@@ -3,23 +3,20 @@
 # * google_calendar
 # 
 # Translators:
-# Martin Trigaux, 2017
-# gebri <gebri@inmail.sk>, 2018
-# Matus Krnac <matus.krnac@gmail.com>, 2018
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:35+0000\n"
 "PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -29,14 +26,14 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
 msgid "API Credentials"
-msgstr "API poverenia"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:89
 #, python-format
 msgid "Accounts"
-msgstr "Účty"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -46,8 +43,6 @@ msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
 msgstr ""
-"Všetky udalosti boli odpojené od vášho predchádzajúceho účtu. Teraz môžete "
-"reštartovať synchronizáciu"
 
 #. module: google_calendar
 #. openerp-web
@@ -57,8 +52,6 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Administrátor musí nakonfigurovať Google Synchronizáciu než ju začnete "
-"pouźívať!"
 
 #. module: google_calendar
 #. openerp-web
@@ -68,43 +61,41 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
-"Vyskytla sa chyba pri odpájaní udalostí od vášho predošlého účtu. Prosím "
-"skúste znova alebo kontaktujte svojho administrátora."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr "Informácie o účastníkovi"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Calendar"
-msgstr "Kalendár"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "ID kalendára"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "ID klienta"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Klient tajomstvo"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
 msgid "Client_id"
-msgstr "Client_id"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
 msgid "Client_key"
-msgstr "Client_key"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -112,7 +103,7 @@ msgstr "Client_key"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:58
 #, python-format
 msgid "Configuration"
-msgstr "Konfigurácia"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
@@ -124,31 +115,31 @@ msgstr "Zobraziť meno"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:66
 #, python-format
 msgid "Do you want to do this now?"
-msgstr "Chcete to urobiť teraz?"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Event"
-msgstr "Udalosť"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:84
 #, python-format
 msgid "Event disconnection error"
-msgstr "Chyba odpájania udalosti"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:80
 #, python-format
 msgid "Event disconnection success"
-msgstr "Úspech odpájania udalosti"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr "ID udalosti Google Kalendára"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -160,7 +151,7 @@ msgstr ""
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr "Google ID má byť jedinečné!"
+msgstr ""
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:687
@@ -170,9 +161,6 @@ msgid ""
 "\n"
 " %s"
 msgstr ""
-"Google je nedostupný... ďalšia synchronizácia bude úplná synchronizácia. \n"
-"\n"
-" %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
@@ -187,8 +175,6 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
-"Aby sa toto mohlo spraviť, najskôr musíte odpojiť všetky existujúce udalosti"
-" starého účtu."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
@@ -196,8 +182,6 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Posledné ID kalendára bolo synchronizované. Ak je zmenené, odstránime všetky"
-" spojenia medzi GoogleID a Odoo Google interným ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -207,41 +191,41 @@ msgstr "Posledná modifikácia"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr "Dátum poslednej synchronizácie"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr "Dátum Odoo synchronizácie"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
 msgid "Odoo Update Date"
-msgstr "Dátum Odoo aktualizácie"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:46
 #, python-format
 msgid "Redirection"
-msgstr "Presmerovanie"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "Obnoviť token"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
 msgid "Settings"
-msgstr "Nastavenia"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:117
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr "Synchronizovať s <b>Google</b>"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -251,8 +235,6 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"Google Synchronizácia potrebuje byť nakonfigurovaná než ju začnete používať,"
-" chcete to spraviť teraz?"
 
 #. module: google_calendar
 #. openerp-web
@@ -262,28 +244,26 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
-"Úçet ktorý sa snažíte synchronizovať (%s) nie je ten istý ako posledný "
-"použitý (%s)!"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
-msgstr "Platnosť tokenu"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
 msgid "URI for tuto"
-msgstr "URI for tuto"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
 msgid "User token"
-msgstr "Token používateľa"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -291,20 +271,19 @@ msgstr "Používatelia"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
-"Budete presmerovaný na Google pre autorizovanie prístupu k vášmu kalendáru!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:295
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr "Váš token je neplatný alebo bol zrušený !"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
 msgid "google.calendar"
-msgstr "google.calendar"
+msgstr ""
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""

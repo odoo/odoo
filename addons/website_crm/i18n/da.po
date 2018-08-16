@@ -5,19 +5,18 @@
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
-# Martin Trigaux, 2017
-# lhmflexerp <lhm@flexerp.dk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Laerke Mathiasen <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,8 +25,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks_page
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
@@ -74,7 +74,7 @@ msgstr "Standard Salgskanaler"
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Default sælger"
+msgstr "Standard salgsperson"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
@@ -82,16 +82,12 @@ msgstr "Default sælger"
 msgid ""
 "Default sales channel for new leads created through the Contact Us form."
 msgstr ""
-"Standard salgskanal for nye kundeomner, der er oprettet gennem "
-"Kontaktformularen."
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
-"Standard sælger for nye kundeemner, der er oprettet gennem "
-"Kontaktformularen."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -99,8 +95,9 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks_page
 msgid "If you have an emergency, do not hesitate to contact us by phone:"
 msgstr "Hvis det haster, kontakt os da hurtigst muligt på telefon:"
 
@@ -112,7 +109,7 @@ msgstr "Kundeemne/salgsmulighed"
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr "Nye beskeder behandles som kundeemner eller muligheder i din CRM app."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -135,14 +132,16 @@ msgid "Subject"
 msgstr "Emne"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks_page
 msgid "Thanks!"
 msgstr "Tak!"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks_page
 msgid "We will get back to you shortly."
 msgstr "Vi kommer tilbage hurtigst muligt."
 
@@ -172,17 +171,18 @@ msgid "Your Question"
 msgstr "Dit spørgsmål"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks_page
 msgid "Your message has been sent successfully."
 msgstr "Din meddelelse er afsendt."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
-msgstr "side"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""

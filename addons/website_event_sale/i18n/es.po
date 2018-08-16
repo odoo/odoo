@@ -3,22 +3,21 @@
 # * website_event_sale
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
-# Antonio Trueba, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
+# Martin Trigaux, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Antonio Trueba, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Eduardo Magdalena <emagdalena@close2circle.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +41,11 @@ msgid "<span>left</span>"
 msgstr "<span>izquierda</span>"
 
 #. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr "Tickets del evento"
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "Solo"
@@ -57,7 +61,7 @@ msgid "Quotation"
 msgstr "Presupuesto"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:56
+#: code:addons/website_event_sale/controllers/main.py:59
 #, python-format
 msgid "Registration"
 msgstr "Registro"
@@ -77,7 +81,7 @@ msgstr "Agotado"
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr ""
-"Disculpe, Los %(ticket)s tickets para el %(event)s evento están agotados."
+"Disculpa, Los %(ticket)s tickets para el %(event)s evento están vendidos."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:77
@@ -86,14 +90,14 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
 msgstr ""
-"Disculpe, solo quedan%(remaining_seats)d asientos disponibles para el "
-"ticket%(ticket)s al evento  %(event)s ."
+"Perdone, hay solo %(remaining_seats)d asientos todavía disponibles para la "
+"entrada %(ticket)s al evento  %(event)s ."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr "El ticket no coincide con este producto."
+msgstr "El vale no casa con este producto."
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

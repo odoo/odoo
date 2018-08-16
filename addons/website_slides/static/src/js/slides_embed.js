@@ -184,7 +184,7 @@ $(document).ready(function () {
             var input = widget.find('input');
             var slide_id = widget.find('button').data('slide-id');
             if(input.val() && input[0].checkValidity()){
-                widget.removeClass('has-error');
+                widget.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                 $.ajax({
                     type: "POST",
                     dataType: 'json',
@@ -199,7 +199,7 @@ $(document).ready(function () {
                     }
                 });
             }else{
-                widget.addClass('has-error');
+                widget.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 input.focus();
             }
         });

@@ -16,7 +16,7 @@ class CrmLeadReportAssign(models.Model):
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     date_assign = fields.Date('Assign Date', readonly=True)
     create_date = fields.Datetime('Create Date', readonly=True)
@@ -32,7 +32,6 @@ class CrmLeadReportAssign(models.Model):
     opening_date = fields.Datetime('Opening Date', readonly=True)
     date_closed = fields.Datetime('Close Date', readonly=True)
     nbr_cases = fields.Integer('# of Cases', readonly=True, oldname='nbr')
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority')
     type = fields.Selection([
         ('lead', 'Lead'),

@@ -19,28 +19,28 @@
                         </div>
                         <h2>Location</h2>
                         <div class="row mt16 o_settings_container" name="event_type_location">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="is_online"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="is_online"/>
                                     <div class="row">
-                                        <div class="col-md-8 mt16 text-muted">
+                                        <div class="col-lg-8 mt16 text-muted">
                                             Online events like webinars do not require a specific location
                                             and are hosted online.
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="use_timezone"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="use_timezone"/>
                                     <div class="row">
-                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_timezone', '=', False)]}">
+                                        <div class="col-lg-8 mt16" attrs="{'invisible': [('use_timezone', '=', False)]}">
                                             <label for="default_timezone"/>
                                             <field name="default_timezone"
                                                 attrs="{'required': [('use_timezone', '=', True)]}"/>
@@ -51,14 +51,14 @@
                         </div>
                         <h2>Communication</h2>
                         <div class="row mt16 o_settings_container" name="event_type_communication">
-                            <div class="col-xs-12 col-md-12 o_setting_box">
+                            <div class="col-12 col-lg-12 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="use_mail_schedule"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="use_mail_schedule"/>
                                     <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
-                                        <div class="col-md-9">
+                                        <div class="col-lg-9">
                                             <field name="event_type_mail_ids">
                                                 <tree string="Email Schedule" editable="bottom">
                                                     <field name="template_id"/>
@@ -71,14 +71,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="use_hashtag"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="use_hashtag"/>
                                     <div class="row">
-                                        <div class="col-md-8 mt16" attrs="{'invisible': [('use_hashtag', '=', False)]}">
+                                        <div class="col-lg-8 mt16" attrs="{'invisible': [('use_hashtag', '=', False)]}">
                                             <label for="default_hashtag"/>
                                             <field name="default_hashtag"
                                                 attrs="{'required': [('use_hashtag', '=', True)]}"/>
@@ -89,14 +89,14 @@
                         </div>
                         <h2>Visibility</h2>
                         <div class="row mt16 o_settings_container" name="event_type_visibility">
-                            <div class="col-xs-12 col-md-6 o_setting_box" name="event_type_visibility_seats">
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_seats">
                                 <div class="o_setting_left_pane">
                                     <field name="has_seats_limitation"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="has_seats_limitation"/>
                                     <div class="row">
-                                        <div class="col-md-8 mt16" attrs="{'invisible': [('has_seats_limitation', '=', False)]}">
+                                        <div class="col-lg-8 mt16" attrs="{'invisible': [('has_seats_limitation', '=', False)]}">
                                             <div>
                                                 <label for="default_registration_min"/> <field name="default_registration_min"/>
                                             </div>
@@ -110,14 +110,14 @@
                         </div>
                         <h2>Attendees</h2>
                         <div class="row mt16 o_settings_container" name="event_type_attendees">
-                            <div class="col-xs-12 col-md-6 o_setting_box" name="event_type_attendees_auto_confirm">
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_attendees_auto_confirm">
                                 <div class="o_setting_left_pane">
                                     <field name="auto_confirm"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="auto_confirm"/>
                                     <div class="row">
-                                        <div class="col-md-8 mt16 text-muted">
+                                        <div class="col-lg-8 mt16 text-muted">
                                             Events and registrations will automatically be confirmed
                                             upon creation, easing the flow for simple events.
                                         </div>
@@ -158,9 +158,10 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'search_default_expected': True}</field>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a new attendee.
-</p></field>
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new attendee
+                </p>
+            </field>
         </record>
 
         <!-- EVENT.EVENT VIEWS -->
@@ -237,7 +238,7 @@
                                 <div>
                                     <field name="seats_availability" widget='radio'/>
                                     <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to 
+                                        to
                                     </span>
                                     <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                 </div>
@@ -304,15 +305,15 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                         </t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                    </div>
                                 </div>
                                 <div class="o_event_left">
                                     <div class="o_day"><t t-esc="record.date_begin.raw_value.getDate()"/></div>
@@ -326,8 +327,8 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <i class="fa fa-clock-o"/>
-                                        <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <b><i class="fa fa-clock-o"/>
+                                        To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">
@@ -370,19 +371,19 @@
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
-                    <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Events" name="myevents" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <filter string="Upcoming" name="upcoming"
-                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                    <filter string="Upcoming/Running" name="upcoming"
+                        domain="['&amp;', ('state', '!=', 'cancel'), ('date_end','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
                     <field name="event_type_id"/>
                     <field name="user_id"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Category" context="{'group_by':'event_type_id'}"/>
-                        <filter string="Status" context="{'group_by':'state'}"/>
-                        <filter string="Start Month" domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Event Category" name="event_type_id" context="{'group_by':'event_type_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -407,23 +408,15 @@
            <field name="view_mode">kanban,calendar,tree,form,pivot</field>
            <field name="context">{"search_default_upcoming":1}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help" type="html"><p class="oe_view_nocontent_create">
-    Click to add a new event.
-</p><p>
-    Odoo helps you schedule and efficiently organize your events:
-    track registrations and participations, automate the confirmation emails,
-    sell tickets, etc.
-</p></field>
+           <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new event
+              </p><p>
+                Schedule and organize your events efficiently:
+                track registrations and participations, automate the confirmation emails, sell tickets, etc.
+              </p>
+            </field>
         </record>
-
-        <act_window
-            id="act_register_event_partner"
-            name="Subscribe"
-            res_model="event.registration"
-            src_model="res.partner"
-            view_mode="tree,form,calendar,graph"
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            view_type="form"/>
 
         <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
         <menuitem name="Events"
@@ -475,7 +468,7 @@
                                 <field name="email"/>
                             </group>
                             <group string="Event Information" name="event">
-                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="date_open" groups="base.group_no_one"/>
                                 <field name="date_closed" groups="base.group_no_one"/>
                             </group>
@@ -531,14 +524,20 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
+                    <filter string="Unconfirmed" name="unconfirmed" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'open')]"/>
+                    <filter string="Attended" name="attended" domain="[('state', '=', 'done')]"/>
+                    <separator/>
+                    <filter string="Registration Date" name="filter_date_open" date="date_open"/>
+                    <filter string="Event Start Date" name="filter_event_begin_date" date="event_begin_date"/>
+                    <filter string="Attended Date" name="filter_date_closed" date="date_closed"/>
                     <field name="event_id"/>
                     <field name="partner_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
-                        <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>
@@ -549,14 +548,17 @@
           <field name="res_model">event.registration</field>
           <field name="view_type">form</field>
           <field name="domain"></field>
-          <field name="view_mode">tree,form,calendar,pivot,graph</field>
+          <field name="view_mode">pivot,graph,tree,form</field>
           <field name="context">{}</field>
           <field name="search_view_id" ref="view_registration_search"/>
         </record>
 
         <menuitem name="Attendees"
-            id="menu_action_registration" parent="event.event_main_menu"
-            action="action_registration" groups="base.group_no_one"/>
+            id="menu_action_registration"
+            parent="event.menu_reporting_events"
+            sequence="4"
+            action="action_registration"
+            groups="event.group_event_manager"/>
 
         <!-- EVENT.MAIL VIEWS -->
         <record model="ir.ui.view" id="view_event_mail_form">

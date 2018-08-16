@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools
+from odoo.tools import email_re
 
 
 class MailComposeMessage(models.TransientModel):
@@ -10,7 +11,7 @@ class MailComposeMessage(models.TransientModel):
 
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
-    mass_mailing_name = fields.Char(string='Mass Mailing')
+    mass_mailing_name = fields.Char(string='Mass Mailing Name')
     mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
 
     @api.multi
@@ -55,8 +56,9 @@ class MailComposeMessage(models.TransientModel):
 
             partners_email = {p.id: p.email for p in read_partners}
 
-            blacklist = self._context.get('mass_mailing_blacklist')
+            opt_out_list = self._context.get('mass_mailing_opt_out_list')
             seen_list = self._context.get('mass_mailing_seen_list')
+            mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
@@ -64,7 +66,8 @@ class MailComposeMessage(models.TransientModel):
                 else:
                     recips = tools.email_split(partners_email.get(res_id))
                 mail_to = recips[0].lower() if recips else False
-                if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
+                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
+                        or (not mail_to or not email_re.findall(mail_to)):
                     # prevent sending to blocked addresses that were included by mistake
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
@@ -72,11 +75,14 @@ class MailComposeMessage(models.TransientModel):
                 stat_vals = {
                     'model': self.model,
                     'res_id': res_id,
-                    'mass_mailing_id': mass_mailing.id
+                    'mass_mailing_id': mass_mailing.id,
+                    'email': mail_to,
                 }
-                # propagate exception state to stat when still-born
+                if mail_values.get('body_html') and mass_mail_layout:
+                    mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
+                # propagate ignored state to stat when still-born
                 if mail_values.get('state') == 'cancel':
-                    stat_vals['exception'] = fields.Datetime.now()
+                    stat_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'statistics_ids': [(0, 0, stat_vals)],

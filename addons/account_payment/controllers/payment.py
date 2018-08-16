@@ -23,25 +23,22 @@ class PaymentPortal(http.Controller):
             return False
 
         try:
-            acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+            acquirer_id = int(acquirer_id)
         except:
             return False
 
         if request.env.user == request.env.ref('base.public_user'):
             save_token = False # we avoid to create a token for the public user
+        vals = {
+            'acquirer_id': acquirer_id,
+        }
 
-        token = request.env['payment.token'].sudo()  # currently no support of payment tokens
-        tx = request.env['payment.transaction'].sudo()._check_or_create_invoice_tx(
-            invoice_sudo,
-            acquirer,
-            payment_token=token,
-            tx_type='form_save' if save_token else 'form',
-        )
+        if save_token:
+            vals['type'] = 'form_save'
 
-        # set the transaction id into the session
-        request.session['portal_invoice_%s_transaction_id' % invoice_sudo.id] = tx.id
+        transaction = invoice_sudo._create_payment_transaction(vals)
 
-        return tx.render_invoice_button(
+        return transaction.render_invoice_button(
             invoice_sudo,
             success_url,
             submit_txt=_('Pay & Confirm'),
@@ -75,22 +72,12 @@ class PaymentPortal(http.Controller):
             params['error'] = 'pay_invoice_invalid_token'
             return request.redirect(_build_url_w_params(error_url, params))
 
-        # find an existing tx or create a new one
-        tx = request.env['payment.transaction'].sudo()._check_or_create_invoice_tx(
-            invoice_sudo,
-            token.acquirer_id,
-            payment_token=token,
-            tx_type='server2server',
-        )
+        vals = {
+            'payment_token_id': token.id,
+            'type': 'server2server',
+        }
 
-        # set the transaction id into the session
-        request.session['portal_invoice_%s_transaction_id' % invoice_sudo.id] = tx.id
+        invoice_sudo._create_payment_transaction(vals)
 
-        # proceed to the payment
-        res = tx.confirm_invoice_token()
-        if tx.state != 'authorized' or not tx.acquirer_id.capture_manually:
-            if res is not True:
-                params['error'] = res
-                return request.redirect(_build_url_w_params(error_url, params))
-            params['success'] = 'pay_invoice'
+        params['success'] = 'pay_invoice'
         return request.redirect(_build_url_w_params(success_url, params))

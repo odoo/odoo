@@ -5,7 +5,7 @@
     'name': 'Forum',
     'category': 'Website',
     'sequence': 150,
-    'summary': 'Forum, FAQ, Q&A',
+    'summary': 'Manage a forum with FAQ and Q&A',
     'version': '1.0',
     'description': """
 Ask questions, get answers, no distractions
@@ -20,7 +20,7 @@ Ask questions, get answers, no distractions
     'data': [
         'data/forum_data.xml',
         'views/forum.xml',
-        'views/res_users.xml',
+        'views/res_users_views.xml',
         'views/website_forum.xml',
         'views/ir_qweb.xml',
         'security/ir.model.access.csv',

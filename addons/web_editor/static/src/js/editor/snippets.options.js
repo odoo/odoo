@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -17,10 +17,10 @@ var _t = core._t;
  */
 var SnippetOption = Widget.extend({
     events: {
-        'mouseenter a': '_onLinkEnter',
-        'click a': '_onLinkClick',
+        'mouseenter': '_onLinkEnter',
+        'click': '_onLinkClick',
         'mouseleave': '_onMouseleave',
-        'mouseleave ul': '_onMouseleave',
+        'mouseleave .dropdown-menu': '_onMouseleave',
     },
     /**
      * When editing a snippet, its options are shown alongside the ones of its
@@ -30,7 +30,7 @@ var SnippetOption = Widget.extend({
     preventChildPropagation: false,
 
     /**
-     * The option `$el` is supposed to be the associated <li/> element in the
+     * The option `$el` is supposed to be the associated DOM element in the
      * options dropdown. The option controls another DOM element: the snippet it
      * customizes, which can be found at `$target`. Access to the whole edition
      * overlay is possible with `$overlay` (this is not recommended though).
@@ -115,18 +115,22 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one and only one class in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each <li/> having a `data-select-class`
+     * case is having a subdropdown with each item having a `data-select-class`
      * value allowing to choose the associated class.
      *
      * @param {boolean|string} previewMode
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {*} value - the class to activate ($li.data('selectClass'))
-     * @param {jQuery} $li - the related DOMElement option
+     * @param {*} value - the class to activate ($opt.data('selectClass'))
+     * @param {jQuery} $opt - the related DOMElement option
      */
-    selectClass: function (previewMode, value, $li) {
-        var $lis = this.$el.find('[data-select-class]').addBack('[data-select-class]');
+    selectClass: function (previewMode, value, $opt) {
+        var $group = $opt && $opt.closest('.dropdown-submenu');
+        if (!$group || !$group.length) {
+            $group = this.$el;
+        }
+        var $lis = $group.find('[data-select-class]').addBack('[data-select-class]');
         var classes = $lis.map(function () {return $(this).data('selectClass');}).get().join(' ');
 
         this.$target.removeClass(classes);
@@ -137,12 +141,12 @@ var SnippetOption = Widget.extend({
     /**
      * Default option method which allows to select one or multiple classes in
      * the option classes set and set it on the associated snippet. The common
-     * case is having a subdropdown with each <li/> having a `data-toggle-class`
+     * case is having a subdropdown with each item having a `data-toggle-class`
      * value allowing to toggle the associated class.
      *
      * @see this.selectClass
      */
-    toggleClass: function (previewMode, value, $li) {
+    toggleClass: function (previewMode, value, $opt) {
         var $lis = this.$el.find('[data-toggle-class]').addBack('[data-toggle-class]');
         var classes = $lis.map(function () {return $(this).data('toggleClass');}).get().join(' ');
         var activeClasses = $lis.filter('.active, :has(.active)').map(function () {return $(this).data('toggleClass');}).get().join(' ');
@@ -159,7 +163,7 @@ var SnippetOption = Widget.extend({
 
     /**
      * Override the helper method to search inside the $target element instead
-     * of the dropdown <li/> element.
+     * of the dropdown item element.
      *
      * @override
      */
@@ -221,13 +225,13 @@ var SnippetOption = Widget.extend({
      *        - truthy if the option is enabled for preview or if leaving it (in
      *          that second case, the value is 'reset')
      *        - false if the option should be activated for good
-     * @param {jQuery} $li - the related DOMElement option
+     * @param {jQuery} $opt - the related DOMElement option
      */
-    _select: function (previewMode, $li) {
+    _select: function (previewMode, $opt) {
         var self = this;
 
         // Options can say they respond to strong choice
-        if (previewMode && ($li.data('noPreview') || $li.parent().data('noPreview'))) {
+        if (previewMode && ($opt.data('noPreview') || $opt.parent().data('noPreview'))) {
             return;
         }
         // If it is not preview mode, the user selected the option for good
@@ -239,7 +243,7 @@ var SnippetOption = Widget.extend({
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
         // selected (sub)option and its parents
-        var el = $li[0];
+        var el = $opt[0];
         var methods = [];
         do {
             methods.push([el, el.dataset]);
@@ -298,20 +302,25 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $li = $(ev.currentTarget).parent();
-        if ($li.is('.dropdown-submenu')) {
-            var $menu = $li.children('.dropdown-menu');
+        var $opt = $(ev.target);
+        if (!$opt.hasClass('dropdown-item')) {
+            return;
+        }
+
+        var $dsmenu = $opt.parent('.dropdown-submenu');
+        if ($dsmenu.length) {
+            var $menu = $dsmenu.children('.dropdown-menu'); // FIXME
             if ($menu.length) {
-                var menuRightPosition = $li.offset().left + $li.outerWidth() + $menu.outerWidth();
+                var menuRightPosition = $dsmenu.offset().left + $dsmenu.outerWidth() + $menu.outerWidth();
                 $menu.toggleClass('o_open_to_left', menuRightPosition > $(window).outerWidth());
             }
         }
 
-        if (!$li.is(':hasData')) {
+        if (!$opt.is(':hasData')) {
             return;
         }
         this.__click = false;
-        this._select(true, $li);
+        this._select(true, $opt);
         this.$target.trigger('snippet-option-preview', [this]);
     },
     /**
@@ -321,13 +330,14 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkClick: function (ev) {
-        var $li = $(ev.currentTarget).parent(':hasData');
-        if (!$li.length) {
+        var $opt = $(ev.target);
+        if (!$opt.hasClass('dropdown-item') || !$opt.is(':hasData')) {
             return;
         }
+
         ev.preventDefault();
         this.__click = true;
-        this._select(false, $li);
+        this._select(false, $opt);
         this.$target.trigger('snippet-option-change', [this]);
     },
     /**
@@ -351,7 +361,7 @@ var SnippetOption = Widget.extend({
  */
 var registry = {};
 
-registry.marginAndResize = SnippetOption.extend({
+registry.sizing = SnippetOption.extend({
     preventChildPropagation: true,
 
     /**
@@ -359,92 +369,64 @@ registry.marginAndResize = SnippetOption.extend({
      */
     start: function () {
         var self = this;
-        this._super();
+        var def = this._super.apply(this, arguments);
 
-        var resize_values = this._getSize();
-        if (resize_values.n) this.$overlay.find('.oe_handle.n').removeClass('readonly');
-        if (resize_values.s) this.$overlay.find('.oe_handle.s').removeClass('readonly');
-        if (resize_values.e) this.$overlay.find('.oe_handle.e').removeClass('readonly');
-        if (resize_values.w) this.$overlay.find('.oe_handle.w').removeClass('readonly');
-        if (resize_values.size) this.$overlay.find('.oe_handle.size').removeClass('readonly');
+        this.$handles = this.$overlay.find('.o_handle');
+        var resizeValues = this._getSize();
+        _.each(resizeValues, function (value, key) {
+            self.$handles.filter('.' + key).toggleClass('readonly', !value);
+        });
 
-        var $auto_size = this.$overlay.find('.oe_handle.size .auto_size');
-        var $fixed_size = this.$overlay.find('.oe_handle.size .size');
+        this.$handles.on('mousedown', function (ev) {
+            ev.preventDefault();
 
-        var auto_sized = isNaN(parseInt(self.$target.prop('style').height));
-        $fixed_size.toggleClass('active', !auto_sized);
-        $auto_size.toggleClass('active', auto_sized);
+            var $handle = $(ev.currentTarget);
 
-        $fixed_size.add(this.$overlay.find('.oe_handle:not(.size)')).on('mousedown', function (event) {
-            event.preventDefault();
-
-            var $handle = $(this);
-
-            var resize_values = self._getSize();
             var compass = false;
             var XY = false;
             if ($handle.hasClass('n')) {
                 compass = 'n';
                 XY = 'Y';
-            }
-            else if ($handle.hasClass('s')) {
+            } else if ($handle.hasClass('s')) {
                 compass = 's';
                 XY = 'Y';
-            }
-            else if ($handle.hasClass('e')) {
+            } else if ($handle.hasClass('e')) {
                 compass = 'e';
                 XY = 'X';
-            }
-            else if ($handle.hasClass('w')) {
+            } else if ($handle.hasClass('w')) {
                 compass = 'w';
                 XY = 'X';
             }
-            else if ($handle.hasClass('size')) {
-                compass = 'size';
-                XY = 'Y';
+
+            var resize = resizeValues[compass];
+            if (!resize) {
+                return;
             }
 
-            var resize = resize_values[compass];
-            if (!resize) return;
+            var current = 0;
+            var cssProperty = resize[2];
+            var cssPropertyValue = parseInt(self.$target.css(cssProperty));
+            _.each(resize[0], function (val, key) {
+                if (self.$target.hasClass(val)) {
+                    current = key;
+                } else if (resize[1][key] === cssPropertyValue) {
+                    current = key;
+                }
+            });
+            var begin = current;
+            var beginClass = self.$target.attr('class');
+            var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
 
-
-            if (compass === 'size') {
-                var offset = self.$target.offset().top;
-            } else {
-                var xy = event['page'+XY];
-                var current = resize[2] || 0;
-                var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
-                var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
-                _.each(resize[0], function (val, key) {
-                    if (self.$target.hasClass(val)) {
-                        current = key;
-                    } else if (resize[1][key] === real_margin) {
-                        current = key;
-                    }
-                });
-                var begin = current;
-                var beginClass = self.$target.attr('class');
-                var regClass = new RegExp('\\s*' + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-            }
-
-            var cursor = $handle.css('cursor')+'-important';
+            var cursor = $handle.css('cursor') + '-important';
             var $body = $(document.body);
             $body.addClass(cursor);
 
-            var body_mousemove = function (event) {
-                event.preventDefault();
-                if (compass === 'size') {
-                    var dy = event.pageY-offset;
-                    dy = dy - dy%resize;
-                    if (dy <= 0) dy = resize;
-                    self.$target.css('height', dy+'px');
-                    self.$target.css('overflow', 'hidden');
-                    self._onResize(compass, null, dy);
-                    self.trigger_up('cover_update');
-                    return;
-                }
-                var dd = event['page'+XY] - xy + resize[1][begin];
-                var next = current+1 === resize[1].length ? current : (current+1);
+            var xy = ev['page' + XY];
+            var body_mousemove = function (ev) {
+                ev.preventDefault();
+
+                var dd = ev['page' + XY] - xy + resize[1][begin];
+                var next = current + (current+1 === resize[1].length ? 0 : 1);
                 var prev = current ? (current-1) : 0;
 
                 var change = false;
@@ -464,56 +446,54 @@ registry.marginAndResize = SnippetOption.extend({
                 if (change) {
                     self._onResize(compass, beginClass, current);
                     self.trigger_up('cover_update');
-                    self._adaptMarginsPreviews();
-                    $handle.addClass('oe_handle_change');
+                    $handle.addClass('o_active');
                 }
             };
-
             var body_mouseup = function () {
-                $body.unbind('mousemove', body_mousemove);
-                $body.unbind('mouseup', body_mouseup);
+                $body.off('mousemove', body_mousemove);
+                $body.off('mouseup', body_mouseup);
                 $body.removeClass(cursor);
-                setTimeout(function () {
-                    if (begin !== current) {
-                        self.trigger_up('request_history_undo_record', {
-                            $target: self.$target,
-                            event: 'resize_' + XY,
-                        });
-                    }
-                },0);
-                $handle.removeClass('oe_handle_change');
+                $handle.removeClass('o_active');
 
-                if (compass === 'size') {
-                    $fixed_size.addClass('active');
-                    $auto_size.removeClass('active');
-                } else {
-                    self._highlightMarginsPreviews();
+                // Highlights the previews for a while
+                var $handlers = self.$overlay.find('.o_handle');
+                $handlers.addClass('o_active').delay(300).queue(function () {
+                    $handlers.removeClass('o_active').dequeue();
+                });
+
+                if (begin === current) {
+                    return;
                 }
+                setTimeout(function () {
+                    self.trigger_up('request_history_undo_record', {
+                        $target: self.$target,
+                        event: 'resize_' + XY,
+                    });
+                }, 0);
             };
-            $body.mousemove(body_mousemove);
-            $body.mouseup(body_mouseup);
+            $body.on('mousemove', body_mousemove);
+            $body.on('mouseup', body_mouseup);
         });
-        $auto_size.on('click', function () {
-            self.$target.css('height', '');
-            self.$target.css('overflow', '');
-            self.trigger_up('request_history_undo_record', {
-                $target: self.$target,
-                event: 'resize_Y',
-            });
-            self.trigger_up('cover_update');
 
-            $fixed_size.removeClass('active');
-            $auto_size.addClass('active');
-
-            return false;
-        });
+        return def;
     },
     /**
      * @override
      */
-    onFocus : function () {
-        this._updateCursor();
-        this._adaptMarginsPreviews();
+    onFocus: function () {
+        this._onResize();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    setTarget: function () {
+        this._super.apply(this, arguments);
+        this._onResize();
     },
 
     //--------------------------------------------------------------------------
@@ -521,98 +501,72 @@ registry.marginAndResize = SnippetOption.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Adapts the margin handles to fit the left, top and bottom margins.
+     * Returns an object mapping one or several cardinal direction (n, e, s, w)
+     * to an Array containing:
+     * 1) A list of classes to toggle when using this cardinal direction
+     * 2) A list of values these classes are supposed to set on a given CSS prop
+     * 3) The mentioned CSS prop
      *
-     * @private
-     */
-    _adaptMarginsPreviews: function () {
-        var self = this;
-        var ml = this.$target.css('margin-left');
-        _.each(this.$overlay.find(".oe_handle.n, .oe_handle.s"), function (handle) {
-            var $handle = $(handle);
-            var direction = $handle.hasClass('n') ? 'top': 'bottom';
-            $handle.height(self.$target.css('margin-' + direction));
-        });
-        this.$overlay.find(".oe_handle.w").css({
-            width: ml,
-            left: '-' + ml,
-        });
-    },
-    /**
-     * Returns an object whose keys indicate the different editable dimensions.
+     * Note: this object must also be saved in this.grid before being returned.
      *
+     * @abstract
      * @private
      * @returns {Object}
      */
-    _getSize: function () {
-        this.grid = {};
-        return this.grid;
-    },
-    /**
-     * Highlights the margins previews for a while.
-     *
-     * @private
-     */
-    _highlightMarginsPreviews: function () {
-        var $handlers = this.$overlay.find(".oe_handle.n, .oe_handle.s, .oe_handle.w");
-        $handlers.addClass('oe_handle_active').delay(300).queue(function () {
-            $handlers.removeClass('oe_handle_active').dequeue();
-        });
-    },
+    _getSize: function () {},
     /**
      * Called when the snippet is being resized and its classes changes.
      *
      * @private
-     * @param {string} compass - resize direction ('n', 's', 'e' or 'w')
-     * @param {?} beginClass - attributes class at the beginning
-     * @param {?} current - curent increment in this.grid
+     * @param {string} [compass] - resize direction ('n', 's', 'e' or 'w')
+     * @param {string} [beginClass] - attributes class at the beginning
+     * @param {integer} [current] - current increment in this.grid
      */
     _onResize: function (compass, beginClass, current) {
-        this._updateCursor();
-    },
-    /**
-     * Adapts the resize handles according to the classes and dimensions.
-     *
-     * @private
-     */
-    _updateCursor : function () {
-        var _class = this.$target.attr('class') || '';
-        var $handle_s = this.$overlay.find('.oe_handle.s');
-        var $handle_n = this.$overlay.find('.oe_handle.n');
-        var $handle_w = this.$overlay.find('.oe_handle.w');
+        var self = this;
 
-        var col = _class.match(/col-md-([0-9-]+)/i);
-        col = col ? +col[1] : 0;
+        // Adapt the resize handles according to the classes and dimensions
+        var resizeValues = this._getSize();
+        var $handles = this.$overlay.find('.o_handle');
+        _.each(resizeValues, function (resizeValue, direction) {
+            var classes = resizeValue[0];
+            var values = resizeValue[1];
+            var cssProperty = resizeValue[2];
 
-        var offset = _class.match(/col-md-offset-([0-9-]+)/i);
-        offset = offset ? +offset[1] : 0;
+            var $handle = $handles.filter('.' + direction);
 
-        var overlay_class = this.$overlay.attr('class').replace(/(^|\s+)block-[^\s]*/gi, '');
-        if (col+offset >= 12) overlay_class+= ' block-e-right';
-        if (col === 1) overlay_class+= ' block-w-right block-e-left';
-        if (offset === 0) overlay_class+= ' block-w-left';
-        $handle_w.toggleClass('oe_handle_centered', offset > 0).toggleClass('o_handle_edited', offset >= 1 );
+            var current = 0;
+            var cssPropertyValue = parseInt(self.$target.css(cssProperty));
+            _.each(classes, function (className, key) {
+                if (self.$target.hasClass(className)) {
+                    current = key;
+                } else if (values[key] === cssPropertyValue) {
+                    current = key;
+                }
+            });
 
-        var mb = _class.match(/mb([0-9-]+)/i);
-        mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
-        if (mb >= 128) overlay_class+= ' block-s-bottom';
-        else if (!mb) overlay_class+= ' block-s-top';
-        $handle_s.toggleClass('oe_handle_centered', mb >= 32).toggleClass('o_handle_edited', mb > 0 );
+            $handle.toggleClass('o_handle_start', current === 0);
+            $handle.toggleClass('o_handle_end', current === classes.length - 1);
+        });
 
-        var mt = _class.match(/mt([0-9-]+)/i);
-        mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
-        if (mt >= 128) overlay_class+= ' block-n-top';
-        else if (!mt) overlay_class+= ' block-n-bottom';
-        $handle_n.toggleClass('oe_handle_centered', mt >= 32).toggleClass('o_handle_edited', mt > 0 );
-
-        this.$overlay.attr('class', overlay_class);
+        // Adapt the handles to fit the left, top and bottom sizes
+        var ml = this.$target.css('margin-left');
+        this.$overlay.find('.o_handle.w').css({
+            width: ml,
+            left: '-' + ml,
+        });
+        _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
+            var $handle = $(handle);
+            var direction = $handle.hasClass('n') ? 'top': 'bottom';
+            $handle.height(self.$target.css('padding-' + direction));
+        });
     },
 });
 
 /**
- * Handles the edition of margin-top and margin-bottom.
+ * Handles the edition of padding-top and padding-bottom.
  */
-registry['margin-y'] = registry.marginAndResize.extend({
+registry.sizing_y = registry.sizing.extend({
 
     //--------------------------------------------------------------------------
     // Private
@@ -622,34 +576,26 @@ registry['margin-y'] = registry.marginAndResize.extend({
      * @override
      */
     _getSize: function () {
-        this.grid = this._super();
-        var grid = [0,4,8,16,32,48,64,92,128];
+        var nClass = 'pt';
+        var nProp = 'padding-top';
+        var sClass = 'pb';
+        var sProp = 'padding-bottom';
+        if (this.$target.is('hr')) {
+            nClass = 'mt';
+            nProp = 'margin-top';
+            sClass = 'mb';
+            sProp = 'margin-bottom';
+        }
+
+        var grid = [];
+        for (var i = 0 ; i <= 256/8 ; i++) {
+            grid.push(i * 8);
+        }
+        grid.splice(1, 0, 4);
         this.grid = {
-            // list of class (Array), grid (Array), default value (INT)
-            n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-            s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
-            // INT if the user can resize the snippet (resizing per INT px)
-            size: null
+            n: [_.map(grid, function (v) { return nClass + v; }), grid, nProp],
+            s: [_.map(grid, function (v) { return sClass + v; }), grid, sProp],
         };
-        return this.grid;
-    },
-});
-
-/**
- * Handles the edition of snippet's height.
- */
-registry.resize = registry.marginAndResize.extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _getSize: function () {
-        this.grid = this._super();
-        this.grid.size = 8;
         return this.grid;
     },
 });
@@ -665,6 +611,7 @@ registry.colorpicker = SnippetOption.extend({
         'mouseleave .colorpicker button': '_onColorButtonLeave',
         'click .note-color-reset': '_onColorResetButtonClick',
     }),
+    colorPrefix: 'bg-',
 
     /**
      * @override
@@ -673,9 +620,18 @@ registry.colorpicker = SnippetOption.extend({
         var self = this;
         var res = this._super.apply(this, arguments);
 
+        if (this.data.colorPrefix) {
+            this.colorPrefix = this.data.colorPrefix;
+        }
+
         if (!this.$el.find('.colorpicker').length) {
+            // TODO remove old UI's code that survived
             var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
             var $clpicker = $(qweb.render('web_editor.colorpicker'));
+
+            _.each($clpicker.find('.o_colorpicker_section'), function (elem) {
+                $(elem).prepend("<div class='text-muted mt8'>" + elem.dataset.display + "</div>")
+            });
 
             // Retrieve excluded palettes list
             var excluded = [];
@@ -687,70 +643,44 @@ registry.colorpicker = SnippetOption.extend({
                 $pt.find('.note-palette-title').text(this.data.paletteTitle);
             }
 
-            var $toggles = $pt.find('.o_colorpicker_section_menu');
-            var $tabs = $pt.find('.o_colorpicker_section_tabs');
-
             // Remove excluded palettes
             _.each(excluded, function (exc) {
                 $clpicker.find('[data-name="' + exc + '"]').remove();
             });
 
-            var $sections = $clpicker.find('.o_colorpicker_section');
-
-            if ($sections.length > 1) { // Multi-palette layout
-                $sections.each(function () {
-                    var $section = $(this);
-                    var id = 'o_palette_' + $section.data('name') + _.uniqueId();
-
-                    var $li = $('<li/>')
-                                .append($('<a/>', {href: '#' + id})
-                                    .append($('<i/>', {'class': $section.data('iconClass') || '', html: $section.data('iconContent') || ''})));
-                    $toggles.append($li);
-
-                    $tabs.append($section.addClass('tab-pane').attr('id', id));
+            // Add common colors to palettes if not excluded
+            if (!('common' in excluded)) {
+                var colors = [
+                    '#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF',
+                    '#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF',
+                    '#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE',
+                    '#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD',
+                    '#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5',
+                    '#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B',
+                    '#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842',
+                    '#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031'
+                ];
+                var $commonColorSection = $clpicker.find('[data-name="common"]');
+                _.each(colors, function (color) {
+                    $commonColorSection.append('<button class="o_custom_color" style="background-color: ' + color + '" />');
                 });
-
-                // If a default palette is defined, make it active
-                if (this.data.paletteDefault) {
-                    var $palette_def = $tabs.find('div[data-name="' + self.data.paletteDefault + '"]');
-                    var pos = $tabs.find('> div').index($palette_def);
-
-                    $toggles.children('li').eq(pos).addClass('active');
-                    $palette_def.addClass('active');
-                } else {
-                    $toggles.find('li').first().addClass('active');
-                    $tabs.find('div').first().addClass('active');
-                }
-
-                $toggles.on('click mouseover', '> li > a', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $(this).tab('show');
-                });
-            } else if ($sections.length === 1) { // Unique palette layout
-                $tabs.addClass('o_unique_palette').append($sections.addClass('tab-pane active'));
-            } else {
-                $toggles.parent().empty().append($clpicker);
             }
 
-            this.$el.find('li').append($pt);
-        }
-        if (this.$el.data('area')) {
-            this.$target = this.$target.find(this.$el.data('area'));
-            this.$el.removeData('area').removeAttr('area');
+            $pt.find('.o_colorpicker_section_tabs').append($clpicker);
+            this.$el.find('.dropdown-menu').append($pt);
         }
 
         var classes = [];
         this.$el.find('.colorpicker button').each(function () {
             var $color = $(this);
-            if (!$color.data('color')) {
+            var color = $color.data('color');
+            if (!color) {
                 return;
             }
 
-            var className = 'bg-' + $color.data('color');
-            $color.addClass(className);
+            $color.addClass('bg-' + color);
+            var className = self.colorPrefix + color;
             if (self.$target.hasClass(className)) {
-                self.color = className;
                 $color.addClass('selected');
             }
             classes.push(className);
@@ -761,7 +691,7 @@ registry.colorpicker = SnippetOption.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Handlers
     //--------------------------------------------------------------------------
 
     /**
@@ -774,7 +704,7 @@ registry.colorpicker = SnippetOption.extend({
         this.$el.find('.colorpicker button.selected').removeClass('selected');
         $(ev.currentTarget).addClass('selected');
         this.$target.closest('.o_editable').trigger('content_changed');
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', false);
     },
     /**
      * Called when a color button is entered -> preview the background color.
@@ -786,9 +716,13 @@ registry.colorpicker = SnippetOption.extend({
         this.$target.removeClass(this.classes);
         var color = $(ev.currentTarget).data('color');
         if (color) {
-            this.$target.addClass('bg-' + color);
+            this.$target.addClass(this.colorPrefix + color);
+        } else if ($(ev.target).hasClass('o_custom_color')) {
+            this.$target
+                .removeClass(this.classes)
+                .css('background-color', ev.currentTarget.style.backgroundColor);
         }
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', true);
     },
     /**
      * Called when a color button is left -> cancel the preview.
@@ -798,12 +732,16 @@ registry.colorpicker = SnippetOption.extend({
      */
     _onColorButtonLeave: function (ev) {
         this.$target.removeClass(this.classes);
+        this.$target.css('background-color', '');
         var $selected = this.$el.find('.colorpicker button.selected');
-        var color = $selected.length && $selected.data('color');
-        if (color) {
-            this.$target.addClass('bg-' + color);
+        if ($selected.length) {
+            if ($selected.data('color')) {
+                this.$target.addClass(this.colorPrefix + $selected.data('color'));
+            } else {
+                this.$target.css('background-color', $selected.css('background-color'));
+            }
         }
-        this.$target.trigger('background-color-event', ev.type);
+        this.$target.trigger('background-color-event', 'reset');
     },
     /**
      * Called when the color reset button is clicked -> remove all background
@@ -812,7 +750,7 @@ registry.colorpicker = SnippetOption.extend({
      * @private
      */
     _onColorResetButtonClick: function () {
-        this.$target.removeClass(this.classes);
+        this.$target.removeClass(this.classes).css('background-color', '');
         this.$el.find('.colorpicker button.selected').removeClass('selected');
     },
 });
@@ -840,7 +778,7 @@ registry.background = SnippetOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    background: function (previewMode, value, $li) {
+    background: function (previewMode, value, $opt) {
         if (previewMode === 'reset' && value === undefined) {
             // No background has been selected and we want to reset back to the
             // original custom image
@@ -859,28 +797,26 @@ registry.background = SnippetOption.extend({
     /**
      * @override
      */
-    selectClass: function (previewMode, value, $li) {
-        this.background(previewMode, '', $li);
-        this._super(previewMode, value ? (value + ' oe_img_bg') : value, $li);
+    selectClass: function (previewMode, value, $opt) {
+        this.background(previewMode, '', $opt);
+        this._super(previewMode, value ? (value + ' oe_img_bg') : value, $opt);
     },
     /**
      * Opens a media dialog to add a custom background image.
      *
      * @see this.selectClass for parameters
      */
-    chooseImage: function (previewMode, value, $li) {
+    chooseImage: function (previewMode, value, $opt) {
         // Put fake image in the DOM, edit it and use it as background-image
-        var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
+        var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
 
         var $editable = this.$target.closest('.o_editable');
-        var options = {
+        var _editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
-        };
-        var _editor = new widget.MediaDialog(this, options, null, $image[0]).open();
-        _editor.opened(function () {
-            _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
-        });
+        }, null, $image[0]).open();
 
         _editor.on('save', this, function () {
             this._setCustomBackground($image.attr('src'));
@@ -900,10 +836,13 @@ registry.background = SnippetOption.extend({
      */
     bindBackgroundEvents: function () {
         this.$target.off('.background-option')
-            .on('background-color-event.background-option', (function (e, type) {
+            .on('background-color-event.background-option', (function (e, previewMode) {
                 e.stopPropagation();
                 if (e.currentTarget !== e.target) return;
-                this.$el.find('li[data-background=""] > a').trigger(type);
+                if (previewMode === false) {
+                    this.__customImageSrc = undefined;
+                }
+                this.background(previewMode);
             }).bind(this));
     },
     /**
@@ -939,7 +878,7 @@ registry.background = SnippetOption.extend({
         this._super.apply(this, arguments);
 
         var src = this._getSrcFromCssValue();
-        this.$el.find('li[data-background]')
+        this.$el.find('[data-background]')
             .removeClass('active')
             .filter(function () {
                 var bgOption = $(this).data('background');
@@ -947,7 +886,7 @@ registry.background = SnippetOption.extend({
             })
             .addClass('active');
 
-        this.$el.find('li[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
+        this.$el.find('[data-choose-image]').toggleClass('active', this.$target.hasClass('oe_custom_bg'));
     },
     /**
      * Sets the given value as custom background image.
@@ -984,7 +923,7 @@ registry.background_position = SnippetOption.extend({
      * @override
      */
     onFocus: function () {
-        this.$el.toggleClass('hidden', this.$target.css('background-image') === 'none');
+        this.$el.toggleClass('d-none', this.$target.css('background-image') === 'none');
     },
 
     //--------------------------------------------------------------------------
@@ -996,7 +935,7 @@ registry.background_position = SnippetOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    backgroundPosition: function (previewMode, value, $li) {
+    backgroundPosition: function (previewMode, value, $opt) {
         var self = this;
 
         this.previous_state = [this.$target.attr('class'), this.$target.css('background-size'), this.$target.css('background-position')];
@@ -1046,7 +985,7 @@ registry.background_position = SnippetOption.extend({
 
             var img_url = /\(['"]?([^'"]+)['"]?\)/g.exec(self.$target.css('background-image'));
             img_url = (img_url && img_url[1]) || '';
-            var $img = $('<img/>', {class: 'img img-responsive', src: img_url});
+            var $img = $('<img/>', {class: 'img img-fluid', src: img_url});
             $img.on('load', function () {
                 self._bindImageEvents($img);
             });
@@ -1211,8 +1150,8 @@ registry.many2one = SnippetOption.extend({
 
         // move menu item
         setTimeout(function () {
-            if (self.$overlay.find('.oe_options').hasClass('hidden')) {
-                self.$btn.css('height', '0').find('> a').addClass('hidden');
+            if (self.$overlay.find('.oe_options').hasClass('d-none')) {
+                self.$btn.css('height', '0').find('> a').addClass('d-none');
                 self.$ul.show().css({
                     'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
                 });

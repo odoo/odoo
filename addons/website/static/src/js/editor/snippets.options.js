@@ -3,11 +3,31 @@ odoo.define('website.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var widgets = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
 var qweb = core.qweb;
+
+options.Class.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Refreshes all animations related to the given element.
+     *
+     * @private
+     * @param {jQuery} [$el=this.$target]
+     */
+    _refreshAnimations: function ($el) {
+        this.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: $el || this.$target,
+        });
+    },
+});
 
 options.registry.menu_data = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
@@ -123,12 +143,11 @@ options.registry.carousel = options.Class.extend({
         this.$target.on('slid.bs.carousel', function () {
             self.$target.carousel('pause');
             self.trigger_up('option_update', {
-                optionNames: ['background', 'background_position', 'colorpicker'],
+                optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
-                data: self.$target.find('.item.active'),
+                data: self.$target.find('.carousel-item.active'),
             });
         });
-        this.$target.trigger('slid.bs.carousel');
 
         return def;
     },
@@ -143,6 +162,14 @@ options.registry.carousel = options.Class.extend({
         this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // Needs to be done on focus, not on start, as all other options are
+        // maybe not all initialized in start
+        this.$target.trigger('slid.bs.carousel');
     },
     /**
      * Associates unique ID on cloned slider elements.
@@ -160,9 +187,9 @@ options.registry.carousel = options.Class.extend({
      */
     cleanForSave: function () {
         this._super.apply(this, arguments);
-        this.$target.find('.item').removeClass('next prev left right active')
+        this.$target.find('.carousel-item').removeClass('next prev left right active')
             .first().addClass('active');
-        this.$target.find('.carousel-indicators').find('li').removeClass('active')
+        this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
             .first().addClass('active');
         this.$target.removeClass('oe_img_bg ' + this._class).css('background-image', '');
     },
@@ -178,12 +205,12 @@ options.registry.carousel = options.Class.extend({
      */
     addSlide: function (previewMode) {
         var self = this;
-        var cycle = this.$inner.find('.item').length;
-        var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
+        var cycle = this.$inner.find('.carousel-item').length;
+        var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
         var index = $active.index();
-        this.$('.carousel-control, .carousel-indicators').removeClass('hidden');
+        this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = this.$('.item:first').clone(true);
+        var $clone = this.$('.carousel-item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
@@ -202,7 +229,7 @@ options.registry.carousel = options.Class.extend({
 
         var self = this;
 
-        var $items = this.$inner.find('.item');
+        var $items = this.$inner.find('.carousel-item');
         var cycle = $items.length - 1;
         var $active = $items.filter('.active');
         var index = $active.index();
@@ -216,7 +243,7 @@ options.registry.carousel = options.Class.extend({
                 self._rebindEvents();
                 self.remove_process = false;
                 if (cycle === 1) {
-                    self.$target.find('.carousel-control, .carousel-indicators').addClass('hidden');
+                    self.$target.find('.carousel-control-prev, .carousel-control-next, .carousel-indicators').addClass('d-none');
                 }
             });
             _.defer(function () {
@@ -241,8 +268,8 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     _setActive: function () {
-        this.$el.find('li[data-interval]').removeClass('active')
-            .filter('li[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
+        this.$el.find('[data-interval]').removeClass('active')
+            .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
     },
     /**
      * Rebinds carousel events on indicators.
@@ -251,7 +278,7 @@ options.registry.carousel = options.Class.extend({
      */
     _rebindEvents: function () {
         var self = this;
-        this.$target.find('.carousel-control').off('click').on('click', function () {
+        this.$target.find('.carousel-control-prev, .carousel-control-next').off('click').on('click', function () {
             self.$target.carousel($(this).data('slide'));
         });
         this.$target.find('.carousel-indicators [data-slide-to]').off('click').on('click', function () {
@@ -263,9 +290,7 @@ options.registry.carousel = options.Class.extend({
     },
 });
 
-options.registry['margin-x'] = options.registry.marginAndResize.extend({
-    preventChildPropagation: true,
-
+options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
      */
@@ -274,7 +299,7 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
         // Below condition is added to remove offset of target element only
         // and not its children to avoid design alteration of a container/block.
         if (options.isCurrent) {
-            var _class = this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
+            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
             this.$target.attr('class', _class);
         }
     },
@@ -287,15 +312,13 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
      * @override
      */
     _getSize: function () {
-        this.grid = this._super();
-        var width = this.$target.parents('.row:first').first().outerWidth();
-
-        var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
-        this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-
-        grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
-        this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
-
+        var width = this.$target.closest('.row').width();
+        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        this.grid = {
+            e: [_.map(gridE, function (v) { return 'col-lg-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
+            w: [_.map(gridW, function (v) { return 'offset-lg-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+        };
         return this.grid;
     },
     /**
@@ -304,9 +327,9 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
     _onResize: function (compass, beginClass, current) {
         if (compass === 'w') {
             // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
+            var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+            var beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
+            var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
             if (offset < 0) {
                 offset = 0;
             }
@@ -315,14 +338,92 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
                 colSize = 1;
                 offset = beginOffset + beginCol - 1;
             }
-            this.$target.attr('class',this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
+            this.$target.attr('class',this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
 
-            this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
+            this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
-                this.$target.addClass('col-md-offset-' + offset);
+                this.$target.addClass('offset-lg-' + offset);
             }
         }
-        this._super(compass, beginClass, current);
+        this._super.apply(this, arguments);
+    },
+});
+
+options.registry.layout_column = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the number of columns.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectCount: function (previewMode, value, $opt) {
+        this._updateColumnCount(value - this.$target.children().length);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds new columns which are clones of the last column or removes the
+     * last x columns.
+     *
+     * @private
+     * @param {integer} count - positif to add, negative to remove
+     */
+    _updateColumnCount: function (count) {
+        if (!count) {
+            return;
+        }
+
+        this.trigger_up('request_history_undo_record', {$target: this.$target});
+
+        if (count > 0) {
+            var $lastColumn = this.$target.children().last();
+            for (var i = 0 ; i < count ; i++) {
+                $lastColumn.clone().insertAfter($lastColumn);
+            }
+        } else {
+            var self = this;
+            _.each(this.$target.children().slice(count), function (el) {
+                self.trigger_up('remove_snippet', {$snippet: $(el)});
+            });
+        }
+
+        this._resizeColumns();
+        this.trigger_up('cover_update');
+    },
+    /**
+     * Resizes the columns so that they are kept on one row.
+     *
+     * @private
+     */
+    _resizeColumns: function () {
+        var $columns = this.$target.children();
+        var colsLength = $columns.length;
+        var colSize = Math.floor(12 / colsLength) || 1;
+        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
+        var colClass = 'col-lg-' + colSize;
+        _.each($columns, function (column) {
+            var $column = $(column);
+            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
+            $column.addClass(colClass);
+        });
+        if (colOffset) {
+            $columns.first().addClass('offset-lg-' + colOffset);
+        }
+    },
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.find('[data-select-count]').removeClass('active')
+            .filter('[data-select-count=' + this.$target.children().length + ']').addClass('active');
     },
 });
 
@@ -331,8 +432,10 @@ options.registry.parallax = options.Class.extend({
      * @override
      */
     start: function () {
-        this._refresh_callback = this._refresh.bind(this);
-        this.$target.on('snippet-option-change snippet-option-preview', this._refresh_callback);
+        var self = this;
+        this.$target.on('snippet-option-change snippet-option-preview', function () {
+            self._refreshAnimations();
+        });
         return this._super.apply(this, arguments);
     },
     /**
@@ -344,13 +447,17 @@ options.registry.parallax = options.Class.extend({
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });
-        this._refresh();
+        // Refresh the parallax animation on focus; at least useful because
+        // there may have been changes in the page that influenced the parallax
+        // rendering (new snippets, ...).
+        // TODO make this automatic.
+        this._refreshAnimations();
     },
     /**
      * @override
      */
     onMove: function () {
-        this._refresh();
+        this._refreshAnimations();
     },
 
     //--------------------------------------------------------------------------
@@ -364,7 +471,7 @@ options.registry.parallax = options.Class.extend({
      */
     scroll: function (previewMode, value) {
         this.$target.attr('data-scroll-background-ratio', value);
-        this._refresh();
+        this._refreshAnimations();
     },
 
     //--------------------------------------------------------------------------
@@ -372,23 +479,207 @@ options.registry.parallax = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Notifies the parallax animation that it needs to be reinitialized.
-     *
-     * @private
-     */
-    _refresh: function () {
-        var self = this;
-        _.defer(function () {
-            self.$target.data('snippet-view')._rebuild();
-        });
-    },
-    /**
      * @override
      */
     _setActive: function () {
         this._super.apply(this, arguments);
         this.$el.find('[data-scroll]').removeClass('active')
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass('active');
+    },
+});
+
+var FacebookPageDialog = weWidgets.Dialog.extend({
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
+        ['/website/static/src/xml/website.facebook_page.xml']
+    ),
+    template: 'website.facebook_page_dialog',
+    events: _.extend({}, weWidgets.Dialog.prototype.events || {}, {
+        'change': '_onOptionChange',
+    }),
+
+    /**
+     * @constructor
+     */
+    init: function (parent, fbData, options) {
+        this._super(parent, _.extend({
+            title: _t("Facebook Page"),
+        }, options || {}));
+
+        this.fbData = $.extend(true, {}, fbData);
+        this.final_data = this.fbData;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$previewPage = this.$('.o_facebook_page');
+        this.opened().then(this._renderPreview.bind(this));
+        return this._super.apply(this, arguments);
+    },
+
+    //------------------------------------------------------------------
+    // Private
+    //------------------------------------------------------------------
+
+    /**
+     * Manages Facebook page preview. Also verifies if the page exists on
+     * Facebook or not.
+     *
+     * @private
+     */
+    _renderPreview: function () {
+        var self = this;
+        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(\w+)/);
+        if (match) {
+            // Check if the page exists on Facebook or not
+            $.ajax({
+                url: 'https://graph.facebook.com/' + match[1] + '/picture',
+                statusCode: {
+                    200: function () {
+                        self._toggleWarning(true);
+
+                        // Managing height based on options
+                        if (self.fbData.tabs) {
+                            self.fbData.height = self.fbData.tabs === 'events' ? 300 : 500;
+                        } else if (self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 165 : 70;
+                        } else if (!self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 225 : 150;
+                        }
+                        options.registry.facebookPage.prototype.markFbElement(self, self.$previewPage, self.fbData);
+                    },
+                    404: function () {
+                        self._toggleWarning(false);
+                    },
+                },
+            });
+        } else {
+            this._toggleWarning(false);
+        }
+    },
+    /**
+     * Toggles the warning message and save button and destroy iframe preview.
+     *
+     * @private
+     * @param {boolean} toggle
+     */
+    _toggleWarning: function (toggle) {
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$previewPage,
+        });
+        this.$('.facebook_page_warning').toggleClass('d-none', toggle);
+        this.$footer.find('.btn-primary').prop('disabled', !toggle);
+    },
+
+    //------------------------------------------------------------------
+    // Handlers
+    //------------------------------------------------------------------
+
+    /**
+     * Called when a facebook option is changed -> adapt the preview and saved
+     * data.
+     *
+     * @private
+     */
+    _onOptionChange: function () {
+        var self = this;
+        // Update values in fbData
+        this.fbData.tabs = _.map(this.$('.o_facebook_tabs input:checked'), function (tab) { return tab.name; }).join(',');
+        this.fbData.href = this.$('.o_facebook_page_url').val();
+        _.each(this.$('.o_facebook_options input'), function (el) {
+            self.fbData[el.name] = $(el).prop('checked');
+        });
+        this._renderPreview();
+    },
+});
+options.registry.facebookPage = options.Class.extend({
+    /**
+     * Initializes the required facebook page data to create the animation
+     * iframe.
+     *
+     * @override
+     */
+    willStart: function () {
+        var defs = [this._super.apply(this, arguments)];
+
+        var defaults = {
+            href: false,
+            height: 215,
+            width: 350,
+            tabs: '',
+            small_header: false,
+            hide_cover: false,
+            show_facepile: false,
+        };
+        this.fbData = _.defaults(_.pick(this.$target.data(), _.keys(defaults)), defaults);
+
+        if (!this.fbData.href) {
+            // Fetches the default url for facebook page from website config
+            var self = this;
+            defs.push(this._rpc({
+                model: 'website',
+                method: 'search_read',
+                args: [[], ['social_facebook']],
+                limit: 1,
+            }).then(function (res) {
+                if (res) {
+                    self.fbData.href = res[0].social_facebook || 'https://www.facebook.com/Odoo';
+                }
+            }));
+        }
+
+        return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.$target.on('click.facebook_page_option', '.o_add_facebook_page', function (ev) {
+            ev.preventDefault();
+            self.fbPageOptions();
+        });
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.$target.off('.facebook_page_option');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Opens a dialog to configure the facebook page options.
+     *
+     * @see this.selectClass for parameters
+     */
+    fbPageOptions: function () {
+        var dialog = new FacebookPageDialog(this, this.fbData).open();
+        dialog.on('save', this, function (fbData) {
+            this.$target.empty();
+            this.fbData = fbData;
+            options.registry.facebookPage.prototype.markFbElement(this, this.$target, this.fbData);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Static
+    //--------------------------------------------------------------------------
+
+    /**
+     * @static
+     */
+    markFbElement: function (self, $el, fbData) {
+        _.each(fbData, function (value, key) {
+            $el.attr('data-' + key, value);
+            $el.data(key, value);
+        });
+        self._refreshAnimations($el);
     },
 });
 
@@ -424,7 +715,9 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.$target.data('snippet-view').destroy();
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$target,
+        });
 
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
         this.$target.find('li:has(>ul,>ol)').map(function () {
@@ -445,10 +738,7 @@ options.registry.ul = options.Class.extend({
         this.$target.find('li:has(.o_ul_toggle_self, .o_ul_toggle_next), li:has(>ul,>ol):not(:has(>li))').css('list-style', 'none');
 
         this.$target.find('li:not(:has(>ul))').css('list-style', '');
-        this.trigger_up('animation_start_demand', {
-            editableMode: true,
-            $target: this.$target,
-        });
+        this._refreshAnimations();
     },
 });
 
@@ -474,7 +764,7 @@ options.registry.collapse = options.Class.extend({
      */
     onClone: function () {
         this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.panel-collapse').removeAttr('id');
+        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -482,9 +772,9 @@ options.registry.collapse = options.Class.extend({
      */
     onMove: function () {
         this._createIDs();
-        var $panel = this.$target.find('.panel-collapse').removeData('bs.collapse');
+        var $panel = this.$target.find('.collapse').removeData('bs.collapse');
         if ($panel.attr('aria-expanded') === 'true') {
-            $panel.closest('.panel-group').find('.panel-collapse[aria-expanded="true"]')
+            $panel.closest('.accordion').find('.collapse[aria-expanded="true"]')
                 .filter(function () {return this !== $panel[0];})
                 .collapse('hide')
                 .one('hidden.bs.collapse', function () {
@@ -507,7 +797,7 @@ options.registry.collapse = options.Class.extend({
         var $tab = this.$target.find('[data-toggle="collapse"]');
 
         // link to the parent group
-        var $tablist = this.$target.closest('.panel-group');
+        var $tablist = this.$target.closest('.accordion');
         var tablist_id = $tablist.attr('id');
         if (!tablist_id) {
             tablist_id = 'myCollapse' + time;
@@ -517,7 +807,7 @@ options.registry.collapse = options.Class.extend({
         $tab.data('parent', '#'+tablist_id);
 
         // link to the collapse
-        var $panel = this.$target.find('.panel-collapse');
+        var $panel = this.$target.find('.collapse');
         var panel_id = $panel.attr('id');
         if (!panel_id) {
             while ($('#'+(panel_id = 'myCollapseTab' + time)).length) {
@@ -545,7 +835,7 @@ options.registry.gallery = options.Class.extend({
         // Make sure image previews are updated if images are changed
         this.$target.on('save', 'img', function (ev) {
             var $img = $(ev.currentTarget);
-            var index = self.$target.find('.item.active').index();
+            var index = self.$target.find('.carousel-item.active').index();
             self.$('.carousel:first li[data-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
@@ -588,13 +878,13 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         var self = this;
         var $container = this.$('.container:first');
-        var dialog = new widgets.MediaDialog(this, {select_images: true}, this.$target.closest('.o_editable'), null);
+        var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, this.$target.closest('.o_editable'), null);
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         dialog.on('save', this, function (attachments) {
             for (var i = 0 ; i < attachments.length; i++) {
                 $('<img/>', {
-                    class: 'img img-responsive',
+                    class: 'img img-fluid',
                     src: attachments[i].src,
                     'data-index': ++index,
                 }).appendTo($container);
@@ -623,7 +913,7 @@ options.registry.gallery = options.Class.extend({
         var imgs = this._getImages();
         var $row = $('<div/>', {class: 'row'});
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         _.each(imgs, function (img, index) {
@@ -650,7 +940,7 @@ options.registry.gallery = options.Class.extend({
     masonry: function () {
         var imgs = this._getImages();
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
 
         var $row = $('<div/>', {class: 'row'});
@@ -684,7 +974,7 @@ options.registry.gallery = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    mode: function (previewMode, value, $li) {
+    mode: function (previewMode, value, $opt) {
         this.$target.css('height', '');
         this[value]();
         this.$target
@@ -701,9 +991,9 @@ options.registry.gallery = options.Class.extend({
         this._replaceContent($row);
 
         _.each(imgs, function (img) {
-            var wrapClass = 'col-md-3';
+            var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
-                wrapClass = 'col-md-6';
+                wrapClass = 'col-lg-6';
             }
             var $wrap = $('<div/>', {class: wrapClass}).append(img);
             $row.append($wrap);
@@ -733,7 +1023,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with a "slideshow" layout.
      */
     slideshow: function () {
-        var imgStyle = this.$el.find('li.active[data-styling]').data('styling') || '';
+        var imgStyle = this.$el.find('.active[data-styling]').data('styling') || '';
         var urls = _.map(this._getImages(), function (img) {
             return $(img).attr('src');
         });
@@ -755,10 +1045,7 @@ options.registry.gallery = options.Class.extend({
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$('li.fa').off('click');
-        this.trigger_up('animation_start_demand', {
-            editableMode: true,
-            $target: this.$target,
-        });
+        this._refreshAnimations();
     },
     /**
      * Allows to change the style of the individual images.
@@ -766,8 +1053,8 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     styling: function (previewMode, value) {
-        var classes = _.map(this.$el.find('li[data-styling]'), function (li) {
-            return $(li).data('styling');
+        var classes = _.map(this.$el.find('[data-styling]'), function (el) {
+            return $(el).data('styling');
         }).join(' ');
         this.$('img').removeClass(classes).addClass(value);
     },
@@ -879,8 +1166,8 @@ options.registry.gallery = options.Class.extend({
             .removeClass('active')
             .filter('[data-styling="' + classes.join('"], [data-styling="') + '"]').addClass('active');
 
-        this.$el.find('li[data-interval]').removeClass('active')
-            .filter('li[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
+        this.$el.find('[data-interval]').removeClass('active')
+            .filter('[data-interval='+this.$target.find('.carousel:first').attr('data-interval')+']')
             .addClass('active');
 
         var interval = this.$target.find('.carousel:first').attr('data-interval');
@@ -933,6 +1220,99 @@ options.registry.gallery_img = options.Class.extend({
                 $image: this.$target,
                 position: value,
             },
+        });
+    },
+});
+
+options.registry.topMenuTransparency = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Handles the toggling between normal and overlay positions of the header.
+     *
+     * @see this.selectClass for params
+     */
+    transparent: function (previewMode, value, $opt) {
+        var self = this;
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_overlay'}],
+            onSuccess: function () {
+                self.trigger_up('action_demand', {
+                    actionName: 'toggle_page_option',
+                    params: [{name: 'header_color', value: ''}],
+                });
+            },
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.find('[data-transparent]').addBack('[data-transparent]').toggleClass('active', !!enabled);
+    },
+});
+
+options.registry.topMenuColor = options.registry.colorpicker.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        this.$target.on('snippet-option-change', function () {
+            self.onFocus();
+        });
+        return def;
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        var enabled;
+        this.trigger_up('action_demand', {
+            actionName: 'get_page_option',
+            params: ['header_overlay'],
+            onSuccess: function (value) {
+                enabled = value;
+            },
+        });
+        this.$el.toggleClass('d-none', !enabled);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onColorButtonClick: function () {
+        this._super.apply(this, arguments);
+        var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
+        var allowedBgs = this.classes.split(' ');
+        var color = _.intersection(bgs, allowedBgs).join(' ');
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: color}],
         });
     },
 });

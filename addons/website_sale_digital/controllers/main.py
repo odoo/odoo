@@ -27,10 +27,10 @@ class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
     @http.route([
-        '/my/orders/<int:order>',
-    ], type='http', auth='user', website=True)
-    def portal_order_page(self, order=None, **post):
-        response = super(WebsiteSaleDigital, self).portal_order_page(order=order, **post)
+        '/my/orders/<int:order_id>',
+    ], type='http', auth='public', website=True)
+    def portal_order_page(self, order_id=None, **post):
+        response = super(WebsiteSaleDigital, self).portal_order_page(order_id=order_id, **post)
         if not 'order' in response.qcontext:
             return response
         order = response.qcontext['order']
@@ -44,7 +44,7 @@ class WebsiteSaleDigital(CustomerPortal):
             product_id = product.id
             template = product.product_tmpl_id
             att = Attachment.search_read(
-                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), '&', ('res_id', '=', template.id), ('product_downloadable', '=', True)],
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )

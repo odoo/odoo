@@ -6,13 +6,17 @@ import time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools import date_utils
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+
+    def _get_invoice_reference_types(self):
+        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Customer'))]
 
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
@@ -25,7 +29,9 @@ class ResCompany(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char(string='Prefix of the cash accounts')
-    accounts_code_digits = fields.Integer(string='Number of digits in an account code')
+    transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
+    account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
+    account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")
     tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Cash Basis Journal")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round per Line'),
@@ -51,18 +57,67 @@ If you have any queries regarding your account, Please contact us.
 Thank you in advance for your cooperation.
 Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
+    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
+                                                                                                       This is useful if you install accounting after having used invoicing for some time and
+                                                                                                       don't want to reconcile all the past payments with bank statements.""")
+
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
+        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
+    invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
+                                              default='invoice_number', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
+    account_sanitize_invoice_ref = fields.Boolean(string="Sanitize Invoice References", default=True, help="Whether or not customer invoices and vendor bills should automatically correct their reference they are maximum 140 characters long, consist only of latin characters, contain no '//' sequence, and have no leading or trailing /. (these are the SEPA criteria for payment communications)")
+
+    qr_code = fields.Boolean(string='Display SEPA QR code')
+    qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')
+    qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
+
+    invoice_is_email = fields.Boolean('Email by default', default=True)
+    invoice_is_print = fields.Boolean('Print by default', default=True)
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")
     account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.")
 
-    #Fields marking the completion of a setup step
-    account_setup_company_data_done = fields.Boolean(string='Company Setup Marked As Done', help="Technical field holding the status of the company setup step.")
-    account_setup_bank_data_done = fields.Boolean('Bank Setup Marked As Done', help="Technical field holding the status of the bank setup step.")
-    account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
-    account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
-    account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+    # Fields marking the completion of a setup step
+    # YTI FIXME : The selection should be factorize as a static list in base, like ONBOARDING_STEP_STATES
+    account_setup_bank_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding bank data step", default='not_done')
+    account_setup_fy_data_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding fiscal year step", default='not_done')
+    account_setup_coa_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding charts of account step", default='not_done')
+    account_onboarding_invoice_layout_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding invoice layout step", default='not_done')
+    account_onboarding_sample_invoice_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sample invoice step", default='not_done')
+    account_onboarding_sale_tax_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding sale tax step", default='not_done')
+
+    # account dashboard onboarding
+    account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
+    account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
+
+    def get_and_update_account_invoice_onboarding_state(self):
+        """ This method is called on the controller rendering method and ensures that the animations
+            are displayed only one time. """
+        return self.get_and_update_onbarding_state(
+            'account_invoice_onboarding_state',
+            self.get_account_invoice_onboarding_steps_states_names()
+        )
+
+    # YTI FIXME: Define only one method that returns {'account': [], 'sale': [], ...}
+    def get_account_invoice_onboarding_steps_states_names(self):
+        """ Necessary to add/edit steps from other modules (payment acquirer in this case). """
+        return [
+            'base_onboarding_company_state',
+            'account_onboarding_invoice_layout_state',
+            'account_onboarding_sample_invoice_state',
+        ]
+
+    def get_and_update_account_dashboard_onboarding_state(self):
+        """ This method is called on the controller rendering method and ensures that the animations
+            are displayed only one time. """
+        return self.get_and_update_onbarding_state('account_dashboard_onboarding_state', [
+            'base_onboarding_company_state',
+            'account_setup_bank_data_state',
+            'account_setup_fy_data_state',
+            'account_setup_coa_state',
+        ])
 
     @api.multi
     def _check_lock_dates(self, vals):
@@ -78,16 +133,15 @@ Best Regards,'''))
         :param vals: The values passed to the write method.
         '''
         period_lock_date = vals.get('period_lock_date') and\
-            time.strptime(vals['period_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+            fields.Date.from_string(vals['period_lock_date'])
         fiscalyear_lock_date = vals.get('fiscalyear_lock_date') and\
-            time.strptime(vals['fiscalyear_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+            fields.Date.from_string(vals['fiscalyear_lock_date'])
 
-        previous_month = datetime.strptime(fields.Date.today(), DEFAULT_SERVER_DATE_FORMAT) + relativedelta(months=-1)
+        previous_month = fields.Date.today() + relativedelta(months=-1)
         days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
-        previous_month = previous_month.replace(day=days_previous_month[1]).timetuple()
+        previous_month = previous_month.replace(day=days_previous_month[1])
         for company in self:
-            old_fiscalyear_lock_date = company.fiscalyear_lock_date and\
-                time.strptime(company.fiscalyear_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+            old_fiscalyear_lock_date = company.fiscalyear_lock_date
 
             # The user attempts to remove the lock date for advisors
             if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
@@ -111,7 +165,7 @@ Best Regards,'''))
             # In case of no new period lock date in vals, fallback to the one defined in the company
             if not period_lock_date:
                 if company.period_lock_date:
-                    period_lock_date = time.strptime(company.period_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+                    period_lock_date = company.period_lock_date
                 else:
                     continue
 
@@ -119,53 +173,72 @@ Best Regards,'''))
             if period_lock_date < fiscalyear_lock_date:
                 raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
-    @api.model
-    def _verify_fiscalyear_last_day(self, company_id, last_day, last_month):
-        company = self.browse(company_id)
-        last_day = last_day or (company and company.fiscalyear_last_day) or 31
-        last_month = last_month or (company and company.fiscalyear_last_month) or 12
-        current_year = datetime.now().year
-        last_day_of_month = calendar.monthrange(current_year, last_month)[1]
-        return last_day > last_day_of_month and last_day_of_month or last_day
-
     @api.multi
-    def compute_fiscalyear_dates(self, date):
-        """ Computes the start and end dates of the fiscalyear where the given 'date' belongs to
-            @param date: a datetime object
-            @returns: a dictionary with date_from and date_to
-        """
-        self = self[0]
-        last_month = self.fiscalyear_last_month
-        last_day = self.fiscalyear_last_day
-        if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
-            date = date.replace(month=last_month, day=last_day)
-        else:
-            if last_month == 2 and last_day == 29 and (date.year + 1) % 4 != 0:
-                date = date.replace(month=last_month, day=28, year=date.year + 1)
-            else:
-                date = date.replace(month=last_month, day=last_day, year=date.year + 1)
-        date_to = date
-        date_from = date + timedelta(days=1)
-        if date_from.month == 2 and date_from.day == 29:
-            date_from = date_from.replace(day=28, year=date_from.year - 1)
-        else:
-            date_from = date_from.replace(year=date_from.year - 1)
+    def compute_fiscalyear_dates(self, current_date):
+        '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
+
+        :param current_date: A datetime.date/datetime.datetime object.
+        :return: A dictionary containing:
+            * date_from
+            * date_to
+            * [Optionally] record: The fiscal year record.
+        '''
+        self.ensure_one()
+        date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        # Search a fiscal year record containing the date.
+        # If a record is found, then no need further computation, we get the dates range directly.
+        fiscalyear = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_str),
+            ('date_to', '>=', date_str),
+        ], limit=1)
+        if fiscalyear:
+            return {
+                'date_from': fiscalyear.date_from,
+                'date_to': fiscalyear.date_to,
+                'record': fiscalyear,
+            }
+
+        date_from, date_to = date_utils.get_fiscal_year(
+            current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
+
+        date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        # Search for fiscal year records reducing the delta between the date_from/date_to.
+        # This case could happen if there is a gap between two fiscal year records.
+        # E.g. two fiscal year records: 2017-01-01 -> 2017-02-01 and 2017-03-01 -> 2017-12-31.
+        # => The period 2017-02-02 - 2017-02-30 is not covered by a fiscal year record.
+
+        fiscalyear_from = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_from_str),
+            ('date_to', '>=', date_from_str),
+        ], limit=1)
+        if fiscalyear_from:
+            date_from = fiscalyear_from.date_to + timedelta(days=1)
+
+        fiscalyear_to = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_to_str),
+            ('date_to', '>=', date_to_str),
+        ], limit=1)
+        if fiscalyear_to:
+            date_to = fiscalyear_to.date_from - timedelta(days=1)
+
         return {'date_from': date_from, 'date_to': date_to}
 
-    def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
+    def get_new_account_code(self, current_code, old_prefix, new_prefix):
+        digits = len(current_code)
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
-    def reflect_code_prefix_change(self, old_code, new_code, digits):
+    def reflect_code_prefix_change(self, old_code, new_code):
         accounts = self.env['account.account'].search([('code', 'like', old_code), ('internal_type', '=', 'liquidity'),
             ('company_id', '=', self.id)], order='code asc')
         for account in accounts:
             if account.code.startswith(old_code):
-                account.write({'code': self.get_new_account_code(account.code, old_code, new_code, digits)})
-
-    def reflect_code_digits_change(self, digits):
-        accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
-        for account in accounts:
-            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
+                account.write({'code': self.get_new_account_code(account.code, old_code, new_code)})
 
     @api.multi
     def _validate_fiscalyear_lock(self, values):
@@ -184,15 +257,12 @@ Best Regards,'''))
 
         # Reflect the change on accounts
         for company in self:
-            digits = values.get('accounts_code_digits') or company.accounts_code_digits
-            if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
+            if values.get('bank_account_code_prefix'):
                 new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
-                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code, digits)
-            if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
+                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code)
+            if values.get('cash_account_code_prefix'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
-                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
-            if values.get('accounts_code_digits'):
-                company.reflect_code_digits_change(digits)
+                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
 
             #forbid the change of currency_id if there are already some accounting entries existing
             if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
@@ -202,42 +272,17 @@ Best Regards,'''))
         return super(ResCompany, self).write(values)
 
     @api.model
-    def setting_init_company_action(self):
-        """ Called by the 'Company Data' button of the setup bar."""
-        company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_view_company_form').id
-        return {'type': 'ir.actions.act_window',
-                'name': _('Company Data'),
-                'res_model': 'res.company',
-                'target': 'new',
-                'view_mode': 'form',
-                'res_id': company.id,
-                'views': [[view_id, 'form']],
-        }
-
-    @api.model
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
-        company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_bank_journal_form').id
-
-        res = {
-            'type': 'ir.actions.act_window',
-            'name': _('Bank Account'),
-            'view_mode': 'form',
-            'res_model': 'account.journal',
-            'target': 'new',
-            'views': [[view_id, 'form']],
+        view_id = self.env.ref('account.setup_bank_account_wizard').id
+        return {'type': 'ir.actions.act_window',
+                'name': _('Create a Bank Account'),
+                'res_model': 'account.setup.bank.manual.config',
+                'target': 'new',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'views': [[view_id, 'form']],
         }
-
-        # If some bank journal already exists, we open it in the form, so the user can edit it.
-        # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')], limit=1)
-        if bank_journal:
-            res['res_id'] = bank_journal.id
-        else:
-            res['context'] = {'default_type': 'bank'}
-        return res
 
     @api.model
     def setting_init_fiscal_year_action(self):
@@ -260,7 +305,7 @@ Best Regards,'''))
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
         company = self.env.user.company_id
-        company.account_setup_coa_done = True
+        company.set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
@@ -278,49 +323,11 @@ Best Regards,'''))
             'name': _('Chart of Accounts'),
             'res_model': 'account.account',
             'view_mode': 'tree',
+            'limit': 99999999,
             'search_view_id': self.env.ref('account.view_account_search').id,
             'views': [[view_id, 'list']],
             'domain': domain,
         }
-
-    @api.model
-    def setting_opening_move_action(self):
-        """ Called by the 'Initial Balances' button of the setup bar."""
-        company = self.env.user.company_id
-
-        # If the opening move has already been posted, we open its form view
-        if company.opening_move_posted():
-            form_view_id = self.env.ref('account.setup_posted_move_form').id
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Initial Balances'),
-                'view_mode': 'form',
-                'res_model': 'account.move',
-                'target': 'new',
-                'res_id': company.account_opening_move_id.id,
-                'views': [[form_view_id, 'form']],
-            }
-
-        # Otherwise, we open a custom wizard to post it.
-        company.create_op_move_if_non_existant()
-        new_wizard = self.env['account.opening'].create({'company_id': company.id})
-        view_id = self.env.ref('account.setup_opening_move_wizard_form').id
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Initial Balances'),
-            'view_mode': 'form',
-            'res_model': 'account.opening',
-            'target': 'new',
-            'res_id': new_wizard.id,
-            'views': [[view_id, 'form']],
-            'context': {'check_move_validity': False},
-        }
-
-    @api.model
-    def setting_hide_setup_bar(self):
-        """ Called by the cross button of the setup bar, to close it."""
-        self.env.user.company_id.account_setup_bar_closed = True
 
     @api.model
     def create_op_move_if_non_existant(self):
@@ -340,14 +347,6 @@ Best Regards,'''))
                 'company_id': self.id,
                 'journal_id': default_journal.id,
             })
-
-    def mark_company_setup_as_done_action(self):
-        """ Marks the 'company' setup step as completed."""
-        self.account_setup_company_data_done = True
-
-    def unmark_company_setup_as_done_action(self):
-        """ Marks the 'company' setup step as uncompleted."""
-        self.account_setup_company_data_done = False
 
     def opening_move_posted(self):
         """ Returns true if this company has an opening account move and this move is posted."""
@@ -414,3 +413,113 @@ Best Regards,'''))
                         'debit': credit_diff,
                         'credit': debit_diff,
                     })
+
+    @api.model
+    def action_close_account_invoice_onboarding(self):
+        """ Mark the invoice onboarding panel as closed. """
+        self.env.user.company_id.account_invoice_onboarding_state = 'closed'
+
+    @api.model
+    def action_close_account_dashboard_onboarding(self):
+        """ Mark the dashboard onboarding panel as closed. """
+        self.env.user.company_id.account_dashboard_onboarding_state = 'closed'
+
+    @api.model
+    def action_open_account_onboarding_invoice_layout(self):
+        """ Onboarding step for the invoice layout. """
+        action = self.env.ref('account.action_open_account_onboarding_invoice_layout').read()[0]
+        action['res_id'] = self.env.user.company_id.id
+        return action
+
+    @api.model
+    def action_open_account_onboarding_sale_tax(self):
+        """ Onboarding step for the invoice layout. """
+        action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]
+        action['res_id'] = self.env.user.company_id.id
+        return action
+
+    @api.model
+    def _get_sample_invoice(self):
+        """ Get a sample invoice or create one if it does not exist. """
+        # use current user as partner
+        partner = self.env.user.partner_id
+
+        company_id = self.env.user.company_id.id
+        # try to find an existing sample invoice
+        sample_invoice = self.env['account.invoice'].search(
+            [('company_id', '=', company_id),
+             ('partner_id', '=', partner.id)], limit=1)
+
+        if len(sample_invoice) == 0:
+            # If there are no existing accounts or no journal, fail
+            account = self.env.user.company_id.get_chart_of_accounts_or_fail()
+
+            journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
+            if len(journal) == 0:
+                action = self.env.ref('account.action_account_journal_form')
+                msg = _("We cannot find any journal for this company. You should create one."
+                        "\nPlease go to Configuration > Journals.")
+                raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
+
+            sample_invoice = self.env['account.invoice'].create({
+                'name': _("Sample invoice"),
+                'journal_id': journal.id,
+                'partner_id': partner.id,
+            })
+            # sample invoice lines
+            self.env['account.invoice.line'].create({
+                'name': _("Sample invoice line name"),
+                'invoice_id': sample_invoice.id,
+                'account_id': account.id,
+                'price_unit': 199.99,
+                'quantity': 2,
+            })
+            self.env['account.invoice.line'].create({
+                'name': _("Sample invoice line name 2"),
+                'invoice_id': sample_invoice.id,
+                'account_id': account.id,
+                'price_unit': 25,
+                'quantity': 1,
+            })
+        return sample_invoice
+
+    @api.model
+    def action_open_account_onboarding_sample_invoice(self):
+        """ Onboarding step for sending a sample invoice. Open a window to compose an email,
+            with the edi_invoice_template message loaded by default. """
+        sample_invoice = self._get_sample_invoice()
+        template = self.env.ref('account.email_template_edi_invoice', False)
+        action = self.env.ref('account.action_open_account_onboarding_sample_invoice').read()[0]
+        action['context'] = {
+            'default_res_id': sample_invoice.id,
+            'default_use_template': bool(template),
+            'default_template_id': template and template.id or False,
+            'default_model': 'account.invoice',
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
+            'custom_layout': 'mail.mail_notification_borders',
+            'force_email': True,
+            'mail_notify_author': True,
+        }
+        return action
+
+    @api.multi
+    def action_save_onboarding_invoice_layout(self):
+        """ Set the onboarding step as done """
+        if bool(self.logo) and self.logo != self._get_logo():
+            self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
+
+    @api.multi
+    def action_save_onboarding_sale_tax(self):
+        """ Set the onboarding step as done """
+        self.set_onboarding_step_done('account_onboarding_sale_tax_state')
+
+    def get_chart_of_accounts_or_fail(self):
+        account = self.env['account.account'].search([('company_id', '=', self.id)], limit=1)
+        if len(account) == 0:
+            action = self.env.ref('account.action_account_config')
+            msg = _(
+                "We cannot find a chart of accounts for this company, you should configure it. \n"
+                "Please go to Account Configuration and select or install a fiscal localization.")
+            raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+        return account

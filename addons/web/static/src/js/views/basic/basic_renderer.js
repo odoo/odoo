@@ -50,6 +50,7 @@ var BasicRenderer = AbstractRenderer.extend({
                 invalidFields.push(widget.name);
             }
             widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+            widget.$el.attr('aria-invalid', !canBeSaved);
         });
         return invalidFields;
     },
@@ -135,7 +136,6 @@ var BasicRenderer = AbstractRenderer.extend({
             dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -152,7 +152,6 @@ var BasicRenderer = AbstractRenderer.extend({
         // widget's $el
         $node = $node.length ? $node : widget.$el;
         $node.tooltip({
-            delay: { show: 1000, hide: 0 },
             title: function () {
                 return qweb.render('WidgetLabel.tooltip', {
                     debug: config.debug,
@@ -172,7 +171,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} [options]
      * @param {integer} [options.inc=1] - the increment to use when searching for the
      *   "next" possible one
-     * @param {boolean} [options.wrap=true] if true, when we arrive at the end of the
+     * @param {boolean} [options.wrap=false] if true, when we arrive at the end of the
      *   list of widget, we wrap around and try to activate widgets starting at
      *   the beginning. Otherwise, we just stop trying and return -1
      * @returns {integer} the index of the widget that was activated or -1 if
@@ -180,7 +179,8 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _activateFieldWidget: function (record, currentIndex, options) {
         options = options || {};
-        _.defaults(options, {inc: 1, wrap: true});
+        _.defaults(options, {inc: 1, wrap: false});
+        currentIndex = Math.max(0,currentIndex); // do not allow negative currentIndex
 
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
@@ -271,6 +271,10 @@ var BasicRenderer = AbstractRenderer.extend({
             element.$el.toggleClass("o_readonly_modifier", !!modifiers.readonly);
             element.$el.toggleClass("o_required_modifier", !!modifiers.required);
 
+            if (element.widget && element.widget.updateModifiersValue) {
+                element.widget.updateModifiersValue(modifiers);
+            }
+
             // Call associated callback
             if (element.callback) {
                 element.callback(element, modifiers, record);
@@ -345,6 +349,9 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} node
      */
     _handleAttributes: function ($el, node) {
+        if ($el.is('button')) {
+            return;
+        }
         if (node.attrs.class) {
             $el.addClass(node.attrs.class);
         }
@@ -504,13 +511,45 @@ var BasicRenderer = AbstractRenderer.extend({
         });
     },
     /**
+     * Renders a button according to a given node element.
+     *
+     * @private
+     * @param {Object} node
+     * @param {Object} [options]
+     * @param {string} [options.extraClass]
+     * @param {boolean} [options.textAsTitle=false]
+     * @returns {jQuery}
+     */
+    _renderButtonFromNode: function (node, options) {
+        var btnOptions = {
+            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
+            icon: node.attrs.icon,
+        };
+        if (options && options.extraClass) {
+            var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
+            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
+        }
+        var str = (node.attrs.string || '').replace(/_/g, '');
+        if (str) {
+            if (options && options.textAsTitle) {
+                btnOptions.attrs.title = str;
+            } else {
+                btnOptions.text = str;
+            }
+        }
+        return dom.renderButton(btnOptions);
+    },
+    /**
      * Instantiates the appropriate AbstractField specialization for the given
      * node and prepares its rendering and addition to the DOM. Indeed, the
      * rendering of the widget will be started and the associated deferred will
      * be added to the 'defs' attribute. This is supposed to be created and
      * deleted by the calling code if necessary.
-     * Note: for this implementation to work, AbstractField willStart methods
-     * *must* be synchronous.
+     *
+     * Note: we always return a $el.  If the field widget is asynchronous, this
+     * $el will be replaced by the real $el, whenever the widget is ready (start
+     * method is done).  This means that this is not the correct place to make
+     * changes on the widget $el.  For this, @see _postProcessField method
      *
      * @private
      * @param {Object} node
@@ -518,7 +557,7 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Object} [options] passed to @_registerModifiers
      * @param {string} [options.mode] either 'edit' or 'readonly' (defaults to
      *   this.mode, the mode of the renderer)
-     * @returns {AbstractField}
+     * @returns {jQueryElement}
      */
     _renderFieldWidget: function (node, record, options) {
         options = options || {};
@@ -543,8 +582,10 @@ var BasicRenderer = AbstractRenderer.extend({
         widget.__node = node; // TODO get rid of this if possible one day
 
         // Prepare widget rendering and save the related deferred
-        var def = widget.__widgetRenderAndInsert(function () {});
-        if (def.state() === 'pending') {
+        var def = widget._widgetRenderAndInsert(function () {});
+        var async = def.state() === 'pending';
+        var $el = async ? $('<div>') : widget.$el;
+        if (async) {
             this.defs.push(def);
         }
 
@@ -553,6 +594,9 @@ var BasicRenderer = AbstractRenderer.extend({
         // associated to new widget)
         var self = this;
         def.then(function () {
+            if (async) {
+                $el.replaceWith(widget.$el);
+            }
             self._registerModifiers(node, record, widget, {
                 callback: function (element, modifiers, record) {
                     element.$el.toggleClass('o_field_empty', !!(
@@ -567,7 +611,7 @@ var BasicRenderer = AbstractRenderer.extend({
             self._postProcessField(widget, node);
         });
 
-        return widget;
+        return $el;
     },
     /**
      * Renders the nocontent helper.
@@ -576,12 +620,14 @@ var BasicRenderer = AbstractRenderer.extend({
      * message when no content is available.
      *
      * @private
+     * @returns {jQueryElement}
      */
     _renderNoContentHelper: function () {
-        var $msg = $('<div>')
-            .addClass('oe_view_nocontent')
-            .html(this.noContentHelp);
-        this.$el.html($msg);
+        var $noContent =
+            $('<div>').html(this.noContentHelp).addClass('o_nocontent_help');
+        return $('<div>')
+            .addClass('o_view_nocontent')
+            .append($noContent);
     },
     /**
      * Actual rendering. Supposed to be overridden by concrete renderers.
@@ -614,16 +660,24 @@ var BasicRenderer = AbstractRenderer.extend({
         this.widgets.push(widget);
 
         // Prepare widget rendering and save the related deferred
-        var def = widget.__widgetRenderAndInsert(function () {});
-        if (def.state() === 'pending') {
+        var def = widget._widgetRenderAndInsert(function () {});
+        var async = def.state() === 'pending';
+        if (async) {
             this.defs.push(def);
         }
+        var $el = async ? $('<div>') : widget.$el;
 
-        // handle other attributes/modifiers
-        this._handleAttributes(widget.$el, node);
-        this._registerModifiers(node, record, widget);
-        widget.$el.addClass('o_widget');
-        return widget.$el;
+        var self = this;
+        def.then(function () {
+            self._handleAttributes(widget.$el, node);
+            self._registerModifiers(node, record, widget);
+            widget.$el.addClass('o_widget');
+            if (async) {
+                $el.replaceWith(widget.$el);
+            }
+        });
+
+        return $el;
     },
 
     /**
@@ -634,20 +688,17 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {Widget} widget
      * @param {Object} record
      * @param {Object} [options] options passed to @_renderFieldWidget
-     * @returns {AbstractField}
      */
     _rerenderFieldWidget: function (widget, record, options) {
         // Render the new field widget
-        var newWidget = this._renderFieldWidget(widget.__node, record, options);
-        widget.$el.replaceWith(newWidget.$el);
+        var $el = this._renderFieldWidget(widget.__node, record, options);
+        widget.$el.replaceWith($el);
 
         // Destroy the old widget and position the new one at the old one's
         var oldIndex = this._destroyFieldWidget(record.id, widget);
         var recordWidgets = this.allFieldWidgets[record.id];
+        var newWidget = recordWidgets.pop();
         recordWidgets.splice(oldIndex, 0, newWidget);
-        recordWidgets.pop();
-
-        return newWidget;
     },
     /**
      * Unregisters an element of the modifiers data associated to the given

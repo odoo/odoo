@@ -14,8 +14,9 @@
     </record>
 
     <template id="report_invoice_document_inherit_sale_stock" inherit_id="account.report_invoice_document">
+        <!-- HTML Preview for mobile responsive -->
         <xpath expr="//div[@name='reference']" position="after">
-            <div class="col-xs-2" t-if="o.incoterms_id" groups="sale_stock.group_display_incoterm">
+            <div t-att-class="o_grid_layout" t-if="o.incoterms_id" groups="sale_stock.group_display_incoterm">
                 <strong>Incoterms:</strong>
                 <p t-field="o.incoterms_id.code"/>
             </div>

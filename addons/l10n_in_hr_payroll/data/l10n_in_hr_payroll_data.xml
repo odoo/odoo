@@ -27,7 +27,7 @@
         </record>
 
         <record id="hr_vpf_contribution_register" model="hr.contribution.register">
-            <field name="name">Register for Voluntarily Provident Fund</field>
+            <field name="name">Register for Voluntary Provident Fund</field>
         </record>
 
         <record id="hr_company_transport_register" model="hr.contribution.register">
@@ -386,7 +386,7 @@ or - (contract.wage * 0.10))</field>
 
         <record id="hr_payslip_rule_vpf" model="hr.salary.rule">
             <field name="code">VPF</field>
-            <field name="name">Voluntarily Provident Fund Contribution</field>
+            <field name="name">Voluntary Provident Fund Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>

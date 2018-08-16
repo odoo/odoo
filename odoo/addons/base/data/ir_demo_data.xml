@@ -1,0 +1,23 @@
+<odoo>
+    <record model="ir.actions.act_window" id="demo_force_install_action">
+        <field name="name">Load demo data</field>
+        <field name="res_model">ir.demo</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="demo_force_install_form">
+        <field name="name">ir.demo.form</field>
+        <field name="model">ir.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Demo data should only be used on test databases. Once they are loaded, they cannot be removed.</p>
+                <p>Are you sure you want to load demo data?</p>
+                <footer>
+                    <button name="install_demo" string="Load demo data" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Discard" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

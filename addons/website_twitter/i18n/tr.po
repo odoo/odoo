@@ -3,18 +3,20 @@
 # * website_twitter
 # 
 # Translators:
+# gezgin biri <gezginbiri@hotmail.com>, 2017
 # Martin Trigaux, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Saban Yildiz <sabany@projetgrup.com>, 2017
 # oğulcan hayrat <ogulcanhayrat@gmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,21 +26,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
-msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter Kaydırıcı</span>"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API Key"
 msgstr "API Anahtarı"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr "API parolası"
+msgstr "API sırrı"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
@@ -51,28 +48,28 @@ msgstr ""
 "olabilir."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr "Favoriler"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
 msgid "Get favorites from this screen name"
 msgstr "Bu ekran adınsan favorileri alın"
 
@@ -83,7 +80,7 @@ msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP Hatası: Bir şey yanlış yapılandırıldı"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
 msgid "ID"
 msgstr "ID"
 
@@ -94,17 +91,17 @@ msgid "Internet connection refused"
 msgstr "İnternet bağlantısı reddedildi"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
 msgstr "Son Güncelleme"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_uid
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_write_date
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
@@ -133,7 +130,7 @@ msgstr "Websitesi Ayarlar Twitter API Key ve Gizli ayarlayın."
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:35
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
 #, python-format
 msgid "Reload"
 msgstr "Yeninden Yükle"
@@ -148,12 +145,12 @@ msgstr ""
 "İstek, kaynak için tükenmiş olan uygulama oranı limiti nedeniyle sunulamaz."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_screen_name
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
 msgid "Screen Name"
 msgstr "Ekran Adı"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
@@ -162,7 +159,7 @@ msgstr ""
 "Secret ile eşleşmesine gerek yoktur."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr "Nasıl Twitter API Key ve Gizli elde edildiğini bana göster"
 
@@ -217,12 +214,12 @@ msgid "Tutorial"
 msgstr "Eğitim"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
 msgid "Tweet ID"
 msgstr "Tweet Kimliği"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet
 msgid "Tweets"
 msgstr "Tweetler"
 
@@ -232,38 +229,38 @@ msgid "Twitter API Credentials"
 msgstr "Twitter API Kimliği"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
 msgid "Twitter API Key"
 msgstr "Twitter API Anahtarı"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
 msgstr "Twitter API Sırrı"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_key
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "Twitter API key"
 msgstr "Twitter API anahtarı"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr "Twitter API kimliğini buradan alabilirsin:  https://apps.twitter.com/"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
+#: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
 msgstr "Twitter API sırrı"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr "Twitter API parolasını buradan alabilirsin: https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:41
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Twitter yapılandırma"
@@ -321,9 +318,9 @@ msgstr "Bir Twitter sunucusuna ulaşamadık"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
-#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_website_id
+#: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
-msgstr "Websitesi"
+msgstr "Web Sitesi"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings

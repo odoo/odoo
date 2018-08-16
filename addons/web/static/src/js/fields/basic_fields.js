@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var datepicker = require('web.datepicker');
@@ -207,6 +206,13 @@ var InputField = DebouncedField.extend({
             this.isDirty = false;
         }
         if (this.isDirty || (event && event.target === this && event.data.changes[this.name] === this.value)) {
+            if (this.attrs.decorations) {
+                // if a field is modified, then it could have triggered an onchange
+                // which changed some of its decorations. Since we bypass the
+                // render function, we need to apply decorations here to make
+                // sure they are recomputed.
+                this._applyDecorations();
+            }
             return $.when();
         } else {
             return this._render();
@@ -237,14 +243,20 @@ var InputField = DebouncedField.extend({
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
-        this.$input.attr({
-            type: this.nodeOptions.isPassword ? 'password' : 'text',
-            placeholder: this.attrs.placeholder || "",
-            autocomplete: this.nodeOptions.isPassword ?
-                'new-password' :
-                this.attrs.autocomplete,
-        });
-        this.$input.val(this._formatValue(this.value));
+
+        var inputAttrs = { placeholder: this.attrs.placeholder || "" };
+        var inputVal;
+        if (this.nodeOptions.isPassword) {
+            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
+            inputVal = this.value || '';
+        } else {
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete });
+            inputVal = this._formatValue(this.value);
+        }
+
+        this.$input.attr(inputAttrs);
+        this.$input.val(inputVal);
+
         return this.$input;
     },
     /**
@@ -313,12 +325,22 @@ var InputField = DebouncedField.extend({
         this._super.apply(this, arguments);
 
         // the following code only makes sense in edit mode, with an input
-        if (this.mode === 'edit') {
+        if (this.mode === 'edit' && ev.data.direction !== 'cancel') {
             var input = this.$input[0];
             var selecting = (input.selectionEnd !== input.selectionStart);
             if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
                 ev.stopPropagation();
+            }
+            if (ev.data.direction ==='next' &&
+                this.attrs.modifiersValue &&
+                this.attrs.modifiersValue.required) {
+                if (!this.$input.val()){
+                    this.setInvalidClass();
+                    ev.stopPropagation();
+                } else {
+                    this.removeInvalidClass();
+                }
             }
         }
     },
@@ -347,6 +369,20 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         this.$el = this.$el.add(this._renderTranslateButton());
         return def;
     },
+    /**
+     * Trim the value input by the user.
+     *
+     * @override
+     * @private
+     * @param {any} value
+     * @param {Object} [options]
+     */
+    _setValue: function (value, options) {
+        if (this.field.trim) {
+            value = value.trim();
+        }
+        return this._super(value, options);
+    },
 });
 
 
@@ -367,9 +403,10 @@ var LinkButton = AbstractField.extend({
         if (this.value) {
             var className = this.attrs.icon || 'fa-globe';
 
-            this.$el.html("<span />");
+            this.$el.html("<span role='img'/>");
             this.$el.addClass("fa "+ className);
             this.$el.attr('title', this.value);
+            this.$el.attr('aria-label', this.value);
         }
     },
 
@@ -424,7 +461,7 @@ var FieldDate = InputField.extend({
             def = this.datewidget.appendTo('<div>').done(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
-                self.replaceElement(self.datewidget.$el);
+                self._replaceElement(self.datewidget.$el);
             });
         }
         return $.when(def, this._super.apply(this, arguments));
@@ -605,7 +642,7 @@ var FieldMonetary = InputField.extend({
         this.$el.empty();
 
         // Prepare and add the input
-        this._prepareInput().appendTo(this.$el);
+        this._prepareInput(this.$input).appendTo(this.$el);
 
         if (this.currency) {
             // Prepare and add the currency symbol
@@ -670,8 +707,8 @@ var FieldBoolean = AbstractField.extend({
         // The formatValue of boolean fields renders HTML elements similar to
         // the one rendered by the widget itself. Even though the event might
         // have been fired on the non-widget version of this field, we can still
-        // test the presence of its o_checkbox class.
-        if (activated && options && options.event && $(options.event.target).parents('.o_checkbox').length) {
+        // test the presence of its custom class.
+        if (activated && options && options.event && $(options.event.target).closest('.custom-control.custom-checkbox').length) {
             this._setValue(!this.value);  // Toggle the checkbox
         }
         return activated;
@@ -705,6 +742,15 @@ var FieldBoolean = AbstractField.extend({
             this.activate();
         }
         return rendered;
+    },
+    /**
+     * Associates the 'for' attribute of the internal label.
+     *
+     * @override
+     */
+    setIDForLabel: function (id) {
+        this._super.apply(this, arguments);
+        this.$('.custom-control-label').attr('for', id);
     },
 
     //--------------------------------------------------------------------------
@@ -852,6 +898,146 @@ var FieldFloatTime = FieldFloat.extend({
     formatType: 'float_time',
 });
 
+var FieldFloatFactor = FieldFloat.extend({
+    supportedFieldTypes: ['float'],
+    className: 'o_field_float_factor',
+    formatType: 'float_factor',
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        // default values
+        if (!this.nodeOptions.factor){
+            this.nodeOptions.factor = 1;
+        }
+        // use as format and parse options
+        this.parseOptions = this.nodeOptions;
+    }
+});
+
+/**
+ * The goal of this widget is to replace the input field by a button containing a
+ * range of possible values (given in the options). Each click allows the user to loop
+ * in the range. The purpose here is to restrict the field value to a predefined selection.
+ * Also, the widget support the factor conversion as the *float_factor* widget (Range values
+ * should be the result of the conversion).
+ **/
+var FieldFloatToggle = AbstractField.extend({
+    supportedFieldTypes: ['float'],
+    formatType: 'float_factor',
+    className: 'o_field_float_toggle',
+    tagName: 'span',
+    events: {
+        click: '_onClick'
+    },
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.formatType = 'float_factor';
+
+        if (this.mode === 'edit') {
+            this.tagName = 'button';
+        }
+
+        // we don't inherit Float Field
+        if (this.attrs.digits) {
+            this.nodeOptions.digits = JSON.parse(this.attrs.digits);
+        }
+        // default values
+        if (!this.nodeOptions.factor){
+            this.nodeOptions.factor = 1;
+        }
+        if (!this.nodeOptions.range){
+            this.nodeOptions.range = [0.0, 0.5, 1.0];
+        }
+
+        // use as format and parse options
+        this.parseOptions = this.nodeOptions;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Get the display value but in real type to use it in calculations
+     *
+     * @private
+     * @returns {float} The current formatted value
+     */
+    _getDisplayedValue: function () {
+        return parseFloat(this._formatValue(this.value));
+    },
+    /**
+     * Formats the HTML input tag for edit mode and stores selection status.
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        // Keep a reference to the input so $el can become something else
+        // without losing track of the actual input.
+        this.$el.text(this._formatValue(this.value));
+    },
+    /**
+     * Resets the content to the formated value in readonly mode.
+     *
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.text(this._formatValue(this.value));
+    },
+    /**
+     * Get the next value in the range, from the current one. If the current
+     * one is not in the range, the next value of the closest one will be chosen.
+     *
+     * @private
+     * @returns {number} The next formatted value in the range
+     */
+    _nextValue: function () {
+        var range = this.nodeOptions.range;
+        var val =  utils.closestNumber(this._getDisplayedValue(), range);
+        var index = _.indexOf(range, val);
+        if (index !== -1) {
+            if (index + 1 < range.length) {
+                return range[index + 1];
+            }
+        }
+        return range[0];
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Clicking on the button triggers the change of value; the next one of
+     * the range will be displayed.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onClick: function(ev) {
+        if (this.mode === 'edit') {
+            ev.stopPropagation(); // only stop propagation in edit mode
+            var next_val = this._nextValue();
+            this._setValue(next_val.toString()); // will be parsed in _setValue
+        }
+    },
+
+});
+
+var FieldPercentage = FieldFloat.extend({
+    formatType:'percentage',
+});
+
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
@@ -965,87 +1151,22 @@ var FieldPhone = FieldEmail.extend({
     className: 'o_field_phone',
     prefix: 'tel',
 
-    /**
-     * The phone widget is an extension of email, with the distinction that, in
-     * some cases, we do not want to show a clickable widget in readonly.
-     * In particular, we only want to make it clickable if the device can call
-     * this particular number. This is controlled by the _canCall function.
-     *
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        if (this.mode === 'readonly' && !this._canCall()) {
-            this.tagName = 'span';
-        }
-    },
-    /**
-     * Returns the associated link only if there is one.
-     *
-     * @override
-     */
-    getFocusableElement: function () {
-        if (this.mode !== 'readonly' || this._canCall()) {
-            return this._super.apply(this, arguments);
-        }
-        return $();
-    },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
-     * In readonly, we only make the widget clickable if the device can call it.
-     * Additionally, we obfuscate the phone number to prevent Skype from seeing it.
-     *
      * @override
      * @private
      */
     _renderReadonly: function () {
         this._super();
-        if (this._canCall()) {
-            // Split phone number into two to prevent Skype app from finding it
-            var text = this.$el.text();
-            var part1 = _.escape(text.substr(0, text.length/2));
-            var part2 = _.escape(text.substr(text.length/2));
-            this.$el.html(part1 + "&shy;" + part2);
-        } else {
-            this.$el.removeClass('o_form_uri');
-        }
+
         // This class should technically be there in case of a very very long
         // phone number, but it breaks the o_row mechanism, which is more
         // important right now.
         this.$el.removeClass('o_text_overflow');
     },
-
-    /**
-     * Remove possibly present &shy; characters when saving number
-     *
-     * @override
-     * @private
-     */
-    _setValue: function (value, options) {
-        // NOT NEEDED AS OF SAAS-11.3
-        if (value) {
-            // remove possibly pasted &shy; characters
-            value = value.replace(/\u00AD/g, '');
-        }
-        return this._super(value, options);
-    },
-
-    /**
-     * Phone fields are clickable in readonly on small screens ~= on phones.
-     * This can be overriden by call-capable modules to display a clickable
-     * link in different situations, like always regardless of screen size,
-     * or only allow national calls for example.
-     *
-     * @override
-     * @private
-     */
-    _canCall: function () {
-        return config.device.size_class <= config.device.SIZES.XS;
-    }
 });
 
 var UrlWidget = InputField.extend({
@@ -1091,6 +1212,81 @@ var UrlWidget = InputField.extend({
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
+    }
+});
+
+var CopyClipboard = {
+
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.clipboard.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Instatiates the Clipboad lib.
+     */
+    _initClipboard: function () {
+        var self = this;
+        var $clipboardBtn = this.$('.o_clipboard_button');
+        $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
+        this.clipboard = new ClipboardJS($clipboardBtn[0], {
+            text: function (_) {
+               return self.value.trim();
+            },
+            // Container added because of Bootstrap modal that give the focus to another element.
+            // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
+            // https://github.com/zenorocha/clipboard.js/issues/155
+            container: self.$el[0]
+        });
+        this.clipboard.on('success', function () {
+            _.defer(function () {
+                $clipboardBtn.tooltip('show');
+                _.delay(function () {
+                    $clipboardBtn.tooltip('hide');
+                }, 800);
+            });
+        });
+    },
+};
+
+var TextCopyClipboard = FieldText.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardText')));
+        this._initClipboard();
+    }
+});
+
+var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _render: function() {
+        this._super.apply(this, arguments);
+        this.$el.addClass('o_field_copy');
+        this.$el.append($(qweb.render('CopyClipboardChar')));
+        this._initClipboard();
     }
 });
 
@@ -1225,6 +1421,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
         var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+        // override css size attributes (could have been defined in css files)
+        // if specified on the widget
+        var width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+        var height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+        if (width) {
+            $img.attr('width', width);
+            $img.css('max-width', width + 'px');
+        }
+        if (height) {
+            $img.attr('height', height);
+            $img.css('max-height', height + 'px');
+        }
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
@@ -1317,6 +1525,109 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
 });
 
+var FieldPdfViewer = FieldBinaryFile.extend({
+    supportedFieldTypes: ['binary'],
+    template: 'FieldPdfViewer',
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.PDFViewerApplication = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {DOMElement} iframe
+     */
+    _disableButtons: function (iframe) {
+        $(iframe).contents().find('button#openFile').hide();
+    },
+    /**
+     * @private
+     * @returns {string} the pdf viewer URI
+     */
+    _getURI: function () {
+        var queryObj = {
+            model: this.model,
+            field: this.name,
+            id: this.res_id,
+        };
+        var page = this.recordData[this.name + '_page'] || 1;
+        var queryString = $.param(queryObj);
+        var url = encodeURIComponent('/web/image?' + queryString);
+        var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
+        return viewerURL + url + '#page=' + page;
+    },
+    /**
+     * @private
+     * @override
+     */
+    _render: function () {
+        var self = this;
+        var $pdfViewer = this.$('.o_form_pdf_controls').children().add(this.$('.o_pdfview_iframe'));
+        var $selectUpload = this.$('.o_select_file_button').first();
+        var $iFrame = this.$('.o_pdfview_iframe');
+
+        $iFrame.on('load', function () {
+            self.PDFViewerApplication = this.contentWindow.window.PDFViewerApplication;
+            self._disableButtons(this);
+        });
+        if (this.mode === "readonly" && this.value) {
+            $iFrame.attr('src', this._getURI());
+        } else {
+            if (this.value) {
+                var binSize = utils.is_bin_size(this.value);
+                $pdfViewer.removeClass('o_hidden');
+                $selectUpload.addClass('o_hidden');
+                if (binSize) {
+                    $iFrame.attr('src', this._getURI());
+                }
+            } else {
+                $pdfViewer.addClass('o_hidden');
+                $selectUpload.removeClass('o_hidden');
+            }
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {Event} ev
+     */
+    on_file_change: function (ev) {
+        this._super.apply(this, arguments);
+        if (this.PDFViewerApplication) {
+            var files = ev.target.files;
+            if (!files || files.length === 0) {
+              return;
+            }
+            var file = files[0];
+            // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
+            this.PDFViewerApplication.open(URL.createObjectURL(file), 0);
+        }
+    },
+    /**
+     * Remove the behaviour of on_save_as in FieldBinaryFile.
+     *
+     * @override
+     * @private
+     * @param {MouseEvent} ev
+     */
+    on_save_as: function (ev) {
+        ev.stopPropagation();
+    },
+
+});
+
 var PriorityWidget = AbstractField.extend({
     // the current implementation of this widget makes it
     // only usable for fields of type selection
@@ -1376,6 +1687,7 @@ var PriorityWidget = AbstractField.extend({
     _renderStar: function (tag, isFull, index, tip) {
         return $(tag)
             .attr('title', tip)
+            .attr('aria-label', tip)
             .attr('data-index', index)
             .addClass('o_priority_star fa')
             .toggleClass('fa-star', isFull)
@@ -1445,7 +1757,8 @@ var AttachmentImage = AbstractField.extend({
         if (this.value) {
             this.$el.empty().append($('<img>/', {
                 src: "/web/image/" + this.value.data.id + "?unique=1",
-                title: this.value.data.display_name
+                title: this.value.data.display_name,
+                alt: _t("Image")
             }));
         }
     }
@@ -1454,10 +1767,7 @@ var AttachmentImage = AbstractField.extend({
 var StateSelectionWidget = AbstractField.extend({
     template: 'FormSelection',
     events: {
-        'click a': function (e) {
-            e.preventDefault();
-        },
-        'click li': '_setSelection'
+        'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
 
@@ -1514,7 +1824,9 @@ var StateSelectionWidget = AbstractField.extend({
         this.$('.o_status')
             .removeClass('o_status_red o_status_green')
             .addClass(currentState.state_class)
-            .prop('special_click', true);
+            .prop('special_click', true)
+            .parent().attr('title', currentState.state_name)
+            .attr('aria-label', currentState.state_name);
 
         // Render "FormSelection.Items" and move it into "FormSelection"
         var $items = $(qweb.render('FormSelection.items', {
@@ -1536,13 +1848,12 @@ var StateSelectionWidget = AbstractField.extend({
      * @param {MouseEvent} ev
      */
     _setSelection: function (ev) {
-        var li = $(ev.target).closest('li');
-        if (li.length) {
-            var value = String(li.data('value'));
-            this._setValue(value);
-            if (this.mode === 'edit') {
-                this._render();
-            }
+        ev.preventDefault();
+        var $item = $(ev.currentTarget);
+        var value = String($item.data('value'));
+        this._setValue(value);
+        if (this.mode === 'edit') {
+            this._render();
         }
     },
 });
@@ -1578,8 +1889,9 @@ var FavoriteWidget = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s"></i></a>' : '<a href="#"><i class="fa %s"></i> %s</a>';
-        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', this.value ? _t('Remove from Favorites') : _t('Add to Favorites')));
+        var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"></i> %s</a>';
+        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 
     //--------------------------------------------------------------------------
@@ -1617,7 +1929,7 @@ var LabelSelection = AbstractField.extend({
     _render: function () {
         this.classes = this.nodeOptions && this.nodeOptions.classes || {};
         var labelClass = this.classes[this.value] || 'primary';
-        this.$el.addClass('label label-' + labelClass).text(this._formatValue(this.value));
+        this.$el.addClass('badge badge-' + labelClass).text(this._formatValue(this.value));
     },
 });
 
@@ -1959,7 +2271,10 @@ var FieldProgressBar = AbstractField.extend({
             widthComplete = 100;
         }
 
-        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value);
+        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value)
+            .attr('aria-valuemin', '0')
+            .attr('aria-valuemax', max_value)
+            .attr('aria-valuenow', value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
         if (!this.write_mode) {
@@ -2016,6 +2331,7 @@ var FieldToggleBoolean = AbstractField.extend({
             .toggleClass('text-muted', !this.value);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
+        this.$el.attr('aria-pressed', this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -2101,7 +2417,7 @@ var JournalDashboardGraph = AbstractField.extend({
                     self.chart.forceY([0]);
                     self.chart.options({
                         x: function (d, u) { return u; },
-                        margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
+                        margin: {'left': 0, 'right': 0, 'top': 5, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
                     });
@@ -2402,7 +2718,7 @@ var FieldDomain = AbstractField.extend({
 var AceEditor = DebouncedField.extend({
     template: "AceEditor",
     jsLibs: [
-        '/web/static/lib/ace/ace.odoo-custom.js',
+        '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-python.js',
             '/web/static/lib/ace/mode-xml.js'
@@ -2510,61 +2826,12 @@ var AceEditor = DebouncedField.extend({
     },
 });
 
-var ImageSelection = AbstractField.extend({
-    supportedFieldTypes: ['selection'],
-    events: _.extend({}, AbstractField.prototype.events, {
-        'click img': '_onImgClicked',
-    }),
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
-        var self = this;
-        this.$el.empty();
-        _.each(this.nodeOptions, function (val, key) {
-            var $container = $('<div>').addClass('col-xs-3 text-center');
-            var $img = $('<img>')
-                .addClass('img img-responsive img-thumbnail ml16')
-                .toggleClass('btn-info', key === self.value)
-                .attr('src', val.image_link)
-                .data('key', key);
-            $container.append($img);
-            if (val.preview_link) {
-                var $previewLink = $('<a>')
-                    .text('Preview')
-                    .attr('href', val.preview_link)
-                    .attr('target', '_blank');
-                $container.append($previewLink);
-            }
-            self.$el.append($container);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onImgClicked: function (event) {
-        this._setValue($(event.currentTarget).data('key'));
-    },
-});
-
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
+    FieldPdfViewer: FieldPdfViewer,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,
@@ -2576,6 +2843,9 @@ return {
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
+    FieldFloatFactor: FieldFloatFactor,
+    FieldFloatToggle: FieldFloatToggle,
+    FieldPercentage : FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
@@ -2586,13 +2856,14 @@ return {
     HandleWidget: HandleWidget,
     InputField: InputField,
     AttachmentImage: AttachmentImage,
-    ImageSelection: ImageSelection,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
     FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,
+    TextCopyClipboard: TextCopyClipboard,
+    CharCopyClipboard: CharCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
 };

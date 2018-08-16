@@ -8,38 +8,40 @@
             <field name="name">Reminder for Goal Update</field>
             <field name="model_id" ref="gamification.model_gamification_goal"/>
             <field name="lang">${object.user_id.lang}</field>
-            <field name="body_html"><![CDATA[
-    <p>
-        <strong>Reminder ${object.name}</strong>
-    </p>
-    
-    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
-            ]]></field>
+            <field name="body_html" type="html">
+<div>
+    <strong>Reminder ${object.name}</strong><br/>
+You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.
+<br/><br/>
+Thank you,
+    <br/>
+    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:
+    ${object.challenge_id.manager_id.signature | safe}
+    % endif
+</div></field>
         </record>
         
         <record id="simple_report_template" model="mail.template">
             <field name="name">Simple Challenge Report Progress</field>
             <field name="model_id" ref="gamification.model_gamification_challenge"/>
-            <field name="body_html">
-                <![CDATA[ 
-% set record = ctx.get('record')
-% set company = record and record.company_id or user.company_id
-% set challenge_lines = ctx.get('challenge_lines', [])     
-<table cellspacing="0" cellpadding="0" width="100%" style="font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;">
+            <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
 <tr>
     <td valign="top" align="center">
-        <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 600px;">
+        % set record = ctx.get('record')
+        % set company = record and record.company_id or user.company_id
+        % set challenge_lines = ctx.get('challenge_lines', [])     
+        <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 570px;">
             <tr><td>
                 <table cellspacing="0" cellpadding="0" width="100%">
                     <tr>
-                        <td valign="middle" align="left" style="padding:30px 15px;">
-                            <img width="90" src="/logo.png?company=${user.company_id.id}" style="width:80px;"/>
-                        </td>
-                        % if object.visibility_mode == 'ranking':
-                            <td style="padding:15px;">
-                                <p style="font-size:20px;color:#666666;" align="right">Leaderboard</p>
-                            </td>
-                        % endif
+                        <div>
+                            % if object.visibility_mode == 'ranking':
+                                <td style="padding:15px;">
+                                    <p style="font-size:20px;color:#666666;" align="center">Leaderboard</p>
+                                </td>
+                            % endif
+                        </div>
                     </tr>
                 </table>
                 <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
@@ -49,7 +51,7 @@
                             <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:20px;">
                                 <tr>
                                     <td align="center">
-                                        <p style="font-size:27px;color:#666666;">Personal Performance</p>
+                                        <div>Personal Performance</div>
                                     </td>
                                 </tr>
                             </table>
@@ -67,11 +69,7 @@
                                 </thead>
                                 <tbody>
                                 % for line in challenge_lines:
-                                    <tr
-                                        % if line['completeness'] >= 100:
-                                            style="font-weight:bold;"
-                                        % endif
-                                        >
+                                    <tr style="font-weight:bold;">
                                         <td style="padding: 20px 0;" align="left">
                                             ${line['name']}
                                             % if line['suffix'] or line['monetary']:
@@ -102,15 +100,15 @@
                             </span> 
                             % for line in challenge_lines:
                                 <!-- Header + Button table -->
-                                <table cellspacing="0" cellpadding="0" width="100%"style="margin-top:35px;">
+                                <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:35px;">
                                     <tr>
                                         <td width="50%">
-                                            <p style="font-size:22px;color:#666666;">Top Achievers for goal <strong>${line['name']}</strong></p>
+                                            <div>Top Achievers for goal <strong>${line['name']}</strong></div>
                                         </td>
                                     </tr>
                                 </table>
                                 <!-- Podium -->
-                                % if len(line['goals'])>2:
+                                % if len(line['goals']) == 2:
                                     <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:10px;">
                                         <tr><td style="padding:0 30px;">
                                             <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
@@ -149,18 +147,16 @@
                                                                     </div> 
                                                                     <div align="center" style ="color:${bgColor};height:20px">
                                                                         ${goal['name']}
-                                                                    </div 
+                                                                    </div>
                                                                 </div>
                                                                 <div style="background-color:${bgColor | safe};height:${heightB}px;">
                                                                     <strong><span style="color:#fff;font-size:${fontSize}px;">${podiumPosition | safe}</span></strong>
                                                                 </div>
                                                                 <div style="height:30px;">
-                                                                    <p style="color:#9A6C8E;font-size:20px;margin-top:10px;">
-                                                                        ${"%.2f" % goal['current']}
-                                                                        % if line['suffix'] or line['monetary']:
-                                                                            ${line['full_suffix']}
-                                                                        % endif
-                                                                    </p>
+                                                                    ${"%.2f" % goal['current']}
+                                                                    % if line['suffix'] or line['monetary']:
+                                                                        ${line['full_suffix']}
+                                                                    % endif
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -187,7 +183,7 @@
                                                                 (${company.currency_id.symbol})
                                                             % endif
                                                         </th>
-                                                        <th style="width:30%;text-align:right;"">Completeness</th>
+                                                        <th style="width:30%;text-align:right;">Completeness</th>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="5" style="height:1px;background-color:#9A6C8E;"></td>
@@ -220,43 +216,12 @@
                         % endif
                     </td></tr>
                 </table>
-                <table cellspacing="0" cellpadding="0" width="100%" style="padding: 15px; color: #666666;margin-bottom: 5px;">
-                    <tr>
-                        <td align="center" style="min-width: 590px;">
-                            <table width="580" border="0" cellpadding="0" style="min-width: 580px; font-size: 12px;">
-                                <tr>
-                                    <td valign="middle" align="left" style="padding-top: 10px; padding-bottom: 10px;">
-                                        ${company.name}<br/>
-                                        ${company.phone or ''}
-                                    </td>
-                                    <td valign="middle" align="right" style="padding-top: 10px; padding-bottom: 10px;">
-                                        % if company.email:
-                                            <a href="mailto:${company.email}" style="text-decoration:none; color: #666666;">${company.email}</a><br/>
-                                        % endif
-                                        % if company.website:
-                                            <a href="${company.website}" style="text-decoration:none; color: #666666;">
-                                               ${company.website}
-                                            </a>
-                                        % endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> 
-                    <tr>
-                        <td align="center">
-                            Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.
-                        </td>
-                    </tr>
-                </table>
             </td></tr>
         </table>
     </td>
 </tr>
 </table>
-            ]]>
-
-</field>
+            </field>
         </record>
 
         <!-- goal definitions -->

@@ -3,3 +3,4 @@
 
 from . import res_config_settings
 from . import mass_mailing_list
+from . import res_users

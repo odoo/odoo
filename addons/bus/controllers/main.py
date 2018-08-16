@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import exceptions
+from odoo import exceptions, _
 from odoo.http import Controller, request, route
 from odoo.addons.bus.models.bus import dispatch
 
@@ -38,5 +38,5 @@ class BusController(Controller):
         if [c for c in channels if not isinstance(c, pycompat.string_types)]:
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():
-            raise exceptions.UserError("bus.Bus not available in test mode")
+            raise exceptions.UserError(_("bus.Bus not available in test mode"))
         return self._poll(request.db, channels, last, options)

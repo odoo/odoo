@@ -25,7 +25,7 @@ class KarmaError(Forbidden):
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
 
     @api.model_cr
     def init(self):
@@ -55,11 +55,11 @@ class Forum(models.Model):
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <h1 class="text-center" style="text-align: left;">Welcome!</h1>
                                 <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
                             </div>
                         </div>
@@ -208,6 +208,7 @@ class Post(models.Model):
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -312,7 +313,7 @@ class Post(models.Model):
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
         if self.create_date:
-            days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            days = (datetime.today() - self.create_date).days
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
@@ -435,12 +436,12 @@ class Post(models.Model):
         post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
         # deleted or closed questions
         if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible'))
+            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
         # karma-based access
         if not post.parent_id and not post.can_ask:
-            raise KarmaError('Not enough karma to create a new question')
+            raise KarmaError('You don\'t have enough karma to create a new question.')
         elif post.parent_id and not post.can_answer:
-            raise KarmaError('Not enough karma to answer to a question')
+            raise KarmaError('You don\'t have enough karma to answer a question.')
         if not post.parent_id and not post.can_post:
             post.sudo().state = 'pending'
 
@@ -798,17 +799,19 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Post, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is active. """
+        groups = super(Post, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+        if self.state == 'active':
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
 
         return groups
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, message_type='notification', subtype=None, **kwargs):
+    def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
@@ -828,18 +831,16 @@ class Post(models.Model):
                 raise KarmaError('Not enough karma to comment')
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
+        return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
-    def message_get_message_notify_values(self, message, message_values):
+    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        if message.message_type == 'comment':
-            return {
-                'needaction_partner_ids': [],
-                'partner_ids': [],
-            }
+        msg_type = msg_vals.get('message_type') or message.message_type
+        if msg_type == 'comment':
+            return {'needaction_partner_ids': [], 'partner_ids': []}
         return {}
 
 
@@ -877,12 +878,12 @@ class Vote(models.Model):
 
         # own post check
         if vote.user_id.id == vote.post_id.create_uid.id:
-            raise UserError(_('Not allowed to vote for its own post'))
+            raise UserError(_('It is not allowed to vote for its own post.'))
         # karma check
         if vote.vote == '1' and not vote.post_id.can_upvote:
-            raise KarmaError('Not enough karma to upvote.')
+            raise KarmaError('You don\'t have enough karma toupvote.')
         elif vote.vote == '-1' and not vote.post_id.can_downvote:
-            raise KarmaError('Not enough karma to downvote.')
+            raise KarmaError('You don\'t have enough karma to downvote.')
 
         if vote.post_id.parent_id:
             karma_value = self._get_karma_value('0', vote.vote, vote.forum_id.karma_gen_answer_upvote, vote.forum_id.karma_gen_answer_downvote)
@@ -897,12 +898,12 @@ class Vote(models.Model):
             for vote in self:
                 # own post check
                 if vote.user_id.id == vote.post_id.create_uid.id:
-                    raise UserError(_('Not allowed to vote for its own post'))
+                    raise UserError(_('It is not allowed to vote for its own post.'))
                 # karma check
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0') and not vote.post_id.can_upvote:
-                    raise KarmaError('Not enough karma to upvote.')
+                    raise KarmaError('You don\'t have enough karma to upvote.')
                 elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0') and not vote.post_id.can_downvote:
-                    raise KarmaError('Not enough karma to downvote.')
+                    raise KarmaError('You don\'t have enough karma to downvote.')
 
                 # karma update
                 if vote.post_id.parent_id:
@@ -941,5 +942,5 @@ class Tags(models.Model):
     def create(self, vals):
         forum = self.env['forum.forum'].browse(vals.get('forum_id'))
         if self.env.user.karma < forum.karma_tag_create:
-            raise KarmaError(_('Not enough karma to create a new Tag'))
+            raise KarmaError(_('You don\'t have enough karma to create a new Tag.'))
         return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)

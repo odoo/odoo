@@ -30,7 +30,7 @@ import odoo.modules
 from odoo import api, models, fields
 from odoo.tools import ustr, pycompat
 from odoo.tools import html_escape as escape
-from odoo.addons.base.ir import ir_qweb
+from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -46,7 +46,9 @@ class QWeb(models.AbstractModel):
 
     def _compile_directive_snippet(self, el, options):
         el.set('t-call', el.attrib.pop('t-snippet'))
-        name = self.env['ir.ui.view'].search([('key', '=', el.attrib.get('t-call'))]).display_name
+        View = self.env['ir.ui.view']
+        view_id = View.get_view_id(el.attrib.get('t-call'))
+        name = View.browse(view_id).display_name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s">' % (
             escape(pycompat.to_text(name)),
@@ -144,10 +146,11 @@ class ManyToOne(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
-        many2one = getattr(record, field_name)
-        if many2one:
-            attrs['data-oe-many2one-id'] = many2one.id
-            attrs['data-oe-many2one-model'] = many2one._name
+        if options.get('inherit_branding'):
+            many2one = getattr(record, field_name)
+            if many2one:
+                attrs['data-oe-many2one-id'] = many2one.id
+                attrs['data-oe-many2one-model'] = many2one._name
         return attrs
 
     @api.model
@@ -173,8 +176,9 @@ class Contact(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Contact, self).attributes(record, field_name, options, values)
-        options.pop('template_options') # remove options not specific to this widget
-        attrs['data-oe-contact-options'] = json.dumps(options)
+        if options.get('inherit_branding'):
+            options.pop('template_options') # remove options not specific to this widget
+            attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
     # helper to call the rendering of contact field
@@ -190,7 +194,8 @@ class Date(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Date, self).attributes(record, field_name, options, values)
-        attrs['data-oe-original'] = record[field_name]
+        if options.get('inherit_branding'):
+            attrs['data-oe-original'] = record[field_name]
         return attrs
 
     @api.model
@@ -209,14 +214,15 @@ class DateTime(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
-        value = record[field_name]
-        if isinstance(value, pycompat.string_types):
-            value = fields.Datetime.from_string(value)
-        if value:
-            # convert from UTC (server timezone) to user timezone
-            value = fields.Datetime.context_timestamp(self, timestamp=value)
-            value = fields.Datetime.to_string(value)
-        attrs['data-oe-original'] = value
+        if options.get('inherit_branding'):
+            value = record[field_name]
+            if isinstance(value, pycompat.string_types):
+                value = fields.Datetime.from_string(value)
+            if value:
+                # convert from UTC (server timezone) to user timezone
+                value = fields.Datetime.context_timestamp(self, timestamp=value)
+                value = fields.Datetime.to_string(value)
+            attrs['data-oe-original'] = value
         return attrs
 
     @api.model
@@ -396,7 +402,8 @@ class Duration(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Duration, self).attributes(record, field_name, options, values)
-        attrs['data-oe-original'] = record[field_name]
+        if options.get('inherit_branding'):
+            attrs['data-oe-original'] = record[field_name]
         return attrs
 
     @api.model

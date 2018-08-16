@@ -9,6 +9,7 @@ var framework = require('web.framework');
 var FieldText = basicFields.FieldText;
 var QWeb = core.qweb;
 
+var _t = core._t
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
  * the number of SMS and the number of characters. This text is computed every
@@ -89,7 +90,7 @@ var SmsWidget = FieldText.extend({
      * @private
      */
     _renderSMS: function () {
-        this.$('.o_sms_count').text(this.nbrChar + ' / ' + this.nbrSMS + ' SMS (' + this.encoding + ') ');
+        this.$('.o_sms_count').text(_.str.sprintf(_t('%s chars, fits in %s SMS (%s) '), this.nbrChar, this.nbrSMS, this.encoding));
     },
 
     //--------------------------------------------------------------------------

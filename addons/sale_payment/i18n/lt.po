@@ -4,42 +4,35 @@
 # 
 # Translators:
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"POT-Creation-Date: 2017-11-07 15:45+0000\n"
+"PO-Revision-Date: 2017-11-07 15:45+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:124
+#: code:addons/sale_payment/models/payment.py:111
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr "<%s> transakcija (%s) nepavyko: <%s>"
+msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:131
+#: code:addons/sale_payment/models/payment.py:118
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:139
+#: code:addons/sale_payment/models/payment.py:126
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr ""
@@ -69,19 +62,11 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Atlikta</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<strong>Transactions</strong>"
-msgstr "<strong>Transakcijos</strong>"
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
-#, python-format
-msgid "Amount Mismatch (%s)"
-msgstr "Sumos nesutapimas (%s)"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
@@ -115,18 +100,16 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-"Jei išsaugosime Jūsų mokėjimo informaciją savo serveryje, abonementiniai "
-"mokėjimai bus atlikti automatiškai."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
 msgid "Last Transaction"
-msgstr "Paskutinė transakcija"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
 msgid "Number of payment transactions"
-msgstr "Mokėjimo transakcijų skaičius "
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
@@ -139,13 +122,18 @@ msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
+msgid "Order successfully paid."
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:200
+#: code:addons/sale_payment/models/payment.py:187
 #, python-format
 msgid "Pay Now"
 msgstr "Mokėti dabar"
@@ -153,7 +141,7 @@ msgstr "Mokėti dabar"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "Pay with"
-msgstr "Apmokėti su"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
@@ -186,27 +174,14 @@ msgid "Quotation"
 msgstr "Įkainojimas"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
-msgid "Sale Order State"
-msgstr ""
-
-#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
-msgstr "Pardavimo kanalas"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "Pardavimo užsakymas"
-
-#. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
-#, python-format
-msgid ""
-"The sale order was not confirmed despite response from the acquirer (%s): SO"
-" amount is %r but acquirer replied with %r."
-msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -230,39 +205,30 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-"Įvyko klaida apdorojant Jūsų mokėjimą: problema dėl kredito kortelės ID "
-"patvirtinimo."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
-"Įvyko klaida apdorojant Jūsų mokėjimą: transakcijos sumos problema.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: transakcija nepavyko.<br/>"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr "Įvyko klaida apdorojant Jūsų mokėjimą: transakcijos problema.<br/>"
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-"Įvyko klaida apdorojant Jūsų mokėjimą: netinkamas kredito kortelės ID."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Operacijos"
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
-msgid "Your payment has been authorized."
-msgstr "Jūsų mokėjimas buvo patvirtintas."

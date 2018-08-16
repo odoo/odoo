@@ -32,8 +32,11 @@
             <xpath expr="//button[@special='cancel']" position="attributes">
                   <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_close_dialog']" position="before">
-                <button string="Schedule a meeting"
+                <button string="Open Calendar"
                     attrs="{'invisible': [('activity_category', '!=', 'meeting')]}"
                     name="action_create_calendar_event"
                     type="object"

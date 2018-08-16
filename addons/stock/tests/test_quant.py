@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import closing
 from datetime import datetime, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
-
 
 class StockQuant(TransactionCase):
     def setUp(self):
@@ -221,22 +221,19 @@ class StockQuant(TransactionCase):
         the reserved quanntity for the same product.
         """
         stock_location = self.env.ref('stock.stock_location_stock')
-        product = self.env.ref('stock.test_quant_product')
-        product.type = 'product'  # product 12 is a consumable by default
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 10.0)
-
+        quant = self.env['stock.quant'].search([('location_id', '=', stock_location.id)], limit=1)
+        product = quant.product_id
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, stock_location)
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
-        cr2 = self.registry.cursor()
-        cr2.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, stock_location.id))
-        quant_id = cr2.fetchone()
-        cr2.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
+        with closing(self.registry.cursor()) as cr:
+            cr.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, stock_location.id))
+            quant_id = cr.fetchone()
+            cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 1.0)
 
-        self.env['stock.quant']._update_available_quantity(product, stock_location, 1.0)
-        cr2.rollback()
-        cr2.close()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 11.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), available_quantity + 1)
+        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location, strict=True)), 2)
 
     def test_increase_available_quantity_4(self):
         """ Increase the available quantity when no quants are already in a location with a user without access right.
@@ -337,20 +334,18 @@ class StockQuant(TransactionCase):
         the reserved quanntity for the same product.
         """
         stock_location = self.env.ref('stock.stock_location_stock')
-        product = self.env.ref('stock.test_quant_product')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 10.0)
-        quants = self.env['stock.quant']._gather(product, stock_location)
-        self.assertEqual(len(quants), 1)
+        quant = self.env['stock.quant'].search([('location_id', '=', stock_location.id)], limit=1)
+        product = quant.product_id
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, stock_location)
 
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
-        cr2 = self.registry.cursor()
-        cr2.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quants.ids)
-        self.env['stock.quant']._update_available_quantity(product, stock_location, -1.0)
-        cr2.rollback()
-        cr2.close()
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 9.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
+        with closing(self.registry.cursor()) as cr:
+            cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quant.ids)
+            self.env['stock.quant']._update_available_quantity(product, stock_location, -1.0)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), available_quantity - 1)
+        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location, strict=True)), 2)
 
     def test_decrease_available_quantity_4(self):
         """ Decrease the available quantity that delete the quant. The active user should have
@@ -527,6 +522,7 @@ class StockQuant(TransactionCase):
     def test_action_done_1(self):
         stock_location = self.env.ref('stock.stock_location_stock')
         pack_location = self.env.ref('stock.location_pack_zone')
+        pack_location.active = True
         product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
@@ -767,7 +763,8 @@ class StockQuant(TransactionCase):
             'product_id': product1.id,
         })
 
-        in_date1 = datetime.now()
+        from odoo.fields import Datetime
+        in_date1 = Datetime.now()
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date1)
 
         quant = self.env['stock.quant'].search([
@@ -777,10 +774,9 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 1)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        from odoo.fields import Datetime
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date1))
+        self.assertEqual(quant.in_date, in_date1)
 
-        in_date2 = datetime.now() - timedelta(days=5)
+        in_date2 = Datetime.now() - timedelta(days=5)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date2)
 
         quant = self.env['stock.quant'].search([
@@ -790,4 +786,4 @@ class StockQuant(TransactionCase):
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.quantity, 2)
         self.assertEqual(quant.lot_id.id, lot1.id)
-        self.assertEqual(quant.in_date, Datetime.to_string(in_date2))
+        self.assertEqual(quant.in_date, in_date2)

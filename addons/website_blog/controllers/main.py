@@ -8,10 +8,9 @@ import pytz
 import babel.dates
 from collections import OrderedDict
 
-from odoo import http, fields, _
+from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import html2plaintext
 
@@ -49,13 +48,14 @@ class WebsiteBlog(http.Controller):
         '/blog/page/<int:page>',
     ], type='http', auth="public", website=True)
     def blogs(self, page=1, **post):
+        domain = request.website.website_domain()
         Blog = request.env['blog.blog']
-        blogs = Blog.search([], limit=2)
+        blogs = Blog.search(domain, limit=2)
         if len(blogs) == 1:
             return werkzeug.utils.redirect('/blog/%s' % slug(blogs[0]), code=302)
 
         BlogPost = request.env['blog.post']
-        total = BlogPost.search([], count=True)
+        total = BlogPost.search_count(domain)
 
         pager = request.website.pager(
             url='/blog',
@@ -63,7 +63,7 @@ class WebsiteBlog(http.Controller):
             page=page,
             step=self._blog_post_per_page,
         )
-        posts = BlogPost.search([], offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page)
+        posts = BlogPost.search(domain, offset=(page - 1) * self._blog_post_per_page, limit=self._blog_post_per_page)
         blog_url = QueryURL('', ['blog', 'tag'])
         return request.render("website_blog.latest_blogs", {
             'posts': posts,
@@ -72,10 +72,10 @@ class WebsiteBlog(http.Controller):
         })
 
     @http.route([
-        '/blog/<model("blog.blog"):blog>',
-        '/blog/<model("blog.blog"):blog>/page/<int:page>',
-        '/blog/<model("blog.blog"):blog>/tag/<string:tag>',
-        '/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>',
+        '''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>''',
+        '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
+        '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
+        '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
     ], type='http', auth="public", website=True)
     def blog(self, blog=None, tag=None, page=1, **opt):
         """ Prepare all values to display the blog.
@@ -93,16 +93,19 @@ class WebsiteBlog(http.Controller):
          - 'date': date_begin optional parameter, used in archives navigation
          - 'blog_url': help object to create URLs
         """
+        if not blog.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
         published_count, unpublished_count = 0, 0
+
+        domain = request.website.website_domain()
 
         BlogPost = request.env['blog.post']
 
         Blog = request.env['blog.blog']
-        blogs = Blog.search([], order="create_date asc")
+        blogs = Blog.search(domain, order="create_date asc")
 
-        # build the domain for blog post to display
-        domain = []
         # retrocompatibility to accept tag as slug
         active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
@@ -150,11 +153,15 @@ class WebsiteBlog(http.Controller):
                 tag_ids.append(current_tag)
             tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
             return ','.join(slug(tag) for tag in tag_ids)
+
+        tag_category = sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper())
+        other_tags =  sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper())
+
         values = {
             'blog': blog,
             'blogs': blogs,
             'main_object': blog,
-            'tags': all_tags,
+            'other_tags': other_tags,
             'state_info': {"state": state, "published": published_count, "unpublished": unpublished_count},
             'active_tag_ids': active_tag_ids,
             'tags_list' : tags_list,
@@ -164,11 +171,12 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(blog),
             'blog_url': blog_url,
             'date': date_begin,
+            'tag_category': tag_category,
         }
         response = request.render("website_blog.blog_post_short", values)
         return response
 
-    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
+    @http.route(['''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/feed'''], type='http', auth="public")
     def blog_feed(self, blog, limit='15'):
         v = {}
         v['blog'] = blog
@@ -181,7 +189,7 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-            '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
+            '''/blog/<model("blog.blog", "[('website_id', 'in', (False, current_website_id))]"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
     ], type='http', auth="public", website=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -197,6 +205,9 @@ class WebsiteBlog(http.Controller):
          - 'nav_list': a dict [year][month] for archives navigation
          - 'next_post': next blog post, to direct the user towards the next interesting post
         """
+        if not blog.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         BlogPost = request.env['blog.post']
         date_begin, date_end = post.get('date_begin'), post.get('date_end')
 
@@ -265,48 +276,14 @@ class WebsiteBlog(http.Controller):
             })
         return response
 
-    def _blog_post_message(self, blog_post_id, message_content, **post):
-        BlogPost = request.env['blog.post']
-        # for now, only portal and user can post comment on blog post.
-        if request.env.user.id == request.website.user_id.id:
-            raise UserError(_('Public user cannot post comments on blog post.'))
-        # get the partner of the current user
-        partner_id = request.env.user.partner_id.id
-
-        message = BlogPost.message_post(
-            int(blog_post_id),
-            body=message_content,
-            message_type='comment',
-            subtype='mt_comment',
-            author_id=partner_id,
-            path=post.get('path', False),
-        )
-        return message.id
-
-    def _get_discussion_detail(self, ids, publish=False, **post):
-        values = []
-        for message in request.env['mail.message'].sudo().browse(ids):
-            values.append({
-                "id": message.id,
-                "author_name": message.author_id.name,
-                "author_image": message.author_id.image and \
-                    (b"data:image/png;base64,%s" % message.author_id.image) or \
-                    b'/website_blog/static/src/img/anonymous.png',
-                "date": message.date,
-                'body': html2plaintext(message.body),
-                'website_published' : message.website_published,
-                'publish' : publish,
-            })
-        return values
-
-    @http.route(['/blog/post_discussion'], type='json', auth="public", website=True)
-    def post_discussion(self, blog_post_id, **post):
-        publish = request.env.user.has_group('website.group_website_publisher')
-        message_id = self._blog_post_message(blog_post_id, post.get('comment'), **post)
-        return self._get_discussion_detail([message_id], publish, **post)
-
     @http.route('/blog/<int:blog_id>/post/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
+        # Use sudo so this line prevents both editor and admin to access blog from another website
+        # as browse() will return the record even if forbidden by security rules but editor won't
+        # be able to access it
+        if not request.env['blog.blog'].browse(blog_id).sudo().can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         new_blog_post = request.env['blog.post'].create({
             'blog_id': blog_id,
             'website_published': False,
@@ -324,32 +301,13 @@ class WebsiteBlog(http.Controller):
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
         return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_get_discussion/', type='json', auth="public", website=True)
-    def discussion(self, post_id=0, path=None, count=False, **post):
-        domain = [('res_id', '=', int(post_id)), ('model', '=', 'blog.post'), ('path', '=', path)]
-        #check current user belongs to website publisher group
-        publish = request.env.user.has_group('website.group_website_publisher')
-        if not publish:
-            domain.append(('website_published', '=', True))
-        messages = request.env['mail.message'].sudo().search(domain, count=count)
-        if count:
-            return messages.ids
-        return self._get_discussion_detail(messages.ids, publish, **post)
-
-    @http.route('/blog/post_get_discussions/', type='json', auth="public", website=True)
-    def discussions(self, post_id=0, paths=None, count=False, **post):
-        ret = []
-        for path in paths:
-            result = self.discussion(post_id=post_id, path=path, count=count, **post)
-            ret.append({"path": path, "val": result})
-        return ret
-
     @http.route('/blog/post_change_background', type='json', auth="public", website=True)
     def change_bg(self, post_id=0, cover_properties={}, **post):
         if not post_id:
             return False
         return request.env['blog.post'].browse(int(post_id)).write({'cover_properties': json.dumps(cover_properties)})
 
-    @http.route('/blog/get_user/', type='json', auth="public", website=True)
-    def get_user(self, **post):
-        return [False if request.session.uid else True]
+    @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
+    def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):
+        posts = request.env['blog.post'].search(domain, limit=limit, order=order)
+        return request.env.ref(template).render({'posts': posts})

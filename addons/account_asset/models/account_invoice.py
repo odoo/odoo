@@ -5,7 +5,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 from odoo.addons import decimal_precision as dp
 
@@ -60,15 +59,15 @@ class AccountInvoiceLine(models.Model):
         cat = self.asset_category_id
         if cat:
             if cat.method_number == 0 or cat.method_period == 0:
-                raise UserError(_('The number of depreciations or the period length of your asset category cannot be null.'))
+                raise UserError(_('The number of depreciations or the period length of your asset category cannot be 0.'))
             months = cat.method_number * cat.method_period
             if self.invoice_id.type in ['out_invoice', 'out_refund']:
                 self.asset_mrr = self.price_subtotal_signed / months
             if self.invoice_id.date_invoice:
-                start_date = datetime.strptime(self.invoice_id.date_invoice, DF).replace(day=1)
+                start_date = self.invoice_id.date_invoice.replace(day=1)
                 end_date = (start_date + relativedelta(months=months, days=-1))
-                self.asset_start_date = start_date.strftime(DF)
-                self.asset_end_date = end_date.strftime(DF)
+                self.asset_start_date = start_date
+                self.asset_end_date = end_date
 
     @api.one
     def asset_create(self):

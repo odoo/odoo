@@ -63,7 +63,7 @@ _LOCALE2WIN32 = {
     'hi_IN': 'Hindi',
     'hu': 'Hungarian_Hungary',
     'is_IS': 'Icelandic_Iceland',
-    'id_ID': 'Indonesian_indonesia',
+    'id_ID': 'Indonesian_Indonesia',
     'it_IT': 'Italian_Italy',
     'ja_JP': 'Japanese_Japan',
     'kn_IN': 'Kannada',
@@ -85,7 +85,7 @@ _LOCALE2WIN32 = {
     'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
     'sk_SK': 'Slovak_Slovakia',
     'sl_SI': 'Slovenian_Slovenia',
-    #should find more specific locales for spanish countries,
+    #should find more specific locales for Spanish countries,
     #but better than nothing
     'es_AR': 'Spanish_Spain',
     'es_BO': 'Spanish_Spain',
@@ -116,7 +116,7 @@ _LOCALE2WIN32 = {
 
 }
 
-# These are not all english small words, just those that could potentially be isolated within views
+# These are not all English small words, just those that could potentially be isolated within views
 ENGLISH_SMALL_WORDS = set("as at by do go if in me no of ok on or to up us we".split())
 
 
@@ -143,8 +143,11 @@ TRANSLATED_ELEMENTS = {
 
 # which attributes must be translated
 TRANSLATED_ATTRS = {
-    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
+    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
+    'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
 }
+
+TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
@@ -410,7 +413,7 @@ class GettextAlias(object):
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
-                #          don't know the originial uid, so the language may
+                #          don't know the original uid, so the language may
                 #          be wrong when the admin language differs.
                 (cr, dummy) = self._get_cr(frame, allow_create=False)
                 uid = self._get_uid(frame)
@@ -560,8 +563,8 @@ class PoFile(object):
             if not source and self.first:
                 self.first = False
                 # if the source is "" and it's the first msgid, it's the special
-                # msgstr with the informations about the traduction and the
-                # traductor; we skip it
+                # msgstr with the information about the translate and the
+                # translator; we skip it
                 self.extra_lines = []
                 while line:
                     line = self.lines.pop(0).strip()
@@ -590,7 +593,7 @@ class PoFile(object):
 
         if name is None:
             if not fuzzy:
-                _logger.warning('Missing "#:" formated comment at line %d for the following source:\n\t%s',
+                _logger.warning('Missing "#:" formatted comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
             return next(self)
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
@@ -638,7 +641,7 @@ class PoFile(object):
                 code = True
 
         if code:
-            # only strings in python code are python formated
+            # only strings in python code are python formatted
             self.buffer.write(u"#, python-format\n")
 
         msg = (
@@ -683,27 +686,31 @@ def trans_export(lang, modules, buffer, format, cr):
                     # translation template, so no translation value
                     row['translation'] = ''
                 elif not row.get('translation'):
-                    row['translation'] = src
+                    row['translation'] = ''
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
-            rows_by_module = {}
+            rows_by_module = defaultdict(list)
             for row in rows:
                 module = row[0]
-                rows_by_module.setdefault(module, []).append(row)
-            tmpdir = tempfile.mkdtemp()
-            for mod, modrows in rows_by_module.items():
-                tmpmoddir = join(tmpdir, mod, 'i18n')
-                os.makedirs(tmpmoddir)
-                pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
-                buf = open(join(tmpmoddir, pofilename), 'wb')
-                _process('po', [mod], modrows, buf, lang)
-                buf.close()
+                rows_by_module[module].append(row)
 
-            tar = tarfile.open(fileobj=buffer, mode='w|gz')
-            tar.add(tmpdir, '')
-            tar.close()
+            with tarfile.open(fileobj=buffer, mode='w|gz') as tar:
+                for mod, modrows in rows_by_module.items():
+                    with io.BytesIO() as buf:
+                        _process('po', [mod], modrows, buf, lang)
+                        buf.seek(0)
 
+                        info = tarfile.TarInfo(
+                            join(mod, 'i18n', '{basename}.{ext}'.format(
+                                basename=lang or mod,
+                                ext='po' if lang else 'pot',
+                            )))
+                        # addfile will read <size> bytes from the buffer so
+                        # size *must* be set first
+                        info.size = len(buf.getvalue())
+
+                        tar.addfile(info, fileobj=buf)
         else:
             raise Exception(_('Unrecognized extension: must be one of '
                 '.csv, .po, or .tgz (received .%s).') % format)
@@ -1139,7 +1146,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         irt_cursor.finish()
         Translation.clear_caches()
         if verbose:
-            _logger.info("translation file loaded succesfully")
+            _logger.info("translation file loaded successfully")
 
     except IOError:
         iso_lang = get_iso_codes(lang)

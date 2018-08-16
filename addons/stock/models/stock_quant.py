@@ -26,7 +26,7 @@ class StockQuant(models.Model):
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
     company_id = fields.Many2one(related='location_id.company_id',
         string='Company', store=True, readonly=True)
@@ -336,23 +336,16 @@ class QuantPackage(models.Model):
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True)
     packaging_id = fields.Many2one(
-        'product.packaging', 'Package Type', index=True,
-        help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
+        'product.packaging', 'Package Type', index=True)
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute='_compute_package_info', search='_search_location',
-        index=True, readonly=True)
+        'stock.location', 'Location', compute='_compute_package_info',
+        index=True, readonly=True, store=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', compute='_compute_package_info', search='_search_company',
-        index=True, readonly=True)
+        'res.company', 'Company', compute='_compute_package_info',
+        index=True, readonly=True, store=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
-    move_line_ids = fields.One2many('stock.move.line', 'result_package_id')
-    current_picking_move_line_ids = fields.One2many('stock.move.line', compute="_compute_current_picking_info")
-    current_picking_id = fields.Boolean(compute="_compute_current_picking_info")
-    current_source_location_id = fields.Many2one('stock.location', compute="_compute_current_picking_info")
-    current_destination_location_id = fields.Many2one('stock.location', compute="_compute_current_picking_info")
-    is_processed = fields.Boolean(compute="_compute_current_picking_info")
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
     def _compute_package_info(self):
@@ -360,6 +353,10 @@ class QuantPackage(models.Model):
             values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
+                if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
+                    values['owner_id'] = package.quant_ids[0].owner_id
+                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
+                    values['company_id'] = package.quant_ids[0].company_id
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
@@ -375,63 +372,6 @@ class QuantPackage(models.Model):
             res[package.id] = name
         return res
 
-    def _compute_current_picking_info(self):
-        """ When a package is in displayed in picking, it gets the picking id trough the context, and this function
-        populates the different fields used when we move entire packages in pickings.
-        """
-        for package in self:
-            picking_id = self.env.context.get('picking_id')
-            if not picking_id:
-                package.current_picking_move_line_ids = False
-                package.current_picking_id = False
-                package.is_processed = False
-                package.current_source_location_id = False
-                package.current_destination_location_id = False
-                continue
-            package.current_picking_move_line_ids = package.move_line_ids.filtered(lambda ml: ml.picking_id.id == picking_id)
-            package.current_picking_id = True
-            package.current_source_location_id = package.current_picking_move_line_ids[:1].location_id
-            package.current_destination_location_id = package.current_picking_move_line_ids[:1].location_dest_id
-            package.is_processed = not bool(package.current_picking_move_line_ids.filtered(lambda ml: ml.qty_done < ml.product_uom_qty))
-
-    def action_toggle_processed(self):
-        """ This method set the quantity done to the reserved quantity of all move lines of a package or to 0 if the package is already processed"""
-        picking_id = self.env.context.get('picking_id')
-        if picking_id:
-            self.ensure_one()
-            move_lines = self.current_picking_move_line_ids
-            if move_lines.filtered(lambda ml: ml.qty_done < ml.product_uom_qty):
-                destination_location = self.env.context.get('destination_location')
-                for ml in move_lines:
-                    vals = {'qty_done': ml.product_uom_qty}
-                    if destination_location:
-                        vals['location_dest_id'] = destination_location
-                    ml.write(vals)
-            else:
-                for ml in move_lines:
-                    ml.qty_done = 0
-
-
-    def _search_location(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.location_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'in', packs.ids)]
-        else:
-            return [('id', '=', False)]
-
-    def _search_company(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.company_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'parent_of', packs.ids)]
-        else:
-            return [('id', '=', False)]
-
     def _search_owner(self, operator, value):
         if value:
             packs = self.search([('quant_ids.owner_id', operator, value)])
@@ -442,30 +382,15 @@ class QuantPackage(models.Model):
         else:
             return [('id', '=', False)]
 
-    def _check_location_constraint(self):
-        '''checks that all quants in a package are stored in the same location. This function cannot be used
-           as a constraint because it needs to be checked on pack operations (they may not call write on the
-           package)
-        '''
-        for pack in self:
-            locations = pack.get_content().filtered(lambda quant: quant.qty > 0.0).mapped('location_id')
-            if len(locations) != 1:
-                raise UserError(_('Everything inside a package should be in the same location'))
-        return True
-
     def unpack(self):
         for package in self:
-            move_lines_to_remove = package.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
-            if move_lines_to_remove:
-                move_lines_to_remove.write({'result_package_id': False})
-            else:
-                move_line_to_modify = self.env['stock.move.line'].search([
-                    ('package_id', '=', package.id),
-                    ('state', 'in', ('assigned', 'partially_available')),
-                    ('product_qty', '!=', 0),
-                ])
-                move_line_to_modify.write({'package_id': False})
-                package.mapped('quant_ids').write({'package_id': False})
+            move_line_to_modify = self.env['stock.move.line'].search([
+                ('package_id', '=', package.id),
+                ('state', 'in', ('assigned', 'partially_available')),
+                ('product_qty', '!=', 0),
+            ])
+            move_line_to_modify.write({'package_id': False})
+            package.mapped('quant_ids').sudo().write({'package_id': False})
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]

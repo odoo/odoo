@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo.exceptions import UserError
-from odoo.fields import Date
+from odoo.fields import Date, Datetime
 from odoo.tests.common import TransactionCase
 
 
@@ -16,10 +16,11 @@ class TestStockValuation(TransactionCase):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.partner = self.env['res.partner'].create({'name': 'xxx'})
         self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
-        self.uom_unit = self.env.ref('product.product_uom_unit')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
+            'default_code': 'prda',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product2 = self.env['product.product'].create({
@@ -45,6 +46,11 @@ class TestStockValuation(TransactionCase):
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.expense_account = Account.create({
+            'name': 'Expense Account',
+            'code': 'Expense Account',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
         })
         self.stock_journal = self.env['account.journal'].create({
             'name': 'Stock Journal',
@@ -78,6 +84,33 @@ class TestStockValuation(TransactionCase):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
+
+    def test_realtime(self):
+        """ Stock moves update stock value with product x cost price,
+        price change updates the stock value based on current stock level.
+        """
+        # Enter 10 products while price is 5.0
+        self.product1.standard_price = 5.0
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+
+        # Set price to 6.0
+        self.product1.do_change_standard_price(6.0, self.expense_account.id)
+        stock_aml, price_change_aml = self._get_stock_valuation_move_lines()
+        self.assertEqual(stock_aml.debit, 50)
+        self.assertEqual(price_change_aml.debit, 10)
+        self.assertEqual(price_change_aml.ref, 'prda')
+        self.assertEqual(price_change_aml.product_id, self.product1)
 
     def test_fifo_perpetual_1(self):
         self.product1.product_tmpl_id.cost_method = 'fifo'
@@ -1180,7 +1213,7 @@ class TestStockValuation(TransactionCase):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
-        return_pick.do_transfer()
+        return_pick.action_done()
 
         self.assertEqual(self.product1.standard_price, 16)
 
@@ -1977,7 +2010,7 @@ class TestStockValuation(TransactionCase):
         # Add a new move line to receive 10 more
         # ---------------------------------------------------------------------
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.env['stock.move.line'].with_context(debug=True).create({
+        self.env['stock.move.line'].create({
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
@@ -2258,7 +2291,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Actually, send 10 in the last move
         # ---------------------------------------------------------------------
-        move2.with_context(debug=True).quantity_done = 10
+        move2.quantity_done = 10
 
         self.assertEqual(move2.value, -100.0)  # the move actually sent 10@10
         self.assertEqual(move2.remaining_qty, 0.0)
@@ -2583,7 +2616,6 @@ class TestStockValuation(TransactionCase):
         })
         move2._action_confirm()
         move2._action_assign()
-        move2._force_assign()
         move2.move_line_ids.qty_done = 20.0
         move2._action_done()
 
@@ -2628,7 +2660,6 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 10.0,
         })
         move1._action_confirm()
-        move1._force_assign()
         move1.quantity_done = 10.0
         move1._action_done()
         self.assertEqual(move1.value, -990.0)  # as no move out were done for this product, fallback on the standard price
@@ -2685,7 +2716,6 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 10.0,
         })
         move3._action_confirm()
-        move3._force_assign()
         move3.quantity_done = 10.0
         move3._action_done()
 
@@ -2763,7 +2793,6 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 5.0,
         })
         move3._action_confirm()
-        move3._force_assign()
         move3.quantity_done = 5.0
         move3._action_done()
 
@@ -2780,7 +2809,6 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 30.0,
         })
         move4._action_confirm()
-        move4._force_assign()
         move4.quantity_done = 30.0
         move4._action_done()
 
@@ -2817,7 +2845,6 @@ class TestStockValuation(TransactionCase):
             'product_uom_qty': 5.0,
         })
         move6._action_confirm()
-        move6._force_assign()
         move6.quantity_done = 5.0
         move6._action_done()
 
@@ -3042,7 +3069,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
         # ---------------------------------------------------------------------
-        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.cost_method = 'standard'
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
@@ -3233,7 +3260,7 @@ class TestStockValuation(TransactionCase):
     def test_at_date_standard_1(self):
         self.product1.product_tmpl_id.cost_method = 'standard'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
@@ -3360,42 +3387,42 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(self.product1.stock_value, 712.5)
 
         # Quantity available at date
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_available, 0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_available, 30)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_available, 15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_available, 15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_available, -5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date7)).qty_available, -5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).qty_available, 95)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_available, 0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_available, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_available, 30)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_available, 15)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_available, 15)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_available, -5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date7)).qty_available, -5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date8)).qty_available, 95)
 
         # Valuation at date
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 300)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 150)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 75)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date8)).stock_value, 712.5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).stock_value, 300)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).stock_value, 150)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).stock_value, 75)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, -25)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date8)).stock_value, 712.5)
 
         # Quantity at date
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 0.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 10.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, 30.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, 15.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 15.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, -5.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date7)).qty_at_date, -5.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date8)).qty_at_date, 95.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 0.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 10.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_at_date, 30.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_at_date, 15.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_at_date, 15.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, -5.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date7)).qty_at_date, -5.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date8)).qty_at_date, 95.0)
 
         # edit the done quantity of move1, decrease it
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 10)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 10.0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_available, 10)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 10.0)
         move1.quantity_done = 5
         move1.account_move_ids.write({'date': date2})
 
         # the quantity at date will reflect the change directly
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_available, 5)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 5.0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_available, 5)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 5.0)
 
         # as when we decrease a quantity on a recreipt, we consider it as a out move with the price
         # of today, the value will be decrease of 100 - (5*7.5)
@@ -3403,22 +3430,22 @@ class TestStockValuation(TransactionCase):
 
         # the valuatin at date will take the qty at date * the standard price at date, that's why
         # it is different.
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 50)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 50)
 
         # edit move 4, send 15 instead of 20
         # we now have +5 + 20 - 15 -20 = -10 * a standard price of 5
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_available, -10.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, -10.0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -50)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_available, -10.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, -10.0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, -50)
         move4.quantity_done = 15
         move4.account_move_ids.write({'date': date6})
 
         # -(20*5) + (5*7.5)
         self.assertEqual(move4.value, -62.5)
         # we now have +5 + 20 - 15 -15 = -5 * a standard price of 5
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_available, -5.0)
-        self.assertAlmostEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, -5.0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, -25)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_available, -5.0)
+        self.assertAlmostEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, -5.0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, -25)
 
     def test_at_date_fifo_1(self):
         """ Make some operations at different dates, check that the results of the valuation at
@@ -3427,7 +3454,7 @@ class TestStockValuation(TransactionCase):
         """
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
@@ -3553,18 +3580,18 @@ class TestStockValuation(TransactionCase):
         # ending: manual valuation
         # ---------------------------------------------------------------------
         self.product1.product_tmpl_id.valuation = 'manual_periodic'
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 20)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 200)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 30)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 320)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, 15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 160)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, -5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, -125)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 95)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 1375)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 95)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 1375)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 200)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 30)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 320)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_at_date, 15)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).stock_value, 160)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_at_date, -5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).stock_value, -125)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_at_date, 95)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).stock_value, 1375)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, 95)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, 1375)
         self.assertEqual(self.product1.qty_at_date, 95)
         self.assertEqual(self.product1.stock_value, 1375)
 
@@ -3572,25 +3599,25 @@ class TestStockValuation(TransactionCase):
         # ending: perpetual valuation
         # ---------------------------------------------------------------------
         self.product1.product_tmpl_id.valuation = 'real_time'
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 220)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, 5)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, 60)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, -15)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, -180)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 85)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 1320)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 85)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 1275)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 220)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_at_date, 5)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).stock_value, 60)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_at_date, -15)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).stock_value, -180)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_at_date, 85)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).stock_value, 1320)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, 85)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, 1275)
         self.assertEqual(self.product1.qty_at_date, 95)
         self.assertEqual(self.product1.stock_value, 1375)
 
     def test_at_date_fifo_2(self):
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
-        now = Date.from_string(Date.today())
+        now = Datetime.now()
         date1 = now - timedelta(days=8)
         date2 = now - timedelta(days=7)
         date3 = now - timedelta(days=6)
@@ -3714,18 +3741,18 @@ class TestStockValuation(TransactionCase):
         # ending: manual valuation
         # ---------------------------------------------------------------------
         self.product1.product_tmpl_id.valuation = 'manual_periodic'
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 250)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, -10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, -200)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, 0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 250)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_at_date, -10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).stock_value, -200)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_at_date, 0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).stock_value, 0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, 100)
         self.assertEqual(self.product1.qty_at_date, 10)
         self.assertEqual(self.product1.stock_value, 100)
 
@@ -3733,17 +3760,17 @@ class TestStockValuation(TransactionCase):
         # ending: perpetual valuation
         # ---------------------------------------------------------------------
         self.product1.product_tmpl_id.valuation = 'real_time'
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date1)).stock_value, 100)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).qty_at_date, 20)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date2)).stock_value, 250)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).qty_at_date, -10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date3)).stock_value, -150)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).qty_at_date, 0)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date4)).stock_value, 50)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date5)).stock_value, 150)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).qty_at_date, 10)
-        self.assertEqual(self.product1.with_context(to_date=Date.to_string(date6)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date1)).stock_value, 100)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).qty_at_date, 20)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date2)).stock_value, 250)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).qty_at_date, -10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date3)).stock_value, -150)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).qty_at_date, 0)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date4)).stock_value, 50)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date5)).stock_value, 150)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).qty_at_date, 10)
+        self.assertEqual(self.product1.with_context(to_date=Datetime.to_string(date6)).stock_value, 100)
         self.assertEqual(self.product1.qty_at_date, 10)
         self.assertEqual(self.product1.stock_value, 100)

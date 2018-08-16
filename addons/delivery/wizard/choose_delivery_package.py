@@ -45,6 +45,15 @@ class ChooseDeliveryPackage(models.TransientModel):
             total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
             return total_weight
 
+    @api.onchange('delivery_packaging_id', 'shipping_weight')
+    def _onchange_packaging_weight(self):
+        if self.delivery_packaging_id.max_weight and self.shipping_weight > self.delivery_packaging_id.max_weight:
+            warning_mess = {
+                'title': _('Package too heavy!'),
+                'message': _('The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type.')
+            }
+            return {'warning': warning_mess}
+
     def put_in_pack(self):
         picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
         if not self.stock_quant_package_id:

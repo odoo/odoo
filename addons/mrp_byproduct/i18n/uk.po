@@ -3,17 +3,17 @@
 # * mrp_byproduct
 # 
 # Translators:
-# Bohdan Lisnenko, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Martin Trigaux, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgid "Bill of Material"
 msgstr "Специфікація"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__bom_id
 msgid "BoM"
 msgstr "СЦ"
 
@@ -37,7 +37,7 @@ msgid "Byproduct"
 msgstr "Побічний товар"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom__sub_products
 #: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Побічні товари"
@@ -48,52 +48,52 @@ msgid "Change Quantity of Products"
 msgstr "Змінити кількість товарів"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__operation_id
 msgid "Produced at Operation"
 msgstr "Вироблення під час операції"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_id
 msgid "Product"
 msgstr "Товар"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_qty
 msgid "Product Qty"
 msgstr "К-сть товару"
 
@@ -110,15 +110,15 @@ msgstr "Запис виробництва"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_stock_move
 msgid "Stock Move"
-msgstr "Переміщення запасів"
+msgstr "Складське переміщення "
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct"
 msgstr "Субтовар"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct line that generated the move in a manufacturing order"
 msgstr "Лінія субтовару, яка спричинила рух у виробничому замовленні"
 
@@ -126,13 +126,12 @@ msgstr "Лінія субтовару, яка спричинила рух у в�
 #: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
+"The unit of measure you chose is in a different category than the product "
+"unit of measure."
 msgstr ""
-"Категорія вибраного товару одиниці виміру відрізняється від форми товару."
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_uom_id
 msgid "Unit of Measure"
 msgstr "Одиниця виміру"
 

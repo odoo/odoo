@@ -3,17 +3,17 @@
 # * website
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Jorunn D. Newth, 2017
-# Viktor Basso <viktor@voit.no>, 2017
+# Martin Trigaux, 2018
 # Aleksander, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Aleksander, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,14 +23,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:724
+#: code:addons/website/static/src/js/editor/snippets.options.js:1009
 #, python-format
 msgid " Add Images"
 msgstr "Legg til bilder"
 
 #. module: website
-#: code:addons/website/models/website.py:233
-#: code:addons/website/models/website.py:302
+#: code:addons/website/models/website.py:241
+#: code:addons/website/models/website.py:310
 #, python-format
 msgid "%s (id:%s)"
 msgstr "%s (id:%s)"
@@ -71,37 +71,19 @@ msgid "' did not match any pages."
 msgstr "' matchet ingen sider."
 
 #. module: website
-#: code:addons/website/models/website.py:723
-#: code:addons/website/models/website.py:725
-#: code:addons/website/models/website.py:743
+#: code:addons/website/models/website.py:737
+#: code:addons/website/models/website.py:739
+#: code:addons/website/models/website.py:757
 #, python-format
 msgid "(copy)"
 msgstr "(kopi)"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:29
+#: code:addons/website/static/src/xml/website.pageProperties.xml:33
 #, python-format
 msgid "(could be used in"
 msgstr "(kan være brukt i"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"(e.g. business name, location) tends to improve your ranking in search "
-"engines and consequently increases your traffic. Do it:"
-msgstr ""
-"(for eksempel firmanavn, geografisk område) kan forbedre rangeringen din i "
-"søkemotorer og øke trafikken din. Gjør det:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid ""
-",\n"
-"                                                      the #1"
-msgstr ""
-",\n"
-"                                                      den fremste"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -123,13 +105,8 @@ msgid ", updated:"
 msgstr ", oppdatert:"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "- The Odoo Team"
-msgstr "Odoo-teamet"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:23
+#: code:addons/website/static/src/xml/website.pageProperties.xml:27
 #, python-format
 msgid ""
 ".\n"
@@ -250,30 +227,6 @@ msgstr ""
 "<i>Kontaktskjema</i>-appen."
 
 #. module: website
-#: model:ir.actions.act_window,help:website.action_module_theme
-msgid "<b>No theme module found!</b>"
-msgstr "<b>Ingen tema-modul funnet!</b>"
-
-#. module: website
-#: model:ir.actions.act_window,help:website.action_module_website
-msgid "<b>No website module found!</b>"
-msgstr "<b>Ingen nettsted-modul funnet!</b>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<b>Set Custom Image...</b>"
-msgstr "<b>Bruk eget bilde...</b>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<br/>\n"
-"                                    Make sure the Advanced Options are set to your country and language."
-msgstr ""
-"<br/>\n"
-"                                    Sjekk at ditt land og språk er satt i Avanserte alternativer."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-arrows\"/>Background Image Sizing"
 msgstr "<i class=\"fa fa-arrows\"/>Størrelse på bakgrunnsbilde"
@@ -294,6 +247,11 @@ msgid "<i class=\"fa fa-clock-o\"/>Slideshow speed"
 msgstr "<i class=\"fa fa-clock-o\"/>Lysbildevisningshastighet"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-columns\"/>Number of columns"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-diamond\"/> Feature"
 msgstr "<i class=\"fa fa-diamond\"/> Funksjon"
@@ -312,6 +270,11 @@ msgstr "<i class=\"fa fa-eyedropper\"/>Bakgrunnsfarge"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-eyedropper\"/>Overlay color"
 msgstr "<i class=\"fa fa-eyedropper\"/>Overlagsfarge"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-facebook\"/>Options"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
@@ -340,8 +303,8 @@ msgstr "<i class=\"fa fa-paint-brush\"/>Styling"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-picture-o\"/>Background Image"
-msgstr "<i class=\"fa fa-picture-o\"/>Bakgrunnsbilde"
+msgid "<i class=\"fa fa-picture-o\"/>Choose Background Image"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.language_selector
@@ -393,46 +356,9 @@ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr "<i class=\"fa fa-trash-o\"/>Fjern slide"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<i>\n"
-"                        The whole process may take a few hours, some discussions with your colleagues and\n"
-"                    several cups of coffee to go through. But don't worry, you can return to this tool at any time.</i>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<i>\n"
-"                        Whether you're a beginner or a pro, we have everything you need to plan, create,\n"
-"                    publish and grow your site, blog or online store.</i>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<i>\n"
-"                    This Planner will help you think about your website and provide tips and ideas to inspire you. There are examples and explanations to guide you through the process of creating a top-notch, high quality website that meets all your needs.</i>"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<i>Congratulations on taking the leap and deciding to build your own "
-"website!</i>"
-msgstr ""
-"<i>Gratulerer med å ha tatt spranget og bestemt deg for å bygge ditt eget "
-"nettsted!</i>"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<i>We wish you a fun time!</i>"
-msgstr "<i>Vi håper du får det morsomt!</i>"
 
 #. module: website
 #. openerp-web
@@ -477,20 +403,6 @@ msgstr ""
 "                             <span class=\"sr-only\">Vis nedtrekksmeny</span>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Installer nå"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                <strong>Tips for a good domain:</strong>"
-msgstr ""
-"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
-"                                <strong>Tips for et godt domene:</strong>"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil\"/>Edit"
 msgstr "<span class=\"fa fa-pencil\"/>Rediger"
@@ -501,6 +413,14 @@ msgid "<span class=\"fa fa-plus\"/>New"
 msgstr "<span class=\"fa fa-plus\"/>Ny"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_facebook_page
+msgid ""
+"<span class=\"o_add_facebook_page\">\n"
+"                <i class=\"fa fa-plus-circle\"/> Add Facebook Page\n"
+"            </span>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_image_gallery
 msgid ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
@@ -508,45 +428,6 @@ msgid ""
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/>Legg til bilder</span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-pencil\"/>\n"
-"                                        <strong>On your own</strong><br/>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-pencil\"/>\n"
-"                                        <strong>På egenhånd</strong><br/>\n"
-"                                    </span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-user\"/>\n"
-"                                        <strong>External services</strong><br/>\n"
-"                                    </span>"
-msgstr ""
-"<span class=\"panel-title\">\n"
-"                                        <span class=\"fa fa-user\"/>\n"
-"                                        <strong>Eksterne tjenester</strong><br/>\n"
-"                                    </span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout
-msgid ""
-"<span class=\"sr-only\">Toggle navigation</span>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>"
-msgstr ""
-"<span class=\"sr-only\">Navigasjon på/av</span>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -584,29 +465,14 @@ msgstr ""
 "<i class=\"fa fa-chevron-right\"/>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "<span>Copyright &amp;copy;</span>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_share
 msgid "<span>Share</span>"
 msgstr "<span>Del</span>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>... and your location too!</strong><br/>\n"
-"                                Millions of people use Google Maps everyday. Whether you are a restaurant\n"
-"                                or a huge business, you have no excuse not to register your location in"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>1. Your main menu items</strong> and 2. Your secondary menu items"
-msgstr "<strong>1. Hovedmenyvalgene</strong> og 2. Andre menyvalg"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>3. Your footer titles</strong> and 4. Your footer links"
-msgstr ""
-"<strong>3. Overskrifter i bunnteksten</strong> og 4. Linker i bunnteksten"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_button
@@ -616,186 +482,9 @@ msgstr ""
 "vokse.</strong>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Add features and content</strong><br/>\n"
-"                                You can put more content in the intermediate section of your homepage (one\n"
-"                                or two scrolls down from the visible section), but try to keep your\n"
-"                                paragraphs easy to read and avoid walls of text."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Advertise</strong><br/>\n"
-"                                If you have a small budget to advertise your website (around $100), you\n"
-"                                should start a"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Be announced on the Odoo Twitter account</strong><br/>\n"
-"                                We like to hear from people using Odoo to build their website. Tweet us"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Be linked by trusted websites</strong><br/>\n"
-"                                The more websites that link to your website, the more Google trusts it to be worthwhile. Here are some tips:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Call-to-action</strong><br/>\n"
-"                                Add one, and only one, call-to-action to your homepage. Your homepage is\n"
-"                                the page that gets the most visitors.<br/>\n"
-"                                It's good practice to try to engage with your visitors on the homepage:\n"
-"                                Contact Us, Subscribe to Get More Information, Check the Catalog, etc."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Discuss live</strong>"
-msgstr "Diskuter i sanntid"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Display social proof</strong><br/>\n"
-"                                Below your main banner or call-to-action, it's a good practice to put\n"
-"                                social proofs about your products or services; customer quotes, videos,\n"
-"                                photos of your products in actions, twitter quotes, etc."
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "<strong>Error message:</strong>"
 msgstr "<strong>Feilmelding:</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Find 3 websites that you like</strong> and write down what you like "
-"about them."
-msgstr ""
-"<strong>Finn 3 nettsteder som du liker</strong> og skriv ned hva du liker "
-"med dem."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Find a catchy headline</strong><br/>\n"
-"                                Make sure anyone who visits your site understands what it’s about without too much reading.<br/>\n"
-"                                To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For example, use pictures of your work, screenshots of your app, a short and catchy hook."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>How to get a custom domain name?</strong><br/>"
-msgstr "<strong>Hvordan få et tilpasset domenenavn?</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Initial Teaser</strong><br/>\n"
-"                                Before launching to the masses, it's good practice to tease around 100 of\n"
-"                                your contacts. Start with your friends, colleagues and family. Whether or\n"
-"                                not they're interested in your business, they will provide you with some precious feedback."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Launch a forum</strong>"
-msgstr "<strong>Start et forum</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Next actions:</strong>"
-msgstr "<strong>Neste ting å gjøre:</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Now try to write down you footer structure:</strong>"
-msgstr "<strong>Prøv å skrive ned strukturen for bunnteksten din:</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Publish documentation</strong>"
-msgstr "<strong>Publiser dokumentasjon</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Publish events</strong>"
-msgstr "<strong>Publiser arrangementer</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Reference your images...</strong><br/>\n"
-"                                If you are an artist or a photographer, you can potentially bring in a lot\n"
-"                                of visitors by referencing your images so they are displayed in image\n"
-"                                search engines, like Google Images.\n"
-"                                To do that,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Send mass mails</strong>"
-msgstr "<strong>Send masseutsendelse</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>Start a blog</strong><br/>\n"
-"                                Search engines loves websites that get new content regularly. An excellent way is publishing blog posts. If you have the time and dedication to write good articles,"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>The big launch</strong><br/>"
-msgstr "<strong>Den store lanseringen</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Use Google Webmaster</strong><br/>"
-msgstr "<strong>Bruk Google Webmaster</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Use contact forms</strong>"
-msgstr "<strong>Bruk kontaktskjemaer</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Use relevant keywords</strong><br/>"
-msgstr "<strong>Bruk relevante nøkkelord</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"<strong>With that in mind, try to define the structure of your main "
-"menu:</strong>"
-msgstr ""
-"<strong>Med dette i tankene, prøv å definere strukturen i hovedmenyen "
-"din:</strong>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>You own your domain name?</strong><br/>"
-msgstr "<strong>Eier du domenenavnet ditt?</strong><br/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "<strong>Your website objectives</strong> by priority:"
-msgstr "<strong>Målene dine for nettstedet</strong> etter prioritet:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "@odoo"
-msgstr "@odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -821,7 +510,7 @@ msgid "A Section Subtitle"
 msgstr "En mellomtittel for denne seksjonen"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_ir_act_server_website_published
+#: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 msgid ""
 "A code server action can be executed from the website, using a dedicated "
 "controller. The address is <base>/website/action/<website_path>. Set this "
@@ -847,7 +536,7 @@ msgid "A small explanation of this great<br/>feature, in clear words."
 msgstr "En kort forklaring av denne nyttige<br/>funksjonen, med enkle ord."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_module_website_version
+#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
 msgid "A/B Testing"
 msgstr "A/B-testing"
 
@@ -859,7 +548,7 @@ msgstr "API-nøkkel"
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:website.page,arch_db:website.aboutus_page
 msgid "About us"
 msgstr "Om oss"
@@ -870,13 +559,13 @@ msgid "Account &amp; Sales management"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_cdn_activated
+#: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Activate CDN for assets"
 msgstr "Aktiver CDN for ressurser"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_active
-#: model:ir.model.fields,field_description:website.field_website_redirect_active
+#: model:ir.model.fields,field_description:website.field_website_page__active
+#: model:ir.model.fields,field_description:website.field_website_redirect__active
 msgid "Active"
 msgstr "Aktiv"
 
@@ -909,28 +598,10 @@ msgstr "Legg til et flott slagord"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:49
+#: code:addons/website/static/src/js/menu/new_content.js:50
 #, python-format
 msgid "Add page in menu"
 msgstr "Legg til side i menyen"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:55
-#, python-format
-msgid "Add this feature"
-msgstr "Legg til denne funksjonaliteten"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Adding relevant and popular keywords"
-msgstr "Legge til relevante og populære nøkkelord"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Advertise a keyword if you answer YES to the three following questions:"
-msgstr "Reklamer på et nøkkelord hvis du svarer JA på disse tre spørsmålene:"
 
 #. module: website
 #. openerp-web
@@ -940,20 +611,6 @@ msgid "After having checked how it looks on mobile, <b>close the preview</b>."
 msgstr ""
 "Når du har sjekket hvordan det ser ut på mobil, <b>lukk "
 "forhåndsvisningen</b>."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"After working on this step, you may want to go back and refine your "
-"objectives or modify your visitors interests. Those 3 first steps are "
-"essentially linked, and the more time your spend on refining them, the "
-"better your website will be!"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Aim for a .com and/or your country extension"
-msgstr "Sats på .com og/eller toppdomenet for landet ditt"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -978,13 +635,6 @@ msgid ""
 msgstr "Alle disse ikonene har Creative Commons-lisens som lar deg bruke dem."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Allows your community to ask and answer questions about their interests"
-msgstr ""
-"Lar nettsamfunnet ditt stille og svare på spørsmål om interessene sine."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "Although this Website may be linked to other websites, we are not, directly or\n"
@@ -998,17 +648,19 @@ msgid "An error occured while rendering the template"
 msgstr "En feil oppsto med visning av malen"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"Analyze the efficiency of your marketing campaigns by using trackable UTM "
+"trackers (campaigns, medium, sources). Create trackers and follow clicks "
+"from the Promote menu of your website. Those trackers can be used in Google "
+"Analytics or in Odoo reports where you can see the opportunities and sales "
+"revenue generated thanks to your links."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_title
 msgid "And a great subtitle too"
 msgstr "Og en flott undertittel også"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Announce it on social media: Twitter, Facebook, LinkedIn, Youtube, etc."
-msgstr ""
-"Annonser det på sosiale medier: Twitter, Facebook, LinkedIn, YouTube, "
-"ogsåvidere."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -1016,17 +668,12 @@ msgid "Apply"
 msgstr "Bruk"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Apply it to your website from your database admin page"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch_db
+#: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch_fs
+#: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
 msgstr ""
 
@@ -1038,37 +685,14 @@ msgid "Are you sure you want to delete this page ?"
 msgstr "Er du sikker på at du vil slette denne siden?"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
-msgid "Attachment URL"
-msgstr "URL til vedlegg"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Attract new leads"
-msgstr "Tiltrekk nye leads"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_auto_redirect_lang
+#: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
 msgstr "Omdiriger automatisk til språkversjon"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_published
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 msgid "Available on the Website"
 msgstr "Tilgjengelig på nettstedet"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Avoid special characters"
-msgstr "Unngå spesialtegn"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Avoid using a mass survey, it's way more efficient to have\n"
-"                                personal discussions with everyone. If you engage with them in the\n"
-"                                reviewing process, they will even help you promote your website."
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -1076,14 +700,14 @@ msgid "Back"
 msgstr "Tilbake"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__arch_base
+msgid "Base View Architecture"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
 msgstr "Grunnleggende salg og markedsføring for inntil 2 brukere"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Be mobile"
-msgstr "Vær mobil"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1091,63 +715,31 @@ msgid "Beginner"
 msgstr "Nybegynner"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Being clear on why you're creating your site is an essential first step to "
-"ensure your content and structure meet business objectives."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Best if you have language skills"
-msgstr "Best om du har språkkunnskaper"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Big"
 msgstr "Stor"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Build awareness and credibility"
-msgstr "Bygg kjennskap og troverdighet"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Building Profile"
-msgstr "Bygger profil"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Buy it at a provider:"
-msgstr "Kjøp hos en forhandler:"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_url
-#: model:ir.model.fields,field_description:website.field_website_cdn_url
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
+#: model:ir.model.fields,field_description:website.field_website__cdn_url
 msgid "CDN Base URL"
 msgstr "Base-URL for CDN"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_filters
-#: model:ir.model.fields,field_description:website.field_website_cdn_filters
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_filters
+#: model:ir.model.fields,field_description:website.field_website__cdn_filters
 msgid "CDN Filters"
 msgstr "CDN-filtre"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Can I afford for advertising on the keyword?"
-msgstr "Har jeg råd til annonsering på nøkkelordet?"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:106
+#: code:addons/website/static/src/js/backend/dashboard.js:101
 #: code:addons/website/static/src/xml/website.xml:27
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1160,22 +752,13 @@ msgid "Change Icons"
 msgstr "Bytt ikoner"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Check its availability"
-msgstr "Sjekk tilgjengelighet"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Check your references before deciding to work with you"
-msgstr "Sjekke referansene før de bestemmer seg for å samarbeide "
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_field_parent
+#: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
 msgstr "Underordnet felt"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_child_id
+#: model:ir.model.fields,field_description:website.field_website_menu__child_id
+#: model:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Child Menus"
 msgstr "Undermeny"
 
@@ -1196,30 +779,12 @@ msgid "Circle"
 msgstr "Sirkel"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "City"
-msgstr "By"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Click here to unfold a Good Footer"
-msgstr "Klikk her for å vise en god bunntekst"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Click here to unfold a Good Homepage"
-msgstr "Klikk her for å vise en god hjemmeside"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Click on the icon to adapt it to your feature"
 msgstr "Klikk på ikonet for å tilpasse det til funksjonen"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
-#: model:ir.ui.view,arch_db:website.website2_homepage
-#: model:ir.ui.view,arch_db:website.website2_homepage_page_ir_ui_view
-#: model:website.page,arch_db:website.website2_homepage_page
 msgid "Click to customize this text"
 msgstr "Klikk for å tilpasse denne teksten"
 
@@ -1246,26 +811,12 @@ msgid "Close"
 msgstr "Lukk"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Communicate"
-msgstr "Kommuniser"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Community &amp; Enterprise users: apply a redirection from your Domain "
-"Manager platform"
-msgstr ""
-"Brukere av Community og Enterprise-versjonene: Legg til omdirigering fra "
-"domeneadministrasjonsplattformen"
-
-#. module: website
 #: model:ir.model,name:website.model_res_company
 msgid "Companies"
 msgstr "Firmaer"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_company_id
+#: model:ir.model.fields,field_description:website.field_website__company_id
 msgid "Company"
 msgstr "Firma"
 
@@ -1292,12 +843,7 @@ msgid "Confirmation"
 msgstr "Bekreftelse"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Congratulations, you're done!"
-msgstr "Gratulerer, du er ferdig!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Connect with us"
 msgstr "Kom i kontakt med oss"
 
@@ -1315,29 +861,19 @@ msgstr "Kontakt oss"
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
-#: model:ir.ui.view,arch_db:website.website2_contactus
-#: model:ir.ui.view,arch_db:website.website2_contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.website2_homepage
-#: model:ir.ui.view,arch_db:website.website2_homepage_page_ir_ui_view
 #: model:website.menu,name:website.menu_contactus
-#: model:website.menu,name:website.website2_menu_contactus
 #: model:website.page,arch_db:website.contactus_page
-#: model:website.page,arch_db:website.website2_contactus_page
-#: model:website.page,arch_db:website.website2_homepage_page
 msgid "Contact us"
 msgstr "Kontakt oss"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.website2_contactus
-#: model:ir.ui.view,arch_db:website.website2_contactus_page_ir_ui_view
 #: model:website.page,arch_db:website.contactus_page
-#: model:website.page,arch_db:website.website2_contactus_page
 msgid "Contact us about anything related to our company or services."
 msgstr "Kontakt oss om alt som angår firmaet og tjenestene våre."
 
@@ -1358,20 +894,15 @@ msgstr "Content Delivery Network (CDN)"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:388
+#: code:addons/website/static/src/js/menu/content.js:424
 #: code:addons/website/static/src/xml/website.xml:26
 #, python-format
 msgid "Continue"
 msgstr "Fortsette"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Copyright &amp;copy;"
-msgstr "Opphavsrett &amp;copy;"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:328
+#: code:addons/website/static/src/js/menu/content.js:366
 #, python-format
 msgid "Create Menu"
 msgstr "Opprett meny"
@@ -1382,14 +913,14 @@ msgid "Create Page"
 msgstr "Opprett side"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "Create a"
+msgstr "Opprett"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
 msgstr "Opprett et Google-prosjekt og få en nøkkel"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Create a community"
-msgstr "Opprett et nettsamfunn"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1397,25 +928,25 @@ msgid "Create several versions of your website pages"
 msgstr "Opprett flere versjoner av sidene på nettstedet ditt"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_create_uid
-#: model:ir.model.fields,field_description:website.field_website_menu_create_uid
-#: model:ir.model.fields,field_description:website.field_website_page_create_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect_create_uid
+#: model:ir.model.fields,field_description:website.field_website__create_uid
+#: model:ir.model.fields,field_description:website.field_website_menu__create_uid
+#: model:ir.model.fields,field_description:website.field_website_page__create_uid
+#: model:ir.model.fields,field_description:website.field_website_redirect__create_uid
 msgid "Created by"
 msgstr "Opprettet av"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_create_date
-#: model:ir.model.fields,field_description:website.field_website_menu_create_date
-#: model:ir.model.fields,field_description:website.field_website_page_create_date
-#: model:ir.model.fields,field_description:website.field_website_redirect_create_date
+#: model:ir.model.fields,field_description:website.field_website__create_date
+#: model:ir.model.fields,field_description:website.field_website_menu__create_date
+#: model:ir.model.fields,field_description:website.field_website_page__create_date
+#: model:ir.model.fields,field_description:website.field_website_redirect__create_date
 msgid "Created on"
 msgstr "Opprettet"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Cubes"
-msgstr "Kuber"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
+msgid "Customer Account"
+msgstr "Kundekonto"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1438,6 +969,13 @@ msgstr ""
 "Tilpass alle blokker med denne menyen. Prøv å endre bakgrunnen på banneret."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:75
+#, python-format
+msgid "DRAG BUILDING BLOCKS HERE"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
@@ -1454,18 +992,18 @@ msgid "Default Access Rights"
 msgstr "Standard tilgangsrettigheter"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_default_lang_id
+#: model:ir.model.fields,field_description:website.field_website__default_lang_id
 msgid "Default Language"
 msgstr "Standardspråk"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
 msgstr "Standardspråk"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_default_lang_code
-#: model:ir.model.fields,field_description:website.field_website_default_lang_code
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
+#: model:ir.model.fields,field_description:website.field_website__default_lang_code
 msgid "Default language code"
 msgstr "Standard språkkode"
 
@@ -1483,7 +1021,8 @@ msgstr "Slett blokker"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:741
+#: code:addons/website/static/src/js/menu/content.js:59
+#: code:addons/website/static/src/js/menu/content.js:797
 #, python-format
 msgid "Delete Page"
 msgstr "Slett side"
@@ -1511,8 +1050,8 @@ msgstr "Demo-logo"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:23
-#: code:addons/website/static/src/xml/website.pageProperties.xml:32
+#: code:addons/website/static/src/xml/website.pageProperties.xml:27
+#: code:addons/website/static/src/xml/website.pageProperties.xml:36
 #, python-format
 msgid "Dependencies"
 msgstr "Avhengigheter"
@@ -1525,27 +1064,17 @@ msgid "Description"
 msgstr "Beskrivelse"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Design"
-msgstr "Design"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Disable autoplay"
 msgstr "Slå av autoavspilling"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:45
+#: code:addons/website/static/src/js/menu/content.js:46
 #: code:addons/website/static/src/js/menu/seo.js:343
 #, python-format
 msgid "Discard"
-msgstr "Avbryt"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Discuss and Comments"
-msgstr "Diskusjon og kommentarer"
+msgstr "Forkast"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
@@ -1553,18 +1082,18 @@ msgid "Discussion Group"
 msgstr "Diskusjonsgruppe"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_display_name
-#: model:ir.model.fields,field_description:website.field_website_menu_display_name
-#: model:ir.model.fields,field_description:website.field_website_page_display_name
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_display_name
-#: model:ir.model.fields,field_description:website.field_website_redirect_display_name
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_display_name
+#: model:ir.model.fields,field_description:website.field_website__display_name
+#: model:ir.model.fields,field_description:website.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website.field_website_page__display_name
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__display_name
+#: model:ir.model.fields,field_description:website.field_website_redirect__display_name
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:89
+#: code:addons/website/static/src/js/editor/snippets.options.js:90
 #, python-format
 msgid "Do you want to edit the company data ?"
 msgstr "Vil du oppdatere firmadata?"
@@ -1575,37 +1104,11 @@ msgid "Domain"
 msgstr "Domene"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Domain Name"
-msgstr "Domenenavn"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:35
 #, python-format
 msgid "Don't forget to update all links referring to this page."
 msgstr "Ikke glem å oppdatere alle linker til denne siden."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Don't go over 6 items, otherwise your main menu will be difficult to use."
-msgstr "Ikke gå over 6 valg, ellers blir hovedmenyen vanskelig å bruke."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Don't hesitate in"
-msgstr "Ikke nøl med"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Download the technical documentation of a product"
-msgstr "Last ned teknisk dokumentasjon for et produkt"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Downtown"
-msgstr "Bysentrum"
 
 #. module: website
 #. openerp-web
@@ -1639,18 +1142,13 @@ msgid "Duplicate blocks to add more features."
 msgstr "Dupliser blokkene for å legge til mer funksjonalitet."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Easy to remember and spell"
-msgstr "Lett å huske og stave"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
 msgid "Edit"
 msgstr "Rediger"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:417
+#: code:addons/website/static/src/js/menu/content.js:453
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
@@ -1674,7 +1172,7 @@ msgstr "Rediger i backend"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:73
+#: code:addons/website/static/src/xml/website.backend.xml:28
 #, python-format
 msgid "Edit my Analytics Client ID"
 msgstr "Oppdater min Analytics Client ID"
@@ -1706,11 +1204,6 @@ msgid "Email support"
 msgstr "Epoststøtte"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "End"
-msgstr "Slutt"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Enterprise package"
 msgstr "Enterprise-pakke"
@@ -1721,16 +1214,11 @@ msgid "Error"
 msgstr "Feil"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Examples"
-msgstr "Eksempler"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:61
+#: code:addons/website/static/src/xml/website.facebook_page.xml:19
 #, python-format
-msgid "Existing Page, URL or Email"
-msgstr "Eksisterende side, URL eller epostadresse"
+msgid "Events"
+msgstr "Arrangementer"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1747,7 +1235,8 @@ msgstr ""
 "           tjenester her, skriv om løsninger."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_xml_id
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
+#: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "Ekstern ID"
 
@@ -1757,9 +1246,16 @@ msgid "Extra-Large"
 msgstr "Ekstra stor"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_facebook
+#: model:ir.model.fields,field_description:website.field_website__social_facebook
 msgid "Facebook Account"
 msgstr "Facebook-konto"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:493
+#, python-format
+msgid "Facebook Page"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1767,7 +1263,7 @@ msgid "Fast"
 msgstr "Rask"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_favicon
+#: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 msgid "Favicon"
 msgstr "Favikon"
 
@@ -1792,26 +1288,15 @@ msgid "Feature Two"
 msgstr "Funksjon 2"
 
 #. module: website
-#: model:ir.model,name:website.model_ir_model_fields
-msgid "Fields"
-msgstr "Felter"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Finally don't try to make all your content accessible from the main menu or the footer.\n"
-"                            Indeed, a page can also be accessible through a direct link or button, from any other page of your website."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Find Inspiration"
-msgstr "Finn inspirasjon"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "First Feature"
 msgstr "Første funksjon"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_ir_ui_view__first_page_id
+#: model:ir.model.fields,help:website.field_website_page__first_page_id
+msgid "First page linked to this view"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1821,7 +1306,7 @@ msgstr "Fast"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Float"
-msgstr "Float"
+msgstr "Flyttall"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1836,27 +1321,6 @@ msgid "Follow all the"
 msgstr "Følg alle"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Footer"
-msgstr "Bunntekst"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"For example, use pictures to help break up large areas of text by altering\n"
-"                                    Text-Image and Image-Text blocks. If you prefer icons, use the Features or Feature Grid blocks."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"For the Odoo Team,<br/>\n"
-"                            Fabien Pinckaers, Founder"
-msgstr ""
-"For Odoo-teamet,<br/>\n"
-"                         Fabien Pinckaers, grunnlegger"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind Company. He loves\n"
@@ -1868,9 +1332,9 @@ msgstr ""
 "markedsføring og strategier for kundeopplevelsen."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Free"
-msgstr "Gratis"
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
+msgstr "Åpen registrering (B2C)"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1885,11 +1349,6 @@ msgid "General Terms and Conditions / Service Policies"
 msgstr "Generelle salgsvilkår og betingelser / tjenestevilkår"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Gengo"
-msgstr "Gengo"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules"
 msgstr "Få tilgang til alle moduler"
@@ -1898,11 +1357,6 @@ msgstr "Få tilgang til alle moduler"
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Get access to all modules and features"
 msgstr "Få tilgang til alle moduler og funksjoner"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Get an understanding of your methodology"
-msgstr "Forstå metodologien din"
 
 #. module: website
 #. openerp-web
@@ -1915,18 +1369,13 @@ msgstr ""
 "Gjør siden mer effektiv i søkemotorer for å tiltrekke flere besøkende."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Get your opportunities filled up in our integrated CRM application"
-msgstr "Fyll opp den integrerte CRM-applikasjonen med salgsmuligheter"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_github
+#: model:ir.model.fields,field_description:website.field_website__social_github
 msgid "GitHub Account"
 msgstr "GitHub-konto"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:48
+#: code:addons/website/static/src/js/menu/content.js:50
 #, python-format
 msgid "Go To Page"
 msgstr "Gå til side"
@@ -1945,16 +1394,10 @@ msgstr "Gå til sideadministrasjon"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:20
-#: code:addons/website/static/src/xml/website.backend.xml:22
+#: code:addons/website/static/src/xml/website.backend.xml:93
 #, python-format
 msgid "Go to Website"
 msgstr "Gå til nettsted"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "GoDaddy"
-msgstr "GoDaddy"
 
 #. module: website
 #. openerp-web
@@ -1968,32 +1411,27 @@ msgstr ""
 "<b>mobile enheter</b>."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google Adwords"
-msgstr "Google AdWords "
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:89
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics
+#: code:addons/website/static/src/js/backend/dashboard.js:84
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
 #, python-format
 msgid "Google Analytics"
 msgstr "Google Analytics"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_analytics_key
-#: model:ir.model.fields,field_description:website.field_website_google_analytics_key
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
+#: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
 msgstr "Google Analytics-nøkkel"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_analytics_dashboard
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
 msgid "Google Analytics in Dashboard"
 msgstr "Google Analytics i dashbord"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:92
+#: code:addons/website/static/src/xml/website.backend.xml:48
 #, python-format
 msgid ""
 "Google Analytics initialization failed. Maybe this domain is not whitelisted"
@@ -2003,40 +1441,30 @@ msgstr ""
 "hvitelistet i Google Analytics-prosjektet for denne klient-IDen."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google Business"
-msgstr "Google Business"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_id
-#: model:ir.model.fields,field_description:website.field_website_google_management_client_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_id
+#: model:ir.model.fields,field_description:website.field_website__google_management_client_id
 msgid "Google Client ID"
 msgstr "Google klient-ID"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_management_client_secret
-#: model:ir.model.fields,field_description:website.field_website_google_management_client_secret
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_secret
+#: model:ir.model.fields,field_description:website.field_website__google_management_client_secret
 msgid "Google Client Secret"
 msgstr "Google klient-hemmelighet"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_has_google_maps
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
 msgstr "Google Maps"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_google_maps_api_key
+#: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
 msgid "Google Maps API Key"
 msgstr "Google Maps API-nøkkel"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Google Webmaster"
-msgstr "Google Webmaster"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_googleplus
+#: model:ir.model.fields,field_description:website.field_website__social_googleplus
 msgid "Google+ Account"
 msgstr "Google+-konto"
 
@@ -2059,18 +1487,14 @@ msgstr "Rutenett"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Group By"
 msgstr "Grupper etter"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_groups_id
+#: model:ir.model.fields,field_description:website.field_website_page__groups_id
 msgid "Groups"
 msgstr "Grupper"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Grow"
-msgstr "Voks"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2088,50 +1512,46 @@ msgid "Headline"
 msgstr "Overskrift"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Here is a checklist of actions to help you launch a new website efficiently:"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:37
+#, python-format
+msgid "Hide Cover Photo"
 msgstr ""
-"Her er en sjekkliste med tiltak som kan hjelpe deg med effektiv lansering av"
-" nytt nettsted:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:110
+#: code:addons/website/static/src/xml/website.pageProperties.xml:114
 #, python-format
 msgid "Hide this page from search results"
 msgstr "Gjem denne siden fra søkeresultater"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.contentMenu.xml:54
+#, python-format
+msgid "Hint: Simply type '#' to create a container menu"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.500
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 #: model:website.menu,name:website.menu_homepage
-#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Hjem"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:4
-#: model:ir.model.fields,field_description:website.field_website_homepage_id
-#: model:ir.model.fields,field_description:website.field_website_page_is_homepage
+#: model:ir.model.fields,field_description:website.field_website__homepage_id
+#: model:ir.model.fields,field_description:website.field_website_page__is_homepage
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
-#: model:ir.ui.view,arch_db:website.footer_custom
-#: model:ir.ui.view,arch_db:website.website_planner
 #, python-format
 msgid "Homepage"
 msgstr "Hjemmeside"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website2_homepage
-#: model:ir.ui.view,arch_db:website.website2_homepage_page_ir_ui_view
-#: model:website.page,arch_db:website.website2_homepage_page
-msgid "Homepage 0.0.0.0"
-msgstr "Hjemmeside 0.0.0.0"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:102
+#: code:addons/website/static/src/xml/website.backend.xml:58
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "How to get my Client ID"
@@ -2139,24 +1559,29 @@ msgstr "Hvordan få min klient-ID"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:97
+#: code:addons/website/static/src/xml/website.backend.xml:53
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "How to get my Tracking ID"
 msgstr "Hvordan få min sporings-ID"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
-#: model:ir.model.fields,field_description:website.field_website_page_id
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_id
-#: model:ir.model.fields,field_description:website.field_website_redirect_id
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
+#: model:ir.model.fields,field_description:website.field_website__id
+#: model:ir.model.fields,field_description:website.field_website_menu__id
+#: model:ir.model.fields,field_description:website.field_website_page__id
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__id
+#: model:ir.model.fields,field_description:website.field_website_redirect__id
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_xml_id
+#: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "Handlings-ID er definert i en XML-fil"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website_page__xml_id
 msgid "ID of the view defined in xml file"
 msgstr "ID for visningen definert i XML-filen"
 
@@ -2171,7 +1596,7 @@ msgstr ""
 "én eller flere maler til fabrikkinnstillinger."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_groups_id
+#: model:ir.model.fields,help:website.field_website_page__groups_id
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
@@ -2180,18 +1605,13 @@ msgstr ""
 "visningen bare for brukerne av gruppene nevnt her."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_website_page_active
+#: model:ir.model.fields,help:website.field_website_page__active
 msgid ""
 "If this view is inherited,\n"
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Improve your conversion from visitors to customers"
-msgstr "Forbedre konvertering fra besøkende til kunde"
 
 #. module: website
 #. openerp-web
@@ -2216,7 +1636,7 @@ msgstr "I tittelen"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:108
+#: code:addons/website/static/src/xml/website.pageProperties.xml:112
 #: model:ir.ui.view,arch_db:website.index_management
 #, python-format
 msgid "Indexed"
@@ -2228,14 +1648,9 @@ msgid "Information about the"
 msgstr "Informasjon om"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_inherit_id
+#: model:ir.model.fields,field_description:website.field_website_page__inherit_id
 msgid "Inherited View"
 msgstr "Nedarvet visning"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Install Gengo Translator app"
-msgstr "Installer appen Gengo Translator"
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2248,11 +1663,6 @@ msgid "Install new language"
 msgstr "Installer nytt språk"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Install new languages"
-msgstr "Installer nye språk"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Applications"
 msgstr "Installerte applikasjoner"
@@ -2261,6 +1671,13 @@ msgstr "Installerte applikasjoner"
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Modules"
 msgstr "Installerte moduler"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:57
+#, python-format
+msgid "Invalid Facebook Page Url"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2279,34 +1696,21 @@ msgstr ""
 "å ta selskapet et nivå videre."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_is_visible
-#: model:ir.model.fields,field_description:website.field_website_page_is_visible
+#: model:ir.model.fields,field_description:website.field_website_menu__is_visible
+#: model:ir.model.fields,field_description:website.field_website_page__is_visible
 msgid "Is Visible"
 msgstr "Er synlig"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Is the keyword popular in Google?"
-msgstr "Er nøkkelordet populært i Google?"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Is the person searching for it likely to buy my product or\n"
-"                                    service? When starting out, you want to advertise on\n"
-"                                    “buying intent” keywords (i.e. when people are clearly looking to buy)."
-msgstr ""
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:19
+#: code:addons/website/static/src/xml/website.pageProperties.xml:23
 #, python-format
 msgid "It looks like your file is being called by"
 msgstr "Det ser ut som filen din kalles av"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:212
+#: code:addons/website/static/src/js/content/website_root.js:255
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2316,26 +1720,12 @@ msgstr ""
 "problemet i det <a href=\"%s\">klassiske Odoo-grensesnittet</a>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"It's often much easier not to start with a blank page. Take a look at your competitors\n"
-"                        and similar companies around the world. They probably have the same objectives and\n"
-"                        visitors that you do. How did they transform that into a website?<br/>\n"
-"                        Try to find 3 websites that have remarkable characteristics."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "It’s time to grow your traffic!"
-msgstr "Det er på tide å skaffe deg mer trafikk!"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_button
 msgid "Join us and make your company a better place."
 msgstr "Bli med oss og gjør selskapet ditt til et bedre sted."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_key
+#: model:ir.model.fields,field_description:website.field_website_page__key
 msgid "Key"
 msgstr "Nøkkel"
 
@@ -2347,8 +1737,8 @@ msgid "Keyword"
 msgstr "Nøkkelord"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
-#: model:ir.model.fields,field_description:website.field_website_language_ids
+#: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
+#: model:ir.model.fields,field_description:website.field_website__language_ids
 msgid "Languages"
 msgstr "Språk"
 
@@ -2363,61 +1753,51 @@ msgid "Large"
 msgstr "Stor"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website___last_update
-#: model:ir.model.fields,field_description:website.field_website_menu___last_update
-#: model:ir.model.fields,field_description:website.field_website_page___last_update
-#: model:ir.model.fields,field_description:website.field_website_published_mixin___last_update
-#: model:ir.model.fields,field_description:website.field_website_redirect___last_update
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata___last_update
+#: model:ir.model.fields,field_description:website.field_website____last_update
+#: model:ir.model.fields,field_description:website.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website.field_website_page____last_update
+#: model:ir.model.fields,field_description:website.field_website_published_mixin____last_update
+#: model:ir.model.fields,field_description:website.field_website_redirect____last_update
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 msgid "Last Modified on"
-msgstr "Sist oppdatert "
+msgstr "Sist endret"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:110
+#: code:addons/website/static/src/xml/website.backend.xml:67
 #, python-format
 msgid "Last Month"
 msgstr "Siste måned"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_write_uid
-#: model:ir.model.fields,field_description:website.field_website_page_write_uid
-#: model:ir.model.fields,field_description:website.field_website_redirect_write_uid
-#: model:ir.model.fields,field_description:website.field_website_write_uid
+#: model:ir.model.fields,field_description:website.field_website__write_uid
+#: model:ir.model.fields,field_description:website.field_website_menu__write_uid
+#: model:ir.model.fields,field_description:website.field_website_page__write_uid
+#: model:ir.model.fields,field_description:website.field_website_redirect__write_uid
 msgid "Last Updated by"
 msgstr "Sist oppdatert av"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_write_date
-#: model:ir.model.fields,field_description:website.field_website_page_write_date
-#: model:ir.model.fields,field_description:website.field_website_redirect_write_date
-#: model:ir.model.fields,field_description:website.field_website_write_date
+#: model:ir.model.fields,field_description:website.field_website__write_date
+#: model:ir.model.fields,field_description:website.field_website_menu__write_date
+#: model:ir.model.fields,field_description:website.field_website_page__write_date
+#: model:ir.model.fields,field_description:website.field_website_redirect__write_date
 msgid "Last Updated on"
 msgstr "Sist oppdatert"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:109
+#: code:addons/website/static/src/xml/website.backend.xml:66
 #, python-format
 msgid "Last Week"
 msgstr "Siste uke"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:111
+#: code:addons/website/static/src/xml/website.backend.xml:68
 #, python-format
 msgid "Last Year"
 msgstr "Siste år"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Launch"
-msgstr "Lansering"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Learn what question your customers have, what problems they encounter"
-msgstr "Lær hvilke spørsmål kundene dine har og hvilke problemer de støter på"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2449,21 +1829,19 @@ msgid "Limited customization"
 msgstr "Begrenset tilpassing"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:55
-#, python-format
-msgid "Link"
-msgstr "Link"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
+msgid "Link Trackers"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:81
+#: code:addons/website/static/src/xml/website.backend.xml:36
 #, python-format
 msgid "Link my Analytics Account"
 msgstr "Tilknytt min Analytics-konto"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_linkedin
+#: model:ir.model.fields,field_description:website.field_website__social_linkedin
 msgid "LinkedIn Account"
 msgstr "LinkedIn-konto"
 
@@ -2490,8 +1868,7 @@ msgid "Local Events"
 msgstr "Lokale arrangementer"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_id
-#: model:ir.ui.view,arch_db:website.website_planner
+#: model:ir.model.fields,field_description:website.field_website__menu_id
 msgid "Main Menu"
 msgstr "Hovedmeny"
 
@@ -2509,11 +1886,6 @@ msgstr "Administrer sidene dine"
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Your Website Pages"
 msgstr "Administrer sidene på nettstedet ditt"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Manage channels to structure your content"
-msgstr "Administrer kanaler for å strukturere innholdet ditt"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
@@ -2541,29 +1913,32 @@ msgid "Meet the Executive Team"
 msgstr "Møt ledelsen"
 
 #. module: website
-#: code:addons/website/models/website.py:241
-#: model:ir.model.fields,field_description:website.field_website_menu_name
+#: code:addons/website/models/website.py:249
+#: model:ir.model.fields,field_description:website.field_website_menu__name
 #, python-format
 msgid "Menu"
 msgstr "Meny"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:338
+#: code:addons/website/static/src/js/menu/content.js:380
 #, python-format
 msgid "Menu Label"
 msgstr "Menyvalg"
 
 #. module: website
-#: code:addons/website/models/website.py:243
+#: code:addons/website/models/website.py:251
+#: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
 msgid "Menus"
 msgstr "Menyer"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Message"
-msgstr "Melding"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:22
+#, python-format
+msgid "Messages"
+msgstr "Meldinger"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2589,18 +1964,17 @@ msgid "Mobile preview"
 msgstr "Mobil forhåndsvisning"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_model
-#: model:ir.model.fields,field_description:website.field_website_page_model_ids
+#: model:ir.model.fields,field_description:website.field_website_page__model
 msgid "Model"
 msgstr "Modell"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_model_data_id
+#: model:ir.model.fields,field_description:website.field_website_page__model_data_id
 msgid "Model Data"
 msgstr "Modelldata"
 
 #. module: website
-#: model:ir.model,name:website.model_ir_model
+#: model:ir.model.fields,field_description:website.field_website_page__model_ids
 msgid "Models"
 msgstr "Modeller"
 
@@ -2635,13 +2009,13 @@ msgstr "Flytt til forrige"
 
 #. module: website
 #: selection:website.redirect,type:0
-msgid "Moved permanently"
-msgstr "Permanent flyttet"
+msgid "Moved permanently (301)"
+msgstr ""
 
 #. module: website
 #: selection:website.redirect,type:0
-msgid "Moved temporarily"
-msgstr "Midlertidig flyttet"
+msgid "Moved temporarily (302)"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout
@@ -2650,7 +2024,7 @@ msgstr "Nettstedet mitt"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:40
+#: code:addons/website/static/src/xml/website.pageProperties.xml:44
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
@@ -2663,21 +2037,15 @@ msgid "Name and favicon of your website"
 msgstr "Navn og favikon for nettstedet ditt"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Namecheap"
-msgstr "Namecheap"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:41
-#: code:addons/website/static/src/xml/website.contentMenu.xml:58
+#: code:addons/website/static/src/js/menu/new_content.js:42
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "New Page"
 msgstr "Ny side"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_new_window
+#: model:ir.model.fields,field_description:website.field_website_menu__new_window
 msgid "New Window"
 msgstr "Nytt vindu"
 
@@ -2700,6 +2068,12 @@ msgstr "Ingen tilpasning"
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "No support"
 msgstr "Ikke støttet"
+
+#. module: website
+#: model:ir.actions.act_window,help:website.action_module_theme
+#: model:ir.actions.act_window,help:website.action_module_website
+msgid "No website module found!"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2726,22 +2100,12 @@ msgstr ""
 "toppen."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_language_count
+#: model:ir.model.fields,field_description:website.field_res_config_settings__language_count
 msgid "Number of languages"
 msgstr "Antall språk"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "OVH"
-msgstr "OVH"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Objectives"
-msgstr "Mål"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+#: model:ir.ui.view,arch_db:website.brand_promotion
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -2802,21 +2166,12 @@ msgid "On Website"
 msgstr "På nettsted"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"One way is by optimizing your indexing on search engines like Google "
-"naturally, without paying anything. The earliest you show up in the search, "
-"the more visitors you get. This strategy called <strong>SEO</strong> "
-"involves several actions."
-msgstr ""
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
+msgstr "Bare etter invitasjon (B2B)"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Online users:"
-msgstr "Tilkoblede brukere:"
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_page_mode
+#: model:ir.model.fields,help:website.field_website_page__mode
 msgid ""
 "Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
 "\n"
@@ -2835,24 +2190,21 @@ msgid "Open Source ERP"
 msgstr "ERP-system med åpen kildekode"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Open Source eCommerce"
-msgstr "Netthandel med åpen kildekode"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
 msgstr "Søkemotoroptimalisering"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:26
+#, python-format
+msgid "Options"
+msgstr "Valg"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Order now"
 msgstr "Bestill nå"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Organize and publish events to meet your prospects and customers"
-msgstr "Organiser og publiser arrangementer for å møte kunder og prospekter"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -2865,7 +2217,7 @@ msgid "Our Offers"
 msgstr "Våre tilbud"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Our Products &amp; Services"
 msgstr "Våre produkter og tjenester"
 
@@ -2893,51 +2245,49 @@ msgstr ""
 "optimalisere ytelsen sin."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid ""
 "Our products are designed for small to medium size companies willing to optimize\n"
-"                            their performance."
+"                                their performance."
 msgstr ""
-"Produktene våre er utformet for små til mellomstore firmaer som vil\n"
-"optimalisere ytelsen sin."
 
 #. module: website
-#: code:addons/website/models/website.py:206
-#: code:addons/website/models/website.py:275
+#: code:addons/website/models/website.py:214
+#: code:addons/website/models/website.py:283
 #: model:ir.model,name:website.model_website_page
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_page_ids
-#: model:ir.model.fields,field_description:website.field_website_page_page_ids
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
+#: model:ir.model.fields,field_description:website.field_website_page__page_ids
 #, python-format
 msgid "Page"
 msgstr "Side"
 
 #. module: website
-#: code:addons/website/models/website.py:213
+#: code:addons/website/models/website.py:221
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
 msgstr "Siden <b>%s</b> inneholder en link til denne siden"
 
 #. module: website
-#: code:addons/website/models/website.py:282
+#: code:addons/website/models/website.py:290
 #, python-format
 msgid "Page <b>%s</b> is calling this file"
 msgstr "Side <b>%s</b> kaller denne filen"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_website_indexed
+#: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Page Indexed"
 msgstr "Side indeksert"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:46
+#: code:addons/website/static/src/xml/website.pageProperties.xml:50
 #, python-format
 msgid "Page Name"
 msgstr "Sidenavn"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:51
+#: code:addons/website/static/src/js/menu/content.js:67
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Page Properties"
@@ -2945,7 +2295,7 @@ msgstr "Sideegenskaper"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:42
+#: code:addons/website/static/src/js/menu/new_content.js:43
 #: code:addons/website/static/src/xml/website.seo.xml:14
 #, python-format
 msgid "Page Title"
@@ -2953,24 +2303,20 @@ msgstr "Sidetittel"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:53
-#: model:ir.model.fields,field_description:website.field_website_page_url
+#: code:addons/website/static/src/xml/website.facebook_page.xml:7
+#: code:addons/website/static/src/xml/website.pageProperties.xml:57
+#: model:ir.model.fields,field_description:website.field_website_page__url
 #, python-format
 msgid "Page URL"
 msgstr "Side-URL"
 
 #. module: website
-#: code:addons/website/models/website.py:208
-#: code:addons/website/models/website.py:277
+#: code:addons/website/models/website.py:216
+#: code:addons/website/models/website.py:285
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #, python-format
 msgid "Pages"
 msgstr "Sider"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Panama Sky"
-msgstr "Panama-himmel"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -2982,87 +2328,31 @@ msgstr ""
 "nøkkelfunksjoner. For å sammenlikne produkter, bruk innsidekolonner."
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_left
-msgid "Parent Left"
-msgstr "Venstre forelder"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_id
+#: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr "Overordnet meny"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_parent_right
-msgid "Parent Rigth"
+#: model:ir.model.fields,field_description:website.field_website_menu__parent_path
+msgid "Parent Path"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Partner Detail"
-msgstr "Partnerdetaljer"
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_partner_id
+#: model:ir.model.fields,help:website.field_website__partner_id
 msgid "Partner-related data of the user"
 msgstr "Partnerrelatert brukerdata"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Partners"
-msgstr "Partnere"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Pay services like"
-msgstr "Betal tjenester som"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Peak"
-msgstr "Topp"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "People"
-msgstr "Folk"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Plan"
-msgstr "Planlegg"
-
-#. module: website
-#: model:web.planner,tooltip_planner:website.planner_website
-msgid ""
-"Plan your website strategy, design your pages, sell your products and grow "
-"your online business!"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:58
+#, python-format
+msgid "Please enter valid facebook page URL for preview"
 msgstr ""
-"Planlegg nettstedstrategi, design sider, selg produkter og få netthandelen "
-"din til å vokse!"
-
-#. module: website
-#: model:ir.model,name:website.model_web_planner
-msgid "Planner"
-msgstr "Planlegger"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.theme_customize
 msgid "Please install a theme in order to customize your website."
 msgstr "Installer et tema for å tilpasse nettstedet ditt"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Post content on other people blogs, forums, websites, that are related to "
-"your environment."
-msgstr ""
-"Legg ut innhold på andre blogger, fora og nettsteder som er relevante for "
-"ditt felt."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Powered by"
-msgstr "Drevet av"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -3071,6 +2361,7 @@ msgstr "Forrige"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:52
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
 msgid "Preview"
@@ -3083,7 +2374,6 @@ msgstr "Profesjonell"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#: model:ir.ui.view,arch_db:website.website_planner
 msgid "Promote"
 msgstr "Markedsfør"
 
@@ -3100,47 +2390,22 @@ msgid "Promote page on the web"
 msgstr "Markedsfør side på nettet"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Promote your catalog of services"
-msgstr "Markedsfør tjenestene du tilbyr"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Provide fast, professional and accurate information to your visitors"
-msgstr "Gi dine besøkende kjapp, profesjonell og korrekt informasjon."
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_partner_id
+#: model:ir.model.fields,field_description:website.field_website__partner_id
 msgid "Public Partner"
 msgstr "Offentlig partner"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_user_id
+#: model:ir.model.fields,field_description:website.field_website__user_id
 msgid "Public User"
 msgstr "Offentlig bruker"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:41
-#: code:addons/website/static/src/xml/website.pageProperties.xml:122
+#: code:addons/website/static/src/xml/website.pageProperties.xml:45
+#: code:addons/website/static/src/xml/website.pageProperties.xml:126
 #, python-format
 msgid "Publish"
 msgstr "Publiser"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Publish multimedias to document your products/services"
-msgstr ""
-"Publiser multimediefiler for å dokumentere dine produkter og tjenester"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Publish the link of your website through your social media channels "
-"(Twitter, Facebook, LinkedIn)."
-msgstr ""
-"Publiser linken til nettstedet ditt i de sosiale mediekanalene dine "
-"(Twitter, Facebook, LinkedIn)."
 
 #. module: website
 #. openerp-web
@@ -3160,8 +2425,8 @@ msgstr "Publisert"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:133
-#: model:ir.model.fields,field_description:website.field_website_page_date_publish
+#: code:addons/website/static/src/xml/website.pageProperties.xml:137
+#: model:ir.model.fields,field_description:website.field_website_page__date_publish
 #, python-format
 msgid "Publishing Date"
 msgstr "Publiseringsdato"
@@ -3172,50 +2437,25 @@ msgid "QWeb"
 msgstr "QWeb"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Qualify your visitors in order to reach them out with marketing campaigns"
-msgstr "Kvalifiser de besøkende for å nå dem med markedsføringskampanjer"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Reach your customers and prospects on a recurring basis"
-msgstr "Nå kunder og potensielle kunder jevnlig"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Ready For Launch!"
-msgstr "Klar til lansering!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Recipient"
-msgstr "Mottaker"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Redeem a $75 coupon code to start your campaign."
-msgstr "Hev en kupongkode på 75 dollar for å starte kampanjen."
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_url_from
+#: model:ir.model.fields,field_description:website.field_website_redirect__url_from
 msgid "Redirect From"
 msgstr "Omdirigering fra"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:62
+#: code:addons/website/static/src/xml/website.pageProperties.xml:66
 #, python-format
 msgid "Redirect Old URL"
 msgstr "Omdiriger gammel URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_url_to
+#: model:ir.model.fields,field_description:website.field_website_redirect__url_to
 msgid "Redirect To"
 msgstr "Omdiriger til"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_redirect_type
+#: model:ir.model.fields,field_description:website.field_website_redirect__type
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Redirection Type"
 msgstr "Omdirigeringstype"
 
@@ -3225,38 +2465,19 @@ msgid "Redirects"
 msgstr "Omdirigeringer"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Reduce the time and resources spent on support"
-msgstr "Reduser tid og ressurser brukt på kundestøtte"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Regroup similar pages into a sub-menu, so they will appear under a unique "
-"drop-down menu."
-msgstr "Samle liknende sider i en undermeny"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Related Menu Items"
 msgstr "Tilknyttede menyvalg"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_menu_ids
+#: model:ir.model.fields,field_description:website.field_website_page__menu_ids
 msgid "Related Menus"
 msgstr "Tilknyttede menyer"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_page_id
+#: model:ir.model.fields,field_description:website.field_website_menu__page_id
 msgid "Related Page"
 msgstr "Tilknyttet side"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:58
-#, python-format
-msgid "Remove this suggestion from dashboard"
-msgstr "Fjern dette forslaget fra dashbordet"
 
 #. module: website
 #. openerp-web
@@ -3296,19 +2517,14 @@ msgid "SEO metadata"
 msgstr "Metadata for søkemotoroptimalisering"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Sails"
-msgstr "Seil"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Sample images"
 msgstr "Eksempelbilder"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:96
-#: code:addons/website/static/src/js/menu/content.js:44
+#: code:addons/website/static/src/js/backend/dashboard.js:91
+#: code:addons/website/static/src/js/menu/content.js:45
 #: code:addons/website/static/src/js/menu/seo.js:342
 #, python-format
 msgid "Save"
@@ -3318,6 +2534,11 @@ msgstr "Lagre"
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "Search Menus"
 msgstr "Søk i menyer"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_redirect_search
+msgid "Search Redirect"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_search_box
@@ -3340,18 +2561,8 @@ msgid "See Google Analytics data on your Website Dashboard"
 msgstr "Se data fra Google Analytics på nettsted-dashbordet ditt"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "See and buy your products"
-msgstr "Se og kjøp produktene dine"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "See how to translate on your own"
-msgstr "Se hvordan du kan oversette på egenhånd"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:387
+#: code:addons/website/static/src/js/menu/content.js:423
 #, python-format
 msgid "Select a Menu"
 msgstr "Velg en meny"
@@ -3367,39 +2578,16 @@ msgid "Sell Online. Easily."
 msgstr "Selg på nett. Enkelt."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Sell more online"
-msgstr "Selg mer på nett"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Send <span class=\"fa fa-long-arrow-right\"/>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_comment
-msgid "Send a Message to our Partners"
-msgstr "Send en melding til partnerne våre"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Send an email to all your contacts"
-msgstr "Send en epostmelding til alle kontaktene dine"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.website2_contactus
-#: model:ir.ui.view,arch_db:website.website2_contactus_page_ir_ui_view
 #: model:website.page,arch_db:website.contactus_page
-#: model:website.page,arch_db:website.website2_contactus_page
 msgid "Send us an email"
 msgstr "Send oss en epostmelding"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_sequence
-#: model:ir.model.fields,field_description:website.field_website_page_priority
-#: model:ir.model.fields,field_description:website.field_website_redirect_sequence
+#: model:ir.model.fields,field_description:website.field_website_menu__sequence
+#: model:ir.model.fields,field_description:website.field_website_page__priority
+#: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "Sekvens"
 
@@ -3416,24 +2604,26 @@ msgid "Shadows"
 msgstr "Skygger"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Share experience on similar projects"
-msgstr "Del erfaring med liknende prosjekter"
-
-#. module: website
-#: model:ir.model.fields,help:website.field_website_auto_redirect_lang
+#: model:ir.model.fields,help:website.field_website__auto_redirect_lang
 msgid "Should users be redirected to their browser's language"
 msgstr "Skal brukere omdirigeres til språket satt i nettleseren deres"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_customize_show
-#: model:ir.model.fields,field_description:website.field_website_page_customize_show
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__customize_show
+#: model:ir.model.fields,field_description:website.field_website_page__customize_show
 msgid "Show As Optional Inherit"
 msgstr "Vis som valgfritt arv"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:86
+#: code:addons/website/static/src/xml/website.facebook_page.xml:44
+#, python-format
+msgid "Show Friend's Faces"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:90
 #, python-format
 msgid "Show in Top Menu"
 msgstr "Vis i toppmeny"
@@ -3442,11 +2632,6 @@ msgstr "Vis i toppmeny"
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Show your address on a map in the"
 msgstr "Vis adressen din i et kart på"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Simple and obvious"
-msgstr "Enkel og opplagt"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
@@ -3469,19 +2654,18 @@ msgid "Small"
 msgstr "Liten"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_company_form_inherit_website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Social Media"
 msgstr "Sosiale medier"
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: code:addons/website/controllers/main.py:219
 #, python-format
 msgid "Sort by Name"
 msgstr "Sorter på navn"
 
 #. module: website
-#: code:addons/website/controllers/main.py:217
+#: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Url"
 msgstr "Sorter på URL"
@@ -3514,21 +2698,6 @@ msgid "Stay on this page"
 msgstr "Bli på denne siden"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle"
-msgstr "Undertittel"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle 2"
-msgstr "Undertittel 2"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.footer_custom
-msgid "Subtitle 3"
-msgstr "Undertittel 3"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
@@ -3539,6 +2708,13 @@ msgstr "Foreslått"
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "TRANSLATE"
 msgstr "OVERSETT"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:14
+#, python-format
+msgid "Tabs"
+msgstr "aner"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -3559,20 +2735,20 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr "Forklar verdien for kunden<br/>i denne funksjonaliteten."
 
 #. module: website
-#: code:addons/website/models/website.py:225
-#: code:addons/website/models/website.py:295
+#: code:addons/website/models/website.py:233
+#: code:addons/website/models/website.py:303
 #, python-format
 msgid "Template"
 msgstr "Mal"
 
 #. module: website
-#: code:addons/website/models/website.py:231
+#: code:addons/website/models/website.py:239
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
 msgstr "Malen <b>%s (id:%s)</b> inneholder en link til denne siden"
 
 #. module: website
-#: code:addons/website/models/website.py:301
+#: code:addons/website/models/website.py:309
 #, python-format
 msgid "Template <b>%s (id:%s)</b> is calling this file"
 msgstr "Malen <b>%s (id:%s)</b> kaller denne filen"
@@ -3583,8 +2759,8 @@ msgid "Template fallback"
 msgstr "Reservemal"
 
 #. module: website
-#: code:addons/website/models/website.py:227
-#: code:addons/website/models/website.py:297
+#: code:addons/website/models/website.py:235
+#: code:addons/website/models/website.py:305
 #, python-format
 msgid "Templates"
 msgstr "Maler"
@@ -3593,16 +2769,6 @@ msgstr "Maler"
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Terms of service"
 msgstr "Tjenestevilkår"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.template_partner_post
-msgid "Thank you for posting a message !"
-msgstr "Takk for at du sendte en melding!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "The Banner or Big Picture building blocks are good choices for that."
-msgstr "Innholdsblokkene Banner eller Stort bilde er gode valg til dette."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -3615,26 +2781,13 @@ msgid "The following error was raised in the website controller"
 msgstr "Følgende feil ble oppdaget av nettsted-kontrolleren"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_blog_post_website_url
-#: model:ir.model.fields,help:website.field_delivery_carrier_website_url
-#: model:ir.model.fields,help:website.field_event_event_website_url
-#: model:ir.model.fields,help:website.field_event_track_website_url
-#: model:ir.model.fields,help:website.field_hr_employee_website_url
-#: model:ir.model.fields,help:website.field_hr_job_website_url
-#: model:ir.model.fields,help:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,help:website.field_product_template_website_url
-#: model:ir.model.fields,help:website.field_res_partner_grade_website_url
-#: model:ir.model.fields,help:website.field_res_partner_tag_website_url
-#: model:ir.model.fields,help:website.field_res_partner_website_url
-#: model:ir.model.fields,help:website.field_slide_channel_website_url
-#: model:ir.model.fields,help:website.field_slide_slide_website_url
-#: model:ir.model.fields,help:website.field_website_page_website_url
-#: model:ir.model.fields,help:website.field_website_published_mixin_website_url
+#: model:ir.model.fields,help:website.field_website_page__website_url
+#: model:ir.model.fields,help:website.field_website_published_mixin__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Fullstendig URL for å nå dokumentet via nettstedet."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_ir_act_server_website_url
+#: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 msgid "The full URL to access the server action through the website."
 msgstr "Full URL for å få tilgang til server-handlinger gjennom nettstedet."
 
@@ -3660,29 +2813,13 @@ msgid "The selected templates will be reset to their factory settings."
 msgstr "De valgte malene vil tilbakestilles til fabrikkinnstillinger."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "The shorter the better"
-msgstr "Jo kortere, jo bedre"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "There are currently no pages for your website."
 msgstr "Nettstedet ditt har ingen sider for øyeblikket."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"There are so many ways to communicate with your customers, visitors and\n"
-"                        prospects that it's sometimes difficult to know what to put your energy into. Here are\n"
-"                        some advices on what to focus on next."
-msgstr ""
-"Det er så mange måter å kommunisere med kunder, besøkende og potensielle\n"
-"kunder på at det kan være vanskelig å vite hvor man skal sette inn energien sin.\n"
-"Her er noen råd om det neste å fokusere på."
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:80
+#: code:addons/website/static/src/xml/website.backend.xml:35
 #, python-format
 msgid "There is no data currently available."
 msgstr "Ingen data tilgjengelig for øyeblikket."
@@ -3711,14 +2848,14 @@ msgstr ""
 "nettstedet og dets produkter og tjenester (kollektivt \"nettstedet\" eller \"tjenestene\")."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_favicon
-#: model:ir.model.fields,help:website.field_website_favicon
+#: model:ir.model.fields,help:website.field_res_config_settings__favicon
+#: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
 msgstr "Dette feltet inneholder bildet som brukes som favikon for nettstedet."
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_default_lang_code
-#: model:ir.model.fields,help:website.field_website_default_lang_code
+#: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
+#: model:ir.model.fields,help:website.field_website__default_lang_code
 msgid "This field is used to set/get locales for user"
 msgstr ""
 "Dette feltet brukes til å sette/hente språkinnstillinger for brukeren."
@@ -3733,7 +2870,7 @@ msgstr ""
 "opprette den."
 
 #. module: website
-#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:254
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr "Denne siden er i menyen <b>%s</b>"
@@ -3744,9 +2881,11 @@ msgid "Thumbnails"
 msgstr "Miniatyrbilder"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Time-consuming"
-msgstr "Tidkrevende"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:16
+#, python-format
+msgid "Timeline"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -3761,22 +2900,14 @@ msgstr ""
 "en ny kolonne som kopi."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"To get an external assessment of your website, you can also submit it to"
-msgstr ""
-"For å få en ekstern vurdering av nettstedet ditt, kan du også sende det til"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
 msgstr "Fred Tangen, CEO"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:382
+#: code:addons/website/static/src/js/menu/content.js:418
 #: model:website.menu,name:website.main_menu
-#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Toppmeny"
@@ -3785,6 +2916,11 @@ msgstr "Toppmeny"
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Traceback"
 msgstr "Tilbakesporing"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Track clicks on UTM links"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3804,21 +2940,7 @@ msgid "Transform the picture (click twice to reset transformation)"
 msgstr "Omform bildet (klikk to ganger for å tilbakestille)"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Translate"
-msgstr "Oversett"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Translating your website into other languages is the best way to broaden its"
-" audience."
-msgstr ""
-"Å oversette nettstedet ditt til andre språk er den beste måten å gi det et "
-"bredere publikum på."
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_twitter
+#: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "Twitter Account"
 msgstr "Twitter-konto"
 
@@ -3829,8 +2951,7 @@ msgstr "Twitter-skroller"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:76
-#: model:ir.ui.view,arch_db:website.snippet_options
+#: code:addons/website/static/src/xml/website.pageProperties.xml:80
 #, python-format
 msgid "Type"
 msgstr "Type"
@@ -3845,7 +2966,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:96
+#: code:addons/website/static/src/xml/website.backend.xml:52
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_website_form
 #, python-format
@@ -3853,8 +2974,8 @@ msgid "UA-XXXXXXXX-Y"
 msgstr "UA-XXXXXXXX-Y"
 
 #. module: website
-#: model:ir.model.fields,help:website.field_res_config_settings_cdn_filters
-#: model:ir.model.fields,help:website.field_website_cdn_filters
+#: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
+#: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
 msgstr ""
 "URL som passer med filtrene vil bli omskrevet ved hjelp av CDN base-URL"
@@ -3889,16 +3010,7 @@ msgid "Unpublished"
 msgstr "Upublisert"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Update your internal documents: footer of sales order, contracts, invoices, "
-"business cards, etc."
-msgstr ""
-"Oppdater dine interne dokumenter: Bunntekst i salgsordrer, kontrakter, "
-"fakturaer, visittkort, osv."
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu_url
+#: model:ir.model.fields,field_description:website.field_website_menu__url
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Url"
 msgstr "URL"
@@ -3909,30 +3021,28 @@ msgid "Use Of Cookies"
 msgstr "Bruk av informasjonskapsler"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:30
+#, python-format
+msgid "Use Small Header"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use a CDN to optimize the availability of your website's content"
 msgstr "Bruk et CDN for å optimalisere nettstedinnholdets tilgjengelighet "
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_cdn_activated
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
 msgid "Use a Content Delivery Network (CDN)"
 msgstr "Bruk et Content Delivery Network (CDN)"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:97
+#: code:addons/website/static/src/xml/website.pageProperties.xml:101
 #, python-format
 msgid "Use as Homepage"
 msgstr "Bruk som hjemmeside"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Use the Button block or the Newsletter subscription one (if Mass Mailing "
-"installed)."
-msgstr ""
-"Bruk Knapp-blokken eller Nyhetsbrev-blokken (hvis appen Masseutsendelser er "
-"installert)."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3942,6 +3052,11 @@ msgid ""
 msgstr ""
 "User-agent: *\n"
 "Sitemap:"
+
+#. module: website
+#: model:ir.model,name:website.model_res_users
+msgid "Users"
+msgstr "Brukere"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3954,67 +3069,44 @@ msgid "Very Slow"
 msgstr "Veldig langsom"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_view_id
+#: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Visning"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_arch
-#: model:ir.model.fields,field_description:website.field_website_page_arch_base
+#: model:ir.model.fields,field_description:website.field_website_page__arch
 msgid "View Architecture"
 msgstr "Se arkitektur"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_name
+#: model:ir.model.fields,field_description:website.field_website_page__name
 msgid "View Name"
 msgstr "Se navn"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_type
+#: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
 msgstr "Se type"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_mode
+#: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_inherit_children_ids
+#: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post_website_published
-#: model:ir.model.fields,field_description:website.field_event_track_website_published
-#: model:ir.model.fields,field_description:website.field_hr_employee_website_published
-#: model:ir.model.fields,field_description:website.field_hr_job_website_published
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_published
-#: model:ir.model.fields,field_description:website.field_product_template_website_published
-#: model:ir.model.fields,field_description:website.field_res_partner_website_published
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_published
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_published
-#: model:ir.model.fields,field_description:website.field_website_page_website_published
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_website_published
+#: model:ir.model.fields,field_description:website.field_website_page__website_published
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 msgid "Visible in Website"
 msgstr "Synlig på nettsted"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Visitors might not be interested in your products or services when they come"
-" to your site. They could want to learn something, improve their life, grow "
-"their business, find out more about you, etc. What great content can you "
-"offer your visitors? Why should they stay on your website?"
-msgstr ""
-"Besøkende er kanskje ikke interessert i produktene eller tjenestene når de "
-"kommer til nettstedet ditt. Kanskje de vil lære noe, forbedre livet sitt, få"
-" virksomheten sin til å vokse, finne ut mer om deg, osv. Hva slags godt "
-"innhold kan du tilby dine besøkende? Hvorfor skal de bli på nettstedet ditt?"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:70
+#: code:addons/website/static/src/xml/website.backend.xml:25
 #, python-format
 msgid "Visits"
 msgstr "Besøk"
@@ -4033,15 +3125,12 @@ msgstr ""
 "løser problemer for virksomheten din."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.footer_default
+#: model:ir.ui.view,arch_db:website.footer_custom
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
-"                            life through disruptive products. We build great products to solve your\n"
-"                            business problems."
+"                                life through disruptive products. We build great products to solve your\n"
+"                                business problems."
 msgstr ""
-"Vi er et team av engasjerte mennesker som har som mål å gjøre alles \n"
-"liv bedre med banebrytende produkter. Vi skaper gode produkter som \n"
-"løser problemer for virksomheten din."
 
 #. module: website
 #. openerp-web
@@ -4051,17 +3140,9 @@ msgid "We found these ones:"
 msgstr "Vi fant disse:"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "We hope this planner helped you to create your website."
-msgstr "Vi håper denne planleggeren hjelper deg med å lage nettstedet ditt."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:ir.ui.view,arch_db:website.website2_contactus
-#: model:ir.ui.view,arch_db:website.website2_contactus_page_ir_ui_view
 #: model:website.page,arch_db:website.contactus_page
-#: model:website.page,arch_db:website.website2_contactus_page
 msgid "We'll do our best to get back to you as soon as possible."
 msgstr ""
 "Vi skal gjøre vårt beste for å komme tilbake til deg så snart som mulig."
@@ -4069,10 +3150,10 @@ msgstr ""
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_website_id
-#: model:ir.model.fields,field_description:website.field_website_page_website_id
-#: model:ir.model.fields,field_description:website.field_website_redirect_website_id
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
+#: model:ir.model.fields,field_description:website.field_website_menu__website_id
+#: model:ir.model.fields,field_description:website.field_website_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_redirect__website_id
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
@@ -4085,12 +3166,17 @@ msgid "Website Apps"
 msgstr "Nettsted-apper"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_domain
+#: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
 msgstr "Nettsted-domene"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_favicon
+#: model:ir.model.fields,field_description:website.field_res_users__group_website_user
+msgid "Website Editor"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
 msgstr "Nettsted-favikon"
 
@@ -4106,10 +3192,21 @@ msgid "Website Menu"
 msgstr "Nettsted-meny"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_website_name
-#: model:ir.model.fields,field_description:website.field_website_name
+#: model:ir.ui.view,arch_db:website.website_menus_form_view
+msgid "Website Menus Settings"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
+#: model:ir.model.fields,field_description:website.field_website__name
 msgid "Website Name"
 msgstr "Nettsted-navn"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__first_page_id
+#: model:ir.model.fields,field_description:website.field_website_page__first_page_id
+msgid "Website Page"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
@@ -4123,7 +3220,7 @@ msgid "Website Pages"
 msgstr "Nettsted-sider"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
 msgstr "Nettsted-filbane"
 
@@ -4159,26 +3256,14 @@ msgid "Website Title"
 msgstr "Nettsted-tittel"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post_website_url
-#: model:ir.model.fields,field_description:website.field_delivery_carrier_website_url
-#: model:ir.model.fields,field_description:website.field_event_event_website_url
-#: model:ir.model.fields,field_description:website.field_event_track_website_url
-#: model:ir.model.fields,field_description:website.field_hr_employee_website_url
-#: model:ir.model.fields,field_description:website.field_hr_job_website_url
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel_website_url
-#: model:ir.model.fields,field_description:website.field_product_template_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_grade_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_tag_website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_website_url
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_url
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_url
-#: model:ir.model.fields,field_description:website.field_website_page_website_url
-#: model:ir.model.fields,field_description:website.field_website_published_mixin_website_url
+#: model:ir.model.fields,field_description:website.field_ir_attachment__website_url
+#: model:ir.model.fields,field_description:website.field_website_page__website_url
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__website_url
 msgid "Website URL"
 msgstr "Nettsted-URL"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 msgid "Website Url"
 msgstr "Nettsted-URL"
 
@@ -4196,68 +3281,23 @@ msgid "Website menu"
 msgstr "Nettsted-meny"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_description
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_description
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_description
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_description
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_description
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_description
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
 msgstr "Metabeskrivelse for nettsted"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Meta-nøkkelord for nettsted"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_post_website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_tag_website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_event_website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_track_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_forum_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_post_website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_tag_website_meta_title
-#: model:ir.model.fields,field_description:website.field_hr_job_website_meta_title
-#: model:ir.model.fields,field_description:website.field_ir_ui_view_website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_public_category_website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_template_website_meta_title
-#: model:ir.model.fields,field_description:website.field_res_partner_website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_channel_website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_slide_website_meta_title
-#: model:ir.model.fields,field_description:website.field_website_page_website_meta_title
-#: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_title
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
 msgstr "Meta-tittel for nettsted"
 
@@ -4267,30 +3307,15 @@ msgid "Website: Dashboard"
 msgstr "Nettsted: Dashbord"
 
 #. module: website
-#: model:ir.actions.server,name:website.action_partner_post
-msgid "Website: Partner Post and Thanks Demo"
-msgstr ""
-
-#. module: website
-#: model:ir.actions.server,name:website.action_partner_comment
-msgid "Website: Partners Comment Form"
-msgstr "Nettsted: Kommentarskjema for partnere"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_page_website_ids
+#: model:ir.model.fields,field_description:website.field_website_page__website_ids
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Nettsteder"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
+#: model:ir.model.fields,field_description:website.field_base_language_install__website_ids
 msgid "Websites to translate"
 msgstr "Nettsteder å oversette"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "Welcome"
-msgstr "Velkommen"
 
 #. module: website
 #. openerp-web
@@ -4307,22 +3332,9 @@ msgid "What do you want to do?"
 msgstr "Hva vil du gjøre?"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "What may <strong>interest your visitors?</strong>"
-msgstr "<strong>Hva kan interessere dine besøkende?</strong>"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
 msgid "With a great subtitle"
 msgstr "Med en flott undertittel"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Write a good article about your business and publish it on article database "
-"websites (e.g. squidoo.com). Send it to press websites and to your local "
-"newspapers."
-msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
@@ -4368,38 +3380,24 @@ msgid ""
 msgstr "Skriv det kunden gjerne vil vite, <br/>ikke det du vil vise fram."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You can also pay for a sponsored indexing and place advertisements on web pages that show results from search\n"
-"                        engine queries. This is called <strong>SEA</strong>."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"You can set a custom domain name (e.g. yourcompany.com) for both the website\n"
-"                        and your emails. Your website address is as important to your branding as the\n"
-"                        name of your business or organization, so put some thought into changing it\n"
-"                        for a proper domain."
-msgstr ""
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:91
+#: code:addons/website/static/src/xml/website.backend.xml:47
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
 msgstr "Det ser ikke ut som du har tilgang til denne Analytics-kontoen."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
+#. openerp-web
+#: code:addons/website/static/src/js/menu/seo.js:543
+#, python-format
 msgid ""
-"You have many blocks available: References, Quotes Slider, Twitter "
-"Scroller,etc."
+"You have hidden this page from search results. It won't be indexed by search"
+" engines."
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:90
+#: code:addons/website/static/src/xml/website.backend.xml:46
 #, python-format
 msgid "You need to log in to your Google Account before:"
 msgstr "Du må logge inn i Google-kontoen din før:"
@@ -4420,7 +3418,7 @@ msgstr "Du bør prøve andre søkekriterier."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:100
+#: code:addons/website/static/src/xml/website.backend.xml:56
 #, python-format
 msgid "Your Client ID:"
 msgstr "Klient-IDen din:"
@@ -4432,7 +3430,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:95
+#: code:addons/website/static/src/xml/website.backend.xml:51
 #, python-format
 msgid "Your Tracking ID:"
 msgstr "Sporings-IDen din"
@@ -4450,69 +3448,19 @@ msgid "Your current changes will be saved automatically."
 msgstr "Endringene du har gjort, vil lagres automatisk."
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Your homepage is the most important page of your website. This is where visitors get their first impressions of you. An efficient homepage will prompt them to stay on your site, guide them towards your content, strengthen your company's branding and more.<br/>\n"
-"                        Here are some pointers to help you get started."
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Your menu must be built for your visitors and not for your own purposes or objectives.<br/>\n"
-"                        It needs to be organized, so that they see all the main content at a glance.<br/>\n"
-"                        It needs to be clear, so that they get the content they expect when clicking an item."
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Your search '"
 msgstr "Søket ditt '"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"Your visitors won't see the footer immediately. Use it for links you don't "
-"want in your main menu (e.g. social media, terms and conditions, privacy "
-"terms, etc.)."
-msgstr ""
-"De besøkende vil ikke se bunnteksten med én gang. Bruk den til linker du "
-"ikke vil ha i hovedmenyen (som sosiale medier, salgsvilkår og betingelser, "
-"personvernpolicy, osv.)"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_social_youtube
+#: model:ir.model.fields,field_description:website.field_website__social_youtube
 msgid "Youtube Account"
 msgstr "YouTube-konto"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"a reference to your new website. We will retweet it (we have 30,000 "
-"followers) and feature it in our different communications."
-msgstr ""
-"en henvisning til det nye nettstedet ditt. Vi vil retweete det (vi har "
-"30.000 følgere) og løfte det frem i ulike sammenhenger."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "add keywords in picture's description."
-msgstr "legg til nøkkelord i beskrivelsen av bildet."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "and evaluating the following expression:"
 msgstr "og vurderer følgende uttrykk:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "campaign."
-msgstr "kampanje."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "check out our Blog application"
-msgstr "ta en kikk på blogg-appen vår"
 
 #. module: website
 #. openerp-web
@@ -4529,44 +3477,16 @@ msgid "e.g. About Us"
 msgstr "for eksempel Om oss"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "etc."
-msgstr "osv."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "ex: About us"
-msgstr "for eksempel Om oss"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "ex: Blog, Success stories, References, Events, Jobs"
-msgstr ""
-"for eksempel: Blogg, suksesshistorier, referanser, arrangementer, stillinger"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Blog, Jobs"
-msgstr ""
-"for eksempel: Kontakt oss, kundene våre, personvernpolicy, arrangementer, "
-"blogg, stillinger"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "ex: interesting contents, texts and articles"
-msgstr "for eksempel interessant innhold, tekst og artikler"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "for a free evaluation of the usability of your homepage."
-msgstr "for en gratis vurdering av brukervennligheten på hjemmesiden din"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
 msgid "found(s)"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "free website"
+msgstr "gratis nettsted"
 
 #. module: website
 #. openerp-web
@@ -4606,13 +3526,6 @@ msgid "https://youraccount.github.io"
 msgstr "https://youraccount.github.io"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "in their SEO metadata, including tags, title and description."
-msgstr ""
-"i metadata for søkemotoroptimalisering, inkludert tagger, tittel og "
-"beskrivelse."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "instance of Odoo, the"
 msgstr "instans av Odoo,"
@@ -4638,16 +3551,6 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "learn how people find your website,"
-msgstr "lær hvordan folk finner nettstedet ditt,"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "make optimizations for Google referencing."
-msgstr "optimaliser for henvisninger fra Google."
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "name"
 msgstr "navn"
@@ -4663,19 +3566,9 @@ msgid "page"
 msgstr "side"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "peek.usertesting.com"
-msgstr "peek.usertesting.com"
-
-#. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "sending us an email"
-msgstr "sende oss en epostmelding"
 
 #. module: website
 #. openerp-web
@@ -4690,39 +3583,6 @@ msgid "sitemap.xml"
 msgstr "sitemap.xml"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "through the content of your pages;"
-msgstr "gjennom innholdet på sidene dine;"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"to describe\n"
-"                    <br/> your experience or to suggest improvements!"
-msgstr ""
-"for å beskrive\n"
-"                    <br/> opplevelsen din eller foreslå forbedringer!"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "to get started."
-msgstr "for å komme i gang."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid ""
-"to get your content translated by real professional translators. Quality may"
-" vary."
-msgstr ""
-"for å få innholdet ditt oversatt av profesjonelle oversettere. Kvaliteten "
-"kan variere."
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "understand your search traffic,"
-msgstr "forstå søketrafikken din,"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "url"
 msgstr "url"
@@ -4733,7 +3593,7 @@ msgid "user / month (billed annually)"
 msgstr "bruker / måned (fakturert årlig)"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings_website_id
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "nettsted"
@@ -4744,9 +3604,9 @@ msgid "website.published.mixin"
 msgstr "website.published.mixin"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.website_planner
-msgid "will help you:"
-msgstr "vil hjelpe deg med å:"
+#: model:ir.ui.view,arch_db:website.brand_promotion
+msgid "with"
+msgstr "med"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500

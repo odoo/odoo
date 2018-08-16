@@ -10,15 +10,32 @@ class TestCommonTimesheet(TransactionCase):
     def setUp(self):
         super(TestCommonTimesheet, self).setUp()
 
+        # customer partner
+        self.partner = self.env['res.partner'].create({
+            'name': 'Customer Task',
+            'email': 'customer@task.com',
+            'customer': True,
+        })
+
+        self.analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account for Test Customer',
+            'partner_id': self.partner.id,
+            'code': 'TEST'
+        })
+
+        # project and tasks
         self.project_customer = self.env['project.project'].create({
             'name': 'Project X',
             'allow_timesheets': True,
+            'partner_id': self.partner.id,
+            'analytic_account_id': self.analytic_account.id,
         })
         self.task1 = self.env['project.task'].create({
             'name': 'Task One',
             'priority': '0',
             'kanban_state': 'normal',
             'project_id': self.project_customer.id,
+            'partner_id': self.partner.id,
         })
         self.task2 = self.env['project.task'].create({
             'name': 'Task Two',
@@ -74,6 +91,7 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEquals(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
         self.assertEquals(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
+        self.assertEquals(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
 
         # employee 1 cannot log timesheet for employee 2
         with self.assertRaises(AccessError):
@@ -95,6 +113,14 @@ class TestTimesheet(TestCommonTimesheet):
         })
         timesheet3._onchange_employee_id()
         self.assertEquals(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
+
+        # employee 1 log some timesheet on project (no task)
+        timesheet4 = Timesheet.sudo(self.user_employee.id).create({
+            'project_id': self.project_customer.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+        })
+        self.assertEquals(timesheet4.partner_id, self.project_customer.partner_id, 'Customer of new timesheet should be the same of the one set project (since no task on timesheet)')
 
     def test_log_access_rights(self):
         """ Test access rights : user can update its own timesheets only, and manager can change all """
@@ -120,7 +146,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEquals(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
 
     def test_transfert_project(self):
-        """ Test transfert task with timesheet to another project """
+        """ Transfert task with timesheet to another project should not modified past timesheets (they are still linked to old project. """
         Timesheet = self.env['account.analytic.line']
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
@@ -148,9 +174,9 @@ class TestTimesheet(TestCommonTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEquals(timesheet_count1, 0, "No timesheet in project 1")
-        self.assertEquals(timesheet_count2, 1, "One timesheet in project 2")
-        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+        self.assertEquals(timesheet_count1, 1, "Still one timesheet in project 1")
+        self.assertEquals(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
 
         # it is forbidden to set a task with timesheet without project
         with self.assertRaises(UserError):

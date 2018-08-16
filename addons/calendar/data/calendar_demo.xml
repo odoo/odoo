@@ -14,6 +14,26 @@
             <field name="partner_id" ref="base.partner_demo"/>
         </record>
 
+        <record id="categ_meet1" model="calendar.event.type">
+            <field name="name">Customer Meeting</field>
+        </record>
+
+        <record id="categ_meet2" model="calendar.event.type">
+            <field name="name">Internal Meeting</field>
+        </record>
+
+        <record id="categ_meet3" model="calendar.event.type">
+            <field name="name">Off-site Meeting</field>
+        </record>
+
+        <record id="categ_meet4" model="calendar.event.type">
+            <field name="name">Open Discussion</field>
+        </record>
+
+        <record id="categ_meet5" model="calendar.event.type">
+            <field name="name">Feedback Meeting</field>
+        </record>
+
         <record id="calendar_event_1" model="calendar.event">
             <field name="active" eval="True"/>
             <field name="user_id" ref="base.user_root"/>

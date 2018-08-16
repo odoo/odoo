@@ -44,6 +44,45 @@ otherwise.
 ``application``
     website feature defining togglable views. By default, views are always
     applied
+``banner_route``
+    a route address to be fetched and prepended to the view.
+
+    If this attribute is set, the
+    :ref:`controller route url<reference/http/controllers>` will be fetched and
+    displayed above the view. The json response from the controller should
+    contain an "html" key.
+
+    If the html contains a stylesheet <link> tag, it will be
+    removed and appended to <head>.
+
+    To interact with the backend you can use <a type="action"> tags. Please take
+    a look at the documentation of the _onActionClicked method of
+    AbstractController (*addons/web/static/src/js/views/abstract_controller.js*)
+    for more details.
+
+    Only views extending AbstractView and AbstractController can use this
+    attribute, like :ref:`reference/views/form`, :ref:`reference/views/kanban`,
+    :ref:`reference/views/list`, ...
+
+    Example:
+
+    .. code-block:: xml
+
+        <tree banner_route="/module_name/hello" />
+
+    .. code-block:: python
+
+        class MyController(odoo.http.Controller):
+            @http.route('/module_name/hello', auth='user', type='json')
+            def hello(self):
+                return {
+                    'html': """
+                        <div>
+                            <link href="/module_name/static/src/css/banner.css"
+                                rel="stylesheet">
+                            <h1>hello, world</h1>
+                        </div> """
+                }
 
 .. _reference/views/inheritance:
 
@@ -116,6 +155,21 @@ how the matched node should be altered:
     * if the ``attribute`` element has no body, the attribute named after
       its ``name`` is removed from the matched node. If no such attribute
       exists, an error is raised
+
+Additionally, the ``position`` ``move`` can be used as a direct child of a spec
+with a ``inside``, ``replace``, ``after`` or ``before`` ``position`` attribute
+to move a node.
+
+.. code-block:: xml
+
+    <xpath expr="//@target" position="after">
+        <xpath expr="//@node" position="move"/>
+    </xpath>
+
+    <field name="target_field" position="after">
+        <field name="my_field" position="move"/>
+    </field>
+
 
 A view's specs are applied sequentially.
 
@@ -292,6 +346,56 @@ Possible children elements of the list view are:
     .. note:: if the list view is ``editable``, any field attribute from the
               :ref:`form view <reference/views/form>` is also valid and will
               be used when setting up the inline form view
+
+``control``
+  defines custom controls for the current view.
+
+  This makes sense if the parent ``tree`` view is inside a One2many field.
+
+  Does not support any attribute, but can have children:
+
+  ``create``
+    adds a button to create a new element on the current list.
+
+    .. note:: If any ``create`` is defined, it will overwrite the default
+              "add a line" button.
+
+    The following attributes are supported:
+
+    ``string`` (required)
+      The text displayed on the button.
+
+    ``context``
+      This context will be merged into the existing context
+      when retrieving the default value of the new record.
+
+      For example it can be used to override default values.
+
+
+  The following example will override the default "add a line" button
+  by replacing it with 3 new buttons:
+  "Add a product", "Add a section" and "Add a note".
+
+  "Add a product" will set the field 'display_type' to its default value.
+
+  The two other buttons will set the field 'display_type'
+  to be respectively 'line_section' and 'line_note'.
+
+  .. code-block:: xml
+
+    <control>
+      <create
+        string="Add a product"
+      />
+      <create
+        string="Add a section"
+        context="{'default_display_type': 'line_section'}"
+      />
+      <create
+        string="Add a note"
+        context="{'default_display_type': 'line_note'}"
+      />
+    </control>
 
 .. _reference/views/form:
 
@@ -769,7 +873,7 @@ The only allowed element within a graph view is ``field`` which can have the
 following attributes:
 
 ``name`` (required)
-  the name of a field to use in a graph view. If used for grouping (rather
+  the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
 ``type``
@@ -778,10 +882,9 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot views, each group gets its
-    own row.
+    of grouping, some may support more.
   ``col``
-    only used by pivot tables, creates column-wise groups
+    authorized in graph views but only used by pivot tables
   ``measure``
     field to aggregate within a group
 
@@ -790,13 +893,20 @@ following attributes:
   ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
   specific datetime (fixed second resolution) or date (fixed day resolution).
 
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
+
 .. warning::
 
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
 
+
+.. _reference/views/pivot:
+
 Pivots
-------
+======
 
 The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
@@ -805,8 +915,47 @@ element is ``<pivot>`` which can take the following attributes:
   Set to ``True`` to remove table cell's links to list view.
 ``display_quantity``
   Set to ``true`` to display the Quantity column by default.
+``default_order``
+  The name of the measure and the order (asc or desc) to use as default order
+  in the view.
 
-The elements allowed within a pivot view are the same as for the graph view.
+  .. code-block:: xml
+
+     <pivot default_order="foo asc">
+        <field name="foo" type="measure"/>
+     </pivot>
+
+The only allowed element within a pivot view is ``field`` which can have the
+following attributes:
+
+``name`` (required)
+  the name of a field to use in the view. If used for grouping (rather
+  than aggregating)
+
+``type``
+  indicates whether the field should be used as a grouping criteria or as an
+  aggregated value within a group. Possible values are:
+
+  ``row`` (default)
+    groups by the specified field, each group gets its own row.
+  ``col``
+    creates column-wise groups
+  ``measure``
+    field to aggregate within a group
+  ``interval``
+    on date and datetime fields, groups by the specified interval (``day``,
+    ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
+    specific datetime (fixed second resolution) or date (fixed day resolution).
+
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
+
+.. warning::
+
+    like the graph view, the pivot aggregates data on database content
+    which means that non-stored function fields can not be used in pivot views
+
 
 .. _reference/views/kanban:
 
@@ -1065,6 +1214,9 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used
@@ -1124,6 +1276,249 @@ Possible children of the diagram view are:
     header, easily visible but without any special emphasis.
 
 .. _reference/views/search:
+
+Dashboard
+=========
+
+Like pivot and graph view, The dashboard view is used to display aggregate data.
+However, the dashboard can embed sub views, which makes it possible to have a
+more complete and interesting look on a given dataset.
+
+.. warning::
+
+   The Dashboard view is only available in Odoo Enterprise.
+
+The dashboard view can display sub views, aggregates for some fields (over a
+domain), or even *formulas* (expressions which involves one or more aggregates).
+For example, here is a very simple dashboard:
+
+.. code-block:: xml
+
+    <dashboard>
+        <view type="graph" ref="sale_report.view_order_product_graph"/>
+        <group string="Sale">
+            <aggregate name="price_total" field="price_total" widget="monetary"/>
+            <aggregate name="order_id" field="order_id" string="Orders"/>
+            <formula name="price_average" string="Price Average"
+                value="record.price_total / record.order_id" widget="percentage"/>
+        </group>
+        <view type="pivot" ref="sale_report.view_order_product_pivot"/>
+    </dashboard>
+
+The root element of the Dashboard view is <dashboard>, it does not accept any
+attributes.
+
+There are 5 possible type of tags in a dashboard view:
+
+``view``
+    declares a sub view.
+
+    Admissible attributes are:
+
+    - ``type`` (mandatory)
+        The type of the sub view.  For example, *graph* or *pivot*.
+
+    - ``ref`` (optional)
+        An xml id for a view. If not given, the default view for the model will
+        be used.
+
+    - ``name`` (optional)
+        A string which identifies this element.  It is mostly
+        useful to be used as a target for an xpath.
+
+``group``
+    defines a column layout.  This is actually very similar to the group element
+    in a form view.
+
+    Admissible attributes are:
+
+    - ``string`` (optional)
+        A description which will be displayed as a group title.
+
+    - ``colspan`` (optional)
+        The number of subcolumns in this group tag. By default, 6.
+
+    - ``col`` (optional)
+        The number of columns spanned by this group tag (only makes sense inside
+        another group). By default, 6.
+
+
+``aggregate``
+    declares an aggregate.  This is the value of an aggregate for a given field
+    over the current domain.
+
+    Note that aggregates are supposed to be used inside a group tag (otherwise
+    the style will not be properly applied).
+
+    Admissible attributes are:
+
+    - ``field`` (mandatory)
+        The field name to use for computing the aggregate. Possible field types
+        are:
+
+        - ``integer`` (default group operator is sum)
+        - ``float``  (default group operator is sum)
+        - ``many2one`` (default group operator is count distinct)
+
+    - ``name`` (mandatory)
+        A string to identify this aggregate (useful for formulas)
+
+    - ``string`` (optional)
+        A short description that will be displayed above the value. If not
+        given, it will fall back to the field string.
+
+    - ``domain`` (optional)
+        An additional restriction on the set of records that we want to aggregate.
+        This domain will be combined with the current domain.
+
+    - ``domain_label`` (optional)
+        When the user clicks on an aggregate with a domain, it will be added to
+        the search view as a facet.  The string displayed for this facet can
+        be customized with this attribute.
+
+    - ``group_operator`` (optional)
+        A valid postgreSQL aggregate function identifier to use when aggregating
+        values (see https://www.postgresql.org/docs/9.5/static/functions-aggregate.html).
+        If not provided, By default, the group_operator from the field definition is used.
+        Note that no aggregation of field values is achieved if the group_operator value is "".
+
+        .. note:: The special aggregate function ``count_distinct`` (defined in odoo) can also be used here
+
+        .. code-block:: xml
+
+          <aggregate name="price_total_max" field="price_total" group_operator="max"/>
+
+
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    - ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``measure`` (optional)
+        This attribute is the name of a field describing the measure that has to be used
+        in the graph and pivot views when clicking on the aggregate.
+        The special value __count__ can be used to use the count measure.
+
+        .. code-block:: xml
+
+          <aggregate name="total_ojects" string="Total Objects" field="id" group_operator="count" measure="__count__"/>
+
+    - ``clickable`` (optional)
+        A boolean indicating if this aggregate should be clickable or not (default to true).
+        Clicking on a clickable aggregate will change the measures used by the subviews
+        and add the value of the domain attribute (if any) to the search view.
+
+``formula``
+    declares a derived value.  Formulas are values computed from aggregates.
+
+    Note that like aggregates, formulas are supposed to be used inside a group
+    tag (otherwise the style will not be properly applied).
+
+    Admissible attributes are:
+
+    - ``value`` (mandatory)
+        A string expression that will be evaluated, with the builtin python
+        evaluator (in the web client).  Every aggregate can be used in the
+        context, in the ``record`` variable.  For example,
+        ``record.price_total / record.order_id``.
+
+    - ``name`` (optional)
+        A string to identify this formula
+
+    - ``string`` (optional)
+        A short description that will be displayed above the formula.
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+    - ``widget`` (optional)
+        A widget to format the value (like the widget attribute for fields).
+        For example, monetary. By default, it is 'float'.
+
+    - ``help`` (optional)
+        A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+``widget``
+    Declares a specialized widget to be used to display the information. This is
+    a mechanism similar to the widgets in the form view.
+
+    Admissible attributes are:
+
+    - ``name`` (mandatory)
+        A string to identify which widget should be instantiated. The view will
+        look into the ``widget_registry`` to get the proper class.
+
+    - ``col`` (optional)
+        The number of columns spanned by this tag (only makes sense inside a
+        group). By default, 1.
+
+Cohort
+=========
+
+The cohort view is used to display and understand the way some data changes over
+a period of time.  For example, imagine that for a given business, clients can
+subscribe to some service.  The cohort view can then display the total number
+of subscriptions each month, and study the rate at which client leave the service
+(churn). When clicking on a cell, the cohort view will redirect you to a new action
+in which you will only see the records contained in the cell's time interval;
+this action contains a list view and a form view.
+
+.. warning::
+
+   The Cohort view is only available in Odoo Enterprise.
+
+.. note:: By default the cohort view will use the same list and form views as those
+   defined on the action. You can pass a list view and a form view
+   to the context of the action in order to set/override the views that will be
+   used (the context keys to use being `form_view_id` and `list_view_id`)
+
+For example, here is a very simple cohort view:
+
+.. code-block:: xml
+
+    <cohort string="Subscription" date_start="date_start" date_stop="date" interval="month"/>
+
+The root element of the Cohort view is <cohort>, it accepts the following
+attributes:
+
+
+- ``string`` (mandatory)
+    A title, which should describe the view
+
+- ``date_start`` (mandatory)
+    A valid date or datetime field. This field is understood by the view as the
+    beginning date of a record
+
+- ``date_stop`` (mandatory)
+    A valid date or datetime field. This field is understood by the view as the
+    end date of a record.  This is the field that will determine the churn.
+
+- ``mode`` (optional)
+    A string to describe the mode. It should be either 'churn' or
+    'retention' (default). Churn mode will start at 0% and accumulate over time
+    whereas retention will start at 100% and decrease over time.
+
+- ``timeline`` (optional)
+    A string to describe the timeline. It should be either 'backward' or 'forward' (default).
+    Forward timeline will display data from date_start to date_stop, whereas backward timeline
+    will display data from date_stop to date_start (when the date_start is in future / greater
+    than date_stop).
+
+- ``interval`` (optional)
+    A string to describe a time interval. It should be 'day', 'week', 'month''
+    (default) or 'year'.
+
+- ``measure`` (optional)
+    A field that can be aggregated.  This field will be used to compute the values
+    for each cell.  If not set, the cohort view will count the number of occurrences.
 
 Search
 ======
@@ -1199,12 +1594,85 @@ Possible children elements of the search view are:
 
     ``string`` (required)
         the label of the filter
-    ``domain``
+    ``domain`` (optional)
         an Odoo :ref:`domain <reference/orm/domains>`, will be appended to the
-        action's domain as part of the search domain
+        action's domain as part of the search domain.
+    ``date`` (optional)
+        the name of a field of type ``date`` or ``datetime``.
+        Using this attribute has the effect to create
+        a set of filters available in a submenu
+        of the filters menu.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date"/>
+
+        The example above allows to easily search for records with creation date field
+        values in one of the periods below.
+
+        .. code-block:: text
+
+          Create Date >
+            Today
+            This Week
+            This Month
+            This Quarter
+            This Year
+          --------------
+            Yesterday
+            Last Week
+            Last Month
+            Last Quarter
+            Last Year
+          --------------
+            Last 7 Days
+            Last 30 Days
+            Last 365 Days
+
+        Note that the generated domains are dynamic and can be saved as such (via the favorites menu).
+
+    ``default_period`` (optional)
+        only makes sense for a filter with non empty ``date`` attribute.
+        determines which period is activated if the filter is in the
+        default set of filters activated at the view initialization. If not provided,
+        'this_month' is used by default.
+
+        To choose among the following options:
+        today, this_week, this_month, this_quarter, this_year,
+        yesterday, last_week, last_month,
+        last_quarter, last_year, last_7_days, last_30_days, last_365_days
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="filter_create_date" date="create_date" string="Creation Date" default_period="this_week"/>
+
     ``context``
         a Python dictionary, merged into the action's domain to generate the
         search domain
+
+        The key ``group_by`` can be used to define a groupby available in the
+        'Group By' menu.
+        The 'group_by' value can be a valid field name or a list of field names.
+
+        .. code-block:: xml
+
+          <filter name="groupby_category" string="Category" context = {'group_by': 'category_id'}/>
+
+        The groupby defined above allows to group data by category.
+
+        When the field is of type ``date`` or ``datetime``, the records are grouped by month by default.
+        This can be modified by using one of the following options: day, week, quarter, year.
+
+        Example:
+
+        .. code-block:: xml
+
+          <filter name="groupby_create_date" string="Creation Date" context = {'group_by': 'create_date:week'}/>
+
     ``name``
         logical name for the filter, can be used to :ref:`enable it by default
         <reference/views/search/defaults>`, can also be used as

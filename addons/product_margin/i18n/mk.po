@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_margin
-# 
+#
 # Translators:
-# Martin Trigaux, 2017
-# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018\n"
-"Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-10-22 12:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mk\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: product_margin
@@ -31,8 +30,8 @@ msgstr "# Фактурирано во продажба"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
-msgid "# Purchased"
-msgstr ""
+msgid "#Purchased"
+msgstr "#Нарачано"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -66,6 +65,11 @@ msgid "Catalog Price"
 msgstr "Каталошка цена"
 
 #. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership
+msgid "Check if the product is eligible for membership."
+msgstr "Означете доколку производот е погоден за членство."
+
+#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
 msgstr "Креирано од"
@@ -74,6 +78,21 @@ msgstr "Креирано од"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
 msgstr "Креирано на"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
+msgid "Customer Taxes"
+msgstr "Даноци на купувачот"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
+msgid "Date from which membership becomes active."
+msgstr "Датум од кој членството станува активно"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
+msgid "Date until which membership remains active."
+msgstr "Датум до кој членството останува активно."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -117,6 +136,11 @@ msgid "Expected margin * 100 / Expected Sale"
 msgstr "Очекувана маржа * 100 / Очекувана продажба"
 
 #. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Сметка Трошоци"
+
+#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
 msgid "From"
 msgstr "Од"
@@ -130,6 +154,11 @@ msgstr "Општи информации"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
 msgstr "ID"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
+msgid "Income Account"
+msgstr "Сметка Побарува"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
@@ -168,6 +197,21 @@ msgid "Margins"
 msgstr "Маржи"
 
 #. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
+msgid "Membership"
+msgstr "Членство"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
+msgid "Membership End Date"
+msgstr "Крајна дата на членство"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
+msgid "Membership Start Date"
+msgstr "Почетен датум на членство"
+
+#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
 msgstr "Нормален трошок"
@@ -200,12 +244,17 @@ msgid "Product"
 msgstr "Производ"
 
 #. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
+msgid "Product Email Template"
+msgstr "Е-маил урнек за производи"
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Маржа на производ"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:66
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -266,8 +315,7 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 "Сума од множењето на цената од продажниот каталог и количината од излезните "
 "фактури"
@@ -283,6 +331,20 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr ""
 
 #. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+
+#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "До"
@@ -295,7 +357,6 @@ msgstr "Вкупен трошок"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Вкупна маржа"
 
@@ -319,3 +380,16 @@ msgstr "Промет"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "Промет - Стандардна цена"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "Даноци на добавувачи"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to "
+"an email template."
+msgstr ""

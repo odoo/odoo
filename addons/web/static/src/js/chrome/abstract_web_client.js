@@ -18,17 +18,20 @@ var config = require('web.config');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
+var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
-var mixins = require('web.mixins');
-var NotificationManager = require('web.notification').NotificationManager;
-var RainbowMan = require('web.rainbow_man');
+var RainbowMan = require('web.RainbowMan');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
+var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMixin, {
+    dependencies: ['notification'],
+    events: _.extend(KeyboardNavigationMixin.events, {}),
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -36,21 +39,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         toggle_fullscreen: function (event) {
             this.toggle_fullscreen(event.data.fullscreen);
         },
-        current_action_updated: function (e) {
-            this.current_action_updated(e.data.action);
+        current_action_updated: function (ev) {
+            this.current_action_updated(ev.data.action, ev.data.controller);
         },
         // GENERIC SERVICES
         // the next events are dedicated to generic services required by
         // downstream widgets.  Mainly side effects, such as rpcs, notifications
         // or cache.
-
-        // notifications, warnings and effects
-        notification: function (e) {
-            if(this.notification_manager) {
-                this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
-            }
-        },
         warning: '_onDisplayWarning',
+        load_action: '_onLoadAction',
         load_views: function (event) {
             var params = {
                 model: event.data.modelName,
@@ -66,6 +63,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        create_filter: '_onCreateFilter',
+        push_state: '_onPushState',
         show_effect: '_onShowEffect',
         // session
         get_session: function (event) {
@@ -84,11 +83,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             });
         },
+        getScrollPosition: '_onGetScrollPosition',
+        scrollTo: '_onScrollTo',
+        set_title_part: '_onSetTitlePart',
     },
     init: function (parent) {
         this.client_options = {};
-        mixins.ServiceProvider.init.call(this);
         this._super(parent);
+        ServiceProviderMixin.init.call(this);
+        KeyboardNavigationMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dm = new concurrency.DropMisordered();
@@ -108,10 +111,10 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
 
         return session.is_bound
             .then(function () {
+                self.$el.toggleClass('o_rtl', _t.database.parameters.direction === "rtl");
                 self.bind_events();
                 return $.when(
                     self.set_action_manager(),
-                    self.set_notification_manager(),
                     self.set_loading()
                 );
             }).then(function () {
@@ -128,6 +131,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 core.bus.trigger('web_client_ready');
             });
     },
+
     bind_events: function () {
         var self = this;
         $('.oe_systray').show();
@@ -155,14 +159,17 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             }, 0);
         });
+        window.addEventListener('blur', function (e) { self._hideAccessKeyOverlay(); });
         core.bus.on('click', this, function (ev) {
             $('.tooltip').remove();
             if (!$(ev.target).is('input[type=file]')) {
-                self.$('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
+                $(this.el.getElementsByClassName('oe_dropdown_menu oe_opened')).removeClass('oe_opened');
+                $(this.el.getElementsByClassName('oe_dropdown_toggle oe_opened')).removeClass('oe_opened');
             }
+            this._hideAccessKeyOverlay();
         });
-        core.bus.on('connection_lost', this, this.on_connection_lost);
-        core.bus.on('connection_restored', this, this.on_connection_restored);
+        core.bus.on('connection_lost', this, this._onConnectionLost);
+        core.bus.on('connection_restored', this, this._onConnectionRestored);
 
         // crash manager integration
         core.bus.on('rpc_error', crash_manager, crash_manager.rpc_error);
@@ -199,12 +206,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         };
     },
     set_action_manager: function () {
-        this.action_manager = new ActionManager(this, {webclient: this});
-        return this.action_manager.appendTo(this.$('.o_main_content'));
-    },
-    set_notification_manager: function () {
-        this.notification_manager = new NotificationManager(this);
-        return this.notification_manager.appendTo(this.$el);
+        var self = this;
+        this.action_manager = new ActionManager(this, session.user_context);
+        var fragment = document.createDocumentFragment();
+        return this.action_manager.appendTo(fragment).then(function () {
+            dom.append(self.$('.o_main_content'), fragment, {
+                in_DOM: true,
+                callbacks: [{widget: self.action_manager}],
+            });
+        });
     },
     set_loading: function () {
         this.loading = new Loading(this);
@@ -213,11 +223,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     show_application: function () {
     },
     clear_uncommitted_changes: function () {
-        var def = $.Deferred().resolve();
-        core.bus.trigger('clear_uncommitted_changes', function chain_callbacks(callback) {
-            def = def.then(callback);
-        });
-        return def;
+        return this.action_manager.clearUncommittedChanges();
     },
     destroy_content: function () {
         _.each(_.clone(this.getChildren()), function (el) {
@@ -232,13 +238,17 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * Sets the first part of the title of the window, dedicated to the current action.
     */
     set_title: function (title) {
-       this.set_title_part("action", title);
+        this.set_title_part("action", title);
     },
     /**
      * Sets an arbitrary part of the title of the window. Title parts are
      * identified by strings. Each time a title part is changed, all parts
      * are gathered, ordered by alphabetical order and displayed in the title
      * of the window separated by ``-``.
+     *
+     * @private
+     * @param {string} part
+     * @param {string} title
      */
     set_title_part: function (part, title) {
         var tmp = _.clone(this.get("title_part"));
@@ -264,7 +274,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * This allows to widgets that are not inside the ActionManager to perform do_action
      */
     do_action: function () {
-        return this.action_manager.do_action.apply(this, arguments);
+        return this.action_manager.doAction.apply(this.action_manager, arguments);
     },
     do_reload: function () {
         var self = this;
@@ -274,6 +284,9 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         });
     },
     do_push_state: function (state) {
+        if (!state.menu_id && this.menu) { // this.menu doesn't exist in the POS
+            state.menu_id = this.menu.getCurrentPrimaryMenu();
+        }
         if ('title' in state) {
             this.set_title(state.title);
             delete state.title;
@@ -286,31 +299,14 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     // --------------------------------------------------------------
     // Connection notifications
     // --------------------------------------------------------------
-    on_connection_lost: function () {
-        this.connection_notification = this.notification_manager.notify(
-            _t('Connection lost'),
-            _t('Trying to reconnect...'),
-            true
-        );
-    },
-    on_connection_restored: function () {
-        if (this.connection_notification) {
-            this.connection_notification.destroy();
-            this.notification_manager.notify(
-                _t('Connection restored'),
-                _t('You are back online'),
-                false
-            );
-            this.connection_notification = false;
-        }
-    },
-    // Handler to be overwritten
-    current_action_updated: function () {
-    },
-    // --------------------------------------------------------------
-    // Scrolltop handling
-    // --------------------------------------------------------------
-    getScrollTop: function () {
+    /**
+     * Handler to be overridden, called each time the UI is updated by the
+     * ActionManager.
+     *
+     * @param {Object} action the action of the currently displayed controller
+     * @param {Object} controller the currently displayed controller
+     */
+    current_action_updated: function (action, controller) {
     },
     //--------------------------------------------------------------
     // Misc.
@@ -324,7 +320,47 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     //--------------------------------------------------------------------------
 
     /**
-     * Displays a warning in a dialog of with the NotificationManager
+     * Whenever the connection is lost, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionLost: function () {
+        this.connectionNotificationID = this.call('notification', 'notify', {
+            title: _t('Connection lost'),
+            message: _t('Trying to reconnect...'),
+            sticky: true
+        });
+    },
+    /**
+     * Whenever the connection is restored, we need to notify the user.
+     *
+     * @private
+     */
+    _onConnectionRestored: function () {
+        if (this.connectionNotificationID) {
+            this.call('notification', 'close', this.connectionNotificationID);
+            this.call('notification', 'notify', {
+                title: _t('Connection restored'),
+                message: _t('You are back online'),
+                sticky: false
+            });
+            this.connectionNotificationID = false;
+        }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} e
+     * @param {Object} e.data.filter the filter description
+     * @param {function} e.data.on_success called when the RPC succeeds with its
+     *   returned value as argument
+     */
+    _onCreateFilter: function (e) {
+        data_manager
+            .create_filter(e.data.filter)
+            .then(e.data.on_success);
+    },
+    /**
+     * Displays a warning in a dialog or with the notification service
      *
      * @private
      * @param {OdooEvent} e
@@ -332,7 +368,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * @param {string} e.data.title the warning's title
      * @param {string} [e.data.type] 'dialog' to display in a dialog
      * @param {boolean} [e.data.sticky] whether or not the warning should be
-     *   sticky (if displayed with the NotificationManager)
+     *   sticky (if displayed with the Notification)
      */
     _onDisplayWarning: function (e) {
         var data = e.data;
@@ -342,9 +378,65 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
             }).open();
-        } else if (this.notification_manager) {
-            this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
+        } else {
+            this.call('notification', 'notify', e.data);
         }
+    },
+    /**
+     * This function must be implemented to provide to the caller the current
+     * scroll position (left and top) of the webclient.
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback
+     */
+    _onGetScrollPosition: function (ev) {
+    },
+    /**
+     * Loads an action from the database given its ID.
+     *
+     * @private
+     * @param {OdooEvent} event
+     * @param {integer} event.data.actionID
+     * @param {Object} event.data.context
+     * @param {function} event.data.on_success
+     */
+    _onLoadAction: function (event) {
+        data_manager
+            .load_action(event.data.actionID, event.data.context)
+            .then(event.data.on_success);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} e
+     */
+    _onPushState: function (e) {
+        this.do_push_state(e.data.state);
+    },
+    /**
+     * This function must be implemented by actual webclient to scroll either to
+     * a given offset or to a target element (given a selector).
+     * It must be called with: trigger_up('scrollTo', options).
+     *
+     * @abstract
+     * @param {OdooEvent} ev
+     * @param {integer} [ev.data.top] the number of pixels to scroll from top
+     * @param {integer} [ev.data.left] the number of pixels to scroll from left
+     * @param {string} [ev.data.selector] the selector of the target element to
+     *   scroll to
+     */
+    _onScrollTo: function (ev) {
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.part
+     * @param {string} [ev.data.title]
+     */
+    _onSetTitlePart: function (ev) {
+        var part = ev.data.part;
+        var title = ev.data.title;
+        this.set_title_part(part, title);
     },
     /**
      * Displays a visual effect (for example, a rainbowman0
@@ -358,7 +450,12 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         var data = e.data || {};
         var type = data.type || 'rainbow_man';
         if (type === 'rainbow_man') {
-            new RainbowMan(data).appendTo(this.$el);
+            if (session.show_effect) {
+                new RainbowMan(data).appendTo(this.$el);
+            } else {
+                // For instance keep title blank, as we don't have title in data
+                this.notification_manager.notify('', data.message, true);
+            }
         } else {
             throw new Error('Unknown effect type: ' + type);
         }

@@ -5,24 +5,13 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <search string="Sales">
-                <filter name="week" string="Last Week"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(days=7)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                        ]"/>
-                <filter name="month" string="Last Month"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(months=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                        ]"/>
-                <filter name="year" string="Last Year"
-                        domain="[
-                            '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
-                         ]"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Confirmed Orders" name="confirmed" domain="[('state', 'in', ['sale', 'done'])]"/>
+                <separator/>
+                <filter name="order_date" string="Order Date" date="date" default_period="last_30_days"/>
+                <filter name="confirmed_date" string="Confirmed" date="confirmation_date"/>
             </search>
         </field>
     </record>
@@ -56,7 +45,11 @@
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
-        <field name="help">You don't have any order from the website.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
     </record>
 
     <record id="sale_report_action_view_pivot_website" model="ir.actions.act_window.view">
@@ -79,7 +72,11 @@
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('team_id.team_type', '=', 'website')]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
-        <field name="help">You don't have any order from the website.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
     </record>
 
     <record id="sale_report_action_view_pivot_carts" model="ir.actions.act_window.view">

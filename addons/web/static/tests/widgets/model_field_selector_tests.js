@@ -167,6 +167,30 @@ QUnit.module('ModelFieldSelector', {
             }).join(" -> ");
         }
     });
+
+    QUnit.test("use the filter option", function (assert) {
+        assert.expect(2);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the field selector and its mock environment
+        var fieldSelector = new ModelFieldSelector(null, "partner", [], {
+            readonly: false,
+            filter: function (field) {
+                return field.type === 'many2one';
+            },
+        });
+        testUtils.addMockEnvironment(fieldSelector, {data: this.data});
+        fieldSelector.appendTo($target);
+
+        fieldSelector.$el.trigger('focusin');
+        var $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
+        var $lis = $fieldSelectorPopover.find("li");
+        assert.strictEqual($lis.length, 1, "there should only be one element");
+        assert.strictEqual($lis.text().trim(), "Product", "the available field should be the many2one");
+
+        fieldSelector.destroy();
+    });
 });
 });
 });

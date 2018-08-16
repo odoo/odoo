@@ -6,7 +6,7 @@
     'category': 'Hardware Drivers',
     'sequence': 6,
     'summary': 'Provides support for customer facing displays',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Screen Driver
 =============

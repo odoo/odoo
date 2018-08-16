@@ -335,14 +335,14 @@ var SlideDialog = Widget.extend({
         return values;
     },
     validate: function () {
-        this.$('.form-group').removeClass('has-error');
+        this.$('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         if (!this.$('#name').val()) {
-            this.$('#name').closest('.form-group').addClass('has-error');
+            this.$('#name').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
         var url = this.$('#url').val() ? this.is_valid_url : false;
         if (!(this.file.name || url)) {
-            this.$('#url').closest('.form-group').addClass('has-error');
+            this.$('#url').closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
         return true;

@@ -12,10 +12,8 @@ enable payment.
 
  * UPDATE ME
 """,
-    'depends': ['payment', 'account'],
+    'depends': ['payment'],
     'data': [
-        'views/account_invoice_views.xml',
-        'views/payment_views.xml',
         'views/account_portal_templates.xml',
     ],
     'installable': True,

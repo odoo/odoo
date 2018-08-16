@@ -16,7 +16,7 @@ class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
     @api.multi
-    def render(self, values=None, engine='ir.qweb'):
+    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         if values and values.get('editable'):
             try:
                 self.check_access_rights('write')
@@ -24,7 +24,7 @@ class IrUiView(models.Model):
             except AccessError:
                 values['editable'] = False
 
-        return super(IrUiView, self).render(values=values, engine=engine)
+        return super(IrUiView, self).render(values=values, engine=engine, minimal_qcontext=minimal_qcontext)
 
     #------------------------------------------------------
     # Save from html
@@ -128,7 +128,7 @@ class IrUiView(models.Model):
     @api.model
     def _view_obj(self, view_id):
         if isinstance(view_id, pycompat.string_types):
-            return self.env.ref(view_id)
+            return self.search([('key', '=', view_id)]) or self.env.ref(view_id)
         elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
         # assume it's already a view object (WTF?)

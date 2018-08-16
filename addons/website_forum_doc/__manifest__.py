@@ -4,10 +4,10 @@
 {
     'name': 'Documentation',
     'category': 'Website',
-    'summary': 'Forum, Documentation',
+    'summary': 'Build a documentation/FAQ from forum questions',
     'description': """
-Documentation based on question and pertinent answers of Forum
-        """,
+Push the most relevant questions published on the forum to a documentation index/FAQ.
+    """,
     'depends': [
         'website_forum'
     ],

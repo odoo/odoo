@@ -15,7 +15,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     """,
     'author': 'Ahmet Altınışık',
     'maintainer':'https://launchpad.net/~openerp-turkey',
-    'website':'https://launchpad.net/openerp-turkey',
     'depends': [
         'account',
     ],
@@ -23,6 +22,6 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'data/l10n_tr_chart_data.xml',
         'data/account_data.xml',
         'data/account_tax_template_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
 }

@@ -18,15 +18,15 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <li><a t-att-href="record.website_url.value">View Track</a></li>
-                                        <t t-if="widget.editable"><li><a type="edit">Edit Track</a></li></t>
-                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
@@ -44,7 +44,7 @@
                                         <div class="oe_kanban_bottom_right">
                                             <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
                                             <img t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)"
-                                                t-att-title="record.partner_id.value" width="24" height="24"
+                                                t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" width="24" height="24"
                                                 class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
@@ -94,10 +94,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Date" context="{'group_by':'date'}"/>
-                        <filter string="Event" context="{'group_by':'event_id'}"/>
+                        <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                        <filter string="Event" name="event" context="{'group_by':'event_id'}"/>
                     </group>
                 </search>
             </field>
@@ -109,7 +109,7 @@
             <field name="arch" type="xml">
                 <form string="Event Track">
                     <header>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Track">
                         <div class="oe_button_box" name="button_box">
@@ -189,10 +189,10 @@
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
+                <p class="o_view_nocontent_smiling_face">
+                  Add a new track
                 </p><p>
-                    Tracks define the schedule of your event. These can bea talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -204,11 +204,11 @@
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
-                </p><p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new track
+              </p><p>
                 Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
-                </p>
+              </p>
             </field>
         </record>
 
@@ -433,14 +433,15 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="event_track_stage_view_tree"/>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a stage in the task pipeline.
-</p><p>
-    Define the steps that will be used in the event from the
-    creation of the track, up to the closing of the track.
-    You will use these stages in order to track the progress in
-    solving an event track.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new stage in the task pipeline
+              </p><p>
+                Define the steps that will be used in the event from the
+                creation of the track, up to the closing of the track.
+                You will use these stages in order to track the progress in
+                solving an event track.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Track Stages"

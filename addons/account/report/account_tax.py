@@ -8,12 +8,14 @@ class ReportTax(models.AbstractModel):
     _name = 'report.account.report_tax'
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
         return {
             'data': data['form'],
             'lines': self.get_lines(data.get('form')),
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }
 
     def _sql_from_amls_one(self):

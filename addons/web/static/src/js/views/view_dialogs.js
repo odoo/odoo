@@ -7,7 +7,7 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var ListController = require('web.ListController');
 var ListView = require('web.ListView');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var SearchView = require('web.SearchView');
 var view_registry = require('web.view_registry');
 
@@ -109,7 +109,7 @@ var FormViewDialog = ViewDialog.extend({
             options = options || {};
             options.buttons = [{
                 text: (readonly ? _t("Close") : _t("Discard")),
-                classes: "btn-default o_form_button_cancel",
+                classes: "btn-secondary o_form_button_cancel",
                 close: true,
                 click: function () {
                     if (!readonly) {
@@ -165,9 +165,6 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
-            if (self.recordID) {
-                self.model.addFieldsInfo(self.recordID, viewInfo);
-            }
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: self.context,
@@ -175,8 +172,9 @@ var FormViewDialog = ViewDialog.extend({
                 currentId: self.res_id || undefined,
                 index: 0,
                 mode: self.res_id && self.options.readonly ? 'readonly' : 'edit',
-                footer_to_buttons: true,
+                footerToButtons: true,
                 default_buttons: false,
+                withControlPanel: false,
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
@@ -190,9 +188,9 @@ var FormViewDialog = ViewDialog.extend({
             }
             self.form_view.appendTo(fragment)
                 .then(function () {
-                    var $buttons = $('<div>');
-                    self.form_view.renderButtons($buttons);
                     self.opened().always(function () {
+                        var $buttons = $('<div>');
+                        self.form_view.renderButtons($buttons);
                         if ($buttons.children().length) {
                             self.$footer.empty().append($buttons.contents());
                         }
@@ -211,7 +209,13 @@ var FormViewDialog = ViewDialog.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    /**
+     * @override
+     */
+    _focusOnClose: function() {
+        this.trigger_up('form_dialog_discarded');
+        return true;
+    },
     _save: function () {
         var self = this;
         return this.form_view.saveRecord(this.form_view.handle, {
@@ -258,7 +262,7 @@ var SelectCreateDialog = ViewDialog.extend({
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
         },
         search: function (event) {
-            event.stopPropagation(); // prevent this event from bubbling up to the view manager
+            event.stopPropagation(); // prevent this event from bubbling up to the action manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
             this.list_controller.reload(searchData);
@@ -289,7 +293,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var user_context = this.getSession().user_context;
 
         var _super = this._super.bind(this);
-        var context = pyeval.eval_domains_and_contexts({
+        var context = pyUtils.eval_domains_and_contexts({
             domains: [],
             contexts: [user_context, this.context]
         }).context;
@@ -300,7 +304,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 search_defaults[match[1]] = value_;
             }
         });
-        this.loadViews(this.dataset.model, this.dataset.get_context(), [[false, 'list'], [false, 'search']], {})
+        this.loadViews(this.dataset.model, this.dataset.get_context().eval(), [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this, search_defaults))
             .then(function (fragment) {
                 self.opened().then(function () {
@@ -356,7 +360,7 @@ var SelectCreateDialog = ViewDialog.extend({
             // Set the dialog's buttons
             self.__buttons = [{
                 text: _t("Cancel"),
-                classes: "btn-default o_form_button_cancel",
+                classes: "btn-secondary o_form_button_cancel",
                 close: true,
             }];
             if (!self.options.no_create) {
@@ -393,7 +397,7 @@ var SelectCreateDialog = ViewDialog.extend({
         });
     },
     _process_search_data: function (domains, contexts, groupbys) {
-        var results = pyeval.eval_domains_and_contexts({
+        var results = pyUtils.eval_domains_and_contexts({
             domains: [this.domain].concat(domains),
             contexts: [this.context].concat(contexts),
             group_by_seq: groupbys || [],
@@ -412,7 +416,7 @@ var SelectCreateDialog = ViewDialog.extend({
             on_saved: function (record) {
                 var values = [{
                     id: record.res_id,
-                    display_name: record.data.display_name,
+                    display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
             },
@@ -420,7 +424,13 @@ var SelectCreateDialog = ViewDialog.extend({
         dialog.on('closed', this, this.close);
         return dialog;
     },
-
+    /**
+     * @override
+     */
+    _focusOnClose: function() {
+        this.trigger_up('form_dialog_discarded');
+        return true;
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -435,9 +445,9 @@ var SelectCreateDialog = ViewDialog.extend({
      */
     _onGetControllerContext: function (ev) {
         ev.stopPropagation();
-        var context = this.list_controller.getContext();
-        ev.data.callback(context);
-    },
+        var context = this.list_controller && this.list_controller.getContext();
+        ev.data.callback(context || {});
+    }
 });
 
 return {

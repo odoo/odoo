@@ -6,7 +6,7 @@
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Barcode Scanners',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Barcode Scanner Hardware Driver
 ================================
@@ -18,4 +18,5 @@ point of sale module.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['evdev']},
+    'installable': False,
 }

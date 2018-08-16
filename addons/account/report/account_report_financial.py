@@ -42,7 +42,7 @@ class ReportFinancial(models.AbstractModel):
         '''returns a dictionary with key=the ID of a record and value=the credit, debit and balance amount
            computed for this record. If the record is of type :
                'accounts' : it's the sum of the linked accounts
-               'account_type' : it's the sum of leaf accoutns with such an account_type
+               'account_type' : it's the sum of leaf accounts with such an account_type
                'account_report' : it's the amount of the related report
                'sum' : it's the sum of the children of this record (aka a 'view' record)'''
         res = {}
@@ -144,7 +144,7 @@ class ReportFinancial(models.AbstractModel):
         return lines
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
@@ -158,4 +158,6 @@ class ReportFinancial(models.AbstractModel):
             'docs': docs,
             'time': time,
             'get_account_lines': report_lines,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

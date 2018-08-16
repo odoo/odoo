@@ -1,0 +1,436 @@
+///
+/// This file regroups the frontend general design rules and portal design
+/// rules.
+///
+
+// Resize and vertically align navbar’s items relative to navbar
+@mixin o-w-fill-navbar($ratio: 1) {
+    height: round($nav-link-height * $ratio * 100) / 100;
+    margin-top: round($nav-link-height * (1 - $ratio) / 2 * 100) / 100;
+}
+
+// Frontend general
+#wrapwrap {
+    position: relative;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 100%;
+
+    > * {
+        display: table-row;
+    }
+    > main {
+        height: 100%;
+    }
+}
+
+header {
+    .navbar-brand.logo {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        img {
+            @include o-w-fill-navbar;
+            width: auto;
+            max-width: none;
+        }
+    }
+    .nav-link {
+        white-space: nowrap;
+    }
+}
+.navbar {
+    margin-bottom: 0;
+
+    ul.nav > li {
+        &.divider {
+            display: none;
+            @include o-w-fill-navbar;
+            border-right: 1px solid $nav-divider-color;
+        }
+
+        &.active + .divider {
+            visibility: hidden;
+        }
+    }
+    .nav.navbar-nav.float-right {
+        @include media-breakpoint-down(sm) {
+            float: none!important;
+        }
+    }
+}
+@include media-breakpoint-up(md) {
+    .navbar-expand-md ul.nav > li.divider {
+        display: list-item;
+    }
+}
+ul.flex-column > li > a {
+    padding: 2px 15px;
+}
+
+// Odoo options classes
+.jumbotron {
+    margin-bottom: 0;
+}
+
+// Typography
+ul {
+    list-style-type: disc;
+}
+li > ul {
+    list-style-type: circle;
+}
+li > * > li > ul {
+    list-style-type: square;
+}
+li > * > li > * > li > ul {
+    list-style-type: disc;
+}
+li > * > li > * > li > * > li > ul {
+    list-style-type: circle;
+}
+li > * > li > * > li > * > li > * > li > ul {
+    list-style-type: square;
+}
+li > * > li > * > li > * > li > * > li > * > li > ul {
+    list-style-type: disc;
+}
+ol {
+    list-style-type: decimal;
+}
+li > ol {
+    list-style-type: lower-alpha;
+}
+li > * > li > ol {
+    list-style-type: lower-greek;
+}
+li > * > li > * > li > ol {
+    list-style-type: decimal;
+}
+li > * > li > * > li > * > li > ol {
+    list-style-type: lower-alpha;
+}
+li > * > li > * > li > * > li > * > li > ol {
+    list-style-type: lower-greek;
+}
+li > * > li > * > li > * > li > * > li > * > li > ol {
+    list-style-type: decimal;
+}
+li > p {
+    margin: 0;
+}
+hr {
+    padding: 4px 0;
+}
+
+// Bootstrap hacks
+%o-double-container-no-padding {
+    padding-right: 0;
+    padding-left: 0;
+}
+.container {
+    .container, .container-fluid {
+        @extend %o-double-container-no-padding;
+    }
+}
+.container-fluid .container-fluid {
+    @extend %o-double-container-no-padding;
+}
+[class^="col-lg-"] {
+    min-height: 24px;
+}
+.input-group {
+    flex-flow: row nowrap;
+}
+
+// Force table to their minimum width for fitting their col-*-auto parent
+.table.o_table_column_fit {
+    width: 1px;
+}
+
+// Images spacing
+img, .media_iframe_video, .o_image {
+    &.float-right {
+        margin-left: $grid-gutter-width / 2;
+    }
+    &.float-left {
+        margin-right: $grid-gutter-width / 2;
+    }
+}
+img.o_we_custom_image {
+    // Images added with the editor are .img-fluid by default but should
+    // still behave like inline content.
+    display: inline-block;
+}
+
+// Others
+::-moz-selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+::selection {
+    background: rgba(150, 150, 220, 0.3);
+}
+.oe_demo {
+    position: relative;
+    img {
+        width: 100%;
+    }
+    div {
+        @include o-position-absolute($left: 0, $bottom: 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        opacity: 0.85;
+        width: 100%;
+        padding: 7px;
+        color: white;
+        font-weight: bold;
+        a {
+            color: white;
+        }
+    }
+}
+.oe_search_box {
+    padding-right: 23px;
+}
+
+// Kept for (up to) saas-12 compatibility
+.para_large {
+    font-size: 120%;
+}
+.jumbotron .para_large p {
+    font-size: 150%;
+}
+.readable {
+    font-size: 120%;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+        width: auto;
+    }
+}
+
+//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
+.oe_dark {
+    background-color: rgba(200, 200, 200, 0.14);
+}
+.oe_black {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+.oe_green {
+    background-color: #169C78;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue_light {
+    background-color: #41b6ab;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue {
+    background-color: #34495e;
+    color: white;
+}
+.oe_orange {
+    background-color: #f05442;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_purple {
+    background-color: #b163a3;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_red {
+    background-color: #9C1b31;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_none {
+    background-color: #FFFFFF;
+}
+.oe_yellow {
+    background-color: #A2A51B;
+}
+.oe_green {
+    background-color: #149F2C;
+}
+
+// Portal specific
+.o_portal {
+    .breadcrumb {
+        background-color: rgba(0, 0, 0, 0);
+        margin-bottom: 0px;
+    }
+
+    .record_pager {
+        padding: 8px 0px;
+    }
+
+    > tbody.o_portal_report_tbody {
+        vertical-align: middle;
+    }
+}
+
+.o_portal_wrap {
+    .o_portal_my_home > .page-header > a:hover {
+        text-decoration: none;
+    }
+
+    .o_portal_my_doc_table {
+        td, th {
+            text-align: right;
+        }
+        tr > :first-child {
+            text-align: left;
+        }
+    }
+
+    .o_portal_navbar {
+        .navbar-brand {
+            margin: 0;
+
+            @include media-breakpoint-up(md) {
+                padding: $navbar-padding-y $navbar-padding-x 0 0;
+            }
+        }
+
+        // ===== Default portal navbar design =====
+        &.o_portal_navbar_default {
+            margin-bottom: 8px;
+
+            .navbar-brand {
+                padding: $navbar-padding-y $navbar-padding-x 0 0;
+            }
+
+            .navbar-header .dropdown-menu {
+                right: 0;
+                left: auto;
+            }
+
+            .navbar-toggle {
+                margin-right: 0;
+                margin-bottom: 0;
+                background-color: $table-active-bg;
+                padding: 6px 10px $navbar-padding-y;
+                border-width: 1px 1px 0 1px;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                z-index: 1;
+
+                &.collapsed {
+                    padding:6px 10px;
+                    border-width: 1px;
+                    border-radius: $btn-border-radius;
+                    background-color: transparent;
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                .navbar-collapse {
+                    z-index: 0;
+                    background-color: $table-active-bg;
+                    border-radius: $btn-border-radius;
+                    border-top-right-radius: 0;
+                    transform: translateY(-2px);
+
+                    &.in {
+                        overflow: visible;
+                    }
+                }
+            }
+
+            @include media-breakpoint-up(md) {
+                > .container-fluid {
+                    padding: 0;
+
+                    .navbar-form {
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    table.table tr {
+        word-wrap: break-word;
+    }
+}
+
+.oe_attachments .o_image_small {
+    height: 40px;
+    width: 50px;
+}
+
+.o_portal_chatter {
+    padding: 10px;
+
+    .o_portal_chatter_avatar{
+        width: 45px;
+        height: 45px;
+        margin-right: 1rem;
+    }
+
+    .o_portal_chatter_header {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_composer {
+        margin-bottom: 15px;
+    }
+
+    .o_portal_chatter_messages {
+        margin-bottom: 15px;
+
+        .o_portal_chatter_message_title {
+            p {
+                font-size:85%;
+                color:$o-main-color-muted;
+                margin: 0px;
+            }
+        }
+    }
+
+    .o_portal_chatter_pager {
+        text-align: center;
+    }
+}
+
+.o_portal_signature_form .o_portal_sign_error_msg {
+    color: $danger;
+}
+
+.label-optional {
+    font-weight: normal;
+}
+
+.o_portal_sidebar {
+    .bs-sidebar {
+        width: 100%;
+        border-radius: 5px;
+        background-color: $light;
+    }
+    .o_portal_contact_img {
+        width: 3.7em;
+        height: 3.7em;
+    }
+    .o_portal_html_view {
+        border: 1px solid gray('300');
+        border-radius: 5px;
+        padding-right: 1px;
+    }
+}

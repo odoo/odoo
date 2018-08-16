@@ -130,7 +130,7 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
         action1 = self.action.create({
@@ -185,6 +185,7 @@ class TestActionBindings(common.TransactionCase):
         Actions = self.env['ir.actions.actions']
 
         # first make sure there is no bound action
+        self.env.ref('base.action_partner_merge').unlink()
         bindings = Actions.get_bindings('res.partner')
         self.assertFalse(bindings['action'])
         self.assertFalse(bindings['report'])
@@ -242,7 +243,7 @@ class TestCustomFields(common.TransactionCase):
         super(TestCustomFields, self).setUp()
 
         # use a test cursor instead of a real cursor
-        self.registry.enter_test_mode()
+        self.registry.enter_test_mode(self.cr)
         self.addCleanup(self.registry.leave_test_mode)
 
     def create_field(self, name):

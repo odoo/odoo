@@ -1,0 +1,176 @@
+
+.o_web_client {
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+
+    &.o_fullscreen {
+        #oe_main_menu_navbar {
+            display: none;
+        }
+        .o_main .o_sub_menu {
+            display: none;
+        }
+    }
+
+
+    .navbar {
+        flex: 0 0 auto;
+
+        li > a {
+            padding: 4px 8px;
+            margin-top: 2px;
+            font-size: 13px;
+        }
+
+        .oe_topbar_avatar {
+            max-height: 18px;
+            width: 18px;
+            margin-top: -4px;
+        }
+
+        .oe_systray, .oe_user_menu_placeholder {
+            > li {
+                position: relative;
+                padding: 4px 0px;
+
+                > a {
+                    @include o-hover-text-color($navbar-dark-color, $navbar-dark-active-color);
+                }
+            }
+        }
+    }
+
+    > .o_main {
+        flex: 1 1 auto;
+        display: flex;
+        min-height: 0; // Allow flex to shrink this element as much as it wants
+        height: 100%;
+
+        .o_sub_menu {
+            flex: 0 0 220px;
+            display: flex;
+            flex-flow: column nowrap;
+            border-right: 1px solid darken($o-control-panel-background-color, 20%);
+            background-color: $o-control-panel-background-color;
+
+            .o_sub_menu_logo {
+                flex: 0 0 auto;
+                text-align: center;
+                position: relative;
+
+                > img {
+                    margin: 14px 0;
+                }
+
+                .oe_logo_edit {
+                    position: absolute;
+                    top: 1px;
+                    width: 100%;
+                    padding: 4px;
+                    margin: 14px 0;
+                    display: none;
+                    color: #eee;
+                    background: rgba(37,37,37,0.9);
+                }
+                &:hover .oe_logo_edit_admin {
+                    display: block;
+                }
+            }
+
+            .o_sub_menu_content {
+                flex: 1 1 auto;
+                height:100%;
+                overflow-y: auto;
+
+                .oe_secondary_menu_section {
+                    font-weight: bold;
+                    margin-left: 8px;
+                    color: $o-brand-primary;
+                }
+                .oe_secondary_submenu {
+                    margin: 3px 0px 10px;
+                    line-height: 1.1em;
+                    >li:not(.active) > a {
+                        color: $o-main-text-color;
+                    }
+                    > li > a {
+                        padding: 4px 4px 4px 18px;
+                        > .badge {
+                            margin-top: -1px;
+                        }
+                    }
+                    .oe_secondary_submenu {
+                        > li > a {
+                            padding-left: 30px;
+                        }
+                        .oe_secondary_submenu > li > a {
+                            padding-left: 42px;
+                        }
+                    }
+                    .oe_menu_text {
+                        @include o-text-overflow;
+                        max-width: 85%;
+                        margin-top: 1px;
+                    }
+                    .oe_menu_toggler:before {
+                        display: inline-block;
+                        width: 0;
+                        height: 0;
+                        content: "&darr";
+                        opacity: 0.5;
+                        text-indent: -99999px;
+                        vertical-align: top;
+                        margin-left: -12px;
+                        margin-top: 4px;
+                        margin-right: 4px;
+                        border-top: 4px solid transparent;
+                        border-bottom: 4px solid transparent;
+                        border-left: 4px solid #4c4c4c;
+                    }
+                    .oe_menu_opened:before {
+                        margin-top: 6px;
+                        margin-left: -16px;
+                        margin-right: 4px;
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-top: 4px solid #4c4c4c;
+                    }
+                }
+            }
+
+            .o_sub_menu_footer {
+                flex: 0 0 auto;
+                text-align: center;
+
+                > a {
+                    font-weight: bold;
+                    > span {
+                        color: $o-enterprise-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
+                    }
+                }
+            }
+        }
+
+        .o_main_content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-flow: column nowrap;
+
+            .o_control_panel {
+                flex: 0 0 auto;
+            }
+            .o_content {
+                flex: 1 1 auto;
+                height: 100%;
+                overflow: auto;
+                position: relative;
+
+                > .o_view_controller {
+                    @include o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
+                    height: 100%;
+                }
+            }
+        }
+    }
+}

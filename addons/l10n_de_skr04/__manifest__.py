@@ -48,6 +48,6 @@ German accounting chart and localization.
         'data/account_data.xml',
         'data/account_tax_fiscal_position_data.xml',
         'data/account_reconcile_model_template.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
 }

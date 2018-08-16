@@ -20,7 +20,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         position: "right",
     }, {
         trigger: "button.btn-primary",
-        extra_trigger: ".modal #editor_new_forum input[type=text]:not(:propValue(\"\"))",
+        extra_trigger: '.modal #editor_new_forum input[type=text]:not(:propValue(""))',
         content: _t("Click <em>Continue</em> to create the forum."),
         position: "right",
     }, {

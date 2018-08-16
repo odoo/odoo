@@ -1,0 +1,137 @@
+
+.o_control_panel {
+    display: flex;
+    flex-flow: row wrap;
+    border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
+    @include o-webclient-padding($top: 10px, $bottom: 10px);
+    background-color: $o-control-panel-background-color;
+
+    > .breadcrumb {
+        width: 50%;
+        font-size: 18px;
+
+        > li {
+            @include o-text-overflow($max-width: 90%);
+
+            > a {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &.o_breadcrumb_full > .breadcrumb {
+        width: 100%;
+    }
+
+    > .o_cp_searchview {
+        width: 50%;
+        min-height: $o-cp-breadcrumb-height;
+    }
+
+    .btn.o_enable_searchview {
+        margin-left: 2%;
+        padding: 0px;
+        background: white;
+    }
+
+    > .o_cp_left {
+        display: flex;
+        justify-content: space-between;
+        width: 50%;
+        margin-top: 5px;
+
+        > .o_cp_sidebar {
+            padding-right: 10px;
+
+            .o_hidden_input_file {
+                position: relative;
+                input.o_input_file {
+                    position: absolute;
+                    top: 1px;
+                    opacity: 0;
+                    width: 100%;
+                    height: 26px;
+                }
+                .o_form_binary_form span {
+                    padding: 3px 25px;
+                    color: $o-brand-primary;
+                }
+                .o_form_binary_form:hover {
+                    background-color: $table-hover-bg;
+                }
+            }
+            .o_sidebar_delete_attachment {
+                padding: 0px;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+            }
+        }
+    }
+
+    > .o_cp_right {
+        display: flex;
+        width: 50%;
+        margin-top: 5px;
+
+        > .o_cp_pager {
+            margin: auto 0 auto auto;
+            padding-left: 5px;
+            text-align: center;
+            user-select: none;
+
+            > div {
+                display: flex;
+                align-items: center;
+            }
+
+            .o_pager_counter {
+                margin-right: 5px;
+            }
+        }
+
+        > .o_cp_switch_buttons > .btn:first-child {
+            margin-left: $o-horizontal-padding;
+            @include media-breakpoint-down(sm) {
+                margin-left: $o-horizontal-padding - 6;
+            }
+        }
+    }
+}
+
+.o_x2m_control_panel {
+    display: flex;
+    flex-flow: row wrap;
+
+    .o_cp_buttons {
+        display: flex;
+        margin-right: auto;
+        > div {
+            margin-top: 5px;
+        }
+        .o-kanban-button-new {
+            margin-left: $o-kanban-record-margin;
+        }
+    }
+    .o_cp_pager {
+        display: flex;
+        margin-left: auto;
+    }
+}
+
+// Pager input (to edit pager values)
+.o_pager_value > input {
+    display: inline-block;
+    width: 60px;
+    text-align: right;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+@media print {
+    .o_control_panel {
+        display: none;
+    }
+}

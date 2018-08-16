@@ -3,26 +3,27 @@
 # * auth_signup
 # 
 # Translators:
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Martin Trigaux, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
 # Florian Hatat, 2017
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# fr rev <e2ffr04@hotmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgstr ""
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Changer le mot de passe</a>\n"
 "    </div>\n"
-"    <p>Si vous n'attendiez pas cet email, vous pouvez l'ignorer.</p>\n"
+"    <p>Si vous n'attendiez pas ce courriel, vous pouvez l'ignorer.</p>\n"
 "    <p>Salutations,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
@@ -88,62 +89,11 @@ msgstr ""
 "</div>"
 
 #. module: auth_signup
-#: model:mail.template,body_html:auth_signup.set_password_email
-msgid ""
-"\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"<p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
-"    </p>\n"
-"    <p>\n"
-"        To accept the invitation, click on the following link:\n"
-"    </p>\n"
-"    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Accept invitation to \"${object.company_id.name}\"</a>\n"
-"    </div>\n"
-"    <p>Best regards,</p>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
-"    ${user.signature | safe}\n"
-"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
-"    </p>\n"
-"</div>"
-msgstr ""
-"\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td></tr></tbody></table></div><div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\"><p>Cher/chère ${object.name},</p>\n"
-"<p>\n"
-" Vous avez été invité(e) à vous connecter à « ${object.company_id.name} » pour accéder à vos documents sur Odoo.\n"
-" </p>\n"
-"<p> \n"
-" Pour accepter l'invitation, cliquez sur le lien suivant :\n"
-"</p>\n"
-"<div style=\"text-align: center; margin-top: 16px;\"> \n"
-"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Accepter l'invitation pour « ${object.company_id.name} »</a>\n"
-" </div>\n"
-"<p> Cordialement,</p>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
-" ${user.signature | safe}\n"
-" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"<strong> Envoyé par ${user.company_id.name} à l'aide d'<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
-"</p>\n"
-"</div>"
-
-#. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
-msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} vous invite à vous connecter à Odoo"
+msgid ""
+"${object.create_uid.name} from ${object.company_id.name} invites you to "
+"connect to Odoo"
+msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
@@ -181,52 +131,113 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-" <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
-" <tbody><tr>\n"
-" <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/></td> \n"
-"</tr></tbody> \n"
-"</table>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-" <p>Cher/chère ${object.name},</p>\n"
-"<p>  Votre compte a été créé ! </p> \n"
-" <p>\n"
-" Votre identifiant : ${object.email}\n"
-" <br/>\n"
-"</p> <p>\n"
-" \n"
-" Pour accéder à votre compte, vous pouvez utiliser le lien suivant :\n"
-"</p> <div style=\"text-align: center; margin-top: 16px;\">\n"
-" \n"
-" <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Accéder à Mon compte</a>\n"
-"</div> \n"
-" <p>Cordialement,</p>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
-" ${user.signature | safe}\n"
-" <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-" <strong>Envoyé par ${user.company_id.name} à l'aide d'<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
-"</p> \n"
-"</div>"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
 "<strong>Une réinitialisation du mot de passe a été demandée pour cet "
-"utilisateur. Un email lui a été envoyé, contenant le lien suivant :</strong>"
+"utilisateur. Un courriel lui a été envoyé, contenant le lien suivant "
+":</strong>"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Une invitation a été envoyée par email. Elle contient le lien "
+"<strong>Une invitation a été envoyée par courriel. Elle contient le lien "
 "suivant pour s'abonner :</strong>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.set_password_email
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 20px;\">\n"
+"                                        <strong>Welcome to Odoo!</strong>\n"
+"                                        </span>\n"
+"                                    </td>\n"
+"                                    <td valign=\"middle\" align=\"right\">\n"
+"                                        <img src=\"/web/static/src/img/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                                        <div style=\"margin-top:15px; margin-bottom:15px;\">\n"
+"                                            Dear ${object.name},\n"
+"                                        </div>\n"
+"                                        <div style=\"margin-top:15px; margin-bottom:15px;\">\n"
+"                                            You have been invited by ${object.create_uid.name} of ${object.company_id.name} to connect on Odoo.\n"
+"                                        </div>\n"
+"                                        <div style=\"text-align: center; margin-top: 16px;margin-bottom: 16px;\">\n"
+"                                            <a href=\"${object.signup_url}\" style=\"padding: 12px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; text-align: center; cursor: pointer; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px;\">Accept invitation</a>\n"
+"                                            <br/>\n"
+"                                            <div style=\"margin-top:15px; margin-bottom:15px; line-height:1;\">\n"
+"                                                % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
+"                                                Your Odoo domain is: <br/>\n"
+"                                                <b><a href=\"${website_url}\">${website_url}</a></b>\n"
+"                                            </div>\n"
+"                                            <div style=\"margin-top:15px; margin-bottom:15px;line-height:1;\">\n"
+"                                                Your sign in email is: <br/>\n"
+"                                                <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b>\n"
+"                                            </div>\n"
+"                                        </div>\n"
+"                                        <div style=\"margin-top:15px; margin-bottom:15px;\">\n"
+"                                            Never heard of Odoo? It’s a all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                                        </div>\n"
+"                                        <div style=\"margin-top:15px; margin-bottom:15px;\">\n"
+"                                            Have a look at the <a href=\"https://www.odoo.com/page/tour\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
+"                                        </div>\n"
+"                                        <div style=\"margin-top:15px;\">\n"
+"                                            Enjoy Odoo!\n"
+"                                        </div>\n"
+"                                        <div style=\"margin-top:15px; margin-bottom:15px;\">\n"
+"                                            --<br/>The ${object.company_id.name} Team\n"
+"                                        </div>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td style=\"text-align: center; font-size: 14px;\">\n"
+"                        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -234,21 +245,21 @@ msgid "Already have an account?"
 msgstr "Vous avez déjà un compte ?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
-"Un email a été envoyé avec les informations pour réinitialiser votre mot de "
-"passe"
+"Un courriel a été envoyé avec les informations pour réinitialiser votre mot "
+"de passe"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Un autre utilisateur est déjà enregistré avec cette adresse email."
+msgstr "Un autre utilisateur est déjà enregistré avec cette adresse courriel."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:137
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authentification échouée."
@@ -259,11 +270,12 @@ msgid "Back to Login"
 msgstr "Retour à la page d'authentification"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:137
+#: code:addons/auth_signup/models/res_users.py:168
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
-"Impossible d'envoyer l'email : l'utilisateur %s n'a pas d'adresse spécifiée."
+"Impossible d'envoyer le courriel : l'utilisateur %s n'a pas d'adresse "
+"courriel."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -278,17 +290,12 @@ msgstr "Confirmez le mot de passe"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Confirmed"
-msgstr "Confirmé"
+msgstr "Confirmée"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
 msgstr "Contact"
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr "Copier les droits d'accès de"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:55
@@ -297,13 +304,13 @@ msgid "Could not create a new account."
 msgstr "Vous ne pouvez pas créer un nouveau compte."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:84
 #, python-format
 msgid "Could not reset your password"
 msgstr "Impossible de réinitialiser votre mot de passe"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "Compte client"
 
@@ -318,7 +325,7 @@ msgid "Don't have an account?"
 msgstr "Vous n'avez pas de compte ?"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr ""
@@ -335,14 +342,7 @@ msgid "HTTP routing"
 msgstr "Routage HTTP"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Si la case est décochée, seules les utilisateurs invités pourront se "
-"connecter."
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Invalid signup token"
 msgstr "La session d'authentification est invalide"
@@ -359,7 +359,7 @@ msgid "Never Connected"
 msgstr "Jamais connecté"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:75
 #, python-format
 msgid "No login provided."
 msgstr "Aucun identifiant fourni."
@@ -385,10 +385,11 @@ msgid "Password reset"
 msgstr "Réinitialisation du mot de passe"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:125
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr "Les mots de passe ne correspondent pas, saisissez-les de nouveau."
+msgstr ""
+"Les mots de passe ne correspondent pas, veuillez les saisir à nouveau."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -396,22 +397,22 @@ msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:110
+#: code:addons/auth_signup/models/res_users.py:141
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr ""
 "Veuillez réinitialiser votre mot de passe : nom d'utilisateur ou adresse "
-"email incorrect"
+"courriel incorrecte"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Reset Password Instructions"
 msgstr "Envoyer les instructions de réinitialisation de mot de passe"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
+#: model:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Inviter par email"
+msgstr "Inviter par courriel"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -419,66 +420,84 @@ msgid "Sign up"
 msgstr "S'enregistrer"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
 msgstr "Expiration de la session de connexion"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
 msgstr "Session de connexion"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
 msgstr "Type de jeton de connexion"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
 msgid "Signup Token is Valid"
 msgstr "La session d'authentification est valide"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
 msgstr "Url d'authentification"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:88
+#: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr "Les utilisateurs non invités ne sont pas autorisés à s'inscrire"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr "Le jeton d'inscription « %s » n'est plus valide"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr "Le jeton d'inscription « %s » n'est pas valide"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_state
-msgid "Status"
-msgstr "État"
+#: code:addons/auth_signup/models/res_users.py:117
+#, python-format
+msgid "Signup: invalid template user"
+msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
+#: code:addons/auth_signup/models/res_users.py:120
+#, python-format
+msgid "Signup: no login given for new user"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:122
+#, python-format
+msgid "Signup: no name or partner given for new user"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__state
+msgid "Status"
+msgstr "Statut"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
 "Utilisateur modèle pour les nouveaux utilisateurs créés à travers signup"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:123
 #, python-format
 msgid "The form was not properly filled in."
 msgstr "Le formulaire n'est pas correctement rempli."
@@ -497,12 +516,12 @@ msgstr "Bienvenue sur ${object.company_id.name} !"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "Votre Email"
+msgstr "Votre courriel"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Votre Nom"
+msgstr "Votre nom"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

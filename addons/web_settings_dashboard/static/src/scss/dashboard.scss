@@ -1,0 +1,67 @@
+.o_web_settings_dashboard {
+
+    $bg-dashboard-col: #FFF;
+
+    @mixin o-web-settings-dashboard-card {
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.14);
+        background: $bg-dashboard-col;
+        border-radius: 2px;
+    }
+
+    background: #F7F7F7;
+    height: 100%;
+
+    .o_web_settings_dashboard_col {
+        > div > hr {
+            margin: 12px -18px 15px -18px;
+            border-color: #CBCBCB;
+        }
+
+        > div {
+            @include o-web-settings-dashboard-card;
+            padding: 25px 18px 18px 18px;
+
+            .o_web_settings_dashboard_header {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+        }
+        .btn.o_browse_apps, .btn.o_web_settings_dashboard_invitations {
+            margin-top: 12px;
+        }
+        .o_web_settings_dashboard_compact_subtitle {
+            line-height: 12px;
+            display: block;
+        }
+        .o_web_settings_dashboard_invitations {
+            .o_web_settings_dashboard_invitation_form {
+                text-align: left;
+                > textarea {
+                    resize: vertical;
+                    width: 100%;
+                }
+            }
+        }
+        .o_web_settings_dashboard_planner {
+            .progress {
+                height: 10px;
+                background-color: darken($bg-dashboard-col, 15%);
+                cursor: pointer;
+                margin-bottom: 30px;
+            }
+            .o_web_settings_dashboard_planner_progress_text {
+                font-size: 18px;
+                padding-right: 0px;
+                padding-top: 3px;
+            }
+            .o_web_settings_dashboard_planner_progress_bar {
+                padding-left: 10px;
+            }
+            .o_web_settings_dashboard_progress_title {
+                font-weight: bold;
+                cursor: pointer;
+                color: $o-brand-primary;
+            }
+        }
+    }
+}

@@ -24,7 +24,6 @@ You can choose flexible invoicing methods:
 * *On Delivery Order*: Invoices are generated from picking (delivery)
 * *Before Delivery*: A Draft invoice is created and must be paid before delivery
 """,
-    'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['sale_management', 'stock_account'],
     'data': [
         'security/sale_stock_security.xml',
@@ -33,9 +32,13 @@ You can choose flexible invoicing methods:
         'views/stock_views.xml',
         'views/res_config_settings_views.xml',
         'views/account_invoice_views.xml',
+        'views/sale_stock_portal_template.xml',
+        'views/res_users_views.xml',
+        'views/stock_production_lot_views.xml',
         'report/sale_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',
         'data/sale_stock_data.xml',
+        'wizard/stock_rules_report_views.xml',
     ],
     'demo': ['data/sale_order_demo.xml'],
     'installable': True,

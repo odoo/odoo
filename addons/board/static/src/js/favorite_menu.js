@@ -6,8 +6,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
-var pyeval = require('web.pyeval');
-var ViewManager = require('web.ViewManager');
+var pyUtils = require('web.py_utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -23,11 +22,7 @@ FavoriteMenu.include({
         if(this.action_id === undefined) {
             return this._super();
         }
-        var am = this.findAncestor(function (a) {
-            return a instanceof ActionManager;
-        });
-        if (am && am.get_inner_widget() instanceof ViewManager) {
-            this.view_manager = am.get_inner_widget();
+        if (this.action.type === 'ir.actions.act_window') {
             this.add_to_dashboard_available = true;
             this.$('.o_favorites_menu').append(QWeb.render('SearchView.addtodashboard'));
             this.$add_to_dashboard = this.$('.o_add_to_dashboard');
@@ -69,10 +64,20 @@ FavoriteMenu.include({
         });
 
         context.add({
-            group_by: pyeval.eval('groupbys', search_data.groupbys || [])
+            group_by: pyUtils.eval('groupbys', search_data.groupbys || [])
         });
-        context.add(this.view_manager.active_view.controller.getContext());
-        var c = pyeval.eval('context', context);
+        // AAB: trigger_up an event that will be intercepted by the controller,
+        // as soon as the controller is the parent of the control panel
+        var am = this.findAncestor(function (a) {
+            return a instanceof ActionManager;
+        });
+        // with options 'keepSearchView', it may happen that the action_id of
+        // the searchview (received in init) is not the one of the current
+        // action, which corresponds to the one we want to add to dashboard
+        var currentAction = am.getCurrentAction();
+        var controller = am.getCurrentController();
+        context.add(controller.widget.getContext());
+        var c = pyUtils.eval('context', context);
         for (var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {
                 delete c[k];
@@ -85,10 +90,10 @@ FavoriteMenu.include({
         return self._rpc({
                 route: '/board/add_to_dashboard',
                 params: {
-                    action_id: self.action_id || false,
+                    action_id: currentAction.id || false,
                     context_to_save: c,
                     domain: domain,
-                    view_mode: self.view_manager.active_view.type,
+                    view_mode: controller.viewType,
                     name: name,
                 },
             })

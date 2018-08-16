@@ -2,8 +2,10 @@ odoo.define('web.WebClient', function (require) {
 "use strict";
 
 var AbstractWebClient = require('web.AbstractWebClient');
+var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
+var dom = require('web.dom');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
 var session = require('web.session');
@@ -11,20 +13,17 @@ var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
 
 return AbstractWebClient.extend({
-    events: {
+    events: _.extend({}, AbstractWebClient.prototype.events, {
         'click .oe_logo_edit_admin': 'logo_edit',
         'click .oe_logo img': function(ev) {
             ev.preventDefault();
             return this.clear_uncommitted_changes().then(function() {
-                framework.redirect("/web" + (core.debug ? "?debug" : ""));
+                framework.redirect("/web" + (config.debug ? "?debug" : ""));
             });
         },
-    },
+    }),
     show_application: function() {
         var self = this;
-
-        // Allow to call `on_attach_callback` and `on_detach_callback` when needed
-        this.action_manager.is_in_DOM = true;
 
         this.toggle_bars(true);
         this.set_title();
@@ -50,6 +49,9 @@ return AbstractWebClient.extend({
         return $.when(systray_menu_loaded, user_menu_loaded).then(function() {
             self.menu.start();
             self.bind_hashchange();
+            setTimeout(function () {
+                self.menu.$el.removeClass('d-none');
+            }, 200)
         });
 
     },
@@ -83,7 +85,7 @@ return AbstractWebClient.extend({
                             action_buttons: true,
                             headless: true,
                         };
-                        self.action_manager.do_action(result, {
+                        self.action_manager.doAction(result, {
                             on_close: self.update_logo.bind(self, true),
                         });
                     });
@@ -112,7 +114,7 @@ return AbstractWebClient.extend({
                         }
                         var data = result[0];
                         if(data.action_id) {
-                            self.action_manager.do_action(data.action_id[0]);
+                            self.action_manager.doAction(data.action_id[0]);
                             self.menu.open_action(data.action_id[0]);
                         } else {
                             var first_menu_id = self.menu.$el.find("a:first").data("menu");
@@ -142,11 +144,10 @@ return AbstractWebClient.extend({
                         self.menu.menu_click(state.menu_id);
                     });
                 } else {
-                    state._push_me = false;  // no need to push state back...
-                    self.action_manager.do_load_state(state, !!self._current_state).then(function () {
-                        var action = self.action_manager.get_inner_action();
+                    self.action_manager.loadState(state, !!self._current_state).then(function () {
+                        var action = self.action_manager.getCurrentAction();
                         if (action) {
-                            self.menu.open_action(action.action_descr.id, state.menu_id);
+                            self.menu.open_action(action.id, state.menu_id);
                         }
                     });
                 }
@@ -160,33 +161,49 @@ return AbstractWebClient.extend({
         });
     },
     on_menu_action: function(options) {
-        var self = this;
-        return this.menu_dm.add(data_manager.load_action(options.action_id))
-            .then(function (result) {
-                return self.action_mutex.exec(function() {
-                    var completed = $.Deferred();
-                    $.when(self.action_manager.do_action(result, {
-                        clear_breadcrumbs: true,
-                        action_menu_id: options.id,
-                    })).fail(function() {
-                        self.menu.open_menu(options.previous_menu_id);
-                    }).always(function() {
-                        completed.resolve();
-                    });
-                    setTimeout(function() {
-                        completed.resolve();
-                    }, 2000);
-                    // We block the menu when clicking on an element until the action has correctly finished
-                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
-                    return completed;
-                });
-            });
+        this.action_manager.doAction(options.action_id, {
+            clear_breadcrumbs: true,
+            action_menu_id: options.id,
+        });
     },
     toggle_fullscreen: function(fullscreen) {
         this._super(fullscreen);
         if (!fullscreen) {
-            this.menu.reflow();
+            core.bus.trigger('resize');
         }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onGetScrollPosition: function (ev) {
+        ev.data.callback({
+            left: this.action_manager.el.scrollLeft,
+            top: this.action_manager.el.scrollTop,
+        });
+    },
+    /**
+     * @override
+     */
+    _onScrollTo: function (ev) {
+        var offset;
+        if (ev.data.selector) {
+            offset = dom.getPosition(document.querySelector(ev.data.selector));
+            // substract the position of the ActionManager as it is the
+            // scrolling element
+            var actionManagerOffset = dom.getPosition(this.action_manager.el);
+            offset.left -= actionManagerOffset.left;
+            offset.top -= actionManagerOffset.top;
+        } else {
+            offset = {top: ev.data.top || 0, left: ev.data.left || 0};
+        }
+
+        this.action_manager.el.scrollTop = offset.top;
+        this.action_manager.el.scrollLeft = offset.left;
     },
 });
 

@@ -12,7 +12,7 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     production_id = fields.Many2one('mrp.production', 'Production Order')
-    lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot')
+    lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot/Serial Number')
     lot_produced_qty = fields.Float(
         'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
         help="Informative, not used in matching")
@@ -245,6 +245,7 @@ class StockMove(models.Model):
                 'move_id': self.id,
                 'product_id': self.product_id.id,
                 'location_id': location_id.id if location_id else self.location_id.id,
+                'production_id': self.raw_material_production_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom.id,
@@ -255,12 +256,10 @@ class StockMove(models.Model):
                 vals.update({'lot_id': lot.id})
             self.env['stock.move.line'].create(vals)
 
+    def _get_upstream_documents_and_responsibles(self, visited):
+            if self.created_production_id and self.created_production_id.state not in ('done', 'cancel'):
+                return [(self.created_production_id, self.created_production_id.user_id, visited)]
+            else:
+                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
-class PushedFlow(models.Model):
-    _inherit = "stock.location.path"
 
-    def _prepare_move_copy_values(self, move_to_copy, new_date):
-        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
-        new_move_vals['production_id'] = False
-
-        return new_move_vals

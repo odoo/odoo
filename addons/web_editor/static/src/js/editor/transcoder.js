@@ -1,7 +1,7 @@
 odoo.define('web_editor.transcoder', function (require) {
 'use strict';
 
-var widget = require('web_editor.widget');
+var base = require('web_editor.base');
 
 var rulesCache = [];
 
@@ -37,7 +37,6 @@ function getMatchedCSSRules(a) {
                             selectorText.indexOf(':active') === -1 &&
                             selectorText.indexOf(':link') === -1 &&
                             selectorText.indexOf('::') === -1 &&
-                            selectorText.indexOf('"') === -1 &&
                             selectorText.indexOf("'") === -1) {
                         var st = selectorText.split(/\s*,\s*/);
                         for (k = 0 ; k < st.length ; k++) {
@@ -191,11 +190,11 @@ function fontToImg($editable) {
     $editable.find('.fa').each(function () {
         var $font = $(this);
         var icon, content;
-        _.find(widget.fontIcons, function (font) {
-            return _.find(widget.getCssSelectors(font.parser), function (css) {
-                if ($font.is(css[0].replace(/::?before/g, ''))) {
-                    icon = css[2].split('-').shift();
-                    content = css[1].match(/content:\s*['"]?(.)['"]?/)[1];
+        _.find(base.fontIcons, function (font) {
+            return _.find(base.getCssSelectors(font.parser), function (data) {
+                if ($font.is(data.selector.replace(/::?before/g, ''))) {
+                    icon = data.names[0].split('-').shift();
+                    content = data.css.match(/content:\s*['"]?(.)['"]?/)[1];
                     return true;
                 }
             });
@@ -248,6 +247,10 @@ function applyOverDescendants(node, func) {
             func(node);
             applyOverDescendants(node, func);
         }
+        var $node = $(node);
+        if (node.nodeName === 'A' && $node.hasClass('btn') && !$node.children().length && $(node).parents('.o_outlook_hack').length)  {
+            node = $(node).parents('.o_outlook_hack')[0];
+        }
         node = node.nextSibling;
     }
 }
@@ -283,7 +286,7 @@ function classToStyle($editable) {
 
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;"><tr><td></td></tr></table>');
+            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;vertical-align:middle"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({

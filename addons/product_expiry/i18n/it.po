@@ -1,47 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_expiry
-# 
+#
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Paolo Valier, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-09 13:10+0000\n"
+"Last-Translator: Paolo Valier\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-msgid ""
-"<span class=\"label label-danger\" attrs=\"{'invisible': "
-"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
-msgid "<span class=\"pull-right\">Expiry Date</span>"
-msgstr "<span class=\"pull-right\">Data Scadenza</span>"
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
-msgid "<span>days</span>"
-msgstr "<span>giorni</span>"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
 msgid "Alert Date"
-msgstr "Data Avviso"
+msgstr "Data di avviso"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
@@ -61,15 +41,7 @@ msgid "Cow milk"
 msgstr "Latte di mucca"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
-msgid ""
-"Date to determine the expired lots and serial numbers using the filter "
-"\"Expiration Alerts\"."
-msgstr ""
-
-#. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Date"
 
@@ -77,11 +49,6 @@ msgstr "Date"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
 msgid "End of Life Date"
 msgstr "Data di fine vita"
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
-msgid "Expiration alerts"
-msgstr ""
 
 #. module: product_expiry
 #: model:product.product,name:product_expiry.product_product_jambon
@@ -98,58 +65,19 @@ msgstr "Prosciutto"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Lotto/Seriale"
+msgstr "Lotto/Serie"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_alert_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
-msgid ""
-"Number of days before an alert should be raised on the lot/serial number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_life_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
-msgid ""
-"Number of days before the goods may become dangerous and must not be "
-"consumed. It will be computed on the lot/serial number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_removal_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
-msgid ""
-"Number of days before the goods should be removed from the stock. It will be"
-" computed on the lot/serial number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_product_use_time
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
-msgid ""
-"Number of days before the goods starts deteriorating, without being "
-"dangerous yet. It will be computed on the lot/serial number."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
 msgstr "Tempo di avviso del prodotto"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
-msgid "Product Expiry Alert"
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_life_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
 msgid "Product Life Time"
 msgstr "Tempo di vita del prodotto"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
 msgid "Product Removal Time"
 msgstr "Tempo di rimozione del prodotto"
@@ -160,7 +88,6 @@ msgid "Product Template"
 msgstr "Modello Prodotto"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_product_use_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
 msgid "Product Use Time"
 msgstr "Periodo di utilizzabilità prodotto"
@@ -168,7 +95,7 @@ msgstr "Periodo di utilizzabilità prodotto"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "Quanti"
+msgstr "Quantità"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
@@ -177,9 +104,13 @@ msgid "Removal Date"
 msgstr "Data di rimozione"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
-msgid "The Alert Date has been reached."
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
+msgid ""
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
 msgstr ""
+"In questa data viene generato un avviso relativo ai beni con questo Numero "
+"di Serie."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
@@ -192,13 +123,12 @@ msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
-#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
 msgstr ""
-"In questa data i beni con questo Numero di Serie saranno rimossi dallo stock"
-" di magazzino."
+"In questa data i beni con questo Numero di Serie saranno rimossi dallo stock "
+"di magazzino."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
@@ -208,3 +138,40 @@ msgid ""
 msgstr ""
 "In questa data i beni con questo Numero di Serie iniziano a deteriorarsi, "
 "senza tuttavia essere pericolosi."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
+"anticipo con cui un avviso dovrebbe essere notificato."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
+"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
+"anticipo con cui i beni possono diventare pericolosi e dovrebbero essere "
+"consumati."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
+"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
+"anticipo con cui i beni dovrebbero essere rimossi dal magazzino."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+"Quando un nuovo Numero Seriale viene emesso, questo è il numero di giorni di "
+"anticipo con cui i beni cominciano a degradare, senza diventare pericolosi."

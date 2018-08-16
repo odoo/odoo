@@ -16,12 +16,12 @@ tour.register('shop_wishlist', {
         },
         {
             content: "go to wishlist",
-            extra_trigger: ".label:contains(1)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
             content: "remove first item in whishlist",
-            trigger: 'a.o_wish_rm:first',
+            trigger: '.o_wish_rm:first',
         },
         {
             content: "go back to the store",
@@ -47,23 +47,23 @@ tour.register('shop_wishlist', {
             },
         },
         {
-            content: "check that logged in and search for ipad",
-            extra_trigger: 'li span:contains(Administrator)',
+            content: "check that logged in and search for Customizable Desk",
+            extra_trigger: "li span:contains('Mitchell Stephens')",
             trigger: 'form input[name="search"]',
-            run: "text ipad retina",
+            run: "text Customizable Desk",
         },
         {
             content: "submit search",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            content: "click on ipad",
-            trigger: '.oe_product_cart a:contains("iPad Retina Display")',
+            content: "click on Customizable Desk",
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
-            content: "select ipad 32GB",
+            content: "select desk cutomizable",
             extra_trigger: '#product_detail',
-            trigger: 'label:contains(32 GB) input',
+            trigger: 'label:contains(Aluminium) input',
         },
         {
             content: "click on add to wishlist",
@@ -71,12 +71,12 @@ tour.register('shop_wishlist', {
         },
         {
             content: "check that wishlist contains 2 items and go to wishlist",
-            extra_trigger: ".label:contains(2)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
-            content: "remove Ipad",
-            trigger: 'tr:contains("iPad Retina Display") a.o_wish_rm:first',
+            content: "remove Customizable Desk",
+            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",
@@ -89,7 +89,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that cart contains 1 item",
@@ -107,11 +107,11 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add last item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that user is redirect - wishlist is empty",
-            trigger: "h2:contains('Shopping Cart')",
+            trigger: "#wrap #cart_products",
             run: function() {},
         },
         {

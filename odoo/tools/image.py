@@ -18,7 +18,7 @@ Image._initialized = 2
 # Image resizing
 # ----------------------------------------
 
-def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False):
+def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False, upper_limit=False):
     """ Function to resize an image. The image will be resized to the given
         size, while keeping the aspect ratios, and holes in the image will be
         filled with transparent background. The image will not be stretched if
@@ -41,7 +41,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         :param base64_source: base64-encoded version of the source
             image; if False, returns False
         :param size: 2-tuple(width, height). A None value for any of width or
-            height mean an automatically computed value based respectivelly
+            height mean an automatically computed value based respectively
             on height or width of the source image.
         :param encoding: the output encoding
         :param filetype: the output filetype, by default the source image's
@@ -63,18 +63,32 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     }.get(filetype, filetype)
 
     asked_width, asked_height = size
+    if upper_limit:
+        if asked_width:
+            if asked_width >= image.size[0]:
+                asked_width = image.size[0]
+        if asked_height:
+            if asked_height >= image.size[1]:
+                asked_height = image.size[1]
+
+        if image.size[0] >= image.size[1]:
+            asked_height = None
+        else:
+            asked_width = None
+        if asked_width is None and asked_height is None:
+            return base64_source
+
     if asked_width is None:
         asked_width = int(image.size[0] * (float(asked_height) / image.size[1]))
     if asked_height is None:
         asked_height = int(image.size[1] * (float(asked_width) / image.size[0]))
     size = asked_width, asked_height
-
     # check image size: do not create a thumbnail if avoiding smaller images
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
         return base64_source
 
     if image.size != size:
-        image = image_resize_and_sharpen(image, size)
+        image = image_resize_and_sharpen(image, size, upper_limit=upper_limit)
     if image.mode not in ["1", "L", "P", "RGB", "RGBA"] or (filetype == 'JPEG' and image.mode == 'RGBA'):
         image = image.convert("RGB")
 
@@ -82,7 +96,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image.save(background_stream, filetype)
     return codecs.encode(background_stream.getvalue(), encoding)
 
-def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0):
+def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0, upper_limit=False):
     """
         Create a thumbnail by resizing while keeping ratio.
         A sharpen filter is applied for a better looking result.
@@ -101,8 +115,12 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     sharpener = ImageEnhance.Sharpness(image)
     resized_image = sharpener.enhance(factor)
     # create a transparent image for background and paste the image on it
-    image = Image.new('RGBA', size, (255, 255, 255, 0))
+    if upper_limit:
+        image = Image.new('RGBA', (size[0], size[1]-3), (255, 255, 255, 0)) # FIXME temporary fix for trimming the ghost border.
+    else:
+        image = Image.new('RGBA', size, (255, 255, 255, 0))
     image.paste(resized_image, ((size[0] - resized_image.size[0]) // 2, (size[1] - resized_image.size[1]) // 2))
+
     if image.mode != origin_mode:
         image = image.convert(origin_mode)
     return image
@@ -234,7 +252,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
 
 def image_get_resized_images(base64_source, return_big=False, return_medium=True, return_small=True,
     big_name='image', medium_name='image_medium', small_name='image_small',
-    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False):
+    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes={}):
     """ Standard tool function that returns a dictionary containing the
         big, medium and small versions of the source image. This function
         is meant to be used for the methods of functional fields for
@@ -245,7 +263,7 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         only image_medium and image_small values, to update those fields.
 
         :param base64_source: base64-encoded version of the source
-            image; if False, all returnes values will be False
+            image; if False, all returned values will be False
         :param return_{..}: if set, computes and return the related resizing
             of the image
         :param {..}_name: key of the resized image in the return dictionary;
@@ -255,33 +273,36 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
             previous parameters.
     """
     return_dict = dict()
+    size_big = sizes.get(big_name, (1024, 1024))
+    size_medium = sizes.get(medium_name, (128, 128))
+    size_small = sizes.get(small_name, (64, 64))
     if isinstance(base64_source, pycompat.text_type):
         base64_source = base64_source.encode('ascii')
     if return_big:
-        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big)
+        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big, size=size_big)
     if return_medium:
-        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium)
+        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium, size=size_medium)
     if return_small:
-        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
+        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small, size=size_small)
     return return_dict
 
-def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small', sizes={}):
     """ Update ``vals`` with image fields resized as expected. """
     if vals.get(big_name):
         vals.update(image_get_resized_images(vals[big_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
+                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes=sizes))
     elif vals.get(medium_name):
         vals.update(image_get_resized_images(vals[medium_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False, sizes=sizes))
     elif vals.get(small_name):
         vals.update(image_get_resized_images(vals[small_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True, sizes=sizes))
     elif big_name in vals or medium_name in vals or small_name in vals:
         vals[big_name] = vals[medium_name] = vals[small_name] = False
 

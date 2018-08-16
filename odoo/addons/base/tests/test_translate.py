@@ -5,9 +5,10 @@ import unittest
 
 from odoo.tools import pycompat
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged('standard', 'at_install')
 class TranslationToolsTestCase(unittest.TestCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -157,21 +158,17 @@ class TranslationToolsTestCase(unittest.TestCase):
         terms = []
         source = """<t t-name="stuff">
                         <ul class="nav navbar-nav">
-                            <li>
-                                <a class="oe_menu_leaf" href="/web#menu_id=42&amp;action=54">
+                            <li class="nav-item">
+                                <a class="nav-link oe_menu_leaf" href="/web#menu_id=42&amp;action=54">
                                     <span class="oe_menu_text">Blah</span>
                                 </a>
-                            </li>
-                            <li class="dropdown" id="menu_more_container" style="display: none;">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">More <b class="caret"/></a>
-                                <ul class="dropdown-menu" id="menu_more"/>
                             </li>
                         </ul>
                     </t>"""
         result = xml_translate(terms.append, source)
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
+            ['<span class="oe_menu_text">Blah</span>'])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """
@@ -273,6 +270,37 @@ class TestTranslation(TransactionCase):
         categories = padawans_fr.search([('id', 'in', [self.customers.id, padawans.id])], order='name')
         self.assertEqual(categories.ids, [padawans.id, self.customers.id],
             "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
+
+    def test_105_duplicated_translation(self):
+        """ Test synchronizing translations with duplicated source """
+        # create a category with a French translation
+        padawans = self.env['res.partner.category'].create({'name': 'Padawan'})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'module':'base',
+            'lang': 'fr_FR',
+            'res_id': padawans.id,
+            'value': 'Apprenti',
+            'state': 'translated',
+        })
+        # change name and insert a duplicate manually
+        padawans.write({'name': 'Padawans'})
+        self.env['ir.translation'].create({
+            'type': 'model',
+            'name': 'res.partner.category,name',
+            'module':'base',
+            'lang': 'fr_FR',
+            'res_id': padawans.id,
+            'value': 'Apprentis',
+            'state': 'translated',
+        })
+        self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
+        translations = self.env['ir.translation'].search([
+            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+        ])
+        self.assertEqual(len(translations), 1, "Translations were not merged after `translate_fields` call")
+        self.assertEqual(translations.value, "Apprentis", "The most recent translation must stay")
 
 
 class TestXMLTranslation(TransactionCase):

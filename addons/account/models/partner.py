@@ -7,7 +7,7 @@ import time
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
-from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -27,7 +27,7 @@ class AccountFiscalPosition(models.Model):
     country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invocing country match the group.")
+        help="Apply only if delivery or invoicing country match the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Integer(string='Zip Range From', default=0)
     zip_to = fields.Integer(string='Zip Range To', default=0)
@@ -137,7 +137,7 @@ class AccountFiscalPosition(models.Model):
     def get_fiscal_position(self, partner_id, delivery_id=None):
         if not partner_id:
             return False
-        # This can be easily overriden to apply more complex fiscal rules
+        # This can be easily overridden to apply more complex fiscal rules
         PartnerObj = self.env['res.partner']
         partner = PartnerObj.browse(partner_id)
 
@@ -271,7 +271,7 @@ class ResPartner(models.Model):
             all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
             all_partner_ids += all_partners_and_children[partner]
 
-        # searching account.invoice.report via the orm is comparatively expensive
+        # searching account.invoice.report via the ORM is comparatively expensive
         # (generates queries "id in []" forcing to build the full table).
         # In simple cases where all invoices are in the same currency than the user's company
         # access directly these elements
@@ -380,7 +380,7 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency", help='Utility field to express amount currency')
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts", type='integer')
+    contracts_count = fields.Integer(compute='_compute_contracts_count', string="Contracts Count", type='integer')
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items", type="integer")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
@@ -399,8 +399,8 @@ class ResPartner(models.Model):
         string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
-         string='Vendor Payment Terms',
-         help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
+        string='Vendor Payment Terms',
+        help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner', oldname="ref_companies")
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
@@ -411,10 +411,10 @@ class ResPartner(models.Model):
              'It is set either if there\'s not at least an unreconciled debit and an unreconciled credit '
              'or if you click the "Done" button.')
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
-    contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
+    contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Partner Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
-    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
+    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
 
     @api.multi
@@ -450,3 +450,15 @@ class ResPartner(models.Model):
         else:
             company = self.env.user.company_id
         return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}
+
+    def can_edit_vat(self):
+        can_edit_vat = super(ResPartner, self).can_edit_vat()
+        if not can_edit_vat:
+            return can_edit_vat
+        Invoice = self.env['account.invoice']
+        has_invoice = Invoice.search([
+            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('partner_id', 'child_of', self.commercial_partner_id.id),
+            ('state', 'not in', ['draft', 'cancel'])
+        ], limit=1)
+        return can_edit_vat and not (bool(has_invoice))

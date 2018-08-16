@@ -29,10 +29,10 @@
 
         <record id="sale_order_line_1" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -41,7 +41,7 @@
             <field name="name">Pen drive, 16GB</field>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">145.00</field>
         </record>
 
@@ -50,7 +50,7 @@
             <field name="name">Headset USB</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">65.00</field>
         </record>
 
@@ -69,7 +69,7 @@
             <field name="name">Service on demand</field>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
@@ -78,7 +78,7 @@
             <field name="name">On Site Assistance</field>
             <field name="product_id" ref="product.product_product_2"/>
             <field name="product_uom_qty">30</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">38.25</field>
         </record>
 
@@ -96,7 +96,7 @@
             <field name="name">On Site Monitoring</field>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">10</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">30.75</field>
         </record>
 
@@ -105,7 +105,7 @@
             <field name="name">Toner Cartridge</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">70.00</field>
         </record>
 
@@ -123,7 +123,7 @@
             <field name="name">Service on demand</field>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">16</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
@@ -132,7 +132,7 @@
             <field name="name">Webcam</field>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">10</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">45.00</field>
         </record>
 
@@ -141,7 +141,7 @@
             <field name="name">Multimedia Speakers</field>
             <field name="product_id" ref="product.consu_delivery_02"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">150.00</field>
         </record>
 
@@ -150,7 +150,7 @@
             <field name="name">Switch, 24 ports</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">70.00</field>
         </record>
 
@@ -169,7 +169,7 @@
             <field name="name">External Hard disk</field>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">405.00</field>
         </record>
 
@@ -187,7 +187,7 @@
             <field name="name">PC Assamble + 2GB RAM</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">750.00</field>
         </record>
 
@@ -198,24 +198,23 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="state">sale</field>
         </record>
 
         <record id="sale_order_line_16" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
         <record id="sale_order_line_17" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name">GrapWorks Software</field>
+            <field name="name">Three-Seat Sofa</field>
             <field name="product_id" ref="product.consu_delivery_01"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">173.00</field>
         </record>
 
@@ -224,7 +223,7 @@
             <field name="name">Datacard</field>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">40.00</field>
         </record>
 
@@ -233,7 +232,7 @@
             <field name="name">USB Adapter</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">18.00</field>
         </record>
 
@@ -249,10 +248,10 @@
 
         <record id="sale_order_line_20" model="sale.order.line">
             <field name="order_id" ref="sale_order_8"/>
-            <field name="name">Laptop Customized</field>
+            <field name="name">Drawer</field>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">3645.00</field>
         </record>
 
@@ -261,7 +260,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -279,10 +278,10 @@
 
         <record id="sale_order_line_22" model="sale.order.line">
             <field name="order_id" ref="sale_order_9"/>
-            <field name="name">Laptop Customized</field>
+            <field name="name">Drawer</field>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">3245.00</field>
         </record>
 
@@ -291,7 +290,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -307,10 +306,10 @@
 
         <record id="sale_order_line_24" model="sale.order.line">
             <field name="order_id" ref="sale_order_10"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Screens</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2550.00</field>
         </record>
 
@@ -319,7 +318,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -336,10 +335,10 @@
 
         <record id="sale_order_line_26" model="sale.order.line">
             <field name="order_id" ref="sale_order_11"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Screens</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2450.00</field>
         </record>
 
@@ -348,7 +347,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -364,10 +363,10 @@
 
         <record id="sale_order_line_28" model="sale.order.line">
             <field name="order_id" ref="sale_order_12"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Screens</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">3150.00</field>
         </record>
 
@@ -376,7 +375,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -392,10 +391,10 @@
 
         <record id="sale_order_line_30" model="sale.order.line">
             <field name="order_id" ref="sale_order_13"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Screens</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -404,7 +403,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -420,10 +419,10 @@
 
         <record id="sale_order_line_32" model="sale.order.line">
             <field name="order_id" ref="sale_order_14"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Screens</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2750.00</field>
         </record>
 
@@ -432,7 +431,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -448,10 +447,10 @@
 
         <record id="sale_order_line_34" model="sale.order.line">
             <field name="order_id" ref="sale_order_15"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -460,7 +459,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -476,10 +475,10 @@
 
         <record id="sale_order_line_36" model="sale.order.line">
             <field name="order_id" ref="sale_order_16"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2750.00</field>
         </record>
 
@@ -488,7 +487,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -504,10 +503,10 @@
 
         <record id="sale_order_line_38" model="sale.order.line">
             <field name="order_id" ref="sale_order_17"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">3550.00</field>
         </record>
 
@@ -516,7 +515,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -532,10 +531,10 @@
 
         <record id="sale_order_line_40" model="sale.order.line">
             <field name="order_id" ref="sale_order_18"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -544,7 +543,7 @@
             <field name="name">Mouse, Wireless</field>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
 
@@ -599,13 +598,14 @@ Thanks!</field>
 
         <record id="advance_product_0" model="product.product">
             <field name="name">Deposit</field>
-            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="default_code">Deposit</field>
+            <field name="categ_id" ref="product.product_category_3"/>
             <field name="type">service</field>
             <field name="list_price">150.0</field>
             <field name="invoice_policy">order</field>
             <field name="standard_price">100.0</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="company_id" eval="[]"/>
             <field name="image" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
             <field name="taxes_id" eval="[]"/>
@@ -631,10 +631,10 @@ Thanks!</field>
 
         <record id="portal_sale_order_line_1" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_1"/>
-            <field name="name">Laptop E5023</field>
+            <field name="name">Acoustic Bloc Panel</field>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">2950.00</field>
         </record>
 
@@ -643,7 +643,7 @@ Thanks!</field>
             <field name="name">Pen drive, 16GB</field>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">145.00</field>
         </record>
 
@@ -652,7 +652,7 @@ Thanks!</field>
             <field name="name">Headset USB</field>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">65.00</field>
         </record>
 
@@ -672,7 +672,7 @@ Thanks!</field>
             <field name="name">Service on demand</field>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
@@ -681,12 +681,18 @@ Thanks!</field>
             <field name="name">On Site Assistance</field>
             <field name="product_id" ref="product.product_product_2"/>
             <field name="product_uom_qty">30</field>
-            <field name="product_uom" ref="product.product_uom_hour"/>
+            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">38.25</field>
         </record>
 
 
         <!-- Confirm some Sales Orders-->
         <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
+
+        <function model="crm.team" name="message_unsubscribe"
+            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
+        <function model="crm.team" name="message_subscribe"
+            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
+
     </data>
 </odoo>

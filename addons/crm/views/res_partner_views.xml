@@ -23,8 +23,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create an opportunity related to this customer.
+              <p class="o_view_nocontent_smiling_face">
+                Create an new opportunity related to this customer
               </p><p>
                 Use opportunities to keep track of your sales pipeline, follow
                 up potential sales and better forecast your future revenues.
@@ -70,8 +70,8 @@
                     <field name="meeting_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span class="badge" t-if="record.opportunity_count.value>0"><i class="fa fa-fw fa-star"/><t t-esc="record.opportunity_count.value"/></span>
-                    <span class="badge" t-if="record.meeting_count.value>0"><i class="fa fa-fw fa-calendar"/><t t-esc="record.meeting_count.value"/></span>
+                    <span class="badge badge-pill" t-if="record.opportunity_count.value>0"><i class="fa fa-fw fa-star" aria-label="Favorites" role="img" title="Favorites"/><t t-esc="record.opportunity_count.value"/></span>
+                    <span class="badge badge-pill" t-if="record.meeting_count.value>0"><i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/><t t-esc="record.meeting_count.value"/></span>
                 </xpath>
             </field>
         </record>
@@ -94,7 +94,7 @@
             <field name="name">view.res.partner.form.crm.inherited1</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field eval="18" name="priority"/>
+            <field eval="1" name="priority"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <data>
@@ -103,12 +103,14 @@
                             attrs="{'invisible': [('customer', '=', False)]}"
                             name="%(crm.crm_lead_opportunities)d"
                             icon="fa-star"
+                            groups="sales_team.group_sale_salesman"
                             context="{'search_default_partner_id': active_id}">
                             <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
                         </button>
                         <button class="oe_stat_button" type="object"
                             name="schedule_meeting"
                             icon="fa-calendar"
+                            groups="sales_team.group_sale_salesman"
                             context="{'partner_id': active_id, 'partner_name': name}">
                             <field string="Meetings" name="meeting_count" widget="statinfo"/>
                         </button>

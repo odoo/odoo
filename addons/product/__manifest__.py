@@ -5,7 +5,7 @@
     'name': 'Products & Pricelists',
     'version': '1.2',
     'category': 'Sales',
-    'depends': ['base', 'decimal_precision', 'mail'],
+    'depends': ['base', 'decimal_precision', 'mail', 'uom'],
     'description': """
 This is the base module for managing products and pricelists in Odoo.
 ========================================================================
@@ -33,11 +33,11 @@ Print product labels with barcode.
         'wizard/product_price_list_views.xml',
         'views/res_config_settings_views.xml',
         'views/product_attribute_views.xml',
-        'views/product_uom_views.xml',
         'views/product_views.xml',
         'views/product_template_views.xml',
         'views/product_pricelist_views.xml',
         'views/res_partner_views.xml',
+        'views/res_users_views.xml',
         'report/product_reports.xml',
         'report/product_pricelist_templates.xml',
         'report/product_product_templates.xml',
@@ -45,7 +45,6 @@ Print product labels with barcode.
     ],
     'demo': [
         'data/product_demo.xml',
-        'data/product_image_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -134,6 +134,15 @@ class TestExpression(TransactionCase):
         cats = Category.search([('id', 'child_of', categ_1.ids)])
         self.assertEqual(len(cats), 1)
 
+        # test hierarchical search in m2m with an empty list
+        cats = Category.search([('id', 'child_of', [])])
+        self.assertEqual(len(cats), 0)
+
+        # test hierarchical search in m2m with 'False' value
+        with self.assertLogs('odoo.osv.expression'):
+            cats = Category.search([('id', 'child_of', False)])
+        self.assertEqual(len(cats), 0)
+
         # test hierarchical search in m2m with parent id (list of ids)
         cats = Category.search([('id', 'parent_of', categ_1.ids)])
         self.assertEqual(len(cats), 3)
@@ -153,6 +162,15 @@ class TestExpression(TransactionCase):
         # test hierarchical search in m2m with parent ids
         cats = Category.search([('id', 'parent_of', categ_root.ids)])
         self.assertEqual(len(cats), 1)
+
+        # test hierarchical search in m2m with an empty list
+        cats = Category.search([('id', 'parent_of', [])])
+        self.assertEqual(len(cats), 0)
+
+        # test hierarchical search in m2m with 'False' value
+        with self.assertLogs('odoo.osv.expression'):
+            cats = Category.search([('id', 'parent_of', False)])
+        self.assertEqual(len(cats), 0)
 
     def test_10_equivalent_id(self):
         # equivalent queries
@@ -197,15 +215,15 @@ class TestExpression(TransactionCase):
         Partner = self.env['res.partner']
 
         # testing equality with name
-        partners = Partner.search([('parent_id', '=', 'Agrolait')])
+        partners = Partner.search([('parent_id', '=', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with name
-        partners = Partner.search([('parent_id', 'in', 'Agrolait')])
+        partners = Partner.search([('parent_id', 'in', 'Deco Addict')])
         self.assertTrue(partners)
 
         # testing the in operator with a list of names
-        partners = Partner.search([('parent_id', 'in', ['Agrolait', 'ASUStek'])])
+        partners = Partner.search([('parent_id', 'in', ['Deco Addict', 'Wood Corner'])])
         self.assertTrue(partners)
 
         # check if many2one works with empty search list
@@ -527,10 +545,10 @@ class TestExpression(TransactionCase):
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
-        partners = Partner.search([('name', '=like', 'A_U_TeK')])
-        self.assertTrue(len(partners) == 1, "Must match one partner (ASUSTeK)")
-        partners = Partner.search([('name', '=ilike', 'c%')])
-        self.assertTrue(len(partners) >= 1, "Must match one partner (China Export)")
+        partners = Partner.search([('name', '=like', 'W_od_C_rn_r')])
+        self.assertTrue(len(partners) == 1, "Must match one partner (Wood Corner)")
+        partners = Partner.search([('name', '=ilike', 'G%')])
+        self.assertTrue(len(partners) >= 1, "Must match one partner (Gemini Furniture)")
 
         # check that =like/=ilike expressions are working on translated field
         Country = self.env['res.country']
@@ -574,12 +592,12 @@ class TestExpression(TransactionCase):
             Country.search([('create_date', '=', "1970-01-01'); --")])
 
     def test_active(self):
-        # testing for many2many field with category vendor and active=False
+        # testing for many2many field with category office and active=False
         Partner = self.env['res.partner']
         vals = {
             'name': 'OpenERP Test',
             'active': False,
-            'category_id': [(6, 0, [self.ref("base.res_partner_category_1")])],
+            'category_id': [(6, 0, [self.ref("base.res_partner_category_0")])],
             'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)
@@ -594,7 +612,7 @@ class TestExpression(TransactionCase):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         # first install french language
         self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
-
+        self.env.ref('base.res_partner_2').country_id = self.env.ref('base.be')
         # actual test
         Country = self.env['res.country']
         be = self.env.ref('base.be')
@@ -603,13 +621,24 @@ class TestExpression(TransactionCase):
 
         # indirect search via m2o
         Partner = self.env['res.partner']
-        agrolait = Partner.search([('name', '=', 'Agrolait')])
+        deco_addict = Partner.search([('name', '=', 'Deco Addict')])
 
         not_be = Partner.search([('country_id', '!=', 'Belgium')])
-        self.assertNotIn(agrolait, not_be)
+        self.assertNotIn(deco_addict, not_be)
 
         not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
-        self.assertNotIn(agrolait, not_be)
+        self.assertNotIn(deco_addict, not_be)
+
+    def test_or_with_implicit_and(self):
+        # Check that when using expression.OR on a list of domains with at least one
+        # implicit '&' the returned domain is the expected result.
+        # from #24038
+        d1 = [('foo', '=', 1), ('bar', '=', 1)]
+        d2 = ['&', ('foo', '=', 2), ('bar', '=', 2)]
+
+        expected = ['|', '&', ('foo', '=', 1), ('bar', '=', 1),
+                         '&', ('foo', '=', 2), ('bar', '=', 2)]
+        self.assertEqual(expression.OR([d1, d2]), expected)
 
 
 class TestAutoJoin(TransactionCase):

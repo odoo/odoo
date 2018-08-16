@@ -9,7 +9,6 @@
 This module adds the batch picking option in warehouse management
 =================================================================
     """,
-    'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock'],
     'data': [
         'security/ir.model.access.csv',

@@ -26,7 +26,7 @@ class PosOrderReport(models.Model):
     average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
     location_id = fields.Many2one('stock.location', string='Location', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    nbr_lines = fields.Integer(string='# of Lines', readonly=True, oldname='nbr')
+    nbr_lines = fields.Integer(string='Sale Line Count', readonly=True, oldname='nbr')
     product_qty = fields.Integer(string='Product Quantity', readonly=True)
     journal_id = fields.Many2one('account.journal', string='Journal')
     delay_validation = fields.Integer(string='Delay Validation')
@@ -34,7 +34,6 @@ class PosOrderReport(models.Model):
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
     pos_categ_id = fields.Many2one('pos.category', string='PoS Category', readonly=True)
-    stock_location_id = fields.Many2one('stock.location', string='Warehouse', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
 
@@ -62,7 +61,6 @@ class PosOrderReport(models.Model):
                 p.product_tmpl_id,
                 ps.config_id,
                 pt.pos_categ_id,
-                pc.stock_location_id,
                 s.pricelist_id,
                 s.session_id,
                 s.invoice_id IS NOT NULL AS invoiced
@@ -74,9 +72,8 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_order s ON (s.id=l.order_id)
                 LEFT JOIN product_product p ON (l.product_id=p.id)
                 LEFT JOIN product_template pt ON (p.product_tmpl_id=pt.id)
-                LEFT JOIN product_uom u ON (u.id=pt.uom_id)
+                LEFT JOIN uom_uom u ON (u.id=pt.uom_id)
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
-                LEFT JOIN pos_config pc ON (ps.config_id=pc.id)
         """
 
     def _group_by(self):
@@ -88,8 +85,7 @@ class PosOrderReport(models.Model):
                 l.product_id,
                 pt.categ_id, pt.pos_categ_id,
                 p.product_tmpl_id,
-                ps.config_id,
-                pc.stock_location_id
+                ps.config_id
         """
 
     def _having(self):

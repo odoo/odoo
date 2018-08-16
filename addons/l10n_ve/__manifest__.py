@@ -46,6 +46,6 @@ but you will need set manually account defaults for taxes.
              'data/l10n_ve_chart_data.xml',
              'data/account_data.xml',
              'data/account_tax_data.xml',
-             'data/account_chart_template_data.yml'
+             'data/account_chart_template_data.xml'
     ],
 }

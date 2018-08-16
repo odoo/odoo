@@ -53,7 +53,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata"]
+    _inherit = ["website.seo.metadata", "website.published.multi.mixin"]
     _description = "Website Product Category"
     _order = "sequence, name"
 
@@ -105,7 +105,8 @@ class ProductPublicCategory(models.Model):
 
 
 class ProductTemplate(models.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.multi.mixin', 'rating.mixin']
+    _order = 'is_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
 
@@ -179,6 +180,8 @@ class ProductTemplate(models.Model):
 class Product(models.Model):
     _inherit = "product.product"
 
+    website_id = fields.Many2one(related='product_tmpl_id.website_id')
+
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
@@ -193,10 +196,10 @@ class Product(models.Model):
         context = dict(self._context, pricelist=pricelist.id, partner=partner)
         self2 = self.with_context(context) if self._context != context else self
 
-        ret = self.env.user.has_group('sale.group_show_price_subtotal') and 'total_excluded' or 'total_included'
+        ret = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
 
         for p, p2 in pycompat.izip(self, self2):
-            taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id))
+            taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), p, partner)
             p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
             price_without_pricelist = taxes.compute_all(p.list_price, pricelist.currency_id)[ret]
             p.website_price_difference = False if float_is_zero(price_without_pricelist - p.website_price, precision_rounding=pricelist.currency_id.rounding) else True

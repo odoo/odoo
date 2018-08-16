@@ -15,7 +15,7 @@
                 <sheet>
                 <div class="oe_button_box" name="button_box">
                         <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action"/>
-                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Up/Down Traceability" type="action"/>
+                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -29,7 +29,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
-                                <field name="product_uom_id" readonly="1" groups="product.group_uom"/>
+                                <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                         <field name="ref"/>
                     </group>
@@ -37,6 +37,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -61,6 +62,11 @@
                         <field name="ref"/>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -102,8 +108,8 @@
         <field name="search_view_id" ref="search_product_lot_filter"/>
         <field name="context">{'search_default_group_by_product': 1}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a lot/serial number.
+          <p class="o_view_nocontent_smiling_face">
+            Add a lot/serial number
           </p><p>
             This is the list of all the production lots you recorded. When
             you select a lot, you can get the traceability of the products contained in lot.

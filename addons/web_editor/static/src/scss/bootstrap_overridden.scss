@@ -1,0 +1,33 @@
+
+// Automatically update bootstrap colors map (unused by BS itself)
+$-palette: nth($o-color-palettes, $o-color-palette-number);
+$colors: () !default;
+$colors: map-merge($-palette, $colors);
+
+// Automatically extend bootstrap to create theme background/text/button classes
+$-palette: nth($o-theme-color-palettes, $o-theme-color-palette-number);
+$-main-color: map-get($-palette, 'primary');
+$-main-color-lightness: lightness($-main-color);
+$-palette: map-merge($-palette, (
+    // Compatibility: alpha and beta color exist but will now always be
+    // equal to primary and secondary colors
+    alpha: $-main-color,
+    beta: map-get($-palette, 'secondary'),
+
+    // BS light and dark colors are not used for any BS component, just
+    // for color utilities. By default, we set them to a very light and
+    // very dark version of a desaturate version of the primary color 
+    light: lighten(desaturate($-main-color, 40%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
+    dark: darken(desaturate($-main-color, 40%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
+));
+$theme-colors: () !default;
+$theme-colors: map-merge($-palette, $theme-colors);
+
+// Extend grays with transparent ones (for some reason, BS4 create black-50 and
+// white-50 but does not allow overridding that with variables). Also add black
+// and white ones too as they were also not added by BS4...
+$grays: () !default;
+$grays: map-merge(map-merge($o-transparent-grays, (
+    black: $black, // Note: those two needs to be redefined before bootstrap,
+    white: $white, // otherwise they do not exist yet
+)), $grays);

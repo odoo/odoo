@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 class PosSaleReport(models.Model):
     _name = "report.all.channels.sales"
-    _description = "All sales orders grouped by sales channels"
+    _description = "All sales orders grouped by Sales Teams"
     _auto = False
 
     name = fields.Char('Order Reference', readonly=True)
@@ -23,7 +23,7 @@ class PosSaleReport(models.Model):
     price_subtotal = fields.Float(string='Price Subtotal', readonly=True)
     product_qty = fields.Float('Product Quantity', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
 
     def _so(self):
         so_str = """
@@ -55,8 +55,8 @@ class PosSaleReport(models.Model):
                         cr.company_id = so.company_id AND
                         cr.date_start <= COALESCE(so.date_order, now()) AND
                         (cr.date_end IS NULL OR cr.date_end > COALESCE(so.date_order, now())))
-                    LEFT JOIN product_uom u on (u.id=sol.product_uom)
-                    LEFT JOIN product_uom u2 on (u2.id=pt.uom_id)
+                    LEFT JOIN uom_uom u on (u.id=sol.product_uom)
+                    LEFT JOIN uom_uom u2 on (u2.id=pt.uom_id)
             WHERE so.state != 'cancel'
         """ % self.env['res.currency']._select_companies_rates()
         return so_str

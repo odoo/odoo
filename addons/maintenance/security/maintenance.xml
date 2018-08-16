@@ -37,4 +37,32 @@
         <field name="groups" eval="[(4, ref('group_equipment_manager'))]"/>
     </record>
 
+    <record id="maintenance_request_comp_rule" model="ir.rule">
+        <field name="name">Maintenance Request Multi-company rule</field>
+        <field name="model_id" ref="model_maintenance_request"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="maintenance_equipment_comp_rule" model="ir.rule">
+        <field name="name">Maintenance Equipment Multi-company rule</field>
+        <field name="model_id" ref="model_maintenance_equipment"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="maintenance_team_comp_rule" model="ir.rule">
+        <field name="name">Maintenance Team Multi-company rule</field>
+        <field name="model_id" ref="model_maintenance_team"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="maintenance_equipment_category_comp_rule" model="ir.rule">
+        <field name="name">Maintenance Equipment Category Multi-company rule</field>
+        <field name="model_id" ref="model_maintenance_equipment_category"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </odoo>

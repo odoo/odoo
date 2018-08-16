@@ -20,6 +20,7 @@ var DocumentViewer = Widget.extend({
         'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
+        'click .o_zoom_reset': '_onZoomReset',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
         'click .o_print_btn': '_onPrint',
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
@@ -42,7 +43,7 @@ var DocumentViewer = Widget.extend({
     init: function (parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.mimetype.match("(image|video|application/pdf)");
+            var match = attachment.mimetype.match("(image|video|application/pdf|text)");
 
             if (match) {
                 attachment.type = match[1];
@@ -60,6 +61,7 @@ var DocumentViewer = Widget.extend({
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
     },
 
@@ -103,6 +105,7 @@ var DocumentViewer = Widget.extend({
             widget: this
         }));
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
     /**
@@ -113,7 +116,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} angle
      */
     _getTransform: function(scale, angle) {
-        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
      * Rotate image clockwise by provided angle
@@ -140,6 +143,7 @@ var DocumentViewer = Widget.extend({
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
+        this.$('.o_zoom_reset').add('.o_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -186,6 +190,7 @@ var DocumentViewer = Widget.extend({
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
+            $image.css('cursor', 'move');
         }
     },
     /**
@@ -198,6 +203,7 @@ var DocumentViewer = Widget.extend({
             this.enableDrag = false;
             this.dragstopX = e.clientX - this.dragStartX;
             this.dragstopY = e.clientY - this.dragStartY;
+            this.$('.o_viewer_img').css('cursor', '');
         }
     },
     /**
@@ -346,6 +352,15 @@ var DocumentViewer = Widget.extend({
         e.preventDefault();
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.o_viewer_zoomer').css("transform", "");
+        this._zoom(1);
     },
 });
 return DocumentViewer;

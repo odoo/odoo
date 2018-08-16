@@ -3,4 +3,7 @@
 
 from . import resource
 from . import hr
-from . import hr_holidays
+from . import hr_leave
+from . import hr_leave_allocation
+from . import hr_leave_type
+from . import res_users

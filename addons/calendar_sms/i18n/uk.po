@@ -3,16 +3,17 @@
 # * calendar_sms
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2017
-# Yaroslav Molochko <onorua@gmail.com>, 2017
-# Martin Trigaux, 2017
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
 # Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18+e\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 11:33+0000\n"
-"PO-Revision-Date: 2017-09-20 11:33+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,6 +21,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Email"
+msgstr "Ел. пошта"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -38,6 +44,16 @@ msgid "Event reminder: %s on %s."
 msgstr "Нагадування про подію: %s на %s."
 
 #. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "Notification"
+msgstr "Сповіщення"
+
+#. module: calendar_sms
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr "Текст SMS-повідомлення "
+
+#. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:24
 #, python-format
 msgid "SMS text message reminder sent !"
@@ -47,6 +63,11 @@ msgstr "Нагадування SMS-повідомлення надіслано!"
 #: model:ir.actions.act_window,name:calendar_sms.sms_message_send_action_mutli
 msgid "Send SMS to attendees"
 msgstr "Відправте SMS учасникам"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__type
+msgid "Type"
+msgstr "Тип"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager

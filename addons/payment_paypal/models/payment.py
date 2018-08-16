@@ -203,17 +203,20 @@ class TxPaypal(models.Model):
                     'PST': -8 * 3600,
                     'PDT': -7 * 3600,
                 }
-                date_validate = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
+                date = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
             except:
-                date_validate = fields.Datetime.now()
-            res.update(state='done', date_validate=date_validate)
+                date = fields.Datetime.now()
+            res.update(date=date)
+            self._set_transaction_done()
             return self.write(res)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (self.reference))
-            res.update(state='pending', state_message=data.get('pending_reason', ''))
+            res.update(state_message=data.get('pending_reason', ''))
+            self._set_transaction_pending()
             return self.write(res)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
-            res.update(state='error', state_message=error)
+            res.update(state_message=error)
+            self._set_transaction_cancel()
             return self.write(res)

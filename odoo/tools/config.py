@@ -6,6 +6,7 @@ try:
 except ImportError:
     import ConfigParser
 
+import errno
 import logging
 import optparse
 import os
@@ -116,7 +117,7 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='web')
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -154,13 +155,13 @@ class configmanager(object):
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
-                         help="Launch a python or YML test file.")
-        group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
-                         help="If set, will save sample of all reports in this directory.")
+                         help="Launch a python test file.")
         group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable YAML and unit tests.")
-        group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         my_default=False, help="Commit database changes performed by YAML or XML tests.")
+                         my_default=False, help="Enable unit tests.")
+        group.add_option("--test-tags", dest="test_tags",
+                         default=('+standard'),
+                         help="Comma separated list of tags to filter which tests to excute")
+
         parser.add_option_group(group)
 
         # Logging Group
@@ -219,8 +220,8 @@ class configmanager(object):
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
-                         help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("--db-template", dest="db_template", my_default="template1",
+                         help="specify the the maximum number of physical connections to PostgreSQL")
+        group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
@@ -320,7 +321,7 @@ class configmanager(object):
         arguments.
 
         This method initializes odoo.tools.config and openerp.conf (the
-        former should be removed in the furture) with library-wide
+        former should be removed in the future) with library-wide
         configuration values.
 
         This method must be called before proper usage of this library can be
@@ -393,9 +394,9 @@ class configmanager(object):
             self.options['pidfile'] = False
         # and the server_wide_modules
         if self.options['server_wide_modules'] in ('', 'None', 'False'):
-            self.options['server_wide_modules'] = 'web'
+            self.options['server_wide_modules'] = 'base,web'
 
-        # if defined dont take the configfile value even if the defined value is None
+        # if defined do not take the configfile value even if the defined value is None
         keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
@@ -425,7 +426,7 @@ class configmanager(object):
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
+            'test_file', 'test_enable', 'test_tags',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
             'server_wide_modules',
@@ -620,9 +621,11 @@ class configmanager(object):
     @property
     def session_dir(self):
         d = os.path.join(self['data_dir'], 'sessions')
-        if not os.path.exists(d):
+        try:
             os.makedirs(d, 0o700)
-        else:
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
             assert os.access(d, os.W_OK), \
                 "%s: directory is not writable" % d
         return d

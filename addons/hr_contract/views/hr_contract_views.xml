@@ -35,14 +35,7 @@
                         <group string="Current Contract">
                             <field name="medic_exam" string="Medical Exam"/>
                             <field name="vehicle"/>
-                            <field name="vehicle_distance"/>
                         </group>
-                    </xpath>
-                    <xpath expr="//field[@name='marital']" position="after">
-                        <field name="children"/>
-                    </xpath>
-                    <xpath expr="//field[@name='birthday']" position="after">
-                        <field name="place_of_birth"/>
                     </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}"/>
@@ -67,11 +60,15 @@
                     <separator />
                     <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
                     <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="To Report to Social Secretariat" name="to_report" domain="[('reported_to_secretariat', '=', False)]"/>
+                    <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
-                        <filter string="Contract Type" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Contract Type" name="contract_type" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="State" name='group_by_state' domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
@@ -84,9 +81,14 @@
             <field name="arch" type="xml">
                 <form string="Current Contract">
                     <header>
-                        <field name="state" widget="statusbar" clickable="1"/>
+                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title" name="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -101,22 +103,11 @@
                         </group>
                         <group>
                             <field name="type_id"/>
+                            <field name="reported_to_secretariat" widget="toggle_button" options='{"active": "Reported to the social secretariat", "inactive": "To report to the social secretariat"}'/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Salary Information" name="information">
-                            <group name="main_info">
-                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
-                                    <label for="wage"/>
-                                    <div class="o_row" name="wage">
-                                        <field name="wage" nolabel="1"/>
-                                        <span>/ month</span>
-                                    </div>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
-                                </group>
-                            </group>
-                        </page>
-                        <page string="Other Information" name="other">
+                        <page string="Contract Details" name="other">
                             <group>
                                 <group name="duration_group" string="Contract Terms">
                                     <field name="date_start"/>
@@ -133,10 +124,23 @@
                                 <field name="notes" nolabel="1"/>
                             </group>
                         </page>
+                        <page string="Salary Information" name="information">
+                            <group name="main_info">
+                                <group name="salary_and_advantages" string="Monthly Advantages in Cash">
+                                    <label for="wage"/>
+                                    <div class="o_row" name="wage">
+                                        <field name="wage" nolabel="1"/>
+                                        <span>/ month</span>
+                                    </div>
+                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -171,13 +175,13 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <t t-if="widget.editable"><li><a type="edit">Edit Contract</a></li></t>
-                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Contract</a></t>
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                </div>
                             </div>
                             <div class="oe_kanban_content">
                                 <div>
@@ -187,7 +191,7 @@
                                     <field name="job_id"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('hr.employee', 'image_medium', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('hr.employee', 'image_medium', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -207,8 +211,8 @@
             <field name="context">{'search_default_current':1, 'search_default_group_by_state': 1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create new contracts.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new contract
               </p>
             </field>
         </record>
@@ -268,7 +272,7 @@
             action="action_hr_contract"
             parent="hr.menu_hr_root"
             sequence="4"
-            groups="hr.group_hr_manager"/>
+            groups="hr_contract.group_hr_contract_manager"/>
 
 
 </odoo>

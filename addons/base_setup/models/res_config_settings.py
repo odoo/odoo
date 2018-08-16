@@ -11,8 +11,14 @@ class ResConfigSettings(models.TransientModel):
     group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    default_user_rights = fields.Boolean("Default Access Rights")
-    default_external_email_server = fields.Boolean("External Email Servers")
+    user_default_rights = fields.Boolean(
+        "Default Access Rights",
+        config_parameter='base_setup.default_user_rights',
+        oldname='default_user_rights')
+    external_email_server_default = fields.Boolean(
+        "External Email Servers",
+        config_parameter='base_setup.default_external_email_server',
+        oldname='default_external_email_server')
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
@@ -24,29 +30,23 @@ class ResConfigSettings(models.TransientModel):
     module_inter_company_rules = fields.Boolean("Manage Inter Company")
     module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
+    module_web_unsplash = fields.Boolean("Unsplash Image Library")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
-    default_custom_report_footer = fields.Boolean("Custom Report Footer")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
-    external_report_layout = fields.Selection(related="company_id.external_report_layout")
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id")
+    show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
 
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
-        default_external_email_server = params.get_param('base_setup.default_external_email_server', default=False)
-        default_user_rights = params.get_param('base_setup.default_user_rights', default=False)
-        default_custom_report_footer = params.get_param('base_setup.default_custom_report_footer', default=False)
         res.update(
-            default_external_email_server=default_external_email_server,
-            default_user_rights=default_user_rights,
-            default_custom_report_footer=default_custom_report_footer,
             company_share_partner=not self.env.ref('base.res_partner_rule').active,
         )
         return res
@@ -54,9 +54,6 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
-        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
-        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
         self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
     @api.multi
@@ -90,14 +87,14 @@ class ResConfigSettings(models.TransientModel):
 
     @api.multi
     def edit_external_header(self):
-        if not self.external_report_layout:
+        if not self.external_report_layout_id:
             return False
-        return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
+        return self._prepare_report_view_action(self.external_report_layout_id.key)
 
     @api.multi
     def change_report_template(self):
         self.ensure_one()
-        template = self.env.ref('base.view_company_report_form')
+        template = self.env.ref('base.view_company_document_template_form')
         return {
             'name': _('Choose Your Document Layout'),
             'type': 'ir.actions.act_window',

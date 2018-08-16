@@ -31,7 +31,7 @@ class ReportOverdue(models.AbstractModel):
         return res
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         totals = {}
         lines = self._get_account_move_lines(docids)
         lines_to_display = {}
@@ -65,4 +65,5 @@ class ReportOverdue(models.AbstractModel):
             'Lines': lines_to_display,
             'Totals': totals,
             'Date': fields.date.today(),
+            'company_id': self.env['res.company'].browse([self.env.user.company_id.id]),
         }

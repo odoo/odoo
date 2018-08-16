@@ -8,8 +8,14 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     sale_team_id = fields.Many2one(
-        'crm.team', 'Sales Channel',
-        help='Sales Channel the user is member of. Used to compute the members of a sales channel through the inverse one2many')
+        'crm.team', "User's Sales Team",
+        help='Sales Team the user is member of. Used to compute the members of a Sales Team through the inverse one2many')
+
+    group_sales_team_user = fields.Selection(
+        selection=lambda self: self._get_group_selection('base.module_category_sales_management'),
+        string="Sales", compute='_compute_groups_id', inverse='_inverse_groups_id',
+        category_xml_id='base.module_category_sales_management',
+        help='User: Own Documents Only: the user will have access to his own data in the sales application.\nUser: All Documents: the user will have access to all records of everyone in the sales application.\nManager: the user will have an access to the sales configuration as well as statistic reports.')
 
     @api.model
     def create(self, vals):

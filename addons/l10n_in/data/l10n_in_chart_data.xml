@@ -2,23 +2,14 @@
 <odoo>
         <menuitem id="account_reports_in_statements_menu" name="India" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
-        <record id="standard_transfer_account_id" model="account.account.template">
-            <field name="code">1008</field>
-            <field name="name">Transfer Account</field>
-            <field name="reconcile" eval='True'/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
         <record id="indian_chart_template_standard" model="account.chart.template">
             <field name="name">Indian Chart of Accounts - Standard</field>
             <field name="bank_account_code_prefix">1002</field>
             <field name="cash_account_code_prefix">1001</field>
+            <field name="transfer_account_code_prefix">1008</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.INR"/>
-            <field name="transfer_account_id" ref="standard_transfer_account_id"/>
         </record>
-        <record id="standard_transfer_account_id" model="account.account.template">
-            <field name="chart_template_id" ref="indian_chart_template_standard"/>
-         </record>
 
         <record id="sgst_tag_account" model="account.account.tag">
             <field name="name">SGST</field>

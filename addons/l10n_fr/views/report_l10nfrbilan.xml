@@ -7,12 +7,12 @@
             <div class="page">
                 <h2>Bilan</h2>
                 <div class="row mt32 mb32">
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <span t-esc="res_company.name"/>
                         <br/>au
                         <span t-esc="time.strftime('%d-%m-%Y', time.strptime(date_stop,'%Y-%m-%d'))"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <p>Imprimé le
                             <span t-esc="time.strftime('%d-%m-%Y')"/>
                             <br/>Tenue de compte:
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <h3>Actif</h3>
-                <table class="table table-condensed">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th></th>
@@ -541,7 +541,7 @@
                 </table>
 
                 <h3>Passif</h3>
-                <table class="table table-condensed">
+                <table class="table table-sm">
                     <tbody>
                         <tr>
                             <td><strong>CAPITAUX PROPRES</strong></td>

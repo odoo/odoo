@@ -31,19 +31,19 @@ tour.register('shop_customize', {
             trigger: "#customize-menu a:contains(Product Attribute's Filters)",
         },
         {
-            content: "select product attribute memory 16 GB",
+            content: "select product attribute memory Steel",
             extra_trigger: 'body:not(:has(#customize-menu:visible .dropdown-menu:visible))',
-            trigger: 'form.js_attributes label:contains(16 GB) input:not(:checked)',
+            trigger: 'form.js_attributes label:contains(Steel) input:not(:checked)',
         },
         {
             content: "check the selection",
-            trigger: 'form.js_attributes label:contains(16 GB) input:checked',
+            trigger: 'form.js_attributes label:contains(Steel) input:checked',
             run: function () {}, // it's a check
         },
         {
-            content: "select iPad",
+            content: "select product",
             extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(2)))',
-            trigger: '.oe_product_cart a:contains("iPad")',
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "open customize menu",
@@ -91,23 +91,23 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "check price is 600 and set quantity to 2",
+            content: "check price is 750 and set quantity to 2",
             trigger: ".js_product:first input.quantity:propValue(1)",
-            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
+            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
             run: "text 2",
         },
         {
             content: "verify pricelist based on quantity has effect",
-            trigger: ".product_price .oe_price .oe_currency_value:containsExact(450.00)",
+            trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
             run: function () {}, // it's a check
         },
         {
-            content: "check pricelit has been applied and switch to 32 GB variant",
-            trigger: ".js_product label:contains('32 GB')",
+            content: "check pricelit has been applied and switch to Aluminium variant",
+            trigger: ".js_product label:contains('Aluminium')",
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(450.00))",
+            trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(600.00))",
             run: function () {}, // it's a check
         },
         {
@@ -124,28 +124,28 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "check price is 600 and set quantity to 2",
+            content: "check price is 750 and set quantity to 2",
             trigger: ".js_product:first input.quantity:propValue(1)",
-            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
+            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
             run: "text 2",
         },
         {
             content: "verify pricelist based on quantity has effect",
-            trigger: ".product_price .oe_price .oe_currency_value:containsExact(450.00)",
+            trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
             run: function () {}, // it's a check
         },
         {
-            content: "switch to 32 GB variant",
-            trigger: ".js_product label:contains('32 GB')",
+            content: "switch to Aluminium variant",
+            trigger: ".js_product label:contains('Aluminium')",
         },
         {
             content: "verify that price has changed when changing variant",
-            trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(450.00))",
+            trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(600.00))",
             run: function () {}, // it's a check
         },
         {
-            content: "switch back to 16 GB variant",
-            trigger: ".js_product label:contains('16 GB')",
+            content: "switch back to Steel variant",
+            trigger: ".js_product label:contains('Steel')",
         },
         {
             content: "click on 'Add to Cart' button",
@@ -153,7 +153,7 @@ tour.register('shop_customize', {
         },
         {
             content: "price is lowered by pricelist and not multiplied by quantity",
-            trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(450.00)",
+            trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(600.00)",
             extra_trigger: "#product_confirmation input.quantity:propValue(2)",
             run: function () {}, // it's a check
         },
@@ -164,12 +164,12 @@ tour.register('shop_customize', {
         {
             content: "check that product page has been updated",
             trigger: ".js_product:first input.quantity:propValue(1)",
-            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
+            extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
             run: function () {}, // it's a check
         },
         {
             content: "check that add to cart modal has been updated",
-            trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(600.00)",
+            trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(750.00)",
             extra_trigger: "#product_confirmation input.quantity:propValue(1)",
             run: function () {}, // it's a check
         },
@@ -180,11 +180,11 @@ tour.register('shop_customize', {
         {
             content: "click in modal on 'Proceed to checkout' button",
             extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-            trigger: '.modal-dialog a:contains("Proceed to Checkout")',
+            trigger: '.modal-footer a:contains("Proceed to Checkout")',
         },
         {
             content: "check quantity",
-            trigger: '.my_cart_quantity:containsExact(2)',
+            trigger: '.my_cart_quantity:containsExact(2),.o_extra_menu_items .fa-plus',
             run: function () {}, // it's a check
         },
         {
@@ -193,7 +193,7 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "remove iPad from cart",
+            content: "remove large cabinet from cart",
             trigger: '#cart_products a.js_add_cart_json:first',
         },
         {

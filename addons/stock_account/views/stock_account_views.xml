@@ -19,7 +19,7 @@
             <field name="inherit_id" ref="stock.view_inventory_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="after">
-                    <field name="accounting_date" attrs="{'readonly':[('state','!=', 'draft')]}"/>
+                    <field name="accounting_date" attrs="{'readonly':[('state','!=', 'draft')]}" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
@@ -63,7 +63,7 @@
                     </group>
                     <footer>
                         <button name="open_table" string="Retrieve the inventory valuation" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -79,10 +79,27 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="stock_value" sum="Stock Valuation" widget="monetary"/>
                     <field name="cost_method" invisible="1"/>
-                    <button name="action_valuation_at_date_details" type="object" icon="fa-info-circle" attrs="{'invisible': [('cost_method', '!=', 'fifo')]}" />
+                    <button name="action_valuation_at_date_details" type="object" icon="fa-info-circle" aria-label="Valuation" title="Valuation" attrs="{'invisible': [('cost_method', '!=', 'fifo')]}" />
                 </tree>
             </field>
         </record>
+
+        <record id="view_inventory_valuation_search" model="ir.ui.view">
+            <field name="name">product.product</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="Inventory Valuation">
+                    <filter string="Category" name="categ_id" context="{'group_by':'categ_id'}"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter name="real_stock_available" string="Available Products" domain="[('qty_at_date','&gt;',0)]"/>
+                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_at_date','&lt;=',0),('type','not in',('service', 'consu'))]"/>
+                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_at_date','&lt;',0)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_stock_inventory_valuation" model="ir.actions.act_window">
             <field name="name">Valuation Report</field>
             <field name="res_model">stock.quantity.history</field>

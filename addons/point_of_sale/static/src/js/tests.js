@@ -48,43 +48,39 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: 'waiting for loading to finish',
         trigger: '.o_main_content:has(.loader:hidden)',
         run: function () {
-            var product_boni_orange = posmodel.db.search_product_in_category(0, 'Boni Oranges')[0];
-            var product_papillon_orange = posmodel.db.search_product_in_category(0, 'Orange Butterfly')[0];
-            var product_citron = posmodel.db.search_product_in_category(0, 'Lemon')[0];
-            var product_limon = posmodel.db.search_product_in_category(0, 'Stringers')[0];
-            var product_pamplemousse = posmodel.db.search_product_in_category(0, 'Red grapefruit')[0];
-            var product_grapes = posmodel.db.search_product_in_category(0, 'Black Grapes')[0];
-            var product_poire_conference = posmodel.db.search_product_in_category(0, 'Conference pears')[0];
-            var product_external_audit = posmodel.db.search_product_in_category(0, 'External Audit')[0];
+            var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
+            var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
+            var product_magnetic_board = posmodel.db.search_product_in_category(0, 'Magnetic Board')[0];
+            var product_monitor_stand = posmodel.db.search_product_in_category(0, 'Monitor Stand')[0];
+            var product_desk_pad = posmodel.db.search_product_in_category(0, 'Desk Pad')[0];
+            var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
+            var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
             var product_miscellaneous = posmodel.db.search_product_in_category(0, 'Miscellaneous')[0];
 
-            compare_backend_frontend(product_grapes, 'Public Pricelist', 0, undefined)()
-                .then(compare_backend_frontend(product_grapes, 'Public Pricelist', 1, undefined))
-                .then(compare_backend_frontend(product_grapes, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_papillon_orange, 'Fixed', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_papillon_orange, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_citron, 'Percentage', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_papillon_orange, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_citron, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_limon, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_pamplemousse, 'Formula', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'min_quantity ordering', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'min_quantity ordering', 2, undefined))
-                .then(compare_backend_frontend(product_grapes, 'Category vs no category', 1, undefined))
-                .then(compare_backend_frontend(product_external_audit, 'Category vs no category', 1, undefined))
-                .then(compare_backend_frontend(product_grapes, 'Category', 1, undefined))
-                .then(compare_backend_frontend(product_external_audit, 'Category', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'Product template', 1, undefined))
-                .then(compare_backend_frontend(product_external_audit, 'Product template', 1, undefined))
-                .then(compare_backend_frontend(product_boni_orange, 'Dates', 1, undefined))
+            compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
+                .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
+                .then(compare_backend_frontend(product_letter_tray, 'Fixed', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'Fixed', 1, undefined))
+                .then(compare_backend_frontend(product_small_shelf, 'Fixed', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'Percentage', 1, undefined))
+                .then(compare_backend_frontend(product_small_shelf, 'Percentage', 1, undefined))
+                .then(compare_backend_frontend(product_magnetic_board, 'Percentage', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'Formula', 1, undefined))
+                .then(compare_backend_frontend(product_small_shelf, 'Formula', 1, undefined))
+                .then(compare_backend_frontend(product_magnetic_board, 'Formula', 1, undefined))
+                .then(compare_backend_frontend(product_monitor_stand, 'Formula', 1, undefined))
+                .then(compare_backend_frontend(product_desk_pad, 'Formula', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'min_quantity ordering', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'min_quantity ordering', 2, undefined))
+                .then(compare_backend_frontend(product_letter_tray, 'Category vs no category', 1, undefined))
+                .then(compare_backend_frontend(product_letter_tray, 'Category', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'Product template', 1, undefined))
+                .then(compare_backend_frontend(product_wall_shelf, 'Dates', 1, undefined))
                 .then(compare_backend_frontend(product_miscellaneous, 'Cost base', 1, undefined))
                 .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base', 1, undefined))
                 .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base 2', 1, undefined))
-                .then(compare_backend_frontend(product_papillon_orange, 'Pricelist base rounding', 1, undefined))
-                .then(compare_backend_frontend(product_poire_conference, 'Public Pricelist', 1, undefined))
+                .then(compare_backend_frontend(product_small_shelf, 'Pricelist base rounding', 1, undefined))
+                .then(compare_backend_frontend(product_whiteboard, 'Public Pricelist', 1, undefined))
                 .then(function () {
                     $('.pos').addClass('done-testing');
                 });
@@ -113,8 +109,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
-        content: "select agrolait",
-        trigger: ".client-line:contains('Agrolait')",
+        content: "select Deco Addict",
+        trigger: ".client-line:contains('Deco Addict')",
     }, {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",
@@ -136,8 +132,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
-        content: "select think big systems",
-        trigger: ".client-line:contains('Think Big Systems')",
+        content: "select Lumber Inc",
+        trigger: ".client-line:contains('Lumber Inc')",
     },  {
         content: "confirm selection",
         trigger: ".clientlist-screen .next",
@@ -158,22 +154,22 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
     }, {
-        content: "order 1 kg oranges",
-        trigger: ".product:contains('Boni Oranges')",
+        content: "order 1 kg shelf",
+        trigger: ".product:contains('Wall Shelf')",
     }, {
         content: "change qty to 2 kg",
         trigger: ".numpad button.input-button:visible:contains('2')",
     }, {
-        content: "verify that unit price of oranges changed to $1",
+        content: "verify that unit price of shelf changed to $1",
         trigger: ".total > .value:contains('$ 2.00')",
     }, {
-        content: "order different oranges",
-        trigger: ".product:contains('Orange Butterfly')",
+        content: "order different shelf",
+        trigger: ".product:contains('Small Shelf')",
     }, {
         content: "change to price mode",
         trigger: ".numpad button:contains('Price')",
     }, {
-        content: "manually override the unit price of these oranges to $5",
+        content: "manually override the unit price of these shelf to $5",
         trigger: ".numpad button.input-button:visible:contains('5')",
     }, {
         content: "change back to qty mode",
@@ -185,8 +181,8 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select public pricelist",
         trigger: ".selection-item:contains('Public Pricelist')",
     }, {
-        content: "verify that the boni oranges have been recomputed and the\
-butterfly oranges have not (their price was manually overriden)",
+        content: "verify that the boni shelf have been recomputed and the\
+shelf have not (their price was manually overriden)",
         trigger: ".total > .value:contains('$ 8.96')",
     }, {
         content: "click pricelist button",
@@ -297,10 +293,10 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             run: function () {}, // it's a check
         }];
 
-    steps = steps.concat(add_product_to_order('Peaches'));
+    steps = steps.concat(add_product_to_order('Desk Organizer'));
     steps = steps.concat(verify_order_total('5.10'));
 
-    steps = steps.concat(add_product_to_order('Peaches')); // buy another kg of peaches
+    steps = steps.concat(add_product_to_order('Desk Organizer'));
     steps = steps.concat(verify_order_total('10.20'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
     steps = steps.concat(generate_payment_screen_keypad_steps("12.20"));
@@ -318,7 +314,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(finish_order());
 
     // test opw-672118 orderline subtotal rounding
-    steps = steps.concat(add_product_to_order('Peaches'));
+    steps = steps.concat(add_product_to_order('Desk Organizer'));
     steps = steps.concat(generate_product_screen_keypad_steps('.999')); // sets orderline qty
     steps = steps.concat(verify_order_total('5.09'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());

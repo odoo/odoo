@@ -68,6 +68,7 @@ class Job(models.Model):
         return super(Job, self.with_context(mail_create_nosubscribe=True)).create(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {})
@@ -95,7 +96,7 @@ class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['mail.thread', 'resource.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
 
     _mail_post_access = 'read'
 
@@ -107,7 +108,7 @@ class Employee(models.Model):
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id')
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
@@ -131,6 +132,11 @@ class Employee(models.Model):
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
     ], string='Marital Status', groups="hr.group_hr_user", default='single')
+    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user")
+    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user")
+    children = fields.Integer(string='Number of Children', groups="hr.group_hr_user")
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user")
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user")
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
     ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user")
     sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user")
@@ -144,6 +150,19 @@ class Employee(models.Model):
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user")
+    certificate = fields.Selection([
+        ('bachelor', 'Bachelor'),
+        ('master', 'Master'),
+        ('other', 'Other'),
+    ], 'Certificate Level', default='master', groups="hr.group_hr_user")
+    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user")
+    study_school = fields.Char("School", groups="hr.group_hr_user")
+    emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user")
+    emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user")
+    km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user")
+    google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user")
+    job_title = fields.Char("Job Title")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -184,7 +203,12 @@ class Employee(models.Model):
     def _check_parent_id(self):
         for employee in self:
             if not employee._check_recursion():
-                raise ValidationError(_('Error! You cannot create recursive hierarchy of Employee(s).'))
+                raise ValidationError(_('You cannot create a recursive hierarchy.'))
+
+    @api.onchange('job_id')
+    def _onchange_job_id(self):
+        if self.job_id:
+            self.job_title = self.job_id.name
 
     @api.onchange('address_id')
     def _onchange_address(self):
@@ -204,6 +228,11 @@ class Employee(models.Model):
     def _onchange_user(self):
         if self.user_id:
             self.update(self._sync_user(self.user_id))
+
+    @api.onchange('user_id', 'resource_calendar_id')
+    def _onchange_timezone(self):
+        if self.user_id or self.resource_calendar_id:
+            self.tz = self.user_id.tz or self.resource_calendar_id.tz
 
     def _sync_user(self, user):
         return dict(
@@ -234,38 +263,6 @@ class Employee(models.Model):
         super(Employee, self).unlink()
         return resources.unlink()
 
-    @api.multi
-    def action_follow(self):
-        """ Wrapper because message_subscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_subscribe_users()
-
-    @api.multi
-    def action_unfollow(self):
-        """ Wrapper because message_unsubscribe_users take a user_ids=None
-            that receive the context without the wrapper.
-        """
-        return self.message_unsubscribe_users()
-
-    @api.model
-    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
-        """ Overwrite of the original method to always follow user_id field,
-            even when not track_visibility so that a user will follow it's employee
-        """
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id']
-        user_field_lst = []
-        for name, field in self._fields.items():
-            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
-                user_field_lst.append(name)
-        return user_field_lst
-
-    @api.multi
-    def _message_auto_subscribe_notify(self, partner_ids):
-        # Do not notify user it has been marked as follower of its employee.
-        return
-
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
         """Checks that choosen address (res.partner) is not linked to a company.
@@ -275,6 +272,13 @@ class Employee(models.Model):
                 employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
             except AccessError:
                 employee.is_address_home_a_company = False
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Employees'),
+            'template': '/hr/static/xls/hr_employee.xls'
+        }]
 
 
 class Department(models.Model):
@@ -307,7 +311,7 @@ class Department(models.Model):
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
-            raise ValidationError(_('Error! You cannot create recursive departments.'))
+            raise ValidationError(_('You cannot create recursive departments.'))
 
     @api.model
     def create(self, vals):
@@ -317,7 +321,7 @@ class Department(models.Model):
         department = super(Department, self.with_context(mail_create_nosubscribe=True)).create(vals)
         manager = self.env['hr.employee'].browse(vals.get("manager_id"))
         if manager.user_id:
-            department.message_subscribe_users(user_ids=manager.user_id.ids)
+            department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
         return department
 
     @api.multi
@@ -334,7 +338,7 @@ class Department(models.Model):
                 manager = self.env['hr.employee'].browse(manager_id)
                 # subscribe the manager user
                 if manager.user_id:
-                    self.message_subscribe_users(user_ids=manager.user_id.ids)
+                    self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
         return super(Department, self).write(vals)

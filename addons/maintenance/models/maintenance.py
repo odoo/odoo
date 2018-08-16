@@ -31,13 +31,15 @@ class MaintenanceEquipmentCategory(models.Model):
         self.fold = False if self.equipment_count else True
 
     name = fields.Char('Category Name', required=True, translate=True)
+    company_id = fields.Many2one('res.company', string='Company',
+        default=lambda self: self.env.user.company_id)
     technician_user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.uid, oldname='user_id')
     color = fields.Integer('Color Index')
     note = fields.Text('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
     equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
-    maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
+    maintenance_count = fields.Integer(string="Maintenance Count", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
@@ -110,16 +112,18 @@ class MaintenanceEquipment(models.Model):
         return result
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
-        recs = self.browse()
+        equipment_ids = []
         if name:
-            recs = self.search([('name', '=', name)] + args, limit=limit)
-        if not recs:
-            recs = self.search([('name', operator, name)] + args, limit=limit)
-        return recs.name_get()
+            equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not equipment_ids:
+            equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(equipment_ids).name_get()
 
     name = fields.Char('Equipment Name', required=True, translate=True)
+    company_id = fields.Many2one('res.company', string='Company',
+        default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
     owner_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange')
@@ -133,11 +137,11 @@ class MaintenanceEquipment(models.Model):
     assign_date = fields.Date('Assigned Date', track_visibility='onchange')
     cost = fields.Float('Cost')
     note = fields.Text('Note')
-    warranty = fields.Date('Warranty')
+    warranty_date = fields.Date('Warranty Expiration Date', oldname='warranty')
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
     maintenance_ids = fields.One2many('maintenance.request', 'equipment_id')
-    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance", store=True)
+    maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance Count", store=True)
     maintenance_open_count = fields.Integer(compute='_compute_maintenance_count', string="Current Maintenance", store=True)
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
@@ -204,23 +208,14 @@ class MaintenanceEquipment(models.Model):
     def create(self, vals):
         equipment = super(MaintenanceEquipment, self).create(vals)
         if equipment.owner_user_id:
-            equipment.message_subscribe_users(user_ids=[equipment.owner_user_id.id])
+            equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
         return equipment
 
     @api.multi
     def write(self, vals):
         if vals.get('owner_user_id'):
-            self.message_subscribe_users(user_ids=[vals['owner_user_id']])
+            self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
         return super(MaintenanceEquipment, self).write(vals)
-
-    @api.model
-    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
-        """ mail.thread override so user_id which has no special access allowance is not
-            automatically subscribed.
-        """
-        if auto_follow_fields is None:
-            auto_follow_fields = []
-        return super(MaintenanceEquipment, self)._message_get_auto_subscribe_fields(updated_fields, auto_follow_fields)
 
     @api.model
     def _read_group_category_ids(self, categories, domain, order):
@@ -278,17 +273,24 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
-        return self.env.ref('maintenance.equipment_team_maintenance', raise_if_not_found=False)
+        MT = self.env['maintenance.team']
+        team = MT.search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        if not team:
+            team = MT.search([], limit=1)
+        return team.id
 
     name = fields.Char('Subjects', required=True)
+    company_id = fields.Many2one('res.company', string='Company',
+        default=lambda self: self.env.user.company_id)
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
-    owner_user_id = fields.Many2one('res.users', string='Created by', default=lambda s: s.env.uid)
+    owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
-    equipment_id = fields.Many2one('maintenance.equipment', string='Equipment', index=True)
-    technician_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange', oldname='user_id')
-    stage_id = fields.Many2one('maintenance.stage', string='Stage', track_visibility='onchange',
+    equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
+                                   ondelete='restrict', index=True)
+    technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
+    stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', track_visibility='onchange',
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
     color = fields.Integer('Color Index')
@@ -335,6 +337,7 @@ class MaintenanceRequest(models.Model):
             request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
+        request.activity_update()
         return request
 
     @api.multi
@@ -348,12 +351,40 @@ class MaintenanceRequest(models.Model):
             self._add_followers()
         if self.stage_id.done and 'stage_id' in vals:
             self.write({'close_date': fields.Date.today()})
+            self.activity_feedback(['maintenance.mail_act_maintenance_request'])
+        if vals.get('technician_user_id') or vals.get('schedule_date'):
+            self.activity_update()
+        if vals.get('equipment_id'):
+            # need to change description of activity also so unlink old and create new activity
+            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
+            self.activity_update()
         return res
+
+    def activity_update(self):
+        """ Update maintenance activities based on current record set state.
+        It reschedule, unlink or create maintenance request activities. """
+        self.filtered(lambda request: not request.schedule_date).activity_unlink(['maintenance.mail_act_maintenance_request'])
+        for request in self.filtered(lambda request: request.schedule_date):
+            date_dl = fields.Datetime.from_string(request.schedule_date).date()
+            updated = request.activity_reschedule(
+                ['maintenance.mail_act_maintenance_request'],
+                date_deadline=date_dl,
+                new_user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
+            if not updated:
+                if request.equipment_id:
+                    note = _('Request planned for <a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>') % (
+                        request.equipment_id._name, request.equipment_id.id, request.equipment_id.display_name)
+                else:
+                    note = False
+                request.activity_schedule(
+                    'maintenance.mail_act_maintenance_request',
+                    fields.Datetime.from_string(request.schedule_date).date(),
+                    note=note, user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
         for request in self:
-            user_ids = (request.owner_user_id + request.technician_user_id).ids
-            request.message_subscribe_users(user_ids=user_ids)
+            partner_ids = (request.owner_user_id.partner_id + request.technician_user_id.partner_id).ids
+            request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -369,6 +400,9 @@ class MaintenanceTeam(models.Model):
     _description = 'Maintenance Teams'
 
     name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', string='Company',
+        default=lambda self: self.env.user.company_id)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)

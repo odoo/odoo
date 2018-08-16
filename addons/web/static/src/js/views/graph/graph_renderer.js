@@ -20,10 +20,10 @@ var qweb = core.qweb;
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
-var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
+var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
-    className: "o_graph_svg_container",
+    className: "o_graph_container",
     /**
      * @override
      * @param {Widget} parent
@@ -33,8 +33,8 @@ return AbstractRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.stacked = params.stacked;
-        this.$el.css({minWidth: '100px', minHeight: '100px'});
+        this.isComparison = !!state.comparisonData;
+        this.stacked = this.isComparison ? false : params.stacked;
     },
     /**
      * @override
@@ -79,6 +79,8 @@ return AbstractRenderer.extend({
      * DOM to correctly render itself.  So, we trick Odoo by returning
      * immediately, then we render the chart when the widget is in the DOM.
      *
+     * @override
+     * @private
      * @returns {Deferred} The _super deferred is actually resolved immediately
      */
     _render: function () {
@@ -95,8 +97,7 @@ return AbstractRenderer.extend({
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart. " +
-                    "Try to add some records, or make sure that " +
+                description: _t("Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else if (this.isInDOM) {
@@ -117,10 +118,13 @@ return AbstractRenderer.extend({
     _renderBarChart: function () {
         // prepare data for bar chart
         var self = this;
-        var data, values;
+        var data = [];
+        var values;
         var measure = this.state.fields[this.state.measure].string;
 
-        // zero groupbys
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
+
         if (this.state.groupedBy.length === 0) {
             data = [{
                 values: [{
@@ -128,20 +132,29 @@ return AbstractRenderer.extend({
                     y: this.state.data[0].value}],
                 key: measure
             }];
-        }
-        // one groupby
-        if (this.state.groupedBy.length === 1) {
-            values = this.state.data.map(function (datapt) {
-                return {x: datapt.labels, y: datapt.value};
-            });
-            data = [
-                {
-                    values: values,
-                    key: measure,
+        } else if (this.state.groupedBy.length === 1) {
+            values = this.state.data.map(function (datapt, index) {
+                if (self.state.comparisonData) {
+                    return {x: index, y: datapt.value};
+                } else {
+                    return {x: datapt.labels, y: datapt.value};
                 }
-            ];
-        }
-        if (this.state.groupedBy.length > 1) {
+            });
+            data.push({
+                values: values,
+                key: measure,
+            });
+            if (this.state.comparisonData) {
+                values = this.state.comparisonData.map(function (datapt, index) {
+                    return {x: index, y: datapt.value};
+                });
+                data.push({
+                    values: values,
+                    key: measure + ' (compare)',
+                    color: '#ff7f0e',
+                });
+            }
+        } else if (this.state.groupedBy.length > 1) {
             var xlabels = [],
                 series = [],
                 label, serie, value;
@@ -171,7 +184,15 @@ return AbstractRenderer.extend({
                 data.push(current_serie);
             }
         }
-        var svg = d3.select(this.$el[0]).append('svg');
+
+        // For Bar chart View, we keep only groups where count > 0
+        data[0].values  = _.filter(data[0].values, function (elem, index) {
+            return self.state.data[index].count > 0;
+        });
+
+        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        this.$el.append($svgContainer);
+        var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
 
         svg.transition().duration(0);
@@ -206,13 +227,17 @@ return AbstractRenderer.extend({
      *
      * @returns {nvd3 chart}
      */
-    _renderPieChart: function () {
+    _renderPieChart: function (stateData) {
+        var self = this;
         var data = [];
         var all_negative = true;
         var some_negative = false;
         var all_zero = true;
 
-        this.state.data.forEach(function (datapt) {
+        // undefined label value becomes a string 'Undefined' translated
+        stateData.forEach(self._sanitizeLabel);
+
+        stateData.forEach(function (datapt) {
             all_negative = all_negative && (datapt.value < 0);
             some_negative = some_negative || (datapt.value < 0);
             all_zero = all_zero && (datapt.value === 0);
@@ -234,16 +259,24 @@ return AbstractRenderer.extend({
             return;
         }
         if (this.state.groupedBy.length) {
-            data = this.state.data.map(function (datapt) {
+            data = stateData.map(function (datapt) {
                 return {x:datapt.labels.join("/"), y: datapt.value};
             });
         }
-        var svg = d3.select(this.$el[0]).append('svg');
+
+        // We only keep groups where count > 0
+        data  = _.filter(data, function (elem, index) {
+            return stateData[index].count > 0;
+        });
+
+        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        this.$el.append($svgContainer);
+        var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
 
         svg.transition().duration(100);
 
-        var legend_right = config.device.size_class > config.device.SIZES.XS;
+        var legend_right = config.device.size_class > config.device.SIZES.VSM;
 
         var chart = nv.models.pieChart().labelType('percent');
         chart.options({
@@ -264,34 +297,77 @@ return AbstractRenderer.extend({
      * @returns {nvd3 chart}
      */
     _renderLineChart: function () {
-        if (this.state.data.length < 2) {
-            this.$el.append(qweb.render('GraphView.error', {
-                title: _t("Not enough data points"),
-                description: "You need at least two data points to display a line chart."
-            }));
-            return;
-        }
         var self = this;
+
+        // Remove Undefined of first GroupBy
+        var graphData = _.filter(this.state.data, function(elem){
+            return elem.labels[0] !== undefined;
+        });
+
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
+
         var data = [];
         var tickValues;
         var tickFormat;
         var measure = this.state.fields[this.state.measure].string;
+        var values;
 
         if (this.state.groupedBy.length === 1) {
-            var values = this.state.data.map(function (datapt, index) {
+            values = graphData.map(function (datapt, index) {
                 return {x: index, y: datapt.value};
             });
-            data = [
-                {
+            data.push({
+                    area: true,
                     values: values,
                     key: measure,
+                });
+            if (this.state.comparisonData && this.state.comparisonData.length > 0) {
+                values = this.state.comparisonData.map(function (datapt, index) {
+                    return {x: index, y: datapt.value};
+                });
+                data.push({
+                    values: values,
+                    key: measure + ' (compare)',
+                    color: '#ff7f0e',
+                });
+
+                if (this.state.comparisonData.length > graphData.length) {
+                    tickValues = this.state.comparisonData.map(function (d, i) {
+                        return i;
+                    });
                 }
-            ];
-            tickValues = this.state.data.map(function (d, i) { return i;});
-            tickFormat = function (d) {return self.state.data[d].labels;};
-        }
-        if (this.state.groupedBy.length > 1) {
-            data = [];
+            }
+
+            if (!tickValues) {
+                tickValues = graphData.map(function (d, i) {
+                    return i;
+                });
+            }
+
+            var ticksLabels = [];
+            for (i = 0; i < graphData.length; i++) {
+                ticksLabels.push(graphData[i].labels);
+            }
+            if (this.state.comparisonData && this.state.comparisonData.length > this.state.data.length) {
+                var diff = this.state.comparisonData.length - this.state.data.length;
+                var length = self.state.data.length
+                var diffTime = 0;
+                if (length < self.state.data.length) {
+                    var date1 = moment(self.state.data[length - 1].labels[0]);
+                    var date2 = moment(self.state.data[length - 2].labels[0]);
+                    diffTime = date1 - date2;
+                    for (i = 0; i < diff; i++) {
+                        var value = moment(date1).add(diffTime + i * diffTime).format('DD MMM YYYY');
+                        ticksLabels.push([value]);
+                    }
+                }
+            }
+
+            tickFormat = function (d) {
+                return ticksLabels[d];
+            };
+        } else if (this.state.groupedBy.length > 1) {
             var data_dict = {};
             var tick = 0;
             var tickLabels = [];
@@ -299,13 +375,13 @@ return AbstractRenderer.extend({
             var identity = function (p) {return p;};
             tickValues = [];
             for (var i = 0; i < this.state.data.length; i++) {
-                if (this.state.data[i].labels[0] !== tickLabel) {
+                if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
                     tickValues.push(tick);
                     tickLabels.push(tickLabel);
                     tick++;
                 }
-                serie = this.state.data[i].labels[1];
+                serie = graphData[i].labels[1];
                 if (!data_dict[serie]) {
                     data_dict[serie] = {
                         values: [],
@@ -313,25 +389,27 @@ return AbstractRenderer.extend({
                     };
                 }
                 data_dict[serie].values.push({
-                    x: tick, y: this.state.data[i].value,
+                    x: tick, y: graphData[i].value,
                 });
                 data = _.map(data_dict, identity);
             }
             tickFormat = function (d) {return tickLabels[d];};
         }
-
-        var svg = d3.select(this.$el[0]).append('svg');
+        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        this.$el.append($svgContainer);
+        var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
 
         svg.transition().duration(0);
 
         var chart = nv.models.lineChart();
         chart.options({
-          margin: {left: 80, bottom: 100, top: 80, right: 0},
+          margin: {left: 80, bottom: 100, top: 80, right: 80},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
+          wrapLabels: true,
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
@@ -351,13 +429,38 @@ return AbstractRenderer.extend({
      * @private
      */
     _renderGraph: function () {
+        var self = this;
+
         this.$el.empty();
-        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart']();
-        if (chart && chart.tooltip.chartContainer) {
-            this.to_remove = chart.update;
-            nv.utils.onWindowResize(chart.update);
-            chart.tooltip.chartContainer(this.el);
+
+        var chartResize = function (chart){
+            if (chart && chart.tooltip.chartContainer) {
+                self.to_remove = chart.update;
+                nv.utils.onWindowResize(chart.update);
+                chart.tooltip.chartContainer(self.$('.o_graph_svg_container').last()[0]);
+            }
         }
+        var chart1 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
+        chartResize(chart1);
+        if (this.state.mode === 'pie' && this.isComparison) {
+            var chart2 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
+            chartResize(chart2);
+            chart1.update();
+        }
+    },
+    /**
+     * Helper function, turns label value into a usable string form if it is
+     * undefined, that we can display in the interface.
+     *
+     * @param {Array} datapt an array that contains groupby labels of the graph
+     *     received by the read_group rpc.
+     * @returns {string}
+     */
+    _sanitizeLabel: function (datapt) {
+        datapt.labels = datapt.labels.map(function(label) {
+            if (label === undefined) return _t("Undefined");
+            return label;
+        });
     },
 });
 

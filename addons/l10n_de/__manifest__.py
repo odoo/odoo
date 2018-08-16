@@ -19,7 +19,10 @@ German accounting chart and localization.
     ],
     'data': [
         'data/account_account_tags_data.xml',
+        'data/res.country.state.csv',
         'data/menuitem_data.xml',
         'views/account_view.xml',
+        'data/report_layout.xml',
+        'report/din5008_report.xml',
     ],
 }

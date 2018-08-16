@@ -9,7 +9,7 @@ class PosInvoiceReport(models.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         PosOrder = self.env['pos.order']
         ids_to_print = []
         invoiced_posorders_ids = []

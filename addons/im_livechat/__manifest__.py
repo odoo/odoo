@@ -3,7 +3,7 @@
     'name' : 'Live Chat',
     'version': '1.0',
     'sequence': 170,
-    'summary': 'Live Chat with Visitors/Customers',
+    'summary': 'Chat with your website visitors',
     'category': 'Website',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',
@@ -25,9 +25,9 @@ Help your customers with this chat, and analyse their feedback.
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
+        "views/res_users_views.xml",
         "report/im_livechat_report_channel_views.xml",
-        "report/im_livechat_report_operator_views.xml",
-        "data/im_livechat_channel_data.xml"
+        "report/im_livechat_report_operator_views.xml"
     ],
     'demo': [
         "data/im_livechat_channel_demo.xml",

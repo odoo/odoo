@@ -32,11 +32,11 @@ options.registry.subscribe = options.Class.extend({
         var self = this;
         this._super();
         this.select_mailing_list("click").fail(function () {
-            self.getParent()._removeSnippet();
+            self.getParent().removeSnippet();
         });
     },
     cleanForSave: function () {
-        this.$target.addClass("hidden");
+        this.$target.addClass('d-none');
     },
 });
 });

@@ -4,7 +4,9 @@ odoo.define('web_editor.rte.summernote', function (require) {
 var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
+var ColorpickerDialog = require('web.colorpicker');
 var mixins = require('web.mixins');
+var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
@@ -30,6 +32,22 @@ var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
+function _rgbToHex(rgb) {
+    var rgb = rgb.match(/rgb\((\d{1,3}), ?(\d{1,3}), ?(\d{1,3})\)/);
+    if (!rgb) {
+        return rgb;
+    }
+    var hex = ColorpickerDialog.prototype.convertRgbToHex(
+        parseInt(rgb[1]),
+        parseInt(rgb[2]),
+        parseInt(rgb[3])
+    );
+    if (!hex) {
+        return rgb; // TODO handle error
+    }
+    return hex.hex;
+};
+
 // Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
 renderer.createPalette = function ($container, options) {
@@ -43,14 +61,14 @@ renderer.createPalette = function ($container, options) {
 
     var groups;
     if ($clpicker.is("colorpicker")) {
-        groups = _.map($clpicker.children(), function (el) {
+        groups = _.map($clpicker.find('[data-name="theme"]'), function (el) {
             return $(el).find("button").empty();
         });
     } else {
         groups = [$clpicker.find("button").empty()];
     }
 
-    var html = "<h6>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
+    var html = "<h6 class='mt-2'>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
         var $row = $("<div/>", {"class": "note-color-row mb8"}).append($group);
         var $after_breaks = $row.find(".o_small + :not(.o_small)");
         if ($after_breaks.length === 0) {
@@ -58,21 +76,45 @@ renderer.createPalette = function ($container, options) {
         }
         $after_breaks.addClass("o_clear");
         return $row[0].outerHTML;
-    }).join("") + "<h6>" + _t("Common colors") + "</h6>";
+    }).join("") + "<h6 class='mt-2'>" + _t("Common colors") + "</h6>";
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
-    var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
-    var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
-    $bg.each(function () {
-        var $el = $(this);
-        var className = 'bg-' + $el.data('color');
-        $el.attr('data-event', 'backColor').attr('data-value', className).addClass(className);
+    // Find the custom colors which are used in the page and add them to the color palette
+    var colors = [];
+    var $editable = window.__EditorMenuBar_$editable || $();
+    _.each($editable.find('[style*="color"]'), function (element) {
+        if (element.style.color) {
+            colors.push(element.style.color);
+        }
+        if (element.style.backgroundColor) {
+            colors.push(element.style.backgroundColor);
+        }
     });
+
+    var $customColorPalettes = $container.find('.note-color .note-custom-color-palette').append($('<div/>', {class: "note-color-row"}));
+    var $customColorRows = $customColorPalettes.find('.note-color-row');
+    _.each(_.uniq(colors), function (color) {
+        var hexColor = _rgbToHex(color);
+        if (_.indexOf(_.flatten(options.colors), hexColor) < 0) {
+            // Create button for used custom color for backColor and foreColor both and add them into palette
+            $customColorRows.append('<button type="button" class="o_custom_color" data-color="' + color + '" style="background-color:' + color + ';" />');
+        }
+    });
+
+    $palettes.push.apply($palettes, $customColorPalettes);
+
+    var $fore = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $bg = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
     $fore.each(function () {
         var $el = $(this);
-        var className = 'text-' + $el.data('color');
-        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass('bg-' + $el.data('color'));
+        var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'text-' + $el.data('color');
+        $el.attr('data-event', 'foreColor').attr('data-value', className).addClass($el.hasClass('o_custom_color') ? '' : 'bg-' + $el.data('color'));
+    });
+    $bg.each(function () {
+        var $el = $(this);
+        var className = $el.hasClass('o_custom_color') ? $el.data('color') : 'bg-' + $el.data('color');
+        $el.attr('data-event', 'backColor').attr('data-value', className).addClass($el.hasClass('o_custom_color') ? '' : className);
     });
 };
 
@@ -83,10 +125,6 @@ renderer.tplPopovers = function (lang, options) {
     var $imagePopover = $popover.find('.note-image-popover');
     var $linkPopover = $popover.find('.note-link-popover');
     var $airPopover = $popover.find('.note-air-popover');
-
-    if (window === window.top) {
-        $popover.children().addClass("hidden-xs");
-    }
 
     //////////////// image popover
 
@@ -103,11 +141,11 @@ renderer.tplPopovers = function (lang, options) {
     var $padding = $('<div class="btn-group"/>');
     $padding.insertBefore($imagePopover.find('.btn-group:first'));
     var dropdown_content = [
-        '<li><a data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
-        '<li><a data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="">'+_t('None')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="small">'+_t('Small')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="medium">'+_t('Medium')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="large">'+_t('Large')+'</a></li>',
+        '<li><a class="dropdown-item" data-event="padding" href="#" data-value="xl">'+_t('Xl')+'</a></li>',
     ];
     $(tplIconButton('fa fa-plus-square-o', {
         title: _t('Padding'),
@@ -120,10 +158,10 @@ renderer.tplPopovers = function (lang, options) {
         title: _t('Shadow'),
         event: 'imageShape',
         value: 'shadow'
-    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="rounded-circle"]'));
 
     // add spin for fa
-    var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
+    var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());
     $(tplIconButton('fa fa-refresh', {
             title: _t('Spin'),
             event: 'imageShape',
@@ -131,7 +169,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($spin);
 
     // resize for fa
-    var $resizefa = $('<div class="btn-group hidden only_fa"/>')
+    var $resizefa = $('<div class="btn-group d-none only_fa"/>')
         .insertAfter($imagePopover.find('.btn-group:has([data-event="resize"])'));
     for (var size=1; size<=5; size++) {
         $(tplButton('<span class="note-fontsize-10">'+size+'x</span>', {
@@ -141,12 +179,12 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($resizefa);
     }
     var $colorfa = $airPopover.find('.note-color').clone();
-    $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
+    $colorfa.find(".dropdown-menu").css('min-width', '172px');
     $resizefa.after($colorfa);
 
     // show dialog box and delete
     var $imageprop = $('<div class="btn-group"/>');
-    $imageprop.appendTo($imagePopover.find('.popover-content'));
+    $imageprop.appendTo($imagePopover.find('.popover-body'));
     $(tplIconButton('fa fa-file-image-o', {
             title: _t('Edit'),
             event: 'showImageDialog'
@@ -156,17 +194,22 @@ renderer.tplPopovers = function (lang, options) {
             event: 'delete'
         })).appendTo($imageprop);
 
-    $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
+    $(tplIconButton('fa fa-crop', {
+        title: _t('Crop Image'),
+        event: 'cropImage',
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
+
+    $imagePopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
 
     var $alt = $('<div class="btn-group"/>');
-    $alt.appendTo($imagePopover.find('.popover-content'));
-    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
+    $alt.appendTo($imagePopover.find('.popover-body'));
+    $alt.append('<button class="btn btn-secondary" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     //////////////// link popover
 
-    $linkPopover.find('.popover-content').append($airPopover.find(".note-history").clone());
+    $linkPopover.find('.popover-body').append($airPopover.find(".note-history").clone());
 
     $linkPopover.find('button[data-event="showLinkDialog"] i').attr("class", "fa fa-link");
     $linkPopover.find('button[data-event="unlink"]').before($airPopover.find('button[data-event="showImageDialog"]').clone());
@@ -181,16 +224,16 @@ renderer.tplPopovers = function (lang, options) {
         while (node && (!node.tagName || (!node.tagName || formats.indexOf(node.tagName.toLowerCase()) === -1))) {
             node = node.parentNode;
         }
-        $format.parent().removeClass('active');
+        $format.removeClass('active');
         $format.filter('[data-value="'+(node ? node.tagName.toLowerCase() : "p")+'"]')
-            .parent().addClass("active");
+            .addClass("active");
     });
 
     //////////////// tooltip
 
     setTimeout(function () {
         $airPopover.add($linkPopover).add($imagePopover).find("button")
-            .tooltip('destroy')
+            .tooltip('dispose')
             .tooltip({
                 container: 'body',
                 trigger: 'hover',
@@ -206,27 +249,35 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     // stop animation when edit content
     var previous = $(".note-control-selection").data('target');
     if (previous) {
-        $(previous).css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        var $previous = $(previous);
+        $previous.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        $previous.find('.o_we_selected_image').addBack('.o_we_selected_image').removeClass('o_we_selected_image');
     }
     // end
 
     fn_boutton_update.call(this, $container, oStyle);
 
-    $container.find('.note-color').removeClass("hidden");
+    $container.find('.note-color').removeClass('d-none');
 
     if (oStyle.image) {
-        $container.find('[data-event]').parent().removeClass("active");
+        $container.find('[data-event]').removeClass("active");
 
-        $container.find('a[data-event="padding"][data-value="small"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-small"));
-        $container.find('a[data-event="padding"][data-value="medium"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
-        $container.find('a[data-event="padding"][data-value="large"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-large"));
-        $container.find('a[data-event="padding"][data-value="xl"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
-        $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
+        $container.find('a[data-event="padding"][data-value="small"]').toggleClass("active", $(oStyle.image).hasClass("padding-small"));
+        $container.find('a[data-event="padding"][data-value="medium"]').toggleClass("active", $(oStyle.image).hasClass("padding-medium"));
+        $container.find('a[data-event="padding"][data-value="large"]').toggleClass("active", $(oStyle.image).hasClass("padding-large"));
+        $container.find('a[data-event="padding"][data-value="xl"]').toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
+        $container.find('a[data-event="padding"][data-value=""]').toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
+
+        $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
+            $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', $(oStyle.image).css('color'));
+            $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', $(oStyle.image).css('background-color'));
+            $container.find('.note-fore-color-preview > button').css('border-bottom-color', $(oStyle.image).css('color'));
+            $container.find('.note-back-color-preview > button').css('border-bottom-color', $(oStyle.image).css('background-color'));
 
-            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
-            $container.find('.only_fa').removeClass("hidden");
+            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
+            $container.find('.only_fa').removeClass('d-none');
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
             $container.find('button[data-event="resizefa"][data-value="3"]').toggleClass("active", $(oStyle.image).hasClass("fa-3x"));
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
@@ -235,11 +286,11 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
+            $container.find('.btn-group:has(button[data-event="imageShape"])').removeClass("d-none");
 
         } else {
-
-            $container.find('.hidden:not(.only_fa)').removeClass("hidden");
-            $container.find('.only_fa').addClass("hidden");
+            $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
+            $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
                 width = width[2];
@@ -252,18 +303,22 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
             if (!$(oStyle.image).is("img")) {
-                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
+                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass('d-none');
             }
 
-            $container.find('.note-color').addClass("hidden");
-
+            $container.find('.note-color').addClass('d-none');
         }
 
-        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
-        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
-        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("pull-right"));
+        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("float-left"));
+        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("d-block mx-auto"));
+        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
+    } else {
+        $container.find('[data-event="customColor"][data-value="foreColor"]').attr('data-color', oStyle.color);
+        $container.find('[data-event="customColor"][data-value="backColor"]').attr('data-color', oStyle['background-color']);
+        $container.find('.note-fore-color-preview > button').css('border-bottom-color', oStyle.color);
+        $container.find('.note-back-color-preview > button').css('border-bottom-color', oStyle['background-color']);
     }
 };
 
@@ -353,9 +408,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('center-block').removeClass('pull-right pull-left'); break;
-        case 'left': $target.toggleClass('pull-left').removeClass('pull-right center-block'); break;
-        case 'right': $target.toggleClass('pull-right').removeClass('pull-left center-block'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
+        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {
@@ -394,7 +449,8 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
-        options : {
+        options: {
+            lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
         },
     });
@@ -404,6 +460,33 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     core.bus.trigger('alt_dialog_demand', {
+        $editable: $editable,
+        media: $selection.data('target'),
+    });
+};
+$.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, customColor) {
+    var defaultColor = event.target.dataset.color;
+    core.bus.trigger('color_picker_dialog_demand', {
+        color: defaultColor === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 0, 0)' : defaultColor,
+        onSave: function (color) {
+            var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
+                .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
+            $palettes.filter(':even').find('button:not([data-event])').attr('data-event', 'backColor');
+            $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'foreColor');
+            if (customColor === 'foreColor') {
+                $(event.currentTarget).find('.note-fore-color-preview > button').css('border-bottom-color', color);
+                $.summernote.pluginEvents.foreColor(event, editor, layoutInfo, color);
+            } else {
+                $(event.currentTarget).find('.note-back-color-preview > button').css('border-bottom-color', color);
+                $.summernote.pluginEvents.backColor(event, editor, layoutInfo, color);
+            }
+        }
+    });
+};
+$.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
+    var $editable = layoutInfo.editable();
+    var $selection = layoutInfo.handle().find('.note-control-selection');
+    core.bus.trigger('crop_image_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -433,8 +516,8 @@ dom.isImgFont = function (node) {
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
-        for (var k=0; k<weWidgets.fontIcons.length; k++) {
-            if (_.intersection(weWidgets.fontIcons[k].alias, classNames).length) {
+        for (var k=0; k<base.fontIcons.length; k++) {
+            if (_.intersection(base.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }
@@ -782,11 +865,6 @@ eventHandler.attach = function (oLayoutInfo, options) {
         eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
 
-    if (oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
-        oLayoutInfo.editor().on('click', 'img', function (event) {
-            $(event.target).trigger("dblclick");
-        });
-    }
     oLayoutInfo.editable().on('mousedown', function (e) {
         if (dom.isImg(e.target) && dom.isContentEditable(e.target)) {
             range.createFromNode(e.target).select();
@@ -884,7 +962,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
                 if (!show_tooltip) return;
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manuel', container: 'body'}).tooltip('show');
                 setTimeout(function () {
-                    $target.tooltip('destroy');
+                    $target.tooltip('dispose');
                 }, 800);
             }, 400);
         });
@@ -957,6 +1035,7 @@ $.summernote.lang.odoo = {
       normal: _t('Normal'),
       blockquote: _t('Quote'),
       pre: _t('Code'),
+      small: _t('Small'),
       h1: _t('Header 1'),
       h2: _t('Header 2'),
       h3: _t('Header 3'),
@@ -983,14 +1062,11 @@ $.summernote.lang.odoo = {
       justify: _t('Justify full')
     },
     color: {
-      recent: _t('Recent Color'),
-      more: _t('More Color'),
+      custom: _t('Custom Color'),
       background: _t('Background Color'),
       foreground: _t('Font Color'),
       transparent: _t('Transparent'),
-      setTransparent: _t('Set transparent'),
-      reset: _t('Reset'),
-      resetToDefault: _t('Reset to default')
+      setTransparent: _t('None'),
     },
     shortcut: {
       shortcuts: _t('Keyboard shortcuts'),
@@ -1022,6 +1098,8 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         this.setParent(parent);
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
+        core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1032,6 +1110,8 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.destroy.call(this);
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('color_picker_dialog_demand', this, this._onColorPickerDialogDemand);
+        core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1051,7 +1131,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
-        var altDialog = new weWidgets.alt(this,
+        var altDialog = new weWidgets.AltDialog(this,
             data.options || {},
             data.$editable,
             data.media
@@ -1063,6 +1143,54 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             altDialog.on('cancel', this, data.onCancel);
         }
         altDialog.open();
+    },
+/**
+     * Called when a demand to open a color picker dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onColorPickerDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var colorpicker = new ColorpickerDialog(this, {
+            defaultColor: data.color,
+        });
+        if (data.onSave) {
+            colorpicker.on('colorpicker:saved', this, function (ev) {
+                data.onSave(ev.data.hex);
+            });
+        }
+        colorpicker.open();
+    },
+    /**
+     * Called when a demand to open a crop dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onCropImageDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var cropImageDialog = new weWidgets.CropImageDialog(this,
+            _.extend({
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+            }, data.options || {}),
+            data.$editable,
+            data.media
+        );
+        if (data.onSave) {
+            cropImageDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            cropImageDialog.on('cancel', this, data.onCancel);
+        }
+        cropImageDialog.open();
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.

@@ -46,13 +46,19 @@ class RedirectWarning(Exception):
       :param string button_text: text to put on the button that will trigger
           the redirection.
     """
+    # using this RedirectWarning won't crash if used as an except_orm
+    @property
+    def name(self):
+        return self.args[0]
 
 
 class AccessDenied(Exception):
-    """ Login/password error. No message, no traceback.
+    """ Login/password error. no traceback.
     Example: When you try to log with a wrong password."""
-    def __init__(self):
-        super(AccessDenied, self).__init__('Access denied')
+    def __init__(self, message='Access denied'):
+        super(AccessDenied, self).__init__(message)
+        self.with_traceback(None)
+        self.__cause__ = None
         self.traceback = ('', '', '')
 
 
@@ -61,6 +67,13 @@ class AccessError(except_orm):
     Example: When you try to read a record that you are not allowed to."""
     def __init__(self, msg):
         super(AccessError, self).__init__(msg)
+
+
+class CacheMiss(except_orm, KeyError):
+    """ Missing value(s) in cache.
+    Example: When you try to read a value in a flushed cache."""
+    def __init__(self, record, field):
+        super(CacheMiss, self).__init__("%s.%s" % (str(record), field.name))
 
 
 class MissingError(except_orm):

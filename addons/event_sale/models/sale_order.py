@@ -7,13 +7,13 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     @api.multi
-    def action_confirm(self):
-        self.ensure_one()
-        res = super(SaleOrder, self).action_confirm()
-        # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
-        self.order_line._update_registrations(confirm=self.amount_total == 0, cancel_to_draft=False)
-        if any(self.order_line.filtered(lambda line: line.event_id)):
-            return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
+    def _action_confirm(self):
+        res = super(SaleOrder, self)._action_confirm()
+        for so in self:
+            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+            if any(so.order_line.filtered(lambda line: line.event_id)):
+                return self.env['ir.actions.act_window'].with_context(default_sale_order_id=so.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
 
@@ -26,14 +26,6 @@ class SaleOrderLine(models.Model):
     event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
         "an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
-
-    @api.multi
-    def _prepare_invoice_line(self, qty):
-        self.ensure_one()
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        if self.event_id:
-            res['name'] = '%s: %s' % (res.get('name', ''), self.event_id.name)
-        return res
 
     @api.multi
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
@@ -60,6 +52,40 @@ class SaleOrderLine(models.Model):
                     Registration._prepare_attendee_values(registration))
         return True
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        # We reset the event when keeping it would lead to an inconstitent state.
+        # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
+        if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
+            self.event_id = None
+
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        # We reset the ticket when keeping it would lead to an inconstitent state.
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
+
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
-        self.price_unit = (self.event_id.company_id or self.env.user.company_id).currency_id.compute(self.event_ticket_id.price, self.order_id.currency_id)
+        company = self.event_id.company_id or self.env.user.company_id
+        currency = company.currency_id
+        self.price_unit = currency._convert(
+            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
+
+        # we call this to force update the default name
+        self.product_id_change()
+
+    def get_sale_order_line_multiline_description_sale(self, product):
+        """ We override this method because we decided that:
+                The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
+                So in that case we use the description computed from the ticket, instead of the description computed from the product.
+                We need this override to be defined here in sales order line (and not in product) because here is the only place where the event_ticket_id is referenced.
+        """
+        if self.event_ticket_id:
+            ticket = self.event_ticket_id.with_context(
+                lang=self.order_id.partner_id.lang,
+            )
+
+            return ticket.get_ticket_multiline_description_sale()
+        else:
+            return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)

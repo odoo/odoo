@@ -5,14 +5,14 @@
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,19 +61,19 @@ msgstr ""
 "</table>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"<p>${object.name} 様</p>\n"
-"<p>このメールにリンクされたOdooアカウントのパスワード再設定が要求されました。</p>\n"
-"<p>こちらのリンク（24時間有効）をたどってパスワードを変更してください:</p>\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>このメールにリンクされたOdooアカウントのパスワードリセットが要求されました。</p>\n"
+"<p>24時間有効なこのリンクをたどってパスワードを変更することができます:</p>\n"
 "<div style=\"text-align: center; margin-top: 16px;\">\n"
 "<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">パスワード変更</a>\n"
 "</div>\n"
-"<p>身に覚えがない場合は、このメールを無視されてください。</p>\n"
+"<p>身に覚えがない場合は、このメールを無視しても問題ありません。</p>\n"
 "<p>以上、よろしくお願いいたします。</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "${user.signature | safe}\n"
 "<p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"<strong>このメールは ${user.company_id.name} が<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>より送信しました。</strong>\n"
+"<strong>送信者 ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "</p>\n"
 "</div>"
 
@@ -199,7 +199,7 @@ msgstr "<strong>次のサブスクリプションリンクを含む招待メー�
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr "既にアカウントをお持ちですか？"
+msgstr ""
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:78
@@ -275,12 +275,12 @@ msgstr "顧客アカウント"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr "デフォルトアクセス権"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "アカウントがありませんか？"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
@@ -291,7 +291,7 @@ msgstr "ログインページでのパスワード再設定を有効化"
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
-msgstr "自由にサインアップ(B2C)"
+msgstr "自由にサインアップ (B2C)"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -328,7 +328,7 @@ msgstr ""
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "On invitation (B2B)"
-msgstr "招待制(B2B)"
+msgstr "招待制 (B2B)"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

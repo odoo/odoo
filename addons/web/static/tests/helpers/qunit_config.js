@@ -41,17 +41,6 @@ QUnit.config.hidepassed = (window.location.href.match(/[?&]testId=/) === null);
 var sortButtonAppended = false;
 
 /**
- * We override the _.throttle function to avoid the delay in order to be able to
- * chain multiple actions using throttle in the same test.
- */
-QUnit.begin(function () {
-    this._initialThrottle = _.throttle;
-    var self = this;
-    _.throttle = function (func, wait, options) {
-        return self._initialThrottle(func, 0, options);
-    };
-});
-/**
  * This is the way the testing framework knows that tests passed or failed. It
  * only look in the phantomJS console and check if there is a ok or an error.
  *
@@ -67,7 +56,6 @@ QUnit.done(function(result) {
     if (!sortButtonAppended) {
         _addSortButton();
     }
-    _.throttle = this._initialThrottle;
 });
 
 /**
@@ -129,5 +117,26 @@ function _addSortButton() {
 
     });
 }
+
+/**
+ * We add here a 'fail fast' feature: we often want to stop the test suite after
+ * the first failed test.  This is also useful for the runbot test suites.
+ */
+
+QUnit.config.urlConfig.push({
+  id: "failfast",
+  label: "Fail Fast",
+  tooltip: "Stop the test suite immediately after the first failed test."
+});
+
+QUnit.begin(function() {
+    if (QUnit.config.failfast) {
+        QUnit.testDone(function(details) {
+            if (details.failed > 0) {
+                QUnit.config.queue.length = 0;
+            }
+        });
+    }
+});
 
 })();

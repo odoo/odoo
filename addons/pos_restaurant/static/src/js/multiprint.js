@@ -383,4 +383,9 @@ screens.OrderWidget.include({
     },
 });
 
+return {
+    Printer: Printer,
+    SubmitOrderButton: SubmitOrderButton,
+}
+
 });

@@ -15,19 +15,19 @@ class TestCrmMailActivity(TestCrmCases):
         ActivityType = self.env['mail.activity.type']
         self.activity3 = ActivityType.create({
             'name': 'Celebrate the sale',
-            'days': 3,
+            'delay_count': 3,
             'summary': 'ACT 3 : Beers for everyone because I am a good salesman !',
             'res_model_id': lead_model_id,
         })
         self.activity2 = ActivityType.create({
             'name': 'Call for Demo',
-            'days': 6,
+            'delay_count': 6,
             'summary': 'ACT 2 : I want to show you my ERP !',
             'res_model_id': lead_model_id,
         })
         self.activity1 = ActivityType.create({
             'name': 'Initial Contact',
-            'days': 5,
+            'delay_count': 5,
             'summary': 'ACT 1 : Presentation, barbecue, ... ',
             'res_model_id': lead_model_id,
         })
@@ -59,7 +59,7 @@ class TestCrmMailActivity(TestCrmCases):
         self.assertFalse(internal_subtypes)
 
         # Add sale manager as follower of default subtypes
-        self.lead.message_subscribe([self.crm_salemanager.partner_id.id])
+        self.lead.message_subscribe([self.crm_salemanager.partner_id.id], subtype_ids=[self.env.ref('mail.mt_activities').id, self.env.ref('mail.mt_comment').id])
 
         activity = self.env['mail.activity'].sudo(self.crm_salesman.id).create({
             'activity_type_id': self.activity1.id,

@@ -1,16 +1,16 @@
 odoo.define('web.Apps', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var framework = require('web.framework');
 var session = require('web.session');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
 var apps_client = null;
 
-var Apps = Widget.extend({
+var Apps = AbstractAction.extend({
     template: 'EmptyComponent',
     remote_action_tag: 'loempia.embed',
     failback_action_id: 'base.open_module_tree',

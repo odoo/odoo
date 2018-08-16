@@ -6,7 +6,6 @@ var Context = require('web.Context');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
-var time = require('web.time');
 
 var _t = core._t;
 
@@ -21,6 +20,9 @@ function dateToServer (date) {
 }
 
 return AbstractModel.extend({
+    /**
+     * @override
+     */
     init: function () {
         this._super.apply(this, arguments);
         this.end_date = null;
@@ -229,9 +231,15 @@ return AbstractModel.extend({
 
         return this.preload_def.then(this._loadCalendar.bind(this));
     },
+    /**
+     * Move the current date range to the next period
+     */
     next: function () {
         this.setDate(this.data.target_date.clone().add(1, this.data.scale));
     },
+    /**
+     * Move the current date range to the previous period
+     */
     prev: function () {
         this.setDate(this.data.target_date.clone().add(-1, this.data.scale));
     },
@@ -240,7 +248,8 @@ return AbstractModel.extend({
      *
      * @override
      * @param {any} _handle ignored
-     * @param {any} _params ignored ? really ?
+     * @param {Object} params
+     * @param {Array} [params.domain]
      * @returns {Deferred}
      */
     reload: function (_handle, params) {
@@ -273,6 +282,9 @@ return AbstractModel.extend({
                 this.data.end_date = this.data.end_date.clone().endOf('day');
         }
     },
+    /**
+     * @param {string} scale the scale to set
+     */
     setScale: function (scale) {
         if (!_.contains(scales, scale)) {
             scale = "week";
@@ -280,9 +292,15 @@ return AbstractModel.extend({
         this.data.scale = scale;
         this.setDate(this.data.target_date);
     },
+    /**
+     * Move the current date range to the period containing today
+     */
     today: function () {
         this.setDate(moment(new Date()));
     },
+    /**
+     * Toggle the sidebar (containing the mini calendar)
+     */
     toggleFullWidth: function () {
         var fullWidth = this.call('local_storage', 'getItem', 'calendar_fullWidth') !== 'true';
         this.call('local_storage', 'setItem', 'calendar_fullWidth', fullWidth);
@@ -355,12 +373,15 @@ return AbstractModel.extend({
             domain.push([field, 'in', authorizedValues[field]]);
         }
         for (var field in avoidValues) {
-            domain.push([field, 'not in', avoidValues[field]]);
+            if (avoidValues[field].length > 0) {
+                domain.push([field, 'not in', avoidValues[field]]);
+            }
         }
 
         return domain;
     },
     /**
+     * @private
      * @returns {Object}
      */
     _getFullCalendarOptions: function () {
@@ -379,17 +400,12 @@ return AbstractModel.extend({
             weekNumbers: true,
             weekNumberTitle: _t("W"),
             allDayText: _t("All day"),
-            views: {
-                week: {
-                    columnFormat: 'ddd ' + time.getLangDateFormat(),
-                    titleFormat: time.getLangTimeFormat(),
-                }
-            },
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: moment()._locale._week.dow,
+            firstDay: _t.database.parameters.week_start,
+            slotLabelFormat: _t.database.parameters.time_format.search("%H") != -1 ? 'H:mm': 'h(:mm)a',
         };
     },
     /**
@@ -410,6 +426,7 @@ return AbstractModel.extend({
         return domain;
     },
     /**
+     * @private
      * @returns {Deferred}
      */
     _loadCalendar: function () {
@@ -438,6 +455,7 @@ return AbstractModel.extend({
         });
     },
     /**
+     * @private
      * @param {any} element
      * @param {any} events
      * @returns {Deferred}
@@ -454,6 +472,7 @@ return AbstractModel.extend({
         return $.Deferred().resolve();
     },
     /**
+     * @private
      * @param {any} filter
      * @returns {Deferred}
      */
@@ -515,6 +534,7 @@ return AbstractModel.extend({
             });
     },
     /**
+     * @private
      * @param {any} element
      * @param {any} events
      * @returns {Deferred}
@@ -601,6 +621,7 @@ return AbstractModel.extend({
     /**
      * parse the server values to javascript framwork
      *
+     * @private
      * @param {Object} data the server data to parse
      */
     _parseServerData: function (data) {
@@ -613,6 +634,9 @@ return AbstractModel.extend({
     },
     /**
      * Transform OpenERP event object to fullcalendar event object
+     *
+     * @private
+     * @param {Object} evt
      */
     _recordToCalendarEvent: function (evt) {
         var date_start;

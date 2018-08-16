@@ -8,7 +8,7 @@ class Post(models.Model):
 
     documentation_toc_id = fields.Many2one('forum.documentation.toc', string='Documentation ToC',
                                            ondelete='set null', group_expand='_read_group_stage_ids')
-    documentation_stage_id = fields.Many2one('forum.documentation.stage', string='Documentation Stage',
+    documentation_stage_id = fields.Many2one('forum.documentation.stage', string='Documentation Stage', ondelete='restrict',
                                              default=lambda self: self.env['forum.documentation.stage'].search([], limit=1))
     color = fields.Integer(string='Color Index')
 

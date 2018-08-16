@@ -49,7 +49,7 @@
             <data>
                 <xpath expr="//field[@name='date_end']" position="after">
                     <separator orientation="vertical"/>
-                    <filter string="To Advice" domain="[('available_advice','=', False)]" help="Payslip Batches ready to be Adviced"/>
+                    <filter string="To Advice" name="toadvice" domain="[('available_advice','=', False)]" help="Payslip Batches ready to be Adviced"/>
                 </xpath>
             </data>
             </field>
@@ -133,8 +133,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payment advice">
                     <group>
-                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Advices"/>
-                        <filter string="Confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
+                        <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Advices"/>
+                        <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>

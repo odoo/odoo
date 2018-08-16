@@ -51,6 +51,8 @@ return AbstractModel.extend({
      * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
      * @param {string[]} params.domain
+     * @param {Object} params.intervalMapping object linking fieldNames with intervals.
+     *   this could be useful to simplify the code. For now this parameter is not used.
      * @returns {Deferred} The deferred does not return a handle, we don't need
      *   to keep track of various entities.
      */
@@ -60,10 +62,19 @@ return AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.chart = {
+            compare: params.compare,
+            comparisonTimeRange: params.comparisonTimeRange,
             data: [],
             groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+            // this parameter is not used anywhere for now.
+            // the idea would be to seperate intervals from
+            // fieldnames in groupbys. This could be done
+            // in graph view only or everywhere but this is
+            // a big refactoring.
+            intervalMapping: params.intervalMapping,
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
+            timeRange: params.timeRange,
             domain: params.domain,
             context: params.context,
         };
@@ -97,6 +108,9 @@ return AbstractModel.extend({
         if ('groupBy' in params) {
             this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
+        if ('intervalMapping' in params) {
+            this.chart.intervalMapping = params.intervalMapping;
+        }
         if ('measure' in params) {
             this.chart.measure = params.measure;
         }
@@ -124,19 +138,41 @@ return AbstractModel.extend({
         var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
+
         if (this.chart.measure !== '__count__') {
-            fields = fields.concat(this.chart.measure);
+            if (this.fields[this.chart.measure].type === 'many2one') {
+                fields = fields.concat(this.chart.measure + ":count_distinct");
+            }
+            else {
+                fields = fields.concat(this.chart.measure);
+            }
         }
-        return this._rpc({
+
+        var context = _.extend({fill_temporal: true}, this.chart.context);
+        var defs = [];
+        defs.push(this._rpc({
+            model: this.modelName,
+            method: 'read_group',
+            context: context,
+            domain: this.chart.domain.concat(this.chart.timeRange),
+            fields: fields,
+            groupBy: groupedBy,
+            lazy: false,
+        }).then(this._processData.bind(this, 'data')));
+
+        if (this.chart.compare) {
+            defs.push(this._rpc({
                 model: this.modelName,
                 method: 'read_group',
-                context: this.chart.context,
-                domain: this.chart.domain,
+                context: context,
+                domain: this.chart.domain.concat(this.chart.comparisonTimeRange),
                 fields: fields,
                 groupBy: groupedBy,
                 lazy: false,
-            })
-            .then(this._processData.bind(this));
+            }).then(this._processData.bind(this, 'comparisonData')));
+        }
+
+        return $.when.apply($, defs);
     },
     /**
      * Since read_group is insane and returns its result on different keys
@@ -147,22 +183,36 @@ return AbstractModel.extend({
      *  the object this.chart in argument, or an array or something. We want to
      *  avoid writing on a this.chart object modified by a subsequent read_group
      *
+     * @param {String} dataKey
      * @param {any} raw_data result from the read_group
      */
-    _processData: function (raw_data) {
+    _processData: function (dataKey, raw_data) {
         var self = this;
         var is_count = this.chart.measure === '__count__';
         var data_pt, labels;
 
-        this.chart.data = [];
+        this.chart[dataKey] = [];
         for (var i = 0; i < raw_data.length; i++) {
             data_pt = raw_data[i];
             labels = _.map(this.chart.groupedBy, function (field) {
                 return self._sanitizeValue(data_pt[field], field);
             });
-            this.chart.data.push({
-                value: is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure],
-                labels: labels
+            var count = data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] || 0;
+            var value = is_count ? count : data_pt[this.chart.measure];
+            if (value instanceof Array) {
+                // when a many2one field is used as a measure AND as a grouped
+                // field, bad things happen.  The server will only return the
+                // grouped value and will not aggregate it.  Since there is a
+                // nameclash, we are then in the situation where this value is
+                // an array.  Fortunately, if we group by a field, then we can
+                // say for certain that the group contains exactly one distinct
+                // value for that field.
+                value = 1;
+            }
+            this.chart[dataKey].push({
+                count: count,
+                value: value,
+                labels: labels,
             });
         }
     },
@@ -175,10 +225,13 @@ return AbstractModel.extend({
      * @returns {string}
      */
     _sanitizeValue: function (value, field) {
-        if (value === false) return _t("Undefined");
+        var fieldName = field.split(':')[0];
+        if (value === false && this.fields[fieldName].type !== 'boolean') {
+            return undefined;
+        }
         if (value instanceof Array) return value[1];
-        if (field && this.fields[field] && (this.fields[field].type === 'selection')) {
-            var selected = _.where(this.fields[field].selection, {0: value})[0];
+        if (field && (this.fields[fieldName].type === 'selection')) {
+            var selected = _.where(this.fields[fieldName].selection, {0: value})[0];
             return selected ? selected[1] : value;
         }
         return value;

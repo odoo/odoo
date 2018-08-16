@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.cron" id="snailmail_print">
+            <field name="name">Snaimail: process letters queue</field>
+            <field name="model_id" ref="model_snailmail_letter"/>
+            <field name="state">code</field>
+            <field name="code">model._snailmail_cron()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="mail_activity_data_snailmail" model="mail.activity.type">
+            <field name="name">Snailmail</field>
+            <field name="icon">fa-address-card</field>
+            <field name="sequence">15</field>
+        </record>
+    </data>
+</odoo>

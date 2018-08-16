@@ -16,9 +16,9 @@ class TestProductCommon(common.SavepointCase):
         })
 
         # Product environment related data
-        Uom = cls.env['product.uom']
-        cls.uom_unit = cls.env.ref('product.product_uom_unit')
-        cls.uom_dozen = cls.env.ref('product.product_uom_dozen')
+        Uom = cls.env['uom.uom']
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.uom_dunit = Uom.create({
             'name': 'DeciUnit',
             'category_id': cls.uom_unit.category_id.id,
@@ -26,7 +26,7 @@ class TestProductCommon(common.SavepointCase):
             'factor': 10.0,
             'uom_type': 'smaller',
             'rounding': 0.001})
-        cls.uom_weight = cls.env.ref('product.product_uom_kgm')
+        cls.uom_weight = cls.env.ref('uom.product_uom_kgm')
         Product = cls.env['product.product']
         cls.product_0 = Product.create({
             'name': 'Work',

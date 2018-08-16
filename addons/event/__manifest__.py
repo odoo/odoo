@@ -30,6 +30,8 @@ Key Features
         'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
+        'views/res_users_views.xml',
+
     ],
     'demo': [
         'data/event_demo.xml',

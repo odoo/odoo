@@ -31,7 +31,6 @@ odoo.define('web.ControlPanelMixin', function (require) {
  *         },
  *         _updateControlPanel: function () {
  *             this.update_control_panel({
- *                 breadcrumbs: this.action_manager.get_breadcrumbs(),
  *                 cp_content: {
  *                    $buttons: this.$buttons,
  *                 },
@@ -51,7 +50,9 @@ var ControlPanelMixin = {
      * @param {Object} [options] see web.ControlPanel.update() for a description
      */
     update_control_panel: function(cp_status, options) {
-        this.cp_bus.trigger("update", cp_status || {}, options || {});
+        if (this.cp_bus) {
+            this.cp_bus.trigger("update", cp_status || {}, options || {});
+        }
     },
 };
 
@@ -79,6 +80,9 @@ var ControlPanel = Widget.extend({
         }
 
         this.bus = new Bus(this);
+        // the updateIndex is used to prevent concurrent updates of the control
+        // panel depending on asynchronous code to be executed in the wrong order
+        this.bus.updateIndex = 0;
         this.bus.on("update", this, this.update);
     },
     /**
@@ -88,7 +92,6 @@ var ControlPanel = Widget.extend({
     start: function() {
         // Exposed jQuery nodesets
         this.nodes = {
-            $breadcrumbs: this.$('.breadcrumb'),
             $buttons: this.$('.o_cp_buttons'),
             $pager: this.$('.o_cp_pager'),
             $searchview: this.$('.o_cp_searchview'),
@@ -106,10 +109,6 @@ var ControlPanel = Widget.extend({
         this._toggle_visibility(false);
 
         return this._super();
-    },
-    destroy: function() {
-        this._clear_breadcrumbs_handlers();
-        return this._super.apply(this, arguments);
     },
     /**
      * @return {Object} the Bus the ControlPanel is listening on
@@ -130,6 +129,8 @@ var ControlPanel = Widget.extend({
      * elements that are not in status.cp_content
      */
     update: function(status, options) {
+        this.bus.updateIndex++;
+
         this._toggle_visibility(!status.hidden);
 
         // Don't update the ControlPanel in headless mode as the views have
@@ -143,24 +144,34 @@ var ControlPanel = Widget.extend({
 
             // Render the breadcrumbs
             if (status.breadcrumbs) {
-                this._clear_breadcrumbs_handlers();
-                this.$breadcrumbs = this._render_breadcrumbs(status.breadcrumbs);
-                new_cp_content.$breadcrumbs = this.$breadcrumbs;
+                this.$('.breadcrumb').html(this._render_breadcrumbs(status.breadcrumbs));
             }
 
             // Detach control_panel old content and attach new elements
+            var toDetach = this.nodes;
+            if (status.searchview && this.searchview === status.searchview) {
+                // If the searchview is the same as before, don't detach it s.t.
+                // we don't loose any floating content, nor the focus
+                toDetach = _.omit(toDetach, '$searchview');
+                new_cp_content = _.omit(new_cp_content, '$searchview');
+            }
             if (options.clear) {
-                this._detach_content(this.nodes);
+                this._detach_content(toDetach);
                 // Show the searchview buttons area, which might have been hidden by
                 // the searchview, as client actions may insert elements into it
                 this.nodes.$searchview_buttons.show();
             } else {
-                this._detach_content(_.pick(this.nodes, _.keys(new_cp_content)));
+                this._detach_content(_.pick(toDetach, _.keys(new_cp_content)));
             }
             this._attach_content(new_cp_content);
+            if (options.clear || status.searchview) {
+                this.searchview = status.searchview;
+            }
 
             // Update the searchview and switch buttons
-            this._update_search_view(status.searchview, status.search_view_hidden);
+            if (status.searchview || options.clear) {
+                this._update_search_view(status.searchview, status.search_view_hidden, status.groupable, status.enableTimeRangeMenu);
+            }
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
@@ -234,43 +245,39 @@ var ControlPanel = Widget.extend({
         var self = this;
         var is_last = (index === length-1);
         var li_content = bc.title && _.escape(bc.title.trim()) || data.noDisplayContent;
-        var $bc = $('<li>')
-            .append(is_last ? li_content : $('<a>').html(li_content))
+        var $bc = $('<li>', {class: 'breadcrumb-item'})
+            .append(is_last ? li_content : $('<a>', {href: '#'}).html(li_content))
             .toggleClass('active', is_last);
         if (!is_last) {
-            $bc.click(function () {
-                self.trigger("on_breadcrumb_click", bc.action, bc.index);
+            $bc.click(function (ev) {
+                ev.preventDefault();
+                self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
         return $bc;
     },
     /**
-     * Private function that removes event handlers attached on the currently
-     * displayed breadcrumbs.
-     */
-    _clear_breadcrumbs_handlers: function () {
-        if (this.$breadcrumbs) {
-            _.each(this.$breadcrumbs, function ($bc) {
-                $bc.off();
-            });
-        }
-    },
-    /**
      * Private function that updates the SearchView's visibility and extend the
      * breadcrumbs area if the SearchView is not visible
-     * @param {openerp.web.SearchView} [searchview] the searchview Widget
-     * @param {Boolean} [is_hidden] visibility of the searchview
+     *
+     * @private
+     * @param {SearchView} [searchview] the searchview Widget
+     * @param {boolean} [isHidden] visibility of the searchview
+     * @param {boolean} [groupable] visibility of the groupable menu (only
+     *      relevant if searchview is visible)
      */
-    _update_search_view: function(searchview, is_hidden) {
+    _update_search_view: function (searchview, isHidden, groupable, enableTimeRangeMenu) {
         if (searchview) {
-            // Set the $buttons div (in the DOM) of the searchview as the $buttons
-            // have been appended to a jQuery node not in the DOM at SearchView initialization
-            searchview.$buttons = this.nodes.$searchview_buttons;
-            searchview.toggle_visibility(!is_hidden);
+            searchview.toggle_visibility(!isHidden);
+            if (groupable !== undefined){
+                searchview.groupby_menu.do_toggle(groupable);
+            }
+            if (enableTimeRangeMenu !== undefined){
+                searchview.displayTimeRangeMenu(enableTimeRangeMenu);
+            }
         }
-
-        this.nodes.$searchview.toggle(!is_hidden);
-        this.$el.toggleClass('o_breadcrumb_full', !!is_hidden);
+        this.nodes.$searchview.toggle(!isHidden);
+        this.$el.toggleClass('o_breadcrumb_full', !!isHidden);
     },
 });
 

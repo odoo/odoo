@@ -8,10 +8,10 @@
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation to a Sales Order, then create the Invoice and collect the Payment.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -28,7 +28,7 @@
                     <field name="sale_order_count"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
-                    <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd"/><t t-esc="record.sale_order_count.value"/></span>
+                    <span t-if="record.sale_order_count.value>0" class="badge badge-pill"><i class="fa fa-fw fa-usd" role="img" aria-label="Sale orders" title="Sales orders"/><t t-esc="record.sale_order_count.value"/></span>
                 </xpath>
             </field>
         </record>
@@ -37,22 +37,23 @@
             <field name="name">res.partner.view.buttons</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="priority" eval="20"/>
+            <field name="priority" eval="3"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d" 
+                        groups="sales_team.group_sale_salesman"
                         attrs="{'invisible': [('customer', '=', False)]}"
                         icon="fa-usd">
                         <field string="Sales" name="sale_order_count" widget="statinfo"/>
-                    </button>     
+                    </button>
                 </button>
                 <page name="internal_notes" position="inside">
                     <group colspan="2" col="2" groups="sale.group_warning_sale">
                         <separator string="Warning on the Sales Order" colspan="4" />
                             <field name="sale_warn" nolabel="1" />
-                            <field name="sale_warn_msg" colspan="3" nolabel="1" 
-                                    attrs="{'required':[('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
+                            <field name="sale_warn_msg" colspan="3" nolabel="1"
+                                    attrs="{'required':[('sale_warn', '!=', False), ('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
                     </group>
                 </page>
             </field>

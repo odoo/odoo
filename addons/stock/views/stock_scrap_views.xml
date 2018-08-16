@@ -11,9 +11,9 @@
                     <field name="scrap_location_id"/>
                     <field name="create_date"/>
                     <group expand="0" string="Group By">
-                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
-                        <filter string="Scrap Location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Scrap Location" name="scrap_location" domain="[]" context="{'group_by':'scrap_location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -48,7 +48,7 @@
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
                                     <field name="scrap_qty"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
                                 </div>
                             </group>
                             <group>
@@ -68,6 +68,45 @@
             </field>
         </record>
 
+        <record id="stock_scrap_view_kanban" model="ir.ui.view">
+            <field name="name">stock.scrap.kanban</field>
+            <field name="model">stock.scrap</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="date_expected"/>
+                    <field name="scrap_qty"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <strong class="col-6">
+                                        <span t-esc="record.name.value"/>
+                                    </strong>
+                                    <strong t-if="record.date_expected.value" class="col-6 text-right">
+                                        <i class="fa fa-clock-o" role="img" aria-label="Expected date" title="Expected date"/><span t-esc="record.date_expected.value"/>
+                                    </strong>
+                                    <div class="col-12">
+                                        <span t-esc="record.product_id.value"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <span t-esc="record.scrap_qty.value"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="float-right badge badge-secondary">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="stock_scrap_tree_view" model="ir.ui.view">
             <field name="name">stock.scrap.tree</field>
             <field name="model">stock.scrap</field>
@@ -77,7 +116,7 @@
                     <field name="create_date" string="Create Date"/>
                     <field name="product_id"/>
                     <field name="scrap_qty"/>
-                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="state"/>
@@ -90,10 +129,10 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.scrap</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to scrap products.
+              <p class="o_view_nocontent_smiling_face">
+                Scrap products
               </p><p>
                 Scrapping a product will remove it from your stock. The product will
                 end up in a scrap location that can be used for reporting purpose.
@@ -113,7 +152,7 @@
                             <label for="scrap_qty"/>
                             <div class="o_row">
                                 <field name="scrap_qty"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                         </group>
                         <group>
@@ -128,7 +167,7 @@
                     </group>
                     <footer>
                         <button name="action_validate" string="Done" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>

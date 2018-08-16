@@ -9,19 +9,20 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     @api.multi
-    def _get_delivered_qty(self):
-        self.ensure_one()
+    def _compute_qty_delivered(self):
+        super(SaleOrderLine, self)._compute_qty_delivered()
 
-        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
-        # have changed, we don't compute the quantities but verify the move state.
-        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
-        if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
-            if bom_delivered:
-                return self.product_uom_qty
-            else:
-                return 0.0
-        return super(SaleOrderLine, self)._get_delivered_qty()
+        for line in self:
+            if line.qty_delivered_method == 'stock_move':
+                # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+                # have changed, we don't compute the quantities but verify the move state.
+                bom = self.env['mrp.bom']._bom_find(product=line.product_id)
+                if bom and bom.type == 'phantom':
+                    bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                    if bom_delivered:
+                        line.qty_delivered = line.product_uom_qty
+                    else:
+                        line.qty_delivered = 0.0
 
     @api.multi
     def _get_bom_component_qty(self, bom):
@@ -35,7 +36,7 @@ class SaleOrderLine(models.Model):
             if components.get(product, False):
                 if uom.id != components[product]['uom']:
                     from_uom = uom
-                    to_uom = self.env['product.uom'].browse(components[product]['uom'])
+                    to_uom = self.env['uom.uom'].browse(components[product]['uom'])
                     qty = from_uom._compute_quantity(qty, to_uom)
                 components[product]['qty'] += qty
             else:
@@ -59,7 +60,7 @@ class AccountInvoiceLine(models.Model):
         if self.product_id.invoice_policy == "delivery":
             for s_line in self.sale_line_ids:
                 # qtys already invoiced
-                qty_done = sum([x.uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
+                qty_done = sum([x.uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'in_payment', 'paid')])
                 quantity = self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
                 moves = s_line.move_ids.sorted(lambda x: x.date)

@@ -58,5 +58,8 @@ screens.define_action_button({
     },
 });
 
+return {
+    DiscountButton: DiscountButton,
+}
 
 });

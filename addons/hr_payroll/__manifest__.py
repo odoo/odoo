@@ -7,7 +7,6 @@
     'sequence': 38,
     'summary': 'Manage your employee payroll records',
     'description': "",
-    'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr_contract',
         'hr_holidays',
@@ -29,6 +28,7 @@
         'views/report_contributionregister_templates.xml',
         'views/report_payslip_templates.xml',
         'views/report_payslipdetails_templates.xml',
+        'views/res_users_views.xml',
     ],
     'demo': ['data/hr_payroll_demo.xml'],
 }

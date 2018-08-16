@@ -4,15 +4,18 @@
 # 
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Martin Trigaux, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -32,6 +35,21 @@ msgstr "; birden çok emir bulundu"
 #, python-format
 msgid "; no order found"
 msgstr "; sipariş bulunmadı"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:148
@@ -54,9 +72,19 @@ msgid ""
 msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr "Buckaroo hesabınız nasıl ayarlanır?"
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuel Yapılandırma"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
@@ -69,11 +97,36 @@ msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Sağlayıcı"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr "GizliAnahtar"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
 msgstr "WebsiteAnahtarı"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Wire Transfer"

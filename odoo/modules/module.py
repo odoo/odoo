@@ -320,9 +320,9 @@ def load_information_from_description_file(module, mod_path=None):
             'post_load': None,
             'version': '1.0',
             'web': False,
-            'website': 'https://www.odoo.com',
             'sequence': 100,
             'summary': '',
+            'website': '',
         }
         info.update(pycompat.izip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
@@ -475,36 +475,23 @@ class TestStream(object):
 
 current_test = None
 
-def runs_at(test, hook, default):
-    # by default, tests do not run post install
-    test_runs = getattr(test, hook, default)
-
-    # for a test suite, we're done
-    if not isinstance(test, unittest.TestCase):
-        return test_runs
-
-    # otherwise check the current test method to see it's been set to a
-    # different state
-    method = getattr(test, test._testMethodName)
-    return getattr(method, hook, test_runs)
-
-runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
-runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
-
-def run_unit_tests(module_name, dbname, position=runs_at_install):
+def run_unit_tests(module_name, dbname, position='at_install'):
     """
     :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
               if any of them failed.
     :rtype: bool
     """
     global current_test
+    from odoo.tests.common import TagsSelector # Avoid import loop
     current_test = module_name
     mods = get_test_modules(module_name)
     threading.currentThread().testing = True
+    config_tags = TagsSelector(tools.config['test_tags'])
+    position_tag = TagsSelector(position)
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(t for t in tests if position(t))
+        suite = unittest.TestSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
 
         if suite.countTestCases():
             t0 = time.time()

@@ -24,32 +24,65 @@ class WebsitePayment(http.Controller):
         return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
-    def pay(self, reference='', amount=False, currency_id=None, acquirer_id=None, **kw):
+    def pay(self, reference='', order_id=None, amount=False, currency_id=None, acquirer_id=None, **kw):
         env = request.env
         user = env.user.sudo()
 
-        currency_id = currency_id and int(currency_id) or user.company_id.currency_id.id
-        currency = env['res.currency'].browse(currency_id)
+        # Default values
+        values = {
+            'amount': 0.0,
+            'currency': user.company_id.currency_id,
+        }
 
+        # Check sale order
+        if order_id:
+            try:
+                order_id = int(order_id)
+                order = env['sale.order'].browse(order_id)
+                values.update({
+                    'currency': order.currency_id,
+                    'amount': order.amount_total,
+                    'order_id': order_id
+                })
+            except:
+                order_id = None
+
+        # Check currency
+        if currency_id:
+            try:
+                currency_id = int(currency_id)
+                values['currency'] = env['res.currency'].browse(currency_id)
+            except:
+                pass
+
+        # Check amount
+        if amount:
+            try:
+                amount = float(amount)
+                values['amount'] = amount
+            except:
+                pass
+
+        # Check reference
+        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        values['reference'] = env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
+
+        # Check acquirer
         acquirers = None
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
         if not acquirers:
             acquirers = env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])
-        # auto-increment reference with a number suffix if the reference already exists
-        reference = request.env['payment.transaction'].get_next_reference(reference)
 
+        # Check partner
         partner_id = user.partner_id.id if not user._is_public() else False
 
-        values = {
-            'reference': reference,
-            'currency': currency,
-            'amount': float(amount),
+        values.update({
             'return_url': '/website_payment/confirm',
             'partner_id': partner_id,
             'bootstrap_formatting': True,
             'error_msg': kw.get('error_msg')
-        }
+        })
 
         values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s']
         values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form']
@@ -57,43 +90,26 @@ class WebsitePayment(http.Controller):
 
         return request.render('payment.pay', values)
 
-    def _get_existing_transaction(self, reference, amount, partner_id, currency_id, acquirer_id, tx_id):
-        PaymentTransaction = request.env['payment.transaction']
-        tx = None
-        if tx_id:
-            tx = PaymentTransaction.sudo().browse(tx_id)
-            if not tx.exists() or tx.reference != reference or tx.acquirer_id.id != acquirer_id:
-                tx = None
-
-        if not tx:
-            tx = PaymentTransaction.sudo().search([('reference', '=', reference), ('acquirer_id', '=', acquirer_id)])
-
-        if tx and (tx.state != 'draft' or tx.partner_id.id != partner_id or tx.amount != amount or tx.currency_id.id != currency_id):
-            tx = None
-
-        return tx
-
     @http.route(['/website_payment/transaction/<string:reference>/<string:amount>/<string:currency_id>',
                 '/website_payment/transaction/v2/<string:amount>/<string:currency_id>/<path:reference>',], type='json', auth='public')
     def transaction(self, acquirer_id, reference, amount, currency_id, **kwargs):
         partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
+        order_id = kwargs.get('order_id')
 
-        tx = self._get_existing_transaction(reference, float(amount), partner_id,
-                int(currency_id), int(acquirer_id), request.session.get('website_payment_tx_id'))
+        values = {
+            'acquirer_id': int(acquirer_id),
+            'reference': reference,
+            'amount': float(amount),
+            'currency_id': int(currency_id),
+            'partner_id': partner_id,
+            'type': 'form_save' if acquirer.save_token != 'none' and partner_id else 'form',
+        }
 
-        if not tx:
-            values = {
-                'acquirer_id': int(acquirer_id),
-                'reference': reference,
-                'amount': float(amount),
-                'currency_id': currency_id,
-                'partner_id': partner_id,
-                'type': 'form_save' if acquirer.save_token != 'none' and partner_id else 'form',
-            }
+        if order_id:
+            values['sale_order_ids'] = [(6, 0, [order_id])]
 
-            tx = request.env['payment.transaction'].sudo().create(values)
-            request.session['website_payment_tx_id'] = tx.id
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         render_values = {
             'return_url': '/website_payment/confirm?tx_id=%d' % tx.id,
@@ -106,6 +122,7 @@ class WebsitePayment(http.Controller):
                 '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
     def payment_token(self, pm_id, reference, amount, currency_id, return_url=None, **kwargs):
         token = request.env['payment.token'].browse(int(pm_id))
+        order_id = kwargs.get('order_id')
 
         if not token:
             return request.redirect('/website_payment/pay?error_msg=%s' % _('Cannot setup the payment.'))
@@ -122,8 +139,10 @@ class WebsitePayment(http.Controller):
             'type': 'form_save' if token.acquirer_id.save_token != 'none' and partner_id else 'form',
         }
 
-        tx = request.env['payment.transaction'].sudo().create(values)
-        request.session['website_payment_tx_id'] = tx.id
+        if order_id:
+            values['sale_order_ids'] = [(6, 0, [order_id])]
+
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         try:
             res = tx.s2s_do_transaction()
@@ -138,7 +157,7 @@ class WebsitePayment(http.Controller):
 
     @http.route(['/website_payment/confirm'], type='http', auth='public', website=True)
     def confirm(self, **kw):
-        tx_id = int(kw.get('tx_id', 0)) or request.session.pop('website_payment_tx_id', 0)
+        tx_id = int(kw.get('tx_id', 0))
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
             if tx.state == 'done':

@@ -25,12 +25,12 @@
                                 <div>
                                     <strong>
                                         <field name="vehicle_id"/>
-                                        <span class="pull-right"><field name="date"/></span>
+                                        <span class="float-right"><field name="date"/></span>
                                     </strong>
                                 </div>
                                 <div>
                                     <field name="cost_subtype_id"/>
-                                    <span class="pull-right"><field name="amount"/></span>
+                                    <span class="float-right"><field name="amount"/></span>
                                 </div>
                             </div>
                         </t>
@@ -105,8 +105,7 @@
                         <filter name="groupby_vehicle_id" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
                         <filter name="groupby_parent_id" context="{'group_by': 'parent_id'}" string="Parent"/>
                         <separator/>
-                        <filter name="groupby_date" context="{'group_by': 'date:month'}" string="Month" help="Vehicle Costs by Month"/>
-                        <filter name="groupby_year" context="{'group_by': 'date:year'}" string="Year"/>
+                        <filter name="groupby_date" context="{'group_by': 'date:month'}" string="Date" help="Vehicle Costs by Date"/>
                     </group>
                 </search>
             </field>
@@ -154,12 +153,11 @@
             <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{"search_default_parent_false" : True, "search_default_groupby_vehicle_id" : True,}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new cost.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new cost
               </p><p>
-                Odoo helps you managing the costs for your different
-                vehicles. Costs are created automatically from services,
-                contracts (fixed or recurring) and fuel logs.
+                Manage the costs for your different vehicles.
+                Costs are created automatically from services, contracts and fuel logs.
               </p>
             </field>
         </record>
@@ -175,7 +173,7 @@
                 <header>
                     <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
                     <button name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
-                    <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
+                    <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" attrs="{'invisible': [('state', '=', 'open')]}" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -188,6 +186,7 @@
                         <group string="Contract details">
                             <field name="vehicle_id"/>
                             <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                            <field name="user_id"/>
                             <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                             <label for="cost_generated"/>
                             <div>
@@ -251,6 +250,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                 </div>
             </form>
@@ -278,7 +278,7 @@
                 <field name="vehicle_id" />
                 <field name="cost_subtype_id"/>
                 <field name="insurer_id" />
-                <field name="amount" string="Activation Cost"/>
+                <field name="purchaser_id"/>
                 <field name="cost_generated"/>
                 <field name="cost_frequency"/>
                 <field name="state" />
@@ -297,7 +297,7 @@
                             <div>
                                 <strong>
                                     <field name="vehicle_id"/>
-                                    <span class="pull-right label label-default">
+                                    <span class="float-right badge badge-secondary">
                                         <field name="state"/>
                                     </span>
                                 </strong>
@@ -307,7 +307,7 @@
                             </div>
                             <div>
                                 <field name="insurer_id"/>
-                                <span class="pull-right"><field name="cost_subtype_id"/></span>
+                                <span class="float-right"><field name="cost_subtype_id"/></span>
                             </div>
                         </div>
                     </t>
@@ -333,10 +333,23 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <search string="Vehicles Contracts">
+                <field name="vehicle_id" string="Vehicle" filter_domain="[('vehicle_id.name','ilike', self)]"/>
+                <field name="purchaser_id" string="Driver" filter_domain="[('purchaser_id','child_of', self)]"/>
+                <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
+                <field name="cost_subtype_id" string="Service Type" filter_domain="[('cost_ids.cost_subtype_id', 'ilike', self)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <group expand="0" string="Group By">
                     <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
                 </group>
@@ -351,8 +364,8 @@
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{'search_default_open': 1}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new contract.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new contract
           </p><p>
             Manage all your contracts (leasing, insurances, etc.) with
             their related services, costs. Odoo will automatically warn
@@ -433,7 +446,7 @@
                             <div>
                                 <strong>
                                     <field name="vehicle_id"/>
-                                    <span class="pull-right"><field name="date"/></span>
+                                    <span class="float-right"><field name="date"/></span>
                                 </strong>
                             </div>
                             <div>
@@ -441,7 +454,7 @@
                             </div>
                             <div>
                                 <span><field name="liter"/> Liter</span>
-                                <span class="pull-right"><field name="amount"/></span>
+                                <span class="float-right"><field name="amount"/></span>
                             </div>
                         </div>
                     </t>
@@ -485,12 +498,10 @@
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{"search_default_groupby_vehicle" : True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new fuel log.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new fuel log
           </p><p>
-            Here you can add refuelling entries for all vehicles.  You can
-            also filter logs of a particular vehicle using the search
-            field.
+            Here you can add refuelling entries for all vehicles.
           </p>
         </field>
     </record>
@@ -569,7 +580,7 @@
                             <div>
                                 <strong>
                                     <field name="vehicle_id"/>
-                                    <span class="pull-right"><field name="date"/></span>
+                                    <span class="float-right"><field name="date"/></span>
                                 </strong>
                             </div>
                             <div>
@@ -580,7 +591,7 @@
                             </div>
                             <div>
                                 <span><field name="vendor_id"/></span>
-                                <span class="pull-right"><field name="amount"/></span>
+                                <span class="float-right"><field name="amount"/></span>
                             </div>
                         </div>
                     </t>
@@ -618,12 +629,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,graph</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new service entry.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new service entry
           </p><p>
-            Odoo helps you keeping track of all the services done
-            on your vehicle. Services can be of many type: occasional
-            repair, fixed maintenance, etc.
+            Track all the services done on your vehicle.
+            Services can be of many types: occasional repair, fixed maintenance, etc.
           </p>
         </field>
     </record>

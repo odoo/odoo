@@ -6,6 +6,11 @@
         <field name="arch" type="xml">
             <form string="Activities">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -14,16 +19,42 @@
                         <group>
                             <field name="category" invisible="1"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
+                            <field name="res_model_change" invisible="1"/>
+                            <field name="initial_res_model_id" invisible="1"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
-                            <field name="days"/>
+                            <field name="decoration_type" groups="base.group_no_one"/>
+                            <label for="delay_count"/>
+                            <div>
+                                <field name="delay_count" class="oe_inline"/>&amp;nbsp;
+                                <field name="delay_unit" class="oe_inline"/>&amp;nbsp;
+                                <field name="delay_from" class="oe_inline"/>
+                            </div>
                         </group>
                         <group>
-                            <field name="next_type_ids" widget="many2many_tags"/>
+                            <field name="next_type_ids" widget="many2many_tags"
+                                context="{'default_res_model_id': res_model_id}"/>
+                            <field name="default_next_type_id" context="{'default_res_model_id': res_model_id}"/>
+                            <field name="mail_template_ids" widget="many2many_tags"
+                                domain="[('model_id', '=', res_model_id)]"
+                                attrs="{'invisible': [('res_model_id', '=', False)]}"
+                                context="{'default_model_id': res_model_id}"/>
                         </group>
                     </group>
+                    <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_view_search" model="ir.ui.view">
+        <field name="name">mail.activity.type.search</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <search string="Activities">
+                <field name="name"/>
+                <filter string="Archived" domain="[('active', '=', False)]" name="archived"/>
+            </search>
         </field>
     </record>
 
@@ -35,7 +66,9 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="days"/>
+                <field name="delay_count" string="Planned in"/>
+                <field name="delay_unit" string="Unit"/>
+                <field name="delay_from" string="Type"/>
                 <field name="res_model_id" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>
             </tree>
@@ -71,11 +104,10 @@
                         <field name="has_recommended_activities"/>
                     </group>
                     <group attrs="{'invisible': [('has_recommended_activities','=',False)]}">
-                        <div>
-                            <p><strong>Recommended Activities</strong></p>
-                            <field name="recommended_activity_type_id" widget="radio"
+                        <div class="o_row">
+                            <strong>Recommended Activities</strong>
+                            <field name="recommended_activity_type_id" widget="selection_badge"
                                 domain="[('previous_type_ids', '=', previous_activity_type_id)]"
-                                options="{'horizontal':true}"
                                 nolabel="1"/>
                         </div>
                     </group>
@@ -94,8 +126,12 @@
                         <button string="Schedule" name="action_close_dialog"
                             type="object" class="btn-primary"/>
                         <button string="Mark as Done" name="action_done"
-                            type="object" class="btn-primary"/>
-                        <button string="Discard" class="btn-default" special="cancel" />
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" />
                     </footer>
                 </sheet>
             </form>
@@ -124,9 +160,9 @@
                         ]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Deadline" context="{'group_by': 'date_deadline'}"/>
-                    <filter string="Created By" context="{'group_by': 'create_uid'}"/>
-                    <filter string="Activity Type" context="{'group_by': 'activity_type_id'}"/>
+                    <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
+                    <filter string="Created By" name="createdby" context="{'group_by': 'create_uid'}"/>
+                    <filter string="Activity Type" name="activittype" context="{'group_by': 'activity_type_id'}"/>
                 </group>
             </search>
         </field>

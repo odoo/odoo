@@ -8,6 +8,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var qweb = core.qweb;
@@ -430,6 +431,23 @@ registry.slider = Animation.extend({
      * @override
      */
     start: function () {
+        if (!this.editableMode) {
+            var maxHeight = 0;
+            var $items = this.$('.item');
+            _.each($items, function (el) {
+                var $item = $(el);
+                var isActive =  $item.hasClass('active');
+                $item.addClass('active');
+                var height = $item.outerHeight();
+                if (height > maxHeight) {
+                    maxHeight = height;
+                }
+                $item.toggleClass('active', isActive);
+            });
+            _.each($items, function (el) {
+                $(el).css('min-height', maxHeight);
+            });
+        }
         this.$target.carousel();
         return this._super.apply(this, arguments);
     },
@@ -440,6 +458,9 @@ registry.slider = Animation.extend({
         this._super.apply(this, arguments);
         this.$target.carousel('pause');
         this.$target.removeData('bs.carousel');
+        _.each(this.$('.item'), function (el) {
+            $(el).css('min-height', '');
+        });
     },
 });
 
@@ -552,7 +573,7 @@ registry.parallax = Animation.extend({
 });
 
 registry.share = Animation.extend({
-    selector: '.oe_share',
+    selector: '.s_share, .oe_share', // oe_share for compatibility
 
     /**
      * @override
@@ -750,7 +771,7 @@ registry.gallerySlider = Animation.extend({
 
         function hide() {
             $lis.each(function (i) {
-                $(this).toggleClass('hidden', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
+                $(this).toggleClass('d-none', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
             });
             if (self.editableMode) { // do not remove DOM in edit mode
                 return;
@@ -842,7 +863,7 @@ registry.socialShare = Animation.extend({
             var self = this;
             setTimeout(function () {
                 if (!$(".popover:hover").length) {
-                    $(self).popover("destroy");
+                    $(self).popover('dispose');
                 }
             }, 200);
         });
@@ -885,6 +906,50 @@ registry.socialShare = Animation.extend({
 
         this._render();
         this._bindSocialEvent();
+    },
+});
+
+registry.facebookPage = Animation.extend({
+    selector: '.o_facebook_page',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+
+        var params = _.pick(this.$el.data(), 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
+        if (!params.href) {
+            return def;
+        }
+        params.width = utils.confine(this.$el.width(), 180, 500);
+
+        var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
+        this.$iframe = $('<iframe/>', {
+            src: src,
+            width: params.width,
+            height: params.height,
+            css: {
+                border: 'none',
+                overflow: 'hidden',
+            },
+            scrolling: 'no',
+            frameborder: '0',
+            allowTransparency: 'true',
+        });
+        this.$el.append(this.$iframe);
+
+        return def;
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$iframe) {
+            this.$iframe.remove();
+        }
     },
 });
 

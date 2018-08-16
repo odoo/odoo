@@ -22,10 +22,11 @@ import sys
 import threading
 import time
 import types
+import unicodedata
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, groupby, repeat
+from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
 from .which import which
@@ -252,7 +253,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
                 pass
     # Not found
     if name.endswith('.rml'):
-        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+        raise IOError('Report %r does not exist or has been deleted' % basename)
     raise IOError('File not found: %s' % basename)
 
 
@@ -260,7 +261,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
 # iterables
 #----------------------------------------------------------
 def flatten(list):
-    """Flatten a list of elements into a uniqu list
+    """Flatten a list of elements into a unique list
     Author: Christophe Simonis (christophe@tinyerp.com)
 
     Examples::
@@ -349,7 +350,7 @@ def topological_sort(elems):
 try:
     import xlwt
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedWorkbook(xlwt.Workbook):
         def add_sheet(self, name, cell_overwrite_ok=False):
@@ -368,7 +369,7 @@ except ImportError:
 try:
     import xlsxwriter
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
 
@@ -403,9 +404,9 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    csvpath = odoo.modules.module.get_resource_path('base', 'data', 'res.lang.csv')
     try:
-        # read (code, name) from languages in base/res/res.lang.csv
+        # read (code, name) from languages in base/data/res.lang.csv
         with open(csvpath, 'rb') as csvfile:
             reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
@@ -732,6 +733,19 @@ def attrgetter(*items):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
 
+# ---------------------------------------------
+# String management
+# ---------------------------------------------
+
+# Inspired by http://stackoverflow.com/questions/517923
+def remove_accents(input_str):
+    """Suboptimal-but-better-than-nothing way to replace accented
+    latin letters by an ASCII equivalent. Will obviously change the
+    meaning of input_str and work only for some cases"""
+    input_str = ustr(input_str)
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
+
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
        or escaping, keeping the original string untouched. The name come from Lisp's unquote.
@@ -855,7 +869,7 @@ def stripped_sys_argv(*strip_args):
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
-    longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
+    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
 
     args = sys.argv[:]
@@ -886,7 +900,7 @@ class ConstantMapping(Mapping):
 
     def __iter__(self):
         """
-        same as len, defaultdict udpates its iterable keyset with each key
+        same as len, defaultdict updates its iterable keyset with each key
         requested, is there a point for this?
         """
         return iter([])
@@ -983,6 +997,49 @@ class Collector(Mapping):
     def __len__(self):
         return len(self._map)
 
+
+@pycompat.implements_to_string
+class StackMap(MutableMapping):
+    """ A stack of mappings behaving as a single mapping, and used to implement
+        nested scopes. The lookups search the stack from top to bottom, and
+        returns the first value found. Mutable operations modify the topmost
+        mapping only.
+    """
+    __slots__ = ['_maps']
+
+    def __init__(self, m=None):
+        self._maps = [] if m is None else [m]
+
+    def __getitem__(self, key):
+        for mapping in reversed(self._maps):
+            try:
+                return mapping[key]
+            except KeyError:
+                pass
+        raise KeyError(key)
+
+    def __setitem__(self, key, val):
+        self._maps[-1][key] = val
+
+    def __delitem__(self, key):
+        del self._maps[-1][key]
+
+    def __iter__(self):
+        return iter({key for mapping in self._maps for key in mapping})
+
+    def __len__(self):
+        return sum(1 for key in self)
+
+    def __str__(self):
+        return u"<StackMap %s>" % self._maps
+
+    def pushmap(self, m=None):
+        self._maps.append({} if m is None else m)
+
+    def popmap(self):
+        return self._maps.pop()
+
+
 class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
@@ -1004,6 +1061,19 @@ class LastOrderedSet(OrderedSet):
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+def groupby(iterable, key=None):
+    """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
+        ``key`` is a function computing a key value for each element. This
+        function is similar to ``itertools.groupby``, but aggregates all
+        elements under the same key, not only consecutive elements.
+    """
+    if key is None:
+        key = lambda arg: arg
+    groups = defaultdict(list)
+    for elem in iterable:
+        groups[key(elem)].append(elem)
+    return groups.items()
 
 def unique(it):
     """ "Uniquifier" for the provided iterable: will output each element of
@@ -1078,10 +1148,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_objs = env['res.lang'].search([('code', '=', lang)])
-    if not lang_objs:
-        lang_objs = env['res.lang'].search([], limit=1)
-    lang_obj = lang_objs[0]
+    lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1151,3 +1218,23 @@ pickle.load = _pickle_load
 pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

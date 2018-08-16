@@ -1,0 +1,78 @@
+.o_kanban_view.o_kanban_dashboard.o_project_kanban {
+    .o_project_kanban_boxes {
+        display: flex;
+        flex-flow: row nowrap;
+
+        .o_project_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            width: 33.33%;
+
+            &:last-child {
+                text-align: right;
+            }
+
+            &:nth-child(2){
+                width: 66.66%;
+            }
+
+            &:first-child {
+                text-align: left;
+            }
+
+            .o_value {
+                font-weight: 800;
+            }
+
+            > div {
+                font-weight: 500;
+
+                button.o_needaction {
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    @include o-hover-opacity(0.5, 1);
+
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
+        }
+        .o_project_timesheet_box{
+            position: relative;
+            padding: 0 0 0 0;
+            /* The important are here to assure this class is display in the center */
+            width: 33.33% !important;
+            text-align: center !important;
+        }
+    }
+}
+
+.o_kanban_task_cover_container {
+    .o_kanban_task_cover_image {
+        display: inline-block;
+        position: relative;
+        height: 120px;
+        width: 120px;
+        margin: 10px;
+        cursor: pointer;
+        outline: 2px solid transparent;
+        box-shadow: 0px 0px 1px 1px #ccc;
+        &.o_selected {
+            outline-color: $o-brand-primary;
+        }
+        > img {
+            @include o-position-absolute($top: 0, $left: 0, $right: 0, $bottom: 0);
+            margin: auto;
+            max-height: 100%;
+            max-width: 100%;
+        }
+    }
+}

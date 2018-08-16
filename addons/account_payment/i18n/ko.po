@@ -3,17 +3,14 @@
 # * account_payment
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Linda Stockelova <stockeloval@btlnet.com>, 2018
-# 최재호 <hwangtog@gmail.com>, 2018
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: 최재호 <hwangtog@gmail.com>, 2018\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +63,7 @@ msgstr ""
 msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
-msgstr "대기중"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -81,13 +78,7 @@ msgid "<strong>Transactions</strong>"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:80
-#, python-format
-msgid "Amount Mismatch (%s)"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:52
+#: code:addons/account_payment/controllers/payment.py:53
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -99,6 +90,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
 msgstr "송장"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "Invoice successfully paid."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
@@ -121,7 +117,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr "지금 결제"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -131,31 +127,23 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "결제 완료자"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "결제 처리"
+msgstr ""
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_invoice.py:28
 #, python-format
 msgid "Payment Transactions"
-msgstr "결제 거래"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
 msgstr "상태"
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:81
-#, python-format
-msgid ""
-"The invoice was not confirmed despite response from the acquirer (%s): "
-"invoice amount is %r but acquirer replied with %r."
-msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -205,9 +193,4 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
-msgstr "거래"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
-msgid "Your payment has been authorized."
 msgstr ""

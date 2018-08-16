@@ -27,7 +27,7 @@ class LandedCost(models.Model):
         'Date', default=fields.Date.context_today,
         copy=False, required=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     picking_ids = fields.Many2many(
-        'stock.picking', string='Pickings',
+        'stock.picking', string='Transfers',
         copy=False, states={'done': [('readonly', True)]})
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
@@ -51,6 +51,8 @@ class LandedCost(models.Model):
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string="Company",
+        related='account_journal_id.company_id')
 
     @api.one
     @api.depends('cost_lines.price_unit')
@@ -126,7 +128,7 @@ class LandedCost(models.Model):
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
-        prec_digits = self.env['decimal.precision'].precision_get('Account')
+        prec_digits = self.env.user.company_id.currency_id.decimal_places
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:
@@ -158,7 +160,7 @@ class LandedCost(models.Model):
             lines.append(vals)
 
         if not lines and self.mapped('picking_ids'):
-            raise UserError(_('The selected picking does not contain any move that would be impacted by landed costs. Landed costs are only possible for products configured in real time valuation with real price costing method. Please make sure it is the case, or you selected the correct picking'))
+            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
         return lines
 
     @api.multi

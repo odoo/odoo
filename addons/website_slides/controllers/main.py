@@ -57,7 +57,8 @@ class WebsiteSlides(http.Controller):
         """ Returns a list of available channels: if only one is available,
             redirects directly to its slides
         """
-        channels = request.env['slide.channel'].search([], order='sequence, id')
+        domain = request.website.website_domain()
+        channels = request.env['slide.channel'].search(domain, order='sequence, id')
         if not channels:
             return request.render("website_slides.channel_not_found")
         elif len(channels) == 1:
@@ -71,6 +72,7 @@ class WebsiteSlides(http.Controller):
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
+        dom += env['website'].get_current_website().website_domain()
         for channel in Channel.search(dom):
             loc = '/slides/%s' % slug(channel)
             if not qs or qs.lower() in loc:
@@ -93,6 +95,9 @@ class WebsiteSlides(http.Controller):
         '''/slides/<model("slide.channel"):channel>/category/<model("slide.category"):category>/<string:slide_type>/page/<int:page>'''],
         type='http', auth="public", website=True, sitemap=sitemap_slide)
     def channel(self, channel, category=None, tag=None, page=1, slide_type=None, sorting='creation', search=None, **kw):
+        if not channel.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         user = request.env.user
         Slide = request.env['slide.slide']
         domain = [('channel_id', '=', channel.id)]
@@ -164,8 +169,11 @@ class WebsiteSlides(http.Controller):
     # SLIDE.SLIDE CONTOLLERS
     # --------------------------------------------------
 
-    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True)]"):slide>''', type='http', auth="public", website=True)
+    @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('website_id', 'in', (False, current_website_id))]"):slide>''', type='http', auth="public", website=True)
     def slide_view(self, slide, **kwargs):
+        if not slide.channel_id.can_access_from_current_website():
+            raise werkzeug.exceptions.NotFound()
+
         values = self._get_slide_detail(slide)
         if not values.get('private'):
             self._set_viewed_slide(slide, 'slide')

@@ -6,10 +6,10 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -19,38 +19,68 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:153
+#: code:addons/payment_sips/models/payment.py:164
 #, python-format
 msgid "; multiple order found"
 msgstr "; 找到多個訂單"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:151
+#: code:addons/payment_sips/models/payment.py:162
 #, python-format
 msgid "; no order found"
 msgstr "; 沒有訂單"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:74
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:75
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Wordline不支援此貨幣"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:55
+#: code:addons/payment_sips/models/payment.py:56
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr "不正確的付款收單服務商"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
 msgstr "接口版本"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "手工配置"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "商戶ID"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -63,27 +93,52 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
-msgid "Prod's url"
-msgstr "生產的網址"
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
 msgstr "密鑰"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:149
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:160
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: 供參考的接收數據 %s"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
-msgid "Test's url"
-msgstr "測試 URL"
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "條帶"
 
 #. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
 msgstr "僅適用於生產"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "電匯"

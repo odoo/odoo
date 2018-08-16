@@ -10,15 +10,16 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var ActionManager = require('web.ActionManager');
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
+var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
-var view_registry = require('web.view_registry');
 
 var DebouncedField = basic_fields.DebouncedField;
 
@@ -60,6 +61,80 @@ function observe(widget) {
 }
 
 /**
+ * create and return an instance of ActionManager with all rpcs going through a
+ * mock method using the data, actions and archs objects as sources.
+ *
+ * @param {Object} [params]
+ * @param {Object} [params.actions] the actions given to the mock server
+ * @param {Object} [params.archs] this archs given to the mock server
+ * @param {Object} [params.data] the business data given to the mock server
+ * @param {boolean} [params.debug]
+ * @param {function} [params.mockRPC]
+ * @returns {ActionManager}
+ */
+var createActionManager = function (params) {
+    params = params || {};
+    var $target = $('#qunit-fixture');
+    if (params.debug) {
+        $target = $('body');
+        $target.addClass('debug');
+    }
+
+    var widget = new Widget();
+    // when 'document' addon is installed, the sidebar does a 'search_read' on
+    // model 'ir_attachment' each time a record is open, so we monkey-patch
+    // 'mockRPC' to mute those RPCs, so that the tests can be written uniformly,
+    // whether or not 'document' is installed
+    var mockRPC = params.mockRPC;
+    _.extend(params, {
+        mockRPC: function (route, args) {
+            if (args.model === 'ir.attachment') {
+                return $.when([]);
+            }
+            if (mockRPC) {
+                return mockRPC.apply(this, arguments);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    addMockEnvironment(widget, _.defaults(params, {debounce: false}));
+    widget.prependTo($target);
+    widget.$el.addClass('o_web_client');
+    if (config.device.isMobile) {
+        widget.$el.addClass('o_touch_device');
+    }
+
+    var userContext = params.context && params.context.user_context || {};
+    var actionManager = new ActionManager(widget, userContext);
+
+    var originalDestroy = ActionManager.prototype.destroy;
+    actionManager.destroy = function () {
+        actionManager.destroy = originalDestroy;
+        widget.destroy();
+    };
+    actionManager.appendTo(widget.$el);
+
+    return actionManager;
+};
+
+/**
+ * performs a fields_view_get, and mocks the postprocessing done by the
+ * data_manager to return an equivalent structure.
+ *
+ * @param {MockServer} server
+ * @param {Object} params
+ * @param {string} params.model
+ * @returns {Object} an object with 3 keys: arch, fields and viewFields
+ */
+function fieldsViewGet(server, params) {
+    var fieldsView = server.fieldsViewGet(params);
+    // mock the structure produced by the DataManager
+    fieldsView.viewFields = fieldsView.fields;
+    fieldsView.fields = server.fieldsGet(params.model);
+    return fieldsView;
+}
+
+/**
  * create a view synchronously.  This method uses the createAsyncView method.
  * Most views are synchronous, so the deferred can be resolved immediately and
  * this method will work.
@@ -88,8 +163,7 @@ function createView(params) {
  *
  * It returns the instance of the view, properly created, with all rpcs going
  * through a mock method using the data object as source, and already loaded/
- * started (with a do_search).  The buttons/pager should also be created, if
- * appropriate.
+ * started.
  *
  * Most views can be tested synchronously (@see createView), but some view have
  * external dependencies (like lazy loaded libraries). In that case, it is
@@ -100,8 +174,7 @@ function createView(params) {
  * @param {any[]} [params.domain] the initial domain for the view
  * @param {Object} [params.context] the initial context for the view
  * @param {Object} [params.debug=false] if true, the widget will be appended in
- *   the DOM. Also, the logLevel will be forced to 2 and the uncaught OdooEvent
- *   will be logged
+ *   the DOM. Also, RPCs and uncaught OdooEvent will be logged
  * @param {string[]} [params.groupBy] the initial groupBy for the view
  * @param {integer} [params.fieldDebounce=0] the debounce value to use for the
  *   duration of the test.
@@ -117,22 +190,14 @@ function createView(params) {
 function createAsyncView(params) {
     var $target = $('#qunit-fixture');
     var widget = new Widget();
-
-    // handle debug parameter: render target, log stuff, ...
     if (params.debug) {
         $target = $('body');
-        params.logLevel = 2;
-        observe(widget);
-        var separator = window.location.href.indexOf('?') !== -1 ? "&" : "?";
-        var url = window.location.href + separator + 'testId=' + QUnit.config.current.testId;
-        console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
         $target.addClass('debug');
     }
 
     // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = addMockEnvironment(widget, params);
-    var viewInfo = mockServer.fieldsViewGet(params);
-
+    var viewInfo = fieldsViewGet(mockServer, params);
     // create the view
     var viewOptions = {
         modelName: params.model || 'foo',
@@ -145,31 +210,13 @@ function createAsyncView(params) {
 
     _.extend(viewOptions, params.viewOptions);
 
-
-    if (viewInfo.arch.attrs.js_class) {
-        var jsClsssView = view_registry.get(viewInfo.arch.attrs.js_class);
-        var view = new jsClsssView(viewInfo, viewOptions);
-    } else{
-        var view = new params.View(viewInfo, viewOptions);
-    }
-
-    // make sure images do not trigger a GET on the server
-    $target.on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
-    });
+    var view = new params.View(viewInfo, viewOptions);
 
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
-    var $control_panel = $('<div>').addClass('o_control_panel').appendTo($web_client);
+    var controlPanel = new ControlPanel(widget);
+    controlPanel.appendTo($web_client);
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
-    var $view_manager = $('<div>').addClass('o_view_manager_content').appendTo($content);
-
-    // make sure all Odoo events bubbling up are intercepted
-    if (params.intercepts) {
-        _.each(params.intercepts, function (cb, name) {
-            intercept(widget, name, cb);
-        });
-    }
 
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
@@ -180,35 +227,55 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-            $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
+
+        // link the view to the control panel
+        view.set_cp_bus(controlPanel.get_bus());
+
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM
         var fragment = document.createDocumentFragment();
         return view.appendTo(fragment).then(function () {
-            dom.append($view_manager, fragment, {
+            dom.append($content, fragment, {
                 callbacks: [{widget: view}],
                 in_DOM: true,
             });
             view.$el.on('click', 'a', function (ev) {
                 ev.preventDefault();
             });
-        }).then(function () {
-            var $buttons = $('<div>');
-            view.renderButtons($buttons);
-            $buttons.contents().appendTo($control_panel);
-
-            var $sidebar = $('<div>');
-            view.renderSidebar($sidebar);
-            $sidebar.contents().appendTo($control_panel);
-
-            var $pager = $('<div>');
-            view.renderPager($pager);
-            $pager.contents().appendTo($control_panel);
 
             return view;
         });
     });
+}
+
+// Months are indexed starting at zero
+function patchDate (year, month, day, hours, minutes, seconds) {
+
+    var RealDate = window.Date;
+    var actualDate = new RealDate();
+    var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
+    var timeInterval = actualDate.getTime() - (fakeDate.getTime());
+
+    window.Date = function Date() {
+        if (arguments.length > 0) {
+            return RealDate.apply(this, arguments);
+        } else {
+            // months are indexed from 0!
+            var date = new RealDate();
+            var time = date.getTime();
+            time -= timeInterval;
+            date.setTime(time);
+            return date;
+        }
+    };
+
+    _.mapObject(RealDate, function (val, key) {
+        window.Date[key] = val;
+    });
+    window.Date.prototype = RealDate.prototype;
+
+    return function () {window.Date = RealDate;};
 }
 
 /**
@@ -233,10 +300,8 @@ function createAsyncView(params) {
  *   date. It is given to the mock server.
  * @param {Object} params.data the data given to the created mock server. It is
  *   used to generate mock answers for every kind of routes supported by odoo
- * @param {number} [params.logLevel] the log level. If it is 0, no logging is
- *   done, if 1, some light logging is done, if 2, detailed logs will be
- *   displayed for all rpcs.  Most of the time, when working on a test, it is
- *   frequent to set this parameter to 2
+ * @param {number} [params.debug] if set to true, logs RPCs and uncaught Odoo
+ *   events.
  * @param {function} [params.mockRPC] a function that will be used to override
  *   the _performRpc method from the mock server. It is really useful to add
  *   some custom rpc mocks, or to check some assertions.
@@ -247,6 +312,20 @@ function createAsyncView(params) {
  * @param {Object} [params.translateParameters] if given, it will be used to
  *   extend the core._t.database.parameters object. After the widget
  *   destruction, the original parameters will be restored.
+ * @param {Object} [params.intercepts] an object with event names as key, and
+ *   callback as value.  Each key,value will be used to intercept the event.
+ *   Note that this is particularly useful if you want to intercept events going
+ *   up in the init process of the view, because there are no other way to do it
+ *   after this method returns. Some events ('call_service', "load_views",
+ *   "get_session", "load_filters") have a special treatment beforehand.
+ * @param {web.AbstractService[]} [params.services] list of services to load in
+ *   addition to the ajax service. For instance, if a test needs the local
+ *   storage service in order to work, it can provide a mock version of it.
+ * @param {boolean} [debounce=true] set to false to completely remove the
+ *   debouncing, forcing the handler to be called directly (not on the next
+ *   execution stack, like it does with delay=0).
+ * @param {boolean} [throttle=false] set to true to keep the throttling, which
+ *   is completely removed by default.
  *
  * @returns {MockServer} the instance of the mock server, created by this
  *   function. It is necessary for createAsyncView so that method can call some
@@ -257,14 +336,31 @@ function addMockEnvironment(widget, params) {
     if (params.mockRPC) {
         Server = MockServer.extend({_performRpc: params.mockRPC});
     }
+    if (params.debug) {
+        observe(widget);
+        var separator = window.location.href.indexOf('?') !== -1 ? "&" : "?";
+        var url = window.location.href + separator + 'testId=' + QUnit.config.current.testId;
+        console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
+    }
+
     var mockServer = new Server(params.data, {
-        logLevel: params.logLevel,
+        actions: params.actions,
+        archs: params.archs,
         currentDate: params.currentDate,
+        debug: params.debug,
+        services: params.services,
+        widget: widget,
     });
+
+    // make sure images do not trigger a GET on the server
+    $('body').on('DOMNodeInserted.removeSRC', function (event) {
+        removeSrcAttribute(event.target, widget);
+    });
+
     // make sure the debounce value for input fields is set to 0
-    var initialDebounce = DebouncedField.prototype.DEBOUNCE;
+    var initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
-    var initialSession, initialConfig, initialParameters;
+    var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
         return 0; // by default, but may be overriden in specific tests
@@ -277,6 +373,7 @@ function addMockEnvironment(widget, params) {
         initialConfig.device = _.clone(config.device);
         if ('device' in params.config) {
             _.extend(config.device, params.config.device);
+            config.device.isMobile = config.device.size_class <= config.device.SIZES.VSM;
         }
         if ('debug' in params.config) {
             config.debug = params.config.debug;
@@ -286,6 +383,18 @@ function addMockEnvironment(widget, params) {
         initialParameters = _.extend({}, core._t.database.parameters);
         _.extend(core._t.database.parameters, params.translateParameters);
     }
+    if (params.debounce === false) {
+        initialDebounce = _.debounce;
+        _.debounce = function (func) {
+            return func;
+        };
+    }
+    if (!('throttle' in params) || !params.throttle) {
+        initialThrottle = _.throttle;
+        _.throttle = function (func) {
+            return func;
+        };
+    }
 
     var widgetDestroy = widget.destroy;
     widget.destroy = function () {
@@ -293,7 +402,13 @@ function addMockEnvironment(widget, params) {
         // widget is destroyed, at the end of each test to avoid collisions
         core.bus.trigger('clear_cache');
 
-        DebouncedField.prototype.DEBOUNCE = initialDebounce;
+        DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
+        if (params.debounce === false) {
+            _.debounce = initialDebounce;
+        }
+        if (!('throttle' in params) || !params.throttle) {
+            _.throttle = initialThrottle;
+        }
 
         var key;
         if ('session' in params) {
@@ -315,53 +430,105 @@ function addMockEnvironment(widget, params) {
             _.extend(core._t.database.parameters, initialParameters);
         }
 
+        $('body').off('DOMNodeInserted.removeSRC');
+        $('.blockUI').remove();
+
         widgetDestroy.call(this);
     };
 
-    intercept(widget, 'call_service', function (event) {
-        if (event.data.service === 'ajax') {
-            var result = mockServer.performRpc(event.data.args[0], event.data.args[1]);
-            event.data.callback(result);
+    // Dispatch service calls
+    // Note: some services could call other services at init,
+    // Which is why we have to init services after that
+    var services = {ajax: null}; // mocked ajax service already loaded
+    intercept(widget, 'call_service', function (ev) {
+        var args, result;
+        if (ev.data.service === 'ajax') {
+            // ajax service is already mocked by the server
+            var route = ev.data.args[0];
+            args = ev.data.args[1];
+            result = mockServer.performRpc(route, args);
+        } else if (services[ev.data.service]) {
+            var service = services[ev.data.service];
+            args = (ev.data.args || []);
+            result = service[ev.data.method].apply(service, args);
         }
+        ev.data.callback(result);
+    });
+
+    intercept(widget, 'load_action', function (event) {
+        mockServer.performRpc('/web/action/load', {
+            kwargs: {
+                action_id: event.data.actionID,
+                additional_context: event.data.context,
+            },
+        }).then(function (action) {
+            event.data.on_success(action);
+        });
     });
 
     intercept(widget, "load_views", function (event) {
-        if (params.logLevel === 2) {
-            console.log('[mock] load_views', event.data);
-        }
-        var views = {};
-        var model = event.data.modelName;
-        _.each(event.data.views, function (view_descr) {
-            var view_id = view_descr[0] || false;
-            var view_type = view_descr[1];
-            var key = [model, view_id, view_type].join(',');
-            var arch = params.archs[key];
-            var viewParams = {
-                arch: arch,
-                model: model,
-                viewOptions: {
-                    context: event.data.context.eval(),
-                },
-            };
-            if (!arch) {
-                throw new Error('No arch found for key ' + key);
-            }
-            views[view_type] = mockServer.fieldsViewGet(viewParams);
+        mockServer.performRpc('/web/dataset/call_kw/' + event.data.modelName, {
+            args: [],
+            kwargs: {
+                context: event.data.context,
+                options: event.data.options,
+                views: event.data.views,
+            },
+            method: 'load_views',
+            model: event.data.modelName,
+        }).then(function (views) {
+            views = _.mapObject(views, function (viewParams) {
+                return fieldsViewGet(mockServer, viewParams);
+            });
+            event.data.on_success(views);
         });
-
-        event.data.on_success(views);
     });
 
     intercept(widget, "get_session", function (event) {
-        event.data.callback(params.session || session);
+        event.data.callback(session);
     });
 
     intercept(widget, "load_filters", function (event) {
-        if (params.logLevel === 2) {
+        if (params.debug) {
             console.log('[mock] load_filters', event.data);
         }
         event.data.on_success([]);
     });
+
+    // make sure all Odoo events bubbling up are intercepted
+    if ('intercepts' in params) {
+        _.each(params.intercepts, function (cb, name) {
+            intercept(widget, name, cb);
+        });
+    }
+
+    // Deploy services
+    var done = false;
+    var servicesToDeploy = _.clone(params.services);
+    while (!done) {
+        var serviceName = _.findKey(servicesToDeploy, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
+        });
+        if (serviceName) {
+            var Service = servicesToDeploy[serviceName];
+            var service = services[serviceName] = new Service(widget);
+            delete servicesToDeploy[serviceName];
+
+            intercept(service, "get_session", function (event) {
+                event.data.callback(session);
+            });
+
+            service.start();
+        } else {
+            var serviceNames = _.keys(servicesToDeploy);
+            if (serviceNames.length) {
+                console.warn("Non loaded services:", serviceNames);
+            }
+            done = true;
+        }
+    }
 
     return mockServer;
 }
@@ -394,6 +561,19 @@ function createModel(params) {
 }
 
 /**
+ * create a widget parent from given parameters.
+ *
+ * @param {Object} params This object will be given to addMockEnvironment, so
+ *   any parameters from that method applies
+ * @returns {Widget}
+ */
+function createParent(params) {
+    var widget = new Widget();
+    addMockEnvironment(widget, params);
+    return widget;
+}
+
+/**
  * simulate a drag and drop operation between 2 jquery nodes: $el and $to.
  * This is a crude simulation, with only the mousedown, mousemove and mouseup
  * events, but it is enough to help test drag and drop operations with jqueryUI
@@ -402,34 +582,54 @@ function createModel(params) {
  * @param {jqueryElement} $el
  * @param {jqueryElement} $to
  * @param {Object} [options]
- * @param {string} [options.position=center] target position
- * @param {string} [options.disableDrop=false] whether to trigger the drop action
+ * @param {string|Object} [options.position='center'] target position:
+ *   can either be one of {'top', 'bottom', 'left', 'right'} or
+ *   an object with two attributes (top and left))
+ * @param {boolean} [options.disableDrop=false] whether to trigger the drop action
+ * @param {boolean} [options.continueMove=false] whether to trigger the
+ *   mousedown action (will only work after another call of this function with
+ *   without this option)
  */
 function dragAndDrop($el, $to, options) {
     var position = (options && options.position) || 'center';
     var elementCenter = $el.offset();
-    elementCenter.left += $el.outerWidth()/2;
-    elementCenter.top += $el.outerHeight()/2;
-
     var toOffset = $to.offset();
-    toOffset.top += $to.outerHeight()/2;
-    toOffset.left += $to.outerWidth()/2;
-    var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
-    if (position === 'top') {
-        toOffset.top -= $to.outerHeight()/2 + vertical_offset;
-    } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight()/2 - vertical_offset;
-    } else if (position === 'left') {
-        toOffset.left -= $to.outerWidth()/2;
-    } else if (position === 'right') {
+
+    if (_.isObject(position)) {
+        toOffset.top += position.top;
+        toOffset.left += position.left;
+    } else {
+        toOffset.top += $to.outerHeight()/2;
         toOffset.left += $to.outerWidth()/2;
+        var vertical_offset = (toOffset.top < elementCenter.top) ? -1 : 1;
+        if (position === 'top') {
+            toOffset.top -= $to.outerHeight()/2 + vertical_offset;
+        } else if (position === 'bottom') {
+            toOffset.top += $to.outerHeight()/2 - vertical_offset;
+        } else if (position === 'left') {
+            toOffset.left -= $to.outerWidth()/2;
+        } else if (position === 'right') {
+            toOffset.left += $to.outerWidth()/2;
+        }
     }
 
-    $el.trigger($.Event("mousedown", {
-        which: 1,
-        pageX: elementCenter.left,
-        pageY: elementCenter.top
-    }));
+    if ($to[0].ownerDocument !== document) {
+        // we are in an iframe
+        var bound = $('iframe')[0].getBoundingClientRect();
+        toOffset.left += bound.left;
+        toOffset.top += bound.top;
+    }
+
+    if (!(options && options.continueMove)) {
+        elementCenter.left += $el.outerWidth()/2;
+        elementCenter.top += $el.outerHeight()/2;
+
+        $el.trigger($.Event("mousedown", {
+            which: 1,
+            pageX: elementCenter.left,
+            pageY: elementCenter.top
+        }));
+    }
 
     $el.trigger($.Event("mousemove", {
         which: 1,
@@ -513,26 +713,35 @@ function triggerKeypressEvent(char) {
 /**
  * Removes the src attribute on images and iframes to prevent not found errors,
  * and optionally triggers an rpc with the src url as route on a widget.
+ * This method is critical and must be fastest (=> no jQuery, no underscore)
  *
- * @param {JQueryElement} $el
+ * @param {DOM Node} el
  * @param {[Widget]} widget the widget on which the rpc should be performed
  */
-function removeSrcAttribute($el, widget) {
-    $el.find('img, iframe[src]').each(function () {
-        var $el = $(this);
-        var src = $el.attr('src');
-        if (src[0] !== '#' && src !== 'about:blank') {
-            if ($el[0].nodeName === 'IMG') {
-                $el.attr('src', '#test:' + src);
+function removeSrcAttribute(el, widget) {
+    var nodes;
+    if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
+        nodes = [el];
+    } else {
+        nodes = Array.prototype.slice.call(el.getElementsByTagName('img'))
+            .concat(Array.prototype.slice.call(el.getElementsByTagName('iframe')));
+    }
+    var node;
+    while (node = nodes.pop()) {
+        var src = node.attributes.src && node.attributes.src.value;
+        if (src && src !== 'about:blank') {
+            var $el = $(node);
+            node.setAttribute('data-src', src);
+            if (node.nodeName === 'IMG') {
+                node.attributes.removeNamedItem('src');
             } else {
-                $el.attr('data-src', src);
-                $el.attr('src', 'about:blank');
+                node.setAttribute('src', 'about:blank');
             }
             if (widget) {
                 widget._rpc({route: src});
             }
         }
-    });
+    }
 }
 
 var patches = {};
@@ -592,6 +801,7 @@ function patch (target, props) {
         });
     }
 }
+
 /**
  * Unpatches a given Class or Object.
  *
@@ -632,13 +842,17 @@ return $.when(
     }, 0);
     return {
         addMockEnvironment: addMockEnvironment,
+        createActionManager: createActionManager,
         createAsyncView: createAsyncView,
         createModel: createModel,
+        createParent: createParent,
         createView: createView,
         dragAndDrop: dragAndDrop,
+        fieldsViewGet: fieldsViewGet,
         intercept: intercept,
         observe: observe,
         patch: patch,
+        patchDate: patchDate,
         removeSrcAttribute: removeSrcAttribute,
         triggerKeypressEvent: triggerKeypressEvent,
         triggerMouseEvent: triggerMouseEvent,

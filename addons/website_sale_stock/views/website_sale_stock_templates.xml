@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="portal_order_page_shipping" name="Orders Shipping Followup" inherit_id="sale.portal_order_page">
-    <xpath expr="//div[@id='shipping_address']" position="inside">
-      <t t-if="order.picking_ids">
-        <div>
-          <strong>Delivery Orders</strong>
-        </div>
-        <div>
-          <t t-foreach="order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
-            <t t-set="report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
-            <div id='picking_info'>
-              <a t-att-href="report_url"><span class="fa fa-download"/></a>
-              <a t-att-href="report_url"><span t-field="i.name"/></a>
-              <span class="text-muted" t-field="i.date" t-options='{"widget": "date"}'/>
-              <t t-if="i.state == 'done'">
-                <span class="label label-success label-text-align"><i class="fa fa-fw fa-truck"/> Shipped</span>
-              </t>
-              <t t-if="i.state == 'partially_available'">
-                <span class="label label-warning label-text-align"><i class="fa fa-fw fa-clock-o"/> Partially Available</span>
-              </t>
-              <t t-if="i.state == 'cancel'">
-                <span class="label label-danger label-text-align"><i class="fa fa-fw fa-times"/> Cancelled</span>
-              </t>
-              <t t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']">
-                <span class="label label-info label-text-align"><i class="fa fa-fw fa-clock-o"/> Preparation</span>
-              </t>
-            </div>
-          </t>
-        </div>
-      </t>
-    </xpath>
-  </template>
-
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Sale Stock">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_sale_stock/static/src/js/website_sale_stock.js" />
@@ -45,9 +13,11 @@
         </xpath>
         <xpath expr="//div[hasclass('css_quantity')]//i[hasclass('fa-plus')]/.." position="replace">
           <t t-if="line._get_stock_warning(clear=False)">
-            <a t-attf-href="#" class="mb8 input-group-addon">
-              <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" />
-            </a>
+            <div class="input-group-append">
+                <a t-attf-href="#" class="btn btn-link">
+                  <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
+                </a>
+            </div>
           </t>
           <t t-else="1">
             <t>$0</t>
@@ -58,7 +28,7 @@
         </xpath>
         <xpath expr="//div[hasclass('js_cart_lines')]" position="after">
           <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_stock_warning(clear=False)' class="alert alert-warning">
+            <div t-if='website_sale_order._get_stock_warning(clear=False)' class="alert alert-warning" role="alert">
               <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
             </div>
           </t>
@@ -71,16 +41,16 @@
     </xpath>
   </template>
 
-  <template id="website_sale_stock_payment" inherit_id="website_sale.payment">
-    <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
+  <template id="website_sale_stock_payment" inherit_id="website_sale.cart_summary">
+     <xpath expr="//table[@id='cart_products']//td[hasclass('td-qty')]" position="inside">
       <t t-if='line._get_stock_warning(clear=False)'>
-        <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" />
+        <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
       </t>
     </xpath>
     <xpath expr="//table[@id='cart_products']" position="after">
         <t t-if='website_sale_order'>
           <t t-set='warning' t-value='website_sale_order._get_stock_warning(clear=False)' />
-          <div t-if='warning' class="alert alert-warning">
+          <div t-if='warning' class="alert alert-warning" role="alert">
             <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
           </div>
         </t>
@@ -89,4 +59,3 @@
 
 
 </odoo>
-

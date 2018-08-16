@@ -3,34 +3,33 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Gustavo Valverde, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Jose Manuel <admin@jaboweb.com>, 2017
-# Antonio Trueba, 2017
+# Antonio Trueba, 2016
+# Martin Trigaux, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Felix Villafranca Encinas <f.villafranca@obj3ct.es>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Jose Manuel <admin@jaboweb.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# maitaoriana <maitaoriana@gmail.com>, 2017
 # Gelo Joga Landoo <gj@landoo.es>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -74,45 +73,47 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"<p>Hola:</p>\n"
+"            \n"
+"<p>Hola,</p>\n"
 "\n"
 "\n"
-"<p>Han contactado con nosotros los clientes potenciales que se encuentran en su región. Por lo tanto, las siguientes iniciativas han sido asignadas a ${ctx['partner_id'].name}:</p>\n"
+"<p>Hemos sido contactados por los clientes potenciales que se encuentran en su región. Por lo tanto, las siguientes iniciativas han sido asignadas a ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Asunto no definido'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nombre de contacto no definido'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'País no definido' }, ${lead.lead_id.email_from or 'Correo no definido'}, ${lead.lead_id.phone or ''} </li><br/>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
 "% if ctx.get('partner_in_portal'):\n"
-"<p>Conéctese a su <a href=\"${object.get_portal_url()}\">Portal de socio</a> para obtener más detalles. En cada iniciativa hay dos botones en la esquina superior izquierda que debe pulsar después de haber contactado con la misma: \"Me interesa\" y \"No me interesa\".</p>\n"
+"<p>Por favor conectese al <a href=\"${object.get_portal_url()}\">Portal de asociado</a> para obtener más detalles. En cada iniciativa hay dos botones en la esquina superior izquierda que debe pulsar después de haber contactado con la iniciativa: \"Me interesa\" y \"No me interesa\".</p>\n"
 "% else:\n"
 "<p>\n"
-"    Aún no tiene acceso al portal de nuestra base de datos. Póngase en contacto con \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
+"    Usted aún no tiene acceso al portal de nuestra base de datos. Por favor contacte con \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'su administrador de cuentas %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'nosotros'}.\n"
 "</p>\n"
 "% endif\n"
-"<p>La iniciativa será remitida a otra empresa si no se pone en contacto con la misma antes de 20 días.</p>\n"
+"<p>La iniciativa se enviará a otro asociado si no se comunica con el contacto de la iniciativa antes de 20 días.</p>\n"
 "\n"
 "<p>Gracias,</p>\n"
+"\n"
 "\n"
 "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
 "\n"
 "% if not ctx['partner_id'].user_id:\n"
-"P. D.: Parece ser que no tiene un administrador de cuentas asignado. Póngase en contacto con nosotros si es el caso.\n"
+"PD: Parece que usted no tiene un administrador de cuentas asignado a usted, por favor póngase en contacto con nosotros.\n"
 "% endif\n"
 "            "
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__nbr_cases
 msgid "# of Cases"
-msgstr "# de casos"
+msgstr "nº de casos"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_nbr_opportunities
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
-msgstr "# de Oportunidad"
+msgstr "Nº oportunidad"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -124,7 +125,7 @@ msgstr "&amp;times;"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
-msgstr "<i class=\"fa fa-file-text-o\"/> Estoy interesado"
+msgstr "Estoy interesado"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -190,12 +191,12 @@ msgstr "<span>a </span>"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong>Message and communication history</strong>"
-msgstr "<strong>Historial de mensajes y comunicaciones</strong>"
+msgstr "<strong>Histórico de mensajes y comunicaciones</strong>"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -204,7 +205,7 @@ msgstr "Activación"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:100
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_active
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__active
 #, python-format
 msgid "Active"
 msgstr "Activo"
@@ -228,34 +229,30 @@ msgid "All Countries"
 msgstr "Todos los países"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:262
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:263
 #, python-format
 msgid "All fields are required !"
 msgstr "¡Todos los campos son obligatorios!"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__date_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Date"
 msgstr "Fecha de asignación"
 
 #. module: website_crm_partner_assign
-#: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
-msgid "Assign Month"
-msgstr "Asignar mes"
-
-#. module: website_crm_partner_assign
 #: model:ir.actions.server,name:website_crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr "Asignar vendedor del cliente asignado"
+msgstr "Asignar comercial del cliente asignado"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_assign
 msgid "Assignation Date"
 msgstr "Fecha de asignación"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_assigned_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_assigned_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -271,19 +268,14 @@ msgid "Automatic Assignation"
 msgstr "Asignación automática"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Automatically sanitized HTML contents"
 msgstr "Contenido HTML automáticamente saneado"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probability
 msgid "Avg Probability"
 msgstr "Probabilidad media"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
-msgid "Bronze"
-msgstr "Bronce"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_report_assign
@@ -314,12 +306,12 @@ msgid "City"
 msgstr "Ciudad"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_closed
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__date_closed
 msgid "Close Date"
-msgstr "Fecha de cierre"
+msgstr "Fecha cierre"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_company_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__company_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Company"
 msgstr "Compañía"
@@ -356,7 +348,7 @@ msgid "Contact name"
 msgstr "Nombre del contacto"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
 msgid "Contents"
 msgstr "Contenidos"
 
@@ -366,22 +358,22 @@ msgid "Countries..."
 msgstr "Países..."
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_country_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_country_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__country_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__country_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Country"
 msgstr "País"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__create_date
 msgid "Create Date"
-msgstr "Fecha de creación"
+msgstr "Fecha de Creación"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__create_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
@@ -391,20 +383,20 @@ msgid "Created by Partner"
 msgstr "Creado por socio"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_create_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__create_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-msgid "Current stage of the opp"
-msgstr "Estado actual de la oportunidad"
+msgid "Current stage of the opportunity"
+msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__partner_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Customer"
@@ -429,7 +421,7 @@ msgstr "Fecha de asociación"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr "Fecha de revisión"
+msgstr "Fecha revisión"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -437,12 +429,12 @@ msgid "Deadline:"
 msgstr "Fecha límite:"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_open
 msgid "Delay to Assign"
 msgstr "Demora para asignar"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_close
 msgid "Delay to Close"
 msgstr "Tiempo restante para el cierre"
 
@@ -454,17 +446,17 @@ msgstr "Descripción"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Details Next Activity"
-msgstr "Detalles de la siguiente actividad"
+msgstr "Detalles siguiente actividad"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_display_name
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__display_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__display_name
 msgid "Display Name"
-msgstr "Nombre a Mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -525,15 +517,15 @@ msgstr "Filtro por país"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by Level"
-msgstr "Filtro por nivel"
+msgstr "Filtrado por nivel"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
 msgstr "Reenviar iniciativas a"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
 msgstr "Reenviar iniciativas seleccionadas a"
 
@@ -549,14 +541,14 @@ msgid "Fwd: Lead: ${ctx['partner_id'].name}"
 msgstr "Fwd: Iniciativa: ${ctx['partner_id'].name}"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_latitude
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
 msgid "Geo Latitude"
-msgstr "Latitud geográfica"
+msgstr "Geo latitud"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_longitude
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_longitude
 msgid "Geo Longitude"
-msgstr "Longitud geográfica"
+msgstr "Geo longitud"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -565,9 +557,9 @@ msgid "Geolocation"
 msgstr "Geolocalización"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
-#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users__partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
@@ -576,13 +568,8 @@ msgstr ""
 "significa ninguna asignación)"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
-msgid "Gold"
-msgstr "Oro"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_grade_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
 msgid "Grade"
 msgstr "Nivel"
 
@@ -590,7 +577,7 @@ msgstr "Nivel"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -610,79 +597,79 @@ msgid "I am not interested by this lead. I have not contacted the lead."
 msgstr "No me interesa esta iniciativa. No he contactado con la iniciativa."
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
 msgstr "Referencia de implementación"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_count
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_count
 msgid "Implemented Count"
 msgstr "Recuento implementado"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__assigned_partner_id
 msgid "Implemented by"
-msgstr "Asignado por"
+msgstr "Implementado por"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date
 msgid "Invoice Account Date"
-msgstr "Fecha de cuenta de factura"
+msgstr "Fecha Cuenta Factura"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation___last_update
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade___last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation____last_update
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade____last_update
 msgid "Last Modified on"
-msgstr "Última Modificación en"
+msgstr "Última modificación en"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_uid
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__write_uid
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__write_uid
 msgid "Last Updated by"
-msgstr "Última Actualización por"
+msgstr "Última actualización por"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_write_date
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__write_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__write_date
 msgid "Last Updated on"
-msgstr "Última Actualización el"
+msgstr "Última actualización el"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_date_assign
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__date_assign
 msgid "Last date this case was forwarded/assigned to a partner"
 msgstr "Última fecha en la que este caso fue reenviado/asignado a una empresa"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Partner Review"
-msgstr "Ultima revisión"
+msgstr "Ultima revisión de la empresa"
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 msgid "Lead"
 msgstr "Iniciativa"
 
@@ -703,14 +690,9 @@ msgid "Lead Feedback"
 msgstr "Evaluación de la iniciativa"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_location
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
 msgstr "Ubicación de la iniciativa"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
-msgid "Lead Single Links"
-msgstr "Enlaces a iniciativas"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -723,28 +705,33 @@ msgid "Leads Analysis"
 msgstr "Análisis de iniciativas"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_10761
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivel"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
 msgid "Level Name"
-msgstr "Nombre de Nivel"
+msgstr "Nombre Nivel"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__partner_weight
 msgid "Level Weight"
 msgstr "Nível de Peso"
 
 #. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
+msgid "Link to Lead"
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Looking For a Local Store?"
-msgstr "¿Buscando una tienda local?"
+msgstr "¿Buscando un proveedor local?"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:106
@@ -758,11 +745,12 @@ msgid "Low"
 msgstr "Baja"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability_max
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probability_max
 msgid "Max Probability"
 msgstr "Probabilidad max."
 
 #. module: website_crm_partner_assign
+#: selection:crm.lead.report.assign,priority:0
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Medium"
 msgstr "Media"
@@ -795,7 +783,7 @@ msgstr "Mis oportunidades"
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:53
 #: code:addons/website_crm_partner_assign/controllers/main.py:110
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_name
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__name
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #, python-format
@@ -817,7 +805,7 @@ msgstr "Más moderno"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity"
-msgstr "Actividad siguiente"
+msgstr "Actividad sigiuiente"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -825,10 +813,10 @@ msgid "Next Activity Date"
 msgstr "Fecha de la siguiente actividad"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Partner Review"
-msgstr "Próxima revisión"
+msgstr "Próxima revisiónd de la empresa"
 
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
@@ -841,22 +829,17 @@ msgid "No result found"
 msgstr "No se ha encontrado ningún resultado"
 
 #. module: website_crm_partner_assign
-#: selection:crm.lead.report.assign,priority:0
-msgid "Normal"
-msgstr "Normal"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__delay_close
 msgid "Number of Days to close the case"
 msgstr "Número de días para cerrar el caso"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__delay_open
 msgid "Number of Days to open the case"
 msgstr "Número de días para abrir el caso"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_opening_date
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__opening_date
 msgid "Opening Date"
 msgstr "Fecha de apertura"
 
@@ -897,13 +880,13 @@ msgid "Overdue Activities"
 msgstr "Actividades Atrasadas"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__delay_expected
 msgid "Overpassed Deadline"
 msgstr "Fecha límite excedida"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_assigned_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.grade_in_detail
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner"
@@ -921,10 +904,10 @@ msgid "Partner Activations"
 msgstr "Activaciones de empresas"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_forward_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__forward_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__assignation_lines
 msgid "Partner Assignation"
-msgstr "Asignación a empresa"
+msgstr "Asignación empresa"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
@@ -932,37 +915,37 @@ msgstr "Asignación a empresa"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_tree
 msgid "Partner Level"
-msgstr "Nivel de socio"
+msgstr "Nivel partner"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_location
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__partner_location
 msgid "Partner Location"
 msgstr "Ubicación de la empresa"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr "Revisión del socio"
+msgstr "Revisión empresa"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr "Análisis del socio asignado"
+msgstr "Análisis de la empresa asignada"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_declined_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_declined_ids
 msgid "Partner not interested"
-msgstr "Socio no interesado"
+msgstr "Empresa no interesada"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_partner_assigned_id
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead__partner_assigned_id
 msgid "Partner this case has been forwarded/assigned to."
-msgstr "Socio al que este caso ha sido reenviado/asignado."
+msgstr "Empresa a la que este caso ha sido reenviado/asignado."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Partners"
-msgstr "Socios"
+msgstr "Empresas"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -970,9 +953,9 @@ msgid "Partnership Analysis"
 msgstr "Análisis de la relación"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_partnership
 msgid "Partnership Date"
 msgstr "Fecha de asociación"
 
@@ -987,18 +970,13 @@ msgid "Phone"
 msgstr "Teléfono"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_planned_revenue
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__planned_revenue
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
 msgstr "Ingreso previsto"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
-msgid "Platinum"
-msgstr "Platino"
-
-#. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__priority
 msgid "Priority"
 msgstr "Prioridad"
 
@@ -1015,7 +993,7 @@ msgid "Probability"
 msgstr "Probabilidad"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probable_revenue
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__probable_revenue
 msgid "Probable Revenue"
 msgstr "Ingreso estimado"
 
@@ -1032,19 +1010,19 @@ msgstr "Referencias"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.crm_menu_resellers
-#: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.layout
+#: model:website.menu,name:website_crm_partner_assign.menu_resellers
 msgid "Resellers"
 msgstr "Distribuidores"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_team_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_team_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__team_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__team_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Sales Channel"
-msgstr "Canal de ventas"
+msgstr "Canal de Ventas"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1075,10 +1053,10 @@ msgid "Send Mail"
 msgstr "Enviar correo"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence_10762
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation__sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__sequence
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__grade_sequence
 msgid "Sequence"
 msgstr "Secuencia"
 
@@ -1093,11 +1071,6 @@ msgstr "Establecer una dirección de correo electrónico para el socio %s"
 #, python-format
 msgid "Set an email address for the partner(s): %s"
 msgstr "Establecer una dirección de correo electrónico para el socio(s) : %s"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
-msgid "Silver"
-msgstr "Plata"
 
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
@@ -1127,7 +1100,7 @@ msgid "Street2"
 msgstr "Calle2"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_tag_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__tag_ids
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Tags"
 msgstr "Etiquetas"
@@ -1137,6 +1110,11 @@ msgstr "Etiquetas"
 #, python-format
 msgid "The Forward Email Template is not in the database"
 msgstr "La plantilla de redirección de email no existe en la base de datos"
+
+#. module: website_crm_partner_assign
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__website_url
+msgid "The full URL to access the document through the website."
+msgstr "La URL completa para acceder al documento a través del sitio web."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1157,7 +1135,7 @@ msgstr "Actividades de esta Semana"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr "Esta iniciativa es spam"
+msgstr "Esta oportunidad es spam"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1171,23 +1149,23 @@ msgid "Today Activities"
 msgstr "Actividades de Hoy"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_turnover
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__turnover
 msgid "Turnover"
 msgstr "Volumen de negocio"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_type
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__type
 msgid "Type"
 msgstr "Tipo"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_type
+#: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign__type
 msgid "Type is used to separate Leads and Opportunities"
 msgstr "El tipo se utiliza para separar iniciativas y oportunidades"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_user_id
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_user_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign__user_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__user_id
 msgid "User"
 msgstr "Usuario"
 
@@ -1197,9 +1175,14 @@ msgid "Very High"
 msgstr "Muy alta"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_published
 msgid "Visible in Website"
 msgstr "Visible en el sitio web"
+
+#. module: website_crm_partner_assign
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
+msgid "Website URL"
+msgstr "URL del sitio web"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1262,7 +1245,7 @@ msgstr "e.g Asociado de Oro"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "on"
-msgstr "de"
+msgstr "en"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1282,7 +1265,7 @@ msgstr "referencia(s)"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_activation
 msgid "res.partner.activation"
-msgstr "res.partner.activation"
+msgstr "Copy text \t res.partner.activation"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade

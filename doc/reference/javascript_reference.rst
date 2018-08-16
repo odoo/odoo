@@ -95,7 +95,7 @@ assets may be large, but are seldom needed.  In that case, we sometimes want the
 to be loaded lazily.
 
 The main idea is that we define a set of *bundles* in xml.  A bundle is here defined as
-a collection of files (javascript, css, less). In Odoo, the most important
+a collection of files (javascript, css, scss). In Odoo, the most important
 bundles are defined in the file *addons/web/views/webclient_templates.xml*. It looks
 like this:
 
@@ -119,11 +119,11 @@ directive:
 
 Here is what happens when a template is rendered by the server with these directives:
 
-- all the *less* files described in the bundle are compiled into css files. A file
-  named *file.less* will be compiled in a file named *file.less.css*.
+- all the *scss* files described in the bundle are compiled into css files. A file
+  named *file.scss* will be compiled in a file named *file.scss.css*.
 
 - if we are in *debug=assets* mode,
-    - the *t-call-assets* directive with the *t-js* attribute set to false will 
+    - the *t-call-assets* directive with the *t-js* attribute set to false will
       be replaced by a list of stylesheet tags pointing to the css files
     - the *t-call-assets* directive with the *t-css* attribute set to false will
       be replaced by a list of script tags pointing to the js files
@@ -173,7 +173,7 @@ to add a file from that addon.  In that case, it should be done in three steps:
 
     <template id="assets_backend" name="helpdesk assets" inherit_id="web.assets_backend">
         <xpath expr="//script[last()]" position="after">
-            <link rel="stylesheet" href="/helpdesk/static/src/less/helpdesk.less"/>
+            <link rel="stylesheet" type="text/scss" href="/helpdesk/static/src/scss/helpdesk.scss"/>
             <script type="text/javascript" src="/helpdesk/static/src/js/helpdesk_dashboard.js"></script>
         </xpath>
     </template>
@@ -308,12 +308,12 @@ The *odoo.define* method is given three arguments:
 If an error happens, it will be logged (in debug mode) in the console:
 
 * ``Missing dependencies``:
-  These modules do not appear in the page. It is possible that the JavaScript 
+  These modules do not appear in the page. It is possible that the JavaScript
   file is not in the page or that the module name is wrong
 * ``Failed modules``:
   A javascript error is detected
 * ``Rejected modules``:
-  The module returns a rejected deferred. It (and its dependent modules) is not 
+  The module returns a rejected deferred. It (and its dependent modules) is not
   loaded.
 * ``Rejected linked modules``:
   Modules who depend on a rejected module
@@ -1142,6 +1142,84 @@ may need to directly call a controller (available on some route).
         params: { some: kwargs},
     });
 
+Notifications
+==============
+
+The Odoo framework has a standard way to communicate various informations to the
+user: notifications, which are displayed on the top right of the user interface.
+
+There are two types of notifications:
+
+- *notification*: useful to display some feedback.  For example, whenever a user
+  unsubscribed to a channel.
+
+- *warning*: useful to display some important/urgent information.  Typically
+  most kind of (recoverable) errors in the system.
+
+Also, notifications can be used to ask a question to the user without disturbing
+its workflow.  Imagine a phone call received through VOIP: a sticky notification
+could be displayed with two buttons *Accept* and *Decline*.
+
+Notification system
+-------------------
+
+The notification system in Odoo is designed with the following components:
+
+- a *Notification* widget: this is a simple widget that is meant to be created
+  and displayed with the desired information
+
+- a *NotificationService*: a service whose responsability is to create and
+  destroy notifications whenever a request is done (with a custom_event). Note
+  that the web client is a service provider.
+
+- two helper functions in *ServiceMixin*: *do_notify* and *do_warn*
+
+
+Displaying a notification
+-------------------------
+The most common way to display a notification is by using two methods that come
+from the *ServiceMixin*:
+
+- *do_notify(title, message, sticky, className)*:
+    Display a notification of type *notification*.
+
+    - *title*: string. This will be displayed on the top as a title
+
+    - *message*: string, the content of the notification
+
+    - *sticky*: boolean, optional. If true, the notification will stay until the
+      user dismisses it.  Otherwise, the notification will be automatically
+      closed after a short delay.
+
+    - *className*: string, optional.  This is a css class name that will be
+      automatically added to the notification.  This could be useful for styling
+      purpose, even though its use is discouraged.
+
+- *do_warn(title, message, sticky, className)*:
+    Display a notification of type *warning*.
+
+    - *title*: string. This will be displayed on the top as a title
+
+    - *message*: string, the content of the notification
+
+    - *sticky*: boolean, optional. If true, the notification will stay until the
+      user dismisses it.  Otherwise, the notification will be automatically
+      closed after a short delay.
+
+    - *className*: string, optional.  This is a css class name that will be
+      automatically added to the notification.  This could be useful for styling
+      purpose, even though its use is discouraged.
+
+Here are two examples on how to use these methods:
+
+.. code-block:: javascript
+
+    // note that we call _t on the text to make sure it is properly translated.
+    this.do_notify(_t("Success"), _t("Your signature request has been sent."));
+
+    this.do_warn(_t("Error"), _t("Filter name is required."));
+
+
 
 Translation management
 ======================
@@ -1160,7 +1238,7 @@ to be translated.  The way it currently works is the following:
   is found.
 
 Note that translations are explained in more details, from the server point of
-view, in the document :doc:`translations`. 
+view, in the document :doc:`translations`.
 
 There are two important functions for the translations in javascript: *_t* and
 *_lt*.  The difference is that *_lt* is lazily evaluated.
@@ -1280,6 +1358,34 @@ Let us mention the most important ones:
 - the field widgets can be used outside of a view.  Their API is slightly
   awkward, but they are designed to be standalone.
 
+Decorations
+-----------
+
+Like the list view, field widgets have a simple support for decorations. The
+goal of decorations is to have a simple way to specify a text color depending on
+the record current state.  For example,
+
+.. code-block:: xml
+
+    <field name="state" decoration-danger="amount &lt; 10000"/>
+
+The valid decoration names are:
+
+- decoration-bf
+- decoration-it
+- decoration-danger
+- decoration-info
+- decoration-muted
+- decoration-primary
+- decoration-success
+- decoration-warning
+
+Each decoration *decoration-X* will be mapped to a css class *text-X*, which is
+a standard bootstrap css class (except for *text-it* and *text-bf*, which are
+handled by odoo and correspond to italic and bold, respectively).  Note that the
+value of the decoration attribute should be a valid python expression, which
+will be evaluated with the record as evaluation context.
+
 Non relational fields
 ---------------------
 
@@ -1311,6 +1417,26 @@ order.
     or 4.75 correspond to 4:45.
 
     - Supported field types: *float*
+
+- float_factor (FieldFloatFactor)
+    This widget aims to display properly a float value that converted using a factor
+    given in its options. So, for example, the value saved in database is 0.5 and the
+    factor is 3, the widget value should be formatted as 1.5.
+
+    - Supported field types: *float*
+
+- float_toggle (FieldFloatToggle)
+    The goal of this widget is to replace the input field by a button containing a
+    range of possible values (given in the options). Each click allows the user to loop
+    in the range. The purpose here is to restrict the field value to a predefined selection.
+    Also, the widget support the factor conversion as the *float_factor* widget (Range values
+    should be the result of the conversion).
+
+    - Supported field types: *float*
+
+    .. code-block:: xml
+
+        <field name="days_to_close" widget="float_toggle" options='{"factor": 2, "range": [0, 4, 8]}'/>
 
 - boolean (FieldBoolean)
     This is the default field type for fields of type *boolean*.
@@ -1372,8 +1498,10 @@ order.
 
 
 - handle (HandleWidget)
-    This field's job is to be displayed as a *handle* in a list view, and allow
+    This field's job is to be displayed as a *handle* in a list view, and allows
     reordering the various records by drag and dropping lines.
+
+    .. warning:: Having more than one field with a handle widget on the same list is not supported.
 
     - Supported field types: *integer*
 
@@ -1611,7 +1739,7 @@ order.
     - current_value: get the current_value from the field that must be present in the view
     - max_value: get the max_value from the field that must be present in the view
     - edit_max_value: boolean if the max_value is editable
-    - title: title of the bar, displayed on top of the bar --> not translated, 
+    - title: title of the bar, displayed on top of the bar --> not translated,
       use parameter (not option) "title" instead
 
     .. code-block:: xml
@@ -1693,6 +1821,16 @@ Relational fields
 
         <field name="recommended_activity_type_id" widget="radio"
             options="{'horizontal':true}"/>
+
+- selection_badge (FieldSelectionBadge)
+    This is a subfield of FieldSelection, but specialized to display all the
+    valid choices as rectangular badges.
+
+    - Supported field types: *selection, many2one*
+
+    .. code-block:: xml
+
+        <field name="recommended_activity_type_id" widget="selection_badge"/>
 
 - many2one (FieldMany2One)
     Default widget for many2one fields.
@@ -1797,6 +1935,14 @@ Relational fields
     It usually displays data in a sub list view, or a sub kanban view.
 
     - Supported field types: *one2many*
+
+    Options:
+
+    - create_text: a string that is used to customize the 'Add' label/text.
+
+    .. code-block:: xml
+
+        <field name="turtles" options="{\'create_text\': \'Add turtle\'}">
 
 - statusbar (FieldStatus)
     This is a really specialized widget for the form views. It is the bar on top

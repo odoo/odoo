@@ -41,6 +41,7 @@ odoo.define('portal.signature_form', function (require){
                 'color': '#000',
                 'background-color': '#fff',
                 'height': '142px',
+                'width': '100%', // prevent the signature from being too big
             });
             this.empty_sign = this.$("#o_portal_signature").jSignature('getData', 'image');
         },
@@ -61,8 +62,8 @@ odoo.define('portal.signature_form', function (require){
             var signature = self.$("#o_portal_signature").jSignature('getData', 'image');
             var is_empty = signature ? this.empty_sign[1] === signature[1] : true;
 
-            this.$('#o_portal_sign_name').parent().toggleClass('has-error', !partner_name);
-            this.$('#o_portal_sign_draw').toggleClass('panel-danger', is_empty).toggleClass('panel-default', !is_empty);
+            this.$('#o_portal_sign_name').parent().toggleClass('o_has_error', !partner_name).find('.form-control, .custom-select').toggleClass('is-invalid', !partner_name);
+            this.$('#o_portal_sign_draw').toggleClass('bg-danger text-white', is_empty);
             if (is_empty || ! partner_name) {
                 return false;
             }
@@ -80,8 +81,9 @@ odoo.define('portal.signature_form', function (require){
                 },
             }).then(function (data) {
                 self.$('.fa-spinner').remove();
-                self.$('#o_portal_sign_accept').prepend('<div>PROUT' + data + '</div>');
                 if (data.error) {
+                    self.$('.o_portal_sign_error_msg').remove();
+                    $confirm_btn.before(qweb.render('portal.portal_signature_error', {message: data.error}));
                     $confirm_btn.attr('disabled', false);
                 }
                 else if (data.success) {
@@ -110,6 +112,11 @@ odoo.define('portal.signature_form', function (require){
             var $elem = $(this);
             var form = new SignatureForm(null, $elem.data());
             form.appendTo($elem);
+        });
+        // Make the signature responsive when it is displayed in bootstrap modal.
+        // More precisely it is too small if this code is not here.
+        $('.o_portal_signature_form').parents('.modal').on('shown.bs.modal', function (ev) {
+            $('.o_portal_signature_form').trigger('resize');
         });
     });
 

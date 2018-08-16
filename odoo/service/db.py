@@ -71,7 +71,10 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
             if country_code:
                 countries = env['res.country'].search([('code', 'ilike', country_code)])
                 if countries:
-                    env['res.company'].browse(1).country_id = countries[0]
+                    comp_local = {'country_id': countries[0].id}
+                    if countries[0].currency_id:
+                        comp_local['currency_id'] = countries[0].currency_id.id
+                    env['res.company'].browse(1).write(comp_local)
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
@@ -97,7 +100,13 @@ def _create_empty_database(name):
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             cr.autocommit(True)     # avoid transaction block
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
+
+            # 'C' collate is only safe with template0, but provides more useful indexes
+            collate = "LC_COLLATE 'C'" if chosen_template == 'template0' else ""
+            cr.execute(
+                """CREATE DATABASE "%s" ENCODING 'unicode' %s TEMPLATE "%s" """ %
+                (name, collate, chosen_template)
+            )
 
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
@@ -365,22 +374,11 @@ def list_dbs(force=False):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
-            db_user = odoo.tools.config["db_user"]
-            if not db_user and os.name == 'posix':
-                import pwd
-                db_user = pwd.getpwuid(os.getuid())[0]
-            if not db_user:
-                cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (odoo.tools.config["db_name"],))
-                res = cr.fetchone()
-                db_user = res and str(res[0])
-            if db_user:
-                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
-            else:
-                cr.execute("select datname from pg_database where not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
+            cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=current_user) and not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
             res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
         except Exception:
+            _logger.exception('Listing databases failed:')
             res = []
-    res.sort()
     return res
 
 def list_db_incompatible(databases):
@@ -421,7 +419,7 @@ def exp_list_lang():
 
 def exp_list_countries():
     list_countries = []
-    root = ET.parse(os.path.join(odoo.tools.config['root_path'], 'addons/base/res/res_country_data.xml')).getroot()
+    root = ET.parse(os.path.join(odoo.tools.config['root_path'], 'addons/base/data/res_country_data.xml')).getroot()
     for country in root.find('data').findall('record[@model="res.country"]'):
         name = country.find('field[@name="name"]').text
         code = country.find('field[@name="code"]').text

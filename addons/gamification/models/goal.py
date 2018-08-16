@@ -224,8 +224,9 @@ class Goal(models.Model):
             .render_template(template.body_html, 'gamification.goal', self.id)
         self.env['mail.thread'].message_post(
             body=body_html,
-            partner_ids=[ self.user_id.partner_id.id],
-            subtype='mail.mt_comment'
+            partner_ids=[self.user_id.partner_id.id],
+            subtype='mail.mt_comment',
+            notif_layout='mail.mail_notification_light',
         )
 
         return {'to_update': True}

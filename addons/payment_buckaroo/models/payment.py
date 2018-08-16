@@ -168,29 +168,23 @@ class TxBuckaroo(models.Model):
         data = normalize_keys_upper(data)
         status_code = int(data.get('BRQ_STATUSCODE', '0'))
         if status_code in self._buckaroo_valid_tx_status:
-            self.write({
-                'state': 'done',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_done()
             return True
         elif status_code in self._buckaroo_pending_tx_status:
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_pending()
             return True
         elif status_code in self._buckaroo_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_cancel()
             return True
         else:
             error = 'Buckaroo: feedback error'
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
+            self._set_transaction_cancel()
             return False

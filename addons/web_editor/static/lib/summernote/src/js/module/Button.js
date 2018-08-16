@@ -21,10 +21,10 @@ define([
        * @param {Number} value
        */
       var checkDropdownMenu = function ($btn, value) {
-        $btn.find('.dropdown-menu li a').each(function () {
+        $btn.find('.dropdown-menu .dropdown-item').each(function () {
           // always compare string to avoid creating another func.
           var isChecked = ($(this).data('value') + '') === (value + '');
-          this.className = isChecked ? 'checked' : '';
+          this.className = 'dropdown-item' + (isChecked ? ' checked' : '');
         });
       };
 
@@ -43,17 +43,17 @@ define([
       if (styleInfo.image) {
         var $img = $(styleInfo.image);
 
-        btnState('button[data-event="imageShape"][data-value="img-rounded"]', function () {
-          return $img.hasClass('img-rounded');
+        btnState('button[data-event="imageShape"][data-value="rounded"]', function () {
+          return $img.hasClass('rounded');
         });
-        btnState('button[data-event="imageShape"][data-value="img-circle"]', function () {
-          return $img.hasClass('img-circle');
+        btnState('button[data-event="imageShape"][data-value="rounded-circle"]', function () {
+          return $img.hasClass('rounded-circle');
         });
         btnState('button[data-event="imageShape"][data-value="img-thumbnail"]', function () {
           return $img.hasClass('img-thumbnail');
         });
         btnState('button[data-event="imageShape"]:not([data-value])', function () {
-          return !$img.is('.img-rounded, .img-circle, .img-thumbnail');
+          return !$img.is('.rounded, .rounded-circle, .img-thumbnail');
         });
 
         var imgFloat = $img.css('float');

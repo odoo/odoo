@@ -25,10 +25,10 @@ odoo.define('web.AbstractView', function (require) {
 
 var ajax = require('web.ajax');
 var Class = require('web.Class');
-var Context = require('web.Context');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
+var utils = require('web.utils');
 
 var AbstractView = Class.extend({
     // name displayed in view switchers
@@ -40,12 +40,17 @@ var AbstractView = Class.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
-
     // determine if a search view should be displayed in the control panel and
     // allowed to interact with the view.  Currently, the only not searchable
     // views are the form view and the diagram view.
     searchable: true,
-
+    // viewType is the type of the view, like 'form', 'kanban', 'list'...
+    viewType: undefined,
+    // if searchable, this flag determines if the search view will display a
+    // groupby menu or not.  This is useful for the views which do not support
+    // grouping data.
+    groupable: true,
+    enableTimeRangeMenu: false,
     config: {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
@@ -67,33 +72,105 @@ var AbstractView = Class.extend({
      * @param {string} params.modelName The actual model name
      * @param {Object} params.context
      * @param {number} [params.count]
+     * @param {string} [params.controllerID]
      * @param {string[]} params.domain
+     * @param {string[][]} params.timeRange
+     * @param {string[][]} params.comparisonTimeRange
+     * @param {string} params.timeRangeDescription
+     * @param {string} params.comparisonTimeRangeDescription
+     * @param {boolean} params.compare
      * @param {string[]} params.groupBy
      * @param {number} [params.currentId]
+     * @param {boolean} params.isEmbedded
      * @param {number[]} [params.ids]
+     * @param {boolean} [params.withControlPanel]
+     * @param {boolean} [params.action.flags.headless]
+     * @param {string} [params.action.display_name]
+     * @param {string} [params.action.name]
      * @param {string} [params.action.help]
+     * @param {string} [params.action.jsID]
+     * @param {boolean} [params.action.views]
      */
     init: function (viewInfo, params) {
+        // in general, the fieldsView has to be processed by the View (e.g. the
+        // arch is a string that needs to be parsed) ; the only exception is for
+        // inline form views inside form views, as they are processed alongside
+        // the main view, but they are opened in a FormViewDialog which
+        // instantiates another FormView (unlike kanban or list subviews for
+        // which only a Renderer is instantiated)
+        if (typeof viewInfo.arch === 'string') {
+            this.fieldsView = this._processFieldsView(viewInfo);
+        } else {
+            this.fieldsView = viewInfo;
+        }
+        this.fields = this.fieldsView.viewFields;
+        this.arch = this.fieldsView.arch;
+        // the boolean parameter 'isEmbedded' determines if the view should be considered
+        // as a subview. For now this is only used by the graph controller that appends a
+        // 'Group By' button beside the 'Measures' button when the graph view is embedded.
+        this.isEmbedded = params.isEmbedded || false;
+
         this.rendererParams = {
-            arch: viewInfo.arch,
+            arch: this.arch,
             noContentHelp: params.action && params.action.help,
         };
+
+        var timeRangeMenuData = params.context.timeRangeMenuData;
+        var timeRange = [];
+        var comparisonTimeRange = [];
+        var compare = false;
+        var timeRangeDescription = "";
+        var comparisonTimeRangeDescription = "";
+        if (this.enableTimeRangeMenu && timeRangeMenuData) {
+            timeRange = timeRangeMenuData.timeRange;
+            comparisonTimeRange = timeRangeMenuData.comparisonTimeRange;
+            compare = comparisonTimeRange.length > 0;
+            timeRangeDescription = timeRangeMenuData.timeRangeDescription;
+            comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription;
+            this.rendererParams.timeRangeDescription = timeRangeDescription;
+            this.rendererParams.comparisonTimeRangeDescription = comparisonTimeRangeDescription;
+        }
 
         this.controllerParams = {
             modelName: params.modelName,
             activeActions: {
-                edit: viewInfo.arch.attrs.edit ? JSON.parse(viewInfo.arch.attrs.edit) : true,
-                create: viewInfo.arch.attrs.create ? JSON.parse(viewInfo.arch.attrs.create) : true,
-                delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
-                duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
             },
+            groupable: this.groupable,
+            enableTimeRangeMenu: this.enableTimeRangeMenu,
+            isEmbedded: this.isEmbedded,
+            controllerID: params.controllerID,
+            bannerRoute: this.arch.attrs.banner_route,
         };
+        // AAB: these params won't be necessary as soon as the ControlPanel will
+        // be instantiated by the View
+        this.controllerParams.displayName = params.action && (params.action.display_name || params.action.name);
+        this.controllerParams.isMultiRecord = this.multi_record;
+        this.controllerParams.searchable = this.searchable;
+        this.controllerParams.searchView = params.action && params.action.searchView;
+        this.controllerParams.searchViewHidden = this.searchview_hidden; // AAB: use searchable instead where it is used?
+        this.controllerParams.actionViews = params.action ? params.action.views : [];
+        this.controllerParams.viewType = this.viewType;
+        this.controllerParams.withControlPanel = true;
+        if (params.action && params.action.flags) {
+            this.controllerParams.withControlPanel = !params.action.flags.headless;
+        } else if ('withControlPanel' in params) {
+            this.controllerParams.withControlPanel = params.withControlPanel;
+        }
 
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
                    this.controllerParams.ids.length) || 0,
             domain: params.domain,
+            timeRange: timeRange,
+            timeRangeDescription: timeRangeDescription,
+            comparisonTimeRange: comparisonTimeRange,
+            comparisonTimeRangeDescription: comparisonTimeRangeDescription,
+            compare: compare,
             groupedBy: params.groupBy,
             modelName: params.modelName,
             res_id: params.currentId,
@@ -106,7 +183,7 @@ var AbstractView = Class.extend({
         //   'name,id desc'
         // but we need it like:
         //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
-        var defaultOrder = viewInfo.arch.attrs.default_order;
+        var defaultOrder = this.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
                 order = order.trim().split(' ');
@@ -133,7 +210,7 @@ var AbstractView = Class.extend({
      * load itself, and the renderer needs the data in its constructor.
      *
      * @param {Widget} parent The parent of the resulting Controller (most
-     *      likely a view manager)
+     *      likely an action manager)
      * @returns {Deferred} The deferred resolves to a controller
      */
     getController: function (parent) {
@@ -210,70 +287,20 @@ var AbstractView = Class.extend({
         return model.load(this.loadParams);
     },
     /**
-     * Loads the subviews for x2many fields when they are not inline
+     * Processes a fieldsView. In particular, parses its arch.
      *
      * @private
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @returns {Deferred}
+     * @param {Object} fieldsView
+     * @param {string} fieldsView.arch
+     * @returns {Object} the processed fieldsView
      */
-    _loadSubviews: function (parent) {
-        var self = this;
-        var defs = [];
-        if (this.loadParams && this.loadParams.fieldsInfo) {
-            var fields = this.loadParams.fields;
-
-            _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
-                var field = fields[fieldName];
-                if (!field) {
-                    // when a one2many record is opened in a form view, the fields
-                    // of the main one2many view (list or kanban) are added to the
-                    // fieldsInfo of its form view, but those fields aren't in the
-                    // loadParams.fields, as they are not displayed in the view, so
-                    // we can ignore them.
-                    return;
-                }
-                if (field.type !== 'one2many' && field.type !== 'many2many') {
-                    return;
-                }
-
-                if (attrs.Widget.prototype.useSubview && !attrs.__no_fetch && !attrs.views[attrs.mode]) {
-                    var context = {};
-                    var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
-                    var matches;
-                    while (matches = regex.exec(attrs.context)) {
-                        context[matches[1]] = matches[2];
-                    }
-                    defs.push(parent.loadViews(
-                            field.relation,
-                            new Context(context, self.userContext, self.loadParams.context),
-                            [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
-                        .then(function (views) {
-                            for (var viewName in views) {
-                                attrs.views[viewName] = views[viewName];
-                            }
-                            self._setSubViewLimit(attrs);
-                        }));
-                } else {
-                    self._setSubViewLimit(attrs);
-                }
-            });
-        }
-        return $.when.apply($, defs);
-    },
-    /**
-     * We set here the limit for the number of records fetched (in one page).
-     * This method is only called for subviews, not for main views.
-     *
-     * @private
-     * @param {Object} attrs
-     */
-    _setSubViewLimit: function (attrs) {
-        var view = attrs.views && attrs.views[attrs.mode];
-        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit);
-        if (!limit && attrs.widget === 'many2many_tags') {
-            limit = 1000;
-        }
-        attrs.limit = limit || 40;
+    _processFieldsView: function (fieldsView) {
+        var fv = _.extend({}, fieldsView);
+        var doc = $.parseXML(fv.arch).documentElement;
+        var stripWhitespaces = doc.nodeName.toLowerCase() !== 'kanban';
+        fv.arch = utils.xml_to_json(doc, stripWhitespaces);
+        fv.viewFields = _.defaults({}, fv.viewFields, fv.fields);
+        return fv;
     },
 });
 

@@ -13,7 +13,7 @@ class TrackTag(models.Model):
 
     name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index', default=10)
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -65,7 +65,7 @@ class Track(models.Model):
     partner_biography = fields.Html('Speaker Biography')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     stage_id = fields.Many2one(
-        'event.track.stage', string='Stage',
+        'event.track.stage', string='Stage', ondelete='restrict',
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, track_visibility='onchange')
@@ -139,7 +139,12 @@ class Track(models.Model):
         track = self[0]
         changes, tracking_value_ids = tracking[track.id]
         if 'stage_id' in changes and track.stage_id.mail_template_id:
-            res['stage_id'] = (track.stage_id.mail_template_id, {'composition_mode': 'mass_mail'})
+            res['stage_id'] = (track.stage_id.mail_template_id, {
+                'composition_mode': 'comment',
+                'auto_delete_message': True,
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'notif_layout': 'mail.mail_notification_light'
+            })
         return res
 
     @api.multi
@@ -159,7 +164,7 @@ class Track(models.Model):
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, *args, **kwargs):
         if self.partner_email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -171,7 +176,7 @@ class Track(models.Model):
                     ('partner_email', '=', new_partner.email),
                     ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message)
+        return super(Track, self)._message_post_after_hook(message, *args, **kwargs)
 
     @api.multi
     def open_track_speakers_list(self):

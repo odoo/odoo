@@ -118,11 +118,15 @@ class PaymentTransactionStripe(models.Model):
             charge_params['card'] = str(tokenid)
         if email:
             charge_params['receipt_email'] = email.strip()
+
+        _logger.info('_create_stripe_charge: Sending values to URL %s, values:\n%s', api_url_charge, pprint.pformat(charge_params))
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,
                           headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
@@ -140,16 +144,18 @@ class PaymentTransactionStripe(models.Model):
             'metadata[reference]': self.reference,
         }
 
+        _logger.info('_create_stripe_refund: Sending values to URL %s, values:\n%s', api_url_refund, pprint.pformat(refund_params))
         r = requests.post(api_url_refund,
                             auth=(self.acquirer_id.stripe_secret_key, ''),
                             params=refund_params,
                             headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
-        self.state = 'refunding'
         result = self._create_stripe_refund()
         return self._stripe_s2s_validate_tree(result)
 
@@ -184,18 +190,17 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state not in ('draft', 'pending', 'refunding'):
+        if self.state != 'draft':
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         if status == 'succeeded':
-            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': new_state,
-                'date_validate': fields.datetime.now(),
+                'date': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
+            self._set_transaction_done()
             self.execute_callback()
             if self.payment_token_id:
                 self.payment_token_id.verified = True
@@ -204,11 +209,11 @@ class PaymentTransactionStripe(models.Model):
             error = tree['error']['message']
             _logger.warn(error)
             self.sudo().write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('id'),
-                'date_validate': fields.datetime.now(),
+                'date': fields.datetime.now(),
             })
+            self._set_transaction_cancel()
             return False
 
     @api.multi

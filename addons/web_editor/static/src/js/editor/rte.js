@@ -1,12 +1,12 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
+var base = require('web_editor.base');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var summernote = require('web_editor.summernote');
-var weWidgets = require('web_editor.widget');
 
 var _t = core._t;
 
@@ -257,7 +257,7 @@ var RTEWidget = Widget.extend({
 
         this._getConfig = getConfig || this._getDefaultConfig;
 
-        weWidgets.computeFonts();
+        base.computeFonts();
     },
     /**
      * @override
@@ -269,6 +269,20 @@ var RTEWidget = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
+        $(document).on('click.rte keyup.rte', function () {
+            var current_range = {};
+            try {
+                current_range = range.create() || {};
+            } catch (e) {
+                // if range is on Restricted element ignore error
+            }
+            var $popover = $(current_range.sc).closest('[contenteditable]');
+            var popover_history = ($popover.data()||{}).NoteHistory;
+            if (!popover_history || popover_history === history) return;
+            var editor = $popover.parent('.note-editor');
+            $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+            $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
+        });
         $(document).on('mousedown.rte activate.rte', this, this._onMousedown.bind(this));
         $(document).on('mouseup.rte', this, this._onMouseup.bind(this));
 
@@ -302,7 +316,7 @@ var RTEWidget = Widget.extend({
 
         $('body').addClass('editor_enable');
 
-        $(document)
+        $(document.body)
             .tooltip({
                 selector: '[data-oe-readonly]',
                 container: 'body',
@@ -347,8 +361,10 @@ var RTEWidget = Widget.extend({
         $('#wrapwrap, .o_editable').off('.rte');
 
         $('.o_not_editable').removeAttr('contentEditable');
+
+        $(document).off('click.rte keyup.rte mousedown.rte activate.rte mouseup.rte');
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
-        $(document).tooltip('destroy');
+        $(document).tooltip('dispose');
         $('body').removeClass('editor_enable');
         this.trigger('rte:stop');
     },

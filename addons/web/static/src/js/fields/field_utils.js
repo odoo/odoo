@@ -29,12 +29,12 @@ var _t = core._t;
 
 /**
  * Convert binary to bin_size
- * 
+ *
  * @param {string} [value] base64 representation of the binary (might be already a bin_size!)
  * @param {Object} [field]
- *        a description of the field (note: this parameter is ignored) 
+ *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options (note: this parameter is ignored)
- * 
+ *
  * @returns {string} bin_size (which is human-readable)
  */
 function formatBinary(value, field, options) {
@@ -171,6 +171,21 @@ function formatFloat(value, field, options) {
     var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
     return formatted.join(l10n.decimal_point);
+}
+
+
+/**
+ * Returns a string representing a float value, from a float converted with a
+ * factor.
+ *
+ * @param {number} value
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ * @returns {string}
+ */
+function formatFloatFactor(value, field, options) {
+    var factor = options.factor || 1;
+    return formatFloat(value * factor, field, options);
 }
 
 /**
@@ -320,7 +335,19 @@ function formatMonetary(value, field, options) {
         return currency.symbol + '&nbsp;' + formatted_value;
     }
 }
-
+/**
+ * Returns a string representing the given value (multiplied by 100)
+ * concatenated with '%'.
+ *
+ * @param {number | false} value
+ * @param {Object} [field]
+ * @param {Object} [options]
+ * @returns {string}
+ */
+function formatPercentage(value, field, options) {
+    value = formatFloat(value * 100, field, options) || '0';
+    return parseFloat(value) + "%";
+}
 /**
  * Returns a string representing the value of the selection.
  *
@@ -516,6 +543,18 @@ function parseMonetary(value, field, options) {
     return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
 }
 
+/**
+ * Parse a String containing float and unconvert it with a conversion factor
+ *
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ */
+function parseFloatFactor(value, field, options) {
+    var parsed = parseFloat(value);
+    var factor = options.factor || 1.0;
+    return parsed / factor;
+}
+
 function parseFloatTime(value) {
     var factor = 1;
     if (value[0] === '-') {
@@ -584,6 +623,7 @@ return {
         date: formatDate,
         datetime: formatDateTime,
         float: formatFloat,
+        float_factor: formatFloatFactor,
         float_time: formatFloatTime,
         html: _.identity, // todo
         integer: formatInteger,
@@ -591,6 +631,7 @@ return {
         many2one: formatMany2one,
         monetary: formatMonetary,
         one2many: formatX2Many,
+        percentage: formatPercentage,
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
@@ -602,6 +643,7 @@ return {
         date: parseDate, // todo
         datetime: parseDateTime, // todo
         float: parseFloat,
+        float_factor: parseFloatFactor,
         float_time: parseFloatTime,
         html: _.identity, // todo
         integer: parseInteger,

@@ -15,7 +15,7 @@ class ActivityReport(models.Model):
     date = fields.Datetime('Date', readonly=True)
     author_id = fields.Many2one('res.partner', 'Created By', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Lead", readonly=True)
     subject = fields.Char('Summary', readonly=True)
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', readonly=True)
@@ -51,7 +51,6 @@ class ActivityReport(models.Model):
                 l.active,
                 l.probability
         """
-
 
     def _from(self):
         return """

@@ -46,5 +46,9 @@
             <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
+        <function model="account.chart.template" name="try_loading_for_current_company">
+            <value eval="[ref('l10n_hn.cuentas_plantilla')]"/>
+        </function>
+
     </data>
 </odoo>

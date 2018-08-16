@@ -3,18 +3,16 @@
 # * google_account
 # 
 # Translators:
-# liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
+# liulixia <liu.lixia@elico-corp.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,37 +21,37 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
+#: model:ir.model.fields,field_description:google_account.field_google_service__create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_create_date
+#: model:ir.model.fields,field_description:google_account.field_google_service__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_display_name
+#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_id
+#: model:ir.model.fields,field_description:google_account.field_google_service__id
 msgid "ID"
 msgstr "ID"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service___last_update
+#: model:ir.model.fields,field_description:google_account.field_google_service____last_update
 msgid "Last Modified on"
-msgstr "最后修改时间"
+msgstr "最后修改日"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_uid
+#: model:ir.model.fields,field_description:google_account.field_google_service__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: google_account
-#: model:ir.model.fields,field_description:google_account.field_google_service_write_date
+#: model:ir.model.fields,field_description:google_account.field_google_service__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
@@ -61,7 +59,7 @@ msgstr "最后更新时间"
 #: code:addons/google_account/models/google_service.py:171
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
-msgstr "[GET, POST, PUT, PATCH or DELETE] 中不包括不支持 [%s] 的方法！"
+msgstr "方法 [%s] 不被 [GET, POST, PUT, PATCH 或 DELETE]支持!"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:119
@@ -69,7 +67,7 @@ msgstr "[GET, POST, PUT, PATCH or DELETE] 中不包括不支持 [%s] 的方法�
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
-msgstr "你的令牌生成过程中出错了。你的验证代码可能是无效的"
+msgstr "令牌生成过程中出错了。请重新申请授权码。"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:55
@@ -77,7 +75,7 @@ msgstr "你的令牌生成过程中出错了。你的验证代码可能是无效
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
-msgstr "令牌生成过程中出错了。或许你的授权码无效或已过期"
+msgstr "令牌生成过程中出错了。或许您的授权码无效或已过期。"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:149
@@ -85,19 +83,19 @@ msgstr "令牌生成过程中出错了。或许你的授权码无效或已过期
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
-msgstr "你的令牌生成过程中出错了。或许你的授权码无效已过期[%s]"
+msgstr "令牌生成过程中出错了。或许您的授权码无效已过期 [%s]"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:192
 #, python-format
 msgid "Something went wrong with your request to google"
-msgstr "你对谷歌的申请出错了"
+msgstr "你对谷歌的访问出错了"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:130
 #, python-format
-msgid "The account for the Google service '%s' is not configured"
-msgstr "未配置 Google 服务 '%s' 的账户"
+msgid "The account for the Google service '%s' is not configured."
+msgstr ""
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service

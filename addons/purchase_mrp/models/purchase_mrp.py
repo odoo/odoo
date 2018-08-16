@@ -5,13 +5,17 @@ from odoo import fields, models
 from odoo.tools import float_compare
 
 
+class MrpProduction(models.Model):
+    _inherit = 'mrp.production'
+
+    def _get_document_iterate_key(self, move_raw_id):
+        return super(MrpProduction, self)._get_document_iterate_key(move_raw_id) or 'created_purchase_line_id'
+
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", store=True, compute_sudo=True)
-
-    def _compute_qty_received(self):
-        super(PurchaseOrderLine, self)._compute_qty_received()
+    def _update_received_qty(self):
+        super(PurchaseOrderLine, self)._update_received_qty()
         for line in self.filtered(lambda x: x.move_ids and x.product_id.id not in x.move_ids.mapped('product_id').ids):
             bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id)
             if bom and bom.type == 'phantom':
@@ -29,6 +33,8 @@ class PurchaseOrderLine(models.Model):
             else:
                 return 0.0
 
+    def _get_upstream_documents_and_responsibles(self, visited):
+        return [(self.order_id, self.order_id.user_id, visited)]
 
 class StockMove(models.Model):
     _inherit = 'stock.move'

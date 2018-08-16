@@ -18,7 +18,9 @@
                         <h1><field name="name" class="oe_inline" readonly="1"/></h1>
                     </div>
                     <group>
-                        <field name="user_id"/>
+                        <group>
+                            <field name="user_id"/>
+                        </group>
                     </group>
                     <separator string="Pickings"/>
                     <field name="picking_ids" widget="many2many" domain="[('state', 'not in', ('done', 'cancel'))]" options="{'not_delete': True}">
@@ -72,7 +74,7 @@
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left"/>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
                             </div>
                         </div>
@@ -90,8 +92,8 @@
                 <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Batch Pickings not finished"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                 </group>
            </search>
         </field>
@@ -105,8 +107,8 @@
         <field name="context">{"search_default_in_progress" : True,}</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a Batch Picking.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new batch picking
           </p><p>
             The goal of the batch picking is to group operations that may
             (needs to) be done together in order to increase their efficiency.
@@ -133,7 +135,7 @@
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='picking_type']" position="after">
-                <filter string="Batch" domain="[]" context="{'group_by':'batch_id'}"/>
+                <filter string="Batch" name="batch" domain="[]" context="{'group_by':'batch_id'}"/>
             </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="batch_id"/>
