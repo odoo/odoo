@@ -22,7 +22,7 @@
                                 "/>
                             )</b>
                         </div>
-                        <div class="text-right text-muted d-inline-block" name="address" attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_print','=', False)]}">
+                        <div class="text-right text-muted d-inline-block" name="address" attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('snailmail_is_letter','=', False)]}">
                             <span> to: </span>
                             <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
                         </div>
