@@ -60,11 +60,9 @@ class AccountInvoice(models.Model):
         journal_id = self_ctx._default_journal().id
         self_ctx = self_ctx.with_context(journal_id=journal_id)
 
-        AccountTaxSudo = self.env['account.tax'].sudo()
-
         # self could be a single record (editing) or be empty (new).
         with Form(self_ctx, view='account.invoice_supplier_form') as invoice_form:
-            
+
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
             elements = tree.xpath('//ram:SellerTradeParty/ram:Name', namespaces=tree.nsmap)
             partner_name = elements and elements[0].text
@@ -123,45 +121,61 @@ class AccountInvoice(models.Model):
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
                 invoice_form.date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-            # Lines.
-            elements = tree.xpath('//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax', namespaces=tree.nsmap)
+            # Invoice lines.
+            elements = tree.xpath('//ram:IncludedSupplyChainTradeLineItem', namespaces=tree.nsmap)
             if elements:
                 for element in elements:
-                    line_elements = element.xpath('.//ram:RateApplicablePercent', namespaces=tree.nsmap)
-                    percentage = line_elements and float(line_elements[0].text)
+                    with invoice_form.invoice_line_ids.new() as invoice_line_form:
 
-                    # Name.
-                    line_name = '%s%s%s' % (
-                        partner_name and partner_name + ' ' or '',
-                        _('Tax'),
-                        percentage and ' %s%%' % str(percentage) or '',
-                    )
+                        # Sequence.
+                        line_elements = element.xpath('.//ram:AssociatedDocumentLineDocument/ram:LineID', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.sequence = int(line_elements[0].text)
 
-                    # Price Unit.
-                    line_elements = element.xpath('.//ram:BasisAmount', namespaces=tree.nsmap)
-                    price_unit = line_elements and float(line_elements[0].text) or 0.0
+                        # Product.
+                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:Name', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.name = line_elements[0].text
+                        line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', namespaces=tree.nsmap)
+                        if line_elements and line_elements[0].text:
+                            product = self.env['product.product'].search([('default_code', '=', line_elements[0].text)])
+                            if product:
+                                invoice_line_form.product_id = product
 
-                    # Tax.
-                    tax = None
-                    if percentage is not None:
-                        if invoice_form.fiscal_position_id:
-                            tax = invoice_form.fiscal_position_id.tax_ids.map('tax_dest_id')\
-                                .filtered(lambda t: t.amount_type == 'percent' and t.amount == percentage)
+                        # Price Unit.
+                        line_elements = element.xpath('.//ram:GrossPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.price_unit = float(line_elements[0].text)
                         else:
-                            tax = AccountTaxSudo.search([
+                            line_elements = element.xpath('.//ram:NetPriceProductTradePrice/ram:ChargeAmount', namespaces=tree.nsmap)
+                            if line_elements:
+                                invoice_line_form.price_unit = float(line_elements[0].text)
+
+                        # Quantity.
+                        line_elements = element.xpath('.//ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.quantity = float(line_elements[0].text) * refund_sign
+
+                        # Discount.
+                        line_elements = element.xpath('.//ram:AppliedTradeAllowanceCharge/ram:CalculationPercent', namespaces=tree.nsmap)
+                        if line_elements:
+                            invoice_line_form.discount = float(line_elements[0].text)
+
+                        # Taxes
+                        line_elements = element.xpath('//ram:SpecifiedLineTradeSettlement/ram:RateApplicablePercent', namespaces=tree.nsmap)
+                        invoice_line_form.invoice_line_tax_ids.clear()
+                        for tax_element in line_elements:
+                            percentage = float(tax_element.text)
+
+                            tax = self.env['account.tax'].search([
                                 ('company_id', '=', invoice_form.company_id.id),
                                 ('amount_type', '=', 'percent'),
+                                ('type', '=', 'purchase'),
                                 ('amount', '=', percentage),
                             ])
 
-                    with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                        invoice_line_form.name = line_name
-                        invoice_line_form.price_unit = price_unit
-                        invoice_line_form.quantity = 1
-
-                        if tax:
-                            invoice_line_form.invoice_line_tax_ids.clear()
-                            invoice_line_form.invoice_line_tax_ids.add(tax)
+                            if tax:
+                                invoice_line_form.invoice_line_tax_ids.add(tax)
             elif amount_total_import:
                 # No lines in BASICWL.
                 with invoice_form.invoice_line_ids.new() as invoice_line_form:
