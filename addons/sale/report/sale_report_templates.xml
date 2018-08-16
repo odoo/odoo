@@ -66,7 +66,7 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
-            />
+
             <table class="table table-sm">
                 <thead>
                     <tr>
@@ -153,7 +153,7 @@
 
             <div class="clearfix">
                 <div class="row" name="total">
-                    <div class="col-4 float-right">
+                    <div class="col-4 ml-auto">
                         <table class="table table-sm" style="min-width: 200px;max-width: 350px;">
                             <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                 <td><strong>Subtotal</strong></td>

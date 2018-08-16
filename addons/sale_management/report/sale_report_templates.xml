@@ -2,9 +2,9 @@
 <odoo>
 <template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
-        <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']" style="page-break-before:always;">
+        <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']">
             <h2>
-                <span>Suggested Products</span>
+                <span>Optional Products</span>
             </h2>
             <table class="table table-sm">
                 <thead>

@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
-        </xpath>
-    </template>
-
-    <template id="assets_backend" name="project assets" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/sale/static/src/js/tour.js"></script>
-        </xpath>
-    </template>
-
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_layout" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'quote' or sales_order and sales_order.state in ('sent', 'cancel')" class="breadcrumb-item">
@@ -115,7 +103,7 @@
                     <t t-foreach="orders" t-as="order">
                         <tr>
                             <td>
-                                <a t-attf-href="quotation.get_portal_url()"><t t-esc="order.name"/></a>
+                                <a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a>
                             </td>
                             <td>
                                 <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
@@ -568,9 +556,10 @@
                             <t t-if="current_section and (line_last or sale_order.order_line[line_index+1].display_type == 'line_section')">
                                 <tr class="is-subtotal text-right">
                                     <td t-att-colspan="colspan">
-                                        <strong>Subtotal:</strong> <span
-                                        t-esc="current_subtotal"
-                                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
+                                        <strong>Subtotal:</strong>
+                                        <span
+                                            t-esc="current_subtotal"
+                                            t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                         />
                                     </td>
                                 </tr>
