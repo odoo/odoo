@@ -22,7 +22,7 @@ options.Class.include({
      * @param {jQuery} [$el=this.$target]
      */
     _refreshAnimations: function ($el) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger('animation_start_demand', {
             editableMode: true,
             $target: $el || this.$target,
         });
@@ -1351,11 +1351,11 @@ options.registry.topMenuTransparency = options.Class.extend({
      */
     transparent: function (previewMode, value, $opt) {
         var self = this;
-        this.trigger_up('action_demand', {
+        this.trigger('action_demand', {
             actionName: 'toggle_page_option',
             params: [{name: 'header_overlay'}],
             onSuccess: function () {
-                self.trigger_up('action_demand', {
+                self.trigger('action_demand', {
                     actionName: 'toggle_page_option',
                     params: [{name: 'header_color', value: ''}],
                 });
@@ -1374,7 +1374,7 @@ options.registry.topMenuTransparency = options.Class.extend({
         this._super.apply(this, arguments);
 
         var enabled;
-        this.trigger_up('action_demand', {
+        this.trigger('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
             onSuccess: function (value) {
@@ -1402,7 +1402,7 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
      */
     onFocus: function () {
         var enabled;
-        this.trigger_up('action_demand', {
+        this.trigger('action_demand', {
             actionName: 'get_page_option',
             params: ['header_overlay'],
             onSuccess: function (value) {
@@ -1424,7 +1424,7 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
         var bgs = this.$target.attr('class').match(/bg-(\w|-)+/g);
         var allowedBgs = this.classes.split(' ');
         var color = _.intersection(bgs, allowedBgs).join(' ');
-        this.trigger_up('action_demand', {
+        this.trigger('action_demand', {
             actionName: 'toggle_page_option',
             params: [{name: 'header_color', value: color}],
         });

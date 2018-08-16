@@ -708,7 +708,7 @@ MailManager.include({
     _onUpdateDmPresence: function (ev) {
         var thread = ev.data.thread;
         _.each(this._threadWindows, function (threadWindow) {
-            if (thread.data.getID() === threadWindow.getID()) {
+            if (thread.getID() === threadWindow.getID()) {
                 threadWindow.renderHeader();
             }
         });

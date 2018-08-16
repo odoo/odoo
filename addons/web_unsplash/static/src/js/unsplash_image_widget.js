@@ -253,7 +253,7 @@ weWidgets.ImageWidget.include({
      * @private
      */
     _onUnsplashImgDblClick: function (ev) {
-        this.trigger_up('save_request');
+        this.trigger('save_request');
     },
     /**
      * @private
