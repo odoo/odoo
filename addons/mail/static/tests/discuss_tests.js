@@ -412,8 +412,7 @@ QUnit.test('older messages are loaded on scroll', function (assert) {
             }
             return this._super.apply(this, arguments);
         },
-    }, { phantomjs: true }) // TODO: remove this option when we no longer use phantomJS
-    .then(function (discuss) {
+    }).then(function (discuss) {
 
         assert.verifySteps(['message_fetch'],
             "should fetch messages once for needaction messages (Inbox)");
