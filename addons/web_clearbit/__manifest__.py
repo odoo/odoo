@@ -14,7 +14,7 @@
     'qweb': [
         'static/src/xml/web_clearbit.xml'
     ],
-    'auto_install': True,
+    'auto_install': False,
     'external_dependencies': {
         'python': ['clearbit'],
     },

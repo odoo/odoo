@@ -1,37 +1,37 @@
-odoo.define('web_clearbit.tests', function (require) {
+odoo.define('partner_autocomplete.tests', function (require) {
     "use strict";
 
     var FormView = require('web.FormView');
     var testUtils = require("web.test_utils");
-    var FieldClearbit = require('web_clearbit.field');
+    var FieldAutocomplete = require('partner.autocomplete.fieldchar');
 
     var createView = testUtils.createView;
 
-    QUnit.module('web_clearbit', {
+    QUnit.module('partner_autocomplete', {
         before: function () {
-            this.__field_clearbit_debounce = FieldClearbit.prototype.debounceSuggestions;
-            FieldClearbit.prototype.debounceSuggestions = 0;
+            this.__field_clearbit_debounce = FieldAutocomplete.prototype.debounceSuggestions;
+            FieldAutocomplete.prototype.debounceSuggestions = 0;
 
             // TODO mock these instead of overriding them
 
-            this.__field_clearbit_getBase64Image = FieldClearbit.prototype._getBase64Image;
-            FieldClearbit.prototype._getBase64Image = function (url) {
+            this.__field_clearbit_getBase64Image = FieldAutocomplete.prototype._getBase64Image;
+            FieldAutocomplete.prototype._getBase64Image = function (url) {
                 return $.when(url === "odoo.com/logo.png" ? "odoobase64" : "");
             };
 
-            this.__field_clearbit_getClearbitValues = FieldClearbit.prototype._getClearbitValues;
+            this.__field_clearbit_getClearbitValues = FieldAutocomplete.prototype._getClearbitValues;
             var suggestions = [
                 {name: "Odoo", domain: "odoo.com", logo: "odoo.com/logo.png"}
             ];
-            FieldClearbit.prototype._getClearbitValues = function (value) {
+            FieldAutocomplete.prototype._getClearbitValues = function (value) {
                 this.suggestions = _.filter(suggestions, function (suggestion) {
                     return (suggestion.name.toLowerCase().indexOf(value.toLowerCase()) >= 0);
                 });
                 return $.when();
             };
 
-            this.__field_clearbit_enrichCompany = FieldClearbit.prototype._enrichCompany;
-            FieldClearbit.prototype._enrichCompany = function () {
+            this.__field_clearbit_enrichCompany = FieldAutocomplete.prototype._enrichCompany;
+            FieldAutocomplete.prototype._enrichCompany = function () {
                return {
                    "country_id": 20,
                    "state_id": false,
@@ -73,16 +73,16 @@ odoo.define('web_clearbit.tests', function (require) {
             };
         },
         after: function () {
-            FieldClearbit.prototype.debounceSuggestions = this.__field_clearbit_debounce;
+            FieldAutocomplete.prototype.debounceSuggestions = this.__field_clearbit_debounce;
             delete this.__field_clearbit_debounce;
 
-            FieldClearbit.prototype._getBase64Image = this.__field_clearbit_getBase64Image;
+            FieldAutocomplete.prototype._getBase64Image = this.__field_clearbit_getBase64Image;
             delete this.__field_clearbit_getBase64Image;
 
-            FieldClearbit.prototype._getClearbitValues = this.__field_clearbit_getClearbitValues;
+            FieldAutocomplete.prototype._getClearbitValues = this.__field_clearbit_getClearbitValues;
             delete this.__field_clearbit_getClearbitValues;
 
-            FieldClearbit.prototype._enrichCompany = this.__field_clearbit_enrichCompany;
+            FieldAutocomplete.prototype._enrichCompany = this.__field_clearbit_enrichCompany;
             delete this.__field_clearbit_enrichCompany;
         },
     });
@@ -178,7 +178,7 @@ odoo.define('web_clearbit.tests', function (require) {
 
         var fields = this.data['res.partner'].fields;
         var type, formatted;
-        _.each(FieldClearbit.prototype._enrichCompany(), function (val, key) {
+        _.each(FieldAutocomplete.prototype._enrichCompany(), function (val, key) {
             if( fields[key] ) {
                 type = fields[key].type;
                 formatted = form.$('input[name="'+key+'"]').val();

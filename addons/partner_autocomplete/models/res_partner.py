@@ -5,6 +5,7 @@ import logging
 from odoo import api, fields, models, exceptions, _
 from odoo.http import request
 from requests.exceptions import ConnectionError, HTTPError
+import requests
 
 _logger = logging.getLogger(__name__)
 
@@ -12,9 +13,49 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
+    reveal_data_id = fields.Integer('Reveal database ID')
+
     @api.model
     def enrich_company(self, company_domain):
-        enrichment_data = {}
+        enrichment_data = False
+
+        try:
+            # make HTTP request to IAP service /
+
+            # TODO: Use IAP.jsonrpc instead
+
+            url = 'http://odoo:8069/iap/partner_autocomplete_service/domain'
+            payload = {
+                'jsonrpc': '2.0',
+                'id': None,
+                'method': 'call',
+                'params': {
+                    'domain': company_domain,
+                    'country_code': self.env.user.company_id.country_id.code,
+                }
+            }
+            req = requests.post(url, json=payload)
+            req.raise_for_status()
+            response = req.json()
+            if 'error' in response:
+                name = response['error']['data'].get('name').rpartition('.')[-1]
+                message = response['error']['data'].get('message')
+                if name == 'AccessError':
+                    e_class = exceptions.AccessError
+                elif name == 'UserError':
+                    e_class = exceptions.UserError
+                else:
+                    raise requests.exceptions.ConnectionError()
+                e = e_class(message)
+                e.data = response['error']['data']
+                raise e
+            else:
+                enrichment_data = response.get('result')
+
+        except (ConnectionError, HTTPError) as exception:
+            _logger.error('Encrichment API error: %s' % str(exception))
+            raise exceptions.UserError(_('Connection to Encrichment API failed.'))
+
         return self._format_data_company(enrichment_data)
 
 
@@ -22,48 +63,43 @@ class ResPartner(models.Model):
         lang_code = self._context.get('lang') or 'en_US'
         lang = self.env['res.lang']._lang_get(lang_code)
 
-        geo_data = company_data['geo']
-        site_data = company_data['site']
-        metrics_data = company_data['metrics']
-        category_data = company_data['category']
-        phones = site_data['phoneNumbers']
-        emails = site_data['emailAddresses']
-
         country_data = self._find_country_data(
-            state_code=geo_data.get('stateCode', False),
-            state_name=geo_data.get('state', False),
-            country_code=geo_data.get('countryCode', False),
-            country_name=geo_data.get('country', False)
+            state_code=company_data.get('state_code', False),
+            state_name=company_data.get('state_name', False),
+            country_code=company_data.get('country_code', False),
+            country_name=company_data.get('country_name', False)
         )
+
+        phones = company_data['phone_numbers']
+        emails = company_data['email']
 
         phone = company_data.get('phone')
         if not phone and len(phones) > 0:
-            phone = phones[0]
+            phone = phones.pop(0)
 
         email = False
         if len(emails) > 0:
-            email = emails[0]
+            email = emails.pop(0)
 
         comment = _("""
 Description: 
 %s
 
-Founded year : %s
 Employees : %s
 Annual revenue : %s
 Estimated annual revenue : %s
 
-Sector : %s
-Industry : %s > %s > %s 
-Tags : %s 
-            
+Sector : 
+%s
+
+Tech : 
+%s
+
 Social networks :
 www.facebook.com/%s
 www.linkedin.com/%s
 www.crunchbase.com/%s
-
-Domain alias :
-%s
+www.twitter.com/%s
 
 Email addresses :
 %s
@@ -71,40 +107,64 @@ Email addresses :
 Phone numbers :
 %s
         """) % (company_data.get('description'),
-                company_data.get('foundedYear') if company_data.get('foundedYear') else _('Unknown'),
-                lang.format('%.0f', metrics_data.get('employees'), True, True) if metrics_data.get('employees') else _('Unknown'),
-                '$%s' % lang.format('%.0f', metrics_data.get('annualRevenue'), True, True) if metrics_data.get('annualRevenue') else _('Unknown'),
-                metrics_data.get('estimatedAnnualRevenue') if metrics_data.get('estimatedAnnualRevenue') else _('Unknown'),
-                category_data.get('sector'),
-                category_data.get('industryGroup'),
-                category_data.get('industry'),
-                category_data.get('subIndustry'),
-                ' / '.join(company_data['tags']),
-                company_data['facebook'].get('handle'),
-                company_data['linkedin'].get('handle'),
-                company_data['crunchbase'].get('handle'),
-                ' / '.join(company_data['domainAliases']) if company_data['domainAliases'] else _('None'),
+                lang.format('%.0f', float(company_data.get('employees')), True, True) if company_data.get('employees') else _('Unknown'),
+                '$%s' % lang.format('%.0f', float(company_data.get('annual_revenue')), True, True) if company_data.get('annual_revenue') else _('Unknown'),
+                company_data.get('estimated_annual_revenue') if company_data.get('estimated_annual_revenue') else _('Unknown'),
+                company_data.get('sector'),
+                ' / '.join(company_data.get('tech')),
+                company_data.get('facebook'),
+                company_data.get('linkedin'),
+                company_data.get('crunchbase'),
+                company_data.get('twitter'),
                 ' / '.join(emails) if emails else _('None'),
                 ' / '.join(phones) if phones else _('None'),
                 )
 
-        # if Extend addresses module is installed, try to find street number
-        # if found, append it at the beginning of address
-        if self.env['res.partner']._fields.get('street_number') and geo_data.get('streetNumber'):
-            street = '%s %s' % (geo_data.get('streetNumber') or '', geo_data.get('streetName') or '')
-        else:
-            street = '%s %s' % (geo_data.get('streetName') or '', geo_data.get('streetNumber') or '')
-
-        return {
+        company = {
             'country_id': country_data.get('country_id'),
             'state_id': country_data.get('state_id'),
             'website': company_data['domain'],
             'name': company_data.get('name'),
             'comment': comment,
-            'street': street.strip(),
-            'city': geo_data.get('city'),
-            'zip': geo_data.get('postalCode'),
+            'city': company_data.get('city'),
+            'zip': company_data.get('postal_code'),
             'phone': phone,
             'email': email
         }
 
+        street = self._split_street_with_params('%s %s' % (company_data.get('street_name'), company_data.get('street_number')), '%(street_name)s, %(street_number)s/%(street_number2)s')
+        company.update(street)
+
+        return company
+
+    def _find_country_data(self, state_code, state_name, country_code, country_name):
+        result = {
+            'country_id': False,
+            'state_id': False
+        }
+
+        country_id = self.env['res.country'].search([['code', '=ilike', country_code]])
+        if not country_id:
+            country_id = self.env['res.country'].search([['name', '=ilike', country_name]])
+
+        if country_id:
+            result['country_id'] = {
+                'id': country_id.id,
+                'display_name': country_id.display_name
+            }
+            state_id = self.env['res.country.state'].search(
+                [['country_id', '=', country_id.id], ['code', '=ilike', state_code]])
+            if not state_id:
+                state_id = self.env['res.country.state'].search(
+                    [['country_id', '=', country_id.id], ['name', '=ilike', state_name]])
+
+            if state_id:
+                result['state_id'] = {
+                    'id': state_id.id,
+                    'display_name': state_id.display_name
+                }
+
+        else:
+            _logger.info('Country code not found: %s', country_code)
+
+        return result
