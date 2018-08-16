@@ -124,7 +124,7 @@
                 <form string="Users">
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div class="oe_form_box_info bg-info oe_text_center" style="margin-bottom: 10px" attrs="{'invisible': [('id', '>', 0)]}">
+                        <div class="alert alert-info text-center mb-3" attrs="{'invisible': [('id', '>', 0)]}" role="alert">
                             You are inviting a new user.
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
