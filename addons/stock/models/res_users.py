@@ -22,6 +22,11 @@ class ResUsers(models.Model):
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='stock.group_production_lot')
 
+    has_group_lot_on_delivery_slip = fields.Boolean(
+        'Display Lots & Serial Numbers on Delivery Slip',
+        compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='stock.group_lot_on_delivery_slip')
+
     has_group_tracking_lot = fields.Boolean(
         'Manage Packages',
         compute='_compute_groups_id', inverse='_inverse_groups_id',

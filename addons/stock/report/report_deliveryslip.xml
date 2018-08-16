@@ -65,9 +65,13 @@
                         </tbody>
                     </table>
                     <table class="table table-sm mt48" t-if="o.move_line_ids and o.state=='done'">
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
+                                <th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    Lot/Serial Number
+                                </th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -81,6 +85,9 @@
                                     <p t-if="o.picking_type_code == 'incoming'">
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
+                                </td>
+                                <td t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <span t-field="move_line.lot_name"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
