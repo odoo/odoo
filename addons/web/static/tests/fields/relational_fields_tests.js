@@ -486,8 +486,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('many2one readonly fields with option "no_open"', function (assert) {
-        assert.expect(1);
+    QUnit.test('many2one fields with option "no_open"', function (assert) {
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
@@ -503,7 +503,14 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('a.o_form_uri').length, 0, "should not have an anchor");
+        assert.strictEqual(form.$('span.o_field_widget[name=trululu]').length, 1,
+            "should be displayed inside a span (sanity check)");
+        assert.strictEqual(form.$('span.o_form_uri').length, 0, "should not have an anchor");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] .o_external_button').length,
+            0, "should not have the button to open the record");
+
         form.destroy();
     });
 
@@ -750,7 +757,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('standalone many2one field', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
         var done = assert.async();
 
         var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
@@ -769,13 +776,7 @@ QUnit.module('relational_fields', {
             relation: 'partner',
             type: 'many2one',
             value: [1, 'first partner'],
-        }], {
-            partner_id: {
-                options: {
-                    no_open: true,
-                },
-            },
-        }).then(function (recordID) {
+        }]).then(function (recordID) {
             var record = model.get(recordID);
             // create a new widget that uses the StandaloneFieldManagerMixin
             var StandaloneWidget = Widget.extend(StandaloneFieldManagerMixin, {
@@ -793,11 +794,9 @@ QUnit.module('relational_fields', {
                 },
             });
 
-            var relField = new relationalFields.FieldMany2One(parent,
-                'partner_id',
-                record,
-                {
-                    mode: 'edit',
+            var relField = new relationalFields.FieldMany2One(parent, 'partner_id', record, {
+                mode: 'edit',
+                noOpen: true,
             });
 
             relField.appendTo(fixture);
@@ -807,7 +806,11 @@ QUnit.module('relational_fields', {
                 var $dropdown = $('input.o_input').autocomplete('widget');
                 $dropdown.find('.o_m2o_dropdown_option:contains(Create)')
                     .first().mouseenter().click();
+
+                assert.strictEqual(relField.$('.o_external_button').length, 0,
+                    "should not have the button to open the record");
                 assert.verifySteps(['name_search', 'name_create']);
+
                 parent.destroy();
                 model.destroy();
                 relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;

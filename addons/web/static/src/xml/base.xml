@@ -818,7 +818,7 @@
                 t-att-id="widget.idForLabel"/>
             <a role="button" class="o_dropdown_button" draggable="false"/>
         </div>
-        <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
+        <button type="button" t-if="!widget.noOpen" class="fa fa-external-link btn btn-secondary o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
     </div>
 </t>
 <t t-name="FieldReference" t-extend="FieldMany2One">
