@@ -13,7 +13,7 @@ class IrFilters(models.Model):
     _order = 'model_id, name, id desc'
 
     name = fields.Char(string='Filter Name', translate=True, required=True)
-    user_id = fields.Many2one('res.users', string='User', ondelete='cascade', default=lambda self: self._uid,
+    user_id = fields.Many2one('res.users', string='User', ondelete='cascade',
                               help="The user this filter is private to. When left empty the filter is public "
                                    "and available to all users.")
     domain = fields.Text(default='[]', required=True)
