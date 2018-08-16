@@ -445,9 +445,9 @@ var SearchView = Widget.extend({
                 self.timeRangeMenu = self._createTimeRangeMenu();
                 menu_defs.push(self.timeRangeMenu.prependTo($buttons));
                 self.timeRangeMenu.do_hide();
-                var display = self.options.disableTimeRangeMenu !== undefined &&
+                self.displayedTimeRangeMenu = self.options.disableTimeRangeMenu !== undefined &&
                     !self.options.disableTimeRangeMenu;
-                self.displayTimeRangeMenu(display);
+                self.displayTimeRangeMenu(self.displayedTimeRangeMenu);
                 if (!self.options.disable_groupby) {
                     self.groupby_menu = self._createGroupByMenu();
                     menu_defs.push(self.groupby_menu.prependTo($buttons));
@@ -736,7 +736,7 @@ var SearchView = Widget.extend({
             }
             if (self.filters_menu) {
                 self.filters_menu.updateItemsStatus(activeItemIds.filterCategory);            }
-            if (self.timeRangeMenu && !timeRangeMenuIsActive) {
+            if (self.displayedTimeRangeMenu && !timeRangeMenuIsActive) {
                 self.timeRangeMenu.deactivate();
             }
         });

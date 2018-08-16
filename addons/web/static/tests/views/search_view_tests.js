@@ -635,5 +635,34 @@ QUnit.module('Search View', {
 
         actionManager.destroy();
     });
+
+    QUnit.test('time range menu stays hidden', function (assert) {
+        assert.expect(6);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // check that the fifth dropdown is the time range menu and is hidden
+        assert.ok($('.btn-group.o_dropdown').eq(4).hasClass('o_hidden'));
+        assert.ok($('.btn-group.o_dropdown').eq(4).children().eq(1).hasClass('o_time_range_menu'));
+        // check if search view has no facets
+        assert.strictEqual($('.o_facet_values').length, 0);
+
+        // activate groupby
+        $('button .fa-bars').click();
+        $('.o_menu_item a').eq(0).click();
+        // check that there is a facet
+        assert.strictEqual($('div.o_facet_values').length, 1);
+        // check that the fifth dropdown is the time range menu and is still hidden
+        assert.ok($('.btn-group.o_dropdown').eq(4).hasClass('o_hidden'));
+        assert.ok($('.btn-group.o_dropdown').eq(4).children().eq(1).hasClass('o_time_range_menu'));
+        actionManager.destroy();
+    });
+
 });
 });
