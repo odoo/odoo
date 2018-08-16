@@ -343,7 +343,7 @@ class Website(Home):
                 record_id = View.search([
                     ("website_id", "=", request.website.id),
                     ("key", "=", xml_id),
-                ]).id or request.env.ref(xml_id).id
+                ], limit=1).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
             ids.append(record_id)

@@ -105,6 +105,7 @@ class IrUiView(models.Model):
 
         :param str xpath: valid xpath to the tag to replace
         """
+        self.ensure_one()
         arch_section = html.fromstring(
             value, parser=html.HTMLParser(encoding='utf-8'))
 
