@@ -156,9 +156,6 @@
         @param {boolean} [options.displayLoadMore=false]
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
             message ID, the separator is placed just after this message.
-        @param {boolean} [options.withPhantomJS=false] phantomJS is a mess with flexbox
-            so it may break some features like auto-fetch message on scroll.
-            TODO: remove this option when we no longer use phantomJS
 
                      _____________
                     |             |
@@ -172,7 +169,7 @@
 
     -->
     <t t-name="mail.widget.Thread.Content.ASC">
-        <div t-att-class="options.withPhantomJS ? '' : 'o_mail_thread_content_asc'">
+        <div class="o_mail_thread_content_asc">
             <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
             <t t-set="messages" t-value="messages.slice().reverse()"/>
             <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
@@ -186,9 +183,6 @@
         @param {Object} options
         @param {boolean} [options.displayBottomThreadFreeSpace=false]
         @param {boolean} [options.displayLoadMore=false]
-        @param {boolean} [options.withPhantomJS=false] phantomJS is a mess with flexbox
-            so it may break some features like auto-fetch message on scroll.
-            TODO: remove this option when we no longer use phantomJS
 
                      _____________
                     |             |
@@ -201,7 +195,7 @@
                       DESC Order
     -->
     <t t-name="mail.widget.Thread.Content.DESC">
-        <div t-att-class="options.withPhantomJS ? '' : 'o_mail_thread_content_desc'">
+        <div class="o_mail_thread_content_desc">
             <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
             <t t-call="mail.widget.Thread.Messages"/>
             <t t-if="options.displayBottomThreadFreeSpace">

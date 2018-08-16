@@ -196,10 +196,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * @override
      * @param {Object} [options]
-     * @param {boolean} [options.phantomjs=false] if set, rendering of non-empty
-     *   thread will use 'block' display instead of 'flex', because phantomjs
-     *   sucks with flexbox... TODO: remove this option when we no longer use
-     *   phantomJS
      */
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -223,9 +219,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this._selectedMessage = null;
         this._throttledUpdateThreads = _.throttle(
             this._updateThreads.bind(this), 100, { leading: false });
-
-        // TODO: remove this option when we no longer use phantomJS
-        this._withPhantomJS = this.options.phantomjs || false;
     },
     /**
      * @override
@@ -459,7 +452,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             displayEmailIcons: false,
             displayReplyIcons: true,
             displayBottomThreadFreeSpace: true,
-            withPhantomJS: this._withPhantomJS, // TODO: remove this option when we no longer use phantomJS
         };
     },
     /**
