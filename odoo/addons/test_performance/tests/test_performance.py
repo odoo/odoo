@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import json
 
 from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tools import pycompat
@@ -138,3 +139,6 @@ class TestPerformance(TransactionCase):
                 self.assertEqual(res['partner_id'][0], exp['partner_id'][0])
                 self.assertEqual(res['partner_id_count'], exp['partner_id_count'])
                 self.assertEqual(res['value'], exp['value'])
+        # now serialize to json, which should force evaluation
+        with self.assertQueryCount(admin=1, demo=1):
+            json.dumps(result)
