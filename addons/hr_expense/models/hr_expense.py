@@ -721,7 +721,7 @@ class HrExpenseSheet(models.Model):
     def activity_update(self):
         for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
             self.activity_schedule(
-                'hr_expense.mail_act_expense_approval', fields.Date.today(),
+                'hr_expense.mail_act_expense_approval',
                 user_id=expense_report._get_responsible_for_approval().id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
         self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])

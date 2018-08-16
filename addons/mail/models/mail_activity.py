@@ -4,11 +4,14 @@
 from collections import defaultdict
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+import logging
 import pytz
 
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools import pycompat
+
+_logger = logging.getLogger(__name__)
 
 
 class MailActivityType(models.Model):
@@ -579,12 +582,17 @@ class MailActivityMixin(models.AbstractModel):
         xml_id of activity type instead of directly giving an activity_type_id.
         It is useful to avoid having various "env.ref" in the code and allow
         to let the mixin handle access rights.
+
+        :param date_deadline: the day the activity must be scheduled on
+        the timezone of the user must be considered to set the correct deadline
         """
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
         if not date_deadline:
-            date_deadline = fields.Date.today()
+            date_deadline = fields.Date.context_today(self)
+        if isinstance(date_deadline, datetime):
+            _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
             activity_type = self.sudo().env.ref(act_type_xmlid)
         else:
