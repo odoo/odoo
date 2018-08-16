@@ -4,8 +4,9 @@
 __all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
            'classproperty', 'conditional', 'lazy']
 
-from functools import wraps, partial
+from functools import wraps
 from inspect import getsourcefile
+from json import JSONEncoder
 
 
 class lazy_property(object):
@@ -122,27 +123,27 @@ class lazy(object):
             baz = foo + 2                   # use result of func(arg) and add 2
 
     """
-    __slots__ = ['_func', '_value']
+    __slots__ = ['_func', '_args', '_kwargs', '_cached_value']
 
     def __init__(self, func, *args, **kwargs):
-        self._func = partial(func, *args, **kwargs)
+        # bypass own __setattr__
+        object.__setattr__(self, '_func', func)
+        object.__setattr__(self, '_args', args)
+        object.__setattr__(self, '_kwargs', kwargs)
 
-    def __getattr__(self, name):
-        if name == '_value':
-            self._value = value = self._func()
-            self._func = None
-            return value
-        return getattr(self._value, name)
+    @property
+    def _value(self):
+        if self._func is not None:
+            value = self._func(*self._args, **self._kwargs)
+            object.__setattr__(self, '_func', None)
+            object.__setattr__(self, '_args', None)
+            object.__setattr__(self, '_kwargs', None)
+            object.__setattr__(self, '_cached_value', value)
+        return self._cached_value
 
-    def __setattr__(self, name, value):
-        if name in ('_func', '_value'):
-            return object.__setattr__(self, name, value)
-        return setattr(self._value, name, value)
-
-    def __delattr__(self, name):
-        if name in ('_func', '_value'):
-            return object.__delattr__(self, name)
-        return delattr(self._value, name)
+    def __getattr__(self, name): return getattr(self._value, name)
+    def __setattr__(self, name, value): return setattr(self._value, name, value)
+    def __delattr__(self, name): return delattr(self._value, name)
 
     def __repr__(self):
         return repr(self._value) if self._func is None else object.__repr__(self)
@@ -241,3 +242,14 @@ class lazy(object):
     def __aenter__(self): return self._value.__aenter__()
     def __aexit__(self, exc_type, exc_value, traceback):
         return self._value.__aexit__(exc_type, exc_value, traceback)
+
+
+# patch serialization of lazy
+def default(self, o):
+    if isinstance(o, lazy):
+        return o._value
+    return json_encoder_default(self, o)
+
+
+json_encoder_default = JSONEncoder.default
+JSONEncoder.default = default
