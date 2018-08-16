@@ -21,8 +21,14 @@
                                     <field name="activity_date_deadline_range_type"/>
                                 </div>
                                 <field name="activity_user_type"/>
-                                <field name="activity_user_field_name" attrs="{'invisible': [('activity_user_type', '=', 'specific')], 'required': [('activity_user_type', '=', 'generic')]}"/>
-                                <field name="activity_user_id" attrs="{'invisible': [('activity_user_type', '=', 'generic')], 'required': [('activity_user_type', '=', 'specific')]}"/>
+                                <field name="activity_user_field_name" attrs="{
+                                    'invisible': [('activity_user_type', '=', 'specific')],
+                                    'required': [('state', '=', 'next_activity'), ('activity_user_type', '=', 'generic')]
+                                }"/>
+                                <field name="activity_user_id" attrs="{
+                                    'invisible': [('activity_user_type', '=', 'generic')],
+                                    'required': [('state', '=', 'next_activity'), ('activity_user_type', '=', 'specific')]
+                                }"/>
                             </group>
                         </group>
                         <field name="activity_note" placeholder="Log a note..."/>
