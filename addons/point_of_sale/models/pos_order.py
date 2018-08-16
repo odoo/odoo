@@ -1146,4 +1146,5 @@ class ReportSaleDetails(models.AbstractModel):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
+        data['company_id'] = self.env['res.company'].browse(data['company_id'])
         return data

@@ -29,8 +29,17 @@ class PosDetails(models.TransientModel):
 
     start_date = fields.Datetime(required=True, default=_default_start_date)
     end_date = fields.Datetime(required=True, default=fields.Datetime.now)
-    pos_config_ids = fields.Many2many('pos.config', 'pos_detail_configs',
-        default=lambda s: s.env['pos.config'].search([]))
+    pos_config_ids = fields.Many2many('pos.config', 'pos_detail_configs', required=True,
+        default=lambda s: s.env['pos.config'].search([('company_id', '=', s.company_id.id)]))
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda s: s.env.user.company_id)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            self.pos_config_ids = self.env['pos.config'].search(
+                [('company_id', '=', self.company_id.id)])
+        else:
+            self.pos_config_ids = self.env['pos.config'].search([])
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
@@ -48,5 +57,9 @@ class PosDetails(models.TransientModel):
             raise UserError(_("You have to set a logo or a layout for your company."))
         elif (not self.env.user.company_id.external_report_layout_id):
             raise UserError(_("You have to set your reports's header and footer layout."))
-        data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids}
+        data = {'date_start': self.start_date,
+                'date_stop': self.end_date,
+                'config_ids': self.pos_config_ids.ids,
+                'company_id': self.company_id.id,
+                }
         return self.env.ref('point_of_sale.sale_details_report').report_action([], data=data)
