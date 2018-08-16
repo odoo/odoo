@@ -22,10 +22,10 @@ odoo.define('web_clearbit.field', function (require) {
 
         events: _.extend({}, FieldChar.prototype.events, {
             'keyup': '_onKeyup',
-            'mousedown .o_clearbit_suggestion': '_onMousedown',
+            'mousedown .o_partner_autocomplete_suggestion': '_onMousedown',
             'focusout': '_onFocusout',
-            'mouseenter .o_clearbit_suggestion': '_onHoverDropdown',
-            'click .o_clearbit_suggestion': '_onSuggestionClicked',
+            'mouseenter .o_partner_autocomplete_suggestion': '_onHoverDropdown',
+            'click .o_partner_autocomplete_suggestion': '_onSuggestionClicked',
         }),
 
         /**

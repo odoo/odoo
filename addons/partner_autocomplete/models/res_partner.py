@@ -24,7 +24,7 @@ class ResPartner(models.Model):
 
             # TODO: Use IAP.jsonrpc instead
 
-            url = 'http://odoo:8069/iap/partner_autocomplete_service/domain'
+            url = 'http://odoo:8069/iap/partner_autocomplete/domain'
             payload = {
                 'jsonrpc': '2.0',
                 'id': None,
@@ -82,43 +82,43 @@ class ResPartner(models.Model):
             email = emails.pop(0)
 
         comment = _("""
-Description: 
-%s
+            Description: 
+            %s
 
-Employees : %s
-Annual revenue : %s
-Estimated annual revenue : %s
+            Employees : %s
+            Annual revenue : %s
+            Estimated annual revenue : %s
 
-Sector : 
-%s
+            Sector : 
+            %s
 
-Tech : 
-%s
+            Tech : 
+            %s
 
-Social networks :
-www.facebook.com/%s
-www.linkedin.com/%s
-www.crunchbase.com/%s
-www.twitter.com/%s
+            Social networks :
+            www.facebook.com/%s
+            www.linkedin.com/%s
+            www.crunchbase.com/%s
+            www.twitter.com/%s
 
-Email addresses :
-%s
+            Email addresses :
+            %s
 
-Phone numbers :
-%s
-        """) % (company_data.get('description'),
-                lang.format('%.0f', float(company_data.get('employees')), True, True) if company_data.get('employees') else _('Unknown'),
-                '$%s' % lang.format('%.0f', float(company_data.get('annual_revenue')), True, True) if company_data.get('annual_revenue') else _('Unknown'),
-                company_data.get('estimated_annual_revenue') if company_data.get('estimated_annual_revenue') else _('Unknown'),
-                company_data.get('sector'),
-                ' / '.join(company_data.get('tech')),
-                company_data.get('facebook'),
-                company_data.get('linkedin'),
-                company_data.get('crunchbase'),
-                company_data.get('twitter'),
-                ' / '.join(emails) if emails else _('None'),
-                ' / '.join(phones) if phones else _('None'),
-                )
+            Phone numbers :
+            %s
+            """) % (company_data.get('description'),
+            lang.format('%.0f', float(company_data.get('employees')), True, True) if company_data.get('employees') else _('Unknown'),
+            '$%s' % lang.format('%.0f', float(company_data.get('annual_revenue')), True, True) if company_data.get('annual_revenue') else _('Unknown'),
+            company_data.get('estimated_annual_revenue') if company_data.get('estimated_annual_revenue') else _('Unknown'),
+            company_data.get('sector'),
+            ' / '.join(company_data.get('tech')),
+            company_data.get('facebook'),
+            company_data.get('linkedin'),
+            company_data.get('crunchbase'),
+            company_data.get('twitter'),
+            ' / '.join(emails) if emails else _('None'),
+            ' / '.join(phones) if phones else _('None'),
+        )
 
         company = {
             'country_id': country_data.get('country_id'),

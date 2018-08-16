@@ -217,7 +217,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                         break;
                     }
                     e.preventDefault();
-                    var $active = this.$dropdown.find('.active > .o_clearbit_suggestion');
+                    var $active = this.$dropdown.find('.active > .o_partner_autocomplete_suggestion');
                     if (!$active.length) {
                         return;
                     }
