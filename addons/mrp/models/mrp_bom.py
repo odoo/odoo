@@ -99,6 +99,37 @@ class MrpBom(models.Model):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
         return super(MrpBom, self).unlink()
 
+    @api.multi
+    def _bom_find_multi(self, product_tmpl_ids=None, product_ids=None):
+        """
+        Find boms in one query corresponding to products
+        :param product_tmpl_ids:
+        :param product_ids:
+        :return:
+        """
+        self.ensure_one()
+
+        """ Finds BoM for particular product, picking and company """
+        if product_ids:
+            domain = ['|', ('product_id', 'in', product_ids.ids), '&',
+                      ('product_id', '=', False),
+                      ('product_tmpl_id', 'in', product_ids.mapped('product_tmpl_id.id'))]
+        elif product_tmpl_ids:
+            domain = [('product_tmpl_id', 'in', product_tmpl_ids.ids)]
+        else:
+            # neither product nor template, makes no sense to search
+            return False
+        if self.picking_type_id:
+            domain += ['|', ('picking_type_id', '=', self.picking_type_id.id),
+                       ('picking_type_id', '=', False)]
+        context_company = self.env.context.get('company_id')
+        if self.company_id or context_company:
+            domain = domain + [('company_id', '=',
+                                self.company_id.id or context_company)]
+        # order to prioritize bom with product_id over the one without
+        # We remove lang context to speed up search
+        return self.with_context(lang='').search(domain, order='sequence, product_id')
+
     @api.model
     def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False):
         """ Finds BoM for particular product, picking and company """
@@ -125,7 +156,6 @@ class MrpBom(models.Model):
             and converted into its UoM
         """
         from collections import defaultdict
-
         graph = defaultdict(list)
         V = set()
 
@@ -146,9 +176,12 @@ class MrpBom(models.Model):
         V |= set([product.product_tmpl_id.id])
 
         bom_lines = [(bom_line, product, quantity, False) for bom_line in self.bom_line_ids]
+        bom_products = self.env['product.product'].browse()
         for bom_line in self.bom_line_ids:
             V |= set([bom_line.product_id.product_tmpl_id.id])
             graph[product.product_tmpl_id.id].append(bom_line.product_id.product_tmpl_id.id)
+            bom_products |= bom_line.product_id
+        boms = self._bom_find_multi(product_ids=bom_products)
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
@@ -157,7 +190,13 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
+            bom = boms.filtered(
+                lambda b: b.product_id.id == current_line.product_id.id or
+                          b.product_tmpl_id.id == current_line.product_id.product_tmpl_id.id)
+            if bom:
+                # Take the first one
+                bom = bom[0]
+
             if bom.type == 'phantom':
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
@@ -173,7 +212,6 @@ class MrpBom(models.Model):
                 rounding = current_line.product_uom_id.rounding
                 line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
-
         return boms_done, lines_done
 
 
