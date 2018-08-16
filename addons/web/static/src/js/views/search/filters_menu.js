@@ -161,7 +161,7 @@ var FiltersMenu = DropdownMenu.extend({
         this._super.apply(this, arguments);
         // the following code adds tooltip on date options in order
         // to alert the user of the meaning of intervals
-        var $options = this.$('ul.o_dropdown_menu .o_item_option');
+        var $options = this.$('.o_filters_menu .o_item_option');
         $options.each(function () {
             var $option = $(this);
             $option.tooltip({
