@@ -7,7 +7,7 @@ Allows users to send documents by post
         """,
     'category': 'Tools',
     'version': '0.1',
-    'depends': ['iap', 'base_setup'],
+    'depends': ['iap', 'mail'],
     'data': [
         'data/snailmail_data.xml',
         'views/res_config_settings_views.xml',
