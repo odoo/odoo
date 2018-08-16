@@ -20,7 +20,7 @@ class StockQuant(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        ondelete='restrict', readonly=True, required=True)
+        ondelete='restrict', readonly=True, required=True, auto_join=True)
     # so user can filter on template in webclient
     product_tmpl_id = fields.Many2one(
         'product.template', string='Product Template',
@@ -52,10 +52,6 @@ class StockQuant(models.Model):
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
-    product_type = fields.Selection(
-        related='product_id.product_tmpl_id.type',
-        store=True,
-    )
 
     def action_view_stock_moves(self):
         self.ensure_one()
