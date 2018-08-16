@@ -32,7 +32,7 @@ class Website(models.Model):
             website.pricelist_id = website.get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
-    @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
+    @tools.ormcache_context('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl', keys=("website_id",))
     def _get_pl_partner_order(self, country_code, show_visible, website_pl, current_pl, all_pl, partner_pl=False, order_pl=False):
         """ Return the list of pricelists that can be used on website for the current user.
         :param str country_code: code iso or False, If set, we search only price list available for this country
