@@ -234,6 +234,20 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }];
     }
 
+    function set_fiscal_position_on_order(fp_name) {
+        return [{
+            content: 'set fiscal position',
+            trigger: '.control-button.o_fiscal_position_button',
+        }, {
+            content: 'choose fiscal position ' + fp_name + ' to add to the order',
+            trigger: '.popups .popup .selection .selection-item:contains("' + fp_name + '")',
+        }, {
+            content: 'the fiscal position ' + fp_name + ' has been set to the order',
+            trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
+            run: function () {}, // it's a check
+        }];
+    }
+
     function generate_keypad_steps(amount_str, keypad_selector) {
         var i, steps = [], current_char;
         for (i = 0; i < amount_str.length; ++i) {
@@ -324,6 +338,12 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
     steps = steps.concat(generate_payment_screen_keypad_steps("10"));
     steps = steps.concat(finish_order());
+
+    // Test fiscal position one2many map (align with backend)
+    steps = steps.concat(add_product_to_order('Lemon'));
+    steps = steps.concat(verify_order_total('5.50'));
+    steps = steps.concat(set_fiscal_position_on_order('FP-POS-2M'));
+    steps = steps.concat(verify_order_total('5.52'));
 
     steps = steps.concat([{
         content: "close the Point of Sale frontend",
