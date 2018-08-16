@@ -314,7 +314,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @private
      * @param {integer} channelID
      */
-    _onRedirectToChannel: function (channelID) {
+    _onRedirectToChannel: function (ev) {
+        var channelID = ev.data.channelID;
         var thread = this.call('mail_service', 'getThread', channelID);
         if (!thread) {
             this.call('mail_service', 'joinChannel', channelID)

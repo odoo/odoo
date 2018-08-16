@@ -1131,20 +1131,20 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @param {Object} data
      */
     _onAltDialogDemand: function (data) {
-        if (data.__alreadyDone) {
+        if (ev.data.__alreadyDone) {
             return;
         }
-        data.__alreadyDone = true;
+        ev.data.__alreadyDone = true;
         var altDialog = new weWidgets.AltDialog(this,
-            data.options || {},
-            data.$editable,
-            data.media
+            ev.data.options || {},
+            ev.data.$editable,
+            ev.data.media
         );
-        if (data.onSave) {
-            altDialog.on('save', this, data.onSave);
+        if (ev.data.onSave) {
+            altDialog.on('save', this, ev.data.onSave);
         }
-        if (data.onCancel) {
-            altDialog.on('cancel', this, data.onCancel);
+        if (ev.data.onCancel) {
+            altDialog.on('cancel', this, ev.data.onCancel);
         }
         altDialog.open();
     },
@@ -1154,15 +1154,15 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @private
      * @param {Object} data
      */
-    _onColorPickerDialogDemand: function (data) {
-        if (data.__alreadyDone) {
+    _onColorPickerDialogDemand: function (ev) {
+        if (ev.data.__alreadyDone) {
             return;
         }
-        data.__alreadyDone = true;
+        ev.data.__alreadyDone = true;
         var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: data.color,
+            defaultColor: ev.data.color,
         });
-        if (data.onSave) {
+        if (ev.data.onSave) {
             colorpicker.on('colorpicker:saved', this, function (ev) {
                 data.onSave(ev.data.cssColor);
             });
@@ -1175,24 +1175,24 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @private
      * @param {Object} data
      */
-    _onCropImageDialogDemand: function (data) {
-        if (data.__alreadyDone) {
+    _onCropImageDialogDemand: function (ev) {
+        if (ev.data.__alreadyDone) {
             return;
         }
-        data.__alreadyDone = true;
+        ev.data.__alreadyDone = true;
         var cropImageDialog = new weWidgets.CropImageDialog(this,
             _.extend({
-                res_model: data.$editable.data('oe-model'),
-                res_id: data.$editable.data('oe-id'),
-            }, data.options || {}),
-            data.$editable,
-            data.media
+                res_model: ev.data.$editable.data('oe-model'),
+                res_id: ev.data.$editable.data('oe-id'),
+            }, ev.data.options || {}),
+            ev.data.$editable,
+            ev.data.media
         );
-        if (data.onSave) {
-            cropImageDialog.on('save', this, data.onSave);
+        if (ev.data.onSave) {
+            cropImageDialog.on('save', this, ev.data.onSave);
         }
-        if (data.onCancel) {
-            cropImageDialog.on('cancel', this, data.onCancel);
+        if (ev.data.onCancel) {
+            cropImageDialog.on('cancel', this, ev.data.onCancel);
         }
         cropImageDialog.open();
     },
@@ -1202,21 +1202,21 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @private
      * @param {Object} data
      */
-    _onLinkDialogDemand: function (data) {
-        if (data.__alreadyDone) {
+    _onLinkDialogDemand: function (ev) {
+        if (ev.data.__alreadyDone) {
             return;
         }
-        data.__alreadyDone = true;
+        ev.data.__alreadyDone = true;
         var linkDialog = new weWidgets.LinkDialog(this,
-            data.options || {},
-            data.$editable,
-            data.linkInfo
+            ev.data.options || {},
+            ev.data.$editable,
+            ev.data.linkInfo
         );
-        if (data.onSave) {
-            linkDialog.on('save', this, data.onSave);
+        if (ev.data.onSave) {
+            linkDialog.on('save', this, ev.data.onSave);
         }
-        if (data.onCancel) {
-            linkDialog.on('cancel', this, data.onCancel);
+        if (ev.data.onCancel) {
+            linkDialog.on('cancel', this, ev.data.onCancel);
         }
         linkDialog.open();
     },
@@ -1226,26 +1226,26 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * @private
      * @param {Object} data
      */
-    _onMediaDialogDemand: function (data) {
-        if (data.__alreadyDone) {
+    _onMediaDialogDemand: function (ev) {
+        if (ev.data.__alreadyDone) {
             return;
         }
-        data.__alreadyDone = true;
+        ev.data.__alreadyDone = true;
 
         var mediaDialog = new weWidgets.MediaDialog(this,
             _.extend({
-                res_model: data.$editable.data('oe-model'),
-                res_id: data.$editable.data('oe-id'),
-                domain: data.$editable.data('oe-media-domain'),
-            }, data.options),
-            data.$editable,
-            data.media
+                res_model: ev.data.$editable.data('oe-model'),
+                res_id: ev.data.$editable.data('oe-id'),
+                domain: ev.data.$editable.data('oe-media-domain'),
+            }, ev.data.options),
+            ev.data.$editable,
+            ev.data.media
         );
-        if (data.onSave) {
-            mediaDialog.on('save', this, data.onSave);
+        if (ev.data.onSave) {
+            mediaDialog.on('save', this, ev.data.onSave);
         }
-        if (data.onCancel) {
-            mediaDialog.on('cancel', this, data.onCancel);
+        if (ev.data.onCancel) {
+            mediaDialog.on('cancel', this, ev.data.onCancel);
         }
         mediaDialog.open();
     },
