@@ -125,3 +125,27 @@ class TestFiscalPosition(common.TransactionCase):
         # Dedicated position has max precedence
         george.property_account_position_id = self.be_nat
         assert_fp(george, self.be_nat, "Forced position has max precedence")
+
+
+    def test_20_fp_one_tax_2m(self):
+
+        self.src_tax = self.env['account.tax'].create({'name': "SRC", 'amount': 0.0})
+        self.dst1_tax = self.env['account.tax'].create({'name': "DST1", 'amount': 0.0})
+        self.dst2_tax = self.env['account.tax'].create({'name': "DST2", 'amount': 0.0})
+
+        self.fp2m = self.fp.create({
+            'name': "FP-TAX2TAXES",
+            'tax_ids': [
+                (0,0,{
+                    'tax_src_id': self.src_tax.id,
+                    'tax_dest_id': self.dst1_tax.id
+                }),
+                (0,0,{
+                    'tax_src_id': self.src_tax.id,
+                    'tax_dest_id': self.dst2_tax.id
+                })
+            ]
+        })
+        mapped_taxes = self.fp2m.map_tax(self.src_tax)
+
+        self.assertEqual(mapped_taxes, self.dst1_tax | self.dst2_tax)
