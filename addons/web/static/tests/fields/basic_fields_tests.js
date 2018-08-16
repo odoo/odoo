@@ -14,6 +14,7 @@ var testUtils = require('web.test_utils');
 var createView = testUtils.createView;
 var createAsyncView = testUtils.createAsyncView;
 var DebouncedField = basicFields.DebouncedField;
+var JournalDashboardGraph = basicFields.JournalDashboardGraph;
 var _t = core._t;
 
 QUnit.module('fields', {}, function () {
@@ -2007,6 +2008,53 @@ QUnit.module('basic_fields', {
                 area: true,
             }]);
         },
+    });
+
+    QUnit.test('graph dashboard widget attach/detach callbacks', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        testUtils.patch(JournalDashboardGraph, {
+            on_attach_callback: function () {
+                assert.step('on_attach_callback');
+            },
+            on_detach_callback: function () {
+                assert.step('on_detach_callback');
+            },
+        });
+
+        createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1, 2]]],
+        }).then(function (kanban) {
+            assert.verifySteps([
+                'on_attach_callback',
+                'on_attach_callback'
+            ]);
+
+            kanban.on_detach_callback();
+
+            assert.verifySteps([
+                'on_attach_callback',
+                'on_attach_callback',
+                'on_detach_callback',
+                'on_detach_callback'
+            ]);
+
+            kanban.destroy();
+            testUtils.unpatch(JournalDashboardGraph);
+            done();
+        });
     });
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
