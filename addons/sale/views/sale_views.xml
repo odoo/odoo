@@ -271,7 +271,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Order Lines">
+                        <page string="Order Lines" name="order_lines">
                             <field
                                 name="order_line"
                                 widget="section_and_note_one2many"
@@ -528,7 +528,7 @@
                             <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Other Information">
+                        <page string="Other Information" name="other_information">
                             <group>
                                 <group string="Shipping Information" name="sale_shipping" groups="sale.group_sale_order_dates">
                                     <field name="expected_date" groups="sale.group_sale_order_dates"/>
