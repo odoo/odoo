@@ -792,7 +792,7 @@ var DomainLeaf = DomainNode.extend({
         }
         return _.str.sprintf(
             "%s %s %s",
-            chain.join(" > "),
+            chain.join("→"),
             operator || this.operator,
             value
         ).trim();
