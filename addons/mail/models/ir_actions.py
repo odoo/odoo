@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -96,7 +95,7 @@ class ServerActions(models.Model):
             'activity_type_id': action.activity_type_id.id,
         }
         if action.activity_date_deadline_range > 0:
-            vals['date_deadline'] = date.today() + relativedelta(**{action.activity_date_deadline_range_type: action.activity_date_deadline_range})
+            vals['date_deadline'] = fields.Date.context_today(action) + relativedelta(**{action.activity_date_deadline_range_type: action.activity_date_deadline_range})
         for record in records:
             if action.activity_user_type == 'specific':
                 user = action.activity_user_id

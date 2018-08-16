@@ -27,7 +27,7 @@ class PurchaseOrder(models.Model):
                     sale_to_notify_map[sale_order] |= purchase_line
 
         for sale_order, purchase_order_lines in sale_to_notify_map.items():
-            sale_order.activity_schedule_with_view('mail.mail_activity_data_warning', fields.Datetime.now(),
+            sale_order.activity_schedule_with_view('mail.mail_activity_data_warning',
                 user_id=sale_order.user_id.id or self.env.uid,
                 views_or_xmlid='sale_purchase.exception_sale_on_purchase_cancellation',
                 render_context={

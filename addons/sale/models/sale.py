@@ -366,7 +366,7 @@ class SaleOrder(models.Model):
             if values['invoice_status'] == 'upselling':
                 for order in self:
                     order.activity_schedule(
-                        'sale.mail_act_sale_upsell', fields.Date.today(),
+                        'sale.mail_act_sale_upsell',
                         user_id=order.user_id.id,
                         note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
                             order._name, order.id, order.name,
