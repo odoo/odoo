@@ -133,7 +133,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.pbm_type_id.id
                 },
                 'update_values': {
-                    'active': self.manufacture_steps != 'mrp_one_step',
+                    'active': self.manufacture_steps != 'mrp_one_step' and self.manufacture_to_resupply,
                 }
             },
             # The purpose to move sam rule in the manufacture route instead of
@@ -157,7 +157,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.sam_type_id.id
                 },
                 'update_values': {
-                    'active': self.manufacture_steps == 'pbm_sam',
+                    'active': self.manufacture_steps == 'pbm_sam' and self.manufacture_to_resupply,
                 }
             }
 
