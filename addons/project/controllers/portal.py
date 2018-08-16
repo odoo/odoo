@@ -5,9 +5,9 @@ from collections import OrderedDict
 from operator import itemgetter
 
 from odoo import http, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR
@@ -85,7 +85,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_project(self, project_id=None, access_token=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._project_get_page_view_values(project_sudo, access_token, **kw)
@@ -205,7 +205,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_task(self, task_id, access_token=None, **kw):
         try:
             task_sudo = self._document_check_access('project.task', task_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._task_get_page_view_values(task_sudo, access_token, **kw)
