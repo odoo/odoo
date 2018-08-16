@@ -10,29 +10,38 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow">
-        <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
-            <div class="carousel-inner" style="padding: 0;">
-                 <t t-foreach="srcs" t-as="src">
+
+        <div id="mySlideshow" class="s_slideshow carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#mySlideshow" data-slide-to="0" class="active"/>
+                <li data-target="#mySlideshow" data-slide-to="1"/>
+                <li data-target="#mySlideshow" data-slide-to="2"/>
+            </ol>
+
+            <div class="carousel-inner">
+                <t t-foreach="srcs" t-as="src">
                     <div t-attf-class="carousel-item #{src_index == index and 'active' or ''}">
                         <img t-attf-class="img img-fluid d-block #{userStyle}" t-att-src="src" alt="Slide image"/>
                     </div>
-                 </t>
+                </t>
             </div>
 
-            <ul class="carousel-indicators">
-                <li class="o_indicators_left text-center pt-2" aria-label="Previous" title="Previous">
-                    <i class="fa fa-chevron-left"/>
-                </li>
+            <!-- Controls -->
+            <div class="carousel-control-prev" data-target="#mySlideshow" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
+            </div>
+            <ol class="carousel-indicators">
                 <t t-foreach="srcs" t-as="src">
                     <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
                 </t>
-                <li class="o_indicators_right text-center pt-2" aria-label="Next" title="Next">
-                    <i class="fa fa-chevron-right"/>
-                </li>
-            </ul>
+            </ol>
+            <div class="carousel-control-next" data-target="#mySlideshow" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
+            </div>
 
-            <a class="carousel-control-prev text-black" t-attf-href="##{id}" data-slide="prev" aria-label="Previous" title="Previous"><span class="fa fa-chevron-left"/></a>
-            <a class="carousel-control-next text-black" t-attf-href="##{id}" data-slide="next" aria-label="Next" title="Next"><span class="fa fa-chevron-right"/></a>
         </div>
     </t>
 
