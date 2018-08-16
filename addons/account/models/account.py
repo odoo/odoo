@@ -1049,6 +1049,7 @@ class AccountTax(models.Model):
         RETURN: {
             'total_excluded': 0.0,    # Total without taxes
             'total_included': 0.0,    # Total with taxes
+            'total_void'    : 0.0,    # Total with those taxes, that don't have an account set
             'taxes': [{               # One dict for each tax in self and their children
                 'id': int,
                 'name': str,
@@ -1092,9 +1093,9 @@ class AccountTax(models.Model):
 
         base_values = self.env.context.get('base_values')
         if not base_values:
-            total_excluded = total_included = base = round(price_unit * quantity, prec)
+            total_excluded = total_included = total_void = base = round(price_unit * quantity, prec)
         else:
-            total_excluded, total_included, base = base_values
+            total_excluded, total_included, total_void, base = base_values
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -1106,11 +1107,12 @@ class AccountTax(models.Model):
             price_include = self._context.get('force_price_include', tax.price_include)
 
             if tax.amount_type == 'group':
-                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
+                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, total_void, base))
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
                 base = ret['base'] if tax.include_base_amount else base
                 total_included = ret['total_included']
+                total_void = ret['total_void']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
                 continue
@@ -1126,6 +1128,10 @@ class AccountTax(models.Model):
                 base -= tax_amount
             else:
                 total_included += tax_amount
+            # The total_void amount is computed as the sum of total_excluded
+            # with all tax_amount, where tax has an account set
+            if not tax.account_id:
+                total_void += tax_amount
 
             # Keep base amount used for the current tax
             tax_base = base
@@ -1150,6 +1156,7 @@ class AccountTax(models.Model):
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
             'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
             'total_included': currency.round(total_included) if round_total else total_included,
+            'total_void': currency.round(total_void) if round_total else total_void,
             'base': base,
         }
 
