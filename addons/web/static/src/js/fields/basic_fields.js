@@ -2379,6 +2379,25 @@ var JournalDashboardGraph = AbstractField.extend({
         }
         this._super.apply(this, arguments);
     },
+    /**
+     * The widget view uses the nv(d3) lib to render the graph. This lib
+     * requires that the rendering is done directly into the DOM (so that it can
+     * correctly compute positions). However, the views are always rendered in
+     * fragments, and appended to the DOM once ready (to prevent them from
+     * flickering). We here use the on_attach_callback hook, called when the
+     * widget is attached to the DOM, to perform the rendering. This ensures
+     * that the rendering is always done in the DOM.
+     */
+    on_attach_callback: function () {
+        this._isInDOM = true;
+        this._renderInDOM();
+    },
+    /**
+     * Called when the field is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        this._isInDOM = false;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2399,9 +2418,25 @@ var JournalDashboardGraph = AbstractField.extend({
         }
     },
     /**
+     * Render the widget only when it is in the DOM. This is because nvd3
+     * renders graph only when it is in DOM, apparently to compute available
+     * height and width for instance.
+     *
+     * @override
      * @private
      */
     _render: function () {
+        if (this._isInDOM) {
+            return this._renderInDOM();
+        }
+        return $.when();
+    },
+    /**
+     * Render the widget. This function assumes that it is attached to the DOM.
+     *
+     * @private
+     */
+    _renderInDOM: function () {
         // note: the rendering of this widget is aynchronous as nvd3 does a
         // setTimeout(0) before executing the callback given to addGraph
         var self = this;

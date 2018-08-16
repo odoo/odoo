@@ -65,6 +65,18 @@ var KanbanRecord = Widget.extend({
     start: function () {
         return $.when(this._super.apply(this, arguments), this._render());
     },
+    /**
+     * Called each time the record is attached to the DOM.
+     */
+    on_attach_callback: function () {
+        _.invoke(this.subWidgets, 'on_attach_callback');
+    },
+    /**
+     * Called each time the record is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        _.invoke(this.subWidgets, 'on_detach_callback');
+    },
 
     //--------------------------------------------------------------------------
     // Public

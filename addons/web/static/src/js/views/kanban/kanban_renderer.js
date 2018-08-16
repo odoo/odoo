@@ -122,9 +122,16 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        _.invoke(this.widgets, 'on_attach_callback');
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
         }
+    },
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        _.invoke(this.widgets, 'on_detach_callback');
     },
 
     //--------------------------------------------------------------------------
