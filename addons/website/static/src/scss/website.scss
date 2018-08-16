@@ -162,6 +162,30 @@ font[class*='bg-'] {
     }
 }
 
+
+// Columns
+.s_col_leaf,
+.s_col_rounded,
+.s_col_inset_shadow {
+    // Default, if no background-color already selected
+    background-color: $gray-200;
+    padding: $grid-gutter-width;
+}
+
+.s_col_rounded {
+    border-radius: 1rem;
+}
+
+ .s_col_leaf {
+    border-top-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+
+.s_col_inset_shadow {
+    box-shadow: inset 1px 2px 6px 0 rgba(128, 128, 128, .5);
+    border-radius: .5em;
+}
+
 // Blockquotes
 .blockquote {
     font-size: 1rem;
