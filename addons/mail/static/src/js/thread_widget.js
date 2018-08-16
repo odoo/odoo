@@ -12,8 +12,8 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var ORDER = {
-    ASC: 1, // visually, chronological order of thread from bottom to top
-    DESC: -1, // visually, chronological order of thread from top to bottom
+    ASC: 1, // visually, ascending order of message IDs (from top to bottom)
+    DESC: -1, // visually, descending order of message IDs (from top to bottom)
 };
 
 var READ_MORE = _t("read more");
@@ -55,7 +55,7 @@ var ThreadWidget = Widget.extend({
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
-            displayOrder: ORDER.DESC,
+            displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
             displayStars: true,
             displayDocumentLinks: true,

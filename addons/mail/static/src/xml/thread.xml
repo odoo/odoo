@@ -127,12 +127,12 @@
     <!--
         @param {mail.model.AbstractThread} thread
         @param {Object} options
-        @param {integer} [options.displayOrder] 1 or -1 chronological order for the thread messages
+        @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
+          the thread messages (from top to bottom)
         @param {Object} ORDER
-        @param {integer} ORDER.ASC=1 messages are ordered by increasing IDs, from bottom to top
-        @param {integer} ORDER.DESC=-1 messages are ordered by increasing IDs, from top to bottom
+        @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
+        @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
 
-        Ordering of messages in the thread, messages are indexed by increasing IDs:
                     _____________            _____________
                    |             |          |             |
                    |  message 1  |          |  message n  |
@@ -141,13 +141,40 @@
                    |  message n  |          |  message 1  |
                    |_____________|          |_____________|
 
-        ORDER:           DESC                    ASC
+        ORDER:           ASC                     DESC
 
     -->
     <t t-name="mail.widget.Thread.Content">
         <t t-set="messages" t-value="thread.getMessages()"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      ASC Order
+    -->
+    <t t-name="mail.widget.Thread.Content.ASC">
+        <div class="o_mail_thread_content_asc">
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
+        </div>
     </t>
 
     <!--
@@ -165,43 +192,16 @@
                     |  message 1  |
                     |_____________|
 
-                      ASC Order
+                      DESC Order
 
     -->
-    <t t-name="mail.widget.Thread.Content.ASC">
-        <div class="o_mail_thread_content_asc">
+    <t t-name="mail.widget.Thread.Content.DESC">
+        <div class="o_mail_thread_content_desc">
             <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
             <t t-set="messages" t-value="messages.slice().reverse()"/>
             <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
             <t t-call="mail.widget.Thread.Messages"/>
             <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
-        </div>
-    </t>
-
-    <!--
-        @param {mail.model.AbstractThread} thread
-        @param {Object} options
-        @param {boolean} [options.displayBottomThreadFreeSpace=false]
-        @param {boolean} [options.displayLoadMore=false]
-
-                     _____________
-                    |             |
-                    |  message 1  |
-                    |  message 2  |
-                    |  ...        |
-                    |  message n  |
-                    |_____________|
-
-                      DESC Order
-    -->
-    <t t-name="mail.widget.Thread.Content.DESC">
-        <div class="o_mail_thread_content_desc">
-            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
-            <t t-call="mail.widget.Thread.Messages"/>
-            <t t-if="options.displayBottomThreadFreeSpace">
-                <div class="o_thread_bottom_free_space"/>
-            </t>
-            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
         </div>
     </t>
 
