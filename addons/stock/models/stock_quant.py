@@ -52,6 +52,10 @@ class StockQuant(models.Model):
         help='Quantity of reserved products in this quant, in the default unit of measure of the product',
         readonly=True, required=True)
     in_date = fields.Datetime('Incoming Date', readonly=True)
+    product_type = fields.Selection(
+        related='product_id.product_tmpl_id.type',
+        store=True,
+    )
 
     def action_view_stock_moves(self):
         self.ensure_one()
