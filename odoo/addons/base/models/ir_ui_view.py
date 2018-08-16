@@ -9,6 +9,7 @@ import logging
 import os
 import re
 import time
+import uuid
 
 import itertools
 from dateutil.relativedelta import relativedelta
@@ -363,6 +364,9 @@ actual arch.
          "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
          "Invalid inheritance mode: if the mode is 'extension', the view must"
          " extend an other view"),
+        ('qweb_required_key',
+         "CHECK (type != 'qweb' OR key IS NOT NULL)",
+         "Invalid key: QWeb view should have a key"),
     ]
 
     @api.model_cr_context
@@ -393,6 +397,10 @@ actual arch.
                         # don't raise here, the constraint that runs `self._check_xml` will
                         # do the job properly.
                         pass
+            if not values.get('key') and values.get('type') == 'qweb':
+                values['key'] = "gen_key.%s" % str(uuid.uuid4())[:6]
+                if values.get('model'):
+                    values['key'] = "%s.gen_key_%s" % (values.get('model'), str(uuid.uuid4())[:6])
             if not values.get('name'):
                 values['name'] = "%s %s" % (values.get('model'), values['type'])
             values.update(self._compute_defaults(values))
@@ -421,6 +429,15 @@ actual arch.
         if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
             self.mapped('inherit_children_ids').unlink()
         super(View, self).unlink()
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        self.ensure_one()
+        if self.key and default and 'key' not in default:
+            new_key = self.key + '_%s' % str(uuid.uuid4())[:6]
+            default = dict(default or {}, key=new_key)
+        return super(View, self).copy(default)
 
     @api.multi
     def toggle(self):

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import uuid
 from itertools import groupby
 
 from odoo import api, fields, models, _
@@ -35,26 +36,35 @@ class View(models.Model):
         websites. Also this way newly created websites will only
         contain the default views.
         '''
-        if not self._context.get('no_cow'):
-            current_website_id = self._context.get('website_id')
+        current_website_id = self._context.get('website_id')
+        if current_website_id:
             for view in self:
-                # if generic view in multi-website context
-                if current_website_id and not view.website_id:
-                    new_website_specific_view = view.copy({'website_id': current_website_id})
-                    view._create_website_specific_pages_for_view(new_website_specific_view,
-                                                                 view.env['website'].browse(current_website_id))
+                if not view.key and not vals.get('key'):
+                    view.with_context(no_cow=True).key = 'website.key_%s' % str(uuid.uuid4())[:6]
+                if not view.website_id and current_website_id and not self._context.get('no_cow'):
+                    # If already a specific view for this generic view, write on it
+                    website_specific_view = self.env['ir.ui.view'].search([
+                        ('key', '=', view.key),
+                        ('website_id', '=', current_website_id)
+                    ], limit=1)
+                    if not website_specific_view:
+                        # Set key to avoid copy() to generate an unique key as we want the specific view to have the same key
+                        website_specific_view = view.copy({'website_id': current_website_id, 'key': view.key})
+                        view._create_website_specific_pages_for_view(website_specific_view,
+                                                                     view.env['website'].browse(current_website_id))
 
-                    # trigger COW on inheriting views
-                    for inherit_child in view.inherit_children_ids:
-                        inherit_child.write({'inherit_id': new_website_specific_view.id})
+                        for inherit_child in view.inherit_children_ids:
+                            # COW won't be triggered if there is already a website_id on the view, we should copy the view ourself
+                            if inherit_child.website_id.id == current_website_id:
+                                inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                                # We should unlink website specific view from generic tree as it now copied on specific tree
+                                inherit_child.unlink()
+                            else:
+                                # trigger COW on inheriting views
+                                inherit_child.write({'inherit_id': website_specific_view.id})
 
-                    new_website_specific_view.write(vals)
-                else:
-                    super(View, view).write(vals)
-        else:
-            super(View, self).write(vals)
-
-        return True
+                    return super(View, website_specific_view).write(vals)
+        return super(View, self).write(vals)
 
     @api.multi
     def unlink(self):
@@ -121,10 +131,12 @@ class View(models.Model):
 
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key """
+        view_with_key = self.filtered('key')
+        view_without_key = self - view_with_key
         filtered = self.env['ir.ui.view']
-        for dummy, group in groupby(self.sorted('key'), key=lambda record: record.key):
+        for dummy, group in groupby(view_with_key.sorted('key'), key=lambda record: record.key):
             filtered += sorted(group, key=lambda record: record._sort_suitability_key())[0]
-        return filtered.sorted(key=lambda view: (view.priority, view.id))
+        return (filtered + view_without_key).sorted(key=lambda view: (view.priority, view.id))
 
     @api.model
     def _view_obj(self, view_id):
@@ -275,3 +287,18 @@ class View(models.Model):
 
     def _read_template_keys(self):
         return super(View, self)._read_template_keys() + ['website_id']
+
+    @api.multi
+    def save(self, value, xpath=None):
+        self.ensure_one()
+        # The first time a generic view is edited, it will send multiple rpc to this method.
+        # If there is already a website specific view, we need to divert the super to it
+        current_website_id = self._context.get('website_id')
+        if self.key and current_website_id:
+            website_specific_view = self.env['ir.ui.view'].search([
+                ('key', '=', self.key),
+                ('website_id', '=', current_website_id)
+            ], limit=1)
+            if website_specific_view:
+                self = website_specific_view
+        super(View, self).save(value, xpath=xpath)
