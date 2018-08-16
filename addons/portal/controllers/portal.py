@@ -6,11 +6,9 @@ import math
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
-from odoo.osv import expression
-from odoo.exceptions import ValidationError, AccessError
+from odoo.exceptions import ValidationError, AccessError, MissingError
 from odoo.http import Controller, request, route
 from odoo.tools import consteq
-from odoo.addons.web.controllers.main import WebClient
 
 # --------------------------------------------------
 # Misc tools
@@ -232,7 +230,9 @@ class CustomerPortal(Controller):
 
     def _document_check_access(self, model_name, document_id, access_token=None):
         document = request.env[model_name].browse([document_id])
-        document_sudo = document.sudo()
+        document_sudo = document.sudo().exists()
+        if not document_sudo:
+            raise MissingError("This document does not exist.")
         try:
             document.check_access_rights('read')
             document.check_access_rule('read')

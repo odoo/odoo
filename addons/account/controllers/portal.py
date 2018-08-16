@@ -5,8 +5,8 @@ import re
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
-from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
-from odoo.exceptions import AccessError
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 
 
@@ -85,7 +85,7 @@ class PortalAccount(CustomerPortal):
     def portal_my_invoice_detail(self, invoice_id, access_token=None, **kw):
         try:
             invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
@@ -98,7 +98,7 @@ class PortalAccount(CustomerPortal):
     def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
         try:
             invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         # print report as sudo, since it require access to taxes, payment term, ... and portal

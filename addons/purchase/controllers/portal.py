@@ -4,10 +4,10 @@
 from collections import OrderedDict
 
 from odoo import http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.tools.translate import _
-from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
+from odoo.addons.portal.controllers.portal import pager as portal_pager, CustomerPortal
 
 
 class CustomerPortal(CustomerPortal):
@@ -94,7 +94,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_purchase_order(self, order_id=None, access_token=None, **kw):
         try:
             order_sudo = self._document_check_access('purchase.order', order_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)

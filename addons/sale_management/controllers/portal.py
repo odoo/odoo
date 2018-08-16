@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.portal.controllers.mail import _message_post_helper
@@ -14,7 +14,7 @@ class CustomerPortal(CustomerPortal):
     def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None, order_id=None):
         try:
             order_sudo = self._document_check_access('sale.order', res_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return {'error': _('Invalid order')}
         if order_sudo.state != 'sent':
             return {'error': _('Order is not in a state requiring customer validation.')}
@@ -50,7 +50,7 @@ class CustomerPortal(CustomerPortal):
     def decline(self, order_id, access_token=None, **post):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         if order_sudo.state != 'sent':
@@ -65,7 +65,7 @@ class CustomerPortal(CustomerPortal):
     def update(self, line_id, remove=False, unlink=False, order_id=None, access_token=None, **post):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         if order_sudo.state not in ('draft', 'sent'):
@@ -85,7 +85,7 @@ class CustomerPortal(CustomerPortal):
     def add(self, order_id, option_id, access_token=None, **post):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
-        except AccessError:
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
         option_sudo = request.env['sale.order.option'].sudo().browse(option_id)
