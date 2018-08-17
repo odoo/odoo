@@ -75,7 +75,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
             this._prepareInput().appendTo(this.$el);
         },
         /**
-         * Shows the dropdown with the current clearbit suggestions. If one is
+         * Shows the dropdown with the suggestions. If one is
          * already opened, it removes the old one before rerendering the dropdown.
          *
          * @private
@@ -83,7 +83,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
         _showDropdown: function () {
             this._removeDropdown();
             if (this.suggestions.length > 0) {
-                this.$dropdown = $(QWeb.render('web_clearbit.dropdown', {
+                this.$dropdown = $(QWeb.render('partner_autocomplete.dropdown', {
                     suggestions: this.suggestions,
                 }));
                 this.$dropdown.appendTo(this.$el);
@@ -95,7 +95,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
          * to work only with the "res.partner" form view.
          *
          * @private
-         * @param company - the clearbit company description
+         * @param company
          */
         _selectCompany: function (company) {
             var self = this;
@@ -125,12 +125,11 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
             this._removeDropdown();
         },
         /**
-         * Shows clearbit suggestions according to the given value.
+         * Shows suggestions according to the given value.
          * Note: this method is debounced (@see init).
          *
          * @private
-         * @param {string} value - the value whose associated clearbit data have to
-         *                       be fetched
+         * @param {string} value - searched term
          */
         _suggestCompanies: function (value) {
             var self = this;
@@ -151,7 +150,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
 
         /**
          * @override of FieldChar (called when the user is typing text)
-         * Checks the <input/> value and shows clearbit suggestions according to
+         * Checks the <input/> value and shows suggestions according to
          * this value.
          *
          * @private
@@ -226,7 +225,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
             }
         },
         /**
-         * Called on mousedown event on a clearbit suggestion -> prevent default
+         * Called on mousedown event on a suggestion -> prevent default
          * action so that the <input/> element does not lose the focus.
          *
          * @private
@@ -256,7 +255,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
         /**
          * Called when a dropdown suggestion is clicked -> trigger_up changes for
          * some fields in the view (not only this <input/> one) with the associated
-         * clearbit data (@see _selectCompany).
+         * data (@see _selectCompany).
          *
          * @private
          * @param {Event} e

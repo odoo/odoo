@@ -3,10 +3,8 @@
 
 import logging
 from odoo import api, fields, models, exceptions, _
-from odoo.http import request
 from odoo.addons.iap import jsonrpc
 from requests.exceptions import ConnectionError, HTTPError
-import requests
 
 _logger = logging.getLogger(__name__)
 
@@ -182,8 +180,7 @@ class ResPartner(models.Model):
         return result
 
 
-# ---- FROM BASE VAT AUTOCOMPLETE ----
-
+    # ---- FROM BASE VAT AUTOCOMPLETE ----
     def _get_vies_company_data(self, vat):
         vies_vat_data = False
 
@@ -194,7 +191,7 @@ class ResPartner(models.Model):
 
             url = 'http://odoo:8069/iap/partner_autocomplete/vat'
             params = {
-                'domain': company_domain,
+                'vat': vat,
                 'country_code': self.env.user.company_id.country_id.code,
             }
 
@@ -206,57 +203,92 @@ class ResPartner(models.Model):
 
         return vies_vat_data
 
-    def _check_vat_format(self, search_val):
-        return len(search_val) > 5 and search_val[:2].lower() in stdnum_vat.country_codes
+# FOR TESTING PURPOSE ========================================================
+
+import re
+from odoo import api, models
+from suds.client import Client
+
+try:
+    import stdnum.eu.vat as stdnum_vat
+    if not hasattr(stdnum_vat, "country_codes"):
+        # stdnum version >= 1.9
+        stdnum_vat.country_codes = stdnum_vat._country_codes
+except ImportError:
+    _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
+    stdnum_vat = None
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
 
     @api.model
-    def vies_vat_search(self, search_val=""):
-        if self._check_vat_format(search_val):
-            return self._get_vies_company_data(search_val)
+    def vies_vat_search(self, vat):
+        def _check_city(lines, country='BE'):
+            if country == 'GB':
+                ukzip = '[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}'
+                if re.match(ukzip, lines[-1]):
+                    cp = lines.pop()
+                    city = lines.pop()
+                    return (cp, city)
+            elif country == 'SE':
+                result = re.match('([0-9]{3}\s?[0-9]{2})\s?([A-Z]+)', lines[-1])
+                if result:
+                    lines.pop()
+                    return (result.group(1), result.group(2))
+            else:
+                result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
+                if result:
+                    lines.pop()
+                    return (result.group(1), result.group(2))
+            return False
+
+        # Equivalent to stdnum_vat.check_vies(partner.vat).
+        # However, we want to add a custom timeout to the suds.client
+        # because by default, it's 120 seconds and this is to long.
+        try:
+            client = Client(stdnum_vat.vies_wsdl, timeout=5)
+            partner_vat = stdnum_vat.compact(vat)
+            result = client.service.checkVat(partner_vat[:2], partner_vat[2:])
+        except:
+            # Avoid blocking the client when the service is unreachable/unavailable
+            return False
+
+        if not result['valid']:
+            return False
+
+        if result['name'] != '---':
+            partner = {}
+
+            # TODO: PUT THIS IN IAPS !!!!
+            # Put the legal form in the company name at the end
+            split_name = result['name'].split(' ')
+            legal_form = split_name.pop(0)
+            partner['short_name'] = ' '.join(split_name)
+
+            split_name.append(legal_form)
+            partner['name'] = ' '.join(split_name)
+            partner['vat'] = result['countryCode'] + result['vatNumber']
+
+            lines = [x for x in result['address'].split("\n") if x]
+            if len(lines) == 1:
+                lines = [x.strip() for x in lines[0].split(',') if x]
+            if len(lines) == 1:
+                lines = [x.strip() for x in lines[0].split('   ') if x]
+
+            vals = self._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
+            partner.update(vals)
+
+            if len(lines) > 0:
+                res = _check_city(lines, result['countryCode'])
+                if res:
+                    partner['zip'] = res[0]
+                    partner['city'] = res[1].title()
+            if len(lines) > 0:
+                partner['street2'] = lines.pop(0).title()
+
+            country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
+            partner['country_id'] = country and country.id or False
+
+            return partner
+
         return False
-
-    @api.onchange('vat')
-    def vies_vat_change(self):
-        if stdnum_vat is None:
-            return {}
-
-        for partner in self:
-            if not partner.vat:
-                continue
-            # If a field is not set in the response, wipe it anyway
-            non_set_address_fields = self._get_all_address_fields()
-            if self._check_vat_format(partner.vat):
-                company_data = self._get_vies_company_data(partner.vat)
-
-                if not partner.name and company_data['name']:
-                    partner.name = company_data['name']
-
-                #set the address fields
-                for field, value in company_data.items():
-                    if(field in non_set_address_fields):
-                        partner[field] = value
-                        non_set_address_fields.remove(field)
-                for field in non_set_address_fields:
-                    if partner[field]:
-                        partner[field] = False
-
-
-class ResCompany(models.Model):
-    _inherit = 'res.company'
-
-    @api.onchange('vat')
-    def vies_vat_change(self):
-        self.ensure_one()
-        company_address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
-        company_data = self.env['res.partner']._get_vies_company_data(self.vat)
-        if not self.name and company_data['name']:
-            self.name = company_data['name']
-
-        #set the address fields
-        for field, value in company_data.items():
-            if(field in company_address_fields):
-                self[field] = value
-                company_address_fields.remove(field)
-        for field in company_address_fields:
-            if self[field]:
-                self[field] = False

@@ -5,10 +5,10 @@
             <a role="menuitem" href="#"
                 t-attf-class="dropdown-item o_partner_autocomplete_suggestion clearfix#{info_index == 0 and ' active' or ''}"
                 t-att-data-index="info_index">
-                <img t-att-src="info['logo']" onerror="this.src='/web/static/src/img/placeholder.png'" alt="Placeholder"/>
+                <img t-att-src="info['logo']" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
                 <div class="o_partner_autocomplete_info">
-                    <strong><t t-esc="info['name'] or '&#160;'"/></strong>
-                    <div><t t-esc="info['domain']"/></div>
+                    <strong><t t-esc="info['label'] or '&#160;'"/></strong>
+                    <div><t t-esc="info['description']"/></div>
                 </div>
             </a>
         </t>
