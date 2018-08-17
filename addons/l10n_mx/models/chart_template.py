@@ -42,7 +42,7 @@ class AccountChartTemplate(models.Model):
         return res
 
     @api.model
-    def _get_default_bank_journals_data(self, name, company):
+    def _prepare_transfer_account_for_direct_creation(self, name, company):
         res = super(AccountChartTemplate, self)._get_default_bank_journals_data(name, company)
         xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
         existing_tags = [x[-1:] for x in res.get('tag_ids', [])]
