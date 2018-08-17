@@ -666,23 +666,22 @@ QUnit.module('account', {
         });
 
         clientAction.appendTo($('#qunit-fixture'));
-
         var widget = clientAction.widgets[0];
 
         assert.strictEqual(widget.$('.mv_line').length, 2, "should display 2 account move lines");
         assert.strictEqual(widget.$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
             " 101200 2017-02-07 INV/2017/0002 $ 650.00 101200 2017-02-07 INV/2017/0003 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
-        assert.strictEqual(widget.$('.mv_line .cell_right:not(:empty)').length, 2, "should display only the credit account move lines (hide the debit)");
+        assert.strictEqual(widget.$('.mv_line .cell_right:contains(".")').length, 2, "should display only the credit account move lines (hide the debit)");
 
         clientAction.widgets[1].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').length, 5, "should display 5 account move lines");
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:not(:empty)').length, 4, "should display only the credit account move lines (hide the debit)");
+        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_right:contains(".")').length, 4, "should display only the credit account move lines (hide the debit)");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line.already_reconciled').length, 3, "should display 3 already reconciled account move lines");
         assert.strictEqual(clientAction.widgets[1].$('.mv_line').text().replace(/[\n\r\s]+/g, ' '),
             " 101401 2017-01-23 ASUSTeK: BNK1/2017/0002: SUPP.OUT/2017/0002 : BILL/2017/0003 $ 376.00 101401 2017-01-23 Agrolait: BNK1/2017/0003: CUST.IN/2017/0001 $ 100.00 101401 2017-01-23 Agrolait: BNK1/2017/0004: CUST.IN/2017/0002 : INV/2017/0003 $ 525.50 101200 2017-02-07 Agrolait: INV/2017/0002 $ 650.00 101200 2017-02-22 Agrolait: INV/2017/0004 $ 525.00 ",
             "should display 4 account move lines who contains the account_code, due_date, label and the credit");
-        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:not(:empty)').length, 1, "should display only 1 debit account move lines");
+        assert.strictEqual(clientAction.widgets[1].$('.mv_line .cell_left:contains(".")').length, 1, "should display only 1 debit account move lines");
 
         // load more
         assert.ok(clientAction.widgets[1].$('.match div.load-more a:visible').length, "should display the 'load more' button");
@@ -833,10 +832,11 @@ QUnit.module('account', {
             mockRPC: function (route, args) {
                 console.log(args.method);
                 if (args.method === 'process_bank_statement_line') {
+                    var lines = args.args['1'];
                     assert.deepEqual(args.args, [
                         [6],
                         [{
-                            partner_id: false,
+                            partner_id: lines.length == 1 ? lines[0].partner_id : false,
                             counterpart_aml_dicts:[],
                             payment_aml_ids: [392],
                             new_aml_dicts: [],
@@ -869,7 +869,12 @@ QUnit.module('account', {
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
         assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
-        assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should not display the reconcile button");
+
+        // The partner has been set automatically, remove it.
+        widget.$('.o_input_dropdown input').trigger('click');
+        widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
+
+        assert.strictEqual(widget.$('button.btn-primary:visible').length, 0, "should display the reconcile model buttons");
         assert.strictEqual(widget.$('.text-danger:visible').length, 1, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
         assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
@@ -1054,7 +1059,7 @@ QUnit.module('account', {
 
         widget.$('.create .create_amount input').val('1100.00').trigger('input');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text(), "$ 1100.00", "should display the value 1100.00 in right column");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 75.00", "should display 'Open Balance' line because the rest to reconcile is 75.00");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have ever only the created reconcile line");
         assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 SAJ/2014/002 and SAJ/2014/003 1100.00 ",
@@ -1067,7 +1072,7 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
         widget.$('.create .create_label input').val('test0').trigger('input');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_left:last').text(), "$ 100.00", "should display the value 100.00 in left column");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_left:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 100.00", "should display the value 100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 175.00", "should display 'Open Balance' line because the rest to reconcile is 175.00");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
@@ -1084,7 +1089,7 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(101000 Current Assets)').trigger('mouseenter').trigger('click');
         widget.$('.create .create_label input').val('test1').trigger('input');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text(), "$ 200.00", "should display the value 200.00 in left column");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 200.00", "should display the value 200.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$ 25.00", "should display 'Open balance' with 25.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 3, "should have 3 created reconcile lines");
@@ -1174,7 +1179,7 @@ QUnit.module('account', {
         widget.$('.create .create_label input').val('test1').trigger('input');
         widget.$('.create .create_amount input').val('1100').trigger('input');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text(), "$\u00a01100.00", "should display the value 1100.00 in left column");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have 1 created reconcile lines");
@@ -1182,7 +1187,7 @@ QUnit.module('account', {
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(10.00%)').trigger('mouseenter').trigger('click');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "$\u00a01000.00$\u00a0100.00", "should have 2 created reconcile lines with right column values");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1000.00 $ 100.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$\u00a075.00", "should display 'Open Balance' with 75.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "", "should display 'Open Balance' without any value in left column");
@@ -1191,7 +1196,7 @@ QUnit.module('account', {
         widget.$('.create .create_tax_id input').trigger('click');
         $('.ui-autocomplete .ui-menu-item a:contains(20.00%)').trigger('mouseenter').trigger('click');
 
-        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "$\u00a01100.00$\u00a0220.00", "should have 2 created reconcile lines with right column values");
+        assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00 $ 220.00", "should have 2 created reconcile lines with right column values");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$\u00a0145.00", "should display 'Open balance' with 145.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
@@ -1215,7 +1220,7 @@ QUnit.module('account', {
         widget.$('.create .quick_add button:contains(ATOS)').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67", "should display 4 lines");
+            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67 ", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance229.12", "should display the 'Open balance' line with value in left column");
 
@@ -1237,37 +1242,6 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
             " 101120 Double Banque 1145.62 101130 Double Frais 29.38 ",
             "should have a sum of reconciliation proposition amounts equal to the line amount");
-
-        clientAction.destroy();
-    });
-
-    QUnit.test('Reconciliation auto reconciliation', function (assert) {
-        assert.expect(6);
-
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-
-        testUtils.addMockEnvironment(clientAction, {
-            'data': this.params.data,
-        });
-        clientAction.appendTo($('#qunit-fixture'));
-
-        clientAction.$('button.o_automatic_reconciliation').trigger('click');
-
-        assert.strictEqual(clientAction.$('.progress .valuenow').text(), "1", "should reconciled one line");
-        assert.strictEqual(clientAction.$('.progress .valuemax').text(), "4", "should have maximum 4 lines to reconciled");
-        assert.strictEqual(clientAction.$('thead .cell_label').text().replace(/[\n\r\s$,]+/g, ' '),
-            "SAJ/2014/002 and SAJ/2014/003 Bank fees First 2000 € of SAJ/2014/001 ", "should rest 3 lines to reconciled");
-        assert.ok(clientAction.$('.notification_area .notification').length, "should display the notification");
-        var do_action = false;
-        clientAction.on('do_action', clientAction, function (data) {
-            do_action = data.data.action;
-        });
-        clientAction.$('.notification_area a.fa-external-link').trigger('click');
-        assert.deepEqual(_.pick(do_action, "res_model", "domain", "type"),
-            {"res_model":"account.move", "domain":[['id',"in",[143]]], "type":"ir.actions.act_window"},
-            "should try to open the record form view");
-        clientAction.$('.notification_area .close').trigger('click');
-        assert.notOk(clientAction.$('.notification_area .notification').length, "should close the notification");
 
         clientAction.destroy();
     });
@@ -1296,7 +1270,7 @@ QUnit.module('account', {
             " Agrolait 101200 ",
             "should display the partner and the account code as title");
 
-        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right').text(),
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '),
             "$ 11,000.00", "sould display the line in $");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:first .match tr:first .cell_right .o_multi_currency').data('content'),
             "10,222.00 €", "sould display the monetary information in €");
