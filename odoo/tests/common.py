@@ -571,7 +571,6 @@ class ChromeBrowser():
                 _logger.info('Code start result: %s' % res)
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
                     _logger.error("Running code returned an error")
-                    self.browser_cleanup()
                     return False
             elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') == 'log':
                 logs = res.get('params', {}).get('args')
@@ -582,7 +581,6 @@ class ChromeBrowser():
                     elif log.get('type', '') == 'string' and log.get('value', '').lower().startswith('error'):
                         self.take_screenshot()
                         self._save_screencast()
-                        self.browser_cleanup()
                         return False
             elif res and res.get('method') == 'Page.screencastFrame':
                 self.screencast_frames.append(res.get('params'))
@@ -675,7 +673,7 @@ class HttpCase(TransactionCase):
                     join_retry_count -= 1
                     if join_retry_count < 0:
                         _logger.warning("Stop waiting for thread %s handling request for url %s",
-                                        thread.name, thread.url)
+                                        thread.name, getattr(thread, 'url', '<UNKNOWN>'))
                         break
                     time.sleep(0.5)
                     t1 = int(time.time())
@@ -730,31 +728,26 @@ class HttpCase(TransactionCase):
         # Start chrome only if needed (instead of using a setupClass)
         self.start_chrome()
 
-        self.authenticate(login, login)
-        url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
-        _logger.info('Open "%s" in chrome headless' % url)
+        try:
+            self.authenticate(login, login)
+            url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
+            _logger.info('Open "%s" in chrome headless' % url)
 
-        _logger.info('Starting screen cast')
-        self.chrome_browser.start_screencast()
-        self.chrome_browser.navigate_to(url)
+            _logger.info('Starting screen cast')
+            self.chrome_browser.start_screencast()
+            self.chrome_browser.navigate_to(url)
 
-        # Needed because tests like test01.js (qunit tests) are passing a ready
-        # code = ""
-        ready = ready or "document.readyState === 'complete'"
-        self.assertTrue(
-            self.chrome_browser._wait_ready(ready),
-            'The ready "%s" code was always falsy' % ready
-        )
+            # Needed because tests like test01.js (qunit tests) are passing a ready
+            # code = ""
+            ready = ready or "document.readyState === 'complete'"
+            self.assertTrue(self.chrome_browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+            self.assertTrue(self.chrome_browser._wait_code_ok(code, timeout), 'The test code "%s" failed' % code)
 
-        self.assertTrue(
-            self.chrome_browser._wait_code_ok(code, timeout),
-            'The test code "%s" failed' % code
-        )
-
-        # better at the end of the method, in case we call the method multiple
-        # times in the same test
-        self.chrome_browser.browser_cleanup()
-        self._wait_remaining_requests()
+        finally:
+            # better at the end of the method, in case we call the method multiple
+            # times in the same test
+            self.chrome_browser.browser_cleanup()
+            self._wait_remaining_requests()
 
     phantom_js = browser_js
 
