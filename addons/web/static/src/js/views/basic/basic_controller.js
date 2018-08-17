@@ -607,7 +607,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }).then(function (result) {
             self.do_action(result, {
                 on_reverse_breadcrumb: function () {
-                    if (self.renderer.alertFields.length) {
+                    if (!_.isEmpty(self.renderer.alertFields)) {
                         self.renderer.displayTranslationAlert();
                     }
                     return false
