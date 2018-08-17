@@ -28,7 +28,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         quick_create_proposition: '_onAction',
         toggle_partial_reconcile: '_onAction',
         validate: '_onValidate',
-        validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
         load_more: '_onLoadMore',

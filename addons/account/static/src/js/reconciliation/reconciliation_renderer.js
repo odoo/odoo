@@ -66,13 +66,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
 
         this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
 
-        this.enterHandler = function (e) {
-            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                this.trigger_up('validate_all_balanced');
-            }
-        }.bind(this);
-        $('body').on('keyup', this.enterHandler);
-
         return $.when.apply($, defs);
     },
     /**
