@@ -150,13 +150,19 @@ class HolidaysType(models.Model):
 
         return result
 
+    def _get_contextual_employee_id(self):
+        if 'employee_id' in self._context:
+            employee_id = self._context['employee_id']
+        elif 'default_employee_id' in self._context:
+            employee_id = self._context['default_employee_id']
+        else:
+            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
+        return employee_id
+
     @api.multi
     def _compute_leaves(self):
         data_days = {}
-        if 'employee_id' in self._context:
-            employee_id = self._context['employee_id']
-        else:
-            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
+        employee_id = self._get_contextual_employee_id()
 
         if employee_id:
             data_days = self.get_days(employee_id)
@@ -221,8 +227,9 @@ class HolidaysType(models.Model):
         is an employee_id in context and that no other order has been given
         to the method.
         """
+        employee_id = self._get_contextual_employee_id()
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        if not count and not order and self._context.get('employee_id'):
+        if not count and not order and employee_id:
             leaves = self.browse(leave_ids)
             sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
             return leaves.sorted(key=sort_key, reverse=True).ids

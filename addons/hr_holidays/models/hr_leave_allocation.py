@@ -27,8 +27,11 @@ class HolidaysAllocation(models.Model):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     def _default_holiday_status_id(self):
-        lt = self.env['hr.leave.type'].with_context(employee_id=self._default_employee().id).search([('valid', '=', True)], limit=1)
-        return lt[:1]
+        if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+            domain = [('valid', '=', True)]
+        else:
+            domain = [('valid', '=', True), ('allocation_type', 'in', ('no', 'fixed_allocation'))]
+        return self.env['hr.leave.type'].search(domain, limit=1)
 
     name = fields.Char('Description')
     state = fields.Selection([
