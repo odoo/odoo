@@ -132,8 +132,8 @@ class HolidaysRequest(models.Model):
                                                ('pm', 'Afternoon')], string="Date Period End", default='pm')
 
     request_unit_all = fields.Selection([('half', 'Half-day'),
-                             ('day', '1 Day'),
-                             ('period', 'Period')])
+                                         ('day', '1 Day'),
+                                         ('period', 'Period')], default='day')
     # Duplicate field because we cannot hide some entries of a selection field
     request_unit_day = fields.Selection([('day', '1 Day'),
                                          ('period', 'Period')], default='day')
