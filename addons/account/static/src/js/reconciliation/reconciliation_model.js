@@ -127,6 +127,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     addProposition: function (handle, mv_line_id) {
+        var self = this;
         var line = this.getLine(handle);
         var prop = _.clone(_.find(line.mv_lines, {'id': mv_line_id}));
         this._addProposition(line, prop);
@@ -135,11 +136,10 @@ var StatementModel = BasicModel.extend({
         // Onchange the partner if not already set on the statement line.
         if(!line.st_line.partner_id && line.reconciliation_proposition
             && line.reconciliation_proposition.length == 1 && prop.partner_id){
-            return $.when(
-                this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)).then(
-                this._computeLine(line),
-                this._performMoveLine(handle)
-            );
+            return this.changePartner(handle, {'id': prop.partner_id, 'display_name': prop.partner_name}, true)
+                .then(function (result) {
+                    return $.when(self._computeLine(line), self._performMoveLine(handle));
+                });
         }
 
         return $.when(this._computeLine(line), this._performMoveLine(handle));
