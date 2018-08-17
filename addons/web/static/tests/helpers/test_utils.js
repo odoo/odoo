@@ -830,14 +830,17 @@ function patch (target, props) {
 function unpatch(target) {
     var patchID = target.__patchID;
     var patch = patches[patchID];
-    _.each(patch.ownPatchedProps, function (p) {
-        target[p.key] = p.initialValue;
-    });
     if (target.prototype) {
+        _.each(patch.ownPatchedProps, function (p) {
+            target.prototype[p.key] = p.initialValue;
+        });
         _.each(patch.otherPatchedProps, function (key) {
             delete target.prototype[key];
         });
     } else {
+        _.each(patch.ownPatchedProps, function (p) {
+            target[p.key] = p.initialValue;
+        });
         _.each(patch.otherPatchedProps, function (key) {
             delete target[key];
         });
