@@ -34,7 +34,7 @@ class AuthenticationError(Exception):
     pass
 
 
-def jsonrpc(url, method='call', params=None):
+def jsonrpc(url, method='call', params=None, timeout=15):
     """
     Calls the provided JSON-RPC endpoint, unwraps the result and
     returns JSON-RPC errors as exceptions.
@@ -49,7 +49,8 @@ def jsonrpc(url, method='call', params=None):
 
     _logger.info('iap jsonrpc %s', url)
     try:
-        req = requests.post(url, json=payload)
+        req = requests.post(url, json=payload, timeout=timeout)
+        req.raise_for_status()
         response = req.json()
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
