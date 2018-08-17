@@ -2629,8 +2629,8 @@ class Many2many(_RelationalMulti):
         model = record_values[0][0]
         comodel = model.env[self.comodel_name]
 
-        # determine links (set of pairs (id1, id2))
-        links = set()
+        # determine relation {id1: ids2}
+        rel_ids = {record.id: set() for record, value in record_values}
         recs, vals_list = [], []
 
         def flush():
@@ -2638,12 +2638,12 @@ class Many2many(_RelationalMulti):
             if vals_list:
                 lines = comodel.create(vals_list)
                 for rec, line in pycompat.izip(recs, lines):
-                    links.add((rec.id, line.id))
+                    rel_ids[rec.id].add(line.id)
                 recs.clear()
                 vals_list.clear()
 
         for record, value in record_values:
-            for act in (value or []):
+            for act in value or []:
                 if not isinstance(act, (list, tuple)) or not act:
                     continue
                 if act[0] == 0:
@@ -2653,23 +2653,22 @@ class Many2many(_RelationalMulti):
                     comodel.browse(act[1]).write(act[2])
                 elif act[0] == 2:
                     comodel.browse(act[1]).unlink()
-                    links.discard((record.id, act[1]))
+                    rel_ids[record.id].discard(act[1])
                 elif act[0] == 3:
-                    links.discard((record.id, act[1]))
+                    rel_ids[record.id].discard(act[1])
                 elif act[0] == 4:
-                    links.add((record.id, act[1]))
+                    rel_ids[record.id].add(act[1])
                 elif act[0] in (5, 6):
                     if recs and recs[-1] == record:
                         flush()
-                    # must reify the RHS as Python can update the subject on
-                    # the fly leading to "RuntimeError: Set changed size during iteration"
-                    links.difference_update([pair for pair in links if pair[0] == record.id])
+                    rel_ids[record.id].clear()
                     if act[0] == 6:
-                        links.update((record.id, id2) for id2 in act[2])
+                        rel_ids[record.id].update(act[2])
 
         flush()
 
         # add links
+        links = [(id1, id2) for id1, ids2 in rel_ids.items() for id2 in ids2]
         if links:
             query = """
                 INSERT INTO {rel} ({id1}, {id2}) VALUES {values}
@@ -2782,9 +2781,15 @@ class Id(Field):
     def __get__(self, record, owner):
         if record is None:
             return self         # the field is accessed through the class owner
-        if not record:
+
+        # the code below is written to make record.id as quick as possible
+        ids = record._ids
+        size = len(ids)
+        if size is 0:
             return False
-        return record.ensure_one()._ids[0]
+        elif size is 1:
+            return ids[0]
+        raise ValueError("Expected singleton: %s" % record)
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
