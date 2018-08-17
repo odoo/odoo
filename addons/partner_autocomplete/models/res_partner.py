@@ -162,17 +162,19 @@ class ResPartner(models.Model):
                 'id': country_id.id,
                 'display_name': country_id.display_name
             }
-            state_id = self.env['res.country.state'].search(
-                [['country_id', '=', country_id.id], ['code', '=ilike', state_code]])
-            if not state_id:
-                state_id = self.env['res.country.state'].search(
-                    [['country_id', '=', country_id.id], ['name', '=ilike', state_name]])
+            if state_name or state_code:
+                state_id = self.env['res.country.state'].search([
+                    ('country_id', '=', country_id.id),
+                    '|',
+                        ('name', '=ilike', state_name),
+                        ('code', '=ilike', state_code)
+                    ], limit=1)
 
-            if state_id:
-                result['state_id'] = {
-                    'id': state_id.id,
-                    'display_name': state_id.display_name
-                }
+                if state_id:
+                    result['state_id'] = {
+                        'id': state_id.id,
+                        'display_name': state_id.display_name
+                    }
 
         else:
             _logger.info('Country code not found: %s', country_code)

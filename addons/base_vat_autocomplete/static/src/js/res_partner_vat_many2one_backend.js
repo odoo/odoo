@@ -41,6 +41,7 @@ odoo.define('base.res_partner_vat_many2one_backend', function (require) {
          * @private
          */
         _validateViesSearchTerm: function(search_val) {
+            // https://github.com/MfgLabs/js-vat to validate
             var str = this._sanitizeVAT(search_val);
             var regex = /^[A-Za-z]{2}\d{5,}$/g;
 
