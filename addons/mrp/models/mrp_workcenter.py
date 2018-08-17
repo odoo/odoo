@@ -166,6 +166,28 @@ class MrpWorkcenter(models.Model):
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
 
+class MrpWorkcenterProductivityLossType(models.Model):
+    _name = "mrp.workcenter.productivity.loss.type"
+    _rec_name = 'loss_type'
+
+    @api.depends('loss_type')
+    def name_get(self):
+        """ As 'category' field in form view is a Many2one, its value will be in
+        lower case. In order to display its value capitalized 'name_get' is
+        overrided.
+        """
+        result = []
+        for rec in self:
+            result.append((rec.id, rec.loss_type.title()))
+        return result
+
+    loss_type = fields.Selection([
+            ('availability', 'Availability'),
+            ('performance', 'Performance'),
+            ('quality', 'Quality'),
+            ('productive', 'Productive')], string='Category', default='availability', required=True)
+
+
 class MrpWorkcenterProductivityLoss(models.Model):
     _name = "mrp.workcenter.productivity.loss"
     _description = "TPM Big Losses"
@@ -174,12 +196,8 @@ class MrpWorkcenterProductivityLoss(models.Model):
     name = fields.Char('Reason', required=True)
     sequence = fields.Integer('Sequence', default=1)
     manual = fields.Boolean('Is a Blocking Reason', default=True)
-    loss_type = fields.Selection([
-        ('availability', 'Availability'),
-        ('performance', 'Performance'),
-        ('quality', 'Quality'),
-        ('productive', 'Productive')], "Effectiveness Category",
-        default='availability', required=True)
+    loss_id = fields.Many2one('mrp.workcenter.productivity.loss.type', domain=([('loss_type', 'in', ['quality', 'availability'])]), string='Category')
+    loss_type = fields.Selection(string='Effectiveness Category', related='loss_id.loss_type', store=True)
 
 
 class MrpWorkcenterProductivity(models.Model):
