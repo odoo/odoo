@@ -46,6 +46,10 @@
             resize: none;
         }
         .o_composer_mention_dropdown .o_mention_proposition {
+            &.active {
+                color: $o-brand-primary;
+                background-color: $o-brand-lightsecondary;
+            }
             @include o-text-overflow;
             width: 100%;
             padding: 3px 15px;
