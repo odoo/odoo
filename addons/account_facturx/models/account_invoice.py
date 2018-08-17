@@ -115,7 +115,14 @@ class AccountInvoice(models.Model):
                 amount_total_import = total_amount * refund_sign
 
             # Date.
-            elements = tree.xpath('//rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
+            elements = tree.xpath('//rsm:ExchangedDocument/ram:DueDateDateTime/udt:DateTimeString', namespaces=tree.nsmap)
+            if elements:
+                date_str = elements[0].text
+                date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
+                invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+            # Due date.
+            elements = tree.xpath('//ram:SpecifiedTradePaymentTerms/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
@@ -162,7 +169,7 @@ class AccountInvoice(models.Model):
                             invoice_line_form.discount = float(line_elements[0].text)
 
                         # Taxes
-                        line_elements = element.xpath('//ram:SpecifiedLineTradeSettlement/ram:RateApplicablePercent', namespaces=tree.nsmap)
+                        line_elements = element.xpath('//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
                         invoice_line_form.invoice_line_tax_ids.clear()
                         for tax_element in line_elements:
                             percentage = float(tax_element.text)
@@ -170,9 +177,9 @@ class AccountInvoice(models.Model):
                             tax = self.env['account.tax'].search([
                                 ('company_id', '=', invoice_form.company_id.id),
                                 ('amount_type', '=', 'percent'),
-                                ('type', '=', 'purchase'),
+                                ('type_tax_use', '=', 'purchase'),
                                 ('amount', '=', percentage),
-                            ])
+                            ], limit=1)
 
                             if tax:
                                 invoice_line_form.invoice_line_tax_ids.add(tax)
