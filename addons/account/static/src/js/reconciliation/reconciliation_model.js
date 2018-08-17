@@ -239,10 +239,12 @@ var StatementModel = BasicModel.extend({
                             }
                         })
                     }
-                    var def = self._computeLine(line);
-                    if(!preserveMode)
-                        def = def.then(self.changeMode(handle, 'match'));
-                    return def;
+                    return self._computeLine(line);
+                })
+                .then(function () {
+                    if (!preserveMode)
+                        return self.changeMode(handle, 'match');
+                    return false;
                 })
                 .then(function () {
                     return line.mode === 'create' ? self.createProposition(handle) : false;
