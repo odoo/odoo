@@ -82,6 +82,11 @@ class AccountInvoice(models.Model):
             if elements:
                 invoice_form.reference = elements[0].text
 
+            # Name.
+            elements = tree.xpath('//ram:BuyerOrderReferencedDocument/ram:IssuerAssignedID', namespaces=tree.nsmap)
+            if elements:
+                invoice_form.name = elements[0].text
+
             # Comment.
             elements = tree.xpath('//ram:IncludedNote/ram:Content', namespaces=tree.nsmap)
             if elements:
@@ -106,23 +111,24 @@ class AccountInvoice(models.Model):
                     refund_sign = -1
 
                 # Currency.
-                currency_str = elements[0].attrib['currencyID']
-                currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                if currency != self.env.user.company_id.currency_id and currency.active:
-                    invoice_form.currency_id = currency
+                if elements[0].attrib.get('currencyID'):
+                    currency_str = elements[0].attrib['currencyID']
+                    currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
+                    if currency != self.env.user.company_id.currency_id and currency.active:
+                        invoice_form.currency_id = currency
 
-                # Store xml total amount.
-                amount_total_import = total_amount * refund_sign
+                    # Store xml total amount.
+                    amount_total_import = total_amount * refund_sign
 
             # Date.
-            elements = tree.xpath('//rsm:ExchangedDocument/ram:DueDateDateTime/udt:DateTimeString', namespaces=tree.nsmap)
+            elements = tree.xpath('//rsm:ExchangedDocument/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
                 invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
             # Due date.
-            elements = tree.xpath('//ram:SpecifiedTradePaymentTerms/ram:IssueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
+            elements = tree.xpath('//ram:SpecifiedTradePaymentTerms/ram:DueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
@@ -169,7 +175,7 @@ class AccountInvoice(models.Model):
                             invoice_line_form.discount = float(line_elements[0].text)
 
                         # Taxes
-                        line_elements = element.xpath('//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
+                        line_elements = element.xpath('.//ram:SpecifiedLineTradeSettlement/ram:ApplicableTradeTax/ram:RateApplicablePercent', namespaces=tree.nsmap)
                         invoice_line_form.invoice_line_tax_ids.clear()
                         for tax_element in line_elements:
                             percentage = float(tax_element.text)

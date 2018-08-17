@@ -111,7 +111,7 @@
 
                 <!-- Document Headers. -->
                 <rsm:ExchangedDocument>
-                    <ram:ID t-esc="record.number"/>
+                    <ram:ID t-esc="record.reference"/>
                     <ram:TypeCode t-esc="'381' if 'refund' in record.type else '380'"/>
                     <ram:IssueDateTime>
                         <udt:DateTimeString format="102" t-esc="format_date(record.date_invoice)"/>
@@ -158,8 +158,8 @@
                         </ram:BuyerTradeParty>
 
                         <!-- Reference. -->
-                        <ram:BuyerOrderReferencedDocument t-if="record.name">
-                            <ram:IssuerAssignedID t-esc="record.name"/>
+                        <ram:BuyerOrderReferencedDocument>
+                            <ram:IssuerAssignedID t-esc="'%s: %s' % str(record.number, record.name) if record.name else record.number"/>
                         </ram:BuyerOrderReferencedDocument>
                     </ram:ApplicableHeaderTradeAgreement>
 
