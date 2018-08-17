@@ -113,7 +113,7 @@ var MessagingMenu = Widget.extend({
             discussOptions.active_id = channelID;
         }
 
-        this.do_action('mail.mail_channel_action_client_chat', discussOptions)
+        this.do_action('mail.action_discuss', discussOptions)
             .then(function () {
                 // we cannot 'go back to previous page' otherwise
                 self.trigger_up('hide_home_menu');

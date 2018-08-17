@@ -23,7 +23,7 @@
             <center>
                 <img src="/digest/static/src/img/notification.png" width="70%" height="100%"/><br/>
             </center>
-            ${', '.join(users.mapped('name'))} signed up. Say hello in the <a href="/web#action=mail.mail_channel_action_client_chat&amp;active_id=${channel_id}" style="color: #006d6b;">company's discussion channel.</a>
+            ${', '.join(users.mapped('name'))} signed up. Say hello in the <a href="/web#action=mail.action_discuss&amp;active_id=${channel_id}" style="color: #006d6b;">company's discussion channel.</a>
         </div>
     </div>
 </div>

@@ -161,8 +161,7 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
         },
         intercepts: {
             /**
-             * Simulate action 'mail.mail_channel_action_client_chat'
-             * successfully performed.
+             * Simulate action 'mail.action_discuss' successfully performed.
              *
              * @param {OdooEvent} ev
              * @param {function} ev.data.on_success called when success action performed

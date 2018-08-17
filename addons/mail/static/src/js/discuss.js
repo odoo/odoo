@@ -1474,7 +1474,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
 });
 
-core.action_registry.add('mail.chat.instant_messaging', Discuss);
+core.action_registry.add('mail.discuss', Discuss);
 
 return Discuss;
 

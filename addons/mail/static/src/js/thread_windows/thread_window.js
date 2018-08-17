@@ -279,7 +279,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 res_id: this._thread.getDocumentID(),
             });
         } else {
-            this.do_action('mail.mail_channel_action_client_chat', {
+            this.do_action('mail.action_discuss', {
                 clear_breadcrumbs: false,
                 active_id: this.hasThread() ? this._getThreadID() : undefined,
                 on_reverse_breadcrumb: function () {
