@@ -2018,14 +2018,14 @@ QUnit.module('basic_fields', {
         var done = assert.async();
         assert.expect(6);
 
-        var originalAttachCallback = JournalDashboardGraph.prototype.on_attach_callback;
-        var originalDetachCallback = JournalDashboardGraph.prototype.on_detach_callback;
-        JournalDashboardGraph.prototype.on_attach_callback = function () {
-            assert.step('on_attach_callback');
-        };
-        JournalDashboardGraph.prototype.on_detach_callback = function () {
-            assert.step('on_detach_callback');
-        };
+        testUtils.patch(JournalDashboardGraph, {
+            on_attach_callback: function () {
+                assert.step('on_attach_callback');
+            },
+            on_detach_callback: function () {
+                assert.step('on_detach_callback');
+            },
+        });
 
         createAsyncView({
             View: KanbanView,
@@ -2056,8 +2056,7 @@ QUnit.module('basic_fields', {
             ]);
 
             kanban.destroy();
-            JournalDashboardGraph.prototype.on_attach_callback = originalAttachCallback;
-            JournalDashboardGraph.prototype.on_detach_callback = originalDetachCallback;
+            testUtils.unpatch(JournalDashboardGraph);
             done();
         });
     });
