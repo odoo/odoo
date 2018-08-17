@@ -149,8 +149,23 @@
         </field>
     </record>
 
+    <record id="hr_leave_allocation_action_all" model="ir.actions.act_window">
+        <field name="name">Allocations All</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave allocation request
+            </p>
+        </field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
     <record id="open_allocation" model="ir.actions.act_window">
-        <field name="name">Allocation Request</field>
+        <field name="name">Allocation Requests</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
@@ -260,16 +275,24 @@
     </record>
 
     <menuitem
-        id="menu_open_department_leave_allocation_approve" groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
-        name="Allocations to Approve"
-        parent="menu_hr_holidays_approvals"
-        action="open_department_holidays_allocation_approve"
-        sequence="2"/>
-
-    <menuitem
         id="menu_open_allocation"
         parent="menu_hr_holidays_my_leaves"
         action="open_allocation"
-        sequence="30"/>
+        sequence="6"/>
+
+    <menuitem
+        id="hr_holidays_menu_manager_approve_allocations"
+        name="Allocations"
+        parent="hr_holidays_menu_manager_approve"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="open_department_holidays_allocation_approve"
+        sequence="2"/>
+    <menuitem
+        id="hr_holidays_menu_manager_all_allocations"
+        name="Allocations"
+        parent="hr_holidays_menu_manager_all"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="hr_leave_allocation_action_all"
+        sequence="2"/>
 
 </odoo>
