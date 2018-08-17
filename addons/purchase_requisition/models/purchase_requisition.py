@@ -291,6 +291,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', copy=False)
+    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy')
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
