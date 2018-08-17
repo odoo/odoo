@@ -1272,5 +1272,93 @@ QUnit.module('Views', {
         unpatchDate();
         actionManager.destroy();
     });
+
+   QUnit.test('export data in excel with comparison', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+            session: {
+                get_file: function (args) {
+                    var data = JSON.parse(args.data.data);
+                    _.each(data.headers, function (l) {
+                        assert.step(l.map(function (o) {return o.title;}));
+                    });
+                    assert.step(data.measure_row.map(function (o) {return o.measure;}));
+                    assert.step(data.nbr_measures);
+                    assert.step(data.rows.map(function (o) {return o.values.length;}));
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // check checkbox 'Compare To'
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+
+        // the time range menu configuration is by now: Date, Today, checkbox checked, Previous Period
+        // With the data above, the time ranges contain no record.
+        assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
+        // export data should be impossible since the pivot buttons
+        // are deactivated (exception: the 'Measures' button).
+        assert.ok($('.o_control_panel button.o_pivot_download').prop('disabled'));
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // select 'This Month' as date range
+        $('.o_control_panel .o_time_range_selector').val('this_month');
+
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+        // the time range menu configuration is by now: Date, This Month, checkbox checked, Previous Period
+        // With the data above, the time ranges contain some records.
+        // export data. Should execute 'get_file'
+        $('.o_control_panel button.o_pivot_download').click();
+
+        assert.verifySteps([
+            // Headers
+            ["Total", ""],
+            ["December 2016" , "November 2016"],
+            ["Foo", "Foo", "Foo"],
+            [
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation"
+            ],
+            // number of 'measures'
+            3,
+            // rows values length
+            [9]
+        ]);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
 });
 });
