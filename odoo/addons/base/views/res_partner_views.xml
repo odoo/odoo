@@ -146,7 +146,11 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <button name="create_company" type="object" string="Create company" class="oe_edit_only fa fa-external-link btn-link " attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                                <button name="create_company" type="object" class="oe_edit_only btn-link"
+                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
+                                       <span class="fa fa-plus-square"/>
+                                       Create company
+                                </button>
                         </div>
                     </div>
                     <group>
@@ -154,10 +158,7 @@
                             <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
-                                <div class="oe_edit_only">
-                                    <button name="open_parent" type="object" string="(edit)" class="oe_link"
-                                        attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
-                                </div>
+                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
                                 <field name="street" placeholder="Street..." class="o_address_street"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
@@ -218,7 +219,11 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
-                                <button name="create_company" type="object" string="Create company" class="oe_edit_only fa fa-external-link btn-link" attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}"/>
+                                <button name="create_company" type="object" class="oe_edit_only btn-link"
+                                    attrs="{'invisible': ['|', '|', ('is_company','=', True), ('company_name', '=', ''), ('company_name', '=', False)]}">
+                                       <span class="fa fa-plus-square"/>
+                                       Create company
+                                </button>
                         </div>
                     </div>
 
@@ -227,10 +232,7 @@
                             <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
-                                <div class="oe_edit_only">
-                                    <button name="open_parent" type="object" string="(edit)" class="oe_link"
-                                        attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
-                                </div>
+                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
                                 <field name="street" placeholder="Street..." class="o_address_street"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
