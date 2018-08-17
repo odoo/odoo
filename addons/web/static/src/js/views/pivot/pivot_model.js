@@ -235,8 +235,8 @@ var PivotModel = AbstractModel.extend({
                 additionalHeaders = additionalHeaders.concat(
                         _.map(
                             [
-                                this.data.timeRangeDescription,
-                                this.data.comparisonTimeRangeDescription,
+                                this.data.timeRangeDescription.toString(),
+                                this.data.comparisonTimeRangeDescription.toString(),
                                 'Variation'
                             ],
                             makeMeasure
