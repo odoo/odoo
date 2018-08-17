@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 
-    <!-- Graph report -->
     <record id="view_evaluation_report_graph" model="ir.ui.view">
             <field name="name">hr.holidays.graph</field>
             <field name="model">hr.leave</field>
@@ -64,8 +63,6 @@
             </search>
         </field>
     </record>
-
-    <!-- Holidays: Leave Request -->
 
     <record id="view_holiday_new_calendar" model="ir.ui.view">
         <field name="name">Leave Request</field>
@@ -217,6 +214,24 @@
         parent="menu_hr_holidays_root"
         sequence="4"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
+    <menuitem
+        id="hr_holidays_menu_manager_approve"
+        name="To Approve"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="1"/>
+    <menuitem
+        id="hr_holidays_menu_manager_all"
+        name="All"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="2"/>
+    <menuitem
+        id="hr_holidays_menu_manager_payroll"
+        name="Payroll"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="3"/>
 
     <menuitem
         id="menu_hr_holidays_report"
@@ -230,7 +245,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar,tree,form</field>
-        <field name="view_id" ref="edit_holiday_new_request"/>
+        <field name="view_id" eval="False"/>
         <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
@@ -267,8 +282,14 @@
         <field name="act_window_id" ref="open_ask_holidays"/>
     </record>
 
+    <menuitem
+        id="menu_open_ask_holidays_new"
+        parent="menu_hr_holidays_my_leaves"
+        action="open_ask_holidays"
+        sequence="2"/>
+
     <record id="hr_leave_action_my_tree" model="ir.actions.act_window">
-        <field name="name">Leaves Request</field>
+        <field name="name">Leaves Requests</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar,form</field>
@@ -287,12 +308,6 @@
             </p>
         </field>
     </record>
-
-    <menuitem
-        id="menu_open_ask_holidays_new"
-        parent="menu_hr_holidays_root"
-        action="open_ask_holidays"
-        sequence="2"/>
 
     <record id="hr_leave_action_view_my_tree_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
@@ -318,10 +333,10 @@
         id="hr_leave_menu_my"
         parent="menu_hr_holidays_my_leaves"
         action="hr_leave_action_my_tree"
-        sequence="22"/>
+        sequence="4"/>
 
     <record id="open_employee_leaves" model="ir.actions.act_window">
-        <field name="name">Leaves Overview</field>
+        <field name="name">Leaves</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar</field>
@@ -358,18 +373,45 @@
 
     <menuitem
         id="menu_open_department_leave_approve"
-        name="Leaves to Approve"
-        parent="menu_hr_holidays_approvals"
+        name="Leaves"
+        parent="hr_holidays_menu_manager_approve"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
         action="open_department_holidays_approve"
         sequence="1"/>
-
     <menuitem
         id="menu_open_employee_leave"
-        parent="menu_hr_holidays_approvals"
+        name="Leaves"
+        parent="hr_holidays_menu_manager_all"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
         action="open_employee_leaves"
-        sequence="4"/>
+        sequence="1"/>
+
+    <record id="hr_leave_action_payroll" model="ir.actions.act_window">
+        <field name="name">Leaves Requests</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="context">{'search_default_gray': True}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal leaves, sickness) and the exact
+                number of open days related to your leave.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_holidays_menu_manager_payroll_to_report"
+        name="Leaves to report"
+        parent="hr_holidays_menu_manager_payroll"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="hr_leave_action_payroll"
+        sequence="1"/>
 
     <!-- Shortcuts -->
     <record id="view_allocation_tree_customize" model="ir.ui.view">
