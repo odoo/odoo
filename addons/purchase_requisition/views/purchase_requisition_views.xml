@@ -79,9 +79,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
           <field name="partner_id" position="replace">
-            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}"
-              domain="[('supplier','=',True)]"
-              attrs="{'readonly': ['&amp;', ('partner_id', '!=', False), ('requisition_id','!=', False)]}" force_save="1"/>
+            <field name="is_quantity_copy" invisible="1"/>
+            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]" attrs="{'readonly': ['|', ('is_quantity_copy', '=', 'none'), ('state', 'in', ['purchase', 'done', 'cancel'])]}" force_save="1"/>
             </field>
             <field name="partner_ref" position="after">
                 <field name="requisition_id"
