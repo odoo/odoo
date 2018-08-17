@@ -125,14 +125,14 @@ class AccountInvoice(models.Model):
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
-                invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                invoice_form.date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
             # Due date.
             elements = tree.xpath('//ram:SpecifiedTradePaymentTerms/ram:DueDateTime/udt:DateTimeString', namespaces=tree.nsmap)
             if elements:
                 date_str = elements[0].text
                 date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
-                invoice_form.date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                invoice_form.date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
             # Invoice lines.
             elements = tree.xpath('//ram:IncludedSupplyChainTradeLineItem', namespaces=tree.nsmap)
