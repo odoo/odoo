@@ -92,17 +92,13 @@
                 <button string="Refuse" name="action_refuse"  type="object" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate','validate1'))]}"/>
                 <button string="Reset to Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
-                <div class="oe_title">  
-                    <h1><field name="display_name"/></h1>   
-                </div>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <group>
                     <group>
-                        <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                         <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
 
                         <label for="number_of_days_temp" string="Duration"/>
@@ -115,8 +111,6 @@
                                 <field name="number_of_hours" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Hours</span>
                             </div>
-                            <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
-                            <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
 
                             <div class="o_row">
                                 <span attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">From </span>
@@ -134,7 +128,12 @@
                                 <field name="request_date_to_period" options="{'horizontal': True}"
                                     attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
                             </div>
+
+                            <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
+                            <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
                         </div>
+
+                        <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                     </group>
                 </group>
             </sheet>
