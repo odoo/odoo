@@ -1189,7 +1189,7 @@ class AccountInvoice(models.Model):
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.compute_invoice_totals(company_currency, iml)
 
-            name = inv.name or '/'
+            name = inv.name or ''
             if inv.payment_term_id:
                 totlines = inv.payment_term_id.with_context(currency_id=company_currency.id).compute(total, inv.date_invoice)[0]
                 res_amount_currency = total_currency
