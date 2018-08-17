@@ -111,27 +111,62 @@
                                 <field name="number_of_hours" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Hours</span>
                             </div>
-
-                            <div class="o_row">
-                                <span attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">From </span>
-                                <field name="request_date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '=', 'period')]}"/>
-                                <field name="date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')]}"/>
-                                <span class="ml8" attrs="{'invisible': ['|', '&amp;', ('request_unit_all', '!=', 'half'), ('leave_type_request_unit', '!=', 'half'), '&amp;', ('request_unit_all', '=', 'day'), ('leave_type_request_unit', '=', 'half')]}"/>
-                                <field name="request_date_from_period" options="{'horizontal': True}"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', '|', ('leave_type_request_unit', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'half'), ('request_unit_all', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '!=', 'half')]}"/>
-                            </div>
-                            <div class="o_row">
-                                <span  attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">To </span>
-                                <field name="request_date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]}"/>
-                                <field name="date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')], 'required': ['|', ('request_unit_all', '=', 'period'), ('request_unit_day', '=', 'period')]}"/>
-                                <span class="ml8" attrs="{'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
-                                <field name="request_date_to_period" options="{'horizontal': True}"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
-                            </div>
-
-                            <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
-                            <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
                         </div>
+
+                        <label for="request_date_from" string="From"/>
+                        <div>
+                            <div class="o_row">
+                                <field name="request_date_from" attrs="{
+                                    'readonly': [('state', '=', 'validate')],
+                                    'invisible': ['&amp;', ('request_unit_all', '=', 'period'), ('leave_type_request_unit', '=', 'hour')]
+                                }"/>
+                                <field name="date_from"
+                                    options="{'datepicker': {'timeFormat': 'HH:mm:00'}}"
+                                    attrs="{
+                                        'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '!=', 'hour')]
+                                    }"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="request_unit_all" widget="radio"
+                                    options="{'horizontal': True}"
+                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
+                                <field name="request_unit_day" widget="radio"
+                                    options="{'horizontal': True}"
+                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
+                            </div>
+                        </div>
+
+                        <field name="request_date_from_period"
+                            string="In"
+                            options="{'horizontal': True}"
+                             attrs="{
+                                'readonly': [('state', '=', 'validate')],
+                                'invisible': ['&amp;', ('request_unit_all', '!=', 'half'), '|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]}"/>
+
+                        <!-- To: display only for period-based computation -->
+                        <label for="request_date_to" string="To"
+                            attrs="{
+                                'invisible': [('request_unit_all', '!=', 'period')]
+                            }"/>
+                        <div class="o_row">
+                            <field name="request_date_to"
+                                attrs="{
+                                    'readonly': [('state', '=', 'validate')],
+                                    'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]
+                                }"/>
+                            <field name="date_to"
+                                options="{'datepicker': {'timeFormat': 'HH:mm:00'}}"
+                                attrs="{
+                                    'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '!=', 'hour')]
+                                }"/>
+                        </div>
+                        <field name="request_date_to_period"
+                            string="In"
+                            options="{'horizontal': True}"
+                            attrs="{
+                                'readonly': [('state', '=', 'validate')],
+                                'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]
+                            }"/>
 
                         <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                     </group>

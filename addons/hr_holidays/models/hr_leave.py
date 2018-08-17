@@ -117,20 +117,19 @@ class HolidaysRequest(models.Model):
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
-    # Those fields are mostly for the interface only
-
+    # UX fields
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     # Interface fields used when not using hour-based computation
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
-
-    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
-
+    # Interface fields used when using hour-based computation
+    request_hour_from = fields.Float('Hour from')
+    request_hour_to = fields.Float('Hour to')
     # These fields are only used only when the leave is taken in half days
     request_date_from_period = fields.Selection([('am', 'Morning'),
                                                  ('pm', 'Afternoon')], string="Date Period Start", default='am')
     request_date_to_period = fields.Selection([('am', 'Morning'),
                                                ('pm', 'Afternoon')], string="Date Period End", default='pm')
-
     request_unit_all = fields.Selection([('half', 'Half-day'),
                                          ('day', '1 Day'),
                                          ('period', 'Period')], default='day')
