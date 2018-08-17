@@ -249,9 +249,30 @@ function createAsyncView(params) {
     });
 }
 
-// Months are indexed starting at zero
-function patchDate (year, month, day, hours, minutes, seconds) {
-
+/**
+ * Patch window.Date so that the time starts its flow from the provided Date.
+ *
+ * Usage:
+ *
+ *  ```
+ *  var unpatchDate = testUtils.patchDate(2018, 0, 10, 17, 59, 30)
+ *  new window.Date(); // "Wed Jan 10 2018 17:59:30 GMT+0100 (Central European Standard Time)"
+ *  ... // 5 hours delay
+ *  new window.Date(); // "Wed Jan 10 2018 22:59:30 GMT+0100 (Central European Standard Time)"
+ *  ...
+ *  unpatchDate();
+ *  new window.Date(); // actual current date time
+ *  ```
+ *
+ * @param {integer} year
+ * @param {integer} month index of the month, starting from zero.
+ * @param {integer} day the day of the month.
+ * @param {integer} hours the digits for hours (24h)
+ * @param {integer} minutes
+ * @param {integer} seconds
+ * @returns {function} a callback to unpatch window.Date.
+ */
+function patchDate(year, month, day, hours, minutes, seconds) {
     var RealDate = window.Date;
     var actualDate = new RealDate();
     var fakeDate = new RealDate(year, month, day, hours, minutes, seconds);
@@ -261,7 +282,6 @@ function patchDate (year, month, day, hours, minutes, seconds) {
         if (arguments.length > 0) {
             return RealDate.apply(this, arguments);
         } else {
-            // months are indexed from 0!
             var date = new RealDate();
             var time = date.getTime();
             time -= timeInterval;
