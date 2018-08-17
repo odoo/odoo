@@ -290,7 +290,7 @@
 
     <menuitem
         id="menu_open_ask_holidays_new"
-        parent="menu_hr_holidays_root"
+        parent="menu_hr_holidays_my_leaves"
         action="open_ask_holidays"
         sequence="2"/>
 
@@ -321,7 +321,7 @@
         sequence="22"/>
 
     <record id="open_employee_leaves" model="ir.actions.act_window">
-        <field name="name">Leaves Overview</field>
+        <field name="name">Leaves</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar</field>
