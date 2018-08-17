@@ -59,10 +59,9 @@ class ResPartner(models.Model):
 
         if result['name'] != '---':
             partner = {}
-
             # TWA: to test
             partner['name'] = result['name']
-            partner['vat'] = result['countryCode'] + result['vatNumber']
+            partner['vat'] = result['vat'] #result['countryCode'] + result['vatNumber']
 
             lines = [x for x in result['address'].split("\n") if x]
             if len(lines) == 1:
@@ -72,8 +71,14 @@ class ResPartner(models.Model):
 
             vals = self._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
             partner.update(vals)
+            # add rest of the address
+            zip, city = lines.split(', ')
+            partner.update({
+                'zip': zip,
+                'city': city,
+            })
 
-            country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
+            country = self.env['res.country'].search([('code', '=', result['country_code'])], limit=1)
             partner['country_id'] = country and country.id or False
 
             return partner

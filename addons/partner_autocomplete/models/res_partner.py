@@ -4,7 +4,7 @@
 import logging
 from odoo import api, fields, models, exceptions, _
 from odoo.http import request
-from odoo.adddons.iap import jsonrpc
+from odoo.addons.iap import jsonrpc
 from requests.exceptions import ConnectionError, HTTPError
 import requests
 
@@ -14,7 +14,7 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    reveal_data_id = fields.Integer('Reveal database ID')
+    company_data_id = fields.Integer('Company database ID')
 
     @api.model
     def enrich_company(self, company_domain):
@@ -60,8 +60,8 @@ class ResPartner(models.Model):
         #     else:
         #         enrichment_data = response.get('result')
 
-        except (ConnectionError, HTTPError) as exception:
-            _logger.error('Encrichment API error: %s' % str(exception))
+        except (ConnectionError, HTTPError, exceptions.AccessError ) as exception:
+            _logger.error('Enrichment API error: %s' % str(exception))
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))
 
         return self._format_data_company(enrichment_data)
@@ -138,7 +138,7 @@ class ResPartner(models.Model):
             'zip': company_data.get('postal_code'),
             'phone': phone,
             'email': email,
-            'reveal_data_id': company_data.get('reveal_data_id'),
+            'company_data_id': company_data.get('company_data_id'),
         }
 
         street = self._split_street_with_params('%s %s' % (company_data.get('street_name'), company_data.get('street_number')), '%(street_name)s, %(street_number)s/%(street_number2)s')
@@ -183,61 +183,26 @@ class ResPartner(models.Model):
 # ---- FROM BASE VAT AUTOCOMPLETE ----
 
     def _get_vies_company_data(self, vat):
-        # def _check_city(lines, country='BE'):
-        #     if country == 'GB':
-        #         ukzip = '[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}'
-        #         if re.match(ukzip, lines[-1]):
-        #             cp = lines.pop()
-        #             city = lines.pop()
-        #             return (cp, city)
-        #     elif country == 'SE':
-        #         result = re.match('([0-9]{3}\s?[0-9]{2})\s?([A-Z]+)', lines[-1])
-        #         if result:
-        #             lines.pop()
-        #             return (result.group(1), result.group(2))
-        #     else:
-        #         result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
-        #         if result:
-        #             lines.pop()
-        #             return (result.group(1), result.group(2))
-        #     return False
+        vies_vat_data = False
 
-        # # Equivalent to stdnum_vat.check_vies(partner.vat).
-        # # However, we want to add a custom timeout to the suds.client
-        # # because by default, it's 120 seconds and this is to long.
-        # try:
-        #     client = Client(stdnum_vat.vies_wsdl, timeout=5)
-        #     partner_vat = stdnum_vat.compact(vat)
-        #     result = client.service.checkVat(partner_vat[:2], partner_vat[2:])
-        # except:
-        #     # Avoid blocking the client when the service is unreachable/unavailable
-        #     return False
+        try:
+            # make HTTP request to IAP service /
 
-        # if not result['valid']:
-        #     return False
+            # TODO: Use IAP.jsonrpc instead
 
-        # if result['name'] != '---':
-        #     partner = {}
+            url = 'http://odoo:8069/iap/partner_autocomplete/vat'
+            params = {
+                'domain': company_domain,
+                'country_code': self.env.user.company_id.country_id.code,
+            }
 
-        #     # TWA: to test
-        #     partner['name'] = result['name']
-        #     partner['vat'] = result['countryCode'] + result['vatNumber']
+            vies_vat_data = jsonrpc(url, params=params)
 
-        #     lines = [x for x in result['address'].split("\n") if x]
-        #     if len(lines) == 1:
-        #         lines = [x.strip() for x in lines[0].split(',') if x]
-        #     if len(lines) == 1:
-        #         lines = [x.strip() for x in lines[0].split('   ') if x]
+        except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
+            _logger.error('Enrichment API error: %s' % str(exception))
+            raise exceptions.UserError(_('Connection to Encrichment API failed.'))
 
-        #     vals = self._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
-        #     partner.update(vals)
-
-        #     country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
-        #     partner['country_id'] = country and country.id or False
-
-        #     return partner
-
-        return False
+        return vies_vat_data
 
     def _check_vat_format(self, search_val):
         return len(search_val) > 5 and search_val[:2].lower() in stdnum_vat.country_codes
