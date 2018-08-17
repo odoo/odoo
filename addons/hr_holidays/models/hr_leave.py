@@ -10,11 +10,10 @@ from datetime import timedelta, datetime, time
 from pytz import timezone, UTC
 
 from odoo import api, fields, models
+from odoo.addons.resource.models.resource import float_to_time
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
-
-from odoo.addons.resource.models.resource import float_to_time
 
 _logger = logging.getLogger(__name__)
 
@@ -87,25 +86,36 @@ class HolidaysRequest(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
-            help="The status is set to 'To Submit', when a leave request is created." +
-            "\nThe status is 'To Approve', when leave request is confirmed by user." +
-            "\nThe status is 'Refused', when leave request is refused by manager." +
-            "\nThe status is 'Approved', when leave request is approved by manager.")
-    payslip_status = fields.Boolean('Reported in last payslips',
-        help='Green this button when the leave has been taken into account in the payslip.')
+        help="The status is set to 'To Submit', when a leave request is created." +
+        "\nThe status is 'To Approve', when leave request is confirmed by user." +
+        "\nThe status is 'Refused', when leave request is refused by manager." +
+        "\nThe status is 'Approved', when leave request is approved by manager.")
+    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False, required=True,
+    date_from = fields.Datetime(
+        'Start Date', readonly=True, index=True, copy=False, required=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    date_to = fields.Datetime('End Date', readonly=True, copy=False, required=True,
+    date_to = fields.Datetime(
+        'End Date', readonly=True, copy=False, required=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
+    # leave type configuration
+    holiday_status_id = fields.Many2one(
+        "hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=lambda self: self._default_domain_holiday_status())
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
+    # HR data
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
+    department_id = fields.Many2one(
+        'hr.department', string='Department', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    # details
     number_of_days_temp = fields.Float(
         'Duration (Days)', copy=False, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
@@ -115,45 +125,41 @@ class HolidaysRequest(models.Model):
         'Duration (Hours)', copy=False, readonly=True, compute='_compute_number_of_hours',
         help='Number of hours of the leave request according to your working schedule.')
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
-
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
+    category_id = fields.Many2one(
+        'hr.employee.category', string='Employee Tag', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
         ('department', 'By Department'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True, required=True, default='employee',
+        ('category', 'By Employee Tag')],
+        string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
-    first_approver_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
+    first_approver_id = fields.Many2one(
+        'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
-    second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
+    second_approver_id = fields.Many2one(
+        'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
-
-    # Those fields are mostly for the interface only
-
-    # Interface fields used when not using hour-based computation
+    # UX FIELDS
+    # used when not using hour-based computation
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
-
-    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
-
-    # These fields are only used only when the leave is taken in half days
-    request_date_from_period = fields.Selection([('am', 'Morning'),
-                                                 ('pm', 'Afternoon')], string="Date Period Start", default='am')
-    request_date_to_period = fields.Selection([('am', 'Morning'),
-                                               ('pm', 'Afternoon')], string="Date Period End", default='pm')
-
+    # used only when the leave is taken in half days
+    request_date_from_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period Start", default='am')
+    request_date_to_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period End", default='pm')
+    # request type + duplicate because we cannot hide some entries of a selection field
     request_unit_all = fields.Selection([('half', 'Half-day'),
-                             ('day', '1 Day'),
-                             ('period', 'Period')])
-    # Duplicate field because we cannot hide some entries of a selection field
+                                         ('day', '1 Day'),
+                                         ('period', 'Period')], default='day')
     request_unit_day = fields.Selection([('day', '1 Day'),
                                          ('period', 'Period')], default='day')
 

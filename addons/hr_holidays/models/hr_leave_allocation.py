@@ -5,16 +5,13 @@
 
 import logging
 
-import pytz
-
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError
 from odoo.tools.translate import _
-
-from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
 _logger = logging.getLogger(__name__)
 
@@ -48,18 +45,22 @@ class HolidaysAllocation(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
-            help="The status is set to 'To Submit', when a leave request is created." +
-            "\nThe status is 'To Approve', when leave request is confirmed by user." +
-            "\nThe status is 'Refused', when leave request is refused by manager." +
-            "\nThe status is 'Approved', when leave request is approved by manager.")
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
+        help="The status is set to 'To Submit', when a leave request is created." +
+        "\nThe status is 'To Approve', when leave request is confirmed by user." +
+        "\nThe status is 'Refused', when leave request is refused by manager." +
+        "\nThe status is 'Approved', when leave request is approved by manager.")
+    date_from = fields.Datetime(
+        'Start Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    date_to = fields.Datetime('End Date', readonly=True, copy=False,
+    date_to = fields.Datetime(
+        'End Date', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
+    holiday_status_id = fields.Many2one(
+        "hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=lambda self: self._default_domain_holiday_status_id(), default=_default_holiday_status_id)
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
@@ -70,24 +71,29 @@ class HolidaysAllocation(models.Model):
     number_of_hours = fields.Float('Duration (hours)', help="Number of hours of the leave allocation according to your working schedule.")
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
     linked_request_ids = fields.One2many('hr.leave.allocation', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
-    holiday_type = fields.Selection([
-        ('employee', 'By Employee'),
-        ('department', 'By Department'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True, required=True, default='employee',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help='By Employee: Allocation for individual Employee, By Employee Tag: Allocation for group of employees in category')
-    first_approver_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
+    first_approver_id = fields.Many2one(
+        'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
-    second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
+    second_approver_id = fields.Many2one(
+        'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    # mode
+    holiday_type = fields.Selection([
+        ('employee', 'By Employee'),
+        ('department', 'By Department'),
+        ('category', 'By Employee Tag')],
+        string='Allocation Mode', readonly=True, required=True, default='employee',
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        help='By Employee: Allocation for individual Employee, By Employee Tag: Allocation for group of employees in category')
+    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    category_id = fields.Many2one(
+        'hr.employee.category', string='Employee Tag', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
+    # accrual configuration
     accrual = fields.Boolean("Accrual", related='holiday_status_id.accrual', store=True, readonly=True)
     number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
     interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)

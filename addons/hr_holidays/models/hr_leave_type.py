@@ -21,7 +21,8 @@ class HolidaysType(models.Model):
     name = fields.Char('Leave Type', required=True, translate=True)
     sequence = fields.Integer(default=100,
                               help='The type with the smallest sequence is the default value in leave request')
-    categ_id = fields.Many2one('calendar.event.type', string='Meeting Type',
+    categ_id = fields.Many2one(
+        'calendar.event.type', string='Meeting Type',
         help='Once a leave is validated, Odoo will create a corresponding meeting of this type in the calendar.')
     color_name = fields.Selection([
         ('red', 'Red'),
@@ -41,56 +42,44 @@ class HolidaysType(models.Model):
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
-    limit = fields.Boolean('Exceed Allocation',
-        help="If you select this check box, the system will allow the employees to ask"
-             "for leaves without allocating some beforehand")
+    limit = fields.Boolean('Exceed Allocation', help="If you select this check box, the system will allow the employees to ask for leaves without allocating some beforehand")
     active = fields.Boolean('Active', default=True,
-        help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
-
+                            help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
-        help='This value is given by the sum of all leaves requests with a positive value.')
-    leaves_taken = fields.Float(compute='_compute_leaves', string='Leaves Already Taken',
+                              help='This value is given by the sum of all leaves requests with a positive value.')
+    leaves_taken = fields.Float(
+        compute='_compute_leaves', string='Leaves Already Taken',
         help='This value is given by the sum of all leaves requests with a negative value.')
-    remaining_leaves = fields.Float(compute='_compute_leaves', string='Remaining Leaves',
+    remaining_leaves = fields.Float(
+        compute='_compute_leaves', string='Remaining Leaves',
         help='Maximum Leaves Allowed - Leaves Already Taken')
-    virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Virtual Remaining Leaves',
+    virtual_remaining_leaves = fields.Float(
+        compute='_compute_leaves', string='Virtual Remaining Leaves',
         help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
-
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-
-    validation_type = fields.Selection([('hr', 'Human Resource officer'),
-                                      ('manager', 'Employee Manager'),
-                                      ('both', 'Double Validation')],
-                                     default='hr',
-                                     string='Validation By')
-
-    employee_applicability = fields.Selection([('both', 'Both'),
-                                            ('leave', 'Can be requested'),
-                                            ('allocation', 'Can be allocated')],
-                                           default=lambda self: 'leave' if self.limit else 'both', string='Mode',
-                                           help='This leave type will be available on Leave / Allocation request based on selected value')
-
+    validation_type = fields.Selection([
+        ('hr', 'Human Resource officer'),
+        ('manager', 'Employee Manager'),
+        ('both', 'Double Validation')], default='hr', string='Validation By')
+    employee_applicability = fields.Selection([
+        ('both', 'Both'),
+        ('leave', 'Can be requested'),
+        ('allocation', 'Can be allocated')],
+        default=lambda self: 'leave' if self.limit else 'both',
+        string='Mode', help='This leave type will be available on Leave / Allocation request based on selected value')
     validity_start = fields.Date("Start Date", default=fields.Date.today,
-                                 help='Adding validity to types of leaves so that it cannot be selected outside'
-                                 'this time period')
+                                 help='Adding validity to types of leaves so that it cannot be selected outside this time period')
     validity_stop = fields.Date("End Date")
-
     valid = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
-
-
     time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
-    request_unit = fields.Selection([('day', 'Day'),
-                               ('half', 'Half-day'),
-                               ('hour', 'Hours')], default='day', string='Take Leaves in', required=True)
-
+    request_unit = fields.Selection([
+        ('day', 'Day'), ('half', 'Half-day'), ('hour', 'Hours')],
+        default='day', string='Take Leaves in', required=True)
     accrual = fields.Boolean('Accrual', default=False,
                              help='This option forces this type of leave to be allocated accrually')
-
     unpaid = fields.Boolean('Is Unpaid', default=False)
-
     negative = fields.Boolean('Allow Negative', help="This option allows to take more leaves than allocated")
-
     balance_limit = fields.Float('Max Balance Limit', default=0, help="The maximum quantity of allocated days on this allocation, zero meaning infinite amount")
 
     _sql_constraints = [
