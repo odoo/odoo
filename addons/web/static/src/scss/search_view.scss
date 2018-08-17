@@ -127,7 +127,7 @@
 // Open and closed carets in dropdowns
 .o_closed_menu {
     position: relative;
-    a:before {
+    &:before {
         @include o-caret-right;
         @include o-position-absolute($top: 50%, $left: 10px);
         margin-top: (-$caret-width);
@@ -135,7 +135,7 @@
 }
 .o_open_menu {
     position: relative;
-    a:before {
+    &:before {
         @include o-caret-down;
         @include o-position-absolute($top: 50%, $left: 10px);
         margin-top: (-$caret-width);
