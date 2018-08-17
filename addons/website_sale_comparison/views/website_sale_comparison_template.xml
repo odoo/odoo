@@ -121,24 +121,20 @@
     </template>
 
     <template id="product_product" name="Comparator - Product row in comparator popover">
-        <div class="row mt8 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
-            <div class="col-md-3 col-3 mb8">
+        <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
+            <div class="col-3">
                 <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
             </div>
-            <div class="col-md-7 col-7 mb8 text-left">
-                <h5>
-                    <strong><a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="product.display_name" /></a></strong>
-                </h5>
-                <h5 class="mt0 mb0">
-                    <strong>
-                        <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
-                            <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
-                        </t>
-                        <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
-                    </strong>
-                </h5>
+            <div class="col-8 pl-2">
+                <h6>
+                    <a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="product.display_name" /></a><br/>
+                    <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                        <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                    </t>
+                    <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                </h6>
             </div>
-            <div class="col-md-1 col-1 mt32">
+            <div class="col-1 text-right">
                 <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
                     <i class="fa fa-trash" role="img" aria-label="Remove"></i>
                 </a>
