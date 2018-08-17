@@ -182,15 +182,15 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         update_moderation_buttons: '_onUpdateModerationButtons',
     },
     events: {
+        'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'blur .o_mail_add_thread input': '_onAddThreadBlur',
+        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
         'click .o_mail_annoying_notification_bar .fa-close': '_onCloseNotificationBar',
         'click .o_mail_discuss_item': '_onDiscussItemClicked',
-        'click .o_mail_open_channels': '_onPublicChannelsClick',
-        'click .o_mail_partner_unpin': '_onUnpinChannel',
-        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
-        'click .o_mail_request_permission': '_onRequestNotificationPermission',
-        'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'keydown': '_onKeydown',
+        'click .o_mail_open_channels': '_onPublicChannelsClick',
+        'click .o_mail_request_permission': '_onRequestNotificationPermission',
+        'click .o_mail_partner_unpin': '_onUnpinChannel',
     },
 
     /**
@@ -1150,6 +1150,20 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onChannelSettingsClicked: function (ev) {
+        var threadID = $(ev.target).data('thread-id');
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.channel',
+            res_id: threadID,
+            views: [[false, 'form']],
+            target: 'current'
+        });
+    },
+    /**
+     * @private
      */
     _onCloseNotificationBar: function () {
         this.$('.o_mail_annoying_notification_bar').slideUp();
@@ -1219,6 +1233,17 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.messageID ID of the moderated message
+     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
+     */
+    _onMessageModeration: function (ev) {
+        var messageIDs = [ev.data.messageID];
+        var decision = ev.data.decision;
+        this._handleModerationDecision(messageIDs, decision);
+    },
+    /**
+     * @private
      * @param {mail.model.Message} message
      * @param {string} [type] the channel
      */
@@ -1253,17 +1278,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                                 return $(this).data('message-id');
                             })
                             .get();
-        this._handleModerationDecision(messageIDs, decision);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {integer} ev.data.messageID ID of the moderated message
-     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
-     */
-    _onMessageModeration: function (ev) {
-        var messageIDs = [ev.data.messageID];
-        var decision = ev.data.decision;
         this._handleModerationDecision(messageIDs, decision);
     },
     /**
@@ -1400,20 +1414,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             this._threadWidget.toggleModerationCheckboxes(true);
             this._updateModerationButtons();
         }
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onChannelSettingsClicked: function (ev) {
-        var threadID = $(ev.target).data('thread-id');
-        this.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'mail.channel',
-            res_id: threadID,
-            views: [[false, 'form']],
-            target: 'current'
-        });
     },
     /**
      * @private
