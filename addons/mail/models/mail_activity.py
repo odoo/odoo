@@ -239,7 +239,7 @@ class MailActivity(models.Model):
             base = fields.Date.context_today(self)
             if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
                 base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-                self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
+            self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
