@@ -19,13 +19,12 @@ class TestAccrualAllocations(TestHrHolidaysBase):
 
         self.accrual_type = LeaveType.create({
             'name': 'accrual',
-            'limit': False,
-            'accrual': True,
+            'allocation_type': 'fixed',
         })
 
         self.unpaid_type = LeaveType.create({
             'name': 'unpaid',
-            'limit': True,
+            'allocation_type': 'no',
             'unpaid': True,
         })
 
@@ -45,40 +44,30 @@ class TestAccrualAllocations(TestHrHolidaysBase):
                        """ % (newdate, id))
 
     def test_accrual_base_no_leaves(self):
-        """
-            Test if we can allocate some leaves accrually to an employee
-        """
-        Allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-
-        alloc_0 = Allocation.create({
+        """ Test if we can allocate some leaves accrually to an employee """
+        alloc = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 1,
             'interval_number': 1,
             'unit_per_interval': 'days',
             'interval_unit': 'weeks',
         })
+        alloc.action_approve()
+        alloc._update_accrual()
 
-        alloc_0.action_approve()
-
-        Allocation._update_accrual()
-
-        self.assertEqual(alloc_0.number_of_days, 1, 'Employee should have been allocated one leave day')
+        self.assertEqual(alloc.number_of_days, 1, 'Employee should have been allocated one leave day')
 
     def test_accrual_base_leaves(self):
-        """
-            Test if the accrual allocation take the unpaid leaves into account
-            when allocating leaves
-        """
-        Allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-        Leave = self.env['hr.leave'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-
-        alloc_0 = Allocation.create({
+        """ Test if the accrual allocation take the unpaid leaves into account when allocating leaves """
+        alloc = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': 'Accrual allocation for employee with leaves',
             'employee_id': self.employee_hruser_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 1,
             'interval_number': 1,
@@ -86,13 +75,13 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'interval_unit': 'weeks',
         })
 
-        alloc_0.action_approve()
+        alloc.action_approve()
 
         employee = self.env['hr.employee'].browse(self.employee_hruser_id)
         # Getting the previous work date
         df = employee.resource_calendar_id.plan_days(-2, fields.Datetime.now()).date()
 
-        leave_0 = Leave.create({
+        leave = self.env['hr.leave'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': 'Leave for hruser',
             'employee_id': self.employee_hruser_id,
             'holiday_status_id': self.unpaid_type.id,
@@ -101,11 +90,11 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'number_of_days_temp': 1,
         })
 
-        leave_0.action_approve()
+        leave.action_approve()
 
-        Allocation._update_accrual()
+        alloc._update_accrual()
 
-        self.assertEqual(alloc_0.number_of_days, .8, 'As employee took some unpaid leaves last week, he should be allocated only .8 days')
+        self.assertEqual(alloc.number_of_days, .8, 'As employee took some unpaid leaves last week, he should be allocated only .8 days')
 
     def test_accrual_many(self):
         """
@@ -117,6 +106,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'name': '1 day per 2 weeks',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 1,
             'interval_number': 2,
@@ -128,6 +118,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'name': '4 hours per week',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 4,
             'interval_number': 1,
@@ -139,6 +130,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'name': '2 day per 1 month',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 2,
             'interval_number': 1,
@@ -150,6 +142,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'name': '20 days per year',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 20,
             'interval_number': 1,
@@ -179,6 +172,7 @@ class TestAccrualAllocations(TestHrHolidaysBase):
             'name': 'one shot one kill',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 1,
             'interval_number': 1,
@@ -193,29 +187,23 @@ class TestAccrualAllocations(TestHrHolidaysBase):
         self.assertEqual(alloc_0.number_of_days, 0, 'Employee is new he should not get any accrual leaves')
 
     def test_accrual_multi(self):
-        """
-            Test if the cron does not allocate leaves every time it's called but only
-            when necessary
-        """
-        Allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-
-        alloc_0 = Allocation.create({
+        """ Test if the cron does not allocate leaves every time it's called but only when necessary """
+        alloc = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': '2 days per week',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
             'number_of_days_temp': 0,
             'number_per_interval': 1,
             'interval_number': 2,
             'unit_per_interval': 'days',
             'interval_unit': 'weeks',
         })
+        alloc.action_approve()
+        alloc._update_accrual()
+        alloc._update_accrual()
 
-        alloc_0.action_approve()
-
-        Allocation._update_accrual()
-        Allocation._update_accrual()
-
-        self.assertEqual(alloc_0.number_of_days, 1, 'Cron only allocates 1 days every two weeks')
+        self.assertEqual(alloc.number_of_days, 1, 'Cron only allocates 1 days every two weeks')
 
     def test_accrual_validation(self):
         """
@@ -242,32 +230,20 @@ class TestAccrualAllocations(TestHrHolidaysBase):
         self.assertEqual(alloc_0.number_of_days, 0, 'Cron validity passed, should not allocate any leave')
 
     def test_accrual_balance_limit(self):
-        """
-            Test if accrual allocation does not allocate more than the balance limit
-        """
-        Allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-        LeaveType = self.env['hr.leave.type'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True)
-
-        accrual_max_five = LeaveType.create({
-            'name': 'max 5 days',
-            'limit': False,
-            'accrual': True,
-            'balance_limit': 5,
-        })
-
-        allocation = Allocation.create({
+        """ Test if accrual allocation does not allocate more than the balance limit"""
+        allocation = self.env['hr.leave.allocation'].sudo(self.user_hrmanager_id).with_context(tracking_disable=True).create({
             'name': 'accrual 5 max',
             'employee_id': self.employee_emp_id,
-            'holiday_status_id': accrual_max_five.id,
+            'holiday_status_id': self.accrual_type.id,
+            'accrual': True,
+            'accrual_limit': 5,
             'number_of_days_temp': 0,
             'number_per_interval': 6,
             'interval_number': 1,
             'unit_per_interval': 'days',
             'interval_unit': 'weeks',
         })
-
         allocation.action_approve()
-
-        Allocation._update_accrual()
+        allocation._update_accrual()
 
         self.assertEqual(allocation.number_of_days, 5, 'Should have allocated only 5 days as balance limit is 5')

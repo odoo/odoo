@@ -19,27 +19,40 @@
             <form string="Leave Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive">
+                            <div class="o_stat_info">
+                                <field name="group_days_allocation"/>
+                                <span class="o_stat_text">Days Allocated</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_see_group_leaves" icon="fa-archive">
+                            <div class="o_stat_info">
+                                <field name="group_days_leave"/>
+                                <span class="o_stat_text">Group Leaves</span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
                             <field name="active" widget="boolean_button"
                             options='{"terminology": "archive"}'/>
                         </button>
                     </div>
+                    <div class="oe_title">  
+                        <h1><field name="name"/></h1>   
+                    </div>
                     <group>
-                        <group name="description" string="Description">
-                            <field name="name"/>
+                        <group name="description" string="Options">
                             <field name="unpaid"/>
-                            <field name="limit" attrs="{'invisible': [('accrual', '=', True)]}"/>
-                            <field name="request_unit"/>
-                            <field name="sequence" attrs="{'invisible': [('limit', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="request_unit" widget="radio"/>
+                            <field name="sequence" groups="base.group_no_one"/>
                             <field name="time_type" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
-                        <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio" attrs="{'readonly': ['|', ('limit', '=', True), ('accrual', '=', True)]}" force_save="1"/>
+                        <group name="visibility" string="Allocation">
+                            <field name="allocation_type" widget="radio" force_save="1"/>
                         </group>
-                        <group name="validity" string="Validity" attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                        <group name="validity" string="Validity">
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
@@ -47,11 +60,6 @@
                             <field name="categ_id"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
-                        <group name="allocation_request" string="Allocation Type" attrs="{'invisible': [('unpaid', '=', True)]}">
-                            <field name="accrual"/>
-                            <field name="negative" attrs="{'invisible': [('accrual', '=', False)]}"/>
-                            <field name="balance_limit" attrs="{'invisible': [('accrual', '=', False)]}"/>
                         </group>
                     </group>
                 </sheet>
@@ -88,7 +96,7 @@
             <tree string="Leave Type">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="limit"/>
+                <field name="allocation_type"/>
                 <field name="validation_type"/>
                 <field name="validity_start"/>
                 <field name="validity_stop"/>

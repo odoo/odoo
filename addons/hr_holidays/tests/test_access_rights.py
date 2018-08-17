@@ -17,8 +17,8 @@ class TestLeavesRights(TestHrHolidaysBase):
         super(TestLeavesRights, self).setUp()
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
-            'limit': True,
             'validation_type': 'hr',
+            'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False
@@ -316,9 +316,9 @@ class TestMultiCompany(TestHrHolidaysBase):
         })
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited - Company New',
-            'limit': True,
             'company_id': self.new_company.id,
             'validation_type': 'hr',
+            'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False

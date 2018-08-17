@@ -33,34 +33,34 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         with self.assertRaises(AccessError):
             HolidaysStatus.sudo(self.user_hruser_id).create({
                 'name': 'UserCheats',
-                'limit': True,
+                'allocation_type': 'no',
             })
 
         # HrManager creates some holiday statuses
         HolidayStatusManagerGroup = HolidaysStatus.sudo(self.user_hrmanager_id)
         HolidayStatusManagerGroup.create({
             'name': 'WithMeetingType',
-            'limit': True,
+            'allocation_type': 'no',
             'categ_id': self.env['calendar.event.type'].sudo(self.user_hrmanager_id).create({'name': 'NotLimitedMeetingType'}).id
         })
         self.holidays_status_1 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedHR',
-            'limit': True,
+            'allocation_type': 'no',
             'validation_type': 'hr',
         })
         self.holidays_status_2 = HolidayStatusManagerGroup.create({
             'name': 'Limited',
-            'limit': False,
+            'allocation_type': 'fixed',
             'validation_type': 'both',
         })
         self.holidays_status_3 = HolidayStatusManagerGroup.create({
             'name': 'NotLimitedManager',
-            'limit': True,
+            'allocation_type': 'no',
             'validation_type': 'manager',
         })
         self.holiday_status_4 = HolidayStatusManagerGroup.create({
             'name': 'TimeNotLimited',
-            'limit': True,
+            'allocation_type': 'no',
             'validation_type': 'manager',
             'validity_start': fields.Datetime.from_string('2017-01-01 00:00:00'),
             'validity_stop': fields.Datetime.from_string('2017-06-01 00:00:00'),

@@ -104,7 +104,7 @@ class Employee(models.Model):
                 join hr_leave_type s ON (s.id=h.holiday_status_id)
             WHERE
                 h.state='validate' AND
-                s.limit=False AND
+                (s.allocation_type='fixed' OR s.allocation_type='fixed_allocation') AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
         return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
@@ -142,7 +142,6 @@ class Employee(models.Model):
     def _compute_leaves_count(self):
         all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
-            ('holiday_status_id.limit', '=', False),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
         mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])

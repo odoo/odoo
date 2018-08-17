@@ -55,7 +55,6 @@
             <form string="Allocation Request">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
-                <field name="accrual" invisible="1"/>
                 <header>
                     <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
@@ -68,19 +67,21 @@
                         <group>
                             <field name="type_request_unit" invisible="1"/>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}"
+                                domain="[('valid', '=', True), ('allocation_type', 'in', ['fixed_allocation', 'no'])]"/>
 
-                            <label for="number_of_days_temp" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '=', 'hour'),('accrual', '=', True)]}"/>
-                            <div name="number_of_days_temp" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '=', 'hour'),('accrual', '=', True)]}">
+                            <label for="number_of_days_temp" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
+                            <div name="number_of_days_temp" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}">
                                 <field name="number_of_days_temp" class="oe_inline" nolabel="1" string="Duration"/>
                                 <span class="ml8">Days</span>
                             </div>
 
-                            <label for="number_of_hours" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '!=', 'hour'),('accrual', '=', True)]}"/>
-                            <div name="number_of_hours" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('type_request_unit', '!=', 'hour'),('accrual', '=', True)]}">
+                            <label for="number_of_hours" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
+                            <div name="number_of_hours" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}">
                                 <field name="number_of_hours" class="oe_inline" nolabel="1" string="Duration"/>
                                 <span class="ml8">Hours</span>
                             </div>
+                            <field name="accrual" invisible="1"/>
                         </group>
                         <group name="alloc_right_col">
                             <field name="employee_id" invisible="1" groups="hr_holidays.group_hr_holidays_user"/>
@@ -114,6 +115,9 @@
                 <button string="Reset to Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
             </xpath>
+            <xpath expr="//field[@name='holiday_status_id']" position="attributes">
+                <attribute name="domain">[('valid', '=', True)]</attribute>
+            </xpath>
             <xpath expr="//field[@name='employee_id']" position="before">
                 <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
             </xpath>
@@ -127,13 +131,28 @@
             <xpath expr="//field[@name='department_id']" position="replace">
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
             </xpath>
-            <xpath expr="//div[@name='number_of_hours']" position="after">
-                <field name="date_to" string="Run Until" help="If no value set, runs indefinitely" class="oe_inline"/>
-                <div class="o_row" colspan="2">
-                    Add <field name="number_per_interval" attrs="{'required': [('accrual', '=', True)]}"/>
-                    <field name="unit_per_interval" attrs="{'required': [('accrual', '=', True)]}"/> of leaves every
-                    <field name="interval_number" attrs="{'required': [('accrual', '=', True)]}"/>
-                    <field name="interval_unit" attrs="{'required': [('accrual', '=', True)]}"/>
+            <xpath expr="//field[@name='accrual']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='accrual']" position="after">
+                <label for="date_to" string=""
+                    attrs="{'invisible': [('accrual', '=', False)]}"/>
+                <div attrs="{'invisible': [('accrual', '=', False)]}">
+                    <div class="o_row">
+                        Run until <field name="date_to" string="Run Until" help="If no value set, runs indefinitely"/>
+                    </div>
+                    <div class="o_row">
+                        <span>Add</span>
+                        <field name="number_per_interval" class="ml8"
+                            attrs="{'required': [('accrual', '=', True)]}"/>
+                        <field name="unit_per_interval"
+                            attrs="{'required': [('accrual', '=', True)]}"/>
+                        <span class="ml8">of leaves every</span>
+                        <field name="interval_number" class="ml8"
+                            attrs="{'required': [('accrual', '=', True)]}"/>
+                        <field name="interval_unit"
+                            attrs="{'required': [('accrual', '=', True)]}"/>
+                    </div>
                 </div>
             </xpath>
         </field>
