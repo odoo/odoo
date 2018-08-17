@@ -41,7 +41,7 @@ class HolidaysType(models.Model):
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
-    limit = fields.Boolean('Exceed Allocation',
+    limit = fields.Boolean('Exceed allocated days',
         help="If you select this check box, the system will allow the employees to ask"
              "for leaves without allocating some beforehand")
     active = fields.Boolean('Active', default=True,
