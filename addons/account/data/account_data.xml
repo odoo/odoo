@@ -182,5 +182,19 @@
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>
+
+        <!-- Account Reconciliation Models
+        Create a default rule for the reconciliation widget matching invoices automatically.
+        -->
+        <record id="reconciliation_model_default_rule" model="account.reconcile.model">
+            <field name="name">Invoices Matching Rule</field>
+            <field name="sequence">1</field>
+            <field name="rule_type">invoice_matching</field>
+            <field name="auto_reconcile" eval="False"/>
+            <field name="match_nature">both</field>
+            <field name="match_same_currency" eval="True"/>
+            <field name="match_total_amount" eval="True"/>
+            <field name="match_total_amount_param" eval="100"/>
+        </record>
     </data>
 </odoo>

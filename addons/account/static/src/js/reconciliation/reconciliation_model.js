@@ -465,12 +465,14 @@ var StatementModel = BasicModel.extend({
         var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_id', 'analytic_tag_ids'];
         this._blurProposition(handle);
 
-        var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
+        var values = _.pick(reconcileModel, fields);
+        values.display_new = true;
+        var focus = this._formatQuickCreate(line, values);
         focus.reconcileModelId = reconcileModelId;
         line.reconciliation_proposition.push(focus);
 
         if (reconcileModel.has_second_line) {
-            var second = {};
+            var second = {display_new: true};
             _.each(fields, function (key) {
                 second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
             });
@@ -604,6 +606,7 @@ var StatementModel = BasicModel.extend({
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
         }
+        prop.display_new = true;
         _.each(values, function (value, fieldName) {
             if (fieldName === 'analytic_tag_ids') {
                 switch (value.operation) {
@@ -859,6 +862,7 @@ var StatementModel = BasicModel.extend({
 
                             tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
                             tax_prop.invalid = prop.invalid;
+                            tax_prop.display_new = true;
 
                             reconciliation_proposition.push(tax_prop);
                         });
@@ -972,6 +976,13 @@ var StatementModel = BasicModel.extend({
             var line = _.find(self.lines, function (l) {
                 return l.id === data.st_line.id;
             });
+            // Line has been already reconciled by the reconciliation model.
+            if(data.status === 'reconciled'){
+                self.valuenow += 1;
+                line.reconciled = true;
+                line.reconciled_aml_ids = data.reconciled_aml_ids;
+                return;
+            }
             line.visible = true;
             line.limitMoveLines = self.limitMoveLines;
             _.extend(line, data);
@@ -997,22 +1008,29 @@ var StatementModel = BasicModel.extend({
             }
 
             // No partner set on st_line and all matching amls have the same one: set it on the st_line.
-            if(!line.st_line.partner_id && line.reconciliation_proposition){
-                var hasDifferentPartners = function(prop){
-                    return !prop.partner_id || prop.partner_id != line.reconciliation_proposition[0].partner_id;
-                }
+            defs.push(
+                $.when(self._computeLine(line))
+                .then(function(){
+                    if(!line.st_line.partner_id && line.reconciliation_proposition.length > 0){
+                        var hasDifferentPartners = function(prop){
+                            return !prop.partner_id || prop.partner_id != line.reconciliation_proposition[0].partner_id;
+                        }
 
-                if(!_.any(line.reconciliation_proposition, hasDifferentPartners)){
-                    defs.push(self.changePartner(line.handle, {
-                        'id': line.reconciliation_proposition[0].partner_id,
-                        'display_name': line.reconciliation_proposition[0].partner_name,
-                    }, true));
-                }
-            }
-
-            defs.push(self._computeLine(line));
+                        if(!_.any(line.reconciliation_proposition, hasDifferentPartners)){
+                            return self.changePartner(line.handle, {
+                                'id': line.reconciliation_proposition[0].partner_id,
+                                'display_name': line.reconciliation_proposition[0].partner_name,
+                            }, true);
+                        }
+                    }
+                    return true;
+                })
+                .then(function(){
+                    return data.status === 'write_off'? self.quickCreateProposition(line.handle, data.model_id) : true;
+                })
+            );
         });
-        return $.when.apply($, defs);
+        return $.when(defs);
     },
     /**
      * Format the server value then compute the line
@@ -1078,6 +1096,7 @@ var StatementModel = BasicModel.extend({
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,
+            'display_new': values.display_new,
             'invalid': true,
             '__tax_to_recompute': true,
             'is_tax': values.is_tax,

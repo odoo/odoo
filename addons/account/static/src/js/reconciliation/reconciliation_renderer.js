@@ -84,6 +84,29 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     hideLoadMoreButton: function () {
         this.$('.js_load_more').hide();
     },
+    showRainbowMan(state){
+        var dt = Date.now()-this.time;
+        var $done = $(qweb.render("reconciliation.done", {
+            'duration': moment(dt).utc().format(time.getLangTimeFormat()),
+            'number': state.valuenow,
+            'timePerTransaction': Math.round(dt/1000/state.valuemax),
+            'context': state.context,
+        }));
+        $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
+        $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
+        this.$el.children().hide();
+        // display rainbowman after full reconciliation
+        if (session.show_effect) {
+            this.trigger_up('show_effect', {
+                type: 'rainbow_man',
+                fadeout: 'no',
+                message: $done,
+            });
+            this.$el.css('min-height', '450px');
+        } else {
+            $done.appendTo(this.$el);
+        }
+    },
     /**
      * update the statement rendering
      *
@@ -103,27 +126,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             .css('width', (state.valuenow/state.valuemax*100) + '%');
 
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
-            var dt = Date.now()-this.time;
-            var $done = $(qweb.render("reconciliation.done", {
-                'duration': moment(dt).utc().format(time.getLangTimeFormat()),
-                'number': state.valuenow,
-                'timePerTransaction': Math.round(dt/1000/state.valuemax),
-                'context': state.context,
-            }));
-            $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
-            $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
-            this.$el.children().hide();
-            // display rainbowman after full reconciliation
-            if (session.show_effect) {
-                this.trigger_up('show_effect', {
-                    type: 'rainbow_man',
-                    fadeout: 'no',
-                    message: $done,
-                });
-                this.$el.css('min-height', '450px');
-            } else {
-                $done.appendTo(this.$el);
-            }
+            this.showRainbowMan(state);
         }
 
         if (state.notifications) {

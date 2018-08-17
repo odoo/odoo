@@ -157,7 +157,11 @@
     <div class="quick_add">
         <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
-                <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
+                <button class="btn btn-primary"
+                        t-if="reconcileModel.rule_type === 'writeoff_button' &amp;&amp; (reconcileModel.match_journal_ids.length == 0 || reconcileModel.match_journal_ids.includes(state.st_line.journal_id))"
+                        t-att-data-reconcile-model-id="reconcileModel.id">
+                    <t t-esc="reconcileModel.name"/>
+                </button>
             </t>
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
@@ -231,7 +235,12 @@
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
         <td class="cell_action"><span class="fa fa-add-remove" role="img" aria-label="Set" title="Set"/></td>
         <td class="cell_account_code"><t t-esc="line.account_code"/></td>
-        <td class="cell_due_date"><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td>
+        <td class="cell_due_date">
+            <t t-if="line.display_new">
+                <span class="badge badge-secondary">New</span>
+            </t>
+            <t t-else="" t-esc="line.date_maturity === false ? line.date : line.date_maturity"/>
+        </td>
         <td class="cell_label">
             <t t-if="line.partner_id &amp;&amp; line.partner_id !== state.st_line.partner_id">
                 <t t-if="line.partner_name.length">
