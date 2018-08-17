@@ -12,8 +12,8 @@ class TestHrLeaveType(TestHrHolidaysBase):
     def test_time_type(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Legal Leaves',
-            'limit': True,
             'time_type': 'leave',
+            'allocation_type': 'no',
         })
 
         leave_1 = self.env['hr.leave'].create({

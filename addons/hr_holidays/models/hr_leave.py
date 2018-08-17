@@ -59,17 +59,12 @@ class HolidaysRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    def _default_domain_holiday_status(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
-            return [('valid', '=', True)]
-        return [('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both'])]
-
     @api.model
     def default_get(self, fields_list):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
 
         LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
-        lt = LeaveType.search(self._default_domain_holiday_status())
+        lt = LeaveType.search([('valid', '=', True)])
 
         defaults['holiday_status_id'] = lt[0].id if len(lt) > 0 else defaults.get('holiday_status_id')
         return defaults
@@ -103,7 +98,7 @@ class HolidaysRequest(models.Model):
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        domain=lambda self: self._default_domain_holiday_status())
+        domain=[('valid', '=', True)])
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     # HR data
@@ -156,13 +151,9 @@ class HolidaysRequest(models.Model):
     request_date_to_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period End", default='pm')
-    # request type + duplicate because we cannot hide some entries of a selection field
-    request_unit_all = fields.Selection([('half', 'Half-day'),
-                                         ('day', '1 Day'),
-                                         ('period', 'Period')], default='day')
-    request_unit_day = fields.Selection([('day', '1 Day'),
-                                         ('period', 'Period')], default='day')
-
+    # request type
+    request_unit = fields.Selection([('day', '1 Day'),
+                                     ('period', 'Period')], default='day')
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
          "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
@@ -170,7 +161,7 @@ class HolidaysRequest(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
-    @api.onchange('request_unit_all', 'request_date_from_period', 'request_date_to_period',
+    @api.onchange('request_unit', 'request_date_from_period', 'request_date_to_period',
                   'holiday_status_id', 'request_date_from', 'request_date_to', 'employee_id')
     def _onchange_request_parameters(self):
         date_from = False
@@ -205,7 +196,7 @@ class HolidaysRequest(models.Model):
         first_day = fields.Date.from_string(date_from)
         last_day = fields.Date.from_string(date_to)
 
-        if self.request_unit_all in ['day', 'half']:
+        if self.request_unit in ['day']:
             last_day = first_day
 
         # find first attendance coming after first_day
@@ -213,19 +204,11 @@ class HolidaysRequest(models.Model):
         # find last attendance coming before last_day
         attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= last_day.weekday()), attendances[-1])
 
-        if self.request_unit_all == 'day' or (self.request_unit_all == 'period' and self.leave_type_request_unit == 'day'):
+        if self.request_unit == 'day' or (self.request_unit == 'period' and self.leave_type_request_unit == 'day'):
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
-        elif self.request_unit_all == 'half':
-            hour_from = float_to_time(attendance_from.hour_from if self.request_date_from_period == 'am' else attendance_to.hour_from)
-            hour_to = float_to_time(attendance_from.hour_to if self.request_date_from_period == 'am' else attendance_to.hour_to)
-
-        elif self.request_unit_all == 'period' and self.leave_type_request_unit == 'half':
-            hour_from = float_to_time(attendance_from.hour_from if self.request_date_from_period == 'am' else attendance_from.hour_to)
-            hour_to = float_to_time(attendance_to.hour_from if self.request_date_to_period == 'am' else attendance_to.hour_to)
-
-        if self.leave_type_request_unit == 'hour' and self.request_unit_all == 'period':
+        if self.request_unit == 'period' and self.leave_type_request_unit == 'hour':
             date_from = fields.Datetime.from_string(date_from)
             date_to = fields.Datetime.from_string(date_to)
         else:
@@ -236,15 +219,11 @@ class HolidaysRequest(models.Model):
         self.date_from = date_from
         self.date_to = date_to
 
-        if not (self.leave_type_request_unit == 'hour' and self.request_unit_all == 'period'):
+        if not (self.request_unit == 'period' and self.leave_type_request_unit == 'hour'):
             date_from = date_from
             date_to = date_to
 
         self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-
-    @api.onchange('request_unit_day')
-    def _onchange_request_unit_day(self):
-        self.request_unit_all = self.request_unit_day
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
@@ -276,8 +255,7 @@ class HolidaysRequest(models.Model):
         self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
-            self.request_unit_all = 'period'
-            self.request_unit_day = 'period'
+            self.request_unit = 'period'
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
@@ -295,8 +273,7 @@ class HolidaysRequest(models.Model):
         self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
-            self.request_unit_all = 'period'
-            self.request_unit_day = 'period'
+            self.request_unit = 'period'
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
@@ -362,7 +339,7 @@ class HolidaysRequest(models.Model):
     @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
-            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.limit or holiday.holiday_status_id.negative:
+            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.allocation_type == 'no':
                 continue
             leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \

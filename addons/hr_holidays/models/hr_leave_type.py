@@ -3,6 +3,7 @@
 
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
+import datetime
 import logging
 
 from odoo import api, fields, models
@@ -42,7 +43,6 @@ class HolidaysType(models.Model):
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
-    limit = fields.Boolean('Exceed Allocation', help="If you select this check box, the system will allow the employees to ask for leaves without allocating some beforehand")
     active = fields.Boolean('Active', default=True,
                             help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
@@ -56,17 +56,23 @@ class HolidaysType(models.Model):
     virtual_remaining_leaves = fields.Float(
         compute='_compute_leaves', string='Virtual Remaining Leaves',
         help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
+    group_days_allocation = fields.Float(
+        compute='_compute_group_days_allocation', string='Days Allocated')
+    group_days_leave = fields.Float(
+        compute='_compute_group_days_leave', string='Group Leaves')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     validation_type = fields.Selection([
         ('hr', 'Human Resource officer'),
         ('manager', 'Employee Manager'),
         ('both', 'Double Validation')], default='hr', string='Validation By')
-    employee_applicability = fields.Selection([
-        ('both', 'Both'),
-        ('leave', 'Can be requested'),
-        ('allocation', 'Can be allocated')],
-        default=lambda self: 'leave' if self.limit else 'both',
-        string='Mode', help='This leave type will be available on Leave / Allocation request based on selected value')
+    allocation_type = fields.Selection([
+        ('fixed', 'Fixed by HR'),
+        ('fixed_allocation', 'Fixed by HR + allocation request'),
+        ('no', 'No allocation')],
+        default='fixed', string='Mode',
+        help='\tFixed by HR: allocated by HR and cannot be bypassed; users can request leaves;'
+             '\tFixed by HR + allocation request: allocated by HR and users can request leaves and allocations;'
+             '\tNo allocation: no allocation by default, users can freely request leaves;')
     validity_start = fields.Date("Start Date", default=fields.Date.today,
                                  help='Adding validity to types of leaves so that it cannot be selected outside this time period')
     validity_stop = fields.Date("End Date")
@@ -74,18 +80,9 @@ class HolidaysType(models.Model):
     time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
     request_unit = fields.Selection([
-        ('day', 'Day'), ('half', 'Half-day'), ('hour', 'Hours')],
+        ('day', 'Day'), ('hour', 'Hours')],
         default='day', string='Take Leaves in', required=True)
-    accrual = fields.Boolean('Accrual', default=False,
-                             help='This option forces this type of leave to be allocated accrually')
     unpaid = fields.Boolean('Is Unpaid', default=False)
-    negative = fields.Boolean('Allow Negative', help="This option allows to take more leaves than allocated")
-    balance_limit = fields.Float('Max Balance Limit', default=0, help="The maximum quantity of allocated days on this allocation, zero meaning infinite amount")
-
-    _sql_constraints = [
-        ('no_negative_balance_limit', "CHECK(balance_limit >= 0)", "The max balance limit cannot be negative"),
-        ('no_accrual_unpaid', 'CHECK(NOT (accrual AND unpaid))', "A leave type cannot be accrual and considered as unpaid leaves")
-    ]
 
     @api.multi
     @api.constrains('validity_start', 'validity_stop')
@@ -96,29 +93,7 @@ class HolidaysType(models.Model):
                 raise ValidationError(_("End of validity period should be greater than start of validity period"))
 
     @api.multi
-    @api.constrains('balance_limit', 'accrual')
-    def _check_balance_limit(self):
-        for leave_type in self:
-            if not leave_type.accrual and leave_type.balance_limit > 0:
-                raise ValidationError(_("Max balance limit can only be set for accrual leaves"))
-
-    @api.onchange('limit')
-    def _onchange_limit(self):
-        if self.limit:
-            self.employee_applicability = 'leave'
-            self.accrual = False
-
-    @api.onchange('accrual')
-    def _onchange_accrual(self):
-        if self.accrual:
-            self.limit = False
-            self.employee_applicability = 'both'
-        else:
-            self.negative = False
-            self.balance_limit = 0
-
-    @api.multi
-    @api.depends('validity_start', 'validity_stop', 'limit')
+    @api.depends('validity_start', 'validity_stop')
     def _compute_valid(self):
         dt = self._context.get('default_date_from') or fields.Datetime.now()
 
@@ -194,6 +169,30 @@ class HolidaysType(models.Model):
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
 
     @api.multi
+    def _compute_group_days_allocation(self):
+        grouped_res = self.env['hr.leave.allocation'].read_group(
+            [('holiday_status_id', 'in', self.ids), ('holiday_type', '!=', 'employee'), ('state', '=', 'validate'),
+             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
+            ['holiday_status_id', 'number_of_days_temp'],
+            ['holiday_status_id'],
+        )
+        grouped_dict = dict((data['holiday_status_id'][0], data['number_of_days_temp']) for data in grouped_res)
+        for allocation in self:
+            allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
+
+    @api.multi
+    def _compute_group_days_leave(self):
+        grouped_res = self.env['hr.leave'].read_group(
+            [('holiday_status_id', 'in', self.ids), ('holiday_type', '=', 'employee'), ('state', '=', 'validate'),
+             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
+            ['holiday_status_id'],
+            ['holiday_status_id'],
+        )
+        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
+        for allocation in self:
+            allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
+
+    @api.multi
     def name_get(self):
         if not self._context.get('employee_id'):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
@@ -201,7 +200,7 @@ class HolidaysType(models.Model):
         res = []
         for record in self:
             name = record.name
-            if not record.limit:
+            if record.allocation_type != 'no':
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
                     'count': _('%g remaining out of %g') % (float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0, float_round(record.max_leaves, precision_digits=2) or 0.0)
@@ -214,7 +213,7 @@ class HolidaysType(models.Model):
         """ Override _search to order the results, according to some employee.
         The order is the following
 
-         - limit (limited leaves first, such as Legal Leaves)
+         - allocation fixed first, then allowing allocation, then free allocation
          - virtual remaining leaves (higher the better, so using reverse on sorted)
 
         This override is necessary because those fields are not stored and depends
@@ -225,6 +224,34 @@ class HolidaysType(models.Model):
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         if not count and not order and self._context.get('employee_id'):
             leaves = self.browse(leave_ids)
-            sort_key = lambda l: (not l.limit, l.virtual_remaining_leaves)
+            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
             return leaves.sorted(key=sort_key, reverse=True).ids
         return leave_ids
+
+    @api.multi
+    def action_see_days_allocated(self):
+        self.ensure_one()
+        action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
+        action['domain'] = [
+            ('holiday_type', '!=', 'employee'),
+            ('holiday_status_id', '=', self.ids[0]),
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))
+        ]
+        action['context'] = {
+            'default_holiday_type': 'department',
+            'default_holiday_status_id': self.ids[0],
+        }
+        return action
+
+    @api.multi
+    def action_see_group_leaves(self):
+        self.ensure_one()
+        action = self.env.ref('hr_holidays.hr_leave_action_all').read()[0]
+        action['domain'] = [
+            ('holiday_status_id', '=', self.ids[0]),
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))
+        ]
+        action['context'] = {
+            'default_holiday_status_id': self.ids[0],
+        }
+        return action

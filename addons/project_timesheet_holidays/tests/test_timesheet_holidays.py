@@ -16,7 +16,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         """Ensure that when a status is created, it fullfills the project and task constrains"""
         status = self.env['hr.leave.type'].create({
             'name': 'A nice Leave Type',
-            'limit': True
+            'allocation_type': 'no'
         })
 
         company = self.env.user.company_id
@@ -42,14 +42,14 @@ class TestTimesheetHolidays(TestTimesheet):
 
         self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
-            'limit': True,
+            'allocation_type': 'no',
             'timesheet_generate': True,
             'timesheet_project_id': self.internal_project.id,
             'timesheet_task_id': self.internal_task_leaves.id,
         })
         self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
             'name': 'Leave Type without timesheet generation',
-            'limit': True,
+            'allocation_type': 'no',
             'timesheet_generate': False,
             'timesheet_project_id': False,
             'timesheet_task_id': False,
