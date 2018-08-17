@@ -425,6 +425,7 @@ function parseDate(value, field, options) {
  * @param {boolean} [options.isUTC] the formatted date is utc
  * @param {boolean} [options.timezone=false] format the date after apply the timezone
  *        offset
+ * @param {string} [options.timeFormat] optional specific time formatting (should still be ISO)
  * @returns {Moment|false} Moment date object
  */
 function parseDateTime(value, field, options) {
@@ -432,7 +433,7 @@ function parseDateTime(value, field, options) {
         return false;
     }
     var datePattern = time.getLangDateFormat(),
-        timePattern = time.getLangTimeFormat();
+        timePattern = options && options.timeFormat || time.getLangTimeFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
         timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
     var pattern1 = datePattern + ' ' + timePattern;
