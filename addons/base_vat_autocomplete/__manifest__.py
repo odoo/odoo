@@ -11,7 +11,7 @@ Auto-Complete Addresses based on VAT numbers
 
     This module requires the python library stdnum to work.
     """,
-    'depends': ['base_vat'],
+    'depends': ['web'],
     'data': [
         'views/base_vat_autocomplete_template.xml',
         'views/res_partner_views.xml',
