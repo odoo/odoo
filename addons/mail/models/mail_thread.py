@@ -2025,8 +2025,8 @@ class MailThread(models.AbstractModel):
         values = kwargs
         values.update({
             'author_id': author_id,
-            'model': model,
-            'res_id': model and self.ids[0] or False,
+            'model': kwargs.get('model') if kwargs.get('model') and kwargs.get('res_id') else model,
+            'res_id': model and self.ids[0] or kwargs.get('res_id') or False,
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
