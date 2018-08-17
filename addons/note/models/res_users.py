@@ -15,8 +15,9 @@ class Users(models.Model):
     @api.model
     def create(self, values):
         user = super(Users, self).create(values)
-        # for new employee, create his own 5 base note stages
-        if user.has_group('base.group_user'):
+        # for new employee, create his own 5 base note stages; allow to skip it
+        # for tests notably
+        if not self.env.context.get('note_skip_user_stages') and user.has_group('base.group_user'):
             user._create_note_stages()
         return user
 
