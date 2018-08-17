@@ -861,11 +861,13 @@ class Meeting(models.Model):
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
-        self.start = self.start_date
+        if self.start_date:
+            self.start = self.start_date
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
-        self.stop = self.stop_date
+        if self.stop_date:
+            self.stop = self.stop_date
 
     ####################################################
     # Calendar Business, Reccurency, ...
