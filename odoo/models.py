@@ -4963,6 +4963,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def __le__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s <= %s" % (self, other))
+        # these are much cheaper checks than a proper subset check, so
+        # optimise for checking if a null or singleton are subsets of a
+        # recordset
+        if not self or self in other:
+            return True
         return set(self._ids) <= set(other._ids)
 
     def __gt__(self, other):
@@ -4973,6 +4978,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def __ge__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s >= %s" % (self, other))
+        if not other or other in self:
+            return True
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):
