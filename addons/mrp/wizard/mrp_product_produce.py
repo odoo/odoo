@@ -100,8 +100,10 @@ class MrpProductProduce(models.TransientModel):
                 if self.product_id.tracking != 'none':
                     qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
                     move._generate_consumed_move_line(qty_to_add, self.lot_id)
-                else:
+                elif len(move._get_move_lines()) < 2:
                     move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                else:
+                    self._set_quantity_done(move, quantity * move.unit_factor)
         for move in self.production_id.move_finished_ids:
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
                 rounding = move.product_uom.rounding
@@ -117,6 +119,40 @@ class MrpProductProduce(models.TransientModel):
                 'date_start': datetime.now(),
             })
         return {'type': 'ir.actions.act_window_close'}
+
+    def _set_quantity_done(self, move, qty):
+        """
+        Set the given quantity as quantity done on the move through the move lines. The method is
+        able to handle move lines with a different UoM than the move (but honestly, this would be
+        looking for trouble...).
+        @param move: stock.move
+        @param qty: quantity in the UoM of move.product_uom
+        """
+        for ml in move.move_line_ids:
+            # Convert move line qty into move uom
+            ml_qty = ml.product_uom_qty - ml.qty_done
+            if ml.product_uom_id != move.product_uom:
+                ml_qty = ml.product_uom_id._compute_quantity(ml_qty, move.product_uom, round=False)
+
+            taken_qty = min(qty, ml_qty)
+            # Convert taken qty into move line uom
+            if ml.product_uom_id != move.product_uom:
+                taken_qty = move.product_uom._compute_quantity(ml_qty, ml.product_uom_id, round=False)
+
+            # Assign qty_done and explicitly round to make sure there is no inconsistency between
+            # ml.qty_done and qty.
+            taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
+            ml.qty_done += taken_qty
+            if ml.product_uom_id != move.product_uom:
+                taken_qty = ml.product_uom_id._compute_quantity(ml_qty, move.product_uom, round=False)
+            qty -= taken_qty
+
+            if float_compare(qty, 0.0,  precision_rounding=move.product_uom.rounding) <= 0:
+                break
+        if float_compare(qty, 0.0,  precision_rounding=move.product_uom.rounding) > 0:
+            vals = move._prepare_move_line_vals(quantity=0)
+            vals['qty_done'] = qty
+            ml = self.env['stock.move.line'].create(vals)
 
     @api.multi
     def check_finished_move_lots(self):
