@@ -2,8 +2,8 @@
 <odoo>
     <template id="report_delivery_document_inherit_sale_stock" inherit_id="stock.report_delivery_document">
         <xpath expr="//h2" position="before">
-            <div class="row" t-if="o.sale_id.client_order_ref">
-                <div class="col-4 float-right">
+            <div class="row justify-content-end" t-if="o.sale_id.client_order_ref">
+                <div class="col-4">
                     <strong>Customer Reference:</strong>
                     <p t-field="o.sale_id.client_order_ref"/>
                 </div>

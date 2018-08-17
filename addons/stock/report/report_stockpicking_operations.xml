@@ -7,8 +7,8 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <div class="row mb16">
-                                <div class="col-4 float-right" name="right_box">
+                            <div class="row justify-content-end mb16">
+                                <div class="col-4" name="right_box">
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
                                 </div>
                             </div>
