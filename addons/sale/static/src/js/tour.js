@@ -61,7 +61,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".o_sale_print",
     extra_trigger: ".o_sale_order.o_form_readonly",
-    content: _t("<p><b>Print this quotation.</b> If not yet done, you will be requested to set your company data and to select a document layout.</p>"),
+    content: _t("<b>Print this quotation to preview it.</b>"),
     position: "bottom"
 }, {
     trigger: ".breadcrumb-item:not(.active):last",
