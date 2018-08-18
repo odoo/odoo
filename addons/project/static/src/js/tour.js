@@ -100,23 +100,6 @@ tour.register('project_tour', {
     extra_trigger: '.o_form_project_tasks.o_form_readonly',
     content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
     position: "right"
-}, tour.STEPS.TOGGLE_HOME_MENU,
-tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
-    content: _t("Configuration options are available in the Settings app."),
-    position: "bottom"
-}, {
-    trigger: ".o_web_settings_dashboard .o_user_emails",
-    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line and press Enter.</i>"),
-    position: "right",
-    run: function(actions){
-        actions.text('test@example.com');
-    }
-}, {
-    trigger: ".o_web_settings_dashboard_invite",
-    content: _t("<b>Enter valid email address and click on Invite button</b> to invite new users. "),
-    position: "right",
-
 }]);
 
 });
