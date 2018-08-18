@@ -5,7 +5,7 @@
     'name': 'Indian - Sale Report(GST)',
     'version': '1.0',
     'description': """GST Sale Report""",
-    'category': 'Localization',
+    'category': 'Accounting',
     'depends': [
         'l10n_in',
         'sale',
