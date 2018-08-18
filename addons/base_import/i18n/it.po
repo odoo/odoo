@@ -3,20 +3,21 @@
 # * base_import
 # 
 # Translators:
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Paolo Valier, 2016
+# Martin Trigaux, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2016\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,13 +54,13 @@ msgstr "Annulla"
 #: code:addons/base_import/models/base_import.py:599
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "La colonna %s contiene valori errati (valore: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:619
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "La colonna %s contiene valori errati. Errore nella riga %d: %s"
 
 #. module: base_import
 #. openerp-web
@@ -126,7 +127,7 @@ msgstr "Formato Data:"
 #: code:addons/base_import/static/src/js/base_import.js:126
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Formato di Date e d'Ora:"
 
 #. module: base_import
 #. openerp-web
@@ -166,7 +167,7 @@ msgstr "Non importare"
 #: code:addons/base_import/static/src/js/base_import.js:282
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Punto"
 
 #. module: base_import
 #. openerp-web
@@ -179,13 +180,13 @@ msgstr "Codifica:"
 #: code:addons/base_import/models/base_import.py:621
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Errore nel Parsing della Data [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:234
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "Cella errata trovata durante la lettura del file XLS/XLSX: %s"
 
 #. module: base_import
 #. openerp-web
@@ -226,7 +227,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:115
 #, python-format
 msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr ""
+msgstr "Per i file CSV, il problema potrebbe essere una codifica errata."
 
 #. module: base_import
 #. openerp-web
@@ -298,6 +299,11 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"Se il modello è dotato di una cronologia delle conversazioni,"
+"                            esso registrerà le modifiche apportate"
+"                             durante l'importazione, terrà conto delle "
+"sottoscrizioni automatiche e invierà le notifiche corrispondenti. Ciò "
+"potrebbe rallentare l'importazione. "
 
 #. module: base_import
 #. openerp-web
@@ -387,7 +393,7 @@ msgstr "Carica File"
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Abbinare le colonne da importare"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -418,7 +424,7 @@ msgstr "Campi Normali"
 #: code:addons/base_import/static/src/xml/base_import.xml:30
 #, python-format
 msgid "Options…"
-msgstr ""
+msgstr "Opzioni..."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
@@ -470,7 +476,7 @@ msgstr "Separatore:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Visualizzare i campi di relazione (avanzato)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -496,7 +502,7 @@ msgstr "Tab"
 #: code:addons/base_import/static/src/js/base_import.js:122
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Delimitatore di Testo:"
 
 #. module: base_import
 #. openerp-web
@@ -506,13 +512,15 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"La prima riga\n"
+"                 contiene l'etichetta della colonna"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Separatore delle Migliaia:"
 
 #. module: base_import
 #. openerp-web

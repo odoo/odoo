@@ -330,7 +330,7 @@ msgstr "Всички редове на продажбата"
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_reprint:0
 msgid "Allow cashier to reprint receipts"
-msgstr ""
+msgstr "Позволява на касиера да разпечатва повторно касови бележки"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
@@ -405,7 +405,7 @@ msgstr "Сигурни ли сте, че клиентът иска да плат
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr "Автоматично повторно принтиране"
+msgstr "Автоматично разпечатване на касова бележка"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
@@ -2458,7 +2458,7 @@ msgstr "Печат"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1325
 #, python-format
 msgid "Print Receipt"
-msgstr "Принтирай бележка"
+msgstr "Разпечатайте касова бележка"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_via_proxy
@@ -2566,27 +2566,27 @@ msgstr "Реално салдото при приключване"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Receipt"
-msgstr "Касов бон"
+msgstr "Касова бележка"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_footer
 msgid "Receipt Footer"
-msgstr "Долна част на бележката"
+msgstr "Долна част на касовата бележка"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_receipt_header
 msgid "Receipt Header"
-msgstr ""
+msgstr "Горна част на касовата бележка"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Receipt Printer"
-msgstr "Принтер на бележки"
+msgstr "Принтер за касови бележки"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pos_reference
 msgid "Receipt Ref"
-msgstr "Бележка №"
+msgstr "Референция на касова бележка"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_rouges
@@ -3080,7 +3080,9 @@ msgstr "Подаден"
 #: code:addons/point_of_sale/models/pos_order.py:254
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr "Поръчката трябва да има редове, когато се извиква този метод"
+msgstr ""
+"Поръчката на център за продажби трябва да има редове, когато се прилага този"
+" метод"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3226,13 +3228,13 @@ msgid ""
 "The receipt screen will be skipped if the receipt can be printed "
 "automatically."
 msgstr ""
-"Екранът за разписка ще бъде пропуснат, ако разписката може да бъде "
+"Екранът за касовата бележка ще бъде пропуснат, ако разписката може да бъде "
 "отпечатана автоматично."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order"
-msgstr ""
+msgstr "Кадовата бележка ще се разпечатва автоматично в края на всяка поръчка"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3388,7 +3390,7 @@ msgid ""
 msgstr ""
 "Този модул добавя няколко характеристики на ресторанти към Центъра за продажби: \n"
 "\n"
-"- Разпечатване на фактури за покупки: Позволява Ви да разпечатате квитанция преди поръчката да е платена. \n"
+"- Разпечатване на фактури за покупки: Позволява Ви да разпечатате касовата бележка преди поръчката да е платена. \n"
 "\n"
 "- Раздеряне на фактури за покупки: Позволява Ви да отделите дадена поръчка на различни поръчки. \n"
 "\n"

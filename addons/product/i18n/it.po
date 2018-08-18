@@ -158,6 +158,9 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Prezzo Pubblico  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Costo  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Altro Listino Prezzi -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -196,6 +199,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Avvertenza</strong>: l'aggiunta o la cancellazione di attributi\n"
+"determinerà la perdita delle varianti e dei lead già esistenti e\n"
+"delle loro eventuali personalizzazioni."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -387,7 +393,7 @@ msgstr "Attributo"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Nome dell'Attributo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra

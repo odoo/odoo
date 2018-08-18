@@ -113,8 +113,8 @@ msgid ""
 "Bill/Refund."
 msgstr ""
 "Описание на продукта, който желаете да споделите с Вашите доставчици. Това "
-"описание ще бъде копирано на всяка поръчка за покупка, квитанция и фактура "
-"за покупка/кредитно известие."
+"описание ще бъде копирано на всяка поръчка за покупка, касова бележка и "
+"фактура за покупка/кредитно известие."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
@@ -159,7 +159,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Сума на поръчката, за възползване от безплатна доставка, изразена във "
+"Стойност на поръчката за възползване от безплатен шипинг, изразена във "
 "валутата на компанията"
 
 #. module: delivery
@@ -224,6 +224,8 @@ msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
+"Базова цена за изчисляване на клиентската цена. Понякога наричана каталожна "
+"цена."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -272,8 +274,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
-"Може да се променя по време на \"поставената опаковка\", за да се коригира "
-"теглото на експедицията."
+"Може да се променя по време на \"поставете в опаковка\", за да се коригира "
+"теглото на шипинга."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -404,6 +406,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Текущо количество продукти.\n"
+"В контекст на единичната стокова локация, това включва стоки, складирани в тази локация, или в някоя от нейните подлокации.\n"
+"В контекста на единичния склад, това включва стоки, складирани в стоковата локация на въпросния склад, или в някоя от неговите подлокации.\n"
+"складирани в стоковата локация на склада на този магазин или в някоя от неговите подлокации.\n"
+"В противен случай това включва стоки, складирани във всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -611,7 +618,7 @@ msgstr "Сметка за Разходи"
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Попълнете това поле, ако планирате да фактурирате превоза въз основа на "
+"Попълнете това поле, ако планирате да фактурирате шипинга въз основа на "
 "пикинг."
 
 #. module: delivery
@@ -657,6 +664,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Прогнозно количество (изчислено като 'количество под ръка' - изходящо + входящо)\n"
+"В контекста на единичната стокова локация това включва стоки, складирани в тази локация или в някоя от нейните подлокации.\n"
+"В контекста на единичния склад това включва стоки, складирани в стоковата локация на този склад или в някоя от неговите подлокации.\n"
+"В противен случай това вклучва стоки, складирани в която и да е стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -749,6 +760,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Ако поръчката надвишава определена сума, клиентът може да се възползва от "
+"безплатен шипинг"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
@@ -827,7 +840,7 @@ msgstr "Оценка на Инвентара"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "Фактура с Доставката"
+msgstr "Фактурирайте шипинга при доставката"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_state
@@ -1287,6 +1300,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Количество продукти, планирани да пристигнат.\n"
+"В контекста на единичната стокова локация, това включва стоки, пристигащи в тази локация или в някоя от нейните подлокации.\n"
+"В контекста на единичния склад това включва стоки, пристигащи в стоковата локация на този склад или в някой от неговите подлокации.\n"
+"В противен случай това включва стоки, пристигащи до всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1296,6 +1313,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Количество продукти, планирани да напуснат.\n"
+"В контекста на единичната стокова локация това включва стоки, напускащи тази локация или някоя от нейните подлокации.\n"
+"В контекста на единичния склад това включва стоки, напускащи стоковата локация на този склад или някоя от неговите подлокации.\n"
+"В противен случай това включва стоки, напускащи всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
@@ -1305,7 +1326,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
 msgid "Receipt"
-msgstr "Касов бон"
+msgstr "Касова бележка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_nbr_reordering_rules
@@ -1432,12 +1453,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr "Цена на Доставка"
+msgstr "Цена за шипинг"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr "Тегло на пратката"
+msgstr "Тегло на шипинга"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1467,8 +1488,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
-"Стандартизиран код за международна декларация за корабоплаването и стоките"
+msgstr "Стандартизиран код за международен шипинг и стокова декларация"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1653,7 +1673,7 @@ msgstr "Сума на допълнителните цени на всички а
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr "Този процент ще бъде добавен към цената за доставка."
+msgstr "Този процент ще бъде добавен към цената за шипинг."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1843,7 +1863,7 @@ msgstr "Тегло на единица мярка"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Тегло за шипинг"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1927,7 +1947,7 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
-"Изпращате различни видове опаковки в една и съща пратка.\n"
+"Транспортирате различни видове опаковки в една и съща пратка.\n"
 "Видове опаковки:%s"
 
 #. module: delivery
