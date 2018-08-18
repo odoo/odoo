@@ -49,7 +49,7 @@
                                             <t t-esc="record.nbr_channel.raw_value"/> Sessions
                                             <div>
                                                 <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
-                                                    <a type="action" name="%(rating_rating_action_view_livechat_rating)d">
+                                                    <a type="action" name="%(rating_rating_action_view_livechat_rating)d" tabindex="10">
                                                         <i class="fa fa-smile-o text-success" t-if="record.rating_percentage_satisfaction.raw_value &gt;= 70" title="Rating: Great" role="img" aria-label="Happy face"/>
                                                         <i class="fa fa-meh-o text-warning" t-if="record.rating_percentage_satisfaction.raw_value &gt; 30 and record.rating_percentage_satisfaction.raw_value &lt; 70" title="Rating: Okay" role="img" aria-label="Neutral face"/>
                                                         <i class="fa fa-frown-o text-danger" t-if="record.rating_percentage_satisfaction.raw_value &lt;= 30" title="Rating: Bad" role="img" aria-label="Sad face"/>

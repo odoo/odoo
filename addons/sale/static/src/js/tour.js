@@ -14,7 +14,7 @@ tour.register('sale_tour', {
     position: 'bottom',
 },  {
     trigger: ".o_list_button_add",
-    extra_trigger: ".o_sale_order",
+    extra_trigger: "div.o_view_controller:not(.o_has_banner) .o_sale_order",
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
     position: "bottom",
 }, {

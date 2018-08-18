@@ -44,21 +44,21 @@
                                 <tbody>
                                     <tr>
                                         <th rowspan="6">
-                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month'],'pivot_column_groupby': ['timesheet_invoice_type'], 'pivot_measures': ['unit_amount']}">Hours</a>
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month'],'pivot_column_groupby': ['timesheet_invoice_type'], 'pivot_measures': ['unit_amount']}" tabindex="-1">Hours</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['hours']['billable_time']" t-options="{'widget': 'float_time'}"/>
                                         </td>
                                         <td>Timesheets</td>
                                         <th rowspan="6">
-                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}" tabindex="-1">Rates</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['rates']['billable_time']"/> %
                                         </td>
                                         <td>Timesheets</td>
                                         <th rowspan="6">
-                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount']}">Profitability</a>
+                                            <a type="action" t-att-domain="json.dumps(timesheet_domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount']}" tabindex="-1">Profitability</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['profit']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
@@ -161,16 +161,16 @@
                             <t t-if="repartition_employee">
                                 <div class="float-right o_timesheet_plan_badge">
                                     <span class="badge badge-pill o_progress_billable_fixed">
-                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])">Billable fixed</a>
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])" tabindex="-1">Billable fixed</a>
                                     </span>
                                     <span class="badge badge-pill o_progress_billable_time">
-                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])">Billable time</a>
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])" tabindex="-1">Billable time</a>
                                     </span>
                                     <span class="badge badge-pill o_progress_non_billable_project">
-                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])">No task found</a>
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
                                     </span>
                                     <span class="badge badge-pill o_progress_non_billable">
-                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])">Non billable</a>
+                                        <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable</a>
                                     </span>
                                 </div>
                                 <table class="table">
@@ -178,7 +178,7 @@
                                         <t t-foreach="repartition_employee" t-as="employee_id">
                                             <tr>
                                                 <td style="width: 15%">
-                                                    <a type="action" t-att-domain="json.dumps(timesheet_domain)" t-att-context="{'search_default_employee_id': employee_id}" views="[[0, 'list']]">
+                                                    <a type="action" t-att-domain="json.dumps(timesheet_domain)" t-att-context="{'search_default_employee_id': employee_id}" views="[[0, 'list']]" tabindex="-1">
                                                         <t t-esc="repartition_employee[employee_id]['employee_name']"/>
                                                     </a>
                                                 </td>
