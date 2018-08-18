@@ -50,7 +50,7 @@ class PaymentTransaction(models.Model):
             if not s2s_result or self.state != valid_state:
                 _logger.warning(
                     _("<%s> transaction (%s) invalid state : %s") %
-                    (self.acquirer_id.provider, self.id, self.state_mesage))
+                    (self.acquirer_id.provider, self.id, self.state_message))
                 return 'pay_invoice_tx_state'
 
             try:
