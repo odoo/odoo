@@ -437,7 +437,7 @@ msgstr "Stampa"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Nome del Report Stampato"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
@@ -503,6 +503,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Questo è il nome di file dell'allegato che verrà utilizzato per archiviare "
+"il risultato della stampa. Lascia vuoto per non salvare i report stampati. È"
+" possibile utilizzare un'espressione python con le variabili object e time."
 
 #. module: report
 #: code:addons/report/models/report.py:273
@@ -533,6 +536,8 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
+"Impossibile trovare Wkhtmltopdf su questo sistema. Il file PDF non può "
+"essere creato."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -546,6 +551,9 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf fallito (codice di errore: %s). La capacità della memoria è "
+"troppo bassa o il numero massimo di file del sottoprocesso è stato "
+"raggiunto: %s"
 
 #. module: report
 #: code:addons/report/models/report.py:452

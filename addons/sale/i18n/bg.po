@@ -268,7 +268,7 @@ msgstr "<strong>Търговец:</strong>"
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Адрес на доставка:</strong>"
+msgstr "<strong>Адрес за шипинг:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -459,7 +459,7 @@ msgstr "По търговци"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr "От търговец"
+msgstr "От продавач"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
@@ -481,11 +481,13 @@ msgstr "Отменено"
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to manage invoices in this sales team."
 msgstr ""
+"Отметнете това поле, за да управлявате фактури в този търговски отдел."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
 msgstr ""
+"Отметнете това поле, за да управлявате офертите на този търговски отдел."
 
 #. module: sale
 #. openerp-web
@@ -989,6 +991,9 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Фактурирайте приход за текущия месец. Това е сумата, която търговският отдел"
+" е фактурирал този месец. Тя се използва, за да изчисли съотношението на "
+"прогреса на текущите и целевите приходи в канбан изгледа."
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1069,7 +1074,7 @@ msgstr "Адрес за фактура:"
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr "Адрес за фактуриране и доставка :"
+msgstr "Адрес за фактуриране и шипинг :"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -1077,6 +1082,8 @@ msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
 msgstr ""
+"Адресите за фактуриране и шипинг са винаги едни и същи (Пример: компании за "
+"услуги)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -1136,7 +1143,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Нека хвърлим поглед към офертите на този търговски отдел."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1296,6 +1303,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Брой дни между потвърждаването на поръчката и шипинга на продуктите до "
+"клиента"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -2071,6 +2080,8 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales team estimates to be able to invoice this month."
 msgstr ""
+"Цел на приходите от фактури за текущия месец. Това е сумата, преценена от "
+"търговския отдел, че е способна да фактурира този месец."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
