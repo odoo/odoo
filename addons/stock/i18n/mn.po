@@ -425,6 +425,11 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Таны агуулахад бараа аль хэрхэн хөдөлгөөн хийх чиглэлийг тохируулан өөрчлөх,"
+" шинээр үүсгэх боломжтой: ж.ш. байршуулах > чанар шалгах > барааг орлогод "
+"авах, цуглуулах > бэлтгэн савлах > барааг зарлагад гаргах. Мөн та бараа "
+"байршуулах дүрмүүдийн тусламжтайгаар орлогоор ирж буй барааг тогтсон нэг дэд"
+" байршилд хадгалах боломжтой (ж.ш. тогтсон тавиур, тавцан)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -688,7 +693,7 @@ msgstr "Зураасан код уншигч"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Багц баримт"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -1581,7 +1586,7 @@ msgstr "Хүргэлтийн захиалгууд"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Хайрцагаар хүргэлт хийх"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -2048,7 +2053,7 @@ msgstr "Ирээдүйн хүлээн авах баримтууд"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
-msgstr ""
+msgstr "Нийлүүлэгчээс харилцагчын гарт очих хүртэлх бүрэн мөшгөлт"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2374,7 +2379,7 @@ msgstr "Даруй шилжүүлэх эсэх?"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr ""
+msgstr "Борлуулалтын захиалга батлагдсан даруйд"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -3070,7 +3075,7 @@ msgstr "Цувралын дугаарын тооллого"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr ""
+msgstr "Цувралын дугаар & Сериал дугаар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -3172,7 +3177,7 @@ msgstr "Гар ажилбар"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr ""
+msgstr "Гараар эсвэл автомат төлөвлөгч ажиллах үед"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -3354,12 +3359,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr ""
+msgstr "Олон алхамт дамжлага"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_warehouses
 msgid "Multi-Warehouses"
-msgstr ""
+msgstr "Олон-Агуулах"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4186,7 +4191,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr ""
+msgstr "Барааны хүргэлтийн баримтуудыг багцаар нь далд боловсруулах"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -4467,6 +4472,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
+"Бараануудаа хайрцаглаад хүргэх, тэднийг хянах (боодол, хайрцаг гэх мэт)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_fixed_putaway_strat_form
@@ -5162,12 +5168,12 @@ msgstr "Үйлчилгээ"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Putaway Strategies on Locations"
-msgstr ""
+msgstr "Байрлалд байршуулах стратеги тохируулах"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Warehouse Routes"
-msgstr ""
+msgstr "Агуулахын чиглэл тохируулах"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
@@ -5181,12 +5187,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
-msgstr ""
+msgstr "Цувралын дугаар болон сериал дугаарын бүртгэлд дуусах хугацаа бүртгэх"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr ""
+msgstr "Барааг хадгалахдаа эзэмшигчээр нь ялгах боломж"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5549,7 +5555,7 @@ msgstr "Хадгалах бараа"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
 msgid "Storage Locations"
-msgstr ""
+msgstr "Хадгалалтын байрлалууд"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -5558,6 +5564,8 @@ msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
 msgstr ""
+"Тухайн барааг агуулахын тодорхой нэг хэсэгт тогтмол байршуулж үлдэгдлийг "
+"хянах нь (жш. тавиур, тавцан)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__supplied_wh_id
@@ -6141,6 +6149,8 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
+"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
+" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар тэмдэглэгдэнэ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6149,11 +6159,13 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
+"Цувралын дугаар & сериал дугаар дээр дараах огноонуудыг хөтөлнө: аюулгүйн эцсийн огноо, устгах огноо, хугацаа дуусах огноо, анхаарах огноо. \n"
+" Эдгээр огноонууд цуврал/сериал дугаарын бүртгэл үүсгэх үед барааны мэдээлэлд тохируулсаны (тохируулсан өдрийн тоо) дагуу автоматаар тэмдэглэгдэнэ."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr ""
+msgstr "Агуулах дотор хэд хэдэн хадгалалтын байрлал ашиглах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
@@ -6385,6 +6397,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes and putaway strategies"
 msgstr ""
+"Бараа орлогод авч хадгалалтанд байршуулах алхам, шат дамжлагыг удирдан "
+"зохион байгуулах"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence

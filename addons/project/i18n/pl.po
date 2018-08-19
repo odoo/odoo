@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
+# Paweł Wodyński <pw@myodoo.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:11+0000\n"
 "PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,7 +292,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Brak oceny"
 
 #. module: project
 #: code:addons/project/models/project.py:122
@@ -540,7 +541,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Automatyczny status kanban"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
@@ -855,11 +856,13 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Oceny klientów dotyczące zadań. Jeśli nie masz oceny, zmień ustawienia "
+"projektu, aby to aktywować."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Oceny klienta(ów)"
 
 #. module: project
 #. openerp-web
@@ -1214,12 +1217,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Szczęśliwy % na projekt"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Szczęśliwy % w zadaniu"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1251,6 +1254,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Jak uzyskać opinie klientów?\n"
+"- Ocena przy zmianie etapu: wiadomość e-mail zostanie wysłana, gdy zadanie / problem zostanie przeciągnięty na inny etap\n"
+"- Ocena okresowa: e-mail będzie wysyłany okresowo\n"
+"\n"
+"Nie zapomnij skonfigurować szablonów poczty na etapach, dla których chcesz uzyskać informacje zwrotne od klienta."
 
 #. module: project
 #: code:addons/project/models/project.py:867
@@ -1313,6 +1321,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Jeśli ustawione i jeśli konfiguracja oceny projektu to \"Ocena przy zmianie "
+"etapu\", wiadomość e-mail zostanie wysłana do klienta, gdy zadanie osiągnie "
+"ten krok."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1467,17 +1478,17 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Ostatnia ocena: Wysoce niezadowolony"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Ostatnia ocena: Nie zadowolony"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Ostatnia ocena: Zadowolony"
 
 #. module: project
 #. openerp-web
@@ -1666,7 +1677,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Brak oceny"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
@@ -1752,7 +1763,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Raz w miesiącu"
 
 #. module: project
 #. openerp-web
@@ -1862,11 +1873,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Procent zadowolonych ocen w ciągu ostatnich 30 dni. Uzyskaj szczegółowe "
+"informacje o ocenie z menu Więcej."
 
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Ocena okresowa"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -1978,7 +1991,7 @@ msgstr ""
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projekt: Wyślij ocenę"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2001,7 +2014,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Ocenione zadania"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2013,12 +2026,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Ocena szablonu e-mail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Częstotliwość oceniania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
@@ -2038,7 +2051,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Termin składania wniosków dotyczących oceny"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -2053,7 +2066,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Ocena przy zmianie etapu"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_rating
@@ -2064,7 +2077,7 @@ msgstr ""
 #: code:addons/project/models/project.py:398
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "Oceny z %s"
 
 #. module: project
 #: code:addons/project/models/project.py:33
@@ -2247,7 +2260,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "Ustaw szablon wiadomości e-mail na etapy"
 
 #. module: project
 #. openerp-web
@@ -2453,7 +2466,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Ocena zadania"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -2722,7 +2735,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Dwa razy w miesiącu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
