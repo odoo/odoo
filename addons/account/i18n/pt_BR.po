@@ -6,7 +6,7 @@
 # Martin Trigaux, 2017
 # grazziano <gra.negocia@gmail.com>, 2017
 # Mateus Lopes <mateus1@gmail.com>, 2017
-# Fábio Novais <fabionovais@aptu.com.br>, 2017
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2017
 # Franciele Neiva <franciele.neiva@br.ey.com>, 2017
 # zimbora <alexandre.ruffer@tkobr.com>, 2017
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
@@ -17,6 +17,7 @@
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 # Silmar <pinheirosilmar@gmail.com>, 2017
+# Fábio Novais <fabionovais@aptu.com.br>, 2017
 # Raphael Mendonça, 2017
 # Marina Jacques <marinajacques@gmail.com>, 2017
 # Gideoni Silva <gd.willian@gmail.com>, 2017
@@ -1724,7 +1725,7 @@ msgstr "Adicionar"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr "Adicionar Notas de Crédito"
+msgstr "Reembolso"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2408,7 +2409,7 @@ msgstr "Banco"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank &amp; Cash"
-msgstr "Banco &amp; Dinheiro"
+msgstr "Banco &amp; Caixa"
 
 #. module: account
 #: code:addons/account/models/company.py:226
@@ -2426,7 +2427,7 @@ msgstr "Conta Bancária"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Bank Account Name"
-msgstr "Nome de Conta de Banco"
+msgstr "Nome de Conta Bancária"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_partner_bank_id
@@ -2457,7 +2458,7 @@ msgstr "Prefixo de Contas Bancárias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_bank_statements_source
 msgid "Bank Feeds"
-msgstr "Retornos Bancários`"
+msgstr "Retornos Bancários"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_yodlee
@@ -2467,7 +2468,7 @@ msgstr "Interface Bancária - Sincronização retornos seu banco automaticamente
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_bank_journal_ids
 msgid "Bank Journals"
-msgstr "Diários de Banco"
+msgstr "Diários Bancários"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -3535,7 +3536,7 @@ msgstr "Controle de Acesso"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr "Custo da Receita"
+msgstr "Custo de Receita"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:873
@@ -3902,7 +3903,7 @@ msgstr "Diferença de taxa de câmbio"
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr "Ativos Atuais"
+msgstr "Ativos Circulantes"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4924,7 +4925,7 @@ msgstr "Quantidade fixa"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_fixed_assets
 msgid "Fixed Assets"
-msgstr "Ativos Imobilizado"
+msgstr "Ativos Permanentes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_amount
@@ -5010,7 +5011,7 @@ msgstr "Referencia livre"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr "De contas a pagar"
+msgstr "De Contas a Pagar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6932,7 +6933,7 @@ msgstr "Mensagem para Fatura"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr "Menos Custo da Receita"
+msgstr "Menos Custo de Receita"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6947,7 +6948,7 @@ msgstr "Menos Passivo Circulante"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Expenses"
-msgstr "Despesas Mínimas"
+msgstr "Menos Despesas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7071,7 +7072,7 @@ msgstr "Minhas Faturas"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "NET ASSETS"
-msgstr "PATRIMÔNIO LÍQUIDO"
+msgstr "ATIVOS LÍQUIDOS"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -7198,12 +7199,12 @@ msgstr "Nº de dígitos utilizados na contabilidade"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr "Ativos Não Circulantes"
+msgstr "Ativo Não Circulante"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr "Passivos Não Circulantes"
+msgstr "Passivo Não Circulante"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -7808,13 +7809,13 @@ msgstr "Pague suas contas com um clique utilizando o serviço Euro SEPA"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payable"
-msgstr "A Pagar"
+msgstr "Conta a Pagar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_payable_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Payable Account"
-msgstr "Conta à Pagar"
+msgstr "Conta de Pagamento"
 
 #. module: account
 #: selection:account.aged.trial.balance,result_selection:0
@@ -7835,7 +7836,7 @@ msgstr "Limite pagável"
 #: model:ir.ui.view,arch_db:account.product_template_form_view
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 msgid "Payables"
-msgstr "Pagáveis"
+msgstr "Contas de pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_amount
@@ -8137,7 +8138,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
-msgstr "Mais Banco"
+msgstr "Mais Banco e Caixa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8152,12 +8153,12 @@ msgstr "Mais Lucro Líquido"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Non-Current Assets"
-msgstr "Mais Ativos Não Circulantes"
+msgstr "Mais Ativo Não Circulante"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Other Income"
-msgstr "Mais Outros Rendimentos"
+msgstr "Mais Outras Receitas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_opening_move_wizard_form
@@ -8219,7 +8220,7 @@ msgstr "Prefixo das contas de caixa principais"
 #: model:account.account.type,name:account.data_account_type_prepayments
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
-msgstr "Pagamentos Antecipados"
+msgstr "Adiantamentos"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -8307,7 +8308,7 @@ msgstr "Lucro"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Profit &amp; Loss"
-msgstr "Lucro &amp; Perda"
+msgstr "Demonstrativo do Resultado do Exercício (DRE)"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
@@ -8324,7 +8325,7 @@ msgstr "Conta de Resultados"
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit and Loss"
-msgstr "Lucros e Perdas"
+msgstr "Demonstrativo do Resultado do Exercício (DRE)"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:135
@@ -8423,7 +8424,7 @@ msgstr "Motivo..."
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Receivable"
-msgstr "A Receber"
+msgstr "Contas a Receber"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_receivable_id
@@ -10870,7 +10871,7 @@ msgstr "Total Faturado"
 #: model:ir.model.fields,field_description:account.field_res_partner_debit
 #: model:ir.model.fields,field_description:account.field_res_users_debit
 msgid "Total Payable"
-msgstr "Total a pagar"
+msgstr "Total a Pagar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_credit

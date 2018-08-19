@@ -480,6 +480,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Kreirajte ručno</strong><br/>\n"
+"                                        <span class=\"small\">Preporučeno za manje od &lt;100 proizvoda</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1210,7 +1215,7 @@ msgstr "Odabrane stavke temeljnica su već proknjižene."
 #: code:addons/account/models/account_bank_statement.py:892
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr ""
+msgstr "Odabrana stavka izvoda je već zatvorena s transakcijom računa."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1225,6 +1230,9 @@ msgid ""
 "                bank accounts, checks), one purchase journal, one sales journal\n"
 "                and one for miscellaneous information."
 msgstr ""
+"Tipična tvrtka koristi jedan dnevnik za svaku vrstu plaćanja (gotovina, "
+"banka, čekovi), jedan dnevnik nabave, jedan dnevnik prodaje i jedan dnevnik "
+"za ostale različite informacije."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1452,7 +1460,7 @@ msgstr "Predložak poreza"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "TaxCloud račun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -2193,12 +2201,12 @@ msgstr "Primjenjivost"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Primijenjeno na stavku dnevnika obveza"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Primijenjeno na stavku dnevnika potraživanja"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -2289,7 +2297,7 @@ msgstr "Automatski detektirano"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automate deferred revenues entries for multi-year contracts"
-msgstr ""
+msgstr "Stavke automatski odgođenih prihoda za višegodišnje ugovore"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2306,7 +2314,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
-msgstr ""
+msgstr "Automatski tečajevi valuta"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3082,7 +3090,7 @@ msgstr "Odaberite računovodstveni predložak"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Choose counterpart or Create Write-off"
-msgstr ""
+msgstr "Odaberi protustavku ili kreiraj otpis"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
@@ -3142,7 +3150,7 @@ msgstr "Kliknite za unos novog ulaznog računa."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Click to record a new vendor credit note."
-msgstr ""
+msgstr "Klikni za kreiranje novog odobrenja dobavljača"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree

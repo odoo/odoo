@@ -39,12 +39,12 @@ msgstr "Nome Azione"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Test di Linea di Regola d'Azione"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Test di Regola d'Azione"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_state
@@ -75,7 +75,7 @@ msgstr "Aggiungi Followers"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "Applicato a"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
@@ -103,48 +103,50 @@ msgstr "Automazione"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Regola di Azione di Base: verifica e attuazione"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
 #: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
 msgid "Base Automation: test recursive rule"
-msgstr ""
+msgstr "Automatizzazione di Base: test di regola ricorsiva"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr ""
+msgstr "Automatizzazione di Base: test di regola durante una creazione"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr ""
+msgstr "Automatizzazione di Base: test di regola durante un ricalcolo"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr ""
+msgstr "Automatizzazione di Base: test di regola su un modello secondario"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr ""
+msgstr "Automatizzazione di Base: test di regola durante una scrittura"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr ""
+"Automatizzazione di Base: verifica della possibilità di modificare un record"
+" di base in funzione del contesto di attuazione"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Basato su una Modifica nel Modulo"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -154,7 +156,7 @@ msgstr "Basato su condizione temporale"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Dominio Prima dell'Aggiornamento"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
@@ -191,7 +193,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Click to setup a new automated automation."
-msgstr ""
+msgstr "Clicca per configurare una nuova automatizzazione."
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -201,7 +203,7 @@ msgstr "Chiuso"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Lista di campi, separati da virgole, che attivano l'evento onchange."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
@@ -239,6 +241,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Termine dopo la data di attivazione.\n"
+"                                    Puoi anche mettere un numero negativo se hai bisogno di un termine prima\n"
+"                                    della data di attivazione: ad esempio, inviare una promemoria 15 minuti prima di una riunione."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
@@ -401,7 +406,7 @@ msgstr "Nuovo"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Attivatore delle Modifiche sui Campi"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -416,7 +421,7 @@ msgstr "Su creazione e aggiornamento"
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Deletion"
-msgstr ""
+msgstr "All'Eliminazione"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -462,12 +467,12 @@ msgstr "Codice Python"
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
-msgstr ""
+msgstr "Rimuovere un'Azione"
 
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
-msgstr ""
+msgstr "Rimuovere l'azione contestuale relativa a questa azione del server"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_user_id
@@ -490,6 +495,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Quando un valore viene definito, questa azione diventa disponibile nella "
+"barra laterale per il modello dato."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -504,7 +511,7 @@ msgstr "Oggetto"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
 msgid "Trigger Condition"
-msgstr ""
+msgstr "Condizione di Attivazione"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
@@ -522,6 +529,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Tipo di azione del server. sono disponibili i seguenti valori:\n"
+"- \"Eseguire un Codice Python\": un blocco di codici python che verrà eseguito\n"
+"- \"Creare o Copiare un nuovo Record\": creare un nuovo record con nuovi valori, o copiare un record esistente nel database\n"
+"- \"Modificare un Record\": aggiornare i valori di un record\n"
+"- \"Eseguire diverse azioni\": definire un'azione che attiva diverse altre azioni del server\n"
+"- \"Aggiungere Followers\": aggiungere follower a un record (disponibile nel modulo Discussione)\n"
+"- \"Inviare E-mail\": Inviare automaticamente una e-mail (disponibile in email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -542,6 +556,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Utilizza azioni automatiche per attivare automaticamente le azioni per\n"
+"                le diverse schermate. Esempio: un lead creato da un utente specifico può\n"
+"                essere assegnato automaticamente ad un canale di vendita specifico, oppure\n"
+"                un'opportunità ancora in attesa dopo 14 giorni potrebbe\n"
+"                attivare una e-mail di promemoria automatica."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
@@ -551,7 +570,7 @@ msgstr "Utente"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Corrispondenza di Valori"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
@@ -569,6 +588,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"Per le azioni multiple, l'ordine di esecuzione è basato sulla sequenza. Il "
+"numero più piccolo indica la massima priorità."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
@@ -576,6 +597,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Attivazione della condizione\n"
+"                                  Se il campo è compilato, il valore sarà controllato dal pianificatore. Se il campo è vuoto, il valore sarà controllato durante la creazione e l'aggiornamento. "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active
@@ -588,6 +611,9 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Scrivi un codice Python che l'azione eseguirà. Alcune variabili sono "
+"disponibili per l'uso. Un aiuto sull'espressione Python è dato nella scheda "
+"Aiuto."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
