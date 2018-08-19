@@ -228,7 +228,7 @@ msgstr ""
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
 "                    <p style=\"font-size:16px;\">\n"
-"                        Hi,\n"
+"                        Guten Tag,\n"
 "                    </p><p style=\"font-size:16px;\">\n"
 "                        Wir freuen uns, Ihre Registration für den Anlass zu bestätigen:\n"
 "                    </p>\n"
@@ -542,7 +542,7 @@ msgstr ""
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Event anzeigen</a>\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Anlass anzeigen</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
@@ -556,7 +556,7 @@ msgstr ""
 "                        Hallo,\n"
 "                    </p>\n"
 "                    <p style=\"font-size:16px;\">\n"
-"                        wir möchten Sie gerne erinnern, dass das Event\n"
+"                        wir möchten Sie gerne erinnern, dass der Anlass\n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
@@ -634,12 +634,12 @@ msgstr ""
 "                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Haben Sie Fragen zu diesem Event?</h2>\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Haben Sie Fragen zu diesem Anlass?</h2>\n"
 "                                    <p>Bitte kontaktieren Sie den Veranstalter:</p>\n"
 "                                    <ul>\n"
 "                                        <li>${object.event_id.organizer_id.name}</li>\n"
 "                                        % if object.event_id.organizer_id.email\n"
-"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                            <li>E-Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
 "                                        % endif\n"
 "                                        % if object.event_id.organizer_id.phone\n"
 "                                            <li>Telefon: ${object.event_id.organizer_id.phone}</li>\n"
@@ -652,7 +652,7 @@ msgstr ""
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Fügen Sie dieses Event zu Ihrem Kalender hinzu</strong>\n"
+"                                <strong>Fügen Sie diesen Anlass zu Ihrem Kalender hinzu</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
 "                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
@@ -677,7 +677,7 @@ msgstr ""
 "                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Gesendet von ${object.company_id.name}</p>\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div>\n"
-"                        Entdecken <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">Sie alle unsere Events</a>.\n"
+"                        Entdecken <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">Sie alle unsere Anlässe</a>.\n"
 "                    </div>\n"
 "                    % endif\n"
 "                </td>\n"
@@ -698,9 +698,9 @@ msgid ""
 "<p>Best regards,</p>"
 msgstr ""
 "\n"
-"<p>Hallo ${object.name},</p>\n"
+"<p>Guten Tag ${object.name},</p>\n"
 "<p>danke für Ihre Anfrage.</p>\n"
-"<p>Hier ist Ihr Ausweis für das Event ${object.event_id.name}.</p>\n"
+"<p>Hier ist Ihr Ausweis für den Anlass ${object.event_id.name}.</p>\n"
 "<p>Bitte kontaktieren Sie uns, falls Sie Fragen haben.</p>\n"
 "<p>Viele Grüße,</p>"
 
@@ -756,7 +756,7 @@ msgid ""
 "<font style=\"font-size: 24px;\">to learn <i>business applications "
 "development</i></font>"
 msgstr ""
-"<font style=\"font-size: 24px;\">um <i>Entwicklung zu "
+"<font style=\"font-size: 24px;\">um <i>Entwicklung von "
 "Geschäftsanwendungen</i> zu erlernen</font>"
 
 #. module: event
@@ -810,7 +810,7 @@ msgstr "<i>bis</i>"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
+msgstr "<small>Hans Muster, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -929,8 +929,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
-"Sind Sie sicher, dass Sie diese Veranstaltung absagen wollen? Alle "
-"verknüpften Teilnehmer werden ebenfalls gelöscht."
+"Sind Sie sicher, dass Sie diesen Anlass absagen wollen? Alle verknüpften "
+"Teilnehmer werden ebenfalls gelöscht."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -953,12 +953,12 @@ msgstr "Teilgenommen"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_closed
 msgid "Attended Date"
-msgstr "Teilnahme Datum"
+msgstr "Teilnahme-Datum"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr "An Veranstaltung teilgenommen"
+msgstr "hat teilgenommen am Anlass"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1006,22 +1006,22 @@ msgstr "Verfügbare Plätze"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_back
 msgid "Badge Back"
-msgstr "Auszeichnungshintergrund"
+msgstr "Rückseite Teilnehmerausweis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_front
 msgid "Badge Front"
-msgstr "Eintrittskarten-Vorderseite"
+msgstr "Vorderseite Teilnehmerausweis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
 msgid "Badge Inner Left"
-msgstr "Auszeichnung innen links"
+msgstr "Teilnehmerausweis innen links"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
 msgid "Badge Inner Right"
-msgstr "Auszeichnung innen rechts"
+msgstr "Teilnehmerausweis innen rechts"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_barcode
@@ -1032,7 +1032,7 @@ msgstr "Strichcode"
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr "Vor der Veranstaltung"
+msgstr "Vor dem Anlass"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1075,7 +1075,7 @@ msgstr "Abbrechen"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr "Veranstaltung stornieren"
+msgstr "Anlass stornieren"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1101,19 +1101,18 @@ msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
-msgstr "Klicken hier, um einen neuen Teilnehmer hinzuzufügen."
+msgstr "Hier klicken, um einen neuen Teilnehmer hinzuzufügen."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr "Klicken Sie hier, um eine neue Veranstaltung zu erstellen."
+msgstr "Hier klicken, um eine neue Veranstaltung zu erstellen."
 
 #. module: event
 #: code:addons/event/models/event.py:264
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
-"Das Ende am Datum kann nicht vor dem Beginn am Datum terminiert werden."
+msgstr "Das Ende-Datum kann nicht vor dem Beginn-Datum liegen."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -1160,12 +1159,12 @@ msgstr "In jedem Fall bestätigen"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr "Veranstaltung bestätigen"
+msgstr "Anlass bestätigen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr "Bestätige Anmeldung"
+msgstr "Anmeldung bestätigen"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -1181,7 +1180,7 @@ msgstr "Bestätigte Teilnehmer"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr "Bestätigte Veranstaltungen"
+msgstr "Bestätigte Anlässe"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -1333,13 +1332,13 @@ msgstr "E-Mail"
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr "Emailversand Zeitplan"
+msgstr "Terminierung E-Mailversand"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail_template_id
 msgid "Email Template"
-msgstr "E-Mail Vorlage"
+msgstr "E-Mail-Vorlage"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -1358,23 +1357,23 @@ msgstr "Festgelegtes Enddatum"
 #: model:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr "Event"
+msgstr "Anlass"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Automatisierter Event-E-Mail-Versand"
+msgstr "Automatischer Anlass-E-Mailversand"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
 msgid "Event Badge"
-msgstr "Veranstaltungsausweis"
+msgstr "Teilnehmerausweis"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Event Categories"
-msgstr "Veranstaltungskategorien"
+msgstr "Anlasskategorien"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1383,28 +1382,28 @@ msgstr "Veranstaltungskategorien"
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 #: model:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
-msgstr "Veranstaltungskategorien"
+msgstr "Anlasskategorie"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
-msgstr "Bestätigung der Anmeldung"
+msgstr "Anlassbestätigung"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_end_date
 msgid "Event End Date"
-msgstr "Ende der Veranstaltung"
+msgstr "Ende des Anlasses"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
-msgstr "Veranstaltungsinformationen"
+msgstr "Anlassinformationen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_logo
 msgid "Event Logo"
-msgstr "Veranstaltungslogo"
+msgstr "Logo des Anlasses"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_mail_form

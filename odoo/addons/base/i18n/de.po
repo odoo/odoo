@@ -45,13 +45,14 @@
 # Pascal Künzli <p.kuenzli@pk-its.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # e2f_KAZ <e2fKAZ@outlook.com>, 2018
+# Jan Meyer <jan.meyer@ife.de>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:47+0000\n"
 "PO-Revision-Date: 2018-08-02 09:47+0000\n"
-"Last-Translator: e2f_KAZ <e2fKAZ@outlook.com>, 2018\n"
+"Last-Translator: Jan Meyer <jan.meyer@ife.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5097,6 +5098,21 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Dieses Add-on bringt die technischen Anforderungen der französischen Verordnung CGI art. 286, I. 3° bis, das bestimmte Kriterien für die Unveränderbarkeit, Sicherheit, Speicherung und Archivierung von Daten im Zusammenhang mit dem Verkauf an Privatpersonen (B2C) festlegt.\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Installieren Sie es, wenn Sie die Point of Sale App verwenden, um an Privatpersonen zu verkaufen.\n"
+"\n"
+"Das Modul fügt folgende Funktionen hinzu:\n"
+"\n"
+"Unveränderbarkeit: Deaktivierung aller Möglichkeiten zur Stornierung oder Änderung von Schlüsseldaten von POS-Aufträgen, Rechnungen und Journalbuchungen\n"
+"\n"
+"Sicherheit: Verkettungsalgorithmus zur Überprüfung der Unveränderlichkeit\n"
+"\n"
+"Speicherung: automatische Verkaufsabschlüsse mit Berechnung von Perioden- und Kumulativsummen (täglich, monatlich, jährlich)\n"
+"\n"
+"Zugang zum Download des obligatorischen Konformitätszertifikats von Odoo SA  (nur für Odoo Enterprise-Benutzer)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_certification
@@ -5115,6 +5131,19 @@ msgid ""
 "\n"
 "    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
+"\n"
+"Dieses Add-on bringt die technischen Anforderungen der französischen Verordnung CGI art. 286, I. 3° bis, der bestimmte Kriterien für die Unveränderbarkeit, Sicherheit, Speicherung und Archivierung von Daten im Zusammenhang mit dem Verkauf an Privatpersonen (B2C) festlegt.\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Das Modul fügt folgende Funktionen hinzu:\n"
+"\n"
+"Unveränderbarkeit: Deaktivierung aller Möglichkeiten, Schlüsseldaten, Rechnungen und Journalbuchungen zu stornieren oder zu ändern\n"
+"\n"
+"Sicherheit: Verkettungsalgorithmus zur Überprüfung der Unveränderlichkeit\n"
+"\n"
+"Speicherung: automatische Verkaufsabschlüsse mit Berechnung von Perioden- und Kumulativsummen (täglich, monatlich, jährlich)\n"
+"\n"
+"Zugang zum Download des obligatorischen Konformitätszertifikats von Odoo SA (nur für Odoo Enterprise-Benutzer).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -7633,6 +7662,75 @@ msgid ""
 "\n"
 ".. figure:: static/description/invoice_custom_xml.png\n"
 msgstr ""
+"==========================================\n"
+"Odoo Mexiko Lokalisierung für Bestand/Wareneinstand\n"
+"==========================================\n"
+"\n"
+"Dieses Modul erweitert die Funktionalität der mexikanischen Lokalisierung zur Unterstützung von\n"
+"Zollnummern im Zusammenhang mit Wareneinstandspreisen bei der Erstellung der elektronischen\n"
+"Rechnung.\n"
+"\n"
+"Verwendung\n"
+"=====\n"
+"\n"
+"Um dieses Modul zu verwenden, müssen Sie:\n"
+"\n"
+"Generieren Sie eine neue Bestellung für ein Produkt aus dem Ausland. Wareneinstandspreise sind\n"
+"nur möglich bei Produkten mit'automatischer' Bewertung mit\n"
+"FIFO-Kalkulationsmethode. Die Kalkulationsmethode ist in der Produktkategorie konfiguriert.\n"
+"\n"
+"\n"
+".. figure:: static/description/purchase_order_new.png\n"
+"\n"
+"* Sie erhalten das Produkt der Bestellung.\n"
+"\n"
+".. figure:: static/description/picking_done_purchase.png\n"
+"\n"
+"* Gehe zu Bestand -> Bestandskontrolle -> Wareneinstandspreise\n"
+"\n"
+"* Legen Sie einen neuen Wareneinstandspreis an, der die Auswahl der Bestellung angibt.\n"
+"und die Nummer der Zollinformationen (pedimento). Wareneinstandspreise sind\n"
+"nur für Produkte möglich, die in Echtzeitbewertung mit realer\n"
+"Preiskalkulationsmethode. Die Kalkulationsmethode ist in der Produktkategorie konfiguriert.\n"
+"\n"
+".. figure:: static/description/landed_cost_picking.png\n"
+"\n"
+"* Beginnen Sie, indem Sie spezifische Produkte erstellen, die Ihre verschiedenen Einstandskosten so wie Fracht, Versicherung oder Zölle anzeigen.\n"
+"\n"
+"Gehen Sie zu Bestand -> Konfiguration -> Wareneinstandspreise. Wareneinstandspreise sind\n"
+"nur für Produkte möglich, die in Echtzeitbewertung mit realer\n"
+"Preiskalkulationsmethode. Die Kalkulationsmethode ist in der Produktkategorie konfiguriert.\n"
+"\n"
+".. figure:: static/description/product_landed_cost.png\n"
+"\n"
+"* Klicken Sie auf die Schaltfläche Berechnen, um zu sehen, wie die Wareneinstandspreise auf die \n"
+" Picking-Linien aufgeteilt werden.\n"
+"\n"
+".. figure:: static/description/compute_landed_cost.png\n"
+"\n"
+"* Um die Zuordnung der Wareneinstandspreise zu bestätigen, klicken Sie auf die Schaltfläche Validieren.\n"
+"\n"
+".. figure:: static/description/validate_landed_cost.png\n"
+"\n"
+"* Erstellen Sie einen Kundenauftrag für das im Ausland gekaufte Produkt.\n"
+"\n"
+".. figure:: static/description/sale_order_new.png\n"
+"\n"
+"* Lieferung des Produkts im Zusammenhang mit dem Kundenauftrag\n"
+"\n"
+".. figure:: static/description/picking_done_sale.png\n"
+"\n"
+"* Erstellen und bestätigen Sie eine neue Rechnung, die dem Kundenauftrag zugeordnet ist\n"
+"\n"
+".. figure:: static/description/validate_invoice_customs.png\n"
+"\n"
+"* Die Zollinformationen finden Sie in den Zeilen der dem Produkt zugehörigen Rechnung.\n"
+"\n"
+".. figure:: static/description/invoice_custom_pedimento.png\n"
+"\n"
+"* Überprüfen Sie die elektronische Rechnung, die dem Produkt zugeordnet ist, in der die Zollinformation angezeigt wird.\n"
+"\n"
+".. figure:: static/description/invoice_custom_xml.png\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_customs
@@ -11622,7 +11720,7 @@ msgstr "E WASSERVERSORGUNG, ABFALLWIRTSCHAFT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_external_trade
 msgid "EDI External Trade Complement for Mexico"
-msgstr ""
+msgstr "EDI-Außenhandelsergänzung für Mexiko"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment
@@ -11639,6 +11737,10 @@ msgid ""
 "which established that a payment complement can be emitted ten (10) days after,\n"
 "of the same month, when was received.\n"
 msgstr ""
+"EDI-Zahlung\n"
+"===========\n"
+"\n"
+"Dieses Zahlungsmodul für die mexikanische Lokalisierung ermöglicht die Erfüllung der SAT-Indikation, in der festgelegt wurde, dass eine Zahlungsergänzung im selben Monaat zehn (10) Tage nach der Auszahlung ausgegeben werden kann.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi
@@ -12186,7 +12288,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_external_trade
 msgid "External Trade Complement for the Mexican localization"
-msgstr ""
+msgstr "Außenhandelsergänzung für die mexikanische Lokalisierung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_external_trade
@@ -12800,7 +12902,7 @@ msgstr "Formular"
 #: selection:ir.actions.report,binding_type:0
 #: selection:ir.actions.server,binding_type:0
 msgid "Form-only"
-msgstr ""
+msgstr "Nur Formular"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
@@ -13406,7 +13508,7 @@ msgstr "HR-Organigramm"
 #. module: base
 #: model:res.country,vat_label:base.ca
 msgid "HST"
-msgstr ""
+msgstr "HST"
 
 #. module: base
 #: selection:ir.actions.report,report_type:0
@@ -17568,12 +17670,12 @@ msgstr "Odoo – Mexikanische Lokalisierungsberichte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_customs
 msgid "Odoo Mexico Localization for Invoice with customs Number"
-msgstr ""
+msgstr "Odoo Mexiko Lokalisierung für Rechnung mit Zollnummer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Odoo Mexiko Lokalisierung für Lager/Wareneinstand"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -20358,7 +20460,7 @@ msgstr "RFC"
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate_rate

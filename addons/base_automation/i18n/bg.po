@@ -26,7 +26,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
 msgid "Action Description"
-msgstr ""
+msgstr "Описание на действието"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_name
@@ -36,12 +36,12 @@ msgstr "Название на действието"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Тест на реда на правилото за действие"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Тест на правилото за действие"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_state
@@ -141,17 +141,17 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Въз основа на промяна на формата"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "Based on Timed Condition"
-msgstr ""
+msgstr "Въз основа на времеви етап"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Преди да актуализирате домейн"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
@@ -171,12 +171,12 @@ msgstr "Отказанa"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Проверете това поле, ако този контакт е клиент."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Дейности на деца"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_child_ids
@@ -184,6 +184,9 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Дейности на второстепенния сървър, които ще бъдат изпълнени. Забележете, че "
+"последната върната стойност на действието ще бъде използвана като глобална "
+"възвръщаемост."
 
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
@@ -199,11 +202,12 @@ msgstr "Затворено"
 #: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
 msgstr ""
+"Разделен от запетаи списък с имена на полета, който стартира замяната."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Създайте/напишете целеви модел"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -236,11 +240,14 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Забавяне след пусковата дата.\n"
+"                                    Можете да поставите отрицателно число, ако се нуждаете от забавяне преди\n"
+"                                    пусковата дата, като изпратите напомняне, което да се активира 15 минути преди дадена среща."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Забавяне след пусковата дата"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range_type
@@ -282,6 +289,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
+"Ако е налице, това условие трябва да бъде изпълнено, преди да се приложи "
+"правилото за действие."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
@@ -289,6 +298,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr ""
+"before executing the action rule. Ако е налице, това условие трябва да бъде "
+"изпълнено преди актуализацията на записа"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -344,7 +355,7 @@ msgstr "Линия"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
 msgid "Link using field"
-msgstr ""
+msgstr "Линк, използващ поле"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -368,6 +379,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
+"Модел за създаване / актуализация на запис. Настройте това поле да определя "
+"единствено различен модел, а не основния модел."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
@@ -392,27 +405,27 @@ msgstr "Nieuw"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Тригер за замяна на полета"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Creation"
-msgstr ""
+msgstr "В процес на създаване"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Creation & Update"
-msgstr ""
+msgstr "В процес на създаване & актуализиране"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Deletion"
-msgstr ""
+msgstr "В процес на премахване"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Update"
-msgstr ""
+msgstr "В процес на актуализиране"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_help
@@ -420,6 +433,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
+"Помощен текст по избор за потребителите с описание на целевия изглед, като "
+"например неговото използване и цел."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_partner_id
@@ -456,7 +471,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
-msgstr ""
+msgstr "Премахнете контекстното действие, свързано с това действие на сървъра"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_user_id
@@ -520,7 +535,7 @@ msgstr "Употреба"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_calendar_id
 msgid "Use Calendar"
-msgstr ""
+msgstr "Използвайте календар"
 
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
@@ -540,7 +555,7 @@ msgstr "Потребител"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Планиране на стойности"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id
@@ -548,6 +563,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"При изчисляване на времево състояние на ежедневна база, е възможно да "
+"използвате календар, за да изчислите датата въз основа на работните дни."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_sequence
@@ -555,6 +572,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"Когато боравите с множество действия, редът на изпълнение се основава на "
+"определена последователност. Ниският брой означава висок приоритет."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
@@ -562,11 +581,14 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Кога трябва да се стартира етапът.\n"
+"                                  Ако е налице, ще бъде отметната от планьора. Ако мястото е празно, ще бъде отметнато при създаването и обновяването."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active
 msgid "When unchecked, the rule is hidden and will not be executed."
 msgstr ""
+"Когато не е отметнато, правилото е скрито и не може да бъде приложено."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_code
@@ -574,6 +596,9 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Напишете код Python, който действието ще изпълни. Някои променливи стойности"
+" са налични за използване; помощ за израз pyhon е предоставена в помощния "
+"раздел."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

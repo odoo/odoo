@@ -784,6 +784,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Pridėkite ir sukonfigūruokite maršruto operacijas produktų perkėlimų sandėlyje apdorojimui: pvz. iškrovimas > kokybės patikrinimas > įeinančių produktų atsargos > pakavimas > išeinančių produktų siuntimas.\n"
+"Taip pat galite nustatyti strategijas, kaip įeinančius produktus nusiųsti tiesiogiai į tam tikras dukterines lokacijas (pvz., konkrečios dėžės, lentynos)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -794,6 +796,11 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Pridėkite ir sukonfigūruokite maršruto operacijas produktų perkėlimų "
+"sandėlyje apdorojimui: pvz. iškrovimas > kokybės patikrinimas > įeinančių "
+"produktų atsargos > pakavimas > išeinančių produktų siuntimas. Taip pat "
+"galite nustatyti strategijas, kaip įeinančius produktus nusiųsti tiesiogiai "
+"į tam tikras dukterines lokacijas (pvz., konkrečios dėžės, lentynos)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -839,7 +846,7 @@ msgstr "Visos operacijos"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 msgid "All Transfers"
-msgstr "Visi pervedimai"
+msgstr "Visi perkėlimai"
 
 #. module: stock
 #: selection:procurement.group,move_type:0
@@ -1064,7 +1071,7 @@ msgstr "Barkodo skaitytuvas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr ""
+msgstr "Grupiniai surinkimai"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1485,7 +1492,7 @@ msgstr "Sveikiname!"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
 msgid "Consignment"
-msgstr ""
+msgstr "Siuntinys"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
@@ -2253,12 +2260,12 @@ msgstr "Atlikti"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr "Atlikti pervedimai"
+msgstr "Atlikti perkėlimai"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr "Atlikti pervedimai pagal datą"
+msgstr "Atlikti perkėlimai pagal datą"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2817,7 +2824,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will show which products are reserved "
 "(lot/serial number, source location, source package)."
 msgstr ""
-"Jei pažymėta, Odoo parodys, kurie produktai yra rezervuoti "
+"Jei pažymėta, \"Odoo\" parodys, kurie produktai yra rezervuoti "
 "(partijos/serijinis numeris, šaltinio vieta, šaltinio pakuotė)."
 
 #. module: stock
@@ -3103,7 +3110,7 @@ msgstr "Vidinis numeris"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Vidiniai pervedimai"
+msgstr "Vidiniai perkėlimai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
@@ -4011,7 +4018,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr ""
+msgstr "Daugiažingsniai maršrutai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_warehouses
@@ -4845,7 +4852,7 @@ msgstr "Apdorokite veiksmus greičiau naudodami brūkšninius kodus"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr ""
+msgstr "Apdoroti surinkimą grupėje pagal darbuotoją"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -5143,7 +5150,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr ""
+msgstr "Įdėkite produktus į pakuotes (dėžes, įpakavimus) ir sekite juos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -5250,7 +5257,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "Kiek numatytuoju produkto matavimo vnt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_incoming_qty
@@ -5881,6 +5888,7 @@ msgstr "Nustatyti laikomų produktų savininką"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
+"Nustatykite produkto atributus (pvz., spalva, dydis) variantų valdymui"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6059,12 +6067,12 @@ msgstr "Šaltinio vieta:"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_package_id
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Source Package"
-msgstr ""
+msgstr "Šaltinis"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package :"
-msgstr ""
+msgstr "Šaltinis:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
@@ -6961,7 +6969,7 @@ msgstr "Perkėlimo nuoroda"
 #: model:ir.ui.menu,name:stock.all_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
-msgstr "Pervedimai"
+msgstr "Perkėlimai"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -7097,7 +7105,7 @@ msgstr "Atrezervuoti"
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "UoM"
-msgstr "UoM"
+msgstr "Mat. vnt."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -7779,6 +7787,9 @@ msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
 msgstr ""
+"Bandote perkelti produktą naudodami matavimo vnt., kuris nėra suderinamas su"
+" perkeliamu produktu. Pasirinkite matavimo vienetą toje pačioje vienetų "
+"kategorijoje."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
