@@ -49,6 +49,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Beste ${object.name},<br/>\n"
+"    Bedankt voor uw aanvraag.<br/>\n"
+"    Hier is uw badge voor het evenement ${object.event_id.name}.<br/>\n"
+"    Laat het ons weten wanneer u vragen heeft.\n"
+"    <br/><br/>\n"
+"    Bedankt,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban

@@ -1090,6 +1090,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"De grootboekrekening welke wordt ingesteld op regels aangemaakt met het "
+"kasbasis stelsel, om zo de BTW grondslag te kunnen bijhouden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1529,6 +1531,7 @@ msgstr "Sta toe om BTW's te configureren op kasbasis methode"
 #: model:res.groups,name:account.group_fiscal_year
 msgid "Allow to define fiscal years of more or less than a year"
 msgstr ""
+"Sta het definiëren van fiscale jaren van meer of minder dan een jaar toe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1890,7 +1893,7 @@ msgstr "Auto-complete"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr ""
+msgstr "Automatisch aanvullen vanuit vorige factuur."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2139,7 +2142,7 @@ msgstr "Bankafschriften"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
 msgid "Bank account that was used in this transaction."
-msgstr ""
+msgstr "Bankrekening die gebruikt is in deze transactie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -2195,7 +2198,7 @@ msgstr "Grondslag"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "Ontvangen BTW grondslagrekening"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2742,7 +2745,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.actions_account_fiscal_year
 msgid "Click here to create a new fiscal year."
-msgstr ""
+msgstr "Klik hier om een nieuw fiscaal jaar aan te maken."
 
 #. module: account
 #. openerp-web
@@ -9766,6 +9769,8 @@ msgstr ""
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
+"De blokkeerdatum voor de controller is onomkeerbaar en kan niet worden "
+"verwijderd."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -9783,6 +9788,8 @@ msgstr "De naam die gebruikt wordt voor de boekingen."
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"De nieuwe blokkeerdatum voor controllers moet worden ingesteld op een "
+"nieuwere datum dan de vorige blokkeerdatum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
@@ -11222,6 +11229,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Het is niet mogelijk om striktere regels te definiëren voor een controller "
+"dan voor gewone gebruikers. Zorg ervoor dat de blokkeerdatum voor "
+"controllers is ingesteld voor de blokkeerdatum van gewone gebruikers. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:493
@@ -11300,6 +11310,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Het is niet mogelijk een periode te blokkeren welke nog niet gereed is. Zorg"
+" ervoor dat de blokkeerdatum niet is ingesteld na de laatste dag van de "
+"vorige maand."
 
 #. module: account
 #. openerp-web
