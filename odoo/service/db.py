@@ -50,7 +50,7 @@ def check_super(passwd):
     raise odoo.exceptions.AccessDenied()
 
 # This should be moved to odoo.modules.db, along side initialize().
-def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None):
+def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None, phone=None):
     try:
         db = odoo.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
@@ -69,12 +69,10 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 modules._update_translations(lang)
 
             if country_code:
-                countries = env['res.country'].search([('code', 'ilike', country_code)])
-                if countries:
-                    comp_local = {'country_id': countries[0].id}
-                    if countries[0].currency_id:
-                        comp_local['currency_id'] = countries[0].currency_id.id
-                    env['res.company'].browse(1).write(comp_local)
+                country = env['res.country'].search([('code', 'ilike', country_code)])[0]
+                env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id, 'phone':phone})
+            elif phone:
+                env['res.company'].browse(1).write({'phone': phone})
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
@@ -109,11 +107,11 @@ def _create_empty_database(name):
             )
 
 @check_db_management_enabled
-def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
+def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
-    _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
+    _initialize_db(id, db_name, demo, lang, user_password, login, country_code, phone)
     return True
 
 @check_db_management_enabled
