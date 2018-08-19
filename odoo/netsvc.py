@@ -119,7 +119,7 @@ def init_logger():
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
             if tools.config['logrotate'] is not False:
-                if tools.config['workers'] > 1:
+                if tools.config['workers'] and tools.config['workers'] > 1:
                     # TODO: fallback to regular file logging in master for safe(r) defaults?
                     #
                     # Doing so here would be a good idea but also might break
