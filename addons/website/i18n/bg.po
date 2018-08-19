@@ -613,6 +613,11 @@ msgid ""
 "                                It's good practice to try to engage with your visitors on the homepage:\n"
 "                                Contact Us, Subscribe to Get More Information, Check the Catalog, etc."
 msgstr ""
+"<strong>'От разговор към действие'</strong><br/>\n"
+"                                Добавете един, само един 'от разговор към действие' към началната си страница. Вачалната Ви страница е\n"
+"                                е страницата, която посреща най-много посетители.<br/>\n"
+"                                Добра практика е да се опитате да се ангажирате с посетителите си в началната страница:\n"
+"                                Свържете се с нас, абонирайте се за 'Получавайте повече информация', разгледайте каталога и т.н."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -627,6 +632,10 @@ msgid ""
 "                                social proofs about your products or services; customer quotes, videos,\n"
 "                                photos of your products in actions, twitter quotes, etc."
 msgstr ""
+"<strong>Показвайте обществено одобрение</strong><br/>\n"
+"                                Добра практика е под основния Ви банер или 'от разговор към действие' да поставяте\n"
+"                                коментари - израз на обществено одобрение относно Вашите продукти или услуги; цитати от клиенти, видея,\n"
+"                                снимки на продуктите Ви в действие, цитати от twitter и т.н."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -977,12 +986,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Архитектурно петно"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Архитектурно име на файла"
 
 #. module: website
 #. openerp-web
@@ -1789,6 +1798,8 @@ msgid ""
 "For example, use pictures to help break up large areas of text by altering\n"
 "                                    Text-Image and Image-Text blocks. If you prefer icons, use the Features or Feature Grid blocks."
 msgstr ""
+"Например, използвайте снимки, за да улесните разбиването на големи части от текста, като променяте\n"
+"                                    блоковете Text-Image и Image-Text. Ако предпочитате икони, използвайте Характеристиките или Матричните блокове на характеристиките."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2091,7 +2102,7 @@ msgstr "ID"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_xml_id
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "Идентификация на изгледа, определен в xml файла"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -2107,6 +2118,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Ако това поле е празно, изгледът се прилага на всички потребители. В "
+"противен случай изгледът се прилага на потребители само от тези групи."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_active
@@ -2116,6 +2129,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Ако този изглед е наследен,\n"
+"* ако е вярно, изгледът винаги разширява своя основен такъв\n"
+"* ако е грешно, понастоящем изгледът не разширява своя основен такъв, но може да бъде активиран\n"
+"         "
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2743,6 +2760,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Прилага се само, ако този изглед се наследява от друг такъв (inherit_id не е Грешно/нула).\n"
+"\n"
+"* ако е разширение (по подразбиране), ако се изисква този изглед, се търси най- близкият \n"
+"първичен изглед (чрез inherit_id), тогава са приложени всички изгледи, наследени от него с този\n"
+"модел на изгледа\n"
+"* ако е първичен, най-близкият първичен изглед е напълно решен (дори и да използва\n"
+"различен от този модел), тогава са приложени спецификациите по онаследяване\n"
+"(<xpath/>) спецификациите по онаследяване и резултатът се използва сякаш това е била същинската арка\n"
+"на този изглед.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -3071,7 +3097,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "QWeb"
-msgstr ""
+msgstr "QWeb"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3505,7 +3531,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The error occured while rendering the template"
-msgstr ""
+msgstr "При конвертирането на шаблона възникна грешка"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -3848,7 +3874,7 @@ msgstr "Тип изглед"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Преглеждайте режима на наследяване"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_inherit_children_ids
