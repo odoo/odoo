@@ -126,10 +126,12 @@ var ModeratorRejectMessageDialog = Dialog.extend({
      * @param {Object} params
      * @param {integer[]} params.messageIDs list of message IDs to send
      *   'reject' decision reason
-     * @param {function} params.proceedReject a function to call when the
-     *   moderator confirms the reason for rejecting the messages. This
-     *   function passes an object as the reason for reject, which is
-     *   structured as follow:
+     * @param {function} params.proceedReject
+     *
+     *      a function to call when the
+     *      moderator confirms the reason for rejecting the
+     *      messages. This function passes an object as the
+     *      reason for reject, which is structured as follow::
      *
      *          {
      *              title: <string>,
@@ -180,19 +182,20 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         update_moderation_buttons: '_onUpdateModerationButtons',
     },
     events: {
+        'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'blur .o_mail_add_thread input': '_onAddThreadBlur',
+        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
         'click .o_mail_annoying_notification_bar .fa-close': '_onCloseNotificationBar',
         'click .o_mail_discuss_item': '_onDiscussItemClicked',
-        'click .o_mail_open_channels': '_onPublicChannelsClick',
-        'click .o_mail_partner_unpin': '_onUnpinChannel',
-        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
-        'click .o_mail_request_permission': '_onRequestNotificationPermission',
-        'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'keydown': '_onKeydown',
+        'click .o_mail_open_channels': '_onPublicChannelsClick',
+        'click .o_mail_request_permission': '_onRequestNotificationPermission',
+        'click .o_mail_partner_unpin': '_onUnpinChannel',
     },
 
     /**
      * @override
+     * @param {Object} [options]
      */
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
@@ -329,6 +332,32 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Ask confirmation to the user to unsubscribe, due to the user being the
+     * administrator of the channel.
+     *
+     * @private
+     * @param {mail.model.Channel} channel a channel for which the current user
+     *   is administrator of.
+     */
+    _askConfirmationAdminUnsubscribe: function (channel) {
+        Dialog.confirm(this,
+            _t("You are the administrator of this channel. Are you sure you want to unsubscribe?"),
+            {
+                buttons: [{
+                    text: _t("Unsubscribe"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: function () {
+                        channel.unsubscribe();
+                    }
+                }, {
+                    text: _t("Discard"),
+                    close: true,
+                }]
+            }
+        );
+    },
+    /**
      * Ban the authors of the messages with ID in `messageIDs`
      * Show a confirmation dialog to the moderator.
      *
@@ -383,22 +412,21 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _fetchAndRenderThread: function () {
         var self = this;
-        return this._thread.getMessages(this.domain)
-            .then(function (messages) {
+        return this._thread.fetchMessages(this.domain)
+            .then(function () {
                 self._threadWidget.render(
-                    messages,
-                    self._getThreadRenderingOptions(messages)
+                    self._thread,
+                    self._getThreadRenderingOptions()
                 );
-                self._updateButtonStatus(messages.length === 0);
+                self._updateButtonStatus(!self._thread.hasMessages());
                 return self._loadEnoughMessages();
             });
     },
     /**
      * @private
-     * @param {mail.model.Message} messages
      * @returns {Object}
      */
-    _getThreadRenderingOptions: function (messages) {
+    _getThreadRenderingOptions: function () {
         // Compute position of the 'New messages' separator, only once when
         // joining a channel to keep it in the thread when new messages arrive
         if (_.isUndefined(this.messagesSeparatorPosition)) {
@@ -411,23 +439,19 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             }
         }
         return {
-            threadID: this._thread.getID(),
             displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
             displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
             messagesSeparatorPosition: this.messagesSeparatorPosition,
             squashCloseMessages: this._thread.getType() !== 'mailbox' &&
                                     !this._thread.isMassMailing(),
-            displayEmptyChannel: !messages.length && !this.domain.length,
-            displayNoMatchFound: !messages.length && this.domain.length,
-            displaySubjectOnMessages:
-                (
-                    this._thread.getType() !== 'mailbox' &&
-                    this._thread.isMassMailing()
-                ) ||
+            displayEmptyThread: !this._thread.hasMessages() && !this.domain.length,
+            displayNoMatchFound: !this._thread.hasMessages() && this.domain.length,
+            displaySubjectOnMessages: this._thread.isMassMailing() ||
                 this._thread.getID() === 'mailbox_inbox' ||
                 this._thread.getID() === 'mailbox_moderation',
             displayEmailIcons: false,
             displayReplyIcons: true,
+            displayBottomThreadFreeSpace: true,
         };
     },
     /**
@@ -469,8 +493,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             (this._threadWidget.el.clientHeight === this._threadWidget.el.scrollHeight) &&
             !this._thread.isAllHistoryLoaded(this.domain);
         if (loadMoreMessages) {
-            return this._loadMoreMessages()
-                        .then(this._loadEnoughMessages.bind(this));
+            return this._loadMoreMessages().then(this._loadEnoughMessages.bind(this));
         }
     },
     /**
@@ -484,18 +507,17 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var oldestMessageID = this.$('.o_thread_message').first().data('messageId');
         var oldestMessageSelector = '.o_thread_message[data-message-id="' + oldestMessageID + '"]';
         var offset = -dom.getPosition(document.querySelector(oldestMessageSelector)).top;
-        return this._thread.getMessages(this.domain, true)
-            .then(function (messages) {
+        return this._thread.fetchMessages(this.domain, true)
+            .then(function () {
                 if (self.messagesSeparatorPosition === 'top') {
                     // reset value to re-compute separator position
                     self.messagesSeparatorPosition = undefined;
                 }
                 self._threadWidget.render(
-                    messages,
-                    self._getThreadRenderingOptions(messages)
+                    self._thread,
+                    self._getThreadRenderingOptions()
                 );
-                offset += dom.getPosition(document.querySelector(oldestMessageSelector)
-                ).top;
+                offset += dom.getPosition(document.querySelector(oldestMessageSelector)).top;
                 self._threadWidget.scrollToPosition(offset);
             });
     },
@@ -532,7 +554,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      *
      * @private
      * @param {JQuery} $input the input to prepare
-     * @param {string} type the type of thread to create ('dm', 'public' or
+     * @param {string} type the type of thread to create ('dm_chat', 'public' or
      *   'private' channel)
      */
     _prepareAddThreadInput: function ($input, type) {
@@ -543,11 +565,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).done(function (result){
                         result.push({
-                            'label':  _.str.sprintf(
+                            label:  _.str.sprintf(
                                         '<strong>' + _t("Create %s") + '</strong>',
                                         '<em>"#' + self._lastSearchVal + '"</em>'
                             ),
-                            'value': '_create',
+                            value: '_create',
                         });
                         response(result);
                     });
@@ -573,7 +595,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                     self.call('mail_service', 'createChannel', name, 'private');
                 }
             });
-        } else if (type === 'dm') {
+        } else if (type === 'dm_chat') {
             $input.autocomplete({
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
@@ -581,11 +603,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 },
                 select: function (ev, ui) {
                     var partnerID = ui.item.id;
-                    var dm = self.call('mail_service', 'getDmFromPartnerID', partnerID);
-                    if (dm) {
-                        self._setThread(dm.getID());
+                    var dmChat = self.call('mail_service', 'getDMChatFromPartnerID', partnerID);
+                    if (dmChat) {
+                        self._setThread(dmChat.getID());
                     } else {
-                        self.call('mail_service', 'createChannel', partnerID, 'dm');
+                        self.call('mail_service', 'createChannel', partnerID, 'dm_chat');
                     }
                     // clear the input
                     $(this).val('');
@@ -604,7 +626,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * cancel his action.
      *
      * @private
-     * @param {number[]]} messageIDs list of message IDs to reject
+     * @param {number[]} messageIDs list of message IDs to reject
      */
     _rejectMessages: function (messageIDs) {
         var self = this;
@@ -667,7 +689,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             needactionCounter: inbox.getMailboxCounter(),
             starredCounter: starred.getMailboxCounter(),
             moderationCounter: moderation ? moderation.getMailboxCounter() : 0,
-            isModerator: this.call('mail_service', 'isModerator'),
+            isMyselfModerator: this.call('mail_service', 'isMyselfModerator'),
         }));
         return $sidebar;
     },
@@ -696,7 +718,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
-            displayHelp: true,
             loadMoreOnScroll: true
         });
 
@@ -821,6 +842,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.action.context.active_id = this._thread.getID();
         this.action.context.active_ids = [this._thread.getID()];
 
+        this._basicComposer.setThread(this._thread);
+        this._extendedComposer.setThread(this._thread);
+
         return this._fetchAndRenderThread().then(function () {
             // Mark thread's messages as read and clear needactions
             if (self._thread.getType() !== 'mailbox') {
@@ -864,7 +888,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .on('update_thread_unread_counter', this, this._throttledUpdateThreads)
             .on('update_dm_presence', this, this._throttledUpdateThreads)
             .on('activity_updated', this, this._throttledUpdateThreads)
-            .on('update_moderation_counter', this, this._throttledUpdateThreads);
+            .on('update_moderation_counter', this, this._throttledUpdateThreads)
+            .on('update_typing_partners', this, this._onTypingPartnersUpdated);
     },
     /**
      * @private
@@ -894,9 +919,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _unselectMessage: function () {
         this._basicComposer.do_toggle(this._thread.getType() !== 'mailbox' && !this._thread.isMassMailing());
-        this._extendedComposer.do_toggle(this._thread.getType() !== 'mailbox' && !!this._thread.isMassMailing());
+        this._extendedComposer.do_toggle(this._thread.isMassMailing());
 
-        if (!config.device.touch) {
+        if (!config.device.isMobile) {
             var composer = this._thread.getType() !== 'mailbox' && this._thread.isMassMailing() ?
                             this._extendedComposer :
                             this._basicComposer;
@@ -934,7 +959,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             this._thread.getID() === 'mailbox_moderation' ||
             (
                 this._thread.isModerated() &&
-                this._thread.isModerator()
+                this._thread.isMyselfModerator()
             )
         ) {
             this._updateModerationButtons();
@@ -960,27 +985,61 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @param {mail.model.Thread} thread
      */
     _updateControlPanelButtons: function (thread) {
-        // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
-        this.$buttons
-            .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
-            .toggle(thread.getType() !== 'dm' && thread.getType() !== 'mailbox');
-        this.$buttons
-            .find('.o_mail_discuss_button_mark_all_read')
-            .toggle(thread.getID() === 'mailbox_inbox')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_unstar_all')
-            .toggle(thread.getID() === 'mailbox_starred')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_select_all')
-            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
-            .removeClass('o_hidden');
-        this.$buttons
-            .find('.o_mail_discuss_button_unselect_all')
-            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
-            .removeClass('o_hidden');
-        this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
+        // Hide 'unsubscribe' button in state channels and DM chats and channels with group-based subscription
+        // Invite
+        if (thread.getType() !== 'dm_chat' && thread.getType() !== 'mailbox') {
+            this.$buttons
+                .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none d-md-inline-block');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none');
+        }
+        // Mark All Read
+        if (thread.getID() === 'mailbox_inbox') {
+            this.$buttons
+                .find('.o_mail_discuss_button_mark_all_read')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none d-md-inline-block');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_mark_all_read')
+                .removeClass('d-none d-md-inline-block')
+                .addClass('d-none');
+        }
+        // Unstar All
+        if (thread.getID() === 'mailbox_starred') {
+            this.$buttons
+                .find('.o_mail_discuss_button_unstar_all')
+                .removeClass('d-none');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_unstar_all')
+                .addClass('d-none');
+        }
+        // Select All & Unselect All
+        if (
+            (thread.isModerated() && thread.isMyselfModerator()) ||
+            thread.getID() === 'mailbox_moderation'
+        ) {
+            this.$buttons
+                .find('.o_mail_discuss_button_select_all')
+                .removeClass('d-none');
+            this.$buttons
+                .find('.o_mail_discuss_button_unselect_all')
+                .removeClass('d-none');
+        } else {
+            this.$buttons
+                .find('.o_mail_discuss_button_select_all')
+                .addClass('d-none');
+            this.$buttons
+                .find('.o_mail_discuss_button_unselect_all')
+                .addClass('d-none');
+        }
+        this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
 
         this.$('.o_mail_discuss_item')
             .removeClass('o_active')
@@ -1007,9 +1066,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _updateModerationDecisionButton: function () {
         if (this._threadWidget.$('.moderation_checkbox:checked').length) {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').show();
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').removeClass('d-none');
         } else {
-            this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').addClass('d-none');
         }
     },
     /**
@@ -1051,7 +1110,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         });
 
         this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
-        _.each(['dm', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'public', 'private'], function (type) {
             var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
             self._prepareAddThreadInput($input, type);
         });
@@ -1088,6 +1147,20 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }
         this._updateThreads();
         delete this._threadsScrolltop[channelID];
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onChannelSettingsClicked: function (ev) {
+        var threadID = $(ev.target).data('thread-id');
+        this.do_action({
+            type: 'ir.actions.act_window',
+            res_model: 'mail.channel',
+            res_id: threadID,
+            views: [[false, 'form']],
+            target: 'current'
+        });
     },
     /**
      * @private
@@ -1128,16 +1201,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * Called when someone asks discuss whether the bottom of `thread` is
      * visible or not. An object `query` is provided in order to reponse on the
-     * key `isDisplayed`.
+     * key `isVisible`.
      *
      * @private
      * @param {mail.model.Thread} thread
      * @param {Object} query
-     * @param {boolean} query.isBottomVisible the response to provide on whether
-     *   the thread is visible in discuss.
+     * @param {boolean} query.isVisible the response to provide on whether the
+     *   bottom of the thread is visible in discuss.
      */
     _onIsThreadBottomVisible: function (thread, query) {
-        query.isBottomVisible = query.isBottomVisible ||
+        query.isVisible = query.isVisible ||
                             (
                                 thread.getID() === this._thread.getID() &&
                                 this._threadWidget.isAtBottom()
@@ -1160,8 +1233,19 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.messageID ID of the moderated message
+     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
+     */
+    _onMessageModeration: function (ev) {
+        var messageIDs = [ev.data.messageID];
+        var decision = ev.data.decision;
+        this._handleModerationDecision(messageIDs, decision);
+    },
+    /**
+     * @private
      * @param {mail.model.Message} message
-     * @param {string} type the channel type
+     * @param {string} [type] the channel
      */
     _onMessageUpdated: function (message, type) {
         var self = this;
@@ -1171,12 +1255,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             (currentThreadID === 'mailbox_inbox' && !message.isNeedaction()) ||
             (currentThreadID === 'mailbox_moderation' && !message.needsModeration())
         ) {
-            this._thread.getMessages(this.domain)
-                .then(function (messages) {
-                    var options = self._getThreadRenderingOptions(messages);
-                    self._threadWidget.removeMessageAndRender(message.getID(), messages, options)
+            this._thread.fetchMessages(this.domain)
+                .then(function () {
+                    var options = self._getThreadRenderingOptions();
+                    self._threadWidget.removeMessageAndRender(message.getID(), self._thread, options)
                         .then(function () {
-                            self._updateButtonStatus(messages.length === 0, type);
+                            self._updateButtonStatus(!self._thread.hasMessages(), type);
                         });
                 });
         } else if (_.contains(message.getThreadIDs(), currentThreadID)) {
@@ -1194,17 +1278,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                                 return $(this).data('message-id');
                             })
                             .get();
-        this._handleModerationDecision(messageIDs, decision);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {integer} ev.data.messageID ID of the moderated message
-     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
-     */
-    _onMessageModeration: function (ev) {
-        var messageIDs = [ev.data.messageID];
-        var decision = ev.data.decision;
         this._handleModerationDecision(messageIDs, decision);
     },
     /**
@@ -1261,7 +1334,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
             messageData.subtype_id = false;
             messageData.message_type = 'comment';
-            messageData.content_subtype = 'html';
         }
         this._thread.postMessage(messageData)
             .then(function () {
@@ -1345,17 +1417,19 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
-     * @param {MouseEvent} ev
+     * @param {integer|string} threadID
      */
-    _onChannelSettingsClicked: function (ev) {
-        var threadID = $(ev.target).data('thread-id');
-        this.do_action({
-            type: 'ir.actions.act_window',
-            res_model: 'mail.channel',
-            res_id: threadID,
-            views: [[false, 'form']],
-            target: 'current'
-        });
+    _onTypingPartnersUpdated: function (threadID) {
+        var self = this;
+        if (this._thread.getID() !== threadID) {
+            return;
+        }
+        if (this._thread.hasTypingNotification()) {
+            // call getMentionpartnerSuggestions in order to correctly fetch members
+            this._thread.getMentionPartnerSuggestions().then(function () {
+                self._threadWidget.renderTypingNotificationBar(self._thread);
+            });
+        }
     },
     /**
      * @private
@@ -1365,7 +1439,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         ev.stopPropagation();
         var channelID = $(ev.target).data('thread-id');
         var channel = this.call('mail_service', 'getChannel', channelID);
-        channel.unsubscribe();
+        if (channel.isMyselfAdministrator()) {
+            this._askConfirmationAdminUnsubscribe(channel);
+        } else {
+            channel.unsubscribe();
+        }
     },
     /**
      * @private
@@ -1396,7 +1474,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
 });
 
-core.action_registry.add('mail.chat.instant_messaging', Discuss);
+core.action_registry.add('mail.discuss', Discuss);
 
 return Discuss;
 

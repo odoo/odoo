@@ -8,14 +8,14 @@ from odoo.tools import mute_logger
 class TestProcRule(TransactionCase):
 
     def test_proc_rule(self):
-        # Create a product route containing a procurement rule that will
+        # Create a product route containing a stock rule that will
         # generate a move from Stock for every procurement created in Output
         product_route = self.env['stock.location.route'].create({
             'name': 'Stock -> output route',
             'product_selectable': True,
-            'pull_ids': [(0, 0, {
+            'rule_ids': [(0, 0, {
                 'name': 'Stock -> output rule',
-                'action': 'move',
+                'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': self.ref('stock.stock_location_stock'),
                 'location_id': self.ref('stock.stock_location_output'),

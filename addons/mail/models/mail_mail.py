@@ -6,6 +6,7 @@ import datetime
 import logging
 import psycopg2
 import threading
+import re
 
 from collections import defaultdict
 from email.utils import formataddr
@@ -103,16 +104,19 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        if not self.ids:
-            filters = ['&',
-                       ('state', '=', 'outgoing'),
-                       '|',
-                       ('scheduled_date', '<', datetime.datetime.now()),
-                       ('scheduled_date', '=', False)]
-            if 'filters' in self._context:
-                filters.extend(self._context['filters'])
-            # TODO: make limit configurable
-            ids = self.search(filters, limit=10000).ids
+        filters = ['&',
+                   ('state', '=', 'outgoing'),
+                   '|',
+                   ('scheduled_date', '<', datetime.datetime.now()),
+                   ('scheduled_date', '=', False)]
+        if 'filters' in self._context:
+            filters.extend(self._context['filters'])
+        # TODO: make limit configurable
+        filtered_ids = self.search(filters, limit=10000).ids
+        if not ids:
+            ids = filtered_ids
+        else:
+            ids = list(set(filtered_ids) & set(ids))
         res = None
         try:
             # auto-commit except in testing mode
@@ -252,6 +256,7 @@ class MailMail(models.Model):
     @api.multi
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None):
         IrMailServer = self.env['ir.mail_server']
+        IrAttachment = self.env['ir.attachment']
         for mail_id in self.ids:
             success_pids = []
             failure_type = 'NONE'
@@ -263,11 +268,18 @@ class MailMail(models.Model):
                     if mail.state != 'exception' and mail.auto_delete:
                         mail.sudo().unlink()
                     continue
+
+                # remove attachments if user send the link with the access_token
+                body = mail.body_html or ''
+                attachments = mail.attachment_ids
+                for link in re.findall(r'/web/(?:content|image)/([0-9]+)', body):
+                    attachments = attachments - IrAttachment.browse(int(link))
+
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
                 attachments = [(a['datas_fname'], base64.b64decode(a['datas']), a['mimetype'])
-                               for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas', 'mimetype'])]
+                               for a in attachments.sudo().read(['datas_fname', 'datas', 'mimetype'])]
 
                 # specific behavior to customize the send email for notified partners
                 email_list = []

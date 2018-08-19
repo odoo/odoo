@@ -297,8 +297,13 @@ class IrFieldsConverter(models.AbstractModel):
                  warnings
         :rtype: (ID|None, unicode, list)
         """
+        # the function 'flush' comes from BaseModel.load(), and forces the
+        # creation/update of former records (batch creation)
+        flush = self._context.get('import_flush', lambda arg=None: None)
+
         id = None
         warnings = []
+        error_msg = ''
         action = {'type': 'ir.actions.act_window', 'target': 'new',
                   'view_mode': 'tree,form', 'view_type': 'form',
                   'views': [(False, 'tree'), (False, 'form')],
@@ -330,12 +335,11 @@ class IrFieldsConverter(models.AbstractModel):
                 xmlid = value
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
-            try:
-                id = self.env.ref(xmlid).id
-            except ValueError:
-                pass # leave id is None
+            flush(xmlid)
+            id = getattr(self.env.ref(xmlid, raise_if_not_found=False), 'id', None)
         elif subfield is None:
             field_type = _(u"name")
+            flush()
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
@@ -343,6 +347,13 @@ class IrFieldsConverter(models.AbstractModel):
                         _(u"Found multiple matches for field '%%(field)s' (%d matches)")
                         % (len(ids))))
                 id, _name = ids[0]
+            else:
+                name_create_enabled_fields = self.env.context.get('name_create_enabled_fields') or {}
+                if name_create_enabled_fields.get(field.name):
+                    try:
+                        id, _name = RelatedModel.name_create(name=value)
+                    except Exception as e:
+                        error_msg = repr(e)
         else:
             raise self._format_import_error(
                 Exception,
@@ -351,10 +362,14 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
         if id is None:
+            if error_msg:
+                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
+            else:
+                message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
             raise self._format_import_error(
                 ValueError,
-                _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"),
-                {'field_type': field_type, 'value': value},
+                message,
+                {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 {'moreinfo': action})
         return id, field_type, warnings
 

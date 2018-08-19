@@ -685,12 +685,14 @@ var BasicModel = AbstractModel.extend({
      *
      * Case for not abandoning the record:
      *
-     *  1. flagged as 'no abandon' (i.e. during a `default_get`, including any
-     *     `onchange` from a `default_get`)
-     *  2. registered in a list on addition
-     *      2.1. registered as non-new addition
-     *      2.2. registered as new additon on update
-     *  3. record is not new
+     * 1. flagged as 'no abandon' (i.e. during a `default_get`, including any
+     *    `onchange` from a `default_get`)
+     * 2. registered in a list on addition
+     *
+     *    2.1. registered as non-new addition
+     *    2.2. registered as new additon on update
+     *
+     * 3. record is not new
      *
      * Otherwise, the record can be abandoned.
      *
@@ -1315,13 +1317,17 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string} [options.position=top] if the new record should be added
      *   on top or on bottom of the list
+     * @param {Object} [options.context] additional context to be merged before
+     *   calling the default_get (eg. to set default values)
      * @returns {Deferred<string>} resolves to the new record id
      */
     _addX2ManyDefaultRecord: function (list, options) {
         var self = this;
         var position = options && options.position || 'top';
+        var additionalContext = options && options.context;
+        var context = this._getContext(list, {additionalContext: additionalContext});
         var params = {
-            context: this._getContext(list),
+            context: context,
             fields: list.fields,
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
@@ -1799,7 +1805,10 @@ var BasicModel = AbstractModel.extend({
                 }
                 break;
             case 'CREATE':
-                var options = {position: command.position};
+                var options = {
+                    context: command.context,
+                    position: command.position,
+                };
                 def = this._addX2ManyDefaultRecord(list, options).then(function (id) {
                     if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {
                         list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;

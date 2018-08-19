@@ -88,7 +88,7 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <sheet>
-                    <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                    <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
                     <field name="state" invisible="1"/>
@@ -235,7 +235,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings">
-                <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                 <field name="res_model" invisible="1" />
                 <field name="res_id" invisible="1" />
                 <field name="state" invisible="1"/>

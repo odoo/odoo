@@ -44,7 +44,6 @@ class ProductReplenish(models.TransientModel):
             res['warehouse_id'] = warehouse.id
         if 'date_planned' in fields:
             res['date_planned'] = datetime.datetime.now()
-            
         return res
 
     def launch_replenishment(self):
@@ -60,7 +59,6 @@ class ProductReplenish(models.TransientModel):
                 "Manual Replenishment", # Origin
                 self._prepare_run_values() # Values
             )
-
         except UserError as error:
             raise UserError(error)
 

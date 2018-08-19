@@ -132,10 +132,6 @@
                         </div>
                         <field name="is_produced" invisible="1"/>
                     </group>
-                    <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('production_messages', '=', False)]}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-                        <field name="production_messages"/>
-                    </div>
                 </group>
                 <notebook>
                 <page string="Work Instruction" attrs="{'invisible': [('worksheet', '=', False)]}">
@@ -193,7 +189,7 @@
                             </div>
                             <label for="duration"/>
                             <div>
-                                <button style="pointer-events: none;" class="oe_inline label label-default">
+                                <button style="pointer-events: none;" class="oe_inline badge badge-secondary">
                                     <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
                                 </button>
                             </div>

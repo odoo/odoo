@@ -8,9 +8,6 @@ var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 require('web_editor.editor');
 var translate = require('web_editor.translate');
-var websiteNavbarData = require('website.navbar');
-
-var WebsiteNavbar = websiteNavbarData.WebsiteNavbar;
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -44,8 +41,8 @@ translate.Class.include({
     translation_gengo_display: function () {
         var self = this;
         if ($('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').length === 0){
-            self.$el.find('.gengo_post').addClass("hidden");
-            self.$el.find('.gengo_inprogress').removeClass("hidden");
+            self.$el.find('.gengo_post').addClass('d-none');
+            self.$el.find('.gengo_inprogress').removeClass('d-none');
         }
     },
     translation_gengo_post: function () {
@@ -63,8 +60,8 @@ translate.Class.include({
                 dialog.on('service_level', this, function () {
                     var gengo_service_level = dialog.$el.find(".form-control").val();
                     dialog.$el.modal('hide');
-                    self.$el.find('.gengo_post').addClass("hidden");
-                    self.$el.find('.gengo_wait').removeClass("hidden");
+                    self.$el.find('.gengo_post').addClass('d-none');
+                    self.$el.find('.gengo_wait').removeClass('d-none');
                     var trans = [];
                     $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
@@ -83,7 +80,7 @@ translate.Class.include({
                         'lang': weContext.get().lang,
                     }).then(function () {
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
-                        self.save_and_reload();
+                        self._save();
                     }).fail(function () {
                         Dialog.alert(null, _t("Could not Post translation"));
                     });
@@ -113,12 +110,12 @@ translate.Class.include({
 });
 
 var GengoTranslatorPostDialog = Widget.extend({
-    events: _.extend({}, WebsiteNavbar.prototype.events, {
+    events: {
         'hidden.bs.modal': 'destroy',
         'click button[data-action=service_level]': function () {
             this.trigger('service_level');
         },
-    }),
+    },
     template: 'website.GengoTranslatorPostDialog',
     init: function (new_words){
         this.new_words = new_words;
@@ -130,9 +127,9 @@ var GengoTranslatorPostDialog = Widget.extend({
 });
 
 var GengoTranslatorStatisticDialog = Widget.extend({
-    events: _.extend({}, WebsiteNavbar.prototype.events, {
+    events: {
         'hidden.bs.modal': 'destroy',
-    }),
+    },
     template: 'website.GengoTranslatorStatisticDialog',
     init: function (res) {
         var self = this;
@@ -154,10 +151,10 @@ var GengoTranslatorStatisticDialog = Widget.extend({
 });
 
 var GengoApiConfigDialog = Widget.extend({
-    events: _.extend({}, WebsiteNavbar.prototype.events, {
+    events: {
         'hidden.bs.modal': 'destroy',
         'click button[data-action=set_config]': 'set_config'
-    }),
+    },
     template: 'website.GengoApiConfigDialog',
     init:function (company_id){
         this.company_id =  company_id;
@@ -175,16 +172,16 @@ var GengoApiConfigDialog = Widget.extend({
        var pub_el = this.$el.find(".gengo_group_public")[0];
        var pri_el = this.$el.find(".gengo_group_private")[0];
        if (! public_key){
-           $(pub_el).addClass("has-error");
+           $(pub_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pub_el).removeClass("has-error");
+           $(pub_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (! private_key){
-           $(pri_el).addClass("has-error");
+           $(pri_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pri_el).removeClass("has-error");
+           $(pri_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (public_key && private_key){
            ajax.jsonRpc('/website/set_gengo_config', 'call', {

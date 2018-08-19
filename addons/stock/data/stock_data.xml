@@ -80,13 +80,14 @@
     </data>
     <data noupdate="1">
         <!--
-             Procurement rules
+             Stock rules
         -->
         
+        <!-- set a lower sequence on the mto route than on the resupply routes -->
         <record id="route_warehouse0_mto" model='stock.location.route'>
             <field name="name">Make To Order</field>
             <field name="company_id"></field>
-            <field name="sequence">10</field>
+            <field name="sequence">5</field>
         </record>
 
         <!--
@@ -143,75 +144,36 @@
         </record>
 
         <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
-        <function model="ir.model.data" name="_update">
-            <value>stock.location</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>stock_location_stock</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.location</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>stock_location_company</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_input_stock_loc_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.location</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>stock_location_output</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_output_stock_loc_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.location</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>location_pack_zone</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.picking.type</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>picking_type_internal</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').int_type_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.picking.type</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>picking_type_in</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').in_type_id.id"/>
-        </function>
-        <function model="ir.model.data" name="_update">
-            <value>stock.picking.type</value>
-            <value>stock</value>
-            <value eval="{}"/>
-            <value>picking_type_out</value>
-            <value eval="True"/>
-            <value eval="True"/>
-            <value>init</value>
-            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').out_type_id.id"/>
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'stock.stock_location_stock',
+                'record': obj().env.ref('stock.warehouse0').lot_stock_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_company',
+                'record': obj().env.ref('stock.warehouse0').wh_input_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.stock_location_output',
+                'record': obj().env.ref('stock.warehouse0').wh_output_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.location_pack_zone',
+                'record': obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_internal',
+                'record': obj().env.ref('stock.warehouse0').int_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_in',
+                'record': obj().env.ref('stock.warehouse0').in_type_id,
+                'noupdate': True,
+            }, {
+                'xml_id': 'stock.picking_type_out',
+                'record': obj().env.ref('stock.warehouse0').out_type_id,
+                'noupdate': True,
+            }]"/>
         </function>
 
         <!-- create the transit location for each company existing -->

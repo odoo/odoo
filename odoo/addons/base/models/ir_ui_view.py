@@ -377,27 +377,28 @@ actual arch.
             values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
-    @api.model
-    def create(self, values):
-        if not values.get('type'):
-            if values.get('inherit_id'):
-                values['type'] = self.browse(values['inherit_id']).type
-            else:
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('type'):
+                if values.get('inherit_id'):
+                    values['type'] = self.browse(values['inherit_id']).type
+                else:
 
-                try:
-                    if not values.get('arch') and not values.get('arch_base'):
-                        raise ValidationError(_('Missing view architecture.'))
-                    values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
-                except LxmlError:
-                    # don't raise here, the constraint that runs `self._check_xml` will
-                    # do the job properly.
-                    pass
-
-        if not values.get('name'):
-            values['name'] = "%s %s" % (values.get('model'), values['type'])
+                    try:
+                        if not values.get('arch') and not values.get('arch_base'):
+                            raise ValidationError(_('Missing view architecture.'))
+                        values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
+                    except LxmlError:
+                        # don't raise here, the constraint that runs `self._check_xml` will
+                        # do the job properly.
+                        pass
+            if not values.get('name'):
+                values['name'] = "%s %s" % (values.get('model'), values['type'])
+            values.update(self._compute_defaults(values))
 
         self.clear_caches()
-        return super(View, self).create(self._compute_defaults(values))
+        return super(View, self).create(vals_list)
 
     @api.multi
     def write(self, vals):
@@ -1094,7 +1095,7 @@ actual arch.
 
     def _read_template_keys(self):
         """ Return the list of context keys to use for caching ``_read_template``. """
-        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id']
+        return ['lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations']
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model
@@ -1125,7 +1126,8 @@ actual arch.
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        return self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
+        view = self.search([('key', '=', template)])
+        return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """

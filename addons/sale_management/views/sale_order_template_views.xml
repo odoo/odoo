@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_template_view_search" model="ir.ui.view">
+        <field name="name">sale.order.template.search</field>
+        <field name="model">sale.order.template</field>
+        <field name="arch" type="xml">
+            <search string="Search Quotation Template">
+               <filter string="Archived" name="inactive" domain="[('active','=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_order_template_view_form" model="ir.ui.view">
+        <field name="name">sale.order.template.form</field>
+        <field name="model">sale.order.template</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Quotation Template">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Quotation Template"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                           <label for="number_of_days" string="Quotation expires after"/>
+                           <div id="number_of_days">
+                               <field name="number_of_days" class="oe_inline"/> days
+                           </div>
+                        </group>
+                    </group>
+                    <notebook name="main_book">
+                        <page string="Lines">
+                        <field name="sale_order_template_line_ids" widget="section_and_note_one2many">
+                            <form string="Quotation Template Lines">
+                                <!--
+                                    We need the sequence field to be here for new lines to be added at the correct position.
+                                    TODO: at some point we want to fix this in the framework so that an invisible field is not required.
+                                -->
+                                <field name="sequence" invisible="1"/>
+                                <field name="display_type" invisible="1"/>
+                                <group attrs="{'invisible': [('display_type', '!=', False)]}">
+                                    <group>
+                                        <field name="product_id" attrs="{'required': [('display_type', '=', False)]}"/>
+                                        <label for="product_uom_qty"/>
+                                        <div>
+                                            <field name="product_uom_qty" class="oe_inline"/>
+                                        </div>
+                                        <field name="price_unit" invisible="1"/>
+                                        <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                        <div groups="sale.group_discount_per_so_line">
+                                            <field name="discount" class="oe_inline"/> %%
+                                        </div>
+                                    </group>
+                                </group>
+                                <notebook colspan="4" name="description">
+                                    <page string="Description" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                        <field name="name" />
+                                    </page>
+                                    <page string="Section" attrs="{'invisible': [('display_type', '!=', 'line_section')]}">
+                                        <field name="name" />
+                                    </page>
+                                    <page string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}">
+                                        <field name="name" />
+                                    </page>
+                                </notebook>
+                            </form>
+                            <tree string="Quotation Template Lines" editable="bottom">
+                                <control>
+                                    <create string="Add a product"/>
+                                    <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                    <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                </control>
+
+                                <field name="display_type" invisible="1"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="product_id"/>
+                                <field name="name" widget="section_and_note_text"/>
+                                <field name="product_uom_qty"/>
+                                <field
+                                    name="product_uom_id"
+                                    groups="uom.group_uom"
+                                    attrs="{'required': [('display_type', '=', False)]}"
+                                />
+                                <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                <field name="price_unit" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Optional Products">
+                        <field name="sale_order_template_option_ids">
+                          <tree string="Quotation Template Lines" editable="bottom">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="price_unit" invisible="1"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                          </tree>
+                        </field>
+                    </page>
+                    <page string="Confirmation">
+                        <group>
+                            <field name="require_signature"/>
+                            <field name="require_payment"/>
+                            <field name="mail_template_id"/>
+                        </group>
+                    </page>
+                    </notebook>
+                    <field name="note" nolabel="1"
+                        placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_order_template_view_tree" model="ir.ui.view">
+        <field name="name">sale.order.template.tree</field>
+        <field name="model">sale.order.template</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation Template">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_order_template_action" model="ir.actions.act_window">
+        <field name="name">Quotation Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your quotation template
+            </p><p>
+                Use templates to create polished, professional quotes in minutes.
+                Send these quotes by email and let your customers sign online.
+                Use cross-selling and discounts to push and boost your sales.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="sale_order_template_menu" action="sale_order_template_action" parent="sale.menu_sales_config" sequence="1" name="Quotation Templates" groups="sale_management.group_sale_order_template"/>
+
+</odoo>

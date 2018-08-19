@@ -389,4 +389,23 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="create">
+        <rng:element name="create">
+            <rng:ref name="overload"/>
+            <rng:attribute name="string"/>
+            <rng:attribute name="context"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="control">
+        <rng:element name="control">
+            <rng:ref name="overload"/>
+            <rng:oneOrMore>
+                <rng:choice>
+                    <rng:ref name="create"/>
+                </rng:choice>
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
 </rng:grammar>

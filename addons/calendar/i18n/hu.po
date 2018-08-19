@@ -10,10 +10,10 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -298,7 +298,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Dátum frissítve"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:720
+#: code:addons/calendar/models/calendar.py:741
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -308,19 +308,19 @@ msgstr ""
 " %s ekkor %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:711
+#: code:addons/calendar/models/calendar.py:732
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s ekkor (%s Címzett %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:225
+#: code:addons/calendar/models/calendar.py:227
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s elfogadta a meghívást"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:233
+#: code:addons/calendar/models/calendar.py:235
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s elutasította a meghívást"
@@ -378,6 +378,11 @@ msgid "Accepted"
 msgstr "Elfogadott"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -399,12 +404,15 @@ msgid "Activity Type"
 msgstr ""
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#, python-format
 msgid "All Day"
 msgstr "Egész nap"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:707
+#: code:addons/calendar/models/calendar.py:728
 #, python-format
 msgid "AllDay , %s"
 msgstr "Minden nap, %s"
@@ -443,7 +451,7 @@ msgid "Availability"
 msgstr "Elérhetőség"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1606
+#: code:addons/calendar/models/calendar.py:1673
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -485,6 +493,16 @@ msgstr ""
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Category"
+msgstr "Kategória"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -658,18 +676,6 @@ msgid "Ending at"
 msgstr "Befejezés ekkor"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:915
-#, python-format
-msgid "Ending date cannot be set before starting date."
-msgstr "A befejezés dátuma nem lehet a kezdeti dátum előtti."
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:913
-#, python-format
-msgid "Ending datetime cannot be set before starting datetime."
-msgstr "A befejezés idejének dátuma nem lehet a kezdeti dátum előtti."
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
 msgstr "Esemény"
@@ -685,7 +691,7 @@ msgid "Event alarm"
 msgstr "Esemény figyelmeztető"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1164
+#: code:addons/calendar/models/calendar.py:1225
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Az esemény ismétlődési ideje nem lehet negatív."
@@ -712,10 +718,25 @@ msgid "First"
 msgstr "Első"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:955
+#: code:addons/calendar/models/calendar.py:990
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "Elöször meg kell határoznia a meghívó dátumát."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -749,7 +770,7 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1549
+#: code:addons/calendar/models/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -774,6 +795,21 @@ msgstr "Óra(k)"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 msgid "ID"
 msgstr "Azonosító ID"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -813,6 +849,11 @@ msgstr "Meghívók"
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
 msgstr "Meghívó varázsló"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -881,8 +922,16 @@ msgstr "Én"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "Találkozó"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:936
+#: code:addons/calendar/models/calendar.py:941
+#, python-format
+msgid "Meeting '%s' starts '%s' and ends '%s'"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -925,6 +974,16 @@ msgstr "Találkozók"
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
 msgstr "Üzenet"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -984,9 +1043,34 @@ msgid "Notification"
 msgstr "Értesítés"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
 msgstr "Ismétlések száma"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: calendar
 #. openerp-web
@@ -1006,6 +1090,11 @@ msgid "Only me"
 msgstr "Csak én"
 
 #. module: calendar
+#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Open Calendar"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
 msgid "Option"
 msgstr "Opció"
@@ -1014,6 +1103,11 @@ msgstr "Opció"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
 msgstr "Lehetőségek"
+
+#. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "Egyéb"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
@@ -1032,7 +1126,7 @@ msgid "Partner-related data of the user"
 msgstr "A felhasználó partner-kapcsolati adatai"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1177
+#: code:addons/calendar/models/calendar.py:1238
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Kérem válassza ki a hónap megfelelő napját."
@@ -1081,6 +1175,11 @@ msgstr "Időszakos szabály"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
+msgstr ""
+
+#. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Reminder"
 msgstr ""
 
 #. module: calendar
@@ -1133,11 +1232,6 @@ msgstr "Szo"
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
 msgstr "Szombat"
-
-#. module: calendar
-#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting"
-msgstr ""
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1274,6 +1368,19 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: code:addons/calendar/models/calendar.py:935
+#, python-format
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:940
+#, python-format
+msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
 msgstr "Harmadik"
@@ -1292,6 +1399,12 @@ msgstr "Cs"
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
 msgstr "Csütörtök"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:41
+#, python-format
+msgid "Today's Meetings"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
@@ -1326,9 +1439,15 @@ msgid "Unit"
 msgstr "Egység"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1339,6 +1458,11 @@ msgstr "Eddig"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
 msgstr "Csak ezt a szakaszt frissítse"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
@@ -1371,7 +1495,7 @@ msgid "Yes I'm going."
 msgstr "Igen én résztveszek."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:155
+#: code:addons/calendar/models/calendar.py:157
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Nem sokszorozhat meg egy naptári résztvevőt."
@@ -1392,7 +1516,7 @@ msgid "e.g. Business Lunch"
 msgstr "Pl: Üzleti ebéd"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1162
+#: code:addons/calendar/models/calendar.py:1223
 #, python-format
 msgid "interval cannot be negative."
 msgstr "időköz nem lehet negatív."

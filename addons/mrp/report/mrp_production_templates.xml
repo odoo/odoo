@@ -7,20 +7,20 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-12">
                             <h2><span t-field="o.name"/></h2>
                         </div>
                     </div>
                     <div class="row mt32 mb32">
-                        <div class="col-xs-3" t-if="o.origin">
+                        <div class="col-3" t-if="o.origin">
                             <strong>Source Document:</strong><br/>
                             <span t-field="o.origin"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Responsible:</strong><br/>
                             <span t-field="o.user_id"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Scheduled Date:</strong><br/>
                             <span t-field="o.date_planned_start"/>
                             <span t-if="o.date_planned_finished"> - <span t-field="o.date_planned_finished"/></span>
@@ -28,16 +28,16 @@
                     </div>
 
                     <div class="row mt32 mb32">
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Finished Product:</strong><br/>
                             <span t-field="o.product_id"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Quantity to Produce:</strong><br/>
                             <span t-field="o.product_qty"/>
                             <span t-field="o.product_uom_id.name" groups="product.group_uom"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Printing date:</strong><br/>
                             <span t-esc="time.strftime('%Y-%m-%d')"
                                   t-options='{"widget": "date"}'/>
@@ -49,7 +49,7 @@
                             <t t-if="o.state == 'done'">Operations Done</t>
                             <t t-else="">Operations Planned</t>
                         </h3>
-                        <table class="table table-condensed">
+                        <table class="table table-sm">
                             <tr>
                                 <th><strong>Operation</strong></th>
                                 <th><strong>WorkCenter</strong></th>
@@ -75,7 +75,7 @@
                         </t>
                     </h3>
 
-                    <table class="table table-condensed" t-if="o.move_raw_ids">
+                    <table class="table table-sm" t-if="o.move_raw_ids">
                         <t t-set="has_location" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.location_id.id)))" groups="stock.group_stock_multi_locations"/>
                         <t t-set="has_serial_number" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.lot_id or x.lot_name)))" groups="stock.group_production_lot"/>
                         <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>

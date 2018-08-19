@@ -4,12 +4,15 @@ odoo.define('mail.chatter_tests', function (require) {
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
+var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
 
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
+
+var _t = core._t;
 
 QUnit.module('mail', {}, function () {
 
@@ -64,6 +67,7 @@ QUnit.module('Chatter', {
                 fields: {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     create_uid: { string: "Assigned to", type: "many2one", relation: 'partner' },
+                    create_user_id: { string: "Creator", type: "many2one", relation: 'partner' },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
                     user_id: { string: "Assigned to", type: "many2one", relation: 'partner' },
@@ -355,6 +359,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }];
     var rpcCount = 0;
@@ -404,13 +409,71 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 
     // mark activity as done
     $record.find('.o_mark_as_done').click();
+    $record.find('.o_activity_popover_done').click();
     $record = kanban.$('.o_kanban_record').first(); // the record widget has been reset
     assert.strictEqual(rpcCount, 5, 'should have done an RPC to mark activity as done, and a read');
     assert.ok($record.find('.o_mail_activity .o_activity_color_default:not(.o_activity_color_today)').length,
         "activity widget should have been updated correctly");
-    assert.strictEqual($record.find('.o_mail_activity.open').length, 1,
+    assert.strictEqual($record.find('.o_mail_activity.show').length, 1,
         "dropdown should remain open when marking an activity as done");
     assert.strictEqual($record.find('.o_no_activity').length, 1, "should have no activity scheduled");
+
+    kanban.destroy();
+});
+
+QUnit.test('kanban activity widget popover test', function (assert) {
+    assert.expect(3);
+
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 1,
+    }];
+    var rpcCount = 0;
+    var kanban = createView({
+        View: KanbanView,
+        model: 'partner',
+        data: this.data,
+        arch: '<kanban>' +
+                    '<field name="activity_state"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="activity_ids" widget="kanban_activity"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
+                rpcCount++;
+
+                var current_ids = this.data.partner.records[0].activity_ids;
+                var done_ids = args.args[0];
+                this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
+                this.data.partner.records[0].activity_state = false;
+                return $.when();
+            }
+            return this._super(route, args);
+        },
+    });
+
+    var $record = kanban.$('.o_kanban_record').first();
+
+    $record.find('.o_activity_btn').click();
+
+    // Click on button and see popover no RPC call
+    $record.find('.o_mark_as_done').click();
+    assert.equal(rpcCount, 0, "");
+    // Click on discard no RPC call
+    $record.find('.o_activity_popover_discard').click();
+    assert.equal(rpcCount, 0, "");
+    // Click on button and then on done and schedule next
+    // RPC call
+    $record.find('.o_activity_popover_done_next').click();
+    assert.equal(rpcCount, 1, "");
 
     kanban.destroy();
 });
@@ -418,8 +481,6 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
 QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
     assert.expect(27);
-
-    var bus = this.services[1].prototype.bus;
 
     this.data.partner.records[0].message_ids = [1];
     this.data['mail.message'].records = [{
@@ -494,7 +555,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                     type: 'toggle_star',
                 };
                 var notification = [[false, 'res.partner'], data];
-                bus.trigger('notification', [notification]);
+                form.call('bus_service', 'trigger', 'notification', [notification]);
                 return $.when();
             }
             return this._super(route, args);
@@ -686,7 +747,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body p').text(),
+    assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
@@ -779,7 +840,6 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
     var getSuggestionsDef = $.Deferred();
 
     var messages = [];
-    var bus = this.services[1].prototype.bus;
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -855,14 +915,14 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
             $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
 
             // untick recipient as follower (prompts a res.partner form otherwise)
-            form.$('.o_checkbox input').prop('checked', false);
+            form.$('input[type="checkbox"]').prop('checked', false);
 
             // send message
             form.$('.oe_chatter .o_composer_button_send').click();
 
             var $modal = $('.modal-dialog');
             assert.strictEqual($modal.length, 1, "should have a modal opened");
-            assert.strictEqual($modal.find('.modal-body p').text(),
+            assert.strictEqual($modal.find('.modal-body').text(),
                 "The record has been modified, your changes will be discarded. Do you want to proceed?",
                 "should warn the user that any unsaved changes will be lost");
 
@@ -915,7 +975,7 @@ QUnit.test('chatter: discard changes on opening full-composer', function (assert
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body p').text(),
+    assert.strictEqual($modal.find('.modal-body').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
@@ -994,7 +1054,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
-    $('[role="dialog"] .arrow.arrow-right.move_next span').click();
+    $('.modal .arrow.arrow-right.move_next span').click();
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
@@ -1025,6 +1085,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
@@ -1041,7 +1102,7 @@ QUnit.test('form activity widget: read RPCs', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (args.method === 'read' && args.model === 'mail.activity') {
+            if (args.method === 'activity_format' && args.model === 'mail.activity') {
                 nbReads++;
             }
             return this._super.apply(this, arguments);
@@ -1109,6 +1170,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
@@ -1133,7 +1195,7 @@ QUnit.test('form activity widget with another x2many field in view', function (a
 });
 
 QUnit.test('form activity widget: schedule next activity', function (assert) {
-    assert.expect(5);
+    assert.expect(4);
     this.data.partner.records[0].activity_ids = [1];
     this.data.partner.records[0].activity_state = 'today';
     this.data['mail.activity'].records = [{
@@ -1142,10 +1204,10 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 2,
     }];
 
-    var checkReadArgs = false;
     var form = createView({
         View: FormView,
         model: 'partner',
@@ -1162,35 +1224,17 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
-                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback' for id 1");
+            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done_schedule_next' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
-                return $.when();
-            }
-            if (args.method === 'read' && args.model === 'partner' && checkReadArgs) {
-                assert.deepEqual(args.args[1], ['activity_ids', 'message_ids', 'display_name'],
-                    "should only read the mail fields");
+                return $.when('test_result');
             }
             return this._super.apply(this, arguments);
         },
         intercepts: {
             do_action: function (event) {
-                assert.deepEqual(event.data.action, {
-                    context: {
-                        default_res_id: 2,
-                        default_res_model: "partner",
-                        default_previous_activity_type_id: 2,
-                    },
-                    res_id: false,
-                    res_model: 'mail.activity',
-                    type: 'ir.actions.act_window',
-                    target: "new",
-                    view_mode: "form",
-                    view_type: "form",
-                    views: [[false, "form"]],
-                }, "should do a do_action with correct parameters");
-                checkReadArgs = true; // should re-read the activities when closing the dialog
+                assert.strictEqual(event.data.action,'test_result' , "should do a do_action with correct parameters");
                 event.data.options.on_close();
             },
         },
@@ -1201,6 +1245,74 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
+QUnit.test('form activity widget: clic mail template', function (assert) {
+    assert.expect(4);
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'activity_format') {
+                return this._super.apply(this, arguments).then(function (res) {
+                    res[0].mail_template_ids = [{ id: 100, name: 'Temp1' }];
+                    return res;
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        intercepts: {
+            do_action: function (ev) {
+                assert.deepEqual(ev.data.action, {
+                        name: _t('Compose Email'),
+                        type: 'ir.actions.act_window',
+                        res_model: 'mail.compose.message',
+                        views: [[false, 'form']],
+                        target: 'new',
+                        context: {
+                            default_res_id: 2,
+                            default_model: 'partner',
+                            default_use_template: true,
+                            default_template_id: 100,
+                            force_email: true,
+                        },
+                    },
+                    "should do a do_action with correct parameters");
+                    ev.data.options.on_close();
+            },
+        },
+    });
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "we should have one activity");
+    assert.strictEqual(form.$('.o_activity_template_preview').length, 1,
+        "Activity should contains one mail template");
+    form.$('.o_activity_template_preview[data-template-id=100]').click();
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message').length, 1,
+        "activity should still be there");
     form.destroy();
 });
 
@@ -1264,6 +1376,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }, {
         id: 2,
@@ -1271,6 +1384,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         date_deadline: moment().format("YYYY-MM-DD"), // now
         state: "today",
         user_id: 2,
+        create_user_id: 2,
         activity_type_id: 1,
     }];
 
@@ -1459,16 +1573,16 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
     assert.strictEqual(form.$('.o_subtypes_list .o_subtype_checkbox:checked').length, 2,
         'two subtypes should be checked by default');
     form.$('.o_subtypes_list .dropdown-toggle').click(); // click to open the dropdown
-    assert.ok(form.$('.o_subtypes_list.open').length, 'dropdown should be opened');
+    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should be opened');
     form.$('.o_subtypes_list .o_subtype input[data-id=2]').click(); // uncheck second subtype
-    assert.ok(form.$('.o_subtypes_list.open').length, 'dropdown should remain opened');
+    assert.ok(form.$('.o_subtypes_list.show').length, 'dropdown should remain opened');
     assert.ok(!form.$('.o_subtypes_list .o_subtype_checkbox[data-id=2]:checked').length,
         'second subtype should now be unchecked');
 
     // click to unfollow
     form.$('.o_followers_follow_button').click(); // click to open the dropdown
-    assert.ok($('[role="dialog"]').length, 'a confirm modal should be opened');
-    $('footer.modal-footer .btn-primary').click(); // click on 'OK'
+    assert.ok($('.modal').length, 'a confirm modal should be opened');
+    $('.modal .modal-footer .btn-primary').click(); // click on 'OK'
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
@@ -1586,7 +1700,7 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
         intercepts: {
             get_session: function (event) {
                 event.stopPropagation();
-                event.data.callback({uid: 1});
+                event.data.callback({uid: 1, origin: 'http://web'});
             },
         },
     });
@@ -1597,6 +1711,147 @@ QUnit.test('does not render and crash when destroyed before chat system is ready
     // view is destroyed, all rpcs will be dropped, and many other mechanisms
     // relying on events will not work, such as the chat bus)
     def.resolve();
+});
+
+QUnit.test('chatter: do not duplicate messages on (un)star message', function (assert) {
+    assert.expect(4);
+
+    this.data.partner.records[0].message_ids = [1];
+    this.data['mail.message'].records = [{
+        author_id: ["1", "John Doe"],
+        body: "A message",
+        date: "2016-12-20 09:35:40",
+        id: 1,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'toggle_message_starred') {
+                var messageData = _.findWhere(
+                    this.data['mail.message'].records,
+                    { id: args.args[0][0] }
+                );
+                messageData.is_starred = !messageData.is_starred;
+                // simulate notification received by mail_service from longpoll
+                var data = {
+                    info: false,
+                    message_ids: [messageData.id],
+                    starred: messageData.is_starred,
+                    type: 'toggle_star',
+                };
+                var notification = [[false, 'res.partner'], data];
+                form.call('bus_service', 'trigger', 'notification', [notification]);
+                return $.when();
+            }
+            return this._super(route, args);
+        },
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should be a single message in the chatter");
+    assert.ok(form.$('.o_thread_message .o_thread_message_star.fa-star-o').length,
+        "message should not be starred");
+
+    // star message
+    form.$('.o_thread_message .o_thread_message_star').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should still be a single message in the chatter after starring the message");
+
+    // unstar message
+    form.$('.o_thread_message .o_thread_message_star').click();
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "there should still be a single message in the chatter after unstarring the message");
+
+    //cleanup
+    form.destroy();
+});
+
+QUnit.test('chatter: new messages on document without any "display_name"', function (assert) {
+    assert.expect(5);
+
+    this.data.partner.records[0].message_ids = [1];
+    this.data.partner.records[0].display_name = false;
+    this.data['mail.message'].records = [{
+        author_id: [1, "John Doe"],
+        body: "A message",
+        date: "2016-12-20 09:35:40",
+        id: 1,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread" options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+    });
+
+    assert.strictEqual(form.$('.o_thread_message').length, 1,
+        "should have a single message in the chatter");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+        "single message should have ID 1");
+
+    // Simulate a new message in the chatter
+    this.data['mail.message'].records.push({
+        author_id: [2, "Mister Smith"],
+        body: "Second message",
+        date: "2016-12-20 09:35:40",
+        id: 2,
+        is_note: false,
+        is_discussion: true,
+        is_notification: false,
+        is_starred: false,
+        model: 'partner',
+        res_id: 2,
+    });
+    this.data.partner.records[0].message_ids.push(2);
+
+    form.reload();
+
+    assert.strictEqual(form.$('.o_thread_message').length, 2,
+        "should have a two messages in the chatter after reload");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="1"]').length, 1,
+        "one of the message should have ID 1");
+    assert.strictEqual(form.$('.o_thread_message[data-message-id="2"]').length, 1,
+        "the other message should have ID 2");
+
+    //cleanup
+    form.destroy();
 });
 
 QUnit.module('FieldMany2ManyTagsEmail', {
@@ -1672,16 +1927,16 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         done();
     });
 
-    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
         "the opened modal should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will render the form view)
-    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('footer.modal-footer .btn-primary').click();
+    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('.modal-footer .btn-primary').click();
 });
 
 QUnit.test('fieldmany2many tags email (edition)', function (assert) {
@@ -1724,16 +1979,16 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     $input.click(); // opens the dropdown
     $input.autocomplete('widget').find('li:first').click(); // add 'silver'
 
-    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
         "the opened modal in edit mode should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
+    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('footer.modal-footer .btn-primary').click();
+    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('.modal-footer .btn-primary').click();
 
     assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
         "should contain the second tag");

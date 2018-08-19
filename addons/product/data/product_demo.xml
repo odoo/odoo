@@ -10,6 +10,10 @@
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Services</field>
         </record>
+        <record id="product_category_6" model="product.category">
+            <field name="parent_id" ref="product.product_category_3"/>
+            <field name="name">Saleable</field>
+        </record>
         <record id="product_category_4" model="product.category">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Software</field>
@@ -143,15 +147,19 @@
         </record>
 
         <record id="product_attribute_3" model="product.attribute">
-            <field name="name">Quality</field>
+            <field name="name">Duration</field>
         </record>
         <record id="product_attribute_value_5" model="product.attribute.value">
-            <field name="name">Premium</field>
+            <field name="name">1 year</field>
+            <field name="attribute_id" ref="product_attribute_3"/>
+        </record>
+        <record id="product_attribute_value_6" model="product.attribute.value">
+            <field name="name">2 year</field>
             <field name="attribute_id" ref="product_attribute_3"/>
         </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="name">Desk Customizable</field>
+            <field name="name">Customizable Desk</field>
             <field name="categ_id" ref="product_category_5"/>
             <field name="standard_price">500.0</field>
             <field name="list_price">750.0</field>
@@ -199,14 +207,9 @@
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
         </record>
-        <record id="product_attribute_line_3" model="product.attribute.line">
-            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="attribute_id" ref="product_attribute_3"/>
-            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5')])]"/>
-        </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2')])]"/>
         </record>
 
         <record id="product_product_4d" model="product.product">

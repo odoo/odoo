@@ -14,13 +14,18 @@
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_journal_dashboard.scss"/>
             <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_dashboard.scss"/>
 
+            <link rel="stylesheet" href="/account/static/src/scss/section_and_note_backend.scss"/>
+
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_action.js"></script>
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_model.js"></script>
             <script type="text/javascript" src="/account/static/src/js/reconciliation/reconciliation_renderer.js"></script>
             <script type="text/javascript" src="/account/static/src/js/reconciliation/tour_reconciliation.js"></script>
 
             <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
-            <script type="text/javascript" src="/account/static/src/js/account_dashboard_setup_bar.js"></script>
+
+            <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/tour.js"></script>
         </xpath>
     </template>
 
@@ -34,7 +39,6 @@
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/account/static/tests/reconciliation_tests.js"></script>
             <script type="text/javascript" src="/account/static/tests/account_payment_field_tests.js"></script>
-            <script type="text/javascript" src="/account/static/tests/account_dashboard_setup_bar_tests.js"></script>
         </xpath>
     </template>
 </odoo>

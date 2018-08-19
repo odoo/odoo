@@ -20,6 +20,8 @@ _default_parameters = {
     "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
     "web.base.url": lambda: "http://localhost:%s" % config.get('http_port'),
+    "base.login_cooldown_after": lambda: 10,
+    "base.login_cooldown_duration": lambda: 60,
 }
 
 
@@ -89,10 +91,10 @@ class IrConfigParameter(models.Model):
                 self.create({'key': key, 'value': value})
             return False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches()
-        return super(IrConfigParameter, self).create(vals)
+        return super(IrConfigParameter, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

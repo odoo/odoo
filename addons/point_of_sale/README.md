@@ -63,7 +63,7 @@ about products with the blasting fast filter accross all your products.
 Integrated Inventory Management
 -------------------------------
 
-Consolidate all your sales channels in real time: stores, ecommerce, sales
+Consolidate all your Sales Teams in real time: stores, ecommerce, sales
 teams. Get real time control of the inventory and accurate forecasts to manage
 procurements.
 

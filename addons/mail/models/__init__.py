@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import mail_message_subtype
 from . import mail_tracking_value
@@ -9,6 +10,7 @@ from . import mail_message
 from . import mail_activity
 from . import mail_mail
 from . import mail_thread
+from . import mail_blacklist
 from . import mail_channel
 from . import mail_template
 from . import mail_shortcode

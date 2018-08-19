@@ -14,7 +14,7 @@ var DEFAULT_INTERVAL = 'month';
 var GroupByMenu = DropdownMenu.extend({
     events: _.extend({}, DropdownMenu.prototype.events,
     {
-        'click .o_add_custom_group a': '_onAddCustomGroupClick',
+        'click .o_add_custom_group': '_onAddCustomGroupClick',
         'click button.o_apply_group': '_onButtonApplyClick',
         'click .o_group_selector': '_onGroupSelectorClick',
     }),
@@ -54,6 +54,7 @@ var GroupByMenu = DropdownMenu.extend({
             {description: 'Quarter', optionId: 'quarter', groupId: 1},
             {description: 'Year', optionId: 'year', groupId: 1},
         ];
+        this.defaultOptionId = DEFAULT_INTERVAL;
         this.groupableFields = [];
         _.each(fields, function (field, name) {
             if (field.sortable && _.contains(GROUPABLE_TYPES, field.type)) {
@@ -78,14 +79,14 @@ var GroupByMenu = DropdownMenu.extend({
         if (options && options.headerStyle === 'primary') {
             style = {
                 el: {class: 'btn-group o_graph_groupbys_menu o_dropdown', attrs: {'role': 'group'}},
-                mainButton: {class: 'btn btn-primary btn-sm dropdown-toggle'},
+                mainButton: {class: 'btn btn-primary dropdown-toggle'},
             };
         }
         var dropdownHeader = {
             category: 'groupByCategory',
             title: 'Group By',
             icon: 'fa fa-bars',
-            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret',
+            symbol: this.isMobile ? 'fa fa-chevron-right float-right mt4' : false,
             style: style,
         };
         this._super(parent, dropdownHeader, groupbys, options);
@@ -98,7 +99,7 @@ var GroupByMenu = DropdownMenu.extend({
      * @private
      */
     start: function () {
-        this.$menu = this.$('ul.o_dropdown_menu');
+        this.$menu = this.$('.o_dropdown_menu');
         this.$menu.addClass('o_group_by_menu');
         var $generatorMenu = QWeb.render('GroupbyMenuGenerator', {widget: this});
         this.$menu.append($generatorMenu);
@@ -131,6 +132,7 @@ var GroupByMenu = DropdownMenu.extend({
         var eventData = _.clone(groupby);
         this._prepareItem(groupby);
         if (groupby.hasOptions) {
+            groupby.defaultOptionId = DEFAULT_INTERVAL;
             groupby.currentOptionId = DEFAULT_INTERVAL;
             groupby.isDate = true;
             eventData.optionId = groupby.currentOptionId;

@@ -16,12 +16,12 @@ tour.register('shop_wishlist', {
         },
         {
             content: "go to wishlist",
-            extra_trigger: ".label:contains(1)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
             content: "remove first item in whishlist",
-            trigger: 'a.o_wish_rm:first',
+            trigger: '.o_wish_rm:first',
         },
         {
             content: "go back to the store",
@@ -47,18 +47,18 @@ tour.register('shop_wishlist', {
             },
         },
         {
-            content: "check that logged in and search for desk customizable",
-            extra_trigger: 'li span:contains(Administrator)',
+            content: "check that logged in and search for Customizable Desk",
+            extra_trigger: "li span:contains('Mitchell Stephens')",
             trigger: 'form input[name="search"]',
-            run: "text Desk Customizable",
+            run: "text Customizable Desk",
         },
         {
             content: "submit search",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            content: "click on desk customizable",
-            trigger: '.oe_product_cart a:contains("Desk Customizable")',
+            content: "click on Customizable Desk",
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "select desk cutomizable",
@@ -71,12 +71,12 @@ tour.register('shop_wishlist', {
         },
         {
             content: "check that wishlist contains 2 items and go to wishlist",
-            extra_trigger: ".label:contains(2)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
-            content: "remove desk customizable",
-            trigger: 'tr:contains("Desk Customizable") a.o_wish_rm:first',
+            content: "remove Customizable Desk",
+            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",
@@ -89,7 +89,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that cart contains 1 item",
@@ -107,7 +107,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "add last item to cart",
-            trigger: 'a.o_wish_add:first',
+            trigger: '.o_wish_add:eq(1)',
         },
         {
             content: "check that user is redirect - wishlist is empty",

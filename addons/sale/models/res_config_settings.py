@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
-
 from odoo import api, fields, models
 
 
@@ -16,12 +14,11 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='sale.use_sale_note')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
-    group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
+    quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)")
+    use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
-    portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Digital Signature')
+    portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Online Signature')
     portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Electronic Payment')
-    module_sale_payment = fields.Boolean("Sale Payment", help='Technical field implied by user choice of portal_confirmation_pay.')
-    module_website_quote = fields.Boolean("Quotations Templates")
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
     multi_sales_price_method = fields.Selection([
@@ -33,21 +30,9 @@ class ResConfigSettings(models.TransientModel):
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
         ], string="Pricelists", config_parameter='sale.sale_pricelist_setting')
-    group_show_price_subtotal = fields.Boolean(
-        "Show subtotal",
-        implied_group='sale.group_show_price_subtotal',
-        group='base.group_portal,base.group_user,base.group_public')
-    group_show_price_total = fields.Boolean(
-        "Show total",
-        implied_group='sale.group_show_price_total',
-        group='base.group_portal,base.group_user,base.group_public')
     group_proforma_sales = fields.Boolean(string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
-    sale_show_tax = fields.Selection([
-        ('subtotal', 'Tax-Excluded Prices'),
-        ('total', 'Tax-Included Prices')], string="Tax Display",
-        required=True, default='subtotal',
-        config_parameter='sale.sale_show_tax')
+    group_sale_order_dates = fields.Boolean("Delivery Date", implied_group='sale.group_sale_order_dates')
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')
@@ -65,8 +50,8 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     auth_signup_uninvited = fields.Selection([
-        ('b2b', 'On invitation (B2B)'),
-        ('b2c', 'Free sign up (B2C)'),
+        ('b2b', 'On invitation'),
+        ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     module_delivery = fields.Boolean("Shipping Costs")
@@ -79,6 +64,18 @@ class ResConfigSettings(models.TransientModel):
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
+
+    automatic_invoice = fields.Boolean("Automatic Invoice",
+                                       help="The invoice is generated automatically and available in the customer portal "
+                                            "when the transaction is confirmed by the payment acquirer.\n"
+                                            "The invoice is marked as paid and the payment is registered in the payment journal "
+                                            "defined in the configuration of the payment acquirer.\n"
+                                            "This mode is advised if you issue the final invoice at the order and not after the delivery.",
+                                       config_parameter='sale.automatic_invoice')
+    template_id = fields.Many2one('mail.template', 'Email Template',
+                                  domain="[('model', '=', 'account.invoice')]",
+                                  config_parameter='sale.default_email_template',
+                                  default=lambda self: self.env.ref('account.email_template_edi_invoice', False))
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
@@ -93,19 +90,6 @@ class ResConfigSettings(models.TransientModel):
                 'multi_sales_price_method': 'percentage',
             })
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
-
-    @api.onchange('sale_show_tax')
-    def _onchange_sale_tax(self):
-        if self.sale_show_tax == "subtotal":
-            self.update({
-                'group_show_price_total': False,
-                'group_show_price_subtotal': True,
-            })
-        else:
-            self.update({
-                'group_show_price_total': True,
-                'group_show_price_subtotal': False,
-            })
 
     @api.onchange('sale_pricelist_setting')
     def _onchange_sale_pricelist_setting(self):
@@ -132,6 +116,19 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_portal_confirmation_pay(self):
         if self.portal_confirmation_pay:
             self.module_sale_payment = True
+
+    @api.onchange('use_quotation_validity_days')
+    def _onchange_use_quotation_validity_days(self):
+        if self.quotation_validity_days <= 0:
+            self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
+
+    @api.onchange('quotation_validity_days')
+    def _onchange_quotation_validity_days(self):
+        if self.quotation_validity_days <= 0:
+            self.quotation_validity_days = self.env['res.company'].default_get(['quotation_validity_days'])['quotation_validity_days']
+            return {
+                'warning': {'title': "Warning", 'message': "Quotation Validity is required and must be greater than 0."},
+            }
 
     @api.model
     def get_values(self):

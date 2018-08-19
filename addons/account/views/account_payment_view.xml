@@ -53,24 +53,24 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span><field name="name"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6 text-right">
+                                    <div class="col-6 text-right">
                                         <strong><i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <t t-esc="record.payment_date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <span><field name="partner_id"/></span>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <field name="amount" widget='monetary'/>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right label label-default">
+                                    <div class="col-6">
+                                        <span class="float-right badge badge-secondary">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'sent': 'success'}}"/>
                                         </span>
                                     </div>
@@ -155,6 +155,8 @@
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" string=" " widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
                             <group>
@@ -234,8 +236,8 @@
             </field>
         </record>
 
-        <menuitem action="action_account_payments" id="menu_action_account_payments_receivable" parent="menu_finance_receivables_documents" sequence="20"/>
-        <menuitem action="action_account_payments_payable" id="menu_action_account_payments_payable" parent="menu_finance_payables_documents" sequence="20"/>
+        <menuitem action="action_account_payments" id="menu_action_account_payments_receivable" parent="account.menu_finance_receivables" sequence="15"/>
+        <menuitem action="action_account_payments_payable" id="menu_action_account_payments_payable" parent="account.menu_finance_payables" sequence="20"/>
 
         <record id="view_account_payment_invoice_form" model="ir.ui.view">
             <field name="name">account.payment.invoice.form</field>
@@ -258,6 +260,8 @@
                                 <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
                                 <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
+                                <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}" context="{'default_partner_id': partner_id}"/>
+                                <field name="show_partner_bank_account" invisible="1"/>
                                 <field name="payment_method_code" invisible="1"/>
                             </group>
                             <group>
@@ -283,7 +287,7 @@
                     </sheet>
                     <footer>
                         <button string='Validate' name="action_validate_invoice_payment" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -325,11 +329,16 @@
                             <field name="journal_id" widget="selection" attrs="{'invisible': [('amount', '=', 0)]}"/>
                             <field name="hide_payment_method" invisible="1"/>
                             <field name="payment_method_id" widget="radio" attrs="{'invisible': ['|', ('hide_payment_method', '=', True), ('amount', '=', 0.0)]}"/>
+                            <field name="partner_bank_account_id" attrs="{'invisible': [('show_partner_bank_account', '!=', True)], 'required': [('show_partner_bank_account', '=', True)]}" context="{'default_partner_id': partner_id}"/>
+                            <field name="show_partner_bank_account" invisible="1"/>
                             <field name="payment_method_code" invisible="1"/>
                         </group>
                         <group>
                             <field name="payment_date"/>
-                            <field name="communication"/>
+                            <field name="group_invoices"/>
+                            <field name="show_communication_field" invisible="1"/>
+                            <field name="communication" attrs="{'invisible': [('show_communication_field', '=', False)]}"/>
+                            <p colspan="2" attrs="{'invisible': [('show_communication_field', '=', True)]}">Memo will be computed from invoices</p>
                         </group>
                         <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                             <label for="payment_difference"/>
@@ -349,7 +358,7 @@
                     </group>
                     <footer>
                         <button string='Validate' name="create_payments" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                </form>
             </field>

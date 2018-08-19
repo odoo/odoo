@@ -7,18 +7,13 @@
             <field name="dashboard_graph_model">sale.report</field>
         </record>
 
-        <record id="sale_layout_cat_1" model="sale.layout_category">
-            <field name="name">Services</field>
-            <field name="subtotal" eval="True"></field>
-            <field name="pagebreak" eval="True"></field>
-            <field name="sequence">1</field>
-        </record>
-
-        <record id="sale_layout_cat_2" model="sale.layout_category">
-            <field name="name">Material</field>
-            <field name="subtotal" eval="True"></field>
-            <field name="pagebreak" eval="False"></field>
-            <field name="sequence">10</field>
+        <!-- Share Button in action menu -->
+        <record id="model_sale_order_action_share" model="ir.actions.server">
+            <field name="name">Share</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_share()</field>
         </record>
     </data>
 </odoo>

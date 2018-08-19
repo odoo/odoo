@@ -3,15 +3,15 @@
 # * base_address_city
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_city
-#: model:ir.model.fields,help:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
@@ -37,17 +37,19 @@ msgid "Cities"
 msgstr "Byer"
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:29
 #: model:ir.model,name:base_address_city.model_res_city
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
 msgid "City"
 msgstr "By"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_city_id
-msgid "Company"
-msgstr "Firma"
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr ""
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
@@ -56,24 +58,24 @@ msgstr "Kontakt"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
 msgstr "Land"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
 msgstr "Opprettet av"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
-msgstr "Opprettet den"
+msgstr "Opprettet"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
-msgstr "Visnings navn"
+msgstr "Visningsnavn"
 
 #. module: base_address_city
 #: model:ir.actions.act_window,help:base_address_city.action_res_city_tree
@@ -87,34 +89,34 @@ msgstr ""
 "har en by fra denne listen."
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_users_country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
 msgstr "Avgrens byer til liste"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city___last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
 msgid "Last Modified on"
-msgstr "Sist oppdatert "
+msgstr "Sist endret"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
 msgid "Last Updated by"
 msgstr "Sist oppdatert av"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
 msgstr "Sist oppdatert"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
 msgid "Name"
 msgstr "Navn"
 
@@ -124,11 +126,11 @@ msgid "Search City"
 msgstr "Søk by"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
 msgstr "Stat"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
 msgid "Zip"
 msgstr "Postnummer"

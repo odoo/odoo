@@ -5,30 +5,27 @@
         <t t-set="o" t-value="doc"/>
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
+                <t t-set="information_block">
+                    <strong t-if="o.address_id == o.partner_invoice_id">Invoice and shipping address:</strong>
+                    <div t-if="o.partner_invoice_id">
+                        <strong t-if="o.address_id != o.partner_invoice_id">Invoice address: </strong>
+                        <div t-field="o.partner_invoice_id" 
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <p t-if="o.partner_invoice_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_invoice_id.vat"/></p>
+                    </div>
+                    <t t-if="o.address_id != o.partner_invoice_id">
+                        <strong>Shipping address :</strong>
+                        <div t-field="o.address_id" 
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <p t-if="o.address_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.address_id.vat"/></p>
+                    </t>
+                </t>
+                <t t-set="address">
+                    <div t-field="o.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                </t>
                 <div class="page">
                     <div class="oe_structure"/>
-
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <strong t-if="o.address_id == o.partner_invoice_id">Invoice and shipping address:</strong>
-                            <div t-if="o.partner_invoice_id">
-                                <strong t-if="o.address_id != o.partner_invoice_id">Invoice address: </strong>
-                                <div t-field="o.partner_invoice_id" 
-                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="o.partner_invoice_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_invoice_id.vat"/></p>
-                            </div>
-                            <div t-if="o.address_id != o.partner_invoice_id">
-                                <strong>Shipping address :</strong>
-                                <div t-field="o.address_id" 
-                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                                <p t-if="o.address_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.address_id.vat"/></p>
-                            </div>                        
-                        </div>
-                        <div class="col-xs-5 col-xs-offset-1">
-                            <div t-field="o.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                        </div>
-                    </div>
 
                     <h2>
                         <span t-if="o.state != 'draft'">Repair Order #:</span>
@@ -37,27 +34,27 @@
                     </h2>
 
                     <div class="row mt32 mb32">
-                        <div t-if="o.product_id.name" class="col-xs-3">
+                        <div t-if="o.product_id.name" class="col-3">
                             <strong>Product to Repair:</strong>
                             <p t-field="o.product_id.name"/>
                         </div>
-                        <div class="col-xs-3" groups="stock.group_production_lot">
+                        <div class="col-3" groups="stock.group_production_lot">
                             <strong>Lot/Serial Number:</strong>
                             <t t-if="o.lot_id">
                                 <span t-field="o.lot_id.name"/>
                             </t>
                         </div>
-                        <div t-if="o.guarantee_limit" class="col-xs-3">
+                        <div t-if="o.guarantee_limit" class="col-3">
                             <strong>Warranty:</strong>
                             <p t-field="o.guarantee_limit"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Printing Date:</strong>
                             <p t-esc="datetime.datetime.now().strftime('%Y-%m-%d')" t-options="{'widget': 'date'}"/>
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -122,8 +119,8 @@
                     </table>
 
                     <div class="row">
-                        <div class="col-xs-4 pull-right">
-                            <table class="table table-condensed">
+                        <div class="col-4 float-right">
+                            <table class="table table-sm">
                                 <t t-if="o.invoice_method !='none'">
                                     <tr class="border-black">
                                         <td><strong>Total Without Taxes</strong></td>

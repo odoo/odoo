@@ -10,6 +10,7 @@ from . import test_ir_actions
 from . import test_ir_attachment
 from . import test_ir_http
 from . import test_ir_filters
+from . import test_ir_model
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_default
@@ -33,3 +34,4 @@ from . import test_xmlrpc
 from . import test_res_partner_bank
 from . import test_reports
 from . import test_tests_tags
+from . import test_non_regression

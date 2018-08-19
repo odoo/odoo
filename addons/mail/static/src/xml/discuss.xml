@@ -30,17 +30,17 @@
         <div class="o_mail_discuss_sidebar">
             <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
                  data-thread-id="mailbox_inbox">
-                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+                <span class="o_thread_name"><i class="fa fa-inbox mr8"/>Inbox</span>
                 <t t-set="counter" t-value="needactionCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
             <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
                  data-thread-id="mailbox_starred">
-                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
+                <span class="o_thread_name"><i class="fa fa-star-o mr8"/>Starred</span>
                 <t t-set="counter" t-value="starredCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
-            <div t-if="isModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
+            <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
                  data-thread-id="mailbox_moderation">
                 <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
                 <t t-set="counter" t-value="moderationCounter"/>
@@ -58,7 +58,7 @@
                 <t t-set="inputPlaceholder">Add a channel</t>
             </t>
 
-            <t t-set="type" t-value="'dm'"/>
+            <t t-set="type" t-value="'dm_chat'"/>
             <t t-call="mail.discuss.SidebarTitle">
                 <t t-set="title">Direct Messages</t>
                 <t t-set="icon" t-value="fa-user"/>
@@ -84,14 +84,14 @@
         @param {integer} counter
     -->
     <t t-name="mail.discuss.SidebarCounter">
-        <span t-attf-class="o_mail_sidebar_needaction badge #{(!counter ? 'hide' : '')}">
+        <span t-attf-class="o_mail_sidebar_needaction badge badge-pill #{(!counter ? 'd-none' : '')}">
             <t t-esc="counter"/>
         </span>
     </t>
 
     <!--
         Don't display the thread type if there is no thread of such type
-        and the 'add a channel' option is disabled for this type
+        and the 'add a thread' option is disabled for this type
 
         @param {mail.model.Thread[]} threads
         @param {boolean} [disableAddThread] whether the 'Add thread' action should disabled or not for the considered discuss item category
@@ -133,7 +133,7 @@
             <input type="text" class="o_input" t-attf-placeholder="#{inputPlaceholder}"/>
         </div>
         <t t-foreach="threads" t-as="thread">
-            <t t-set="counter" t-value="thread.getType() === 'mailbox' ? thread.getMailboxCounter() : thread.isChat() ? thread.getUnreadCounter() : thread.getNeedactionCounter()"/>
+            <t t-set="counter" t-value="thread.getType() === 'mailbox' ? thread.getMailboxCounter() : thread.isTwoUserThread() ? thread.getUnreadCounter() : thread.getNeedactionCounter()"/>
             <div t-if="thread.getType() === type" t-att-data-thread-id="thread.getID()" t-att-title="thread.getName()"
                  t-attf-class="o_mail_discuss_item #{thread.hasUnreadMessages() ? ' o_unread_message' : ''} #{(activeThreadID == thread.getID()) ? 'o_active': ''}">
                 <span class="o_thread_name">
@@ -143,13 +143,13 @@
                         </t>
                     </span>
                     <span t-if="displayHash" class="o_mail_hash">#</span>
-                    <t t-esc="thread.getName()"/>
+                    <t t-esc="_.unescape(thread.getName())"/>
                     <i t-if="thread.isMassMailing()" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"
                       title="Channel settings" role="img" aria-label="Channel settings" t-att-data-thread-id="thread.getID()"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
-                <span t-if="!thread.isGroupBasedSubscription()" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
+                <span t-if="!thread.isGroupBasedSubscription()" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'd-none' : ''}"
                       title="Leave this channel" role="img" aria-label="Leave this channel" t-att-data-thread-id="thread.getID()"/>
             </div>
         </t>
@@ -181,16 +181,16 @@
     -->
     <t t-name="mail.discuss.ControlButtons">
         <div>
-            <button type="button" class="btn btn-primary btn-sm o_mail_discuss_button_invite hidden-xs" title="Invite people">Invite</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_discuss_button_mark_all_read hidden-xs" title="Mark all as read">Mark all read</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_discuss_button_unstar_all" title="Unstar all messages">Unstar all</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_discuss_button_dm visible-xs" title="New Message">New Message</button>
-            <button t-if="!disableAddThread" type="button" class="btn btn-default btn-sm o_mail_discuss_button_public o_mail_discuss_button_private visible-xs" title="New Channel">New Channel</button>
-            <button type="button" class="btn btn-default btn-sm o_hidden o_mail_discuss_button_select_all" title="Select all messages to moderate">Select All</button>
-            <button type="button" class="btn btn-default btn-sm o_hidden o_mail_discuss_button_unselect_all" title="Unselect all messages to moderate">Unselect All</button>
-            <button type="button" data-decision="accept" class="btn btn-default btn-sm o_mail_discuss_button_moderate_all" title="Accept selected messages">Accept</button>
-            <button type="button" data-decision="reject" class="btn btn-default btn-sm o_mail_discuss_button_moderate_all" title="Reject selected messages">Reject</button>
-            <button type="button" data-decision="discard" class="btn btn-default btn-sm o_mail_discuss_button_moderate_all" title="Discard selected messages">Discard</button>
+            <button type="button" class="btn btn-primary o_mail_discuss_button_invite d-none d-md-inline-block" title="Invite people">Invite</button>
+            <button type="button" class="btn btn-secondary o_mail_discuss_button_mark_all_read d-none d-md-inline-block" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-secondary o_mail_discuss_button_unstar_all" title="Unstar all messages">Unstar all</button>
+            <button type="button" class="btn btn-secondary o_mail_discuss_button_dm d-block d-md-none" title="New Message">New Message</button>
+            <button t-if="!disableAddThread" type="button" class="btn btn-secondary o_mail_discuss_button_public o_mail_discuss_button_private d-block d-md-none" title="New Channel">New Channel</button>
+            <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_select_all" title="Select all messages to moderate">Select All</button>
+            <button type="button" class="btn btn-secondary o_hidden o_mail_discuss_button_unselect_all" title="Unselect all messages to moderate">Unselect All</button>
+            <button type="button" data-decision="accept" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Accept selected messages">Accept</button>
+            <button type="button" data-decision="reject" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Reject selected messages">Reject</button>
+            <button type="button" data-decision="discard" class="btn btn-secondary o_mail_discuss_button_moderate_all" title="Discard selected messages">Discard</button>
         </div>
     </t>
 
@@ -208,10 +208,10 @@
     <t t-name="mail.discuss_mobile">
         <div class="o_mail_discuss">
             <div class="o_mail_discuss_mobile_mailboxes_buttons">
-                <button type="button" class="btn btn-primary btn-sm visible-xs-inline o_mailbox_inbox_item" title="Inbox" data-type="mailbox_inbox">
+                <button type="button" class="btn btn-primary d-inline d-md-none o_mailbox_inbox_item" title="Inbox" data-type="mailbox_inbox">
                     Inbox
                 </button>
-                <button type="button" class="btn btn-default btn-sm visible-xs-inline o_mailbox_inbox_item" title="Starred" data-type="mailbox_starred">
+                <button type="button" class="btn btn-secondary d-inline d-md-none o_mailbox_inbox_item" title="Starred" data-type="mailbox_starred">
                     Starred
                 </button>
             </div>
@@ -221,7 +221,7 @@
                     <span class="fa fa-inbox"/>
                     <span class="o_tab_title">Inbox</span>
                 </div>
-                <div class="o_mail_mobile_tab" data-type="dm">
+                <div class="o_mail_mobile_tab" data-type="dm_chat">
                     <span class="fa fa-user"/>
                     <span class="o_tab_title">Chat</span>
                 </div>
@@ -246,7 +246,7 @@
             <div t-if="!disableAddThread" class="o_mail_add_thread" t-att-data-type="type">
                 <span t-if="type == 'private' || type == 'public'">#</span>
                 <t t-set="inputPlaceholder" t-if="type == 'private' || type == 'public'">Add a channel</t>
-                <t t-set="inputPlaceholder" t-if="type == 'dm'">Open chat</t>
+                <t t-set="inputPlaceholder" t-if="type == 'dm_chat'">Open chat</t>
                 <input type="text" t-attf-placeholder="#{inputPlaceholder}"/>
             </div>
             <t t-foreach="previews" t-as="preview">
@@ -266,7 +266,7 @@
         @param {string} [preview.documentModel]
         @param {string|integer} preview.id
         @param {string} [preview.imageSRC]
-        @param {boolean} [preview.isAuthor]
+        @param {boolean} [preview.isMyselfAuthor]
         @param {moment} [preview.date]
         @param {string} [preview.author]
         @param {string} [preview.body]
@@ -276,9 +276,9 @@
     -->
     <t t-name="mail.Preview">
         <div t-attf-class="o_mail_preview #{preview.unreadCounter &gt; 0 ? 'o_preview_unread' : ''}"
-             t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel">
+             t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter">
             <div t-attf-class="o_mail_preview_image #{preview.documentModel ? 'o_mail_preview_app' : ''}">
-                <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Channel"/>
+                <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Preview"/>
                 <i t-if="preview.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
                 <i t-if="preview.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
             </div>
@@ -293,7 +293,7 @@
                     <span class="o_last_message_date"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
                 </div>
                 <div t-if="preview.body" class="o_last_message_preview">
-                    <t t-if="preview.isAuthor">
+                    <t t-if="preview.isMyselfAuthor">
                         <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
                     </t>
                     <t t-elif="preview.author">

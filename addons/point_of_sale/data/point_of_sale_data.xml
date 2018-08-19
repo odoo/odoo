@@ -33,16 +33,18 @@
         <record id="product_product_tip" model="product.product">
             <field name="name">Tips</field>
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
+            <field name="default_code">TIPS</field>
         </record>
 
         <record model="pos.config" id="pos_config_main">
-            <field name="name">Main</field>
+            <field name="name">Shop</field>
             <field name="picking_type_id" ref="picking_type_posout"/>
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
 
         <record id="product_product_consumable" model="product.product">
             <field name="name">Miscellaneous</field>
+            <field name="available_in_pos">True</field>
             <field name="standard_price">13.0</field>
             <field name="list_price">18.0</field>
             <field name="type">consu</field>

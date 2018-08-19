@@ -1,12 +1,13 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
+var BusService = require('bus.BusService');
+
 var Discuss = require('mail.Discuss');
 var MailService = require('mail.Service');
 
-var AbstractService = require('web.AbstractService');
 var AbstractStorageService = require('web.AbstractStorageService');
-var Bus = require('web.Bus');
+var Class = require('web.Class');
 var ControlPanel = require('web.ControlPanel');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
@@ -21,6 +22,7 @@ var Widget = require('web.Widget');
 
 /**
  * Create asynchronously a discuss widget.
+ * This is async due to mail_manager/mail_service that needs to be ready.
  *
  * @param {Object} params
  * @return {$.Promise} resolved with the discuss widget
@@ -58,6 +60,32 @@ function createDiscuss(params) {
     });
 }
 
+
+var MockMailService = Class.extend({
+    bus_service: function () {
+        return BusService.extend({
+            _poll: function () {}, // Do nothing
+            isOdooFocused: function () { return true; },
+            updateOption: function () {},
+        });
+    },
+    mail_service: function () {
+        return MailService;
+    },
+    local_storage: function () {
+        return AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+    },
+    getServices: function () {
+        return {
+            mail_service: this.mail_service(),
+            bus_service: this.bus_service(),
+            local_storage: this.local_storage(),
+        };
+    },
+});
+
 /**
  * Returns the list of mail services required by the mail components: a
  * mail_service, and its two dependencies bus_service and local_storage.
@@ -66,36 +94,11 @@ function createDiscuss(params) {
  * and local_storage, in that order
  */
 function getMailServices() {
-    var MockBus = Bus.extend({
-        /**
-         * Do nothing
-         */
-        start_polling: function () {},
-        is_odoo_focused: function () { return true; },
-    });
-    var BusService =  AbstractService.extend({
-        name: 'bus_service',
-        bus: new MockBus(),
-
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-
-        /**
-         * @returns {Bus}
-         */
-        getBus: function () {
-            return this.bus;
-        }
-    });
-    var LocalStorageService = AbstractStorageService.extend({
-        name: 'local_storage',
-        storage: new RamStorage(),
-    });
-    return [MailService, BusService, LocalStorageService];
+    return new MockMailService().getServices();
 }
 
 return {
+    MockMailService: MockMailService,
     createDiscuss: createDiscuss,
     getMailServices: getMailServices,
 };

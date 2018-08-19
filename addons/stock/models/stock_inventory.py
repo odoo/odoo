@@ -29,7 +29,8 @@ class Inventory(models.Model):
         'Inventory Date',
         readonly=True, required=True,
         default=fields.Datetime.now,
-        help="The date that will be used for the stock level check of the products and the validation of the stock move related to this inventory.")
+        help="If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
+             "If the inventory adjustment is validated, date at which the inventory adjustment has been validated.")
     line_ids = fields.One2many(
         'stock.inventory.line', 'inventory_id', string='Inventories',
         copy=True, readonly=False,
@@ -360,9 +361,14 @@ class InventoryLine(models.Model):
         if not self.product_id:
             self.theoretical_qty = 0
             return
-        theoretical_qty = sum([x.quantity for x in self._get_quants()])
-        if theoretical_qty and self.product_uom_id and self.product_id.uom_id != self.product_uom_id:
-            theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
+        theoretical_qty = self.product_id.get_theoretical_quantity(
+            self.product_id.id,
+            self.location_id.id,
+            lot_id=self.prod_lot_id.id,
+            package_id=self.package_id.id,
+            owner_id=self.partner_id.id,
+            to_uom=self.product_uom_id.id,
+        )
         self.theoretical_qty = theoretical_qty
 
     @api.onchange('product_id')
@@ -380,11 +386,12 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.model
-    def create(self, values):
-        if 'product_id' in values and 'product_uom_id' not in values:
-            values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
-        res = super(InventoryLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'product_id' in values and 'product_uom_id' not in values:
+                values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
+        res = super(InventoryLine, self).create(vals_list)
         res._check_no_duplicate_line()
         return res
 
@@ -416,16 +423,7 @@ class InventoryLine(models.Model):
         """
         for line in self:
             if line.product_id.type != 'product':
-                raise UserError(_("You can only adjust stockable products."))
-
-    def _get_quants(self):
-        return self.env['stock.quant'].search([
-            ('company_id', '=', self.company_id.id),
-            ('location_id', '=', self.location_id.id),
-            ('lot_id', '=', self.prod_lot_id.id),
-            ('product_id', '=', self.product_id.id),
-            ('owner_id', '=', self.partner_id.id),
-            ('package_id', '=', self.package_id.id)])
+                raise UserError(_("You can only adjust storable products."))
 
     def _get_move_values(self, qty, location_id, location_dest_id, out):
         self.ensure_one()
@@ -456,7 +454,7 @@ class InventoryLine(models.Model):
         }
 
     def _generate_moves(self):
-        moves = self.env['stock.move']
+        vals_list = []
         for line in self:
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
@@ -465,5 +463,5 @@ class InventoryLine(models.Model):
                 vals = line._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False)
             else:
                 vals = line._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
-            moves |= self.env['stock.move'].create(vals)
-        return moves
+            vals_list.append(vals)
+        return self.env['stock.move'].create(vals_list)

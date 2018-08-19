@@ -17,6 +17,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -136,6 +137,9 @@ class Partner(models.Model):
     def _default_company(self):
         return self.env['res.company']._company_default_get('res.partner')
 
+    def _split_street_with_params(self, street_raw, street_format):
+        return {'street': street_raw}
+
     name = fields.Char(index=True)
     display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
@@ -155,7 +159,7 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user that is in charge of communicating with this contact if any.')
-    vat = fields.Char(string='TIN', help="Tax Identification Number. "
+    vat = fields.Char(string='Tax ID', help="Tax Identification Number. "
                                          "Fill it if the company is subjected to taxes. "
                                          "Used by the some of the legal statements.")
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
@@ -329,7 +333,9 @@ class Partner(models.Model):
     @api.multi
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        chosen_name = default.get('name') if default else ''
+        new_name = chosen_name or _('%s (copy)') % self.name
+        default = dict(default or {}, name=new_name)
         return super(Partner, self).copy(default)
 
     @api.onchange('parent_id')
@@ -372,7 +378,10 @@ class Partner(models.Model):
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
         for partner in self:
-            partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
+            if partner.email:
+                partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
+            else:
+                partner.email_formatted = ''
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -530,21 +539,23 @@ class Partner(models.Model):
             partner._fields_sync(vals)
         return result
 
-    @api.model
-    def create(self, vals):
-        if vals.get('website'):
-            vals['website'] = self._clean_website(vals['website'])
-        if vals.get('parent_id'):
-            vals['company_name'] = False
-        # compute default image in create, because computing gravatar in the onchange
-        # cannot be easily performed if default images are in the way
-        if not vals.get('image'):
-            vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
-        tools.image_resize_images(vals, sizes={'image': (1024, None)})
-        partner = super(Partner, self).create(vals)
-        partner._fields_sync(vals)
-        partner._handle_first_contact_creation()
-        return partner
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('website'):
+                vals['website'] = self._clean_website(vals['website'])
+            if vals.get('parent_id'):
+                vals['company_name'] = False
+            # compute default image in create, because computing gravatar in the onchange
+            # cannot be easily performed if default images are in the way
+            if not vals.get('image'):
+                vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+            tools.image_resize_images(vals, sizes={'image': (1024, None)})
+        partners = super(Partner, self).create(vals_list)
+        for partner, vals in pycompat.izip(partners, vals_list):
+            partner._fields_sync(vals)
+            partner._handle_first_contact_creation()
+        return partners
 
     @api.multi
     def create_company(self):
@@ -585,27 +596,35 @@ class Partner(models.Model):
                 'target': 'new',
                 'flags': {'form': {'action_buttons': True}}}
 
+    def _get_name(self):
+        """ Utility method to allow name_get to be overrided without re-browse the partner """
+        partner = self
+        name = partner.name or ''
+
+        if partner.company_name or partner.parent_id:
+            if not name and partner.type in ['invoice', 'delivery', 'other']:
+                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+            if not partner.is_company:
+                name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
+        if self._context.get('show_address_only'):
+            name = partner._display_address(without_company=True)
+        if self._context.get('show_address'):
+            name = name + "\n" + partner._display_address(without_company=True)
+        name = name.replace('\n\n', '\n')
+        name = name.replace('\n\n', '\n')
+        if self._context.get('address_inline'):
+            name = name.replace('\n', ', ')
+        if self._context.get('show_email') and partner.email:
+            name = "%s <%s>" % (name, partner.email)
+        if self._context.get('html_format'):
+            name = name.replace('\n', '<br/>')
+        return name
+
     @api.multi
     def name_get(self):
         res = []
         for partner in self:
-            name = partner.name or ''
-
-            if partner.company_name or partner.parent_id:
-                if not name and partner.type in ['invoice', 'delivery', 'other']:
-                    name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
-                if not partner.is_company:
-                    name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
-            if self._context.get('show_address_only'):
-                name = partner._display_address(without_company=True)
-            if self._context.get('show_address'):
-                name = name + "\n" + partner._display_address(without_company=True)
-            name = name.replace('\n\n', '\n')
-            name = name.replace('\n\n', '\n')
-            if self._context.get('show_email') and partner.email:
-                name = "%s <%s>" % (name, partner.email)
-            if self._context.get('html_format'):
-                name = name.replace('\n', '<br/>')
+            name = partner._get_name()
             res.append((partner.id, name))
         return res
 
@@ -826,6 +845,13 @@ class Partner(models.Model):
             'country_id.address_format', 'country_id.code', 'country_id.name',
             'company_name', 'state_id.code', 'state_id.name',
         ]
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Customers'),
+            'template': '/base/static/xls/res_partner.xls'
+        }]
 
 
 class ResPartnerIndustry(models.Model):

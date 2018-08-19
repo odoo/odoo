@@ -1,11 +1,10 @@
-@mixin o-search-options-dropdown-custom-li {
-    margin: 3px 25px;
+@mixin o-search-options-dropdown-custom-item {
     width: auto;
     max-width: 250px;
 }
 
 .o_searchview {
-    @include o-align-items(flex-end);
+    align-items: flex-end;
     position: relative;
     padding: 0 20px 1px 0;
 
@@ -15,38 +14,39 @@
     }
 
     .o_searchview_input_container {
-        @include o-flex-display;
-        @include o-flex-flow(row, wrap);
+        display: flex;
+        flex-flow: row wrap;
 
         .o_searchview_facet {
             $o-searchview-facet-remove-width: 18px;
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             max-width: 100%;
-            @include o-flex-display;
+            display: flex;
             position: relative;
             margin: 1px 3px 0 0;
 
             .o_searchview_facet_label {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 @include o-text-overflow;
                 padding: 0 3px;
                 color: white;
 
-                @include o-flex-display;
-                @include o-align-items(center);
+                display: flex;
+                align-items: center;
             }
 
             .o_facet_values {
+                direction: ltr#{"/*rtl:ignore*/"};
                 padding: 0 $o-searchview-facet-remove-width 0 5px;
                 .o_facet_values_sep {
                     font-style: italic;
                 }
             }
             .o_facet_remove {
-                @include o-flex(0, 0, auto);
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                flex: 0 0 auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 @include o-position-absolute(0, 0, 0);
                 width: $o-searchview-facet-remove-width;
                 cursor: pointer;
@@ -54,7 +54,7 @@
         }
         .o_searchview_input {
             width: 100px;
-            @include o-flex(1, 0, auto);
+            flex: 1 0 auto;
         }
 
         .o_searchview_more {
@@ -107,7 +107,7 @@
 
     display: inline-block;
     cursor: pointer;
-    @include user-select(none);  // Prevent text selection when toggling the dropdowns
+    user-select: none;  // Prevent text selection when toggling the dropdowns
     > a { // dropdown togglers
         color: $o-main-text-color;
         &:hover {
@@ -116,7 +116,7 @@
             color: darken($o-main-text-color, 10%);
         }
     }
-    &.open > a {
+    &.show > a {
         font-weight: bold;
         color: darken($o-main-text-color, 10%);
     }
@@ -127,30 +127,30 @@
 // Open and closed carets in dropdowns
 .o_closed_menu {
     position: relative;
-    a:before {
+    &:before {
         @include o-caret-right;
         @include o-position-absolute($top: 50%, $left: 10px);
-        margin-top: (-$caret-width-base);
+        margin-top: (-$caret-width);
     }
 }
 .o_open_menu {
     position: relative;
-    a:before {
+    &:before {
         @include o-caret-down;
         @include o-position-absolute($top: 50%, $left: 10px);
-        margin-top: (-$caret-width-base);
+        margin-top: (-$caret-width);
     }
+}
+
+.o_filters_menu, .o_group_by_menu, .o_time_range_menu {
+    max-height: calc(100vh - 125px);
+    overflow: auto;
 }
 
 // Filters
 .o_filters_menu {
-    @include o-selected-li;
-
-    max-height: calc(100vh - 125px);
-    overflow: auto;
-
     .o_filter_condition {
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
         .o_or_filter { // or between conditions
             display: none;  // hidden for the first condition
@@ -177,26 +177,22 @@
     }
     .o_add_filter_menu { // apply and add buttons
         display: none;  // Needed by the webclient
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
     }
     .o_submenu_switcher {
-        position: absolute;
-        right: 0px;
+        @include o-position-absolute($right: $dropdown-item-padding-x * 0.5);
     }
 }
-
-
 
 // Favorites
 .o_favorites_menu {
     max-height: 75vh;
     overflow-y: auto;
-    @include o-selected-li;
 
     max-height: calc(100vh - 125px);
     overflow: auto;
 
-    .divider {display: none;} // hide the divider by default (no favorite)
+    .dropdown-divider {display: none;} // hide the divider by default (no favorite)
     .o-searchview-custom-private, .o-searchview-custom-public {
         .o-remove-filter {
             @include o-position-absolute(50%, 12px);
@@ -212,6 +208,13 @@
     }
     .o_save_name { // save button
         display: none; // hidden by default
-        @include o-search-options-dropdown-custom-li;
+        @include o-search-options-dropdown-custom-item;
+    }
+}
+
+// Time Ranges
+.o_time_range_menu {
+    .dropdown-item-text > label,  .custom-control-label {
+        font-weight: bold;
     }
 }

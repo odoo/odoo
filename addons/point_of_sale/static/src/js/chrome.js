@@ -614,7 +614,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
 
     build_chrome: function() { 
         var self = this;
-        FastClick.attach(document.body);
 
         if ($.browser.chrome) {
             var chrome_version = $.browser.version.split('.')[0];
@@ -742,7 +741,7 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         if(err.message === 'XmlHttpRequestError '){
             title = 'Network Failure (XmlHttpRequestError)';
             body  = 'The Point of Sale could not be loaded due to a network problem.\n Please check your internet connection.';
-        }else if(err.message === 'OpenERP Server Error'){
+        }else if(err.code === 200){
             title = err.data.message;
             body  = err.data.debug;
         }

@@ -123,8 +123,7 @@ class StockMove(models.Model):
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
-    rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
-    push_rule_id = fields.Many2one('stock.location.path', 'Push Rule', ondelete='restrict', help='The push rule that created this stock move')
+    rule_id = fields.Many2one('stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move')
     propagate = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
@@ -377,16 +376,18 @@ class StockMove(models.Model):
                 move.location_id.name, move.location_dest_id.name)))
         return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # TDE CLEANME: why doing this tracking on picking here ? seems weird
-        perform_tracking = not self.env.context.get('mail_notrack') and vals.get('picking_id')
-        if perform_tracking:
-            picking = self.env['stock.picking'].browse(vals['picking_id'])
-            initial_values = {picking.id: {'state': picking.state}}
-        vals['ordered_qty'] = vals.get('product_uom_qty')
-        res = super(StockMove, self).create(vals)
-        if perform_tracking:
+        tracking = []
+        for vals in vals_list:
+            vals['ordered_qty'] = vals.get('product_uom_qty')
+            if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
+                picking = self.env['stock.picking'].browse(vals['picking_id'])
+                initial_values = {picking.id: {'state': picking.state}}
+                tracking.append((picking, initial_values))
+        res = super(StockMove, self).create(vals_list)
+        for picking, initial_values in tracking:
             picking.message_track(picking.fields_get(['state']), initial_values)
         return res
 
@@ -425,11 +426,11 @@ class StockMove(models.Model):
                     if 'date_expected' in propagated_changes_dict:
                         propagated_changes_dict.pop('date_expected')
                     if propagated_date_field:
-                        current_date = datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
-                        new_date = datetime.strptime(vals.get(propagated_date_field), DEFAULT_SERVER_DATETIME_FORMAT)
+                        current_date = move.date_expected
+                        new_date = fields.Datetime.from_string(vals.get(propagated_date_field))
                         delta_days = (new_date - current_date).total_seconds() / 86400
                         if abs(delta_days) >= move.company_id.propagation_minimum_delta:
-                            old_move_date = datetime.strptime(move.move_dest_ids[0].date_expected, DEFAULT_SERVER_DATETIME_FORMAT)
+                            old_move_date = move.move_dest_ids[0].date_expected
                             new_move_date = (old_move_date + relativedelta.relativedelta(days=delta_days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                             propagated_changes_dict['date_expected'] = new_move_date
                     #For pushed moves as well as for pulled moves, propagate by recursive call of write().
@@ -505,34 +506,20 @@ class StockMove(models.Model):
         return True
 
     def _push_apply(self):
-        # TDE CLEANME: I am quite sure I already saw this code somewhere ... in routing ??
-        Push = self.env['stock.location.path']
         for move in self:
             # if the move is already chained, there is no need to check push rules
             if move.move_dest_ids:
                 continue
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
-            domain = [('location_from_id', '=', move.location_dest_id.id)]
+            domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
-            rules = self.env['stock.location.path']
-            if move.route_ids:
-                rules = Push.search(expression.AND([[('route_id', 'in', move.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
-            # second priority goes to the route defined on the product and product category
-            if not rules:
-                product_routes = move.product_id.route_ids | move.product_id.categ_id.total_route_ids
-                if product_routes:
-                    rules = Push.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-            if not rules:
-                # TDE FIXME/ should those really be in a if / elif ??
-                # then we search on the warehouse if a rule can apply
-                if move.warehouse_id:
-                    rules = Push.search(expression.AND([[('route_id', 'in', move.warehouse_id.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
-                elif move.picking_id.picking_type_id.warehouse_id:
-                    rules = Push.search(expression.AND([[('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], domain]), order='route_sequence, sequence', limit=1)
+            warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
+            rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
+
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
-                rules._apply(move)
+                rules._run_push(move)
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
@@ -564,6 +551,10 @@ class StockMove(models.Model):
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
             move.package_level_id.id
         ]
+
+    def _clean_merged(self):
+        """Cleanup hook used when merging moves"""
+        self.write({'propagate': False})
 
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
@@ -602,7 +593,7 @@ class StockMove(models.Model):
 
         if moves_to_unlink:
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
-            moves_to_unlink.write({'propagate': False})
+            moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
         return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
@@ -767,7 +758,7 @@ class StockMove(models.Model):
         # create procurements for make to order moves
         for move in move_create_proc:
             values = move._prepare_procurement_values()
-            origin = (move.group_id and move.group_id.name or (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/"))
+            origin = (move.group_id and move.group_id.name or (move.origin or move.picking_id.name or "/"))
             self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
                                               values)
 
@@ -783,7 +774,7 @@ class StockMove(models.Model):
         return self
 
     def _prepare_procurement_values(self):
-        """ Prepare specific key for moves or other componenets that will be created from a procurement rule
+        """ Prepare specific key for moves or other componenets that will be created from a stock rule
         comming from a stock move. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """

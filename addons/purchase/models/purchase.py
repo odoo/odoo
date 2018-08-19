@@ -14,7 +14,7 @@ from odoo.addons import decimal_precision as dp
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
     _order = 'date_order desc, id desc'
 
@@ -119,18 +119,16 @@ class PurchaseOrder(models.Model):
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
+    incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
-    website_url = fields.Char(
-        'Website URL', compute='_website_url',
-        help='The full URL to access the document through the website.')
-
-    def _website_url(self):
+    def _compute_access_url(self):
+        super(PurchaseOrder, self)._compute_access_url()
         for order in self:
-            order.website_url = '/my/purchase/%s' % (order.id)
+            order.access_url = '/my/purchase/%s' % (order.id)
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -173,7 +171,7 @@ class PurchaseOrder(models.Model):
         for line in new_po.order_line:
             seller = line.product_id._select_seller(
                 partner_id=line.partner_id, quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order[:10], uom_id=line.product_uom)
+                date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
             line.date_planned = line._get_date_planned(seller)
         return new_po
 
@@ -262,7 +260,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
+            'custom_layout': "mail.mail_notification_paynow",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -324,7 +322,6 @@ class PurchaseOrder(models.Model):
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel the related vendor bills."))
-            order.order_line.write({'move_dest_ids':[(5,0,0)]})
 
         self.write({'state': 'cancel'})
 
@@ -407,6 +404,7 @@ class PurchaseOrderLine(models.Model):
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     date_planned = fields.Datetime(string='Scheduled Date', required=True, index=True)
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('uom.uom', string='Product Unit of Measure', required=True)
@@ -528,7 +526,7 @@ class PurchaseOrderLine(models.Model):
         """
         date_order = po.date_order if po else self.order_id.date_order
         if date_order:
-            return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
 
@@ -592,7 +590,7 @@ class PurchaseOrderLine(models.Model):
         seller = self.product_id._select_seller(
             partner_id=self.partner_id,
             quantity=self.product_qty,
-            date=self.order_id.date_order and self.order_id.date_order[:10],
+            date=self.order_id.date_order and self.order_id.date_order.date(),
             uom_id=self.product_uom,
             params=params)
 
@@ -600,6 +598,8 @@ class PurchaseOrderLine(models.Model):
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
         if not seller:
+            if self.product_id.seller_ids.filtered(lambda s: s.name.id == self.partner_id.id):
+                self.price_unit = 0.0
             return
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
@@ -611,6 +611,15 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+
+    @api.multi
+    @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
+    def _compute_product_uom_qty(self):
+        for line in self:
+            if line.product_id.uom_id != line.product_uom:
+                line.product_uom_qty = line.product_uom._compute_quantity(line.product_qty, line.product_id.uom_id)
+            else:
+                line.product_uom_qty = line.product_qty
 
     def _suggest_quantity(self):
         '''

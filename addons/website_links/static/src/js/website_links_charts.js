@@ -233,7 +233,7 @@ if (!$('.o_website_links_chart').length) {
         });
 
         // Copy to clipboard link
-        new Clipboard($('.copy-to-clipboard')[0]);
+        new ClipboardJS($('.copy-to-clipboard')[0]);
 
         var animating_copy = false;
 

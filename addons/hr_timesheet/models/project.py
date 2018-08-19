@@ -48,7 +48,7 @@ class Project(models.Model):
         allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
         if allow_timesheets and not values.get('analytic_account_id'):
             analytic_account = self.env['account.analytic.account'].create({
-                'name': values.get('name', _('Unkwon Analytic Account')),
+                'name': values.get('name', _('Unknown Analytic Account')),
                 'company_id': values.get('company_id', self.env.user.company_id.id),
                 'partner_id': values.get('partner_id'),
                 'active': True,
@@ -94,19 +94,14 @@ class Project(models.Model):
 class Task(models.Model):
     _inherit = "project.task"
 
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", related='project_id.analytic_account_id', readonly=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", compute='_compute_allow_timesheets', help="Timesheets can be logged on this task.")
-    remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', inverse='_inverse_remaining_hours', help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
+    analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.")
+    remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, group_operator="avg", help="Display progress of current task.")
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Sum of actually spent hours on the subtask(s)", oldname='children_hours')
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
-
-    @api.depends('project_id.allow_timesheets', 'project_id.analytic_account_id')
-    def _compute_allow_timesheets(self):
-        for task in self:
-            task.allow_timesheets = task.project_id.allow_timesheets and task.project_id.analytic_account_id.active
 
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
@@ -130,11 +125,6 @@ class Task(models.Model):
         for task in self:
             task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
 
-    @api.onchange('remaining_hours')
-    def _inverse_remaining_hours(self):
-        for task in self:
-            task.planned_hours = task.remaining_hours + task.effective_hours + task.subtask_effective_hours
-
     @api.depends('effective_hours', 'subtask_effective_hours')
     def _compute_total_hours_spent(self):
         for task in self:
@@ -145,19 +135,20 @@ class Task(models.Model):
         for task in self:
             task.subtask_effective_hours = sum(child_task.effective_hours + child_task.subtask_effective_hours for child_task in task.child_ids)
 
+    # ---------------------------------------------------------
+    # ORM
+    # ---------------------------------------------------------
+
     @api.multi
     def write(self, values):
-        result = super(Task, self).write(values)
-        # reassign project_id on related timesheet lines
-        if 'project_id' in values:
-            project_id = values.get('project_id')
-            # a timesheet must have an analytic account (and a project)
-            if self and not project_id:
+        # a timesheet must have an analytic account (and a project)
+        if 'project_id' in values and self and not values.get('project_id'):
                 raise UserError(_('This task must be part of a project because they some timesheets are linked to it.'))
-            account_id = self.env['project.project'].browse(project_id).sudo().analytic_account_id
-            self.sudo().mapped('timesheet_ids').write({
-                'project_id': project_id,
-                'account_id': account_id.id,
-                'company_id': account_id.company_id.id,
-            })
+        return super(Task, self).write(values)
+
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """ Set the correct label for `unit_amount`, depending on company UoM """
+        result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
         return result

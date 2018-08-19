@@ -9,7 +9,6 @@ var AbstractService = require('web.AbstractService');
 var core = require('web.core');
 
 var ReportService = AbstractService.extend({
-    name: 'report',
     dependencies: ['ajax'],
 
     /**

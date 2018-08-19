@@ -90,6 +90,20 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [7, 'search'],
+        }, {
+            id: 9,
+            name: 'Partners Action 9',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            search_view_id: [5, 'search'],
+        }, {
+            id: 10,
+            name: 'Partners Action 10',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            search_view_id: [8, 'search'],
         }
         ];
 
@@ -108,6 +122,12 @@ QUnit.module('Search View', {
                         '<field name="date_field" type="row" interval="day"/>' +
                         '<field name="float_field" type="measure"/>' +
                     '</graph>',
+
+            // pivot views
+            'partner,false,pivot': '<pivot>' +
+                        '<field name="date_field" type="row" interval="day"/>' +
+                        '<field name="float_field" type="measure"/>' +
+                '</pivot>',
 
             // search views
             'partner,false,search': '<search>'+
@@ -154,6 +174,15 @@ QUnit.module('Search View', {
                     '<separator/>' +
                     '<filter string="11" name="coolName11" domain="[]"/>' +
                 '</search>',
+            'partner,8,search': '<search>'+
+                    '<field name="foo"/>' +
+                    '<field name="date_field"/>' +
+                    '<field name="birthday"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="float_field"/>' +
+                    '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+                    '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+                '</search>',
         };
     },
 }, function () {
@@ -170,7 +199,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-bars').prev().click();
-        $('li.o_menu_item a').click();
+        $('.o_menu_item a').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'candle',
             'should have a facet with candle name');
         actionManager.destroy();
@@ -187,7 +216,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-bars').prev().click();
-        $('li.o_menu_item a').click();
+        $('.o_menu_item a').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'candle',
             'should have a facet with candle name');
         $('.o_facet_remove:first').click();
@@ -253,11 +282,11 @@ QUnit.module('Search View', {
         actionManager.doAction(4);
         $('.o_graph_buttons div.o_graph_groupbys_menu > button').click();
         $('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').click();
-        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').hasClass('selected'),
+        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').hasClass('selected'),
             'groupby should be unselected');
         $('.o_search_options button span.fa-filter').click();
         $('.o_filters_menu .o_menu_item a').click();
-        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item').hasClass('selected'),
+        assert.ok(!$('.o_graph_buttons div.o_graph_groupbys_menu .o_menu_item > .dropdown-item').hasClass('selected'),
             'groupby should be still unselected');
         actionManager.destroy();
     });
@@ -304,7 +333,7 @@ QUnit.module('Search View', {
         // // no groupby is applied
         assert.strictEqual($('div.o_facet_values span').length, 0);
         // // open 'Add custom Groupby' menu
-        $('.o_group_by_menu .o_add_custom_group a').click();
+        $('.o_group_by_menu .o_add_custom_group').click();
         // // click on 'Apply' button
         $('.o_group_by_menu .o_generator_menu button').click();
         // // data should be grouped by the field 'Birthday' using the interval 'month'
@@ -339,15 +368,15 @@ QUnit.module('Search View', {
         // activate the second groupby
         $('.o_group_by_menu .o_menu_item > a').eq(1).click();
         assert.strictEqual($('.o_group_by_menu .o_menu_item').length, 2);
-        assert.ok($('.o_group_by_menu .o_menu_item').hasClass('selected'));
+        assert.ok($('.o_group_by_menu .o_menu_item > .dropdown-item').hasClass('selected'));
         // deactivate second groupby
         $('.o_group_by_menu .o_menu_item > a').eq(1).click();
-        assert.ok($('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
+        assert.ok($('.o_group_by_menu .o_menu_item > .dropdown-item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(1).hasClass('selected'));
         // remove facet
         $('.o_facet_remove').click();
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
-        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item > .dropdown-item').eq(1).hasClass('selected'));
         actionManager.destroy();
     });
 
@@ -364,7 +393,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-filter').click();
-        $('li.o_add_custom_filter').click();
+        $('.o_add_custom_filter').click();
         $('.o_apply_filter').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'ID is \"0\"',
             'should have a facet with candle name');
@@ -382,9 +411,9 @@ QUnit.module('Search View', {
 
         actionManager.doAction(1);
         $('span.fa-filter').click();
-        $('li.o_add_custom_filter').click();
+        $('.o_add_custom_filter').click();
         $('.o_apply_filter').click();
-        $('li.o_menu_item').click();
+        $('.o_menu_item').click();
         assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
             'no facet should be in the search view');
         actionManager.destroy();
@@ -455,20 +484,20 @@ QUnit.module('Search View', {
         // open menu 'Filter'
         $('.o_search_options .fa-filter').click();
         // open menu options
-        $('li.o_menu_item').click();
-        $('li.o_menu_item .o_item_option[data-option_id="today"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_week"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_month"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_quarter"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="this_year"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="yesterday"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_week"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_month"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_year"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
-        $('li.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
+        $('.o_menu_item').click();
+        $('.o_menu_item .o_item_option[data-option_id="today"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_week"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_month"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_quarter"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="this_year"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="yesterday"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_week"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_month"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_year"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
 
         actionManager.destroy();
         window.Date = RealDate;
@@ -498,7 +527,7 @@ QUnit.module('Search View', {
 
         actionManager.doAction(6);
         $('span.fa-filter').click();
-        $('.o_filters_menu li.o_menu_item a').click();
+        $('.o_filters_menu .o_menu_item a').click();
         $('.o_item_option:first').click();
         $('span.fa-star').click();
         $('.o_favorites_menu .o_save_search a').click();
@@ -523,5 +552,117 @@ QUnit.module('Search View', {
         }
         actionManager.destroy();
     });
+
+    QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {
+        assert.expect(4);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(9);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 103,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(),
+            "Date Field Filter: This Month",
+            "There should be a filter facet with label 'Date Field Filter: This Month'");
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(1).text().trim(),
+            "Date Field Groupby: Day",
+            "There should be a filter facet with label 'Date Field Groupby: Day'");
+
+        $('button .fa-filter').click();
+        $('.o_filters_menu .o_menu_item').eq(0).click();
+        assert.strictEqual($('.o_filters_menu .o_item_option a.selected').text().trim(), "This Month",
+            "The item 'This Month' should be selected in the filters menu");
+
+        $('button .fa-bars').click();
+        $('.o_group_by_menu .o_menu_item').eq(0).click();
+        assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
+            "The item 'Day' should be selected in the groupby menu");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('save filters created via autocompletion works', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                create_filter: function (ev) {
+                    assert.ok(ev.data.filter.domain === "[['foo', 'ilike', 'a']]");
+                },
+            },
+        });
+
+        actionManager.doAction(10);
+
+        $('.o_searchview_input').trigger($.Event('keypress', {
+            which: 97,
+        }));
+
+        $('.o_searchview_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values span').text().trim(), "a");
+
+        $('button .fa-star').click();
+        $('.o_favorites_menu a.o_save_search').click();
+        $('.o_favorites_menu div.o_save_name button').click();
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('time range menu stays hidden', function (assert) {
+        assert.expect(6);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // check that the fifth dropdown is the time range menu and is hidden
+        assert.ok($('.btn-group.o_dropdown').eq(4).hasClass('o_hidden'));
+        assert.ok($('.btn-group.o_dropdown').eq(4).children().eq(1).hasClass('o_time_range_menu'));
+        // check if search view has no facets
+        assert.strictEqual($('.o_facet_values').length, 0);
+
+        // activate groupby
+        $('button .fa-bars').click();
+        $('.o_menu_item a').eq(0).click();
+        // check that there is a facet
+        assert.strictEqual($('div.o_facet_values').length, 1);
+        // check that the fifth dropdown is the time range menu and is still hidden
+        assert.ok($('.btn-group.o_dropdown').eq(4).hasClass('o_hidden'));
+        assert.ok($('.btn-group.o_dropdown').eq(4).children().eq(1).hasClass('o_time_range_menu'));
+        actionManager.destroy();
+    });
+
 });
 });

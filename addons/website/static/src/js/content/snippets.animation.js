@@ -573,7 +573,7 @@ registry.parallax = Animation.extend({
 });
 
 registry.share = Animation.extend({
-    selector: '.oe_share',
+    selector: '.s_share, .oe_share', // oe_share for compatibility
 
     /**
      * @override
@@ -740,7 +740,7 @@ registry.gallery = Animation.extend({
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
         });
-        $modal.find('[role="dialog"] .modal-content, main.modal-body.o_slideshow').css('height', '100%');
+        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
         $modal.appendTo(document.body);
 
         this.carousel = new registry.gallery_slider($modal.find('.carousel').carousel());
@@ -771,7 +771,7 @@ registry.gallerySlider = Animation.extend({
 
         function hide() {
             $lis.each(function (i) {
-                $(this).toggleClass('hidden', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
+                $(this).toggleClass('d-none', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
             });
             if (self.editableMode) { // do not remove DOM in edit mode
                 return;
@@ -863,7 +863,7 @@ registry.socialShare = Animation.extend({
             var self = this;
             setTimeout(function () {
                 if (!$(".popover:hover").length) {
-                    $(self).popover("destroy");
+                    $(self).popover('dispose');
                 }
             }, 200);
         });

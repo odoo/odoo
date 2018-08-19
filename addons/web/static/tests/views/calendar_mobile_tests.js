@@ -4,7 +4,7 @@ odoo.define('web.calendar_mobile_tests', function (require) {
 var CalendarView = require('web.CalendarView');
 var testUtils = require('web.test_utils');
 
-var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 
 var initialDate = new Date(2016, 11, 12, 8, 0, 0);
 initialDate = new Date(initialDate.getTime() - initialDate.getTimezoneOffset()*60*1000);
@@ -35,8 +35,9 @@ QUnit.module('Views', {
 
     QUnit.test('simple calendar rendering in mobile', function (assert) {
         assert.expect(3);
+        var done = assert.async();
 
-        var calendar = createView({
+        createAsyncView({
             View: CalendarView,
             model: 'event',
             data: this.data,
@@ -46,16 +47,18 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
+        }).then(function (calendar) {
+
+            assert.notOk(calendar.$buttons.find('.o_calendar_button_prev').is(':visible'),
+                "prev button should be hidden");
+            assert.notOk(calendar.$buttons.find('.o_calendar_button_next').is(':visible'),
+                "next button should be hidden");
+            assert.ok($('.o_control_panel .o_cp_pager .o_calendar_button_today').is(':visible'),
+                "today button should be visible in the pager area (bottom right corner)");
+
+            calendar.destroy();
+            done();
         });
-
-        assert.notOk(calendar.$buttons.find('.o_calendar_button_prev').is(':visible'),
-            "prev button should be hidden");
-        assert.notOk(calendar.$buttons.find('.o_calendar_button_next').is(':visible'),
-            "next button should be hidden");
-        assert.ok($('.o_control_panel .o_cp_pager .o_calendar_button_today').is(':visible'),
-            "today button should be visible in the pager area (bottom right corner)");
-
-        calendar.destroy();
     });
 });
 

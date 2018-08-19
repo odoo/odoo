@@ -540,7 +540,7 @@ class Picking(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft')._generate_moves()
+        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
         self.mapped('move_lines')\
             .filtered(lambda move: move.state == 'draft')\
@@ -561,7 +561,12 @@ class Picking(models.Model):
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done'))
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
+        # If a package level is done when confirmed its location can be different than where it will be reserved.
+        # So we remove the move lines created when confirmed to set quantity done to the new reserved ones.
+        package_level_done = self.mapped('package_level_ids').filtered(lambda pl: pl.is_done and pl.state == 'confirmed')
+        package_level_done.write({'is_done': False})
         moves._action_assign()
+        package_level_done.write({'is_done': True})
         return True
 
     @api.multi
@@ -600,7 +605,8 @@ class Picking(models.Model):
             for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
                 moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id)
-                if moves: #could search move that needs it the most (that has some quantities left)
+                moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
+                if moves:
                     ops.move_id = moves[0].id
                 else:
                     new_move = self.env['stock.move'].create({
@@ -647,9 +653,9 @@ class Picking(models.Model):
             origin_packages = picking.move_line_ids.mapped("package_id")
             for pack in origin_packages:
                 if picking._check_move_lines_map_quant_package(pack):
-                    package_level = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
+                    package_level_ids = picking.package_level_ids.filtered(lambda pl: pl.package_id == pack)
                     move_lines_to_pack = picking.move_line_ids.filtered(lambda ml: ml.package_id == pack)
-                    if not package_level:
+                    if not package_level_ids:
                         self.env['stock.package_level'].create({
                             'picking_id': picking.id,
                             'package_id': pack.id,
@@ -657,13 +663,20 @@ class Picking(models.Model):
                             'location_dest_id': picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).mapped('location_dest_id')[:1].id,
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)]
                         })
-                        picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
+                        move_lines_to_pack.write({
                             'result_package_id': pack.id,
                         })
                     else:
-                        picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
+                        move_lines_in_package_level = move_lines_to_pack.filtered(lambda ml: ml.move_id.package_level_id)
+                        move_lines_without_package_level = move_lines_to_pack - move_lines_in_package_level
+                        for ml in move_lines_in_package_level:
+                            ml.write({
+                                'result_package_id': pack.id,
+                                'package_level_id': ml.move_id.package_level_id.id,
+                            })
+                        move_lines_without_package_level.write({
                             'result_package_id': pack.id,
-                            'package_level_id': package_level.id,
+                            'package_level_id': package_level_ids[0].id,
                         })
 
     @api.multi
@@ -698,8 +711,6 @@ class Picking(models.Model):
                 if product and product.tracking != 'none':
                     if not line.lot_name and not line.lot_id:
                         raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
-                    elif line.qty_done == 0:
-                        raise UserError(_('You cannot validate a transfer if you have not processed any quantity for %s.') % product.display_name)
 
         if no_quantities_done:
             view = self.env.ref('stock.view_immediate_transfer')
@@ -736,7 +747,7 @@ class Picking(models.Model):
         if self._check_backorder():
             return self.action_generate_backorder_wizard()
         self.action_done()
-        return True
+        return
 
     def action_generate_backorder_wizard(self):
         view = self.env.ref('stock.view_backorder_confirmation')
@@ -781,7 +792,7 @@ class Picking(models.Model):
                 quantity_done[quant.product_id.id] += quant.qty
         for pack in self.mapped('move_line_ids').filtered(lambda x: x.product_id and not x.move_id):
             quantity_done.setdefault(pack.product_id.id, 0)
-            quantity_done[pack.product_id.id] += pack.qty_done
+            quantity_done[pack.product_id.id] += pack.product_uom_id._compute_quantity(pack.qty_done, pack.product_id.uom_id)
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
 
     @api.multi
@@ -910,7 +921,7 @@ class Picking(models.Model):
             note = render_method(rendering_context)
 
             self.env['mail.activity'].create({
-                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
                 'note': note,
                 'user_id': responsible.id,
                 'res_id': parent.id,

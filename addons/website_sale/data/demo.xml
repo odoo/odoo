@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+        <record model="website" id="website.website2">
+            <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
+        </record>
 
         <record id="product.product_attribute_2" model="product.attribute">
             <field name="type">color</field>
         </record>
+        <record id="product.product_attribute_3" model="product.attribute">
+            <field name="type">select</field>
+        </record>
+
         <record id="product.product_product_24" model="product.product">
             <field name="website_published" eval="True"/>
         </record>
@@ -58,7 +65,7 @@
             <field name="website_published" eval="True"/>
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
-            <field name="website_sequence">3</field>
+            <field name="website_sequence">1000</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
         </record>
 
@@ -131,84 +138,9 @@
           <field name="name">Lamps</field>
           <field name="sequence">22</field>
         </record>
-        <record id="public_category_tables" model="product.public.category">
-          <field name="name">Tables</field>
-          <field name="sequence">23</field>
-        </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
           <field name="sequence">24</field>
-        </record>
-        <record id="devices" model="product.public.category">
-          <field name="name">Devices</field>
-          <field name="sequence">5</field>
-        </record>
-
-        <record id="Screen" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Screen</field>
-          <field name="sequence">11</field>
-        </record>
-        <record id="Pen_Drive" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Pen Drive</field>
-          <field name="sequence">9</field>
-        </record>
-        <record id="External_Hard_Drive" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">External Hard Drive</field>
-          <field name="sequence">6</field>
-        </record>
-        <record id="Keyboard_Mouse" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Keyboard / Mouse</field>
-          <field name="sequence">8</field>
-        </record>
-        <record id="printer" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Printer</field>
-          <field name="sequence">10</field>
-        </record>
-        <record id="Speakers" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Speakers</field>
-          <field name="sequence">13</field>
-        </record>
-        <record id="Headset" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Headset</field>
-          <field name="sequence">7</field>
-        </record>
-        <record id="Software" model="product.public.category">
-          <field name="parent_id" ref="devices"/>
-          <field name="name">Software</field>
-          <field name="sequence">12</field>
-        </record>
-
-        <record id="laptops" model="product.public.category">
-          <field name="name">Laptops</field>
-          <field name="sequence">1</field>
-        </record>
-
-        <record id="sub_computers" model="product.public.category">
-          <field name="name">Computers</field>
-          <field name="sequence">2</field>
-        </record>
-
-        <record id="Computer_all_in_one" model="product.public.category">
-          <field name="parent_id" ref="sub_computers"/>
-          <field name="name">Computer all-in-one</field>
-          <field name="sequence">3</field>
-        </record>
-        <record id="server" model="product.public.category">
-          <field name="parent_id" ref="sub_computers"/>
-          <field name="name">Server</field>
-          <field name="sequence">4</field>
-        </record>
-
-        <record id="network" model="product.public.category">
-          <field name="name">Network</field>
-          <field name="sequence">14</field>
         </record>
 
         <record id="services" model="product.public.category">
@@ -272,9 +204,6 @@
         </record>
         <record id="product.product_product_27_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_drawers')])]"/>
-        </record>
-        <record id="product.product_delivery_02_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('External_Hard_Drive')])]"/>
         </record>
         <record id="product.product_order_01_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_multimedia')])]"/>
@@ -401,7 +330,7 @@
 
         <record id="website_sale_order_line_2" model="sale.order.line">
             <field name="order_id" ref="website_sale_order_2"/>
-            <field name="name">Desk Customizable</field>
+            <field name="name">Customizable Desk</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
@@ -422,7 +351,7 @@
 
         <record id="website_sale_order_line_3" model="sale.order.line">
             <field name="order_id" ref="website_sale_order_3"/>
-            <field name="name">Desk Customizable</field>
+            <field name="name">Customizable Desk</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
@@ -464,7 +393,7 @@
 
         <record id="website_sale_order_line_5" model="sale.order.line">
             <field name="order_id" ref="website_sale_order_5"/>
-            <field name="name">Desk Customizable</field>
+            <field name="name">Customizable Desk</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">3</field>
             <field name="product_uom" ref="uom.product_uom_unit"/>
@@ -645,5 +574,11 @@
 
         <!-- action_confirm for confirmation date -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
+
+        <function model="sale.order" name="_set_demo_create_date">
+            <value eval="[ref('website_sale_order_1'), ref('website_sale_order_2'), ref('website_sale_order_3'), ref('website_sale_order_4'),
+                ref('website_sale_order_5'), ref('website_sale_order_6'), ref('website_sale_order_7')]"/>
+            <value eval="(datetime.now()-timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
 
 </odoo>

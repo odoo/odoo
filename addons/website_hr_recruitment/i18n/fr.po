@@ -17,10 +17,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -104,9 +104,8 @@ msgstr ""
 "<span id=\"o_website_form_result\"/>"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "<span>\n"
 "                                            We usually reply between one and three days.<br/>\n"
@@ -203,9 +202,8 @@ msgid "Company Maturity:"
 msgstr "Maturité de l'entreprise :"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Congratulations!"
 msgstr "Félicitations! "
 
@@ -215,9 +213,8 @@ msgid "Contact us"
 msgstr "Contactez-nous"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "Retourner à l'accueil de notre site"
 
@@ -268,9 +265,8 @@ msgid "High commissions for good performers"
 msgstr "Commissions élevés en cas de bons résultats"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "In the meantime,"
 msgstr "Dans l'intervalle,"
 
@@ -301,14 +297,13 @@ msgid "Job Security:"
 msgstr "Sécurité de l'emploi :"
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/controllers/main.py:72
+#: code:addons/website_hr_recruitment/controllers/main.py:76
 #, python-format
 msgid "Job Title"
 msgstr "Titre du poste"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.detail
-#: model:ir.ui.view,arch_db:website_hr_recruitment.job_footer_custom
 #: model:website.menu,name:website_hr_recruitment.menu_jobs
 msgid "Jobs"
 msgstr "Postes"
@@ -337,9 +332,8 @@ msgstr ""
 "gestion de projets, etc."
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
 msgstr "Parcourez notre site Web :"
 
@@ -493,6 +487,11 @@ msgid "The founder’s story"
 msgstr "L'histoire du fondateur"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Adresse complète d'accès au document via le site."
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid ""
 "Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event"
@@ -504,7 +503,7 @@ msgid "US + Canada Territory"
 msgstr "États-Unis + Canada"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source_url
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Url Parameters"
 msgstr "Paramètres du lien"
 
@@ -519,14 +518,44 @@ msgid "Variability of the Job:"
 msgstr "Variabilité de l'emploi :"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_published
+msgid "Visible in Website"
+msgstr "Visible sur le site web."
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.hr_job_website_inherit
+msgid "Website Editor"
+msgstr ""
+
+#. module: website_hr_recruitment
 #: model:ir.actions.act_url,name:website_hr_recruitment.action_open_website
 msgid "Website Recruitment Form"
 msgstr "Formulaire web de recrutement"
 
 #. module: website_hr_recruitment
-#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job_website_description
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_url
+msgid "Website URL"
+msgstr "Adresse du site"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_description
 msgid "Website description"
 msgstr "Description du site"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_description
+msgid "Website meta description"
+msgstr "Description du site"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Mots-clés du site"
+
+#. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__website_meta_title
+msgid "Website meta title"
+msgstr "Titre du site"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -558,16 +587,14 @@ msgid "Your Phone Number"
 msgstr "Votre numéro de téléphone"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
 msgstr "Votre candidature a bien été envoyée."
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
-#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been sent to:"
 msgstr "Votre candidature a été envoyée à :"
 

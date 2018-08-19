@@ -36,7 +36,7 @@ WebsiteNewMenu.include({
 
                 var $add = $(
                     '<div class="form-group mb0">'+
-                        '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+                        '<label class="offset-md-3 col-md-9 text-left">'+
                         '    <input type="checkbox" required="required"/> '+
                         '</label>'+
                     '</div>');

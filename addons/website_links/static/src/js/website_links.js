@@ -107,7 +107,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
             this.animating_copy = false;
         },
         start: function () {
-            new Clipboard(this.$('.btn_shorten_url_clipboard').get(0));
+            new ClipboardJS(this.$('.btn_shorten_url_clipboard').get(0));
             return this._super.apply(this, arguments);
         },
         toggle_copy_button: function () {
@@ -289,7 +289,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
         });
 
         // Clipboard Library
-        new Clipboard($("#btn_shorten_url").get(0));
+        new ClipboardJS($("#btn_shorten_url").get(0));
 
         $("#generated_tracked_link a").click(function () {
             $("#generated_tracked_link a").text("Copied").removeClass("btn-primary").addClass("btn-success");

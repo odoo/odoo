@@ -1,4 +1,4 @@
-odoo.define('web_tour.RunningTourActionHelper', function(require) {
+odoo.define('web_tour.RunningTourActionHelper', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -6,6 +6,7 @@ var utils = require('web_tour.utils');
 var Tip = require('web_tour.Tip');
 
 var get_first_visible_element = utils.get_first_visible_element;
+var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 var RunningTourActionHelper = core.Class.extend({
     init: function (tip_widget) {
@@ -13,6 +14,12 @@ var RunningTourActionHelper = core.Class.extend({
     },
     click: function (element) {
         this._click(this._get_action_values(element));
+    },
+    dblclick: function (element) {
+        this._click(this._get_action_values(element), 2);
+    },
+    tripleclick: function (element) {
+        this._click(this._get_action_values(element), 3);
     },
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
@@ -32,7 +39,7 @@ var RunningTourActionHelper = core.Class.extend({
         }
     },
     _get_action_values: function (element) {
-        var $e = $(element);
+        var $e = get_jquery_element_from_selector(element);
         var $element = element ? get_first_visible_element($e) : this.tip_widget.$anchor;
         if ($element.length === 0) {
             $element = $e.first();
@@ -43,18 +50,23 @@ var RunningTourActionHelper = core.Class.extend({
             consume_event: consume_event,
         };
     },
-    _click: function (values) {
+    _click: function (values, nb) {
         trigger_mouse_event(values.$element, "mouseover");
         values.$element.trigger("mouseenter");
-        trigger_mouse_event(values.$element, "mousedown");
-        trigger_mouse_event(values.$element, "mouseup");
-        trigger_mouse_event(values.$element, "click");
+        for (var i = 1 ; i <= (nb || 1) ; i++) {
+            trigger_mouse_event(values.$element, "mousedown");
+            trigger_mouse_event(values.$element, "mouseup");
+            trigger_mouse_event(values.$element, "click", i);
+            if (i % 2 === 0) {
+                trigger_mouse_event(values.$element, "dblclick");
+            }
+        }
         trigger_mouse_event(values.$element, "mouseout");
         values.$element.trigger("mouseleave");
 
-        function trigger_mouse_event($element, type) {
+        function trigger_mouse_event($element, type, count) {
             var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
+            e.initMouseEvent(type, true, true, window, count || 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
             $element[0].dispatchEvent(e);
         }
     },
@@ -79,20 +91,30 @@ var RunningTourActionHelper = core.Class.extend({
         values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
-        var $to = $(to || document.body);
-
+        var $to;
+        if (to) {
+            $to = get_jquery_element_from_selector(to);
+        } else {
+            $to = $(document.body);
+        }
         var elementCenter = values.$element.offset();
         elementCenter.left += values.$element.outerWidth()/2;
         elementCenter.top += values.$element.outerHeight()/2;
 
         var toCenter = $to.offset();
+
+        if (to && to.indexOf('iframe') !== -1) {
+            var iFrameOffset = $('iframe').offset();
+            toCenter.left += iFrameOffset.left;
+            toCenter.top += iFrameOffset.top;
+        }
         toCenter.left += $to.outerWidth()/2;
         toCenter.top += $to.outerHeight()/2;
 
         values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
         values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-    },
+     },
     _keydown: function (values, keyCodes) {
         while (keyCodes.length) {
             var keyCode = +keyCodes.shift();
@@ -112,4 +134,3 @@ var RunningTourActionHelper = core.Class.extend({
 
 return RunningTourActionHelper;
 });
-

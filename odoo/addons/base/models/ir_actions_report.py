@@ -82,10 +82,15 @@ class IrActionsReport(models.Model):
     binding_type = fields.Selection(default='report')
     model = fields.Char(required=True)
 
-    report_type = fields.Selection([('qweb-html', 'HTML'), ('qweb-pdf', 'PDF')], required=True, default='qweb-pdf',
-                                   help='The type of the report that will be rendered, each one having its own rendering method.'
-                                        'HTML means the report will be opened directly in your browser'
-                                        'PDF means the report will be rendered using Wkhtmltopdf and downloaded by the user.')
+    report_type = fields.Selection([
+        ('qweb-html', 'HTML'),
+        ('qweb-pdf', 'PDF'),
+        ('qweb-text', 'Text'),
+    ], required=True, default='qweb-pdf',
+    help='The type of the report that will be rendered, each one having its own'
+        ' rendering method. HTML means the report will be opened directly in your'
+        ' browser PDF means the report will be rendered using Wkhtmltopdf and'
+        ' downloaded by the user.')
     report_name = fields.Char(string='Template Name', required=True,
                               help="For QWeb reports, name of the template used in the rendering. The method 'render_html' of the model 'report.template_name' will be called (if any) to give the html. For RML reports, this is the LocalService name.")
     report_file = fields.Char(string='Report File', required=False, readonly=False, store=True,
@@ -93,7 +98,7 @@ class IrActionsReport(models.Model):
     groups_id = fields.Many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', string='Groups')
     multi = fields.Boolean(string='On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view.")
 
-    paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
+    paperformat_id = fields.Many2one('report.paperformat', 'Paper Format')
     print_report_name = fields.Char('Printed Report Name',
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     attachment_use = fields.Boolean(string='Reload from Attachment',
@@ -157,7 +162,7 @@ class IrActionsReport(models.Model):
 
         :param record_id: The record that will own the attachment.
         :param pdf_content: The optional name content of the file to avoid reading both times.
-        :return: The newly generated attachment if no AccessError, else None.
+        :return: A modified buffer if the previous one has been modified, None otherwise.
         '''
         attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
         if not attachment_name:
@@ -169,14 +174,13 @@ class IrActionsReport(models.Model):
             'res_model': self.model,
             'res_id': record.id,
         }
-        attachment = None
         try:
-            attachment = self.env['ir.attachment'].create(attachment_vals)
+            self.env['ir.attachment'].create(attachment_vals)
         except AccessError:
             _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
         else:
             _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
-        return attachment
+        return buffer
 
     @api.model
     def get_wkhtmltopdf_state(self):
@@ -209,7 +213,7 @@ class IrActionsReport(models.Model):
         if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
             landscape = specific_paperformat_args.get('data-report-landscape')
 
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
@@ -306,16 +310,17 @@ class IrActionsReport(models.Model):
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
-            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
-            bodies.append(body)
-            oemodelnode = node.find(".//*[@data-oe-model='%s']" % self.model)
-            if oemodelnode is not None:
-                res_id = oemodelnode.get('data-oe-id')
-                if res_id:
-                    res_id = int(res_id)
+            if node.get('data-oe-model') == self.model:
+                body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+                bodies.append(body)
+                res_ids.append(int(node.get('data-oe-id', False)))
             else:
-                res_id = False
-            res_ids.append(res_id)
+                _logger.warning("The report's template '%s' does not contains the attributes 'data-oe-model' and  'data-oe-id' on the container (with class 'article')", self.name)
+                raise UserError(_("The report's template is wrong, please contact your administrator"))
+
+        if not bodies:
+            _logger.warning("The report's template '%s' does not contains the container with the class 'article'", self.name)
+            raise UserError(_("The report's template is wrong, please contact your administrator"))
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
@@ -398,6 +403,9 @@ class IrActionsReport(models.Model):
                 else:
                     message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
                 raise UserError(message % (str(process.returncode), err[-1000:]))
+            else:
+                if err:
+                    _logger.warning('wkhtmltopdf: %s' % err)
         except:
             raise
 
@@ -419,8 +427,7 @@ class IrActionsReport(models.Model):
         the field report_name.
         """
         report_obj = self.env['ir.actions.report']
-        qwebtypes = ['qweb-pdf', 'qweb-html']
-        conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
+        conditions = [('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()
         return report_obj.with_context(context).search(conditions, limit=1)
 
@@ -450,7 +457,7 @@ class IrActionsReport(models.Model):
         if values is None:
             values = {}
 
-        context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
+        context = dict(self.env.context, inherit_branding=values.get('enable_editor'))
 
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
@@ -464,7 +471,7 @@ class IrActionsReport(models.Model):
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
-            editable=True,
+            editable=values.get('enable_editor'),
             user=user,
             res_company=user.company_id,
             website=website,
@@ -513,7 +520,11 @@ class IrActionsReport(models.Model):
                 if len(res_ids) == 1:
                     # Only one record, so postprocess directly and append the whole pdf.
                     if res_ids[0] in record_map and not res_ids[0] in save_in_attachment:
-                        self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                        new_stream = self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                        # If the buffer has been modified, mark the old buffer to be closed as well.
+                        if new_stream and new_stream != pdf_content_stream:
+                            close_streams([pdf_content_stream])
+                            pdf_content_stream = new_stream
                     streams.append(pdf_content_stream)
                 else:
                     # In case of multiple docs, we need to split the pdf according the records.
@@ -534,7 +545,11 @@ class IrActionsReport(models.Model):
                             stream = io.BytesIO()
                             attachment_writer.write(stream)
                             if res_ids[i] and res_ids[i] not in save_in_attachment:
-                                self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                                new_stream = self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                                # If the buffer has been modified, mark the old buffer to be closed as well.
+                                if new_stream and new_stream != stream:
+                                    close_streams([stream])
+                                    stream = new_stream
                             streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
@@ -549,14 +564,18 @@ class IrActionsReport(models.Model):
                 streams.append(io.BytesIO(content))
 
         # Build the final pdf.
-        writer = PdfFileWriter()
-        for stream in streams:
-            reader = PdfFileReader(stream)
-            writer.appendPagesFromReader(reader)
-        result_stream = io.BytesIO()
-        streams.append(result_stream)
-        writer.write(result_stream)
-        result = result_stream.getvalue()
+        # If only one stream left, no need to merge them (and then, preserve embedded files).
+        if len(streams) == 1:
+            result = streams[0].getvalue()
+        else:
+            writer = PdfFileWriter()
+            for stream in streams:
+                reader = PdfFileReader(stream)
+                writer.appendPagesFromReader(reader)
+            result_stream = io.BytesIO()
+            streams.append(result_stream)
+            writer.write(result_stream)
+            result = result_stream.getvalue()
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
@@ -564,6 +583,12 @@ class IrActionsReport(models.Model):
 
     @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
+        if not data:
+            data = {}
+
+        # remove editor feature in pdf generation
+        data.update(enable_editor=False)
+
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if tools.config['test_enable']:
@@ -649,24 +674,36 @@ class IrActionsReport(models.Model):
         return pdf_content, 'pdf'
 
     @api.model
+    def render_qweb_text(self, docids, data=None):
+        data = self._get_rendering_context(docids, data)
+        return self.render_template(self.report_name, data), 'text'
+
+    @api.model
     def render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
+        data = self._get_rendering_context(docids, data)
+        return self.render_template(self.report_name, data), 'html'
+
+    @api.model
+    def _get_rendering_context(self, docids, data):
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
         report_model_name = 'report.%s' % self.report_name
         report_model = self.env.get(report_model_name)
 
         if report_model is not None:
-            data = report_model.get_report_values(docids, data=data)
+            data = report_model._get_report_values(docids, data=data)
         else:
             docs = self.env[self.model].browse(docids)
-            data = {
+            if not data:
+                data = {}
+            data.update({
                 'doc_ids': docids,
                 'doc_model': self.model,
                 'docs': docs,
-            }
-        return self.render_template(self.report_name, data), 'html'
+            })
+        return data
 
     @api.multi
     def render(self, res_ids, data=None):
@@ -684,7 +721,7 @@ class IrActionsReport(models.Model):
         :param report_name: Name of the template to generate an action for
         """
         discard_logo_check = self.env.context.get('discard_logo_check')
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
+        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout_id) or (not discard_logo_check and not self.env.user.company_id.logo)) and config:
             template = self.env.ref('base.view_company_report_form_with_print') if self.env.context.get('from_transient_model', False) else self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),

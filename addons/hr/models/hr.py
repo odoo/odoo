@@ -273,6 +273,13 @@ class Employee(models.Model):
             except AccessError:
                 employee.is_address_home_a_company = False
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Employees'),
+            'template': '/hr/static/xls/hr_employee.xls'
+        }]
+
 
 class Department(models.Model):
     _name = "hr.department"

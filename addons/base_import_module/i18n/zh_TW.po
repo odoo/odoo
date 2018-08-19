@@ -3,14 +3,15 @@
 # * base_import_module
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,66 +27,60 @@ msgstr "取消"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
-msgstr ""
+msgstr "關閉"
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:31
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "無法選擇資料庫 『%s』"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:112
+#: code:addons/base_import_module/models/ir_module.py:123
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "文檔 '%s' 超過了允許的文檔大小"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:104
-#, python-format
-msgid "File is not a zip file!"
-msgstr ""
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
-msgstr ""
+msgstr "強制初始化"
 
 #. module: base_import_module
-#: model:ir.model.fields,help:base_import_module.field_base_import_module_force
+#: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
+msgstr "即使已經安裝也強制初始化。（將更新 `noupdate='1'` 記錄）"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
-msgstr ""
+msgstr "導入app"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
 msgid "Import Message"
-msgstr ""
+msgstr "導入消息"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -93,94 +88,105 @@ msgstr ""
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
-msgstr ""
+msgstr "導入模組"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
-msgstr ""
+msgstr "導入模組"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
 msgid "Imported Module"
-msgstr ""
+msgstr "導入的模組"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_uid
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_write_date
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
-msgstr ""
+msgstr "模組"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__module_file
 msgid "Module .ZIP file"
-msgstr ""
+msgstr "模組的 .ZIP 文件包"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:102
+#: code:addons/base_import_module/models/ir_module.py:113
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "沒有發送文件。"
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:25
 #, python-format
 msgid "Only administrators can upload a module"
+msgstr "只有管理員能夠上傳模組"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:115
+#, python-format
+msgid "Only zip files are supported."
 msgstr ""
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
-msgstr ""
+msgstr "打開模組"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "選擇要導入的模組包（.zip 文件）："
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
 msgid "Status"
 msgstr "狀態"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:40
-#: code:addons/base_import_module/models/ir_module.py:47
+#: code:addons/base_import_module/models/ir_module.py:50
 #, python-format
 msgid "Studio customizations require Studio"
+msgstr "Studio 定制需要安裝 Studio"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:57
+#, python-format
+msgid "Studio customizations require the Odoo Studio app."
 msgstr ""
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:42
+#: code:addons/base_import_module/models/ir_module.py:52
 #, python-format
 msgid "Unmet module dependencies: %s"
-msgstr ""
+msgstr "未滿足模組依賴：%s"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "done"
-msgstr ""
+msgstr "完成"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
-msgstr ""
+msgstr "初始化"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view
 msgid "ir.ui.view"
-msgstr ""
+msgstr "ir.ui.view"

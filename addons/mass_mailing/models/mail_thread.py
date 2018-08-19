@@ -35,7 +35,7 @@ class MailThread(models.AbstractModel):
         """ Override to update the parent mail statistics. The parent is found
         by using the References header of the incoming message and looking for
         matching message_id in mail.mail.statistics. """
-        if message.get('References'):
+        if message.get('References') and routes:
             message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
             self.env['mail.mail.statistics'].set_opened(mail_message_ids=message_ids)
             self.env['mail.mail.statistics'].set_replied(mail_message_ids=message_ids)

@@ -141,11 +141,11 @@ class Challenge(models.Model):
         report period.
         """
         for challenge in self:
-            last = fields.Datetime.from_string(challenge.last_report_date).date()
+            last = challenge.last_report_date
             offset = self.REPORT_OFFSETS.get(challenge.report_message_frequency)
 
             if offset:
-                challenge.next_report_date = fields.Date.to_string(last + offset)
+                challenge.next_report_date = last + offset
             else:
                 challenge.next_report_date = False
 
@@ -201,7 +201,7 @@ class Challenge(models.Model):
     ##### Update #####
 
     @api.model # FIXME: check how cron functions are called to see if decorator necessary
-    def _cron_update(self, ids=False):
+    def _cron_update(self, ids=False, commit=True):
         """Daily cron check.
 
         - Start planned challenges (in draft and with start_date = today)
@@ -228,7 +228,7 @@ class Challenge(models.Model):
 
         # in cron mode, will do intermediate commits
         # FIXME: replace by parameter
-        return records.with_context(commit_gamification=True)._update_all()
+        return records.with_context(commit_gamification=commit)._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
@@ -553,9 +553,6 @@ class Challenge(models.Model):
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
                 subtype='mail.mt_comment',
                 notif_layout='mail.mail_notification_light',
-                notif_values={
-                        'model_description': challenge._description.lower(),
-                    }
                 )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
@@ -580,18 +577,12 @@ class Challenge(models.Model):
                     partner_ids=[(4, user.partner_id.id)],
                     subtype='mail.mt_comment',
                     notif_layout='mail.mail_notification_light',
-                    notif_values={
-                        'model_description': self._description.lower(),
-                    }
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
                         body=body_html,
                         subtype='mail.mt_comment',
                         notif_layout='mail.mail_notification_light',
-                        notif_values={
-                            'model_description': self._description.lower(),
-                        }
                     )
         return challenge.write({'last_report_date': fields.Date.today()})
 

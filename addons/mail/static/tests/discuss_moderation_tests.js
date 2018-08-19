@@ -6,7 +6,7 @@ var mailTestUtils = require('mail.testUtils');
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
-QUnit.module('Discuss moderation', {
+QUnit.module('Discuss (Moderation)', {
     beforeEach: function () {
         // patch _.debounce and _.throttle to be fast and synchronous
         this.underscoreDebounce = _.debounce;
@@ -195,16 +195,16 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "there should be 3 buttons to moderate selected messages in the control panel");
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').length, 1,
             "there should one moderate button to accept messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: none;', 'the moderate button "Accept" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="accept"]').hasClass('d-none'),
+            'the moderate button "Accept" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').length, 1,
             "there should one moderate button to reject messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: none;', 'the moderate button "Reject" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="reject"]').hasClass('d-none'),
+            'the moderate button "Reject" should be invisible by default');
         assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').length, 1,
             "there should one moderate button to discard messages pending moderation");
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: none;', 'the moderate button "Discard" should be invisible by default');
+        assert.ok($(moderateAllSelector + '[data-decision="discard"]').hasClass('d-none'),
+            'the moderate button "Discard" should be invisible by default');
 
         // click on message moderation checkbox
         $message.find('.moderation_checkbox').click();
@@ -216,12 +216,12 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         assert.notOk($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
             "the 'Unselect All' button should not be disabled");
         // check moderate all buttons updated (visible)
-        assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Accept" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="reject"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Reject" should become visible');
-        assert.strictEqual($(moderateAllSelector + '[data-decision="discard"]').attr('style'),
-            'display: inline-block;', 'the moderate button "Discard" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="accept"]').hasClass('d-none'),
+            'the moderate button "Accept" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="reject"]').hasClass('d-none'),
+            'the moderate button "Reject" should become visible');
+        assert.notOk($(moderateAllSelector + '[data-decision="discard"]').hasClass('d-none'),
+            'the moderate button "Discard" should become visible');
 
         // 2. go to channel 'general'
         discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
@@ -507,7 +507,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
             "should have two buttons in the footer of the dialog");
         assert.strictEqual($('.modal-footer button.btn-primary').text(), "Ok",
             "should have a confirm button in the dialog for discard");
-        assert.strictEqual($('.modal-footer button.btn-default').text(), "Cancel",
+        assert.strictEqual($('.modal-footer button.btn-secondary').text(), "Cancel",
             "should have a cancel button in the dialog for discard");
 
         // discard mesage
@@ -533,8 +533,6 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     assert.expect(4);
     var done = assert.async();
 
-    var bus = this.services[1].prototype.bus;
-
     var messagePostDef = $.Deferred();
 
     this.data.initMessaging = {
@@ -548,6 +546,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         },
     };
 
+    var objectDiscuss;
     createDiscuss({
         id: 1,
         context: {},
@@ -571,7 +570,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
                     message: message,
                 };
                 var notification = [metaData, notifData];
-                bus.trigger('notification', [notification]);
+                objectDiscuss.call('bus_service', 'trigger', 'notification', [notification]);
 
                 messagePostDef.resolve();
                 return $.when(message.id);
@@ -583,6 +582,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         },
     })
     .then(function (discuss) {
+        objectDiscuss = discuss;
 
         // go to channel 'general'
         discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
@@ -612,8 +612,6 @@ QUnit.test('author: send message in moderated channel', function (assert) {
 QUnit.test('author: sent message accepted in moderated channel', function (assert) {
     assert.expect(8);
     var done = assert.async();
-
-    var bus = this.services[1].prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -674,7 +672,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         };
         var metaData = [dbName, 'mail.channel'];
         var notification = [metaData, messageData];
-        bus.trigger('notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
 
         // check message is accepted
         $message = discuss.$('.o_thread_message');
@@ -695,8 +693,6 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
 QUnit.test('author: sent message rejected in moderated channel', function (assert) {
     assert.expect(5);
     var done = assert.async();
-
-    var bus = this.services[1].prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -753,7 +749,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         };
         var metaData = [dbName, 'res.partner'];
         var notification = [metaData, notifData];
-        bus.trigger('notification', [notification]);
+        discuss.call('bus_service', 'trigger', 'notification', [notification]);
 
         // // check no message
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,

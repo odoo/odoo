@@ -2,7 +2,6 @@
 
 from odoo.exceptions import ValidationError
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
 from datetime import datetime
@@ -37,8 +36,8 @@ class AccountFiscalYear(models.Model):
         '''
         for fy in self:
             # Starting date must be prior to the ending date
-            date_from = datetime.strptime(fy.date_from, DEFAULT_SERVER_DATE_FORMAT)
-            date_to = datetime.strptime(fy.date_to, DEFAULT_SERVER_DATE_FORMAT)
+            date_from = fy.date_from
+            date_to = fy.date_to
             if date_to < date_from:
                 raise ValidationError(_('The ending date must not be prior to the starting date.'))
 

@@ -63,7 +63,7 @@
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
@@ -92,6 +92,9 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
+                    <header>
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
+                    </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
@@ -226,17 +229,17 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <strong><field name="name" string="Project Name"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-8">
+                                    <div class="col-8">
                                         <field name="partner_id" string="Contact"/>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-4">
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -265,7 +268,7 @@
                     </group>
                     <footer>
                         <button string="Create" name="open_tasks" type="object" class="btn-primary o_open_tasks"/>
-                        <button string="Discard" class="btn-default" special="cancel"/>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -328,6 +331,9 @@
                                     <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager" role="menu">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div role="menuitem">
+                                                <a name="%(portal.portal_share_action)d" type="action">Share</a>
+                                            </div>
+                                            <div role="menuitem">
                                                 <a type="edit">Edit</a>
                                             </div>
                                             <div role="menuitem" t-if="record.rating_status.raw_value != 'no'">
@@ -377,7 +383,7 @@
                 <p class="o_view_nocontent_smiling_face">
                     Create a new project
                 </p><p>
-                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.
+                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d" tabindex="-1">activate a sample project</a> to play with.
                 </p>
             </field>
         </record>
@@ -412,7 +418,7 @@
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
-
+                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
@@ -504,8 +510,8 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name"/>
-                        <field name="user_id" options="{'no_open': True}"/>
+                        <field name="name" string = "Task Title"/>
+                        <field name="user_id" options="{'no_open': True,'no_create': True}"/>
                     </group>
                 </form>
             </field>
@@ -552,19 +558,18 @@
                                         </small>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                        <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li t-if="widget.editable"><a role="menuitem" type="set_cover">Set Cover Image</a></li>
-                                            <li t-if="widget.editable"><a role="menuitem" type="edit">Edit Task</a></li>
-                                            <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li role="separator" class="dropdown-header">Record's Colour</li>
-                                            <li role="menuitem" aria-haspopup="true">
-                                                <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
-                                            </li>
-                                        </ul>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item">Set Cover Image</a>
+                                            <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
+                                            <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
+                                            <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            <div role="separator" class="dropdown-divider"></div>
+                                            <div role="separator" class="dropdown-header">Record's Colour</div>
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">
@@ -831,7 +836,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <strong><t t-esc="record.name.value"/></strong>
                                     </div>
                                 </div>

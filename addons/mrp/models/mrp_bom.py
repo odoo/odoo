@@ -47,18 +47,24 @@ class MrpBom(models.Model):
         help="The operations for producing this BoM.  When a routing is specified, the production orders will "
              " be executed through work orders, otherwise everything is processed in the production order itself. ")
     ready_to_produce = fields.Selection([
-        ('all_available', 'All components available'),
-        ('asap', 'The components of 1st operation')], string='Manufacturing Readiness',
-        default='asap', required=True)
+        ('all_available', ' When all components are available'),
+        ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
+        default='asap', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
-             "to define procurement rules which trigger different manufacturing orders with different BoMs.")
+             "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),
         required=True)
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if self.product_id:
+            for line in self.bom_line_ids:
+                line.attribute_value_ids = False
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_product_recursion(self):
@@ -175,6 +181,13 @@ class MrpBom(models.Model):
 
         return boms_done, lines_done
 
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Bills of Materials'),
+            'template': '/mrp/static/xls/mrp_bom.xls'
+        }]
+
 
 class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
@@ -185,10 +198,10 @@ class MrpBomLine(models.Model):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
     product_id = fields.Many2one(
-        'product.product', 'Product', required=True)
+        'product.product', 'Component', required=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
-        'Product Quantity', default=1.0,
+        'Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -208,7 +221,7 @@ class MrpBomLine(models.Model):
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
     attribute_value_ids = fields.Many2many(
-        'product.attribute.value', string='Variants',
+        'product.attribute.value', string='Apply on Variants',
         help="BOM Product Variants needed form apply this line.")
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Consumed in Operation',
@@ -267,11 +280,12 @@ class MrpBomLine(models.Model):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
 
-    @api.model
-    def create(self, values):
-        if 'product_id' in values and 'product_uom_id' not in values:
-            values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
-        return super(MrpBomLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'product_id' in values and 'product_uom_id' not in values:
+                values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
+        return super(MrpBomLine, self).create(vals_list)
 
     def _skip_bom_line(self, product):
         """ Control if a BoM line should be produce, can be inherited for add

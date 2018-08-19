@@ -3150,7 +3150,7 @@ class StockMove(TransactionCase):
 
     def test_immediate_validate_4(self):
         """ In a picking with a single available tracked by lot move, clicking on validate without
-        filling any quantities should open an UserError.
+        filling any quantities should pop up the immediate transfer wizard.
         """
         partner = self.env['res.partner'].create({'name': 'Jean'})
         lot1 = self.env['stock.production.lot'].create({
@@ -3176,12 +3176,11 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
-        # No quantites/lot filled, it should raise.
-        with self.assertRaises(UserError):
-            picking.button_validate()
-        picking.move_lines.move_line_ids[0].qty_done = 5.0
-        # All the information are present (lots and quantities), the wizard won't be opened.
-        picking.button_validate()
+        # No quantites filled, immediate transfer wizard should pop up.
+        immediate_trans_wiz_dict = picking.button_validate()
+        self.assertEqual(immediate_trans_wiz_dict.get('res_model'), 'stock.immediate.transfer')
+        immediate_trans_wiz = self.env[immediate_trans_wiz_dict['res_model']].browse(immediate_trans_wiz_dict['res_id'])
+        immediate_trans_wiz.process()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
         # Check move_lines data
@@ -3359,7 +3358,7 @@ class StockMove(TransactionCase):
 
     def test_scrap_1(self):
         """ Check the created stock move and the impact on quants when we scrap a
-        stockable product.
+        storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
         scrap = self.env['stock.scrap'].create({
@@ -3602,8 +3601,9 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
-        from datetime import datetime, timedelta
-        initial_in_date_lot1 = datetime.now() - timedelta(days=5)
+        from odoo.fields import Datetime
+        from datetime import timedelta
+        initial_in_date_lot1 = Datetime.now() - timedelta(days=5)
         quant_lot1.in_date = initial_in_date_lot1
 
         # Move one quant to pack location
@@ -3626,8 +3626,7 @@ class StockMove(TransactionCase):
         # As lot1 has an older date and FIFO is set by default, it's the one that should be
         # in pack.
         self.assertEqual(len(quant_in_pack), 1)
-        from odoo.fields import Datetime
-        self.assertEqual(quant_in_pack.in_date, Datetime.to_string(initial_in_date_lot1))
+        self.assertAlmostEqual(quant_in_pack.in_date, initial_in_date_lot1, delta=timedelta(seconds=1))
         self.assertEqual(quant_in_pack.lot_id, lot1)
 
         # Now, edit the move line and actually move the other lot
@@ -3640,7 +3639,7 @@ class StockMove(TransactionCase):
             ('lot_id', '=', lot1.id),
         ])
         self.assertEqual(quant_lot1.location_id, self.stock_location)
-        self.assertEqual(quant_lot1.in_date, Datetime.to_string(initial_in_date_lot1))
+        self.assertAlmostEqual(quant_lot1.in_date, initial_in_date_lot1, delta=timedelta(seconds=1))
 
         # Check that lo2 is in pack with is right in_date
         quant_lot2 = self.env['stock.quant'].search([
@@ -3649,7 +3648,7 @@ class StockMove(TransactionCase):
             ('lot_id', '=', lot2.id),
         ])
         self.assertEqual(quant_lot2.location_id, self.pack_location)
-        self.assertEqual(quant_lot2.in_date, initial_in_date_lot2)
+        self.assertAlmostEqual(quant_lot2.in_date, initial_in_date_lot2, delta=timedelta(seconds=1))
 
     def test_in_date_3(self):
         """ Check that, when creating a move line on a done stock move, the lot and its incoming
@@ -3707,8 +3706,9 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
-        from datetime import datetime, timedelta
-        initial_in_date_lot1 = datetime.now() - timedelta(days=5)
+        from odoo.fields import Datetime
+        from datetime import timedelta
+        initial_in_date_lot1 = Datetime.now() - timedelta(days=5)
         quant_lot1.in_date = initial_in_date_lot1
 
         # Move one quant to pack location
@@ -3741,12 +3741,11 @@ class StockMove(TransactionCase):
             ('product_id', '=', self.product3.id),
         ])
         self.assertEqual(len(quants), 2)
-        from odoo.fields import Datetime
         for quant in quants:
             if quant.lot_id == lot1:
-                self.assertEqual(quant.in_date, Datetime.to_string(initial_in_date_lot1))
+                self.assertAlmostEqual(quant.in_date, initial_in_date_lot1, delta=timedelta(seconds=1))
             elif quant.lot_id == lot2:
-                self.assertEqual(quant.in_date, initial_in_date_lot2)
+                self.assertAlmostEqual(quant.in_date, initial_in_date_lot2, delta=timedelta(seconds=1))
 
     def test_transit_1(self):
         """ Receive some products, send some to transit, check the product's `available_qty`

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -176,13 +174,13 @@ class Applicant(models.Model):
     @api.one
     def _compute_day(self):
         if self.date_open:
-            date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_open = datetime.strptime(self.date_open, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_create = self.create_date
+            date_open = self.date_open
             self.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
 
         if self.date_closed:
-            date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            date_closed = datetime.strptime(self.date_closed, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            date_create = self.create_date
+            date_closed = self.date_closed
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
             self.delay_close = self.day_close - self.day_open
 
@@ -338,7 +336,11 @@ class Applicant(models.Model):
         applicant = self[0]
         changes, dummy = tracking[applicant.id]
         if 'stage_id' in changes and applicant.stage_id.template_id:
-            res['stage_id'] = (applicant.stage_id.template_id, {'composition_mode': 'mass_mail'})
+            res['stage_id'] = (applicant.stage_id.template_id, {
+                'auto_delete_message': True,
+                'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'),
+                'notif_layout': 'mail.mail_notification_light'
+            })
         return res
 
     @api.multi
@@ -397,7 +399,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
+    def _message_post_after_hook(self, message, *args, **kwargs):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -408,7 +410,7 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout, notif_values)
+        return super(Applicant, self)._message_post_after_hook(message, *args, **kwargs)
 
     @api.multi
     def create_employee_from_applicant(self):
@@ -445,7 +447,6 @@ class Applicant(models.Model):
                 applicant.job_id.message_post(
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired")
-                employee._broadcast_welcome()
             else:
                 raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
 

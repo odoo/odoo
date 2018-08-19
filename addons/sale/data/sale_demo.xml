@@ -198,7 +198,6 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="state">sale</field>
         </record>
 
         <record id="sale_order_line_16" model="sale.order.line">
@@ -689,5 +688,11 @@ Thanks!</field>
 
         <!-- Confirm some Sales Orders-->
         <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
+
+        <function model="crm.team" name="message_unsubscribe"
+            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
+        <function model="crm.team" name="message_subscribe"
+            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
+
     </data>
 </odoo>

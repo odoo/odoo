@@ -21,7 +21,7 @@ tour.register('hr_recruitment_tour', [{
     content: _t("Let\'s have a look at the <b>applications pipeline</b> for this job position."),
     position: "bottom"
 }, {
-    trigger: ".breadcrumb li:not(.active):last",
+    trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_kanban_applicant',
     content: _t("Use the breadcrumbs to <b>go back to the dashboard</b>."),
     position: "bottom"

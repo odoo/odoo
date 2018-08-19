@@ -6,7 +6,6 @@
     'description': """
 This module allows a customer to give rating.
 """,
-    'website': 'http://odoo.com',
     'depends': [
         'mail',
     ],

@@ -62,6 +62,9 @@ class Base(models.AbstractModel):
                         group_by_value, format=display_date_formats[group_by_modifier],
                         locale=locale)
 
+            if field_type == 'selection':
+                group_by_value = dict(self.fields_get()[group_by]['selection'])[group_by_value]
+
             if type(group_by_value) == tuple:
                 group_by_value = group_by_value[1] # FIXME should use technical value (0)
 

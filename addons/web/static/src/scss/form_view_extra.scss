@@ -41,6 +41,7 @@
         }
 
         .oe_stat_button {
+            color: $o-main-text-color;
             text-align: left;
             width: 132px !important;
             height: 40px;
@@ -72,18 +73,16 @@
                 max-width: 70%;
                 line-height: 1.2;
 
-                .o_stat_value {
+                > .o_stat_value, > .o_stat_text {
                     @include o-text-overflow(block);
+                }
+
+                .o_stat_value {
                     font-weight: 700;
-                    color: $o-brand-primary;
+                    color: $o-brand-odoo;
                 }
                 .o_stat_text {
-                    @include o-text-overflow(block);
                     font-size: small;
-
-                    .o_stat_value {
-                        display: inline;
-                    }
                 }
             }
             > span {
@@ -144,7 +143,7 @@
 
     // Separators
     .o_horizontal_separator {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
         font-weight: bold;
     }
 

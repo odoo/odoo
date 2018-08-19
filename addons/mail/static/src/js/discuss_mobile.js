@@ -73,7 +73,7 @@ Discuss.include({
     _renderButtons: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(['dm', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'public', 'private'], function (type) {
             var selector = '.o_mail_discuss_button_' + type;
             self.$buttons.on('click', selector, self._onAddThread.bind(self));
         });
@@ -106,6 +106,7 @@ Discuss.include({
      */
     _setThread: function (threadID) {
         var thread = this.call('mail_service', 'getThread', threadID);
+        this._thread = thread;
         if (thread.getType() !== 'mailbox') {
             this.call('mail_service', 'openThreadWindow', threadID);
             return $.when();
@@ -148,7 +149,7 @@ Discuss.include({
      *
      * @private
      * @param {string} type the thread's type to display (e.g. 'mailbox_inbox',
-     *   'mailbox_starred', 'dm'...).
+     *   'mailbox_starred', 'dm_chat'...).
      */
     _updateContent: function (type) {
         var self = this;
@@ -207,9 +208,9 @@ Discuss.include({
                     .removeClass('o_hidden');
                 self.$('.o_mailbox_inbox_item')
                     .removeClass('btn-primary')
-                    .addClass('btn-default');
+                    .addClass('btn-secondary');
                 self.$('.o_mailbox_inbox_item[data-type=' + type + ']')
-                    .removeClass('btn-default')
+                    .removeClass('btn-secondary')
                     .addClass('btn-primary');
             } else {
                 self.$('.o_mail_discuss_mobile_mailboxes_buttons')

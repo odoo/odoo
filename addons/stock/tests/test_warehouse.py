@@ -240,14 +240,12 @@ class TestWarehouse(TestStockCommon):
         warehouse_distribution = self.env['stock.warehouse'].create({
             'name': 'Dist.',
             'code': 'DIST',
-            'default_resupply_wh_id': warehouse_stock.id,
             'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
         })
 
         warehouse_shop = self.env['stock.warehouse'].create({
             'name': 'Shop',
             'code': 'SHOP',
-            'default_resupply_wh_id': warehouse_distribution.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
         })
 
@@ -259,7 +257,7 @@ class TestWarehouse(TestStockCommon):
         # select one randomly between them and if it select the resupply it is
         # 'make to stock' and it will not create the picking between stock and
         # dist warehouses.
-        route_dist_to_shop.pull_ids.write({'procure_method': 'make_to_order'})
+        route_dist_to_shop.rule_ids.write({'procure_method': 'make_to_order'})
 
         product = self.env['product.product'].create({
             'name': 'Fakir',
@@ -318,7 +316,6 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_wavre = self.env['stock.warehouse'].create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
-            'default_resupply_wh_id': warehouse_distribution_wavre.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
         })
 
@@ -330,13 +327,11 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_namur = self.env['stock.warehouse'].create({
             'name': 'Shop Namur',
             'code': 'SHNM',
-            'default_resupply_wh_id': warehouse_distribution_namur.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
         })
 
         route_shop_namur = warehouse_shop_namur.resupply_route_ids
         route_shop_wavre = warehouse_shop_wavre.resupply_route_ids
-
         # The product contains the 2 resupply routes.
         product = self.env['product.product'].create({
             'name': 'Fakir',
@@ -443,7 +438,6 @@ class TestResupply(TestStockCommon):
         self.warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Small Warehouse',
             'code': 'SWH',
-            'default_resupply_wh_id': self.warehouse_1.id,
             'resupply_wh_ids': [(6, 0, [self.warehouse_1.id])]
         })
 

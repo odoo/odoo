@@ -22,7 +22,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        url = '/web#%s' % url_encode({'action': 'mail.mail_channel_action_client_chat'})
+        url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
         return werkzeug.utils.redirect(url)
 
     @classmethod
@@ -49,7 +49,9 @@ class MailController(http.Controller):
         return comparison, record, redirect
 
     @classmethod
-    def _redirect_to_record(cls, model, res_id, access_token=None):
+    def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
+        # access_token and kwargs are used in the portal controller override for the Send by email or Share Link
+        # to give access to the record to a recipient that has normally no access.
         uid = request.session.uid
 
         # no model / res_id, meaning no possible record -> redirect to login
@@ -176,9 +178,23 @@ class MailController(http.Controller):
 
             models that have an access_token may apply variations on this.
         """
+        # ==============================================================================================
+        # This block of code disappeared on saas-11.3 to be reintroduced by TBE.
+        # This is needed because after a migration from an older version to saas-11.3, the link
+        # received by mail with a message_id no longer work.
+        # So this block of code is needed to guarantee the backward compatibility of those links.
+        if kwargs.get('message_id'):
+            try:
+                message = request.env['mail.message'].sudo().browse(int(kwargs['message_id'])).exists()
+            except:
+                message = request.env['mail.message']
+            if message:
+                model, res_id = message.model, message.res_id
+        # ==============================================================================================
+
         if res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
-        return self._redirect_to_record(model, res_id, access_token)
+        return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route('/mail/assign', type='http', auth='user', methods=['GET'])
     def mail_action_assign(self, model, res_id, token=None):
@@ -228,7 +244,7 @@ class MailController(http.Controller):
             'commands': request.env['mail.channel'].get_mention_commands(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
-            'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.mail_channel_menu_root_chat'),
+            'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
             'is_moderator': request.env.user.is_moderator,
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,

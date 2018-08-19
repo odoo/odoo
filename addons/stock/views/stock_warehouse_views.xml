@@ -35,9 +35,10 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
-                                    <group string="Resupply">
-                                        <field name="default_resupply_wh_id" widget='selection'/>
-                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    <field name="show_resupply" invisible="1"/>
+                                    <group name="group_resupply" string="Resupply" attrs="{'invisible': [('show_resupply', '!=', True)]}">
+                                        <field name="warehouse_count" invisible="1"/>
+                                        <field name="resupply_wh_ids" attrs="{'invisible': [('show_resupply', '!=', True)]}" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
                                     </group>
                                 </group>
                             </page>
@@ -139,14 +140,14 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
                                     </div>
-                                    <span class="badge"><strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/></span>
+                                    <span class="badge badge-pill"><strong>Min qty :</strong><t t-esc="record.product_min_qty.value"/></span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span class="badge"><strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/></span>
+                                        <span class="badge badge-pill"><strong>Max qty :</strong><t t-esc="record.product_max_qty.value"/></span>
                                     </div>
                                 </div>
                             </div>

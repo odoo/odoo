@@ -43,7 +43,7 @@ tour.register('shop_customize', {
         {
             content: "select product",
             extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(2)))',
-            trigger: '.oe_product_cart a:contains("Desk Customizable")',
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "open customize menu",
@@ -180,7 +180,7 @@ tour.register('shop_customize', {
         {
             content: "click in modal on 'Proceed to checkout' button",
             extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-            trigger: 'footer.modal-footer a:contains("Proceed to Checkout")',
+            trigger: '.modal-footer a:contains("Proceed to Checkout")',
         },
         {
             content: "check quantity",

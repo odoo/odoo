@@ -7,8 +7,8 @@
     'version': '2.0',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
-    'sequence': 14,
-    'summary': 'Manufacturing Orders, Bill of Materials, Routings',
+    'sequence': 16,
+    'summary': 'Manufacturing Orders & BOMs',
     'depends': ['product', 'stock', 'resource'],
     'description': "",
     'data': [
@@ -26,7 +26,6 @@
         'views/mrp_production_views.xml',
         'views/mrp_routing_views.xml',
         'views/mrp_bom_views.xml',
-        'views/procurement_views.xml',
         'views/product_views.xml',
         'views/stock_warehouse_views.xml',
         'views/stock_picking_views.xml',
@@ -39,6 +38,7 @@
         'report/mrp_report_views_main.xml',
         'report/mrp_report_bom_structure.xml',
         'report/mrp_production_templates.xml',
+        'report/report_stock_rule.xml',
     ],
     'qweb': ['static/src/xml/mrp.xml'],
     'demo': [
@@ -46,4 +46,5 @@
     ],
     'test': [],
     'application': True,
+    'post_init_hook': '_create_warehouse_data',
 }

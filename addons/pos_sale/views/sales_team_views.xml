@@ -88,14 +88,14 @@
 
             <xpath expr="//t[@name='first_options']" position="before">
                 <div class="row" t-if="record.team_type.raw_value == 'pos'">
-                    <div class="col-xs-8">
+                    <div class="col-8">
                         <a name="%(pos_session_action_from_crm_team)d" type="action">
                             <field name="pos_sessions_open_count"/>
                             <t t-if="record.pos_sessions_open_count.raw_value == 1">Session Running</t>
                             <t t-else="">Sessions Running</t>
                         </a>
                     </div>
-                    <div class="col-xs-4 text-right">
+                    <div class="col-4 text-right">
                         <field name="pos_order_amount_total" widget="monetary"/>
                     </div>
                 </div>

@@ -3,16 +3,17 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2018
+# Henrik Norlin <henrik@appstogrow.net>, 2018
+# Jorunn D. Newth, 2018
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,38 +28,38 @@ msgid "Accounting"
 msgstr "Regnskap"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_move_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
 msgid "Accounting Entry"
-msgstr ""
+msgstr "Regnskapsmessig oppføring"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
-msgstr ""
+msgstr "Justering oppføring"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_analytic_account_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_analytic_account_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
 msgid "Analytic Account"
-msgstr "Analytisk konto."
+msgstr "Analytisk konto"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_credit
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_credit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_credit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
 msgid "Credit Account"
 msgstr "Kreditkonto"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_date
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
 msgid "Date Account"
 msgstr ""
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_debit
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_debit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_debit
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
 msgid "Debit Account"
 msgstr "Debetkonto"
 
@@ -73,7 +74,7 @@ msgid "Generate payslips for all selected employees"
 msgstr "Generer lønnsslipper for alle valgte ansatte"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip_date
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr "La stå tom for å bruke perioden fra dato for validering (lønnsslipp)."
 
@@ -83,14 +84,14 @@ msgid "Pay Slip"
 msgstr "Lønnsslipp"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "Lønnsslipp-linje"
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lønnsslipp Batcher."
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-msgid "Payslip Run"
-msgstr ""
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Lønnsslipplinje"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
@@ -99,15 +100,15 @@ msgid "Payslip of %s"
 msgstr "%s lønnsslipp"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_journal_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_journal_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run_journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_run__journal_id
 msgid "Salary Journal"
 msgstr "Lønnsjournal"
 
 #. module: hr_payroll_account
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line_account_tax_id
-#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule_account_tax_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_tax_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_tax_id
 msgid "Tax"
 msgstr "Skatt"
 
@@ -115,13 +116,13 @@ msgstr "Skatt"
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
-msgstr ""
+msgstr "Bekostning Journal \"%s\" har ikke riktig konfigurert kreditt-konto!"
 
 #. module: hr_payroll_account
 #: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
-msgstr ""
+msgstr "Bekostning Journal \"%s\" har ikke riktig konfigurert Debet konto!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule

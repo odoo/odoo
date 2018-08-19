@@ -16,42 +16,22 @@ class FinancialYearOpeningWizard(models.TransientModel):
                                              related="company_id.fiscalyear_last_month",
                                              required=True,
                                              help="The last day of the month will be taken if the chosen day doesn't exist.")
-    account_setup_fy_data_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
-
-    @api.depends('company_id.account_setup_fy_data_done')
-    def _compute_setup_marked_done(self):
-        for record in self:
-            record.account_setup_fy_data_done = record.company_id.account_setup_fy_data_done
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
-    def mark_as_done(self):
-        """ Forces fiscal year setup state to 'done'."""
-        self.company_id.account_setup_fy_data_done = True
-
-    def unmark_as_done(self):
-        """ Forces fiscal year setup state to 'undone'."""
-        self.company_id.account_setup_fy_data_done = False
 
     @api.multi
-    def write(self, vals):
-        if 'fiscalyear_last_day' in vals or 'fiscalyear_last_month' in vals:
-            for wizard in self:
-                company = wizard.company_id
-                vals['fiscalyear_last_day'] = company._verify_fiscalyear_last_day(
-                    company.id,
-                    vals.get('fiscalyear_last_day'),
-                    vals.get('fiscalyear_last_month'))
-        return super(FinancialYearOpeningWizard, self).write(vals)
-
+    def action_save_onboarding_fiscal_year(self):
+        self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
 
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
 
+    res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     create_or_link_option = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
     new_journal_name = fields.Char(compute='compute_new_journal_related_data', inverse='set_linked_journal_id', required=True, help='Will be used to name the Journal related to this bank account')
     linked_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_linked_journal_id', inverse='set_linked_journal_id')

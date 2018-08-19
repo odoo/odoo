@@ -160,11 +160,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # make task non billable
         task_serv2.write({'sale_line_id': False})
-        self.assertTrue(all([billing_type == 'non_billable' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "Timesheet to a non billable task should be non billable too")
-
-        # make task billable again
-        task_serv2.write({'sale_line_id': so_line_deliver_global_project.id})
-        self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "Timesheet to a billable time task should be billable")
+        self.assertTrue(all([billing_type == 'billable_time' for billing_type in timesheets.mapped('timesheet_invoice_type')]), "billable type of timesheet should not change when tranfering task into another project")
+        self.assertEqual(task_serv2.timesheet_ids.mapped('so_line'), so_line_deliver_global_project, "Old timesheet are not modified when changing the task SO line")
 
         # invoice SO, and validate invoice
         invoice_id = self.sale_order.action_invoice_create()[0]
@@ -173,7 +170,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # try to update timesheets, catch error 'You cannot modify invoiced timesheet'
         with self.assertRaises(UserError):
-            task_serv2.write({'sale_line_id': False})
+            timesheets.write({'so_line': False})
 
     def test_delivered_quantity(self):
         # create SO line and confirm it
@@ -344,7 +341,16 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
+        so_line_deliver_new_task_project_2 = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name + "(2)",
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
         so_line_deliver_new_task_project.product_id_change()
+        so_line_deliver_new_task_project_2.product_id_change()
         self.sale_order.action_confirm()
 
         project = so_line_deliver_new_task_project.project_id
@@ -358,14 +364,13 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'parent_id': task.id,
             'project_id': project.id,
             'name': '%s: substask1' % (task.name,),
-            'sale_line_id': False  # forcing, but should have not effect
         })
         task2 = self.env['project.task'].create({
             'project_id': project.id,
             'name': '%s: substask1' % (task.name,)
         })
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should have the same SO line than its mother")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line than its mother")
         self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line than its project")
         self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line than its project")
 
@@ -373,6 +378,18 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         subtask.write({'project_id': self.project_global.id})
 
         self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
+        self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project)
+
+        # changing the SO line of the mother task
+        task.write({'sale_line_id': so_line_deliver_new_task_project_2.id})
+
+        self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project, "A child task is not impacted by the change of SO line of its mother")
+        self.assertEqual(task.sale_line_id, so_line_deliver_new_task_project_2, "A mother task can have its SO line set manually")
+
+        # changing the SO line of a subtask
+        subtask.write({'sale_line_id': so_line_deliver_new_task_project_2.id})
+
+        self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project_2, "A child can have its SO line set manually")
 
     def test_change_ordered_qty(self):
         """ Changing the ordered quantity of a SO line that have created a task should update the planned hours of this task """

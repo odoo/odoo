@@ -144,6 +144,59 @@ class TestMailActivity(BaseFunctionalTest):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    def test_activity_mixin_archive(self):
+        rec = self.test_record.sudo(self.user_employee)
+        new_act = rec.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id)
+        self.assertEqual(rec.activity_ids, new_act)
+        rec.toggle_active()
+        self.assertEqual(rec.active, False)
+        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+        rec.toggle_active()
+        self.assertEqual(rec.active, True)
+        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+
+    def test_activity_mixin_reschedule_user(self):
+        rec = self.test_record.sudo(self.user_employee)
+        rec.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            user_id=self.user_admin.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_admin)
+
+        # reschedule its own should not alter other's activities
+        rec.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            user_id=self.user_employee.id,
+            new_user_id=self.user_employee.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_admin)
+
+        rec.activity_reschedule(
+            ['test_mail.mail_act_test_todo'],
+            user_id=self.user_admin.id,
+            new_user_id=self.user_employee.id)
+        self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
+    def test_activity_notify_other_user(self):
+        self.user_admin.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_admin=(1, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_admin.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_admin)
+
+    def test_activity_notify_same_user(self):
+        self.user_employee.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_employee.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_employee)
+
     def test_activity_security_user_access(self):
         activity = self.test_record.activity_schedule(
             'test_mail.mail_act_test_todo',

@@ -3,17 +3,18 @@
 # * analytic
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Viktor Basso <viktor@voit.no>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
-# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
+# Martin Trigaux, 2018
+# Aleksander, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Jorunn D. Newth, 2018
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,49 +23,80 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
-msgid "Account Currency"
-msgstr "Kontovaluta"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "Handling påkrevd"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active
 msgid "Active"
 msgstr "Aktiv"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
+#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Add a new analytic account"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+msgid "Add a new tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Beløp"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr "Analytisk konto."
+msgstr "Analytisk konto"
 
 #. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_group_action
+#: model:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
+msgid "Analytic Account Groups"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
+msgstr "Analytisk bokføring"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_tags
+#: model:res.groups,name:analytic.group_analytic_tags
+msgid "Analytic Accounting Tags"
 msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__analytic_distribution_ids
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Analytiske konti"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
-msgid "Analytic Accounts Tags"
+#: model:ir.model,name:analytic.model_account_analytic_group
+msgid "Analytic Categories"
 msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+msgid "Analytic Distribution"
+msgstr "Analytisk distribusjon"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -72,12 +104,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Analytiske registreringer"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr ""
+msgstr "Analytiske registrering"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -85,17 +117,20 @@ msgid "Analytic Line"
 msgstr "Analytisk linje"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
 msgstr "Analytiske linjer"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
 msgid "Analytic Tag"
 msgstr ""
 
 #. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
 #: model:ir.model,name:analytic.model_account_analytic_tag
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Tags"
 msgstr ""
 
@@ -107,10 +142,11 @@ msgstr "Arkivert"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr ""
+msgstr "Samarbeidspartner"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "Balanse"
 
@@ -122,28 +158,35 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
 msgid "Chart of Analytic Accounts"
+msgstr "Analytiske konti"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
+msgid "Childrens"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
-msgid "Click to add a new tag."
-msgstr "Klikk for å legge til en ny tag."
-
-#. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
-msgid "Click to add an analytic account."
+#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+msgid "Click to add a new analytic account group."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
 msgid "Color Index"
 msgstr "Fargeindeks"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__company_id
 msgid "Company"
 msgstr "Firma"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__complete_name
+msgid "Complete Name"
+msgstr "Fullstendig navn"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -164,55 +207,86 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_uid
 msgid "Created by"
 msgstr "Opprettet av"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr "Opprettet den"
+msgstr "Opprettet"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
 msgstr "Kreditt"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
 msgstr "Valuta"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
 msgid "Customer"
 msgstr "Kunde"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
 msgid "Date"
 msgstr "Dato"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
 msgstr "Debit"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 msgid "Description"
 msgstr "Beskrivelse"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
-msgstr "Visnings navn"
+msgstr "Visningsnavn"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "Følgere"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Følgere (kanaler)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Følgere (partnere)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__group_id
+msgid "Group"
+msgstr "Gruppe"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -221,18 +295,37 @@ msgid "Group By..."
 msgstr "Grupper etter..."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Dersom det aktive feltet er satt til False, vil det tillate deg å skjule "
+"kontoen uten å fjerne det."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -244,49 +337,122 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
-msgid "Last Modified on"
-msgstr "Sist oppdatert "
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "Er følger"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag____last_update
+msgid "Last Modified on"
+msgstr "Sist endret"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_uid
 msgid "Last Updated by"
 msgstr "Sist oppdatert av"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_date
 msgid "Last Updated on"
 msgstr "Sist oppdatert"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-msgid "No activity yet on this account."
-msgstr "Ingen aktivitet på denne kontoen enda."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "Meldinger"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Name"
+msgstr "Navn"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
-msgid "No activity yet."
-msgstr "Ingen aktivitet enda."
+msgid "No activity yet"
+msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
+#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antall handlinger"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Antall meldinger som krever handling"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Antall uleste meldinger"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
+msgid "Parent"
+msgstr "Overordnet"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
+msgid "Parent Path"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
+msgid "Parent tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
 msgstr "Partner"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
+msgid "Percentage"
+msgstr "Prosent"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Antall"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
 msgstr "Referanse"
 
@@ -303,27 +469,40 @@ msgstr ""
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "Søk analytiske linjer"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
 msgid "Tags"
 msgstr "Tagger"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Month"
+msgid "Tasks Date"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
-msgid "The related account currency if not equal to the company one."
+#: sql_constraint:account.analytic.distribution:0
+msgid ""
+"The percentage of an analytic distribution should be between 0 and 100."
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/models/analytic_account.py:193
+#, python-format
+msgid ""
+"The selected account belongs to another company that the one you're trying "
+"to create an analytic item for"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+msgid "This allows to classify your analytic accounts."
 msgstr ""
 
 #. module: analytic
@@ -332,11 +511,31 @@ msgid "Total"
 msgstr "Total"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
+msgid "Unread Messages"
+msgstr "Uleste meldinger"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Teller for uleste meldinger"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Bruker"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_users
+msgid "Users"
+msgstr "Brukere"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_distribution
+msgid "account.analytic.distribution"
+msgstr ""
+
+#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr ""
+msgstr "for eksempel Prosjekt XYZ"

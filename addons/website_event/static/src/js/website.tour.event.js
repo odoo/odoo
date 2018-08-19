@@ -19,7 +19,7 @@ odoo.define("website_event.tour", function (require) {
         content: _t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training"),
         position: "right",
     }, {
-        trigger: 'footer.modal-footer button.btn-primary.btn-continue',
+        trigger: '.modal-footer button.btn-primary.btn-continue',
         extra_trigger: '#editor_new_event input[type=text][value!=""]',
         content: _t("Click <em>Continue</em> to create the event."),
         position: "right",

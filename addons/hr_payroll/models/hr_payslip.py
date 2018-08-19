@@ -514,15 +514,16 @@ class HrPayslipLine(models.Model):
         for line in self:
             line.total = float(line.quantity) * line.amount * line.rate / 100
 
-    @api.model
-    def create(self, values):
-        if 'employee_id' not in values or 'contract_id' not in values:
-            payslip = self.env['hr.payslip'].browse(values.get('slip_id'))
-            values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
-            values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
-            if not values['contract_id']:
-                raise UserError(_('You must set a contract to create a payslip line.'))
-        return super(HrPayslipLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'employee_id' not in values or 'contract_id' not in values:
+                payslip = self.env['hr.payslip'].browse(values.get('slip_id'))
+                values['employee_id'] = values.get('employee_id') or payslip.employee_id.id
+                values['contract_id'] = values.get('contract_id') or payslip.contract_id and payslip.contract_id.id
+                if not values['contract_id']:
+                    raise UserError(_('You must set a contract to create a payslip line.'))
+        return super(HrPayslipLine, self).create(vals_list)
 
 
 class HrPayslipWorkedDays(models.Model):

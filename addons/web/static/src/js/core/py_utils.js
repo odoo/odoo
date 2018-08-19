@@ -335,11 +335,13 @@ function py_eval(expr, context) {
 /**
  * Assemble domains into a single domains using an 'OR' or an 'AND' operator.
  *
- * Note: - this function does not evaluate anything inside the domain.  This is
- * actually quite critical because this allows the manipulation of unevaluated
- * (dynamic) domains.
- *       - this function gives a normalized domain as result,
- *       - applied on a list of length 1, it returns the domain normalized.
+ * .. note:
+ *
+ *      - this function does not evaluate anything inside the domain.  This
+ *        is actually quite critical because this allows the manipulation of
+ *        unevaluated (dynamic) domains.
+ *      - this function gives a normalized domain as result,
+ *      - applied on a list of length 1, it returns the domain normalized.
  *
  * @param {string[]} domains list of string representing domains
  * @param {"AND" | "OR"} operator used to combine domains (default "AND")

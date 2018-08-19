@@ -188,8 +188,9 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
+                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
 
     @api.depends('name')
@@ -292,6 +293,7 @@ class Module(models.Model):
     application = fields.Boolean('Application', readonly=True)
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
+    to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
@@ -516,7 +518,7 @@ class Module(models.Model):
         _logger.info('getting next %s', Todos)
         active_todo = Todos.search([('state', '=', 'open')], limit=1)
         if active_todo:
-            _logger.info('next action is %s', active_todo)
+            _logger.info('next action is "%s"', active_todo.name)
             return active_todo.action_launch()
         return {
             'type': 'ir.actions.act_url',
@@ -678,7 +680,7 @@ class Module(models.Model):
             values = self.get_values_from_terp(terp)
 
             if mod:
-                updated_values = {}
+                updated_values = {'to_buy': False}
                 for key in values:
                     old = getattr(mod, key)
                     updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]

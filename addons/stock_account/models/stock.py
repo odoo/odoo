@@ -15,10 +15,10 @@ class StockInventory(models.Model):
     _inherit = "stock.inventory"
 
     accounting_date = fields.Date(
-        'Force Accounting Date',
-        help="Choose the accounting date at which you want to value the stock "
-             "moves created by the inventory instead of the default one (the "
-             "inventory end date)")
+        'Accounting Date',
+        help="Date at which the accounting entries will be created"
+             " in case of automated inventory valuation."
+             " If empty, the inventoy date will be used.")
 
     @api.multi
     def post_inventory(self):
@@ -62,15 +62,16 @@ class StockLocation(models.Model):
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    @api.model
-    def create(self, vals):
-        res = super(StockMoveLine, self).create(vals)
-        move = res.move_id
-        if move.state == 'done':
-            correction_value = move._run_valuation(res.qty_done)
-            if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
-                move.with_context(force_valuation_amount=correction_value)._account_entry_move()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(StockMoveLine, self).create(vals_list)
+        for line in lines:
+            move = line.move_id
+            if move.state == 'done':
+                correction_value = move._run_valuation(line.qty_done)
+                if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
+                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
+        return lines
 
     @api.multi
     def write(self, vals):
@@ -151,7 +152,7 @@ class StockMove(models.Model):
 
     def _get_price_unit(self):
         """ Returns the unit price to store on the quant """
-        return self.price_unit or self.product_id.standard_price
+        return not self.company_id.currency_id.is_zero(self.price_unit) and self.price_unit or self.product_id.standard_price
 
     @api.model
     def _get_in_base_domain(self, company_id=False):
@@ -592,6 +593,11 @@ class StockMove(models.Model):
 
     def _get_partner_id_for_valuation_lines(self):
         return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
+
+    def _prepare_move_split_vals(self, uom_qty):
+        vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
+        vals['to_refund'] = self.to_refund
+        return vals
 
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()

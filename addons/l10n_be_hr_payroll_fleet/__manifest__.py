@@ -3,7 +3,7 @@
 
 {
     'name': 'Belgium - Payroll - Fleet',
-    'category': 'Localization',
+    'category': 'Human Resources',
     'depends': ['l10n_be_hr_payroll', 'fleet'],
     'description': """
     """,

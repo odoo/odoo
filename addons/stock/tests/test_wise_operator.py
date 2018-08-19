@@ -8,7 +8,7 @@ class TestWiseOperator(TransactionCase):
 
     def test_wise_operator(self):
 
-        # Create a new stockable product
+        # Create a new storable product
         product_wise = self.env['product.product'].create({
             'name': 'Wise Unit',
             'type': 'product',

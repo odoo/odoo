@@ -27,11 +27,23 @@
 
         .modal-footer {
             text-align: left;
+            justify-content: flex-start;
+
+            // TODO These rules should not be necessary if we used buttons
+            // as direct children of the modal-footer as normally required
+            > div, > footer {
+                flex: 1 1 auto;
+            }
+
+            footer {
+                > :not(:first-child) { margin-left: .25rem; }
+                > :not(:last-child) { margin-right: .25rem; }
+            }
         }
     }
 
 
-    @media (min-width: $screen-sm-min) {
+    @include media-breakpoint-up(md) {
         .modal-dialog {
             height: 100%;
             padding: 30px 0;
@@ -39,11 +51,11 @@
 
             .modal-content {
                 max-height: 100%;
-                @include o-flex-display;
-                @include o-flex-flow(column, nowrap);
+                display: flex;
+                flex-flow: column nowrap;
 
                 .modal-header, .modal-footer {
-                    @include o-flex(0, 0, auto);
+                    flex: 0 0 auto;
                 }
 
                 .modal-body {
@@ -54,18 +66,44 @@
 
                     &.o_dialog_error {
                         overflow: visible;
-                        @include o-flex-display;
-                        @include o-flex-flow(column, nowrap);
+                        display: flex;
+                        flex-flow: column nowrap;
 
                         > .alert, > button {
-                            @include o-flex(0, 0, auto);
+                            flex: 0 0 auto;
                         }
 
                         > .o_error_detail {
-                            @include o-flex(1, 1, auto);
+                            flex: 1 1 auto;
                             min-height: 0;
                             overflow: auto;
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(xs) {
+        &.o_modal_full {
+            .modal-dialog {
+                margin: 0px;
+                height: 100%;
+
+                .modal-content {
+                    height: 100%;
+                    border: none;
+
+                    .modal-header {
+                        background: $o-brand-odoo;
+                        .modal-title, .o_subtitle, button.close {
+                            color: white;
+                        }
+                    }
+
+                    .modal-body {
+                        height: 100%;
+                        overflow-y: auto;
                     }
                 }
             }

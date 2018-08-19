@@ -49,7 +49,7 @@ class ProductTemplate(models.Model):
     type = fields.Selection([
         ('consu', _('Consumable')),
         ('service', _('Service'))], string='Product Type', default='consu', required=True,
-        help='A stockable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
+        help='A storable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
              'A consumable product, on the other hand, is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.\n'
              'A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on '
@@ -103,6 +103,7 @@ class ProductTemplate(models.Model):
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for all stock operation.")
+    uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
@@ -271,7 +272,8 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
-        self.product_variant_count = len(self.product_variant_ids)
+        # do not pollute variants to be prefetched when counting variants
+        self.product_variant_count = len(self.with_prefetch().product_variant_ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
@@ -308,30 +310,33 @@ class ProductTemplate(models.Model):
         if self.uom_id:
             self.uom_po_id = self.uom_id.id
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         # TDE FIXME: context brol
-        tools.image_resize_images(vals)
-        template = super(ProductTemplate, self).create(vals)
+        for vals in vals_list:
+            tools.image_resize_images(vals)
+        templates = super(ProductTemplate, self).create(vals_list)
         if "create_product_product" not in self._context:
-            template.with_context(create_from_tmpl=True).create_variant_ids()
+            templates.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
-        related_vals = {}
-        if vals.get('barcode'):
-            related_vals['barcode'] = vals['barcode']
-        if vals.get('default_code'):
-            related_vals['default_code'] = vals['default_code']
-        if vals.get('standard_price'):
-            related_vals['standard_price'] = vals['standard_price']
-        if vals.get('volume'):
-            related_vals['volume'] = vals['volume']
-        if vals.get('weight'):
-            related_vals['weight'] = vals['weight']
-        if related_vals:
-            template.write(related_vals)
-        return template
+        for template, vals in pycompat.izip(templates, vals_list):
+            related_vals = {}
+            if vals.get('barcode'):
+                related_vals['barcode'] = vals['barcode']
+            if vals.get('default_code'):
+                related_vals['default_code'] = vals['default_code']
+            if vals.get('standard_price'):
+                related_vals['standard_price'] = vals['standard_price']
+            if vals.get('volume'):
+                related_vals['volume'] = vals['volume']
+            if vals.get('weight'):
+                related_vals['weight'] = vals['weight']
+            if related_vals:
+                template.write(related_vals)
+
+        return templates
 
     @api.multi
     def write(self, vals):
@@ -424,6 +429,11 @@ class ProductTemplate(models.Model):
     def create_variant_ids(self):
         Product = self.env["product.product"]
         AttributeValues = self.env['product.attribute.value']
+
+        variants_to_create = []
+        variants_to_activate = []
+        variants_to_unlink = []
+
         for tmpl_id in self.with_context(active_test=False):
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
@@ -442,39 +452,37 @@ class ProductTemplate(models.Model):
             existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids}
             # -> for each value set, create a recordset of values to create a
             #    variant for if the value set isn't already a variant
-            to_create_variants = [
-                value_ids
-                for value_ids in variant_matrix
-                if set(value_ids.ids) not in existing_variants
-            ]
+            for value_ids in variant_matrix:
+                if set(value_ids.ids) not in existing_variants:
+                    variants_to_create.append({
+                        'product_tmpl_id': tmpl_id.id,
+                        'attribute_value_ids': [(6, 0, value_ids.ids)]
+                    })
 
             # check product
-            variants_to_activate = self.env['product.product']
-            variants_to_unlink = self.env['product.product']
             for product_id in tmpl_id.product_variant_ids:
                 if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
-                    variants_to_activate |= product_id
+                    variants_to_activate.append(product_id)
                 elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
-                    variants_to_unlink |= product_id
-            if variants_to_activate:
-                variants_to_activate.write({'active': True})
+                    variants_to_unlink.append(product_id)
 
-            # create new product
-            for variant_ids in to_create_variants:
-                new_variant = Product.create({
-                    'product_tmpl_id': tmpl_id.id,
-                    'attribute_value_ids': [(6, 0, variant_ids.ids)]
-                })
+        if variants_to_activate:
+            Product.concat(*variants_to_activate).write({'active': True})
 
-            # unlink or inactive product
-            for variant in variants_to_unlink:
-                try:
-                    with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
-                        variant.unlink()
-                # We catch all kind of exception to be sure that the operation doesn't fail.
-                except (psycopg2.Error, except_orm):
-                    variant.write({'active': False})
-                    pass
+        # create new products
+        if variants_to_create:
+            Product.create(variants_to_create)
+
+        # unlink or inactive product
+        for variant in variants_to_unlink:
+            try:
+                with self._cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+                    variant.unlink()
+            # We catch all kind of exception to be sure that the operation doesn't fail.
+            except (psycopg2.Error, except_orm):
+                variant.write({'active': False})
+                pass
+
         return True
 
     @api.model
@@ -483,3 +491,10 @@ class ProductTemplate(models.Model):
             empty_list_help_document_name=_("product"),
         )
         return super(ProductTemplate, self).get_empty_list_help(help)
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Products'),
+            'template': '/product/static/xls/product_template.xls'
+        }]

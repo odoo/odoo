@@ -20,6 +20,7 @@ var get_running_key = utils.get_running_key;
 var get_running_delay_key = utils.get_running_delay_key;
 var get_first_visible_element = utils.get_first_visible_element;
 var do_before_unload = utils.do_before_unload;
+var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     init: function(parent, consumed_tours) {
@@ -160,7 +161,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     update: function (tour_name) {
         if (this.paused) return;
 
-        this.$modal_displayed = $('[role="dialog"]:visible').last();
+        this.$modal_displayed = $('.modal:visible').last();
 
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
@@ -187,14 +188,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
         } else {
-            $trigger = $(tip.trigger);
+            $trigger = get_jquery_element_from_selector(tip.trigger);
         }
         var $visible_trigger = get_first_visible_element($trigger);
 
         var extra_trigger = true;
         var $extra_trigger = undefined;
         if (tip.extra_trigger) {
-            $extra_trigger = $(tip.extra_trigger);
+            $extra_trigger = get_jquery_element_from_selector(tip.extra_trigger);
             extra_trigger = get_first_visible_element($extra_trigger).length;
         }
 
@@ -206,6 +207,22 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 tip.widget.update($visible_trigger);
             }
         } else {
+            if ($trigger.iframeContainer || ($extra_trigger && $extra_trigger.iframeContainer)) {
+                var $el = $();
+                if ($trigger.iframeContainer) {
+                    $el = $el.add($trigger.iframeContainer);
+                }
+                if (($extra_trigger && $extra_trigger.iframeContainer) && $trigger.iframeContainer !== $extra_trigger.iframeContainer) {
+                    $el = $el.add($extra_trigger.iframeContainer);
+                }
+                var self = this;
+                $el.off('load').one('load', function () {
+                    $el.off('load');
+                    if (self.active_tooltips[tour_name] === tip) {
+                        self.update(tour_name);
+                    }
+                });
+            }
             this._deactivate_tip(tip);
 
             if (this.running_tour === tour_name) {
@@ -325,14 +342,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
-            var message;
-            if (step.extra_trigger) {
-                message = _.str.sprintf('Tour %s failed at step "%s" with trigger "%s" and extra trigger "%s"',
-                    tour_name, step.content, step.trigger, step.extra_trigger);
-            } else {
-                message = _.str.sprintf('Tour %s failed at step "%s" with trigger "%s"', tour_name, step.content, step.trigger);
-            }
-            this._consume_tour(tour_name, message);
+            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
@@ -365,11 +375,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         MENU_MORE: {
             edition: "community",
             trigger: "body > header > nav",
-            content: _t('Click on the <i>More icon</i> to show hidden apps.'),
             position: "bottom",
             auto: true,
             run: function (actions) {
-                actions.auto("#more_menu_button");
+                var $more = $('.o_extra_menu_items > .dropdown-toggle');
+                if ($more.length) {
+                    actions.auto($more);
+                }
             },
         },
 

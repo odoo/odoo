@@ -241,6 +241,11 @@ class xml_import(object):
             return self.id_get(node_uid)
         return self.uid
 
+    def make_xml_id(self, xml_id):
+        if not xml_id or '.' in xml_id:
+            return xml_id
+        return "%s.%s" % (self.module, xml_id)
+
     def _test_xml_id(self, xml_id):
         id = xml_id
         if '.' in xml_id:
@@ -316,17 +321,17 @@ form: module.record_id""" % (xml_id,)
             pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
 
-        id = self.env['ir.model.data']._update("ir.actions.report", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
-        self.idref[xml_id] = int(id)
+        xid = self.make_xml_id(xml_id)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
+        self.idref[xml_id] = report.id
 
         if not rec.get('menu') or safe_eval(rec.get('menu','False')):
-            report = self.env['ir.actions.report'].browse(id)
             report.create_action()
         elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
-            report = self.env['ir.actions.report'].browse(id)
             report.unlink_action()
-        return id
+        return report.id
 
     def _tag_function(self, rec, data_node=None, mode=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
@@ -434,8 +439,10 @@ form: module.record_id""" % (xml_id,)
             if rec.get('key2') in (None, 'client_action_relate'):
                 if not res.get('multi'):
                     res['binding_type'] = 'action_form_only'
-        id = self.env['ir.model.data']._update('ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
-        self.idref[xml_id] = int(id)
+
+        xid = self.make_xml_id(xml_id)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
     def _tag_menuitem(self, rec, data_node=None, mode=None):
         rec_id = rec.get("id")
@@ -497,12 +504,9 @@ form: module.record_id""" % (xml_id,)
             if rec.get('web_icon'):
                 values['web_icon'] = rec.get('web_icon')
 
-        pid = self.env['ir.model.data']._update('ir.ui.menu', self.module, values, rec_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
-
-        if rec_id and pid:
-            self.idref[rec_id] = int(pid)
-
-        return 'ir.ui.menu', pid
+        xid = self.make_xml_id(rec_id)
+        data = dict(xml_id=xid, values=values, noupdate=self.isnoupdate(data_node))
+        self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
 
     def _assert_equals(self, f1, f2, prec=4):
         return not round(f1 - f2, prec)
@@ -569,7 +573,7 @@ form: module.record_id""" % (xml_id,)
     def _tag_record(self, rec, data_node=None, mode=None):
         rec_model = rec.get("model")
         model = self.env[rec_model]
-        rec_id = rec.get("id",'')
+        rec_id = rec.get("id", '')
         rec_context = rec.get("context", {})
         if rec_context:
             rec_context = safe_eval(rec_context)
@@ -579,24 +583,21 @@ form: module.record_id""" % (xml_id,)
             rec_context['install_filename'] = self.xml_filename
 
         self._test_xml_id(rec_id)
+        xid = self.make_xml_id(rec_id)
+
         # in update mode, the record won't be updated if the data node explicitly
         # opt-out using @noupdate="1". A second check will be performed in
-        # ir.model.data#_update() using the record's ir.model.data `noupdate` field.
+        # model._load_records() using the record's ir.model.data `noupdate` field.
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has no id, skip
             if not rec_id:
                 return None
 
-            if '.' in rec_id:
-                module,rec_id2 = rec_id.split('.')
-            else:
-                module = self.module
-                rec_id2 = rec_id
-            id = self.env['ir.model.data']._update_dummy(rec_model, module, rec_id2)
-            if id:
+            record = self.env['ir.model.data']._load_xmlid(xid)
+            if record:
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
-                self.idref[rec_id] = int(id)
+                self.idref[rec_id] = record.id
                 return None
             elif not self.nodeattr2bool(rec, 'forcecreate', True):
                 # if it doesn't exist and we shouldn't create it, skip it
@@ -650,12 +651,13 @@ form: module.record_id""" % (xml_id,)
                         f_val = str2bool(f_val)
             res[f_name] = f_val
 
-        id = self.env(context=rec_context)['ir.model.data']._update(rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode)
+        data = dict(xml_id=xid, values=res, noupdate=self.isnoupdate(data_node))
+        record = model.with_context(rec_context)._load_records([data], self.mode == 'update')
         if rec_id:
-            self.idref[rec_id] = int(id)
+            self.idref[rec_id] = record.id
         if config.get('import_partial'):
             self.cr.commit()
-        return rec_model, id
+        return rec_model, record.id
 
     def _tag_template(self, el, data_node=None, mode=None):
         # This helper transforms a <template> element into a <record> and forwards it
@@ -671,9 +673,14 @@ form: module.record_id""" % (xml_id,)
             el.tag = 'data'
         el.attrib.pop('id', None)
 
+        if self.module.startswith('theme_'):
+            model = 'theme.ir.ui.view'
+        else:
+            model = 'ir.ui.view'
+
         record_attrs = {
             'id': tpl_id,
-            'model': 'ir.ui.view',
+            'model': model,
         }
         for att in ['forcecreate', 'context']:
             if att in el.attrib:
@@ -742,7 +749,6 @@ form: module.record_id""" % (xml_id,)
                 try:
                     self._tags[rec.tag](rec, de, mode=mode)
                 except Exception as e:
-                    self.cr.rollback()
                     exc_info = sys.exc_info()
                     pycompat.reraise(
                         ParseError,

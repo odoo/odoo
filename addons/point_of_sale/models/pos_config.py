@@ -6,7 +6,6 @@ from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 
 class AccountCashboxLine(models.Model):
@@ -100,7 +99,7 @@ class PosConfig(models.Model):
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
         help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount.')
-    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], related="company_id.iface_tax_included", required=True)
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
@@ -154,7 +153,7 @@ class PosConfig(models.Model):
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
-    module_account_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
+    module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -196,7 +195,7 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                pos_config.last_session_closing_date = session[0]['stop_at']
+                pos_config.last_session_closing_date = session[0]['stop_at'].date()
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
@@ -209,7 +208,7 @@ class PosConfig(models.Model):
                 pos_config.pos_session_username = session[0].user_id.name
                 pos_config.pos_session_state = session[0].state
                 pos_config.pos_session_duration = (
-                    datetime.now() - datetime.strptime(session[0].start_at, DATETIME_FORMAT)
+                    datetime.now() - session[0].start_at
                 ).days if session[0].start_at else 0
             else:
                 pos_config.pos_session_username = False
@@ -249,13 +248,18 @@ class PosConfig(models.Model):
         if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('company_id', 'available_pricelist_ids')
+    def _check_companies(self):
+        if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
+            raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
 
-    @api.onchange('module_account_invoicing')
-    def _onchange_module_account_invoicing(self):
-        if self.module_account_invoicing:
+    @api.onchange('module_account')
+    def _onchange_module_account(self):
+        if self.module_account:
             self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
 
     @api.onchange('picking_type_id')

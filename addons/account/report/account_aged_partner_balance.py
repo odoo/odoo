@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 from datetime import datetime
@@ -19,7 +19,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # The context key allow it to appear
         ctx = self._context
         periods = {}
-        start = datetime.strptime(date_from, "%Y-%m-%d") - relativedelta(days=1)
+        date_from = fields.Date.from_string(date_from)
+        start = date_from - relativedelta(days=1)
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
@@ -77,7 +78,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
         lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
-            return [], [], []
+            return [], [], {}
 
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
@@ -211,7 +212,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         return res, total, lines
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
@@ -220,7 +221,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         docs = self.env[model].browse(self.env.context.get('active_id'))
 
         target_move = data['form'].get('target_move', 'all')
-        date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
+        date_from = fields.Date.from_string(data['form'].get('date_from')) or fields.Date.today()
 
         if data['form']['result_selection'] == 'customer':
             account_type = ['receivable']

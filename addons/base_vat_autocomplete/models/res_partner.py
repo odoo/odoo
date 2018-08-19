@@ -72,8 +72,8 @@ class ResPartner(models.Model):
         if len(lines) == 1:
             lines = [x.strip() for x in lines[0].split('   ') if x]
 
-        partner_address['street'] = lines.pop(0)
-        #_set_address_field(partner, 'street', lines.pop(0))
+        vals = self._split_street_with_params(', '.join(lines.pop(0).rsplit(' ', 1)), '%(street_name)s, %(street_number)s/%(street_number2)s')
+        partner_address.update(vals)
 
         if len(lines) > 0:
             res = _check_city(lines, result['countryCode'])

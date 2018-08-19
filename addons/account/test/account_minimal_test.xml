@@ -186,11 +186,6 @@
             <field name="name">Dividends</field>
             <field name="user_type_id" ref="account.data_account_type_equity"/>
         </record>
-        <record id="a_current_year_earnings" model="account.account">
-            <field name="code">X0000</field>
-            <field name="name">Unaffected Earnings</field>
-            <field name="user_type_id" ref="account.data_unaffected_earnings"/>
-        </record>
 
         <!-- Properties -->
         <record forcecreate="True" id="property_account_receivable_id" model="ir.property">

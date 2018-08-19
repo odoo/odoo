@@ -54,6 +54,7 @@ var KanbanColumn = Widget.extend({
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.draggable = options.draggable;
+        this.KanbanRecord = options.KanbanRecord || KanbanRecord; // the KanbanRecord class to use
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
@@ -153,7 +154,7 @@ var KanbanColumn = Widget.extend({
         this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
         var tooltip = this.data.count + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {
@@ -237,7 +238,7 @@ var KanbanColumn = Widget.extend({
      * @return {Deferred}
      */
     _addRecord: function (recordState, options) {
-        var record = new KanbanRecord(this, recordState, this.record_options);
+        var record = new this.KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options && options.position === 'before') {
             return record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);

@@ -25,30 +25,15 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
 
-def load_module_graph(cr, graph, status=None, perform_checks=True,
-                      skip_modules=None, report=None, models_to_check=None):
-    """Migrates+Updates or Installs all module nodes from ``graph``
-       :param graph: graph of module nodes to load
-       :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
-       :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases)
-       :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
-       :return: list of modules that were installed or updated
+def load_data(cr, idref, mode, kind, package, report):
     """
-    def load_test(module_name, idref, mode):
-        cr.commit()
-        try:
-            _load_data(cr, module_name, idref, mode, 'test')
-            return True
-        except Exception:
-            _test_logger.exception(
-                'module %s: an exception occurred in a test', module_name)
-            return False
-        finally:
-            cr.rollback()
-            # avoid keeping stale xml_id, etc. in cache
-            odoo.registry(cr.dbname).clear_caches()
 
+    kind: data, demo, test, init_xml, update_xml, demo_xml.
+
+    noupdate is False, unless it is demo data or it is csv data in
+    init mode.
+
+    """
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
@@ -72,27 +57,89 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                     )
         return files
 
-    def _load_data(cr, module_name, idref, mode, kind):
-        """
+    try:
+        if kind in ('demo', 'test'):
+            threading.currentThread().testing = True
+        for filename in _get_files_of_kind(kind):
+            _logger.info("loading %s/%s", package.name, filename)
+            noupdate = False
+            if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
+                noupdate = True
+            tools.convert_file(cr, package.name, filename, idref, mode, noupdate, kind, report)
+    finally:
+        if kind in ('demo', 'test'):
+            threading.currentThread().testing = False
 
-        kind: data, demo, test, init_xml, update_xml, demo_xml.
 
-        noupdate is False, unless it is demo data or it is csv data in
-        init mode.
+def load_demo(cr, package, idref, mode, report=None):
+    """
+    Loads demo data for the specified package.
+    """
+    if not package.should_have_demo():
+        return False
 
-        """
+    try:
+        _logger.info("Module %s: loading demo", package.name)
+        with cr.savepoint():
+            load_data(cr, idref, mode, kind='demo', package=package, report=report)
+        return True
+    except Exception as e:
+        # If we could not install demo data for this module
+        _logger.warning(
+            "Module %s demo data failed to install, installed without demo data",
+            package.name, exc_info=True)
+
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
+        Failure = env.get('ir.demo_failure')
+        if todo and Failure is not None:
+            todo.state = 'open'
+            Failure.create({'module_id': package.id, 'error': str(e)})
+        return False
+
+
+def force_demo(cr):
+    """
+    Forces the `demo` flag on all modules, and installs demo data for all installed modules.
+    """
+    graph = odoo.modules.graph.Graph()
+    cr.execute(
+        "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
+    )
+    module_list = [name for (name,) in cr.fetchall()]
+    graph.add_modules(cr, module_list, ['demo'])
+
+    for package in graph:
+        load_demo(cr, package, {}, 'init')
+
+    cr.execute('update ir_module_module set demo=%s', (True,))
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['ir.module.module'].invalidate_cache(['demo'])
+
+
+def load_module_graph(cr, graph, status=None, perform_checks=True,
+                      skip_modules=None, report=None, models_to_check=None):
+    """Migrates+Updates or Installs all module nodes from ``graph``
+       :param graph: graph of module nodes to load
+       :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
+       :param perform_checks: whether module descriptors should be checked for validity (prints warnings
+                              for same cases)
+       :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
+       :return: list of modules that were installed or updated
+    """
+    def load_test(idref, mode):
+        cr.execute("SAVEPOINT load_test_data_file")
         try:
-            if kind in ('demo', 'test'):
-                threading.currentThread().testing = True
-            for filename in _get_files_of_kind(kind):
-                _logger.info("loading %s/%s", module_name, filename)
-                noupdate = False
-                if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
-                    noupdate = True
-                tools.convert_file(cr, module_name, filename, idref, mode, noupdate, kind, report)
+            load_data(cr, idref, mode, 'test', package, report)
+            return True
+        except Exception:
+            _test_logger.exception(
+                'module %s: an exception occurred in a test', package.name)
+            return False
         finally:
-            if kind in ('demo', 'test'):
-                threading.currentThread().testing = False
+            cr.execute("ROLLBACK TO SAVEPOINT load_test_data_file")
+            # avoid keeping stale xml_id, etc. in cache
+            odoo.registry(cr.dbname).clear_caches()
 
     if models_to_check is None:
         models_to_check = set()
@@ -148,7 +195,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check -= set(model_names)
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
-            cr.commit()
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -172,15 +218,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if perform_checks:
                 module._check()
 
-            if package.state=='to upgrade':
+            if package.state == 'to upgrade':
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.data))
-            _load_data(cr, module_name, idref, mode, kind='data')
-            has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
-            if has_demo:
-                _load_data(cr, module_name, idref, mode, kind='demo')
-                cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-                module.invalidate_cache(['demo'])
+            load_data(cr, idref, mode, kind='data', package=package, report=report)
+            demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode, report)
+            cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
+            module.invalidate_cache(['demo'])
 
             migrations.migrate_module(package, 'post')
 
@@ -199,11 +243,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # validate all the views at a whole
             env['ir.ui.view']._validate_module_views(module_name)
 
-            if has_demo:
+            # need to commit any modification the module's installation or
+            # update made to the schema or data so the tests can run
+            # (separately in their own transaction)
+            cr.commit()
+            if demo_loaded:
                 # launch tests only in demo mode, allowing tests to use demo data.
                 if tools.config.options['test_enable']:
                     # Yamel test
-                    report.record_result(load_test(module_name, idref, mode))
+                    report.record_result(load_test(idref, mode))
                     # Python tests
                     env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
                     report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
@@ -226,13 +274,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         if package.name is not None:
             registry._init_modules.add(package.name)
-        cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
     registry.clear_caches()
 
-    cr.commit()
 
     return loaded_modules, processed_modules
 
@@ -285,8 +331,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     models_to_check = set()
 
-    cr = db.cursor()
-    try:
+    with db.cursor() as cr:
         if not odoo.modules.db.is_initialized(cr):
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
@@ -390,7 +435,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 if model in registry and not registry[model]._abstract and not registry[model]._transient:
-                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,0,0,0',
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,base.group_user,1,0,0,0',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
@@ -412,8 +457,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
-
-        cr.commit()
 
         # STEP 5: Uninstall modules to remove
         if update_module:
@@ -476,11 +519,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 9: save installed/updated modules for post-install tests
         registry.updated_modules += processed_modules
-        cr.commit()
-
-    finally:
-        cr.close()
-
 
 def reset_modules_state(db_name):
     """

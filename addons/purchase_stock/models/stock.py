@@ -78,6 +78,10 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _clean_merged(self):
+        super(StockMove, self)._clean_merged()
+        self.write({'created_purchase_line_id': False})
+
     def _action_done(self):
         res = super(StockMove, self)._action_done()
         self.mapped('purchase_line_id').sudo()._update_received_qty()
@@ -109,51 +113,27 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
-    buy_pull_id = fields.Many2one('procurement.rule', 'Buy rule')
+    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
 
-    @api.multi
-    def _get_buy_pull_rule(self):
-        try:
-            buy_route_id = self.env['ir.model.data'].get_object_reference('purchase', 'route_warehouse0_buy')[1]
-        except:
-            buy_route_id = self.env['stock.location.route'].search([('name', 'like', _('Buy'))])
-            buy_route_id = buy_route_id[0].id if buy_route_id else False
-        if not buy_route_id:
-            raise UserError(_("Can't find any Buy route. Please create a route with the 'Buy' action for your receipts operation types."))
-
-        return {
-            'name': self._format_routename(_(' Buy')),
-            'location_id': self.in_type_id.default_location_dest_id.id,
-            'route_id': buy_route_id,
-            'action': 'buy',
-            'picking_type_id': self.in_type_id.id,
-            'warehouse_id': self.id,
-            'group_propagation_option': 'none',
-        }
-
-    @api.multi
-    def create_routes(self):
-        res = super(StockWarehouse, self).create_routes() # super applies ensure_one()
-        if self.buy_to_resupply:
-            buy_pull_vals = self._get_buy_pull_rule()
-            buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
-            res['buy_pull_id'] = buy_pull.id
-        return res
-
-    @api.multi
-    def write(self, vals):
-        if 'buy_to_resupply' in vals:
-            if vals.get("buy_to_resupply"):
-                for warehouse in self:
-                    if not warehouse.buy_pull_id:
-                        buy_pull_vals = self._get_buy_pull_rule()
-                        buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
-                        vals['buy_pull_id'] = buy_pull.id
-            else:
-                for warehouse in self:
-                    if warehouse.buy_pull_id:
-                        warehouse.buy_pull_id.unlink()
-        return super(StockWarehouse, self).write(vals)
+    def _get_global_route_rules_values(self):
+        rules = super(StockWarehouse, self)._get_global_route_rules_values()
+        location_id = self.in_type_id.default_location_dest_id
+        rules.update({
+            'buy_pull_id': {
+                'depends': ['reception_steps', 'buy_to_resupply'],
+                'create_values': {
+                    'action': 'buy',
+                    'picking_type_id': self.in_type_id.id,
+                    'route_id': self._find_global_route('purchase.route_warehouse0_buy', 'Buy').id
+                },
+                'update_values': {
+                    'active': self.buy_to_resupply,
+                    'name': self._format_rulename(location_id, False, 'Buy'),
+                    'location_id': location_id.id,
+                }
+            }
+        })
+        return rules
 
     @api.multi
     def _get_all_routes(self):
@@ -165,18 +145,11 @@ class StockWarehouse(models.Model):
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
-        #change the buy procurement rule name
+        #change the buy stock rule name
         if warehouse.buy_pull_id and name:
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-    @api.multi
-    def _update_routes(self):
-        res = super(StockWarehouse, self)._update_routes()
-        for warehouse in self:
-            if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
-                warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
-        return res
 
 class ReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
@@ -211,3 +184,19 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    purchase_order_ids = fields.Many2many('purchase.order', string="Purchase Orders", compute='_compute_purchase_order_ids', readonly=True, store=False)
+
+    @api.depends('name')
+    def _compute_purchase_order_ids(self):
+        for lot in self:
+            stock_moves = self.env['stock.move.line'].search([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done')
+            ]).mapped('move_id').filtered(
+                lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
+            lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')

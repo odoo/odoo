@@ -88,12 +88,12 @@ class HolidaysRequest(models.Model):
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
-        'Allocation', copy=False, readonly=True,
+        'Duration (Days)', copy=False, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
     number_of_hours = fields.Float(
-        'Hours Allocation', copy=False, readonly=True, compute='_compute_number_of_hours',
+        'Duration (Hours)', copy=False, readonly=True, compute='_compute_number_of_hours',
         help='Number of hours of the leave request according to your working schedule.')
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
 
@@ -158,13 +158,13 @@ class HolidaysRequest(models.Model):
             if self.date_from:
                 date_from = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_from), fields.Datetime.from_string(self.date_from).time()))
             else:
-                date_from = self.request_date_from
+                date_from = datetime.combine(self.request_date_from, time.min)
 
         if self.request_date_to:
             if self.date_to:
                 date_to = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_to), fields.Datetime.from_string(self.date_to).time()))
             else:
-                date_to = self.request_date_to
+                date_to = datetime.combine(self.request_date_to, time.max)
 
         if not self.request_date_from or not self.request_date_to:
             if date_from:
@@ -247,8 +247,8 @@ class HolidaysRequest(models.Model):
             date_to = date_from + timedelta(hours=self.employee_id.resource_calendar_id.hours_per_day)
             self.date_to = date_to
 
-        self.request_date_from = date_from
-        self.request_date_to = date_to
+        self.request_date_from = date_from.date() if date_from else False
+        self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
             self.request_unit_all = 'period'
@@ -266,8 +266,8 @@ class HolidaysRequest(models.Model):
         date_from = fields.Datetime.from_string(self.date_from)
         date_to = fields.Datetime.from_string(self.date_to)
 
-        self.request_date_from = date_from
-        self.request_date_to = date_to
+        self.request_date_from = date_from.date() if date_from else False
+        self.request_date_to = date_to.date() if date_to else False
 
         if (date_from and date_to) and (date_from.day < date_to.day):
             self.request_unit_all = 'period'
@@ -376,12 +376,12 @@ class HolidaysRequest(models.Model):
     def _check_leave_type_validity(self):
         for leave in self:
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
-                vstart = fields.Datetime.from_string(leave.holiday_status_id.validity_start)
-                vstop  = fields.Datetime.from_string(leave.holiday_status_id.validity_stop)
-                dfrom  = fields.Datetime.from_string(leave.date_from)
-                dto    = fields.Datetime.from_string(leave.date_to)
+                vstart = leave.holiday_status_id.validity_start
+                vstop  = leave.holiday_status_id.validity_stop
+                dfrom  = leave.date_from
+                dto    = leave.date_to
 
-                if dfrom and dto and (dfrom < vstart or dto > vstop):
+                if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
                     raise UserError(_('You can take %s only between %s and %s') % (leave.holiday_status_id.display_name, \
                                                                                   leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
 
@@ -621,12 +621,12 @@ class HolidaysRequest(models.Model):
                 to_clean |= holiday
             elif holiday.state == 'confirm':
                 holiday.activity_schedule(
-                    'hr_holidays.mail_act_leave_approval', fields.Date.today(),
+                    'hr_holidays.mail_act_leave_approval',
                     user_id=holiday._get_responsible_for_approval().id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
-                    'hr_holidays.mail_act_leave_second_approval', fields.Date.today(),
+                    'hr_holidays.mail_act_leave_second_approval',
                     user_id=holiday._get_responsible_for_approval().id)
             elif holiday.state == 'validate':
                 to_do |= holiday
@@ -664,8 +664,9 @@ class HolidaysRequest(models.Model):
             ref_action = self._notify_get_action_link('controller', controller='/leave/refuse')
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
+        holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id
         new_group = (
-            'group_hr_holidays_user', lambda partner: bool(partner.user_ids) and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in partner.user_ids), {
+            'group_hr_holidays_user', lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'], {
                 'actions': hr_actions,
             })
 

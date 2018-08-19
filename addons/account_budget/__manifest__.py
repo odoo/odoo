@@ -8,7 +8,6 @@
 Use budgets to compare actual with expected revenues and costs
 --------------------------------------------------------------
 """,
-    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',

@@ -323,8 +323,7 @@ class IrTranslation(models.Model):
         existing_ids = [row[0] for row in self._cr.fetchall()]
 
         # create missing translations
-        for res_id in set(ids) - set(existing_ids):
-            self.create({
+        self.create([{
                 'lang': lang,
                 'type': tt,
                 'name': name,
@@ -332,7 +331,9 @@ class IrTranslation(models.Model):
                 'value': value,
                 'src': src,
                 'state': 'translated',
-            })
+            }
+            for res_id in set(ids) - set(existing_ids)
+        ])
         return len(ids)
 
     @api.model
@@ -470,6 +471,7 @@ class IrTranslation(models.Model):
                             discarded += trans
                         else:
                             trans.write({'src': matches[0], 'state': trans.state})
+                            trans_src.append(matches[0])  # avoid reuse of term
                     else:
                         outdated += trans
 
@@ -556,12 +558,12 @@ class IrTranslation(models.Model):
                     if value2 != value0:
                         raise ValidationError(_("Translation is not valid:\n%s") % val)
 
-    @api.model
-    def create(self, vals):
-        record = super(IrTranslation, self.sudo()).create(vals).with_env(self.env)
-        record.check('create')
-        record._modified()
-        return record
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(IrTranslation, self.sudo()).create(vals_list).with_env(self.env)
+        records.check('create')
+        records._modified()
+        return records
 
     @api.multi
     def write(self, vals):
@@ -615,6 +617,14 @@ class IrTranslation(models.Model):
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
                         );
+
+                        DELETE FROM ir_translation dup
+                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            AND dup.id NOT IN (SELECT MAX(t.id)
+                                       FROM ir_translation t
+                                       WHERE t.lang=dup.lang AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            );
+
                         UPDATE ir_translation SET src=%(src)s
                         WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
                     """

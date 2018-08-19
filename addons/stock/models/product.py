@@ -93,7 +93,9 @@ class Product(models.Model):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
-        if to_date and to_date < fields.Datetime.now(): #Only to_date as to_date will correspond to qty_available
+        # only to_date as to_date will correspond to qty_available
+        to_date = fields.Datetime.to_datetime(to_date)
+        if to_date and to_date < fields.Datetime.now():
             dates_in_the_past = True
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc
@@ -365,6 +367,23 @@ class Product(models.Model):
         action['context'] = {'default_product_id': self.id}
         return action
 
+    @api.model
+    def get_theoretical_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, to_uom=None):
+        product_id = self.env['product.product'].browse(product_id)
+        product_id.check_access_rights('read')
+        product_id.check_access_rule('read')
+
+        location_id = self.env['stock.location'].browse(location_id)
+        lot_id = self.env['stock.production.lot'].browse(lot_id)
+        package_id = self.env['stock.quant.package'].browse(package_id)
+        owner_id = self.env['res.partner'].browse(owner_id)
+        to_uom = self.env['uom.uom'].browse(to_uom)
+        quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+        theoretical_quantity = sum([quant.quantity for quant in quants])
+        if to_uom and product_id.uom_id != to_uom:
+            theoretical_quantity = product_id.uom_id._compute_quantity(theoretical_quantity, to_uom)
+        return theoretical_quantity
+
     def write(self, values):
         res = super(Product, self).write(values)
         if 'active' in values and not values['active']:
@@ -383,7 +402,7 @@ class ProductTemplate(models.Model):
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self.env.uid, required=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
-    type = fields.Selection(selection_add=[('product', 'Stockable Product')])
+    type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
         company_dependent=True, domain=[('usage', 'like', 'production')],
@@ -524,12 +543,6 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
         return super(ProductTemplate, self).write(vals)
 
-    def action_view_routes(self):
-        routes = self.mapped('route_ids') | self.mapped('categ_id').mapped('total_route_ids') | self.env['stock.location.route'].search([('warehouse_selectable', '=', True)])
-        action = self.env.ref('stock.action_routes_form').read()[0]
-        action['domain'] = [('id', 'in', routes.ids)]
-        return action
-
     def action_update_quantity_on_hand(self):
         default_product_id = self.env.context.get('default_product_id', self.product_variant_id.id)
         if self.env.user.user_has_groups('stock.group_stock_multi_locations') or (self.env.user.user_has_groups('stock.group_production_lot') and self.tracking != 'none'):
@@ -619,7 +632,9 @@ class UoM(models.Model):
         if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
             changed = self.filtered(
                 lambda u: any(u[f] != values[f] if f in values else False
-                              for f in {'factor', 'factor_inv', 'category_id'}))
+                              for f in {'factor', 'factor_inv'})) + self.filtered(
+                lambda u: any(u[f].id != int(values[f]) if f in values else False
+                              for f in {'category_id'}))
             if changed:
                 stock_move_lines = self.env['stock.move.line'].search_count([
                     ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),

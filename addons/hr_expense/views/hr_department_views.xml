@@ -13,12 +13,12 @@
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row">
-                        <div class="col-xs-9">
+                        <div class="col-9">
                             <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
                                 Expense Reports
                             </a>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <t t-esc="record.expense_sheets_to_approve_count.raw_value"/>
                         </div>
                     </div>
@@ -26,7 +26,7 @@
 
                 <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
-                        <div class="col-xs-12 text-left">
+                        <div class="col-12 text-left">
                             <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
                                 <t t-esc="record.expense_sheets_to_approve_count.raw_value or 0"/> Expense Reports
                             </a>
@@ -36,7 +36,7 @@
 
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
-                        <div class="col-xs-12 text-left">
+                        <div class="col-12 text-left">
                             <a name="%(action_hr_expense_sheet_department_filtered)d" type="action">
                                 Expense Reports
                             </a>

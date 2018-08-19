@@ -82,9 +82,9 @@ class TestPortalProject(TestPortalProjectBase):
         pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
-        prout = pigs.sudo(self.user_projectuser)
-        prout.invalidate_cache()
-        prout.read(['user_id'])
+        donkey = pigs.sudo(self.user_projectuser)
+        donkey.invalidate_cache()
+        donkey.read(['user_id'])
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)
         self.assertRaises(AccessError, pigs.sudo(self.user_public).read, ['user_id'])

@@ -10,13 +10,16 @@
 # Levent Karakaş <levent@mektup.at>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Mehmet Demirel <mdemirell@gmail.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +41,11 @@ msgstr "<span>Raporlama</span>"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>Görünüm</span>"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+msgid "Action Needed"
+msgstr "Eylem Gerekiyor"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -174,6 +182,21 @@ msgstr ""
 "takip edin."
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Takipçiler (Kanallar)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Tekipçiler (İş ortakları)"
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Graph"
 msgstr "Grafik"
@@ -199,6 +222,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
@@ -221,6 +259,11 @@ msgstr ""
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Invoices"
 msgstr "Faturalar"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
@@ -263,6 +306,16 @@ msgid "Manager"
 msgstr "Yönetici"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Month"
 msgstr "Ay"
@@ -277,6 +330,31 @@ msgstr "Favorilerim"
 #, python-format
 msgid "Not Defined"
 msgstr "Tanımlanmamış"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Eylemlerin Sayısı"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Eylem gerektiren mesaj sayısı"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Okunmamış mesaj sayısı"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -297,6 +375,7 @@ msgstr "Yanıtlama"
 #: selection:crm.team,dashboard_graph_model:0
 #: model:crm.team,name:sales_team.team_sales_department
 #: selection:crm.team,team_type:0
+#: model:ir.model.fields,field_description:sales_team.field_res_users__group_sales_team_user
 msgid "Sales"
 msgstr "Satış"
 
@@ -422,6 +501,16 @@ msgid "Undefined graph model for Sales Channel: %s"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+msgid "Unread Messages"
+msgstr "Okunmamış Mesajlar"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Okunmamış Mesaj Sayacı"
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
@@ -442,6 +531,14 @@ msgid "User: Own Documents Only"
 msgstr "Kullanıcı: Sadece Kendi Belgeleri"
 
 #. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users__group_sales_team_user
+msgid ""
+"User: Own Documents Only: the user will have access to his own data in the sales application.\n"
+"User: All Documents: the user will have access to all records of everyone in the sales application.\n"
+"Manager: the user will have an access to the sales configuration as well as statistic reports."
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Kullanıcılar"
@@ -451,6 +548,16 @@ msgstr "Kullanıcılar"
 #: selection:crm.team,team_type:0
 msgid "Website"
 msgstr "Web Sitesi"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0

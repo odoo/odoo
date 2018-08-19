@@ -1,17 +1,18 @@
 html, body {
     height: 100%;
+    direction: ltr;
 }
 
 body {
     color: #000 !important;
     word-wrap: break-word;
 }
-.border-black td {
+.border-black td, .border-black th {
     border-top: 1px solid black !important;
 }
 
 /* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
-.table-condensed {
+.table-sm {
     > thead > tr > th {
         border-bottom: none !important;
     }
@@ -30,6 +31,33 @@ body {
 }
 
 /* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
-.hidden-print{
+.d-print-none{
     display: none;
+}
+
+.o_bold {
+    font-weight: bolder;
+}
+.o_italic {
+    font-style: italic;
+}
+.o_underline {
+    text-decoration: underline;
+}
+
+/*
+    The goal of the following lines is to contain CSS hacks related to allowing
+    section and note on sale order and invoice.
+*/
+.row.o_is_line_section,
+.table > tbody > tr.o_is_line_section td {
+    font-weight: bold;
+    background-color: #EEE;
+    padding: 8px;
+    border: 1px solid #BBB;
+}
+
+.row.o_is_line_note,
+tr.o_is_line_note {
+    color: #999;
 }

@@ -133,14 +133,15 @@ var KanbanColumnProgressBar = Widget.extend({
         });
         if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
             this.$el.tooltip({
-                delay: '0',
-                trigger:'hover',
-                placement: 'top',
+                delay: 0,
+                trigger: 'hover',
                 title: this.progressBarHelp,
             });
         }
 
         // Display and animate the progress bars
+        var barNumber = 0;
+        var barMinWidth = 6; // In %
         _.each(self.colors, function (val, key) {
             var $bar = self.$bars[val];
             var count = self.subgroupCounts && self.subgroupCounts[key] || 0;
@@ -152,9 +153,8 @@ var KanbanColumnProgressBar = Widget.extend({
             // Adapt tooltip
             $bar.attr('data-original-title', count + ' ' + key);
             $bar.tooltip({
-                delay: '0',
-                trigger:'hover',
-                placement: 'top'
+                delay: 0,
+                trigger: 'hover',
             });
 
             // Adapt active state
@@ -165,7 +165,12 @@ var KanbanColumnProgressBar = Widget.extend({
             window.getComputedStyle($bar[0]).getPropertyValue('width'); // Force reflow so that animations work
             if (count > 0) {
                 $bar.addClass('o_bar_has_records');
+                // Make sure every bar that has records has some space
+                // and that everything adds up to 100%
+                var maxWidth = 100 - barMinWidth * barNumber;
+                self.$('.progress-bar.o_bar_has_records').css('max-width', maxWidth + '%');
                 $bar.css('width', (count * 100 / self.groupCount) + '%');
+                barNumber++;
                 $bar.attr('aria-valuemin', 0);
                 $bar.attr('aria-valuemax', self.groupCount);
                 $bar.attr('aria-valuenow', count);
@@ -173,6 +178,7 @@ var KanbanColumnProgressBar = Widget.extend({
                 $bar.css('width', '');
             }
         });
+        this.$('.progress-bar.o_bar_has_records').css('min-width', barMinWidth + '%');
 
         // Display and animate the counter number
         var start = this.prevTotalCounterValue;

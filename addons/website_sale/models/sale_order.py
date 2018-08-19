@@ -23,18 +23,11 @@ class SaleOrder(models.Model):
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
-    can_directly_mark_as_paid = fields.Boolean(compute='_compute_can_directly_mark_as_paid',
-        string="Can be directly marked as paid", store=True,
-        help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
-                is sent or confirmed and if the payment acquire is of the type transfer or manual""")
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
-
-    @api.depends('state', 'transaction_ids')
-    def _compute_can_directly_mark_as_paid(self):
-        for order in self:
-            transaction = order.get_portal_last_transaction()
-            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and transaction and transaction.acquirer_id.provider in ['transfer', 'manual']
+    website_id = fields.Many2one('website', related='partner_id.website_id', string='Website',
+                                 help='Website through which this order was placed.',
+                                 store=True, readonly=True)
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
@@ -47,7 +40,7 @@ class SaleOrder(models.Model):
     @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
         abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
             domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
@@ -231,7 +224,7 @@ class SaleOrder(models.Model):
             'view_id': composer_form_view_id,
             'target': 'new',
             'context': {
-                'default_composition_mode': 'mass_mail' if len(self) > 1 else 'comment',
+                'default_composition_mode': 'mass_mail',
                 'default_res_id': self.ids[0],
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
@@ -241,18 +234,26 @@ class SaleOrder(models.Model):
             },
         }
 
-    def action_mark_as_paid(self):
-        """ Mark directly a sales order as paid if:
-                - State: Quotation Sent, or sales order
-                - Provider: wire transfer or manual config
-            The transaction is marked as done
-            The invoice may be generated and marked as paid if configured in the website settings
-            """
-        self.ensure_one()
-        if self.can_directly_mark_as_paid:
-            self.action_confirm()
-            if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False):
-                self.payment_tx_id._generate_and_pay_invoice()
-            self.payment_tx_id.state = 'done'
-        else:
-            raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
+    def _set_demo_create_date(self, create_date):
+        self.env.cr.execute("""UPDATE sale_order SET create_date=%s WHERE id IN %s """, (create_date, tuple(self.ids)))
+        self.modified(['create_date'])
+        if self.env.recompute and self.env.context.get('recompute', True):
+            self.recompute()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    name_short = fields.Char(compute="_compute_name_short")
+
+    @api.multi
+    @api.depends('product_id.display_name')
+    def _compute_name_short(self):
+        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
+            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
+        """
+        for record in self:
+            record.name_short = record.product_id.with_context(display_default_code=False).display_name
+
+    def get_description_following_lines(self):
+        return self.name.splitlines()[1:]

@@ -119,7 +119,7 @@ class PurchaseRequisition(models.Model):
     def action_in_progress(self):
         self.ensure_one()
         if not all(obj.line_ids for obj in self):
-            raise UserError(_('You cannot confirm agreement because there is no product line.'))
+            raise UserError(_("You cannot confirm agreement '%s' because there is no product line.") % self.name)
         if self.type_id.quantity_copy == 'none' and self.vendor_id:
             for requisition_line in self.line_ids:
                 if requisition_line.price_unit <= 0.0:
@@ -280,7 +280,7 @@ class PurchaseRequisitionLine(models.Model):
             'product_qty': product_qty,
             'price_unit': price_unit,
             'taxes_id': [(6, 0, taxes_ids)],
-            'date_planned': requisition.schedule_date or fields.Date.today(),
+            'date_planned': requisition.schedule_date or fields.Datetime.now(),
             'account_analytic_id': self.account_analytic_id.id,
             'analytic_tag_ids': self.analytic_tag_ids.ids,
             'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
@@ -430,20 +430,20 @@ class ProductTemplate(models.Model):
         string='Procurement', default='rfq')
 
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
 
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         if product_id.purchase_requisition != 'tenders':
-            return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
+            return super(StockRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
         values['picking_type_id'] = self.picking_type_id.id
         self.env['purchase.requisition'].create(values)
         return True
 
     def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
-        res = super(ProcurementRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+        res = super(StockRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
         res['partner_ref'] = values['supplier'].purchase_requisition_id.name
         res['requisition_id'] = values['supplier'].purchase_requisition_id.id
         if values['supplier'].purchase_requisition_id.currency_id:
@@ -451,7 +451,7 @@ class ProcurementRule(models.Model):
         return res
 
     def _make_po_get_domain(self, values, partner):
-        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        domain = super(StockRule, self)._make_po_get_domain(values, partner)
         if 'supplier' in values and values['supplier'].purchase_requisition_id:
             domain += (
                 ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),

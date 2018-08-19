@@ -86,7 +86,7 @@ class TestLifoPrice(common.TransactionCase):
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
-            move.date_expected = fields.Date.context_today(self.env['stock.move.line'])
+            move.date_expected = fields.Datetime.now()
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

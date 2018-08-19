@@ -23,12 +23,12 @@ var DebugManager = Widget.extend({
     template: "WebClient.DebugManager",
     events: {
         "click a[data-action]": "perform_callback",
-        "mouseover .o_debug_dropdowns > li:not(.open)": function(e) {
+        "mouseover .o_debug_dropdowns > li:not(.show)": function(e) {
             // Open other dropdowns on mouseover
-            var $opened = this.$('.o_debug_dropdowns > li.open');
+            var $opened = this.$('.o_debug_dropdowns > li.show');
             if($opened.length) {
-                $opened.removeClass('open');
-                $(e.currentTarget).addClass('open').find('> a').focus();
+                $opened.removeClass('show');
+                $(e.currentTarget).addClass('show').find('> a').focus();
             }
         },
     },
@@ -271,23 +271,24 @@ DebugManager.include({
         });
     },
     get_view_fields: function () {
-        var self = this;
-        var model = this._action.res_model;
+        var model = this._action.res_model,
+            self = this;
         this._rpc({
-                model: model,
-                method: 'fields_get',
-                kwargs: {
-                    attributes: ['string', 'searchable', 'required', 'readonly', 'type', 'store', 'sortable', 'relation', 'help']
-                },
-            })
-            .done(function (fields) {
-                new Dialog(self, {
-                    title: _.str.sprintf(_t("Fields of %s"), model),
-                    $content: $(QWeb.render('WebClient.DebugManager.Action.Fields', {
-                        fields: fields
-                    }))
-                }).open();
+            model: 'ir.model',
+            method: 'search',
+            args: [[['model', '=', model]]]
+        }).done(function (ids) {
+            self.do_action({
+                res_model: 'ir.model.fields',
+                name: _t('View Fields'),
+                views: [[false, 'list'], [false, 'form']],
+                domain: [['model_id', '=', model]],
+                type: 'ir.actions.act_window',
+                context: {
+                    'default_model_id': ids[0]
+                }
             });
+        });
     },
     manage_filters: function () {
         this.do_action({
@@ -368,13 +369,26 @@ DebugManager.include({
             metadata.create_date = field_utils.format.datetime(createDate);
             var modificationDate = field_utils.parse.datetime(metadata.write_date);
             metadata.write_date = field_utils.format.datetime(modificationDate);
-            new Dialog(this, {
+            var dialog = new Dialog(this, {
                 title: _.str.sprintf(_t("Metadata (%s)"), self._action.res_model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : metadata,
                 })
-            }).open();
+            });
+            dialog.open().opened(function () {
+                dialog.$el.on('click', 'a[data-action="toggle_noupdate"]', function (ev) {
+                    ev.preventDefault();
+                    self._rpc({
+                        model: 'ir.model.data',
+                        method: 'toggle_noupdate',
+                        args: [self._action.res_model, metadata.id]
+                    }).then(function (res) {
+                        dialog.close();
+                        self.get_metadata();
+                    })
+                });
+            })
         });
     },
     set_defaults: function() {
@@ -848,7 +862,7 @@ if (config.debug) {
                         if (action) {
                             var controller = parent.getCurrentControllerInDialog();
                             self.debugManager = new DebugManager(self);
-                            var $header = self.$modal.find('header.modal-header:first');
+                            var $header = self.$modal.find('.modal-header:first');
                             return self.debugManager.prependTo($header).then(function () {
                                 self.debugManager.update('action', action, controller.widget);
                             });

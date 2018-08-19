@@ -528,15 +528,22 @@ ActionManager.include({
             group_by_seq: groupbys || [],
             eval_context: this.userContext,
         });
+        var groupBy = results.group_by.length ?
+                        results.group_by :
+                        (action.context.group_by || []);
+        groupBy = (typeof groupBy === 'string') ? [groupBy] : groupBy;
+
         if (results.error) {
             throw new Error(_.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
                             JSON.stringify(results.error)));
         }
-        var groupBy = results.group_by.length ? results.group_by : (action.context.group_by || []);
+
+        var context = _.omit(results.context, 'time_ranges');
+
         return {
-            context: results.context,
+            context: context,
             domain: results.domain,
-            groupBy: (typeof groupBy === 'string') ? [groupBy] : groupBy,
+            groupBy: groupBy,
         };
     },
     /**
@@ -704,11 +711,11 @@ ActionManager.include({
         var env = ev.data.env;
         var context = new Context(env.context, actionData.context || {});
         var recordID = env.currentID || null; // pyUtils handles null value, not undefined
-        var def;
+        var def = $.Deferred();
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
-            def = $.when({type: 'ir.actions.act_window_close'});
+            def = $.when({type: 'ir.actions.act_window_close', infos: 'special'});
         } else if (actionData.type === 'object') {
             // call a Python Object method, which may return an action to execute
             var args = recordID ? [[recordID]] : [env.resIDs];

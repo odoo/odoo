@@ -1,14 +1,13 @@
 odoo.define('mail.ThreadField', function (require) {
 "use strict";
 
-var Message = require('mail.model.Message');
+var CreateModeDocumentThread = require('mail.model.CreateModeDocumentThread');
 var ThreadWidget = require('mail.widget.Thread');
 
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var concurrency = require('web.concurrency');
-var session = require('web.session');
 
 var _t = core._t;
 
@@ -105,37 +104,20 @@ var ThreadField = AbstractField.extend({
      */
     _fetchAndRenderThread: function (options) {
         var self = this;
-        options = options || {};
-        options.ids = this._messageIDs;
-        var fetchDef = this.dp.add(this._documentThread.getMessages(options));
-        return fetchDef.then(function (rawMessages) {
-            var isCreateMode = false;
-            if (!self.res_id) {
-                rawMessages = self._forgeCreateMessages();
-                isCreateMode = true;
-            }
-            self._threadWidget.render(rawMessages, {
-                displayLoadMore: rawMessages.length < self._documentThread.getMessageIDs().length,
-                isCreateMode: isCreateMode,
+        if (!this._documentThread) {
+            var thread = new CreateModeDocumentThread();
+            options = { isCreateMode: true };
+            self._threadWidget.render(thread, options);
+            return $.when();
+        } else {
+            var fetchDef = this.dp.add(this._documentThread.fetchMessages(options));
+            return fetchDef.then(function () {
+                self._threadWidget.render(self._documentThread, {
+                    displayLoadMore: self._documentThread.getMessages().length < self._documentThread.getMessageIDs().length,
+                });
+                return self._documentThread.markAsRead();
             });
-            return self._documentThread.markAsRead();
-        });
-    },
-    /**
-     * Make a fake list of messages to render in create mode.
-     * Instead of rendering no messages at all, it displays a single message
-     * with body content "Creating a new record".
-     *
-     * @private
-     * @returns {mail.model.Message[]} an array containing a single message 'Creating a new record...'
-     */
-    _forgeCreateMessages: function () {
-        var createMessage = new Message(this, {
-            id: 0,
-            body: _t("<p>Creating a new record...</p>"),
-            author_id: [session.partner_id, session.partner_display_name],
-        });
-        return [createMessage];
+        }
     },
     /**
      * @override
@@ -162,7 +144,7 @@ var ThreadField = AbstractField.extend({
      * Sets this._documentThread, the DocumentThread associated with the current
      * model and resID.
      *
-     * @returns {mail.model.DocumentThread}
+     * If it is a new document in create mode, unset the document thread.
      */
     _setDocumentThread: function () {
         var params = {
@@ -171,7 +153,11 @@ var ThreadField = AbstractField.extend({
             resID: this.res_id,
             resModel: this.model,
         };
-        this._documentThread = this.call('mail_service', 'getOrAddDocumentThread', params);
+        if (!params.resID) {
+            this._documentThread = null;
+        } else {
+            this._documentThread = this.call('mail_service', 'getOrAddDocumentThread', params);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -211,7 +197,7 @@ var ThreadField = AbstractField.extend({
         var self = this;
         this.call('mail_service', 'joinChannel', channelID).then(function () {
             // Execute Discuss with 'channel' as default channel
-            self.do_action('mail.mail_channel_action_client_chat', { active_id: channelID });
+            self.do_action('mail.action_discuss', { active_id: channelID });
         });
     },
     /**

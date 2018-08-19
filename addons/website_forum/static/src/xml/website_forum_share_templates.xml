@@ -3,10 +3,10 @@
         <div role="dialog" class="modal fade" id="oe_social_share_modal">
             <div class="modal-dialog modal-content">
                 <header class="modal-header alert alert-info mb0" role="status">
+                    <h4 class="modal-title">Thanks for posting!</h4>
                     <button type="button" class="close" data-dismiss="modal">
                         <span role="img" aria-label="Close">x</span>
                     </button>
-                    <h4 class="modal-title">Thanks for posting!</h4>
                 </header>
                 <main class="modal-body">
                     <t t-if="target_type == 'question'" t-call="website_forum.social_message_question"/>

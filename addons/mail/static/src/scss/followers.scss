@@ -1,12 +1,7 @@
 .o_followers {
     float: right;
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         display: none !important; // Hide the followers in mobile
-    }
-
-    .dropdown-menu {
-        right: 0;
-        left: auto;
     }
 
     .o_followers_actions {
@@ -38,7 +33,7 @@
         .o_followers_follow_button {
             width: 85px;
             padding-right: 0;
-            color: $text-color;
+            color: $body-color;
             font-weight: bold;
 
             .o_follow, .o_followers_unfollow, .o_followers_following {
@@ -62,10 +57,10 @@
 
             .fa {
                 &.fa-times {
-                    color: $brand-warning;
+                    color: theme-color('warning');
                 }
                 &.fa-check {
-                    color: $brand-success;
+                    color: theme-color('success');
                 }
             }
         }
@@ -102,7 +97,7 @@
                     padding: 3px $o-mail-partner-avatar-size + 8px;
                 }
                 > img {
-                    @include o-position-absolute;
+                    @include o-position-absolute($top: 0, $left: 0);
                     width: $o-mail-partner-avatar-size;
                 }
                 .o_remove_follower {

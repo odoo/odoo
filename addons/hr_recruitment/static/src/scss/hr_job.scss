@@ -1,5 +1,5 @@
 .o_kanban_view.o_kanban_ungrouped {
-    @include o-flex-display;
+    display: flex;
     .o_kanban_record {
         width: 350px;
     }
@@ -7,24 +7,24 @@
 
 .o_kanban_view.o_kanban_dashboard {
     .o_recruitment_kanban_boxes {
-        @include o-flex-display;
-        @include o-flex-flow(row, nowrap);
+        display: flex;
+        flex-flow: row nowrap;
 
         .o_recruitment_kanban_box {
             position: relative;
             text-align: center;
             padding: 0 0 0 0;
-            @include o-flex(1, 1, auto);
-            @include o-flex-display;
-            @include o-flex-flow(row, nowrap);
-            @include o-justify-content(center);
+            flex: 1 1 auto;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
 
             &:first-child {
-                @include o-justify-content(flex-start);
+                justify-content: flex-start;
                 padding-left: 16px;
             }
             &:last-child {
-                @include o-justify-content(flex-end);
+                justify-content: flex-end;
                 padding-right: 16px;
             }
 

@@ -3,15 +3,16 @@
 # * payment
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,91 +21,87 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
+msgid "# of Invoices"
+msgstr "# 發票"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
 msgid "3D Secure HTML"
+msgstr "3D 安全HTML"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "<b>Amount:</b>"
+msgstr ""
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "<b>Reference:</b>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> 返回我的帳戶"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\">付款</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\">添加新卡</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/>刪除"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:76
-#: code:addons/payment/static/src/js/payment_form.js:219
+#: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
-msgid "<p>Please fill all the inputs required.</p>"
+msgid "<i>Cancel,</i> Your payment has been cancelled."
 msgstr ""
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:180
+#: code:addons/payment/models/payment_acquirer.py:120
 #, python-format
-msgid "<p>Please select a payment method.</p>"
+msgid ""
+"<i>Done,</i> Your online payment has been successfully processed. Thank you "
+"for your order."
 msgstr ""
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:274
+#: code:addons/payment/models/payment_acquirer.py:128
 #, python-format
-msgid "<p>Please select the option to add a new payment method.</p>"
+msgid ""
+"<i>Error,</i> Please be aware that an error occurred during the transaction."
+" The order has been confirmed but will not be paid. Do not hesitate to "
+"contact us if you have any questions on the status of your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:116
+#, python-format
+msgid ""
+"<i>Pending,</i> Your online payment has been successfully processed. But "
+"your order is not validated yet."
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:315
+#: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:108
-#: code:addons/payment/static/src/js/payment_form.js:120
-#: code:addons/payment/static/src/js/payment_form.js:254
-#: code:addons/payment/static/src/js/payment_form.js:267
-#, python-format
-msgid "<p>We are not able to add your payment method at the moment.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:298
-#: code:addons/payment/static/src/js/payment_form.js:333
-#, python-format
-msgid "<p>We are not able to delete your payment method at the moment.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:155
-#: code:addons/payment/static/src/js/payment_form.js:161
-#, python-format
-msgid "<p>We are not able to redirect you to the payment form.</p>"
-msgstr ""
-
-#. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:169
-#, python-format
-msgid "<p>We're unable to process your payment.</p>"
-msgstr ""
+msgstr "<p>此卡目前與以下記錄鏈接：<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -112,6 +109,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">測試</span>\n"
+"                                    <span class=\"o_stat_text\">環境</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -119,6 +118,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">生產</span>\n"
+"                                    <span class=\"o_stat_text\">環境</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -132,7 +133,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>取消,</i> 您的付款已被取消。</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -148,7 +149,7 @@ msgstr ""
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>完成，</i> 您的線上付款已成功完成。感謝您的訂單。</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -167,6 +168,7 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>出錯了。</i>請注意，在交易過程中出現錯誤。訂單已確認，但未支付。如果您對訂單狀態有任何疑問，請隨時聯繫我們。</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -181,71 +183,119 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>待定,</i> 您的線上付款已完成。但是您的訂單尚未被驗證。</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
+msgstr "<span><i>待定</i>... 訂單將在付款後被驗證。</span>"
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:72
+#, python-format
+msgid "A journal must be specified of the acquirer %s."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
+#: code:addons/payment/models/account_invoice.py:65
+#, python-format
+msgid "A payment acquirer is required to create a transaction."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_payment.py:55
+#, python-format
+msgid "A payment transaction already exists."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_payment.py:57
+#, python-format
+msgid "A token is required to create a new payment transaction."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:642
+#, python-format
+msgid "A transaction %s with %s has been initiated using %s credit card."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:648
+#, python-format
+msgid "A transaction %s with %s has been initiated."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:36
+#, python-format
+msgid "A transaction can't be linked to invoices having different currencies."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:41
+#, python-format
+msgid "A transaction can't be linked to invoices having different partners."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 msgid "Acquirer"
-msgstr ""
+msgstr "收單"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
+#: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "收單帳號"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
+#: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "收單參照"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "收單參考"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
+#: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "受讓人"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "收單方列表"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr ""
+msgstr "激活"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_active
+#: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "添加額外費用"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -253,143 +303,151 @@ msgid "Always"
 msgstr "總是"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
-#: model:ir.model.fields,help:payment.field_payment_transaction_amount
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Amount"
 msgstr "金額"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
-msgid "Authorize Mechanism Supported"
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid ""
+"Are you sure you want to void the authorized transaction? This action can't "
+"be undone."
 msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
+msgid "Authorize Mechanism Supported"
+msgstr "批准支援的機制"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
+msgstr "已授權"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
+msgid "Authorized Transactions"
 msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Bank Account"
-msgstr ""
+msgstr "銀行帳戶"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_res_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "回調文件 ID"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_model_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "回調單據模型"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_hash
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "回調哈希函數"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_method
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "回調方法"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:323
+#: code:addons/payment/static/src/js/payment_form.js:360
 #, python-format
 msgid "Cancel"
 msgstr "取消"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "取消消息"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "已取消"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:168
+#: code:addons/payment/static/src/js/payment_form.js:190
 #, python-format
 msgid "Cannot set-up the payment"
+msgstr "無法設定支付方式"
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:128
+#, python-format
+msgid "Cannot setup the payment."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "手動獲取金額"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "捕捉交易"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_capture_manually
+#: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr ""
+msgstr "完成交貨後，從 Odoo 獲取金額。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr ""
-
-#. module: payment
-#: model:ir.actions.act_window,help:payment.action_payment_acquirer
-msgid "Click to create a payment acquirer."
-msgstr ""
-
-#. module: payment
-#: model:ir.actions.act_window,help:payment.action_payment_icon
-msgid "Click to create a payment icon."
-msgstr ""
+msgstr "城市"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr ""
+msgstr "溝通"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__company_id
 msgid "Company"
 msgstr "公司"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Configuration"
-msgstr "設置"
+msgstr "配置"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr ""
+msgstr "配置"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:322
+#: code:addons/payment/static/src/js/payment_form.js:359
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "確認刪除"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -397,87 +455,103 @@ msgid "Contact"
 msgstr "聯絡人"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "對應模組"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
-#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "付款指示物個數"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
 msgid "Countries"
-msgstr ""
+msgstr "國家"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
+msgstr "國家"
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_acquirer
+msgid "Create a new payment acquirer"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_icon_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_token_create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_uid
+#: model:ir.actions.act_window,help:payment.action_payment_transaction
+msgid "Create a new payment transaction"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.action_payment_icon
+msgid "Create a payment icon"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.act_window,help:payment.payment_token_action
+msgid "Create a saved payment data"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建者"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_icon_create_date
-#: model:ir.model.fields,field_description:payment.field_payment_token_create_date
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_icon__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "建立於"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_create_date
-msgid "Creation Date"
-msgstr "建立日期"
+msgstr "創建時間"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "證明"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr ""
+msgstr "信用卡"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
 msgstr "貨幣"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
 msgid "Custom"
-msgstr ""
+msgstr "自定義"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
 msgid "Customer"
 msgstr "客戶"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
 msgid "Description"
-msgstr "說明"
+msgstr "描述"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_sequence
+#: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "決定顯示順序"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_icon_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_token_display_name
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_icon__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -487,295 +561,327 @@ msgid "Done"
 msgstr "完成"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "完成的信息"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
-msgstr "草案"
+msgstr "草稿"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr ""
+msgstr "電子信件"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "電子"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 msgid "Email"
-msgstr "電郵"
+msgstr "電子郵箱"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__environment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
-msgstr ""
+msgstr "環境"
 
 #. module: payment
-#: selection:payment.transaction,state:0
-msgid "Error"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__error_msg
 msgid "Error Message"
-msgstr ""
+msgstr "錯誤消息"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:372
+#: code:addons/payment/static/src/js/payment_form.js:430
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "出錯了："
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
 msgid "Fees"
-msgstr ""
+msgstr "費用"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "支援費用計算"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_fees
+#: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "費用金額; 由系統設定因為它依賴於收單方"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_state_message
+#: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "用來存儲錯誤或信息的驗證信息字段"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "固定國內費用"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
+msgstr "固定國際費用"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
+msgid "For Incoming Payments"
 msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr ""
+msgstr "表單"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "表單按鈕模板"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "使用指示物化技術的表單"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr "自"
+msgstr "從"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "幫助信息"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
-#: model:ir.model.fields,field_description:payment.field_payment_icon_id
-#: model:ir.model.fields,field_description:payment.field_payment_token_id
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment.field_payment_icon__id
+#: model:ir.model.fields,field_description:payment.field_payment_token__id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_specific_countries
+#: model:ir.model.fields,help:payment.field_payment_acquirer__specific_countries
 msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
-msgstr ""
+msgstr "如果您將其留空，該付款受讓人將適用於所有國家/地區。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
-#: model:ir.model.fields,field_description:payment.field_payment_icon_image
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image
 msgid "Image"
-msgstr ""
+msgstr "圖像"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
+#: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "在支付表單上顯示的圖像"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico "
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "安裝"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "安裝狀態"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_reference
+#: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
+msgstr "TX內部參考"
+
+#. module: payment
+#: code:addons/payment/models/account_invoice.py:55
+#, python-format
+msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
+#: code:addons/payment/models/account_invoice.py:58
+#, python-format
+msgid "Invalid token found! Token partner %s != %s"
+msgstr ""
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_invoice
+msgid "Invoice"
+msgstr "發票"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.transaction_form
+msgid "Invoice(s)"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:801
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
+#, python-format
+msgid "Invoices"
+msgstr "發票"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
 msgstr "語言"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_icon___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_token___last_update
-#: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改時間"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_icon_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_icon_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_token_write_date
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_icon__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_token__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "讓客戶決定"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
+#: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "支援此支付圖標的受讓人列表。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
+#: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "使此付款收單可用(客戶發票等)"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "管理您的付款方式"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "管理您的付款方式"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "手工配置"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
+#: model:ir.model.fields,help:payment.field_payment_acquirer__inbound_payment_method_ids
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+msgstr ""
+"手動：通過現金、支票或除 Odoo 以外的任何其他方法獲取報酬。\n"
+"電子方式：線上購買或訂閱時（支付指示物），通過請求客戶保存的卡上的交易，通過付款受讓人自動獲得付款。\n"
+"批量存款：通過生成批量存款立即兌現幾個客戶的支票，以便提交給銀行。在 Odoo 中編碼銀行對帳單時，建議您將交易與批量存款進行核對。從設定中啟用此選項。"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "中等尺寸圖片"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image_medium
 msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "此供應方的中等大小圖像。它被自動調整為128*128的圖像，縱橫比保存起來。通常在表單視圖或者看板視圖中用這個字段。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
-msgstr "訊息"
+msgstr "消息"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "在付款完成後顯示完成消息。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "在支付過程中顯示說明及幫助信息。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "如果在付款過程中發生錯誤，會有消息提示。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "如果在付款的時候訂單被取消，會有消息提示。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr ""
+msgstr "如果付款後訂單被順利完成，會顯示消息。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
+#: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr ""
+msgstr "如果在付款後訂單還是打開的狀態，會顯示消息"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr "訊息"
+msgstr "消息"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:395
+#: code:addons/payment/models/payment_acquirer.py:468
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
-msgstr ""
+msgstr "嘗試創建新的支付指示物時缺少合作夥伴參考"
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:75
-#: code:addons/payment/static/src/js/payment_form.js:218
-#, python-format
-msgid "Missing values"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_name
-#: model:ir.model.fields,field_description:payment.field_payment_icon_name
-#: model:ir.model.fields,field_description:payment.field_payment_token_name
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
+#: model:ir.model.fields,field_description:payment.field_payment_icon__name
+#: model:ir.model.fields,field_description:payment.field_payment_token__name
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -783,84 +889,108 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_token_name
+#: model:ir.model.fields,help:payment.field_payment_token__name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "付款指示物的名稱"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
+msgstr "從不"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "No payment acquirer found."
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:179
-#: code:addons/payment/static/src/js/payment_form.js:273
+#: code:addons/payment/static/src/js/payment_form.js:201
+#: code:addons/payment/static/src/js/payment_form.js:310
 #, python-format
 msgid "No payment method selected"
-msgstr ""
+msgstr "未選擇付款方式"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_account_payment_payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr ""
+msgstr "請注意，來自設定為僅授權交易（而非獲取金額）的受讓人的指示物不可用。"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
+#: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
 msgid ""
 "Note: Subscriptions does not take this field in account, it uses server to "
 "server by default."
-msgstr ""
+msgstr "注意：訂閱不考慮此字段，預設情況下使用伺服器。"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Ogone"
-msgstr ""
+msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:376
+#: code:addons/payment/static/src/js/payment_form.js:434
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "確定"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:759
+#: code:addons/payment/models/payment_acquirer.py:708
 #, python-format
-msgid "Only transactions in the Authorized status can be captured."
+msgid "Only draft transaction can be authorized."
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:766
+#: code:addons/payment/models/payment_acquirer.py:699
 #, python-format
-msgid "Only transactions in the Authorized status can be voided."
+msgid "Only draft transaction can be processed."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_partner_id
+#: code:addons/payment/models/payment_acquirer.py:745
+#, python-format
+msgid "Only draft/authorized transaction can be cancelled."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:717
+#, python-format
+msgid "Only draft/authorized transaction can be posted."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:972
+#, python-format
+msgid "Only transactions having the capture status can be captured."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:979
+#, python-format
+msgid "Only transactions having the capture status can be voided."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_token__partner_id
 msgid "Partner"
-msgstr "伙伴"
+msgstr "業務夥伴"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_name
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
 msgid "Partner Name"
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/controllers/portal.py:39
-#, python-format
-msgid "Pay Now"
-msgstr ""
+msgstr "合作夥伴名稱"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_id
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
@@ -870,76 +1000,82 @@ msgstr "付款"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "收單"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "收款人"
+msgstr "收單"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
+msgid "Payment Flow"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "支付圖標"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "支付圖標"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "付款日記帳"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
-msgstr ""
+msgstr "付款方式"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "付款指示物"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
-#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users__payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "付款指示物"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
+#: model:ir.model.fields,field_description:payment.field_account_payment__payment_transaction_id
 msgid "Payment Transaction"
-msgstr ""
+msgstr "付款交易"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.actions.act_window,name:payment.action_payment_tx_ids
-#: model:ir.model.fields,field_description:payment.field_payment_token_payment_ids
+#: model:ir.model.fields,field_description:payment.field_payment_token__payment_ids
 #: model:ir.ui.menu,name:payment.payment_transaction_menu
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
+msgstr "付款交易"
+
+#. module: payment
+#: selection:payment.acquirer,payment_flow:0
+msgid "Payment from Odoo"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
-msgid "Payment flow"
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/account_payment.py:59
+#: code:addons/payment/controllers/portal.py:150
+#: code:addons/payment/controllers/portal.py:154
 #, python-format
-msgid "Payment transaction failed (%s)"
+msgid "Payment transaction failed."
 msgstr ""
 
 #. module: payment
@@ -947,10 +1083,10 @@ msgstr ""
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr ""
+msgstr "收付款"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
+#: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
 msgid ""
 "Payments will be registered into this journal. If you get paid straight on your bank account,\n"
 "                select your bank account. If you get paid in batch for several transactions, create a specific\n"
@@ -960,177 +1096,201 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"付款將被登記到此日記帳中。如果您直接通過銀行帳戶收取付款，\n"
+"                請選擇您的銀行帳戶。如果您分批收取多筆交易的付款，則為此付款受讓人創建特定\n"
+"                付款日記帳，以便輕鬆管理銀行對帳單。您持有\n"
+"                帳簿的臨時轉帳帳戶中的金額（創建\n"
+"                付款日記帳時自動創建）。然後，當您收到付款受讓人通過銀行帳戶支付的款項後，\n"
+"                使用此臨時轉帳帳戶核對銀行對帳單。使用對帳\n"
+"                模板一鍵完成。"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr ""
+msgstr "待定"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
+msgstr "待定消息"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
+msgid "Phone"
+msgstr "電話"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.pay
+msgid "Please configure a payment acquirer."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
-msgid "Phone"
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:202
+#, python-format
+msgid "Please select a payment method."
+msgstr "請選擇付款方式"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:311
+#, python-format
+msgid "Please select the option to add a new payment method."
 msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the following transfer details"
-msgstr ""
+msgstr "請使用以下轉帳詳細信息"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "請使用訂單名稱作為通信參考。"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Processed by"
-msgstr ""
+msgstr "處理人"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr ""
+msgstr "生產"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_provider
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__provider
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
+msgstr "服務商"
+
+#. module: payment
+#: selection:payment.acquirer,payment_flow:0
+msgid "Redirection to the acquirer website"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model:ir.ui.view,arch_db:payment.confirm
-#: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
-msgstr "參考"
+msgstr "參照"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
+#: sql_constraint:payment.transaction:0
+msgid "Reference must be unique!"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
-
-#. module: payment
-#: selection:payment.transaction,state:0
-msgid "Refunded"
-msgstr ""
-
-#. module: payment
-#: selection:payment.transaction,state:0
-msgid "Refunding"
-msgstr ""
+msgstr "存儲在收單方資料庫中的TX參考"
 
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "必須填寫的信息沒有填寫"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "S2S表單模板"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "保存卡"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr ""
+msgstr "保存我的支付數據"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr ""
+msgstr "保存的付款數據"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "保存的付款指示物"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "支援保存卡片數據"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
 msgid "Sequence"
 msgstr "序列"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:107
-#: code:addons/payment/static/src/js/payment_form.js:119
-#: code:addons/payment/static/src/js/payment_form.js:154
-#: code:addons/payment/static/src/js/payment_form.js:160
-#: code:addons/payment/static/src/js/payment_form.js:253
-#: code:addons/payment/static/src/js/payment_form.js:297
-#: code:addons/payment/static/src/js/payment_form.js:332
+#: code:addons/payment/static/src/js/payment_form.js:120
+#: code:addons/payment/static/src/js/payment_form.js:135
+#: code:addons/payment/static/src/js/payment_form.js:175
+#: code:addons/payment/static/src/js/payment_form.js:181
+#: code:addons/payment/static/src/js/payment_form.js:287
+#: code:addons/payment/static/src/js/payment_form.js:334
+#: code:addons/payment/static/src/js/payment_form.js:369
 #, python-format
 msgid "Server Error"
-msgstr ""
+msgstr "伺服器錯誤"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "伺服器到伺服器"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:266
+#: code:addons/payment/static/src/js/payment_form.js:302
 #, python-format
 msgid "Server error"
-msgstr ""
+msgstr "伺服器錯誤"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_short_name
+#: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
-msgstr ""
+msgstr "簡名"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 #: selection:payment.acquirer,provider:0
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "小尺寸圖像"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image_small
 msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr ""
+msgstr "此供應商的小尺寸圖像。保持縱橫比，自動縮放為64x64px的圖像。用於任何需要小圖像的字段。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "特定國家/地區"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_state
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__state
 msgid "Status"
 msgstr "狀態"
 
@@ -1138,86 +1298,104 @@ msgstr "狀態"
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "條帶"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "支援的支付圖標"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
+#: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "用來登記方法的模板"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "測試"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__post_msg
 msgid "Thanks Message"
-msgstr ""
+msgstr "感謝留言"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:570
+#: code:addons/payment/models/payment_acquirer.py:821
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
-msgstr ""
+msgstr "付款受讓人 %s 無法使用手動捕獲模式！"
 
 #. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer encode his payment details on the website."
-msgstr ""
-
-#. module: payment
-#: selection:payment.acquirer,payment_flow:0
-msgid "The customer is redirected to the website of the acquirer."
-msgstr ""
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:563
+#: code:addons/payment/models/payment_acquirer.py:645
 #, python-format
-msgid "The payment transaction reference must be unique!"
+msgid "The customer has selected %s to pay this document."
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_payment.py:42
+#: code:addons/payment/models/payment_acquirer.py:662
 #, python-format
 msgid ""
-"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
-"Please use a token from another provider than %s."
+"The transaction %s with %s for %s has been authorized. Waiting for "
+"capture..."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_icon_image
+#: code:addons/payment/models/payment_acquirer.py:667
+#, python-format
+msgid ""
+"The transaction %s with %s for %s has been cancelled with the following "
+"message: %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:670
+#, python-format
+msgid "The transaction %s with %s for %s has been cancelled."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:664
+#, python-format
+msgid ""
+"The transaction %s with %s for %s has been confirmed. The related payment is"
+" posted: %s"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:660
+#, python-format
+msgid "The transaction %s with %s for %s is pending."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_icon__image
 msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
-msgstr ""
+msgstr "此字段可控制用於此支付圖標的圖像的大小，上限為 1024x1024px"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_image
+#: model:ir.model.fields,help:payment.field_payment_acquirer__image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
-msgstr ""
+msgstr "這個字段保持著這個供應方的圖像，限制為1024x1024px"
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
+#: model:ir.model.fields,help:payment.field_payment_acquirer__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
+#: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
 msgid ""
 "This payment gateway is available for selected countries. If none is "
 "selected it is available for all countries."
-msgstr ""
+msgstr "此支付入口適用於所選國家/地區。如果未選擇任何國家/地區，則適用於所有國家/地區。"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1225,69 +1403,126 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"此模板提供具有所有必要值的受讓人按鈕。\n"
+"                                            它使用以下評估上下文，通過 qWeb 進行轉譯："
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
+msgid "Transactions"
+msgstr "交易"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
-msgstr ""
+msgstr "在選擇付款收單方後提供轉帳信息。"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_type
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__type
 msgid "Type"
-msgstr ""
+msgstr "類型"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__date
 msgid "Validation Date"
-msgstr ""
+msgstr "審核日期"
 
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Validation of the bank card"
-msgstr ""
+msgstr "銀行卡驗證"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "可變國內費用(百分比)"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "可變國際費用（百分比）"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_token_verified
+#: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
-msgstr ""
+msgstr "已驗證"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "在門戶/網站可見"
 
 #. module: payment
+#: model:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
+msgstr "無效交易"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:651
+#, python-format
+msgid "Waiting for payment confirmation..."
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:318
+#: code:addons/payment/static/src/js/payment_form.js:355
 #, python-format
 msgid "Warning!"
+msgstr "警告!"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:136
+#, python-format
+msgid "We are not able to add your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:303
+#, python-format
+msgid "We are not able to add your payment method at the moment.</p>"
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:335
+#: code:addons/payment/static/src/js/payment_form.js:370
+#, python-format
+msgid "We are not able to delete your payment method at the moment."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:176
+#, python-format
+msgid "We are not able to redirect you to the payment form."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:182
+#, python-format
+msgid "We are not able to redirect you to the payment form. "
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:191
+#, python-format
+msgid "We're unable to process your payment."
 msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
-msgstr ""
+msgstr "電匯"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
-msgid "You will be prompt with Stripe Payment page for payment information."
+msgid "You will be prompted with Stripe Payment page for payment information."
 msgstr ""
 
 #. module: payment
@@ -1295,117 +1530,135 @@ msgstr ""
 msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "點選支付按鈕後您將被重導向到 Adyen 網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
 msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
-msgstr ""
+msgstr "點選付款按鈕後您將會被重導向到授權網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
-msgstr ""
+msgstr "在點選支付按鈕後您將會被重新定向到Buckaroo網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
-msgstr ""
+msgstr "點選支付按鈕後您將被重導向到 Ingenico 網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
 msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
-msgstr ""
+msgstr "點選支付按鈕後您將被重導向到 PayUmoney 網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
 msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
-msgstr ""
+msgstr "點選支付按鈕後您將被重導向到Paypal網站。"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
-msgstr ""
+msgstr "點選支付按鈕後您將被重導向到Sips網站。"
+
+#. module: payment
+#: model:ir.ui.view,arch_db:payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "您的付款已獲授權。"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr ""
+msgstr "郵編"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
-msgstr ""
+msgstr "郵政編碼"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "acquirer: payment.acquirer 瀏覽記錄"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "金額：交易金額、浮點數"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "更多"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "上下文：目前上下相關字典"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
+msgstr "貨幣：交易幣別瀏覽記錄"
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:121
+#: code:addons/payment/static/src/js/payment_form.js:288
+#, python-format
+msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "合作夥伴：客戶瀏覽歷史，不一定完全"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
+msgstr "合作夥伴_值：有關買家的特定值，例如來自貨運單"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "參考：交易參考號碼"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url：交易後在表單上顯示的網址"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values：交易價值"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr ""
+msgstr "使用者：目前使用者瀏覽記錄"
+
+#. module: payment
+#: model:ir.model,name:payment.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

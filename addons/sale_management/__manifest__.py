@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Sales Management',
+    'name': 'Sales',
     'version': '1.0',
     'category': 'Sales',
-    'sequence': 15,
-    'summary': 'Quotations, Sales Orders, Invoicing',
+    'sequence': 17,
+    'summary': 'From quotes to invoices',
     'description': """
 Manage sales quotations and orders
 ==================================
@@ -41,10 +41,22 @@ The Dashboard for the Sales Manager will include
 * Monthly Turnover (Graph)
     """,
     'website': 'https://www.odoo.com/page/sales',
-    'depends': ['sale', 'account_invoicing'],
+    'depends': ['sale', 'digest'],
     'data': [
+        'security/sale_management_security.xml',
+        'data/sale_order_template_data.xml',
+        'views/sale_portal_templates.xml',
+        'views/sale_order_template_views.xml',
+        'security/ir.model.access.csv',
+        'views/res_config_settings_views.xml',
+        'data/digest_data.xml',
         'views/sale_management_views.xml',
-        'views/sale_management_templates.xml',
+        'views/digest_views.xml',
+        'views/sale_order_views.xml',
+        'report/sale_report_templates.xml',
+    ],
+    'demo': [
+        'data/sale_order_template_demo.xml',
     ],
     'application': True,
     'uninstall_hook': 'uninstall_hook',

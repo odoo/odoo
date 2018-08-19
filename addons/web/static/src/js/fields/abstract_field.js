@@ -107,6 +107,9 @@ var AbstractField = Widget.extend({
         var fieldsInfo = record.fieldsInfo[this.viewType];
         this.attrs = options.attrs || (fieldsInfo && fieldsInfo[name]) || {};
 
+        // the 'additionalContext' property contains the attributes to pass through the context.
+        this.additionalContext = options.additionalContext || {};
+
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')
         // is no longer valid.
@@ -304,7 +307,6 @@ var AbstractField = Widget.extend({
         this._reset(record, event);
         return this._render() || $.when();
     },
-
     /**
      * Remove the invalid class on a field
      */
@@ -312,7 +314,15 @@ var AbstractField = Widget.extend({
         this.$el.removeClass('o_field_invalid');
         this.$el.removeAttr('aria-invalid');
     },
-
+    /**
+     * Sets the given id on the focusable element of the field and as 'for'
+     * attribute of potential internal labels.
+     *
+     * @param {string} id
+     */
+    setIDForLabel: function (id) {
+        this.getFocusableElement().attr('id', id);
+    },
     /**
      * add the invalid class on a field
      */
@@ -320,7 +330,6 @@ var AbstractField = Widget.extend({
         this.$el.addClass('o_field_invalid');
         this.$el.attr('aria-invalid', 'true');
     },
-
     /**
      * Update the modifiers with the newest value.
      * Now this.attrs.modifiersValue can be used consistantly even with

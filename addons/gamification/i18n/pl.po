@@ -2,24 +2,12 @@
 # This file contains the translation of the following modules:
 # * gamification
 # 
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
-# Paweł Michoń <michon.pawel@wp.pl>, 2017
-# Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
-# zieloo <zieloo@gmail.com>, 2017
-# zbik2607 <darek@krokus.com.pl>, 2017
-# Mariusz <waniliowy@o2.pl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Mariusz <waniliowy@o2.pl>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,28 +16,191 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: gamification
+#: code:addons/gamification/models/challenge.py:594
+#, python-format
+msgid "%s has joined the challenge"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:603
+#, python-format
+msgid "%s has refused the challenge"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,body_html:gamification.email_template_badge_received
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Badge</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.badge_id.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${object.user_id.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${object.user_id.company_id.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        Congratulations ${object.user_id.name} !<br/>\n"
+"                        You just received badge <strong>${object.badge_id.name}</strong> !<br/>\n"
+"                        % if object.badge_id.description\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
+"                            <tbody><tr>\n"
+"                                <td valign=\"center\">\n"
+"                                    <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                                </td>\n"
+"                                <td valign=\"center\">\n"
+"                                    <cite>${object.badge_id.description}</cite>\n"
+"                                </td>\n"
+"                            </tr></tbody>\n"
+"                            </table>\n"
+"                        % endif\n"
+"                        <br/>\n"
+"                        % if object.sender_id\n"
+"                            This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
+"                        % endif\n"
+"                        <br/>\n"
+"                        % if object.comment\n"
+"                            ${object.comment}\n"
+"                        % endif\n"
+"                        <br/><br/>\n"
+"                        Thank you,\n"
+"                        <br/>\n"
+"                        % if object.sender_id and object.sender_id.signature:\n"
+"                            ${object.sender_id.signature | safe}\n"
+"                        % endif\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${object.user_id.company_id.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${object.user_id.company_id.phone}\n"
+"                    % if object.user_id.company_id.email\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % endif\n"
+"                    % if object.user_id.company_id.website\n"
+"                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                        ${object.user_id.company_id.website}\n"
+"                    </a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"\n"
+"\n"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:660
+#, python-format
+msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:657
+#, python-format
+msgid ""
+"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
+" challenge."
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:655
+#, python-format
+msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/challenge.py:665
+#, python-format
+msgid ""
+"<br/>Special rewards were sent to the top competing users. The ranking for "
+"this challenge is :"
+msgstr ""
+
+#. module: gamification
+#: model:mail.template,body_html:gamification.email_template_goal_reminder
+msgid ""
+"<div>\n"
+"    <strong>Reminder ${object.name}</strong><br/>\n"
+"You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.\n"
+"<br/><br/>\n"
+"Thank you,\n"
+"    <br/>\n"
+"    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:\n"
+"    ${object.challenge_id.manager_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+msgid ""
+"<span class=\"o_stat_text\">Related</span>\n"
+"                                <span class=\"o_stat_text\">Goals</span>"
+msgstr ""
+
+#. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
 msgid ""
-"\n"
-"                 \n"
-"% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
-"% set challenge_lines = ctx.get('challenge_lines', [])     \n"
-"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"font-family: 'Helvetica'; background-color: #EEE; border-collapse: collapse;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-color: #EEE; border-collapse: collapse;\">\n"
 "<tr>\n"
 "    <td valign=\"top\" align=\"center\">\n"
-"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 600px;\">\n"
+"        % set record = ctx.get('record')\n"
+"        % set company = record and record.company_id or user.company_id\n"
+"        % set challenge_lines = ctx.get('challenge_lines', [])     \n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style=\"margin: 0 auto; width: 570px;\">\n"
 "            <tr><td>\n"
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
 "                    <tr>\n"
-"                        <td valign=\"middle\" align=\"left\" style=\"padding:30px 15px;\">\n"
-"                            <img width=\"90\" src=\"/logo.png?company=${user.company_id.id}\" style=\"width:80px;\"/>\n"
-"                        </td>\n"
-"                        % if object.visibility_mode == 'ranking':\n"
-"                            <td style=\"padding:15px;\">\n"
-"                                <p style=\"font-size:20px;color:#666666;\" align=\"right\">Leaderboard</p>\n"
-"                            </td>\n"
-"                        % endif\n"
+"                        <div>\n"
+"                            % if object.visibility_mode == 'ranking':\n"
+"                                <td style=\"padding:15px;\">\n"
+"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Leaderboard</p>\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </div>\n"
 "                    </tr>\n"
 "                </table>\n"
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
@@ -59,7 +210,7 @@ msgid ""
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
-"                                        <p style=\"font-size:27px;color:#666666;\">Personal Performance</p>\n"
+"                                        <div>Personal Performance</div>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -72,16 +223,12 @@ msgid ""
 "                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Completeness</th>\n"
 "                                    </tr>\n"
 "                                    <tr>\n"
-"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"/>\n"
 "                                    </tr>\n"
 "                                </thead>\n"
 "                                <tbody>\n"
 "                                % for line in challenge_lines:\n"
-"                                    <tr\n"
-"                                        % if line['completeness'] >= 100:\n"
-"                                            style=\"font-weight:bold;\"\n"
-"                                        % endif\n"
-"                                        >\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
 "                                        <td style=\"padding: 20px 0;\" align=\"left\">\n"
 "                                            ${line['name']}\n"
 "                                            % if line['suffix'] or line['monetary']:\n"
@@ -101,7 +248,7 @@ msgid ""
 "                                        <td style=\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong>${line['completeness']| int}%</strong></td>\n"
 "                                    </tr>\n"
 "                                    <tr>\n"
-"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                        <td colspan=\"5\" style=\"height:1px;background-color:#e3e3e3;\"/>\n"
 "                                    </tr>\n"
 "                                % endfor        \n"
 "                                </tbody>\n"
@@ -112,15 +259,15 @@ msgid ""
 "                            </span> \n"
 "                            % for line in challenge_lines:\n"
 "                                <!-- Header + Button table -->\n"
-"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"style=\"margin-top:35px;\">\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:35px;\">\n"
 "                                    <tr>\n"
 "                                        <td width=\"50%\">\n"
-"                                            <p style=\"font-size:22px;color:#666666;\">Top Achievers for goal <strong>${line['name']}</strong></p>\n"
+"                                            <div>Top Achievers for goal <strong>${line['name']}</strong></div>\n"
 "                                        </td>\n"
 "                                    </tr>\n"
 "                                </table>\n"
 "                                <!-- Podium -->\n"
-"                                % if len(line['goals'])>2:\n"
+"                                % if len(line['goals']) == 2:\n"
 "                                    <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
 "                                        <tr><td style=\"padding:0 30px;\">\n"
 "                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
@@ -129,7 +276,7 @@ msgid ""
 "                                                    % for goal in top_goals:\n"
 "                                                        <td align=\"center\" style=\"width:32%;\">\n"
 "                                                            % if loop.index == 1:\n"
-"                                                                % set extra_div = '<div style=\"height:40px;\"></div>'\n"
+"                                                                % set extra_div = '<div style=\"height:40px;\"/>'\n"
 "                                                                % set heightA = 95\n"
 "                                                                % set heightB = 75\n"
 "                                                                % set bgColor = '#b898b0'\n"
@@ -143,7 +290,7 @@ msgid ""
 "                                                                % set fontSize = 85\n"
 "                                                                % set podiumPosition = '1'\n"
 "                                                            % elif loop.index == 3:\n"
-"                                                                % set extra_div = '<div style=\"height:60px;\"></div>'\n"
+"                                                                % set extra_div = '<div style=\"height:60px;\"/>'\n"
 "                                                                % set heightA = 115\n"
 "                                                                % set heightB = 55\n"
 "                                                                % set bgColor = '#c8afc1'\n"
@@ -157,20 +304,18 @@ msgid ""
 "                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
 "                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
 "                                                                    </div> \n"
-"                                                                    <div align=\"center\" style =\"color:${bgColor};height:20px\">\n"
+"                                                                    <div align=\"center\" style=\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
-"                                                                    </div \n"
+"                                                                    </div>\n"
 "                                                                </div>\n"
 "                                                                <div style=\"background-color:${bgColor | safe};height:${heightB}px;\">\n"
 "                                                                    <strong><span style=\"color:#fff;font-size:${fontSize}px;\">${podiumPosition | safe}</span></strong>\n"
 "                                                                </div>\n"
 "                                                                <div style=\"height:30px;\">\n"
-"                                                                    <p style=\"color:#9A6C8E;font-size:20px;margin-top:10px;\">\n"
-"                                                                        ${\"%.2f\" % goal['current']}\n"
-"                                                                        % if line['suffix'] or line['monetary']:\n"
-"                                                                            ${line['full_suffix']}\n"
-"                                                                        % endif\n"
-"                                                                    </p>\n"
+"                                                                    ${\"%.2f\" % goal['current']}\n"
+"                                                                    % if line['suffix'] or line['monetary']:\n"
+"                                                                        ${line['full_suffix']}\n"
+"                                                                    % endif\n"
 "                                                                </div>\n"
 "                                                            </div>\n"
 "                                                        </td>\n"
@@ -197,10 +342,10 @@ msgid ""
 "                                                                (${company.currency_id.symbol})\n"
 "                                                            % endif\n"
 "                                                        </th>\n"
-"                                                        <th style=\"width:30%;text-align:right;\"\">Completeness</th>\n"
+"                                                        <th style=\"width:30%;text-align:right;\">Completeness</th>\n"
 "                                                    </tr>\n"
 "                                                    <tr>\n"
-"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"/>\n"
 "                                                    </tr>\n"
 "                                                </thead>\n"
 "                                                <tbody>\n"
@@ -218,7 +363,7 @@ msgid ""
 "                                                            <td width=\"30%\" style=\"color:${tdPercentageColor};background-color:${tdBgColor};padding-right:15px;font-size:22px;\" align=\"right\"><strong>${goal['completeness'] | int}%</strong></td>\n"
 "                                                        </tr>\n"
 "                                                        <tr>\n"
-"                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                            <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"/>\n"
 "                                                        </tr>\n"
 "                                                    % endfor\n"
 "                                                </tbody>\n"
@@ -230,145 +375,12 @@ msgid ""
 "                        % endif\n"
 "                    </td></tr>\n"
 "                </table>\n"
-"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"padding: 15px; color: #666666;margin-bottom: 5px;\">\n"
-"                    <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                            <table width=\"580\" border=\"0\" cellpadding=\"0\" style=\"min-width: 580px; font-size: 12px;\">\n"
-"                                <tr>\n"
-"                                    <td valign=\"middle\" align=\"left\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
-"                                        ${company.name}<br/>\n"
-"                                        ${company.phone or ''}\n"
-"                                    </td>\n"
-"                                    <td valign=\"middle\" align=\"right\" style=\"padding-top: 10px; padding-bottom: 10px;\">\n"
-"                                        % if company.email:\n"
-"                                            <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: #666666;\">${company.email}</a><br/>\n"
-"                                        % endif\n"
-"                                        % if company.website:\n"
-"                                            <a href=\"${company.website}\" style=\"text-decoration:none; color: #666666;\">\n"
-"                                               ${company.website}\n"
-"                                            </a>\n"
-"                                        % endif\n"
-"                                    </td>\n"
-"                                </tr>\n"
-"                            </table>\n"
-"                        </td>\n"
-"                    </tr> \n"
-"                    <tr>\n"
-"                        <td align=\"center\">\n"
-"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </table>\n"
 "            </td></tr>\n"
 "        </table>\n"
 "    </td>\n"
 "</tr>\n"
 "</table>\n"
-"            \n"
-"\n"
-msgstr ""
-
-#. module: gamification
-#: model:mail.template,body_html:gamification.email_template_goal_reminder
-msgid ""
-"\n"
-"    <p>\n"
-"        <strong>Reminder ${object.name}</strong>\n"
-"    </p>\n"
-"    \n"
-"    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr ""
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:589
-#, python-format
-msgid "%s has joined the challenge"
-msgstr ""
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:598
-#, python-format
-msgid "%s has refused the challenge"
-msgstr ""
-
-#. module: gamification
-#: model:mail.template,body_html:gamification.email_template_badge_received
-msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><div>\n"
-"    <p>Congratulations ${object.user_id.name} !</p>\n"
-"    <p>You just received badge <strong>${object.badge_id.name}</strong> !</p>\n"
-"</div>\n"
-"<div>\n"
-"% if object.badge_id.description\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
-"<tbody><tr>\n"
-"    <td valign=\"center\">\n"
-"        <img src=\"/web/image/gamification.badge/${object.badge_id.id}/image/80x80\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
-"    </td>\n"
-"    <td valign=\"center\">\n"
-"        <cite>${object.badge_id.description}</cite>\n"
-"    </td>\n"
-"</tr></tbody>\n"
-"</table>\n"
-"% endif\n"
-"</div>\n"
-"<div>\n"
-"    <p>\n"
-"% if object.sender_id\n"
-"        This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
-"% endif\n"
-"    </p>\n"
-"    <p>\n"
-"% if object.comment\n"
-"        <em>${object.comment}</em>\n"
-"% endif\n"
-"    </p>\n"
-"</div>\n"
-"</data>"
-msgstr ""
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:655
-#, python-format
-msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:652
-#, python-format
-msgid ""
-"<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
-" challenge."
-msgstr ""
-"<br/>Nikomu nie udało się osiągnąć wszystkich celów, za to wyzwanie nikt nie"
-" otrzymuje odznaki."
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:650
-#, python-format
-msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
-"<br/>Nagroda (badge %s) dla każdego użytkownika, któremu się udało, została "
-"wysłana do %s."
-
-#. module: gamification
-#: code:addons/gamification/models/challenge.py:660
-#, python-format
-msgid ""
-"<br/>Special rewards were sent to the top competing users. The ranking for "
-"this challenge is :"
-msgstr ""
-"<br/>Specjalne nagrody zostały wysłane do najlepszych użytkowników "
-"uczestniczących w rywalizacji. Ranking dla tego wyzwania przedstawia się "
-"następująco :"
-
-#. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
-msgid ""
-"<span class=\"o_stat_text\">Related</span>\n"
-"                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
 
 #. module: gamification
@@ -387,15 +399,13 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_condition_3120
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
+#: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Cel jest uznany za wypełniony, kiedy aktualna wartość jest porównywana do "
-"wartości do osiągnięcia"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -407,42 +417,48 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr "Wybrana lista użytkowników"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
 msgid "Action"
-msgstr "Akcja"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
 msgid "Active"
-msgstr "Aktywne"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "Opcje zaawansowane"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr "Dodatek do udzielenia"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_user_domain
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__user_domain
 msgid "Alternative to a list of users"
-msgstr "Alternatywa dla listy użytkowników"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_category
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__category
 msgid "Appears in"
-msgstr "Pojawia się w"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr "Przydziel wyzwanie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -453,60 +469,60 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Authorized Users"
-msgstr "Autoryzowani użytkownicy"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr "Automatyczne: wykonaj konkretny kod pythonowy"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: number of records"
-msgstr "Automatyczne: liczba rekordów"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: sum on a field"
-msgstr "Automatyczne: suma w polu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_badge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr "Odznaka"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr "Opis odznaki"
+msgstr ""
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr "Odznaka przyznana"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr "Lista odznak"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_badge_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Name"
-msgstr "Nazwa odznaki"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr "Odznaki"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -516,152 +532,146 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"Odznaki są przyznawane po zakończeniu wyzwania. Może to oznaczać zakończenie"
-" okresu działania (np. koniec miesiąca przy miesięcznym wyzwaniu), końcową "
-"datę wyzwania (jeśli okresowość nie została ustawiona) lub po ręcznym "
-"zamknięciu wyzwania."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
 msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr "Wspaniale"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr "Nie można przyznać"
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:412
+#: code:addons/gamification/models/goal.py:413
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr "Nie można zmieniać konfiguracji zaczętego celu"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "Anuluj"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Canceled"
-msgstr "Anulowano"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr "Kategoria"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_challenge_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_challenge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__challenge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__challenge_id
 msgid "Challenge"
-msgstr "Wyzwanie"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_line_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__line_id
 msgid "Challenge Line"
-msgstr "Pozycja wyzwania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr "Pozycje wyzwania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__name
 msgid "Challenge Name"
-msgstr "Nazwa wyzwania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_challenge_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
 msgid "Challenge originating"
-msgstr "Wyzwanie zapoczątkowujące"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_challenge_id
+#: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
-"Wyzwanie, które wygenerowało cel, przypisz wyzwanie do użytkowników, aby "
-"wygenerować cele z wartością w tym polu."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
-msgstr "Wyzwania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max
+#: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "Zaznacz, aby ustawić miesięczny limit na osobę wysyłania tej odznaki"
-
-#. module: gamification
-#: model:ir.actions.act_window,help:gamification.badge_list_action
-msgid "Click to create a badge."
 msgstr ""
-
-#. module: gamification
-#: model:ir.actions.act_window,help:gamification.challenge_list_action
-msgid "Click to create a challenge."
-msgstr "Kliknij, aby utworzyć wyzwanie."
-
-#. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_definition_list_action
-msgid "Click to create a goal definition."
-msgstr ""
-
-#. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_list_action
-msgid "Click to create a goal."
-msgstr "Kliknij, aby utworzyć cel."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr "Klikalne cele"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_closed
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
-msgstr "Zamknięty cel"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_comment
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__comment
 msgid "Comment"
-msgstr "Komentarz"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr "Uzupełnij swój profil"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_completeness
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr "Kompletność"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_computation_mode
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_computation_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__computation_mode
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
-msgstr "Tryb obliczeniowy"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr "Utwórz użytkownika"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.badge_list_action
+msgid "Create a new badge"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.challenge_list_action
+msgid "Create a new challenge"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goal_list_action
+msgid "Create a new goal"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goal_definition_list_action
+msgid "Create a new goal definition"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -671,145 +681,135 @@ msgid ""
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
 msgstr ""
-"Twórz i zarządzaj użytkownikami, którzy będą się łączyć z systemem. "
-"Użytkownicy mogą zostać zdezaktywowani, jeśli pojawi się okres czasu, kiedy "
-"nie będą lub nie powinni łączyć się z systemem. Możesz przydzielić ich do "
-"grup, aby nadać im specyficzne uprawnienia do aplikacji, których potrzebują "
-"używać w systemie."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_date
 msgid "Created"
-msgstr "Utworzono"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_uid
 msgid "Created by"
-msgstr "Utworzone przez"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_create_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_uid
 msgid "Creator"
-msgstr "Twórca"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_current
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
 msgid "Current"
-msgstr "Bieżące"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_current
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr "Aktualna wartość"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Daily"
-msgstr "Codziennie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
-msgstr "Dane"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_date_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
 msgid "Date Field"
-msgstr "Pole daty"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_category
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__category
 msgid "Define the visibility of the challenge through menus"
-msgstr "Definiuj widoczność wyzwania w menu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_computation_mode
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_computation_mode
+#: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
-"Zdefiniuj, jak cele będą obliczane. Wynik tej operacji będzie przechowywany "
-"w polu \"Bieżące\""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3119
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
 msgid "Definition Description"
-msgstr "Opis definicji"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
 msgstr ""
-"W zależności od trybu wyświetlania, raporty mogą być indywidualne lub "
-"dzielone."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
-"Opisz wyzwanie: co robi, do kogo jest skierowane, dlaczego ma znaczenie..."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Opisz co zrobili i dlaczego jest to ważne (widoczne dla wszystkich)."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_description
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_description
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__description
 msgid "Description"
-msgstr "Opis"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_visibility_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__visibility_mode
 msgid "Display Mode"
-msgstr "Tryb wyświetlania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_display_name
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__display_name
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_mode
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_display
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
 msgid "Displayed as"
-msgstr "Wyświetlane jako"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_distinctive_field
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_domain
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
 msgid ""
 "Domain for filtering records. General rule, not user depending, e.g. "
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
@@ -820,126 +820,144 @@ msgstr ""
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Wykonano"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: selection:gamification.goal,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
-msgstr "Szkic"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_end_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_end_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr "Data końcowa"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "Evaluated expression for batch mode"
 msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "Everyone"
-msgstr "Wszyscy"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Exclusive (done or not-done)"
-msgstr "Wyłączne (zrobione lub nie zrobione)"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Failed"
-msgstr "Nie udało się"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
 msgid "Field to Sum"
-msgstr "Pole do zsumowania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__domain
 msgid "Filter Domain"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_follower_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_channel_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
 msgid "For 1st user"
-msgstr "Dla pierwszego użytkownika"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_second_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_second_id
 msgid "For 2nd user"
-msgstr "Dla drugiego użytkownika"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_third_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_third_id
 msgid "For 3rd user"
-msgstr "Dla trzeciego użytkownika"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_id
 msgid "For Every Succeeding User"
 msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Formating Options"
-msgstr "Opcje formatowania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "Od"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_full_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
 msgid "Full Suffix"
-msgstr "Pełny przyrostek"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr "Narzędzia grywalizacji"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "Odznaka grywalizacyjna"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr "Wyzwanie grywalizacyjne"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr "Typowy cel grywalizacyjny dla wyzwania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
 msgid "Gamification goal definition"
-msgstr "Definicja celu grywalizacyjnego"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification goal instance"
-msgstr "Przypadek celu grywalizacyjnego"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "Odznaka grywalizacyjna użytkownika"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
@@ -949,60 +967,60 @@ msgid "Gamification: Goal Challenge Check"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goal"
-msgstr "Cel"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id_3104
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr "Definicja celu"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr "Definicje celów"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
 msgid "Goal Description"
-msgstr "Opis celu"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr "Cel nieosiągnięty"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
-msgstr "Lista celów"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_condition_3120
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__condition
 msgid "Goal Performance"
-msgstr "Wykonanie celów"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Reached"
-msgstr "Cel osiągnięty"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model:ir.ui.view,arch_db:gamification.challenge_list_view
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
-msgstr "Definicje celów"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -1010,71 +1028,71 @@ msgstr "Definicje celów"
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
-msgstr "Cele"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr "Dobra robota"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr "Przyznaj"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "Przyznaj odznakę"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Przyznaj odznakę użytkownikowi"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Przyznaj tę odznakę"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr "Przyznane przez"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
-msgstr "Przyznawanie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
-msgstr "Grupuj wg"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_report_message_group_id
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr "Grupa, która otrzyma kopię raportu oprócz tego użytkownika"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
-msgstr "Wyzwania kadrowe"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
-msgstr "Ukryte"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
-msgstr "Jak obliczyć cel?"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
@@ -1082,41 +1100,59 @@ msgid "Human Resources / Engagement"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr "Pole ID użytkownika"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
+#: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
 msgid "If a maximum is set"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_challenge_id
-msgid "If this badge was rewarded through a challenge"
-msgstr "Jeśli ta odznaka została przydzielona w ramach wyzwania"
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_unread
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
+msgid "If this badge was rewarded through a challenge"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__image
 msgid "Image"
-msgstr "Obraz"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 msgid "In Progress"
-msgstr "W toku"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1126,188 +1162,201 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_distinctive_field
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_last_update
+#: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
 msgid ""
 "In case of manual goal, reminders are sent if the goal as not been updated "
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
 msgstr ""
-"W przypadku ręcznie ustawionych celów, przypomnienia są wysyłane jeśli cel "
-"nie był uaktualniany przez pewien czas (zdefiniowany w wyzwaniu). Ignorowane"
-" w przypadku celów nie ustawianych ręcznie i celów nie powiązanych z "
-"wyzwaniem."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "In progress"
-msgstr "W toku"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
 msgid "Individual Goals"
-msgstr "Cele indywidualne"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr "Zaproś nowych użytkowników"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition___last_update
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard___last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition____last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard____last_update
 msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
 msgid "Last Report Date"
-msgstr "Data ostatniego raportu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_last_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__last_update
 msgid "Last Update"
-msgstr "Ostatnia aktualizacja"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_uid
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_write_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__write_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__write_date
 msgid "Last Updated on"
-msgstr "Ostatnia aktualizacja"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
 msgid "Leader Board (Group Ranking)"
-msgstr "Tablica liderów (ranking grupy)"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max_number
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max_number
 msgid "Limitation Number"
-msgstr "Liczba ograniczenia"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
-msgstr "Lista pozycji"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__line_ids
 msgid "Lines"
-msgstr "Pozycje"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
 msgid "List of goals that will be set"
-msgstr "Lista celów do ustawienia"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
 msgid "List of users participating to the challenge"
-msgstr "Lista użytkowników biorących udział w wyzwaniu"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
-msgstr "Obserwująca grupa mailowa"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr "Model"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
 msgid "Monetary"
-msgstr "Pieniężny"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
 msgid "Monetary Value"
-msgstr "Wartość pieniężna"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Monthly"
-msgstr "Miesięcznie"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max
 msgid "Monthly Limited Sending"
-msgstr "Wysyłanie ograniczone miesięcznie"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_this_month
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_this_month
 msgid "Monthly total"
-msgstr "Miesięczna wartość całkowita"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr "Moje cele"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "My Monthly Sending Total"
-msgstr "Moja miesięczna wartość całkowita wysyłania"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_this_month
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_this_month
 msgid "My Monthly Total"
-msgstr "Moja miesięczna wartość całkowita"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my
 msgid "My Total"
-msgstr "Moja wartość całkowita"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_name
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
 msgid "Name"
-msgstr "Nazwa"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Never"
-msgstr "Nigdy"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
 msgstr ""
-"Nigdy nie przypominać, jeśli nie wyszczególniono wartości lub wpisano zero."
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -1315,14 +1364,19 @@ msgid "New badge ${object.badge_id.name} granted"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
 msgid "Next Report Date"
-msgstr "Data następnego raportu"
+msgstr ""
+
+#. module: gamification
+#: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
+msgid "No goal found"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
-msgstr "Brak limitu miesięcznego wysyłania"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
@@ -1332,34 +1386,63 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "No one, assigned through challenges"
-msgstr "Nikt, przypisywane w wyzwaniach"
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:667
+#: code:addons/gamification/models/challenge.py:672
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
-"Nikt nie osiągnął wymaganych warunków, aby otrzymać specjalne odznaki."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 msgid "Non recurring"
-msgstr "Nie powtarzające się"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_remind_update_delay
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
-msgstr "Nieaktualizowane ustawione ręcznie cele będą przypominane po"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
-msgstr "Wiadomości z powiadomieniami"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count_distinct
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,help:gamification.field_gamification_badge__message_unread_counter
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count_distinct
 msgid "Number of users"
-msgstr "Liczba użytkowników"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
@@ -1367,215 +1450,209 @@ msgid "On change"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_badge_ids
+#: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "Tylko osoby z tymi odznakami mogą dawać tę odznakę"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth_user_ids
+#: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "Tylko te osoby mogą dawać tę odznakę"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr "Optymalizacja"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_owner_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
-msgstr "Właściciele"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "People having some badges"
-msgstr "Osoby posiadające kilka odznak"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
-msgstr "Okres"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_period
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__period
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
 msgstr ""
-"Okres automatycznego przypisywania celów. Jeśli żaden nie zostanie wybrany, "
-"będzie trzeba wystartować ręcznie."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_period
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
 msgid "Periodicity"
-msgstr "Okresowość"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr "Rozwiązywacz problemów"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr "Progresywny (używając wartości numerycznych)"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__compute_code
 msgid "Python Code"
-msgstr "Kod Python"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_compute_code
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
 msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
-"Kod w języku Python, który zostanie wykonany dla każdego użytkownika. "
-"\"Wynik\" powinien zawierać nową wartość aktualną. Do ewaluowanego "
-"użytkownika można dotrzeć przez object.user_id."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Reached"
-msgstr "Osiągnięto"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr "Osiągnięte, gdy aktualna wartość wynosi"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Recorded manually"
-msgstr "Odnotowano ręcznie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr "Odnośnik"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
-msgstr "Odśwież wyzwanie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
-msgstr "Cele powiązane"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard_user_id
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_remaining_sending
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr "Pozostało zezwolonych wysłań"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_remind_update_delay
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr "Przypomnij o opóźnieniu"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr "Przypomnienia dla ręcznie ustawionych celów"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_frequency
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
 msgid "Report Frequency"
-msgstr "Częstotliwość raportów"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_template_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_template_id
 msgid "Report Template"
-msgstr "Szablon raportu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_badge_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "Wymagane odznaki"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr "Resetuj zakończenie"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_manager_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
 msgid "Responsible"
-msgstr "Odpowiedzialny"
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:490
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
-"Odzyskiwanie postępu w wyzwaniu osobistym bez informacji o użytkowniku"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reward"
-msgstr "Nagroda"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_failure
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr "Wynagrodzić najlepszych, jeśli brak sukcesów?"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_realtime
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr "Nagródź natychmiast, gdy wszystkie cele są spełnione"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_challenge_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr "Nagroda w wyzwaniach"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_goal_definition_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
 msgid "Rewarded by"
-msgstr "Nagrodzony przez"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
-msgstr "Nagrody za wyzwania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr "Uruchomione"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr "Bieżące wyzwania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Planowanie"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr "Przeszukaj wyzwania"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr "Przeszukaj definicje celów"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr "Przeszukaj cele"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1583,56 +1660,54 @@ msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr ""
-"Zasady bezpieczeństwa określające, kto może ręcznie przyznawać odznaki. "
-"Nienarzucone dla administratora."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
-msgstr "Wyślij raport"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_group_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
-msgstr "Wyślij kopię do"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_sender_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
-msgstr "Nadawca"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_sequence
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr "Numeracja"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_sequence
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence number for ordering"
-msgstr "Numer porządkowy dla zamówień"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr "Ustaw aktualną wartość, którą osiągnąłeś dla tego celu"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr "Ustaw dane swojej firmy"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr "Ustaw logo swojej firmy"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
 #: model:gamification.goal.definition,name:gamification.definition_base_timezone
 msgid "Set your Timezone"
-msgstr "Ustaw swoją strefę czasową"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
@@ -1642,106 +1717,100 @@ msgstr ""
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr "Konfiguruj swoją firmę"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr "Rozpocznij wyzwanie"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_start_date
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_start_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__start_date
 msgid "Start Date"
-msgstr "Data Początkowa"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr "Rozpocznij cel"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_state
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_state
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__state
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Stan"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
-msgstr "Statystyki"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr "Subskrypcje"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3121
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_full_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__suffix
 msgid "Suffix"
-msgstr "Sufiks"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_invited_user_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
-msgstr "Zasugeruj użytkownikom"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_target_goal
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
 msgid "Target Value to Reach"
-msgstr "Wartość docelowa do osiągnięcia"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr "Cel: mniej niż"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_action_id
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr "Akcja, która zostanie wywołana, aby zaktualizować wartość dla celu."
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:646
+#: code:addons/gamification/models/challenge.py:651
 #, python-format
 msgid "The challenge %s is finished."
-msgstr "Wyzwanie %s jest zakończone."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_full_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_full_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix_3121
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
+#: model:ir.model.fields,help:gamification.field_gamification_goal__definition_suffix
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__full_suffix
 msgid "The currency and suffix field"
-msgstr "Pole waluty i sufiksu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_date_id
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr "Data do wykorzystania przy ewaluacji dla okresu"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_end_date
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
 msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
-"Dzień, kiedy nowe wyzwanie zostanie automatycznie zamknięte. Jeśli "
-"okresowość nie została ustawiona, ta data zostanie użyta jako data końcowa "
-"celu."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_start_date
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
 msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"Dzień, kiedy nowe wyzwanie zostanie automatycznie rozpoczęte. Jeśli "
-"okresowość nie została ustawiona, ta data zostanie użyta jako data "
-"początkowa celu."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:93
@@ -1751,51 +1820,44 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Dziedzina dla definicji %s wygląda na nieprawidłową, sprawdź to.\n"
-"\n"
-"%s"
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_id
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_id
 msgid "The field containing the value to evaluate"
-msgstr "Pole zawierające wartość do ewaluacji"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_res_id_field
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
 msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
-"Nazwa pola w profilu użytkownika (res.users) zawierającego wartość res_id "
-"dla akcji."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The higher the better"
-msgstr "Im wyżej, tym lepiej"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_owner_ids
+#: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "Lista przypadków przydzielenia tej odznaki użytkownikom"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_unique_owner_ids
+#: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "Lista unikalnych użytkowników, którzy otrzymali tę odznakę."
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The lower the better"
-msgstr "Im niżej, tym lepiej"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_max_number
+#: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr ""
-"Maksymalna ilość razów w miesiącu, kiedy ta odznaka może zostać wysłana, na "
-"osobę."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:110
@@ -1816,206 +1878,206 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
 msgid "The model object for the field to evaluate"
-msgstr "Obiekt modelu dla pola do ewaluacji"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_remind_update_delay
+#: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
 msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
 msgstr ""
-"Liczba dni, po których użytkownik przypisany do ustawionego ręcznie celu "
-"otrzyma przypomnienie. Jeśli wartość nie zostanie wpisana, przypomnienia nie"
-" będą wysyłane."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
 msgstr ""
-"Liczba ile razy bieżący użytkownik otrzymał tę odznakę w tym miesiącu."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "Liczba ile razy bieżący użytkownik otrzymał tę odznakę."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_monthly_sending
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "Liczba ile razy bieżący użytkownik wysłał tę odznakę w tym miesiącu."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count_distinct
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
 msgstr ""
-"Liczba ile razy ta odznaka została otrzymana przez unikalnych użytkowników."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_this_month
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "Liczba ile razy ta odznaka została otrzymana w tym miesiącu."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_stat_count
+#: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count
 msgid "The number of time this badge has been received."
-msgstr "Liczba ile razy ta odznaka została otrzymana."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_monetary
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__monetary
 msgid "The target and current value are defined in the company currency."
-msgstr "Docelowa i bieżąca wartość są definiowane w walucie firmy."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_suffix
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix
+#: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr "Jednostka docelowej i bieżącej wartości"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__manager_id
 msgid "The user responsible for the challenge."
-msgstr "Użytkownik odpowiedzialny za wyzwanie."
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_user_sender_id
+#: model:ir.model.fields,help:gamification.field_gamification_badge_user__sender_id
 msgid "The user who has send the badge"
-msgstr "Użytkownik, który wysłał odznakę"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_goal_definition_ids
+#: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
 msgstr ""
-"Użytkownicy, którzy osiągnęli te cele, automatycznie otrzymają odznakę."
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_user_expression
+#: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
 msgid ""
 "The value to compare with the distinctive field. The expression can contain "
 "reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
 msgstr ""
-"Wartość do porównania z konkretnym polem. Wyrażenie może zawierać odwołanie "
-"do \"użytkownika\", co oznacza przeszukanie rekordu dla bieżącego "
-"użytkownika, np. user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
-"There is no goals associated to this challenge matching your search.\n"
+"There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_goal_closed
+#: model:ir.model.fields,help:gamification.field_gamification_goal__closed
 msgid "These goals will not be recomputed."
-msgstr "Te cele nie zostaną ponownie obliczone."
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:210
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "Ta odznaka nie może być wysyłana przez użytkowników"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_image
+#: model:ir.model.fields,help:gamification.field_gamification_badge__image
 msgid "This field holds the image used for the badge, limited to 256x256"
 msgstr ""
-"To pole zawiera obrazek używany dla odznaki, rozmiar ograniczony do 256x256"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr "Do"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
 msgid "To Reach"
-msgstr "Do osiągnięcia"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_to_update
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__to_update
 msgid "To update"
-msgstr "Do aktualizacji"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_count
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count
 msgid "Total"
-msgstr "Suma"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_unique_owner_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
 msgid "Unique Owners"
-msgstr "Unikalni właściciele"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_suffix
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
 msgid "Unit"
-msgstr "Jednostka"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_unread
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_unread_counter
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr "Aktualizuj"
+msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:447
+#: code:addons/gamification/models/goal.py:448
 #, python-format
 msgid "Update %s"
-msgstr "Aktualizuj %s"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_user_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_user_id
-#: model:ir.model.fields,field_description:gamification.field_gamification_goal_user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__user_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_goal__user_id
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
-msgstr "Użytkownik"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_domain
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
-msgstr "Dziedzina użytkownika"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_ids
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
 msgid "Users"
-msgstr "Użytkownicy"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr "Strona internetowa/forum"
+msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Weekly"
-msgstr "Tygodniowo"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth
+#: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr "Kto może przydzielić tę odznakę"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "Kogo chciałbyś/abyś nagrodzić?"
+msgstr ""
 
 #. module: gamification
-#: model:ir.model.fields,help:gamification.field_gamification_challenge_reward_realtime
+#: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
-"Przy włączonej tej opcji użytkownik może otrzymać daną odznakę tylko raz. "
-"Trzy najwyższe odznaki są przyznawane nadal tylko na końcu wyzwania."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
@@ -2026,19 +2088,19 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Yearly"
-msgstr "Co rok"
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:212
 #, python-format
 msgid "You are not in the user allowed list."
-msgstr "Nie jesteś na liście zezwoleń tego użytkownika."
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/wizard/grant_badge.py:24
 #, python-format
-msgid "You can not grant a badge to yourself"
-msgstr "Nie możesz sam sobie przyznać odznaki"
+msgid "You can not grant a badge to yourself."
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:196
@@ -2049,7 +2111,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr "Wciąż możesz przyznać"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_good_job
@@ -2060,13 +2122,13 @@ msgstr ""
 #: code:addons/gamification/models/badge.py:214
 #, python-format
 msgid "You do not have the required badges."
-msgstr "Nie masz wymaganych odznak."
+msgstr ""
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:216
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "Wysłałeś już tę odznakę zbyt wiele razy w miesiącu."
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
@@ -2076,23 +2138,23 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "odznak w tym miesiącu"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
-msgstr "dni"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
-msgstr "np. miesięczne cele sprzedażowe"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr "np. dni"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -2104,12 +2166,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr "np. user.partner_id.id"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "gamification.badge.user.wizard"
-msgstr "gamification.badge.user.wizard"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
@@ -2119,17 +2181,17 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
-msgstr "przyznano,"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "refresh"
-msgstr "odśwież"
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
-msgstr "niż cel."
+msgstr ""
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -2139,4 +2201,4 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
-msgstr "w tym miesiącu"
+msgstr ""

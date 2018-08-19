@@ -146,6 +146,9 @@ class Web_Editor(http.Controller):
         # therefore we have to recover the files from the request object
         Attachments = request.env['ir.attachment']  # registry for the attachment table
 
+        website = request.env['website'].get_current_website()  # # TO MOVE   
+
+
         res_model = kwargs.get('res_model', 'ir.ui.view')
         if res_model != 'ir.ui.view' and kwargs.get('res_id'):
             res_id = int(kwargs['res_id'])
@@ -167,6 +170,8 @@ class Web_Editor(http.Controller):
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,
+                'website_id': website.id,    
+
             })
             attachment.generate_access_token()
             uploads += attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
@@ -198,6 +203,8 @@ class Web_Editor(http.Controller):
                         'public': res_model == 'ir.ui.view',
                         'res_id': res_id,
                         'res_model': res_model,
+                        'website_id': website.id,  # TO MOVE IN WEBSITEID   
+
                     })
                     attachment.generate_access_token()
                     attachments += attachment
@@ -285,7 +292,7 @@ class Web_Editor(http.Controller):
         if get_scss:
             # Compile regex outside of the loop
             # This will used to exclude library scss files from the result
-            excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.scss)$")
+            excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
             # Load already customized scss files attachments
             custom_attachments = request.env["ir.attachment"].search([("url", "=like", self._make_custom_scss_file_url("%%.%%", "%%"))])

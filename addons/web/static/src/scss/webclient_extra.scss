@@ -8,7 +8,7 @@
 }
 .o_input {
     border: 1px solid $o-form-lightsecondary;
-    border-radius: $border-radius-base;
+    border-radius: $border-radius;
     padding: 2px 4px;
     color: #1f1f1f;
 
@@ -29,7 +29,7 @@ select {
     top: 0;
     right: 50%;
     padding: 4px 12px;
-    background-color: $o-color-pink;
+    background-color: $o-enterprise-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
     color: white;
     text-align: center;
     border-top: none;
@@ -45,7 +45,8 @@ select {
     max-width: 150px;
 }
 
-// Button
-.btn-icon {
-    @include button-variant($btn-default-color, $btn-default-bg, $btn-default-border);
+.o_rtl {
+    .navbar-right {
+        padding: 0; // fix for user agent stylesheet -webkit-padding-start: 40px in rtl language
+    }
 }

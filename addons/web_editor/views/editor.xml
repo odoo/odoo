@@ -66,6 +66,13 @@
     </xpath>
 </template>
 
+<template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden_backend.scss"/>
+    </xpath>
+</template>
+
 <template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
     <xpath expr="link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
@@ -73,6 +80,12 @@
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/src/js/backend/fields.js" />
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
@@ -140,38 +153,23 @@
 -->
 <template id="web_editor.colorpicker" name="Color-Picker">
     <colorpicker>
-        <div class="o_colorpicker_section" data-name="theme" data-icon-class="fa fa-flask">
-            <button data-color="alpha">Alpha</button>
-            <button data-color="beta">Beta</button>
-            <button data-color="gamma">Gamma</button>
-            <button data-color="delta">Delta</button>
-            <button data-color="epsilon">Epsilon</button>
+        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+            <button data-color="primary"></button>
+            <button data-color="secondary"></button>
+            <button data-color="gamma"></button>
+            <button data-color="delta"></button>
+            <button data-color="epsilon"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
-            <button data-color="white">White</button>
-            <button data-color="gray-lighter">Gray Lighter</button>
-            <button data-color="gray-light">Gray Light</button>
-            <button data-color="gray">Gray</button>
-            <button data-color="gray-dark">Gray Dark</button>
-            <button data-color="gray-darker">Gray Darker</button>
-            <button data-color="black">Black</button>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent"></button>
+            <button data-color="black-25"></button>
+            <button data-color="black-50"></button>
+            <button data-color="black-75"></button>
+            <button data-color="white-25"></button>
+            <button data-color="white-50"></button>
+            <button data-color="white-75"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">
-            <button data-color="primary">Primary</button>
-            <button data-color="success">Success</button>
-            <button data-color="info">Info</button>
-            <button data-color="warning">Warning</button>
-            <button data-color="danger">Danger</button>
-        </div>
-        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
-            <button class="o_btn_transparent">Transparent</button>
-            <button data-color="black-25">25% Black</button>
-            <button data-color="black-50">50% Black</button>
-            <button data-color="black-75">75% Black</button>
-            <button data-color="white-25">25% White</button>
-            <button data-color="white-50">50% White</button>
-            <button data-color="white-75">75% White</button>
-        </div>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"></div>
     </colorpicker>
 </template>
 </odoo>

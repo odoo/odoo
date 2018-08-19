@@ -202,6 +202,48 @@ class TestORM(TransactionCase):
         group_user.write({'users': [(3, user.id)]})
         self.assertTrue(user.share)
 
+    def test_create_multi(self):
+        """ create for multiple records """
+        # assumption: 'res.bank' does not override 'create'
+        vals_list = [{'name': name} for name in ('Foo', 'Bar', 'Baz')]
+        vals_list[0]['email'] = 'foo@example.com'
+        for vals in vals_list:
+            record = self.env['res.bank'].create(vals)
+            self.assertEqual(len(record), 1)
+            self.assertEqual(record.name, vals['name'])
+            self.assertEqual(record.email, vals.get('email', False))
+
+        records = self.env['res.bank'].create([])
+        self.assertFalse(records)
+
+        records = self.env['res.bank'].create(vals_list)
+        self.assertEqual(len(records), len(vals_list))
+        for record, vals in pycompat.izip(records, vals_list):
+            self.assertEqual(record.name, vals['name'])
+            self.assertEqual(record.email, vals.get('email', False))
+
+        # create countries and states
+        vals_list = [{
+            'name': 'Foo',
+            'state_ids': [
+                (0, 0, {'name': 'North Foo', 'code': 'NF'}),
+                (0, 0, {'name': 'South Foo', 'code': 'SF'}),
+                (0, 0, {'name': 'West Foo', 'code': 'WF'}),
+                (0, 0, {'name': 'East Foo', 'code': 'EF'}),
+            ],
+        }, {
+            'name': 'Bar',
+            'state_ids': [
+                (0, 0, {'name': 'North Bar', 'code': 'NB'}),
+                (0, 0, {'name': 'South Bar', 'code': 'SB'}),
+            ],
+        }]
+        foo, bar = self.env['res.country'].create(vals_list)
+        self.assertEqual(foo.name, 'Foo')
+        self.assertCountEqual(foo.mapped('state_ids.code'), ['NF', 'SF', 'WF', 'EF'])
+        self.assertEqual(bar.name, 'Bar')
+        self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
+
 
 class TestInherits(TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
@@ -267,8 +309,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
-        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo', 'password': 'foo',
-                                                 'login_date': '2016-01-01', 'signature': 'XXX'})
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
         partner_bar = self.env['res.partner'].create({'name': 'Bar'})
 
         foo_before, = user_foo.read()

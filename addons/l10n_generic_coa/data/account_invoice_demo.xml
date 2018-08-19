@@ -4,7 +4,6 @@
         <record id="demo_invoice_1" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
@@ -86,7 +85,6 @@
         <record id="demo_invoice_followup" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
@@ -115,7 +113,6 @@
         <record id="demo_invoice_0" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">in_invoice</field>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
@@ -168,6 +165,7 @@
         <record id="coffee_machine_line" model="account.invoice.line">
             <field name="invoice_id" ref="demo_invoice_equipment_purchase"/>
             <field name="name">Coffee Machine with huge 'employee\'s performances boosting perk'</field>
+            <field name="product_id" ref="product.product_product_6"/>
             <field name="price_unit">4999.99</field>
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_coffee_machine_account')),

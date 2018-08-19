@@ -215,7 +215,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         # <><><><><><><><><><><><><><><><><><><><><><>
 
         # FP Todo: find a better way to look for the production order
-        mnf_product_d = self.MrpProduction.search([('product_id', '=', product_d.id), ('move_dest_ids.group_id', '=', order.procurement_group_id.id)], order='id desc', limit=1)
+        mnf_product_d = self.MrpProduction.search([('product_id', '=', product_d.id)], order='id desc', limit=1)
         # Check state of production order D.
         self.assertEqual(mnf_product_d.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
@@ -351,7 +351,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # confirm our standard so, check the picking
         so.action_confirm()
-        self.assertTrue(so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
+        self.assertTrue(so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" storable products')
 
         # invoice in on delivery, nothing should be invoiced
         with self.assertRaises(UserError):

@@ -7,34 +7,26 @@
     'name': 'Belgium - Structured Communication',
     'version': '1.2',
     'author': 'Noviat',
-    'website': 'https://www.odoo.com/page/accounting',
-    'category': 'Localization',
+    'category': 'Invoicing Management',
     'description': """
-    
-Belgian localization for in- and outgoing invoices (prereq to account_coda):
-============================================================================
-    - Rename 'reference' field labels to 'Communication'
-    - Add support for Belgian Structured Communication
 
-A Structured Communication can be generated automatically on outgoing invoices according to the following algorithms:
+Add Structured Communication to customer invoices.
 ---------------------------------------------------------------------------------------------------------------------
+
+Using BBA structured communication simplifies the reconciliation between invoices and payments.        
+You can select the structured communication as payment communication in Invoicing/Accounting settings.
+Three algorithms are suggested:
     1) Random : +++RRR/RRRR/RRRDD+++
         **R..R =** Random Digits, **DD =** Check Digits
     2) Date : +++DOY/YEAR/SSSDD+++
         **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits
     3) Customer Reference +++RRR/RRRR/SSSDDD+++
         **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  
-        
-The preferred type of Structured Communication and associated Algorithm can be
-specified on the Partner records. A 'random' Structured Communication will
-generated if no algorithm is specified on the Partner record. 
-
     """,
-    'depends': ['account'],
+    'depends': ['account', 'l10n_be'],
     'data' : [
         'data/mail_template_data.xml',
-        'views/res_partner_view.xml',
-        'views/account_invoice_view.xml',        
-        'views/report_invoice.xml',
+        'views/res_config_settings_views.xml',
     ],
+    'auto-install': True,
 }

@@ -20,11 +20,11 @@ class AccountInvoice(models.Model):
         if self.company_id.country_id.code != 'IN':
             return super(AccountInvoice, self)._get_printed_report_name()
         return self.type == 'out_invoice' and self.state == 'draft' and _('Draft %s') % (self.journal_id.name) or \
-            self.type == 'out_invoice' and self.state in ('open','paid') and '%s - %s' % (self.journal_id.name, self.number) or \
+            self.type == 'out_invoice' and self.state in ('open','in_payment','paid') and '%s - %s' % (self.journal_id.name, self.number) or \
             self.type == 'out_refund' and self.state == 'draft' and _('Credit Note') or \
             self.type == 'out_refund' and _('Credit Note - %s') % (self.number) or \
             self.type == 'in_invoice' and self.state == 'draft' and _('Vendor Bill') or \
-            self.type == 'in_invoice' and self.state in ('open','paid') and _('Vendor Bill - %s') % (self.number) or \
+            self.type == 'in_invoice' and self.state in ('open','in_payment','paid') and _('Vendor Bill - %s') % (self.number) or \
             self.type == 'in_refund' and self.state == 'draft' and _('Vendor Credit Note') or \
             self.type == 'in_refund' and _('Vendor Credit Note - %s') % (self.number)
 

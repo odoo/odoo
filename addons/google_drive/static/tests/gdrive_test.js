@@ -94,16 +94,16 @@ QUnit.module('gdrive_integration', {
                     return $.when();
                 }
                 return this._super.apply(this, arguments);
-            }
+            },
         });
 
-        var google_action = form.sidebar.$('.oe_share_gdoc');
+        var $googleAction = form.sidebar.$('.oe_share_gdoc');
 
-        assert.strictEqual(google_action.length, 1,
+        assert.strictEqual($googleAction.length, 1,
             'The button to the google action should be present');
 
         // Trigger opening of the dynamic link
-        google_action.find('a:first').click();
+        $googleAction.click();
 
         form.destroy();
     });

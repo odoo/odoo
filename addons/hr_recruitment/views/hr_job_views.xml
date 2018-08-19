@@ -40,7 +40,7 @@
                             <div class="container o_kanban_card_content">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
-                                        <div name="application_button" class="col-xs-6 o_kanban_primary_left">
+                                        <div name="application_button" class="col-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">Application(s)</button>
                                         </div>
                                     </div>
@@ -61,17 +61,17 @@
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
-                                        <div class="col-xs-12 o_kanban_primary_left">
+                                        <div class="col-12 o_kanban_primary_left">
                                             <button class="btn btn-secondary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
                                     </div>
                                 </t>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-xs-8" role="menuitem" aria-haspopup="true">
+                                    <div class="col-8" role="menuitem" aria-haspopup="true">
                                         <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-4">
                                         <a role="menuitem" t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
                                         <a role="menuitem" t-if="record.state.raw_value == 'open'" name="set_recruit" type="object">Start recruitment</a>
                                         <br role="separator"/>

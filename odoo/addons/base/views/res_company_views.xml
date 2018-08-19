@@ -28,7 +28,6 @@
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
-                                    <field name="report_header" placeholder="e.g. Global Business Solutions"/>
                                 </group>
                                 <group>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
@@ -39,7 +38,6 @@
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="report_footer" placeholder="e.g. Your Bank Accounts, one per line"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>
@@ -77,16 +75,16 @@
                                 </div>
                                 <hr class="mt4 mb4"/>
                                 <div class="row">
-                                    <div t-if="record.email.value" class="col-xs-6 text-center">
+                                    <div t-if="record.email.value" class="col-6 text-center">
                                         <strong>Email:</strong>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                    <div t-if="record.phone.value" class="col-6 text-center">
                                         <strong>Phone</strong>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                    <div t-if="record.phone.value" class="col-6 text-center">
                                         <field name="email"/>
                                     </div>
-                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                    <div t-if="record.phone.value" class="col-6 text-center">
                                         <field name="phone"/>
                                     </div>
                                 </div>
@@ -143,23 +141,9 @@
               <xpath expr="//sheet" position="inside">
                     <hr />
                     <div class="row mt16">
-                        <field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
-                            'background': {
-                                'image_link': '/base/static/img/preview_background.png',
-                                'preview_link': '/base/static/pdf/preview_background.pdf'
-                            },
-                            'boxed': {
-                                'image_link': '/base/static/img/preview_boxed.png',
-                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
-                            },
-                            'clean': {
-                                'image_link': '/base/static/img/preview_clean.png',
-                                'preview_link': '/base/static/pdf/preview_clean.pdf'
-                            },
-                            'standard': {
-                                'image_link': '/base/static/img/preview_standard.png',
-                                'preview_link': '/base/static/pdf/preview_standard.pdf'
-                            }
+                        <field style="margin-right: 40px;" name="external_report_layout_id" widget="report_layout" options="{
+                            'field_image': 'preview_image',
+                            'field_binary': 'preview_pdf'
                         }"/>
                     </div>
                     <footer>
@@ -182,6 +166,37 @@
                 </xpath>
             </field>
         </record>
-
+        <record id="view_company_document_template_form" model="ir.ui.view">
+            <field name="name">res.company.document.template.form</field>
+            <field name="model">res.company</field>
+            <field name="mode">primary</field>
+            <field name="priority">2048</field>
+            <field name="arch" type="xml">
+                <form class="o_company_document_layout">
+                    <group>
+                        <label for="external_report_layout_id" string="Template" colspan="2" />
+                        <field name="external_report_layout_id" colspan="2" nolabel="1"
+                                class="report_layout_container"
+                                widget="report_layout" options="{
+                                    'field_image': 'preview_image',
+                                    'field_binary': 'preview_pdf'
+                                }"/>
+                    </group>
+                    <group>
+                        <field name="logo" widget="image" />
+                        <field name="report_header"  widget="char"
+                            placeholder="e.g. Global Business Solutions" />
+                        <field name="report_footer" string="Footer"
+                            placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                        <field name="paperformat_id" widget="selection" />
+                    </group>
+                    <footer>
+                        <button special="save" string="Save"
+                                class="btn btn-primary" type="object" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>

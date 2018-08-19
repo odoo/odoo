@@ -64,6 +64,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/fetch_dashboard_data',
             params: {
+                website_id: this.website_id || false,
                 date_from: this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
                 date_to: this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
             },
@@ -72,6 +73,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             self.dashboards_data = result.dashboards;
             self.currency_id = result.currency_id;
             self.groups = result.groups;
+            self.websites = result.websites;
         });
     },
 
@@ -110,6 +112,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
             route: '/website/dashboard/set_ga_data',
             params: {
+                'website_id': self.website_id,
                 'ga_client_id': ga_client_id,
                 'ga_analytics_key': ga_analytics_key,
             },
@@ -200,7 +203,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
             $analytics_components.empty();
             // 1. Authorize component
-            var $analytics_auth = $('<div>').addClass('col-md-12');
+            var $analytics_auth = $('<div>').addClass('col-lg-12');
             window.onOriginError = function () {
                 $analytics_components.find('.js_unauthorized_message').remove();
                 self.display_unauthorized_message($analytics_components, 'not_initialized');
@@ -243,6 +246,16 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             self.render_graphs();
         });
 
+    },
+
+    on_website_button: function(website_id) {
+        var self = this;
+        this.website_id = website_id;
+        $.when(this.fetch_data()).then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+        });
     },
 
     on_reverse_breadcrumb: function() {
@@ -293,10 +306,15 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
             this.$searchview = $(QWeb.render("website.DateRangeButtons", {
                 widget: this,
             }));
-            this.$searchview.click('button.js_date_range', function(ev) {
-                self.on_date_range_button($(ev.target).data('date'));
-                $(this).find('button.js_date_range.active').removeClass('active');
+            this.$searchview.find('button.js_date_range').click(function(ev) {
+                self.$searchview.find('button.js_date_range.active').removeClass('active');
                 $(ev.target).addClass('active');
+                self.on_date_range_button($(ev.target).data('date'));
+            });
+            this.$searchview.find('button.js_website').click(function(ev) {
+                self.$searchview.find('button.js_website.active').removeClass('active');
+                $(ev.target).addClass('active');
+                self.on_website_button($(ev.target).data('website-id'));
             });
         }
         this.update_control_panel({
@@ -350,7 +368,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         $analytics_users.appendTo($analytics_components);
 
         // 3. View Selector
-        var $analytics_view_selector = $('<div>').addClass('col-md-12 o_properties_selection');
+        var $analytics_view_selector = $('<div>').addClass('col-lg-12 o_properties_selection');
         var viewSelector = new gapi.analytics.ViewSelector({
             container: $analytics_view_selector[0],
         });
@@ -364,7 +382,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         } else if (this.date_range === 'year') {
             start_date = '365daysAgo';
         }
-        var $analytics_chart_2 = $('<div>').addClass('col-md-6 col-xs-12');
+        var $analytics_chart_2 = $('<div>').addClass('col-lg-6 col-12');
         var breakdownChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:date',
@@ -384,7 +402,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
         $analytics_chart_2.appendTo($analytics_components);
 
         // 5. Chart table
-        var $analytics_chart_1 = $('<div>').addClass('col-md-6 col-xs-12');
+        var $analytics_chart_1 = $('<div>').addClass('col-lg-6 col-12');
         var mainChart = new gapi.analytics.googleCharts.DataChart({
             query: {
                 'dimensions': 'ga:medium',

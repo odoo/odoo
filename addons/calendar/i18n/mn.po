@@ -2,12 +2,21 @@
 # This file contains the translation of the following modules:
 # * calendar
 # 
+# Translators:
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
+# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
+# Tsogjav <Tsogjav2007@yahoo.com>, 2018
+# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -276,50 +285,47 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
-msgid "# Meetings Highlight"
-msgstr ""
-
-#. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Сануулга"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} урилга"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Огноо шинэчлэгдсэн"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:720
+#: code:addons/calendar/models/calendar.py:741
 #, python-format
 msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s %s-д \n"
+" %s %s (%s) хүртэл"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:711
+#: code:addons/calendar/models/calendar.py:732
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s (%s-д %s хүртэл) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:225
+#: code:addons/calendar/models/calendar.py:227
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s урилгыг хүлээн авсан"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:233
+#: code:addons/calendar/models/calendar.py:235
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s урилгаас татгалзсан"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
@@ -360,34 +366,39 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> цаг</span>"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr ""
+msgstr "Зөвшөөрөх"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Accepted"
-msgstr ""
+msgstr "Зөвшөөрсөн"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_active
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_active
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "Үйлдэл Шаардлагатай"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Ажилбар"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Ажилбар"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -395,15 +406,18 @@ msgid "Activity Type"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
+#. openerp-web
+#: code:addons/calendar/static/src/xml/base_calendar.xml:36
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
+#, python-format
 msgid "All Day"
-msgstr ""
+msgstr "Өдөржин"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:707
+#: code:addons/calendar/models/calendar.py:728
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "Бүтэн өдөр , %s"
 
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
@@ -411,51 +425,51 @@ msgid "An user cannot have twice the same contact."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
 msgid "Attendee"
-msgstr ""
+msgstr "Оролцогч"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
 msgid "Attendee Status"
-msgstr ""
+msgstr "Оролцогчийн төлөв"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Оролцогчийн мэдээлэл"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr ""
+msgstr "Оролцогчид"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr ""
+msgstr "Бэлэн байдал"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1606
+#: code:addons/calendar/models/calendar.py:1673
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr ""
+msgstr "Завгүй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_byday
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__byday
 msgid "By day"
-msgstr ""
+msgstr "Өдрөөр"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr ""
+msgstr "Цаглабар"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -463,15 +477,15 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Цаглабарын Сэрүүлэг"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Цаглабарын Урилга"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
+#: model:ir.model.fields,field_description:calendar.field_mail_activity__calendar_event_id
 msgid "Calendar Meeting"
 msgstr ""
 
@@ -483,216 +497,211 @@ msgid "Calendar: Event Reminder"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Category"
+msgstr "Ангилал"
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr ""
+"Энийг тэмдгэлэснээр зөвхөн үүнийг шинэчлэх бөгөөд бусад давтагдсаныг "
+"өөрчлөхгүй."
 
 #. module: calendar
-#: model:ir.actions.act_window,help:calendar.action_calendar_event
-msgid "Click to schedule a new meeting."
-msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
 msgid "Common name"
-msgstr ""
+msgstr "Ерөнхий нэр"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Баталсан"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Холбох хаяг"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_create_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_create_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__create_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_start
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
-msgstr ""
+msgstr "Огноо"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_day
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__day
 msgid "Date of month"
-msgstr ""
+msgstr "Сарын огноо"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Сарын хэд дэх өдөр"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 msgid "Day of month"
-msgstr ""
+msgstr "Сарын өдөр"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Өдөр(үүд)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr ""
+msgstr "Бууралт"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Declined"
-msgstr ""
+msgstr "Буурсан"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_description
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__description
 msgid "Description"
-msgstr ""
+msgstr "Тодорхойлолт"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:18
 #, python-format
 msgid "Details"
-msgstr ""
+msgstr "Задаргаа"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
-msgstr ""
+msgstr "Баримт"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "Баримтын ID"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr ""
+msgstr "Баримтын модель"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
 msgid "Document Model Name"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
-msgstr ""
+msgstr "Үргэлжлэх хугацаа"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
-#: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Үргэлжлэх хугацаа минутаар"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__email
 msgid "Email"
-msgstr ""
+msgstr "Имэйл"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_attendee_email
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "Урьсан хүний э-мэйл"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_partner_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
 msgid "Employee"
-msgstr ""
+msgstr "Ажилтан"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr ""
+msgstr "Дуусах Огноо"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "Дууссан огноо"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "Дуусах хугацаа"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:915
-#, python-format
-msgid "Ending date cannot be set before starting date."
-msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:913
-#, python-format
-msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "Дуусах хугацаа"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr ""
+msgstr "Арга хэмжээ"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_display_time
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr ""
+msgstr "Арга хэмжээний цаг"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Арга хэмжээний сэрүүлэг"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1164
+#: code:addons/calendar/models/calendar.py:1225
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr ""
+msgstr "Арга хэмжээний давталт хасах тоо байж болохгүй."
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
-msgstr ""
+msgstr "Бүгд"
 
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:38
@@ -703,204 +712,258 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "5 дахь"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "First"
-msgstr ""
+msgstr "Эхний"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:955
+#: code:addons/calendar/models/calendar.py:990
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Эхлээд урилгын огноог зааж өгөх хэрэгтэй."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Дагагчид (Сувагууд)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Дагагчид (Харилцагчид)"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr ""
+msgstr "4 дэх"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "үнэгүй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_availability
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Free/Busy"
-msgstr ""
+msgstr "Чөлөөтэй/Завгүй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_fr
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
 msgid "Fri"
-msgstr ""
+msgstr "Баа"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Friday"
-msgstr ""
+msgstr "Баасан"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1549
+#: code:addons/calendar/models/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
+"Огноогоор бүлэглэх нь дэмжигдэхгүй, оронд нь цаглабар харагдацыг хэрэглэнэ "
+"үү."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP шилжүүлэг"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "Цаг(ууд)"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 msgid "ID"
+msgstr "ID"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+"Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
+"шаардана."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
+msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_active
+#: model:ir.model.fields,help:calendar.field_calendar_event__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Идэвхтэй талбарыг худал гэж тохируулбал арга хэмжээний сэрүүлэгийг "
+"устгалгүйгээр нуух боломжтой."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Урих"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "Урилгын тасалбар"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr ""
+msgstr "Урилгын мэдээлэл"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "Урилга"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "Урилга"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
+msgstr "Урих харилцах цонх"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "Дагагч эсэх"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
+msgid "Is the Event Highlighted"
 msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Last"
-msgstr ""
+msgstr "Сүүлчийн"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_event___last_update
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type___last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event____last_update
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_uid
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_uid
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_write_date
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__write_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
-#: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Суурь цаглабараас сүүлийн мэдэгдэл уншигдсан гэж тэмдэглэгдсэн"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
+#: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Энэ интервалд арга хэмжээг автоматаар давтах"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_location
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__location
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr ""
+msgstr "Байршил"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_location
+#: model:ir.model.fields,help:calendar.field_calendar_event__location
 msgid "Location of Event"
-msgstr ""
+msgstr "Арга хэмжээний байрлал"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_contacts_user_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
 msgid "Me"
-msgstr ""
+msgstr "Би"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: selection:mail.activity.type,category:0
 msgid "Meeting"
+msgstr "Уулзалт"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:936
+#: code:addons/calendar/models/calendar.py:941
+#, python-format
+msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "Уулзалтын Дэлгэрэнгүй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__name
 msgid "Meeting Subject"
-msgstr ""
+msgstr "Уулзалтын сэдэв"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "Уулзалтын Төрөл"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr ""
+msgstr "Уулзалтын Төрлүүд"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_event_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
 msgid "Meeting linked"
-msgstr ""
+msgstr "Уулзалтын линк"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -910,205 +973,255 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr ""
+msgstr "Уулзалтууд"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
+msgstr "Зурвас"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
+msgid "Message Delivery error"
 msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "Зурвасууд"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "Минут(ууд)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr ""
+msgstr "Бусад"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_mo
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__mo
 msgid "Mon"
-msgstr ""
+msgstr "Дав"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr ""
+msgstr "Даваа"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Сар(ууд)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr ""
+msgstr "Миний арга хэмжээнүүд"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "Миний уулзалтууд"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_name
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_type_name
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_type__name
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "Хэрэгтэй үйл ажиллагаа"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr ""
+msgstr "Үгүй би явахгүй."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
+msgstr "Мэдэгдэл"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Үйлдлийн тоо"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Үйлдэл шаардлагатай зурвасын тоо"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Давтах Тоо"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Уншаагүй зурвасын тоо"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:17
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only internal users"
-msgstr ""
+msgstr "Зөвхөн дотоод хэрэглэгчид"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only me"
+msgstr "Зөвхөн би"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Open Calendar"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
 msgid "Option"
-msgstr ""
+msgstr "Сонгох зүйл"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
-msgstr ""
+msgstr "Сонголтууд"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "Бусад"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
-msgstr ""
+msgstr "Эзэмшигч"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
 msgid "Participant"
-msgstr ""
+msgstr "Оролцогч"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
+#: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Хэрэглэгчийн харилцагчтай холбоотой өгөгдөл"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1177
+#: code:addons/calendar/models/calendar.py:1238
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr ""
+msgstr "Сарын зөв өдөрийг сонгоно уу."
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
-msgstr ""
+msgstr "Хувийн нууц"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
 msgid "Recurrence"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "Дахин давталтын дуусгавар"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
 msgid "Recurrent"
-msgstr ""
+msgstr "Давтагдах"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id
 msgid "Recurrent ID"
-msgstr ""
+msgstr "Давтагдсан ID"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrent_id_date
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "ID давтагдсан огноо"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
+#: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Давтагдах Уулзалт"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "Давтагдах журам"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
+#: selection:mail.activity.type,category:0
+msgid "Reminder"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
 msgid "Reminders"
-msgstr ""
+msgstr "Сануулгууд"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_count
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Repeat"
-msgstr ""
+msgstr "Давтах"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "Тутамд давтах"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__final_date
 msgid "Repeat Until"
-msgstr ""
+msgstr "Давталт хүртэл"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_interval
+#: model:ir.model.fields,help:calendar.field_calendar_event__interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "(Өдөр/Долооног/Сар/Жил) тутам давтах"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_count
+#: model:ir.model.fields,help:calendar.field_calendar_event__count
 msgid "Repeat x times"
-msgstr ""
+msgstr "x удаа давтах"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "Хариуцагч"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1116,129 +1229,131 @@ msgid "SMS Text Message"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__sa
 msgid "Sat"
-msgstr ""
+msgstr "Бя"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "Бямба"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
-msgid "Schedule a meeting"
+#: model:ir.actions.act_window,help:calendar.action_calendar_event
+msgid "Schedule a new meeting"
 msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "Уулзалт хайх"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Second"
-msgstr ""
+msgstr "Секунд"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "Оролцогчдийг сонгох..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Мэйл илгээх"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_show_as
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show Time as"
-msgstr ""
+msgstr "Үзүүлэх цаг"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Хүлээлгэ"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
-msgstr ""
+msgstr "Эхлэх"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start_date
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr ""
+msgstr "Эхлэх Огноо"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__start_datetime
 msgid "Start DateTime"
-msgstr ""
+msgstr "Эхлэх хугацаа"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_start
+#: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
 msgstr ""
+"Арга хэмжээний эхлэх огноо бөгөөд бүтэн өдрийн арга хэмжээний хувьд цаггүй."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "Эхлэлийн хугацаа"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee_state
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_state
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__state
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_attendee_state
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__state
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Оролцогчийн ирцийн төлөв"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_stop
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
 msgid "Stop"
-msgstr ""
+msgstr "Зогс"
 
 #. module: calendar
-#: model:ir.model.fields,help:calendar.field_calendar_event_stop
+#: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
 msgstr ""
+"Арга хэмжээний дуусах огноо бөгөөд бүтэн өдрийн арга хэмжээний хувьд цаггүй."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
-msgstr ""
+msgstr "Гарчиг"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_su
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__su
 msgid "Sun"
-msgstr ""
+msgstr "Ня"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Sunday"
-msgstr ""
+msgstr "Ням"
 
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr ""
+msgstr "Пайзууд"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr "Энэ"
 
 #. module: calendar
 #. openerp-web
@@ -1258,130 +1373,160 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#: code:addons/calendar/models/calendar.py:935
+#, python-format
+msgid ""
+"The ending date and time cannot be earlier than the starting date and time."
+msgstr ""
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:940
+#, python-format
+msgid "The ending date cannot be earlier than the starting date."
+msgstr ""
+
+#. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr ""
+msgstr "3 дахь"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "Энэ арга хэмжээ нь давталттай холбогдсон...<br/>"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_th
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__th
 msgid "Thu"
-msgstr ""
+msgstr "Пүр"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
+msgstr "Пүрэв"
+
+#. module: calendar
+#: code:addons/calendar/models/res_users.py:41
+#, python-format
+msgid "Today's Meetings"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_tu
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__tu
 msgid "Tue"
-msgstr ""
+msgstr "Мяг"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Мягмар"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_type
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__type
 msgid "Type"
-msgstr ""
+msgstr "Төрөл"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
-msgstr ""
+msgstr "Тодорхой бус"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Батлагаажаагүй"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr ""
+msgstr "Ширхэг"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Уншаагүй зурвасын тоолуур"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "Хүртэл"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Зөвхөн энэ тохиолдлыг шинэчлэх"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_we
+#: model:ir.model,name:calendar.model_res_users
+msgid "Users"
+msgstr "Хэрэглэгчид"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__we
 msgid "Wed"
-msgstr ""
+msgstr "Лха"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Лхагва"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "Долоо хоног(ууд)"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_week_list
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__week_list
 msgid "Weekday"
-msgstr ""
+msgstr "Ажлын өдөр"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Жил(үүд)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Тиймээ би явна."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:155
+#: code:addons/calendar/models/calendar.py:157
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Цаглабарын ирцыг хувилж болохгүй"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "calendar.contacts"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "ж: Бизнес үдийн хоол"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1162
+#: code:addons/calendar/models/calendar.py:1223
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "муж сөрөг байж болохгүй."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"

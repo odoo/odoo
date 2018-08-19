@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -208,7 +207,7 @@ class Project(models.Model):
             ('portal', _('Visible by following customers')),
         ],
         string='Privacy', required=True,
-        default='employees',
+        default='portal',
         help="Holds visibility of the tasks or issues that belong to the current project:\n"
                 "- On invitation only: Employees may only see the followed project, tasks or issues\n"
                 "- Visible by all employees: Employees may see all project, tasks or issues\n"
@@ -242,10 +241,16 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
-    def _compute_portal_url(self):
-        super(Project, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(Project, self)._compute_access_url()
         for project in self:
-            project.portal_url = '/my/project/%s' % project.id
+            project.access_url = '/my/project/%s' % project.id
+
+    def _compute_access_warning(self):
+        super(Project, self)._compute_access_warning()
+        for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
+            project.access_warning = _(
+                "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
@@ -318,30 +323,6 @@ class Project(models.Model):
             for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
                 project.message_subscribe(project.partner_id.ids)
         return res
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to website for portal users
-        that can read the project. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share:
-            try:
-                record.check_access_rule('read')
-            except AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/project/%s' % self.id,
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(Project, self).get_access_action(access_uid)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
@@ -429,6 +410,7 @@ class Task(models.Model):
             result.update(self._subtask_values_from_parent(result['parent_id']))
         return result
 
+    @api.model
     def _get_default_partner(self):
         if 'default_project_id' in self.env.context:
             default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
@@ -497,7 +479,7 @@ class Task(models.Model):
         index=True, track_visibility='always')
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        default=_get_default_partner)
+        default=lambda self: self._get_default_partner())
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True, related_sudo=False)
     company_id = fields.Many2one('res.company',
         string='Company',
@@ -568,10 +550,16 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
-    def _compute_portal_url(self):
-        super(Task, self)._compute_portal_url()
+    def _compute_access_url(self):
+        super(Task, self)._compute_access_url()
         for task in self:
-            task.portal_url = '/my/task/%s' % task.id
+            task.access_url = '/my/task/%s' % task.id
+
+    def _compute_access_warning(self):
+        super(Task, self)._compute_access_warning()
+        for task in self.filtered(lambda x: x.project_id.privacy_visibility != 'portal'):
+            task.access_warning = _(
+                "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
     @api.depends('child_ids.planned_hours')
     def _compute_subtask_planned_hours(self):
@@ -631,47 +619,6 @@ class Task(models.Model):
         for task in self:
             if not task._check_recursion():
                 raise ValidationError(_('Error! You cannot create recursive hierarchy of task(s).'))
-
-    # Override view according to the company definition
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = self.env.user.company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
-
-        res = super(Task, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = self.env.user.company_id.project_time_mode_id
-        # using get_object to get translation value
-        uom_hour = self.env.ref('uom.product_uom_hour', False)
-        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
-            return res
-
-        eview = etree.fromstring(res['arch'])
-
-        # if the project_time_mode_id is not in hours (so in days), display it as a float field
-        def _check_rec(eview):
-            if eview.attrib.get('widget', '') == 'float_time':
-                eview.set('widget', 'float')
-            for child in eview:
-                _check_rec(child)
-            return True
-
-        _check_rec(eview)
-
-        res['arch'] = etree.tostring(eview, encoding='unicode')
-
-        # replace reference of 'Hours' to 'Day(s)'
-        for f in res['fields']:
-            # TODO this NOT work in different language than english
-            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
-            # but string 'Initially Planned Days' is not available in translation
-            if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
-        return res
 
     @api.model
     def get_empty_list_help(self, help):
@@ -771,30 +718,6 @@ class Task(models.Model):
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to website for portal users
-        that can read the task. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share:
-            try:
-                record.check_access_rule('read')
-            except AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/task/%s' % self.id,
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(Task, self).get_access_action(access_uid)
-
     # ---------------------------------------------------
     # Subtasks
     # ---------------------------------------------------
@@ -865,8 +788,9 @@ class Task(models.Model):
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
+            project_user_group_id = self.env.ref('project.group_project_user').id
             new_group = (
-                'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {
                     'actions': project_actions,
                 })
             groups = [new_group] + groups
@@ -959,7 +883,7 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
+    def _message_post_after_hook(self, message, *args, **kwargs):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -970,7 +894,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, values, notif_layout, notif_values)
+        return super(Task, self)._message_post_after_hook(message, *args, **kwargs)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

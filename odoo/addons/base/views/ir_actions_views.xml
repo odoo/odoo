@@ -62,7 +62,7 @@
                                     attrs="{'invisible':[('binding_model_id','=',False)]}" icon="fa-minus-square"
                                     help="Remove the contextual action related this report" class="oe_stat_button"/>
                             <button name="associated_view" string="QWeb views" type="object"
-                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html'])]}" icon='fa-code'
+                                    attrs="{'invisible':[('report_type', 'not in', ['qweb-pdf', 'qweb-html', 'qweb-text'])]}" icon='fa-code'
                                     class="oe_stat_button"/>
                         </div>
                         <group>
@@ -276,6 +276,8 @@
                             <group name="action_content">
                                 <field name="model_id"/>
                                 <field name="model_name" invisible="1"/>
+                            </group>
+                            <group>
                                 <field name="state"/>
                                 <field name="type" invisible="1"/>
                                 <field name="crud_model_id"
@@ -301,7 +303,8 @@
                                      <tree string="Field Mappings" editable="bottom">
                                         <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
                                         <field name="type"/>
-                                        <field name="value"/>
+                                        <field name="resource_ref" attrs="{'readonly': [('type', '!=', 'reference')]}" options="{'hide_model': True}"/>
+                                        <field name="value" attrs="{'readonly': [('type', '=', 'reference')]}" force_save="1"/>
                                     </tree>
                                 </field>
                             </page>

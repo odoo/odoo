@@ -81,6 +81,10 @@ function transformQwebTemplate(node, fields) {
 
 var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
+    config: { // the KanbanRecord and KanbanColumn classes to use (may be overriden)
+        KanbanColumn: KanbanColumn,
+        KanbanRecord: KanbanRecord,
+    },
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
         close_quick_create: '_onCloseQuickCreate',
         cancel_quick_create: '_onCloseQuickCreate',
@@ -91,6 +95,7 @@ var KanbanRenderer = BasicRenderer.extend({
     events:_.extend({}, BasicRenderer.prototype.events || {}, {
         'keydown .o_kanban_record' : '_onRecordKeyDown'
     }),
+
     /**
      * @override
      */
@@ -107,7 +112,7 @@ var KanbanRenderer = BasicRenderer.extend({
             qweb: this.qweb,
             viewType: 'kanban',
         });
-        this.columnOptions = _.extend({}, params.column_options);
+        this.columnOptions = _.extend({KanbanRecord: this.KanbanRecord}, params.column_options);
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
@@ -117,9 +122,16 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        _.invoke(this.widgets, 'on_attach_callback');
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
         }
+    },
+    /**
+     * Called each time the renderer is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        _.invoke(this.widgets, 'on_detach_callback');
     },
 
     //--------------------------------------------------------------------------
@@ -167,6 +179,7 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     updateColumn: function (localID, columnState, options) {
         var self = this;
+        var KanbanColumn = this.config.KanbanColumn;
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
         var index = _.findIndex(this.widgets, {db_id: localID});
         var column = this.widgets[index];
@@ -274,6 +287,7 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
 
         // Render columns
+        var KanbanColumn = this.config.KanbanColumn;
         _.each(this.state.data, function (group) {
             var column = new KanbanColumn(self, group, self.columnOptions, self.recordOptions);
             var def;
@@ -340,6 +354,7 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderUngrouped: function (fragment) {
         var self = this;
+        var KanbanRecord = this.config.KanbanRecord;
         _.each(this.state.data, function (record) {
             var kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);

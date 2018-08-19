@@ -551,7 +551,7 @@ Alias support integration
 
 Aliases are usually configured on a parent model which will then create specific
 record when contacted by e-mail. For example, Project have aliases to create tasks
-or issues, Sales Channel have aliases to generate Leads.
+or issues, Sales Team have aliases to generate Leads.
 
 .. note:: The model that will be created by the alias **must** inherit the
           ``mail_thread`` model.
@@ -924,7 +924,7 @@ buttons to website visitors:
 
 .. code-block:: xml
 
-    <div id="website_published_button" class="pull-right"
+    <div id="website_published_button" class="float-right"
          groups="base.group_website_publisher"> <!-- or any other meaningful group -->
         <t t-call="website.publish_management">
           <t t-set="object" t-value="blog_post"/>

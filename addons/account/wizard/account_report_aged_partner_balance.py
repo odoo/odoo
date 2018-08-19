@@ -27,7 +27,7 @@ class AccountAgedTrialBalance(models.TransientModel):
         if not data['form']['date_from']:
             raise UserError(_('You must set a start date.'))
 
-        start = datetime.strptime(data['form']['date_from'], "%Y-%m-%d")
+        start = fields.Date.from_string(data['form']['date_from'])
 
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length - 1)

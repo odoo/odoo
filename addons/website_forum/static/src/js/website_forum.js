@@ -13,8 +13,8 @@ odoo.define('website_forum.website_forum', function (require) {
         return $.Deferred().reject("DOM doesn't contain '.website_forum'");
     }
 
-    // pull-left class messes up the post layout OPW 769721
-    $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.pull-left').removeClass('pull-left');
+    // float-left class messes up the post layout OPW 769721
+    $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
 
     $("[data-toggle='popover']").popover();
     $('.karma_required').on('click', function (ev) {
@@ -177,7 +177,7 @@ odoo.define('website_forum.website_forum', function (require) {
         $(this).parents('.post_to_validate').hide();
         $.get($link.attr('href'))
             .fail(function() {
-                self.parents('.o_js_validation_queue > div').addClass('panel-danger').css('background-color', '#FAA');
+                self.parents('.o_js_validation_queue > div').addClass('bg-danger text-white').css('background-color', '#FAA');
                 self.parents('.post_to_validate').show();
             })
             .done(function() {
@@ -357,7 +357,7 @@ odoo.define('website_forum.website_forum', function (require) {
         },
         formatResult: function(term) {
             if (term.isNew) {
-                return '<span class="label label-primary">New</span> ' + _.escape(term.text);
+                return '<span class="badge badge-primary">New</span> ' + _.escape(term.text);
             }
             else {
                 return _.escape(term.text);
@@ -415,8 +415,8 @@ odoo.define('website_forum.website_forum', function (require) {
                 styleWithSpan: false
             });
 
-        // pull-left class messes up the post layout OPW 769721
-        $form.find('.note-editable').find('img.pull-left').removeClass('pull-left');
+        // float-left class messes up the post layout OPW 769721
+        $form.find('.note-editable').find('img.float-left').removeClass('float-left');
         $form.on('click', 'button, .a-submit', function () {
             $textarea.html($form.find('.note-editable').code());
         });

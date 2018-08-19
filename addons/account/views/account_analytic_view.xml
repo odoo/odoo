@@ -11,9 +11,8 @@
                         <field name="ref"/>
                         <field name="partner_id"/>
                     </xpath>
-                    <xpath expr="//field[@name='amount']" position="after">
+                    <xpath expr="//field[@name='product_uom_id']" position="before">
                         <field name="product_id"/>
-                        <field name="product_uom_id" class="oe_inline"/>
                     </xpath>
                     <group name="amount" position="after">
                         <group/> <!-- put Accounting group under Amount group -->
@@ -68,8 +67,8 @@
         </record>
 
         <menuitem
-            name="Analytic Entries"
-            parent="menu_finance_entries_accounting_entries"
+            name="Analytic Items"
+            parent="account.menu_finance_entries_accounting_entries"
             action="analytic.account_analytic_line_action_entries"
             id="menu_action_analytic_lines_tree"
             sequence="35"

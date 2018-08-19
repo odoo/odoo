@@ -12,7 +12,9 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
+var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var AbstractAction = require('web.AbstractAction');
@@ -54,7 +56,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.activeActions = params.activeActions;
         this.controllerID = params.controllerID;
         this.initialState = params.initialState;
-
+        this.bannerRoute = params.bannerRoute;
         // use a DropPrevious to correctly handle concurrent updates
         this.dp = new concurrency.DropPrevious();
         // those arguments are temporary, they won't be necessary as soon as the
@@ -65,6 +67,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.searchView = params.searchView;
         this.searchViewHidden = params.searchViewHidden;
         this.groupable = params.groupable;
+        this.enableTimeRangeMenu = params.enableTimeRangeMenu;
         this.actionViews = params.actionViews;
         this.viewType = params.viewType;
         this.withControlPanel = params.withControlPanel !== false;
@@ -90,7 +93,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             this._super.apply(this, arguments),
             this.renderer.appendTo(this.$el)
         ).then(function () {
-            self._update(self.initialState);
+            return self._update(self.initialState);
         });
     },
     /**
@@ -256,7 +259,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
                     return;
                 }
                 self.renderer.setLocalState(localState);
-                self._update(state);
+                return self._update(state);
             });
         });
     },
@@ -279,6 +282,57 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             controllerID: this.controllerID,
             state: state || {},
         });
+    },
+   /**
+    * Renders the html provided by the route specified by the
+    * bannerRoute attribute on the controller (banner_route in the template).
+    * Renders it before the view output and add a css class 'o_has_banner' to it.
+    * There can be only one banner displayed at a time.
+    *
+    * If the banner contains stylesheet links or js files, they are moved to <head>
+    * (and will only be fetched once).
+    *
+    * Route example:
+    * @http.route('/module/hello', auth='user', type='json')
+    * def hello(self):
+    *     return {'html': '<h1>hello, world</h1>'}
+    *
+    * @private
+    * @returns {Deferred}
+    */
+    _renderBanner: function () {
+        if (this.bannerRoute !== undefined) {
+            var self = this;
+            return this.dp
+                .add(this._rpc({route: this.bannerRoute}))
+                .then(function (response) {
+                    if (!response.html) {
+                        self.$el.removeClass('o_has_banner');
+                        return $.when();
+                    }
+                    self.$el.addClass('o_has_banner');
+                    var $banner = $(response.html);
+                    // we should only display one banner at a time
+                    if (self._$banner && self._$banner.remove) {
+                        self._$banner.remove();
+                    }
+                    // Css and js are moved to <head>
+                    var defs = [];
+                    $('link[rel="stylesheet"]', $banner).each(function (i, link) {
+                        defs.push(ajax.loadCSS(link.href));
+                        link.remove();
+                    });
+                    $('script[type="text/javascript"]', $banner).each(function (i, js) {
+                        defs.push(ajax.loadJS(js.src));
+                        js.remove();
+                    });
+                    return $.when.apply($, defs).then(function () {
+                        $banner.prependTo(self.$el);
+                        self._$banner = $banner;
+                    });
+                });
+        }
+        return $.when();
     },
     /**
      * Renders the control elements (buttons, pager and sidebar) of the current
@@ -323,7 +377,8 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             return $();
         }
 
-        var $switchButtons = $(QWeb.render('ControlPanel.SwitchButtons', {
+        var template = config.device.isMobile ? 'ControlPanel.SwitchButtons.Mobile' : 'ControlPanel.SwitchButtons';
+        var $switchButtons = $(QWeb.render(template, {
             views: views,
         }));
         // create bootstrap tooltips
@@ -331,10 +386,17 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             $switchButtons.filter('.o_cp_switch_' + view.type).tooltip();
         });
         // add onclick event listener
-        $switchButtons.filter('button').click(_.debounce(function (event) {
+        var $switchButtonsFiltered = config.device.isMobile ? $switchButtons.find('button') : $switchButtons.filter('button');
+        $switchButtonsFiltered.click(_.debounce(function (event) {
             var viewType = $(event.target).data('view-type');
             self.trigger_up('switch_view', {view_type: viewType});
         }, 200, true));
+
+        if (config.device.isMobile) {
+            // set active view's icon as view switcher button's icon
+            var activeView = _.findWhere(views, {type: this.viewType});
+            $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
+        }
 
         return $switchButtons;
     },
@@ -367,10 +429,11 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             searchview: this.searchView,
             search_view_hidden: !this.searchable || this.searchviewHidden,
             groupable: this.groupable,
+            enableTimeRangeMenu: this.enableTimeRangeMenu,
         });
 
         this._pushState();
-        return $.when();
+        return this._renderBanner();
     },
 
     //--------------------------------------------------------------------------
@@ -405,12 +468,39 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * When a user clicks on an <a> link with type="action", we need to actually
      * do the action. This kind of links is used a lot in no-content helpers.
      *
+     * The <a> may have
+     * - a data-method and data-model attribute, in that case the corresponding
+     *   rpc will be called. If that rpc returns an action it will be executed.
+     * - a data-reload-on-close attribute, in that case the view will be
+     *   reloaded after the dialog has been closed.
+     *
      * @private
      * @param {OdooEvent} event
      */
     _onActionClicked: function (event) {
-        event.preventDefault();
-        this.do_action(event.currentTarget.name);
+        var $target = $(event.currentTarget);
+        var self = this;
+        var model = $target.data('model');
+        var method = $target.data('method');
+
+        if (method !== undefined && model !== undefined) {
+            var options = {};
+            if ($target.data('reload-on-close')) {
+                options.on_close = function () {
+                    self.trigger_up('reload');
+                };
+            }
+            this.dp.add(this._rpc({
+                model: model,
+                method: method,
+            })).then(function (action) {
+                if (action !== undefined) {
+                    self.do_action(action, options);
+                }
+            });
+        } else {
+            this.do_action($target.attr('name'));
+        }
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,

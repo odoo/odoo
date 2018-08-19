@@ -398,86 +398,6 @@ class AccountBankStatementLine(models.Model):
             return select_clause, from_clause, where_clause
         return select_clause + from_clause + where_clause
 
-    # todo: remove this => coverage task
-    def _get_move_lines_for_auto_reconcile(self):
-        """ Returns the move lines that the method auto_reconcile can use to try to reconcile the statement line """
-        pass
-
-    # this method is only call by the widget reconciliation, move it or not ?
-    @api.multi
-    def auto_reconcile(self):
-        """ Try to automatically reconcile the statement.line ; return the counterpart journal entry/ies if the automatic reconciliation succeeded, False otherwise.
-            TODO : this method could be greatly improved and made extensible
-        """
-        self.ensure_one()
-        match_recs = self.env['account.move.line']
-
-        amount = self.amount_currency or self.amount
-        company_currency = self.journal_id.company_id.currency_id
-        st_line_currency = self.currency_id or self.journal_id.currency_id
-        currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
-        precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
-        params = {'company_id': self.env.user.company_id.id,
-                    'account_payable_receivable': (self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id),
-                    'amount': float_round(amount, precision_digits=precision),
-                    'partner_id': self.partner_id.id,
-                    'ref': self.name,
-                    }
-        field = currency and 'amount_residual_currency' or 'amount_residual'
-        liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
-        # Look for structured communication match
-        if self.name:
-            sql_query = self._get_common_sql_query() + \
-                " AND aml.ref = %(ref)s AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = %(amount)s)) \
-                ORDER BY date_maturity asc, aml.id asc"
-            self.env.cr.execute(sql_query, params)
-            match_recs = self.env.cr.dictfetchall()
-            if len(match_recs) > 1:
-                return False
-
-        # Look for a single move line with the same partner, the same amount
-        if not match_recs:
-            if self.partner_id:
-                sql_query = self._get_common_sql_query() + \
-                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = %(amount)s)) \
-                ORDER BY date_maturity asc, aml.id asc"
-                self.env.cr.execute(sql_query, params)
-                match_recs = self.env.cr.dictfetchall()
-                if len(match_recs) > 1:
-                    return False
-
-        if not match_recs:
-            return False
-
-        match_recs = self.env['account.move.line'].browse([aml.get('id') for aml in match_recs])
-        # Now reconcile
-        counterpart_aml_dicts = []
-        payment_aml_rec = self.env['account.move.line']
-        for aml in match_recs:
-            if aml.account_id.internal_type == 'liquidity':
-                payment_aml_rec = (payment_aml_rec | aml)
-            else:
-                amount = aml.currency_id and aml.amount_residual_currency or aml.amount_residual
-                counterpart_aml_dicts.append({
-                    'name': aml.name if aml.name != '/' else aml.move_id.name,
-                    'debit': amount < 0 and -amount or 0,
-                    'credit': amount > 0 and amount or 0,
-                    'move_line': aml
-                })
-
-        try:
-            with self._cr.savepoint():
-                counterpart = self.process_reconciliation(counterpart_aml_dicts=counterpart_aml_dicts, payment_aml_rec=payment_aml_rec)
-            return counterpart
-        except UserError:
-            # A configuration / business logic error that makes it impossible to auto-reconcile should not be raised
-            # since automatic reconciliation is just an amenity and the user will get the same exception when manually
-            # reconciling. Other types of exception are (hopefully) programming errors and should cause a stacktrace.
-            self.invalidate_cache()
-            self.env['account.move'].invalidate_cache()
-            self.env['account.move.line'].invalidate_cache()
-            return False
-
     def _prepare_reconciliation_move(self, move_ref):
         """ Prepare the dict of values to create the move from a statement line. This method may be overridden to adapt domain logic
             through model inheritance (make sure to call super() to establish a clean extension chain).
@@ -525,7 +445,7 @@ class AccountBankStatementLine(models.Model):
             # company in currency A, statement in currency B and transaction in currency A
             # counterpart line must have currency B and amount is computed using the rate between A and B
             amount_currency = amount/st_line_currency_rate
-        
+
         # last case is company in currency A, statement in currency A and transaction in currency A
         # and in this case counterpart line does not need any second currency nor amount_currency
 
@@ -623,6 +543,14 @@ class AccountBankStatementLine(models.Model):
             total -= aml_rec.debit - aml_rec.credit
             aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
+            if aml_rec.journal_id.post_at_bank_rec and aml_rec.payment_id and aml_rec.move_id.state == 'draft':
+                # In case the journal is set to only post payments when performing bank
+                # reconciliation, we modify its date and post it.
+                aml_rec.move_id.date = self.date
+                aml_rec.payment_id.payment_date = self.date
+                aml_rec.move_id.post()
+                # We check the paid status of the invoices reconciled with this payment
+                aml_rec.payment_id.reconciled_invoice_ids.filtered(lambda x: x.state == 'in_payment').write({'state': 'paid'})
 
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
         # case we reconcile the existing and the new move lines together, or being a write-off.
@@ -722,7 +650,7 @@ class AccountBankStatementLine(models.Model):
             self.write({'move_name': move.name})
             payment and payment.write({'payment_reference': move.name})
         elif self.move_name:
-            raise UserError(_('Operation not allowed. Since your statement line already received a number, you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.'))
+            raise UserError(_('Operation not allowed. Since your statement line already received a number (%s), you cannot reconcile it entirely with existing journal entries otherwise it would make a gap in the numbering. You should book an entry and make a regular revert of it in case you want to cancel it.') % (self.move_name))
 
         #create the res.partner.bank if needed
         if self.account_number and self.partner_id and not self.bank_account_id:

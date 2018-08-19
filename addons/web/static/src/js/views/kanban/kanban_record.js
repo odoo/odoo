@@ -65,6 +65,18 @@ var KanbanRecord = Widget.extend({
     start: function () {
         return $.when(this._super.apply(this, arguments), this._render());
     },
+    /**
+     * Called each time the record is attached to the DOM.
+     */
+    on_attach_callback: function () {
+        _.invoke(this.subWidgets, 'on_attach_callback');
+    },
+    /**
+     * Called each time the record is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        _.invoke(this.subWidgets, 'on_detach_callback');
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -99,8 +111,7 @@ var KanbanRecord = Widget.extend({
             var tooltip = $el.attr('tooltip');
             if (tooltip) {
                 $el.tooltip({
-                    'html': true,
-                    'title': self.qweb.render(tooltip, self.qweb_context)
+                    title: self.qweb.render(tooltip, self.qweb_context)
                 });
             }
         });
@@ -350,7 +361,7 @@ var KanbanRecord = Widget.extend({
     _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            $el.addClass('pull-right');
+            $el.addClass('float-right');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
             $el.addClass('o_text_block');
         }
@@ -490,7 +501,7 @@ var KanbanRecord = Widget.extend({
             if (elem === event.currentTarget) {
                 ischild = false;
             }
-            var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== "tooltip");
+            var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== 'bs.tooltip');
             if (ischild) {
                 children.push(elem);
                 if (test_event) {

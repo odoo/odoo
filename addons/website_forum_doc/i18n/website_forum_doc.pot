@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,6 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
 #: model:ir.actions.act_window,name:website_forum_doc.action_documentation_toc
-#: model:ir.ui.view,arch_db:website_forum_doc.header_footer_custom
 #: model:website.menu,name:website_forum_doc.menu_questions
 msgid "Documentation"
 msgstr ""
@@ -123,12 +122,6 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
 msgid "Edit Post"
-msgstr ""
-
-#. module: website_forum_doc
-#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
-#, python-format
-msgid "Error ! You cannot create recursive categories."
 msgstr ""
 
 #. module: website_forum_doc
@@ -206,11 +199,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__parent_left
-msgid "Left Parent"
-msgstr ""
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__name
 msgid "Name"
 msgstr ""
@@ -223,6 +211,11 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "No business benefit"
+msgstr ""
+
+#. module: website_forum_doc
+#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__parent_path
+msgid "Parent Path"
 msgstr ""
 
 #. module: website_forum_doc
@@ -283,11 +276,6 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_review
 msgid "Review"
-msgstr ""
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__parent_right
-msgid "Right Parent"
 msgstr ""
 
 #. module: website_forum_doc
@@ -352,6 +340,21 @@ msgid "To be promoted in the official documentation the question\n"
 msgstr ""
 
 #. module: website_forum_doc
+#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__website_meta_description
+msgid "Website meta description"
+msgstr ""
+
+#. module: website_forum_doc
+#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__website_meta_keywords
+msgid "Website meta keywords"
+msgstr ""
+
+#. module: website_forum_doc
+#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc__website_meta_title
+msgid "Website meta title"
+msgstr ""
+
+#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr ""
@@ -359,6 +362,12 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What's the available stock field?"
+msgstr ""
+
+#. module: website_forum_doc
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:36
+#, python-format
+msgid "You cannot create recursive categories."
 msgstr ""
 
 #. module: website_forum_doc

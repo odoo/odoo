@@ -13,9 +13,11 @@
         </xpath>
         <xpath expr="//div[hasclass('css_quantity')]//i[hasclass('fa-plus')]/.." position="replace">
           <t t-if="line._get_stock_warning(clear=False)">
-            <a t-attf-href="#" class="mb8 input-group-addon">
-              <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
-            </a>
+            <div class="input-group-append">
+                <a t-attf-href="#" class="btn btn-link">
+                  <i class='fa fa-warning text-warning' t-att-title="line._get_stock_warning()" role="img" aria-label="Warning"/>
+                </a>
+            </div>
           </t>
           <t t-else="1">
             <t>$0</t>
@@ -57,4 +59,3 @@
 
 
 </odoo>
-

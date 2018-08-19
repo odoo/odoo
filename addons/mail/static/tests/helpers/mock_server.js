@@ -15,18 +15,14 @@ MockServer.include({
      * @param {Object} [data.initMessaging] init messaging data
      * @param {Object} [options.services] list of extra services to load for
      *   the tests (e.g. MailService or BusService)
+     * @param {Widget} [options.widget] mocked widget (use to call services)
      */
     init: function (data, options) {
         if (data && data.initMessaging) {
             this.initMessagingData = data.initMessaging;
             delete data.initMessaging;
         }
-        var BusService = _.find(options.services, function (Service) {
-            return Service.prototype.name === 'bus_service';
-        });
-        if (BusService) {
-            this.busBus = BusService.prototype.bus;
-        }
+        this._widget = options.widget;
 
         this._super.apply(this, arguments);
     },
@@ -118,34 +114,30 @@ MockServer.include({
             });
             // simulate notification back (deletion of rejected/discarded
             // message in channel)
-            if (this.busBus) {
-                var dbName = undefined; // useless for tests
-                var notifData = {
-                    message_ids: messageIDs,
-                    type: "deletion",
-                };
-                var metaData = [dbName, 'res.partner'];
-                var notification = [metaData, notifData];
-                this.busBus.trigger('notification', [notification]);
-            }
+            var dbName = undefined; // useless for tests
+            var notifData = {
+                message_ids: messageIDs,
+                type: "deletion",
+            };
+            var metaData = [dbName, 'res.partner'];
+            var notification = [metaData, notifData];
+            this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         } else if (decision === 'accept') {
             // simulate notification back (new accepted message in channel)
-            if (this.busBus) {
-                var messages = _.filter(model.records, function (rec) {
-                    return _.contains(messageIDs, rec.id);
-                });
+            var messages = _.filter(model.records, function (rec) {
+                return _.contains(messageIDs, rec.id);
+            });
 
-                var notifications = [];
-                _.each(messages, function (message) {
-                    var dbName = undefined; // useless for tests
-                    var messageData = message;
-                    message.moderation_status = 'accepted';
-                    var metaData = [dbName, 'mail.channel'];
-                    var notification = [metaData, messageData];
-                    notifications.push(notification);
-                });
-                this.busBus.trigger('notification', notifications);
-            }
+            var notifications = [];
+            _.each(messages, function (message) {
+                var dbName = undefined; // useless for tests
+                var messageData = message;
+                message.moderation_status = 'accepted';
+                var metaData = [dbName, 'mail.channel'];
+                var notification = [metaData, messageData];
+                notifications.push(notification);
+            });
+            this._widget.call('bus_service', 'trigger', 'notification', notifications);
         }
     },
     /**
@@ -163,6 +155,9 @@ MockServer.include({
         if (args.method === 'channel_fetch_preview') {
             return $.when(this._mockChannelFetchPreview(args));
         }
+        if (args.method === 'channel_minimize') {
+            return $.when();
+        }
         if (args.method === 'channel_seen') {
             return $.when();
         }
@@ -172,13 +167,19 @@ MockServer.include({
         if (args.method === 'message_format') {
             return $.when(this._mockMessageFormat(args));
         }
+        if (args.method === 'activity_format') {
+            return $.when(this._mockRead(args.model, args.args, args.kwargs));
+        }
         if (args.method === 'set_message_done') {
             return $.when();
         }
         if (args.method === 'moderate') {
             return $.when(this._mockModerate(args));
         }
-        if (args.method === 'channel_minimize') {
+        if (args.method === 'notify_typing') {
+            return $.when();
+        }
+        if (args.method === 'set_message_done') {
             return $.when();
         }
         return this._super(route, args);

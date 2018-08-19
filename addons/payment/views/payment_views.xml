@@ -153,9 +153,9 @@
                                     <t t-if="installed">
                                         <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                     </t>
-                                    <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm" name="button_immediate_install">Install</button>
-                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Activate</button>
-                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>
+                                    <button t-if="!installed" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Activate</button>
+                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Configure</button>
                                 </div>
                             </div>
                         </t>
@@ -297,14 +297,14 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><field name="reference"/></strong>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <span><field name="partner_name"/></span>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right">
+                                    <div class="col-6">
+                                        <span class="float-right">
                                             <field name="amount" widget="monetary"/>
                                         </span>
                                     </div>

@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         return warehouse_ids
 
     incoterm = fields.Many2one(
-        'stock.incoterms', 'Incoterms',
+        'account.incoterms', 'Incoterms',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
         ('direct', 'Deliver each product when available'),
@@ -34,6 +34,27 @@ class SaleOrder(models.Model):
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Pickings')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    effective_date = fields.Date("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
+
+    @api.depends('picking_ids.date_done')
+    def _compute_effective_date(self):
+        for order in self:
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+            dates_list = [date for date in pickings.mapped('date_done') if date]
+            order.effective_date = dates_list and min(dates_list).date()
+
+    @api.depends('picking_policy')
+    def _compute_expected_date(self):
+        super(SaleOrder, self)._compute_expected_date()
+        for order in self:
+            dates_list = []
+            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+                dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
+                dates_list.append(dt)
+            if dates_list:
+                expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
+                order.expected_date = fields.Datetime.to_string(expected_date)
 
     @api.multi
     def write(self, values):
@@ -54,9 +75,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        super(SaleOrder, self)._action_confirm()
         for order in self:
-            order.order_line._action_launch_procurement_rule()
+            order.order_line._action_launch_stock_rule()
+        super(SaleOrder, self)._action_confirm()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -148,7 +169,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_method(self):
         """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
             For SO line coming from expense, no picking should be generate: we don't manage stock for
-            thoses lines, even if the product is a stockable.
+            thoses lines, even if the product is a storable.
         """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
 
@@ -172,12 +193,11 @@ class SaleOrderLine(models.Model):
                         qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                 line.qty_delivered = qty
 
-    @api.model
-    def create(self, values):
-        line = super(SaleOrderLine, self).create(values)
-        if line.state == 'sale':
-            line._action_launch_procurement_rule()
-        return line
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(SaleOrderLine, self).create(vals_list)
+        lines.filtered(lambda line: line.state == 'sale')._action_launch_stock_rule()
+        return lines
 
     @api.multi
     def write(self, values):
@@ -188,7 +208,7 @@ class SaleOrderLine(models.Model):
                 lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_procurement_rule()
+            lines._action_launch_stock_rule()
         return res
 
     @api.depends('order_id.state')
@@ -275,30 +295,35 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_procurement_values(self, group_id=False):
-        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
-        date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
+        date_planned = self.order_id.confirmation_date\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'company_id': self.order_id.company_id,
             'group_id': group_id,
             'sale_line_id': self.id,
-            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'date_planned': date_planned,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
-            'partner_dest_id': self.order_id.partner_shipping_id
+            'partner_id': self.order_id.partner_shipping_id.id,
         })
+        for line in self.filtered("order_id.commitment_date"):
+            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
+            values.update({
+                'date_planned': fields.Datetime.to_string(date_planned),
+            })
         return values
 
     @api.multi
-    def _action_launch_procurement_rule(self):
+    def _action_launch_stock_rule(self):
         """
         Launch procurement group run method with required/custom fields genrated by a
-        sale order line. procurement group will launch '_run_move', '_run_buy' or '_run_manufacture'
+        sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -381,7 +406,7 @@ class SaleOrderLine(models.Model):
         else:
             mto_route = False
             try:
-                mto_route = self.env['stock.warehouse']._get_mto_route()
+                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
@@ -390,7 +415,7 @@ class SaleOrderLine(models.Model):
 
         # Check Drop-Shipping
         if not is_available:
-            for pull_rule in product_routes.mapped('pull_ids'):
+            for pull_rule in product_routes.mapped('rule_ids'):
                 if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
                         pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
                     is_available = True

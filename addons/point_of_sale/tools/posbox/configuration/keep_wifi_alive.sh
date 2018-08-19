@@ -2,7 +2,7 @@
 
 CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt"
 while true ; do
-	if [ -z "$(cat <(ifconfig eth0) <(ifconfig wlan0) | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}';)" ] ; then
+	if [ -z "$(cat <(ifconfig eth0) <(ifconfig wlan0) | grep "inet ";)" ] ; then
 		ESSID=$(head -n 1 "${CURRENT_WIFI_NETWORK_FILE}" | tr -d '\n')
 		PASSWORD=$(tail -n 1 "${CURRENT_WIFI_NETWORK_FILE}" | tr -d '\n')
 

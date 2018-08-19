@@ -24,7 +24,7 @@
             <pivot string="Timesheet">
                 <field name="employee_id" type="row"/>
                 <field name="date" interval="month" type="col"/>
-                <field name="timesheet_revenue" type="measure"/>
+                <field name="unit_amount" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -50,7 +50,7 @@
         <field name="context">{
             'col_group_by': ['date:month', 'timesheet_invoice_type'],
             'group_by': ['project_id', 'employee_id'],
-            'measures': ['timesheet_revenue', 'amount_currency', 'unit_amount', '__count']
+            'measures': ['amount_currency', 'unit_amount', '__count']
         }</field>
         <field name="action_id" ref="timesheet_action_billing_report"/>
     </record>

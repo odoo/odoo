@@ -3,15 +3,17 @@
     <data noupdate="1">
 
         <record id="partner_demo" model="res.partner">
-            <field name="name">Demo User</field>
+            <field name="name">Marc Brown</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
-            <field name="email">demo@yourcompany.example.com</field>
             <field name="company_name">YourCompany</field>
-            <field name="street">Avenue des Dessus-de-Lives, 2</field>
-            <field name="city">Namur (Loyers)</field>
-            <field name="zip">5101</field>
-            <field name="country_id" ref="be"/>
+            <field name="street">3575  Buena Vista Avenue</field>
+            <field name="city">Eugene</field>
+            <field name="state_id"  model="res.country.state" search="[('code','ilike','OR')]"/>
+            <field name="zip">97401</field>
+            <field name="country_id" ref="us"/>
+            <field name="email">mark.brown23@example.com</field>
+            <field name="phone">(441)-695-2334</field>
         </record>
 
         <record id="main_partner" model="res.partner">
@@ -25,7 +27,6 @@
             <field name="phone">+1 555 123 8069</field>
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_company_logo.png"/>
         </record>
 
         <record id="user_demo" model="res.users">
@@ -39,6 +40,7 @@
         </record>
 
         <record model="res.partner" id="base.partner_root">
+            <field name="name">Mitchell Stephens</field>
             <field name="company_name">YourCompany</field>
             <field name="street">215 Vine St</field>
             <field name="city">Scranton</field>
@@ -54,15 +56,18 @@
 
         <!-- Portal : partner and user -->
         <record id="partner_demo_portal" model="res.partner">
-            <field name="name">Demo Portal User</field>
-            <field name="email">demo.portal@yourcompany.example.com</field>
+            <field name="name">Joel Willis</field>
+            <field name="email">joel.willis63@example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="True"/>
-            <field name="city">Vivegnis</field>
-            <field name="zip">4683</field>
-            <field name="country_id" ref="base.be"/>
+            <field name="street">858 Lynn Street</field>
+            <field name="city">Bayonne</field>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
+            <field name="zip">07002</field>
+            <field name="country_id" ref="base.us"/>
             <field name="company_name">YourCompany</field>
-            <field name="street">Rue Cesar de Paepe, 43</field>
+            <field name="image" type="base64" file="base/static/img/partner_demo_portal.jpg"/>
+            <field name="phone">(683)-556-5104</field>
         </record>
         <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
             <field name="partner_id" ref="partner_demo_portal"/>

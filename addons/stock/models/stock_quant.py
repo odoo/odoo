@@ -262,12 +262,12 @@ class StockQuant(models.Model):
             # if we want to reserve
             available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
+                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
+                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % product_id.display_name)
         else:
             return reserved_quants
 
@@ -353,6 +353,10 @@ class QuantPackage(models.Model):
             values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             if package.quant_ids:
                 values['location_id'] = package.quant_ids[0].location_id
+                if all(q.owner_id == package.quant_ids[0].owner_id for q in package.quant_ids):
+                    values['owner_id'] = package.quant_ids[0].owner_id
+                if all(q.company_id == package.quant_ids[0].company_id for q in package.quant_ids):
+                    values['company_id'] = package.quant_ids[0].company_id
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']

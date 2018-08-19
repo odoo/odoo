@@ -16,7 +16,7 @@ class Website(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
+    salesteam_id = fields.Many2one('crm.team', string='Sales Team')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
 
@@ -60,8 +60,8 @@ class Website(models.Model):
 
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
-        else:
-            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.sudo().code)
+        if not show_visible and not country_code:
+            pricelists |= all_pl.filtered(lambda pl: pl.sudo().code)
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
@@ -145,7 +145,7 @@ class Website(models.Model):
 
     @api.multi
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
 
     @api.model
     def sale_get_payment_term(self, partner):
@@ -160,7 +160,7 @@ class Website(models.Model):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery', 'invoice'])
+        addr = partner.address_get(['delivery'])
         if len(partner.sale_order_ids):  # first = me
             addr['delivery'] = partner.sale_order_ids[0].partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
@@ -169,9 +169,10 @@ class Website(models.Model):
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
             'team_id': self.salesteam_id.id,
-            'partner_invoice_id': addr['invoice'],
+            'partner_invoice_id': partner.id,
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+            'website_id': self._context.get('website_id'),
         }
         company = self.company_id or pricelist.company_id
         if company:
@@ -254,6 +255,7 @@ class Website(models.Model):
                 # change the partner, and trigger the onchange
                 sale_order.write({'partner_id': partner.id})
                 sale_order.onchange_partner_id()
+                sale_order.write({'partner_invoice_id': partner.id})
                 sale_order.onchange_partner_shipping_id() # fiscal position
                 sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 

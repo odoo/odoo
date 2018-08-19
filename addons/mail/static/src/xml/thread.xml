@@ -2,26 +2,27 @@
 <templates xml:space="preserve">
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayEmptyThread]
+        @param {boolean} [options.displayNoMatchFound]
     -->
     <t t-name="mail.widget.Thread">
-        <t t-if="messages.length">
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.ASC"
-               t-call="mail.widget.Thread.LoadMore"/>
+        <t t-if="thread.hasMessages()">
             <t t-call="mail.widget.Thread.Content"/>
-            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
-               t-call="mail.widget.Thread.LoadMore"/>
         </t>
-        <t t-if="options.displayEmptyChannel">
-            <t t-call="mail.EmptyChannel" />
+        <t t-elif="options.displayEmptyThread">
+            <t t-call="mail.widget.Thread.Empty" />
         </t>
-        <div t-if="options.displayNoMatchFound" class="o_mail_no_content">
+        <div t-elif="options.displayNoMatchFound" class="o_mail_no_content">
             <div class="o_thread_title">No matches found</div>
             <div>No message matches your search. Try to change your search filters.</div>
         </div>
     </t>
 
-
+    <!--
+        @param {mail.DocumentViewer} widget
+    -->
     <t t-name="DocumentViewer.Content">
         <div class="o_viewer_content">
             <div class="o_viewer-header">
@@ -32,7 +33,7 @@
                     <t t-esc="widget.activeAttachment.name"/>
                     <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
                 </span>
-                <a role="button" class="o_close_btn pull-right" href="#" aria-label="Close" title="Close">×</a>
+                <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
@@ -63,6 +64,9 @@
         </div>
     </t>
 
+    <!--
+        @param {mail.DocumentViewer} widget
+    -->
     <t t-name="DocumentViewer">
         <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
             <t t-call="DocumentViewer.Content"/>
@@ -77,6 +81,10 @@
             </t>
         </div>
     </t>
+
+    <!--
+        @param {string} src
+    -->
     <t t-name="PrintImage">
         <html>
             <head>
@@ -97,30 +105,120 @@
     </t>
 
     <!--
-        When a channel is empty
+        When a thread is empty
 
-        @param {mail.widget.Thread} widget
+        @param {mail.model.Thread} thread
     -->
-    <div t-name="mail.EmptyChannel" class="o_mail_no_content">
-        <t t-if="options.threadID === 'mailbox_inbox'">
+    <div t-name="mail.widget.Thread.Empty" class="o_mail_no_content">
+        <t t-if="thread.getID() === 'mailbox_inbox'">
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>
         </t>
-        <t t-if="options.threadID === 'mailbox_starred'">
+        <t t-if="thread.getID() === 'mailbox_starred'">
             <div class="o_thread_title">No starred message</div>
             <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
         </t>
-        <t t-if="options.threadID === 'mailbox_moderation'">
+        <t t-if="thread.getID() === 'mailbox_moderation'">
             <div class="o_thread_title">You have no message to moderate</div>
             <div>Pending moderation messages appear here.</div>
         </t>
     </div>
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
+          the thread messages (from top to bottom)
+        @param {Object} ORDER
+        @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
+        @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
+
+                    _____________            _____________
+                   |             |          |             |
+                   |  message 1  |          |  message n  |
+                   |  message 2  |          |  ...        |
+                   |  ...        |          |  message 2  |
+                   |  message n  |          |  message 1  |
+                   |_____________|          |_____________|
+
+        ORDER:           ASC                     DESC
+
     -->
     <t t-name="mail.widget.Thread.Content">
-        <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+        <t t-set="messages" t-value="thread.getMessages()"/>
+        <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
+        <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      ASC Order
+    -->
+    <t t-name="mail.widget.Thread.Content.ASC">
+        <div class="o_mail_thread_content_asc">
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayLoadMore=false]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+
+                     _____________
+                    |             |
+                    |  message n  |
+                    |  ...        |
+                    |  message 2  |
+                    |  message 1  |
+                    |_____________|
+
+                      DESC Order
+
+    -->
+    <t t-name="mail.widget.Thread.Content.DESC">
+        <div class="o_mail_thread_content_desc">
+            <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+            <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-if="thread.hasTypingNotification()" t-call="mail.widget.Thread.TypingNotificationBar"/>
+            <t t-call="mail.widget.Thread.Messages"/>
+            <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+    -->
+    <t t-name="mail.widget.Thread.TypingNotificationBar">
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.DESC"/>
+        <div class="o_thread_typing_notification_bar"/>
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.ASC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractMessage[]} messages messages are ordered based
+          on desired display order
+    -->
+    <t t-name="mail.widget.Thread.Messages">
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
@@ -135,34 +233,51 @@
     </t>
 
     <!--
+        @param {mail.model.AbstractThread} thread
+        @param {string} dateFormat
+        @param {Object[]} hideAuthorMessages dict where key is message ID and
+          value is boolean. It tells whether the message with this ID should
+          hide the author visually or not.
+        @param {Object} options
         @param {mail.model.AbstractMessage} message
+        @param {Object} options
+        @param {boolean} [options.displayAvatars]
+        @param {boolean} [options.displayDocumentLinks]
+        @param {boolean} [options.displayEmailIcons]
+        @param {boolean} [options.displayMarkAsRead]
+        @param {boolean} [options.displayReplyIcons]
+        @param {boolean} [options.displayStars]
+        @param {boolean} [options.displaySubjectsOnMessages]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+        @param {integer} [options.selectedMessageID]
     -->
     <t t-name="mail.widget.Thread.Message">
         <div t-att-class="'o_thread_message' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.getID()">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
-                    <img t-if="message.shouldDisplayAuthor()"
+                    <img t-if="displayAuthorMessages[message.getID()]"
                         alt=""
                         t-att-src="message.getAvatarSource()"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                        t-attf-class="o_thread_message_avatar img-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
                 </t>
                 <t t-else="">
-                    <img t-if="message.shouldDisplayAuthor()"
+                    <img t-if="displayAuthorMessages[message.getID()]"
                         alt=""
                         t-att-src="message.getAvatarSource()"
-                        class="o_thread_message_avatar img-circle"/>
+                        class="o_thread_message_avatar rounded-circle"/>
                 </t>
-                <span t-if="!message.shouldDisplayAuthor()" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
+                <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
                     <t t-esc="message.getDate().format('hh:mm')"/>
                 </span>
-                <i t-if="!message.shouldDisplayAuthor() and options.displayStars and message.getType() !== 'notification'"
+                <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
             </div>
             <div class="o_thread_message_core">
-                <p t-if="message.shouldDisplayAuthor()" class="o_mail_info text-muted">
+                <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
                     <input t-if="message.needsModeration() and message.needsModerationByUser()" type="checkbox" class="moderation_checkbox" t-att-data-message-id="message.getID()"/>
                     <t t-if="message.isNote()">
                         Note by
@@ -186,7 +301,7 @@
                     <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
                         on <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
-                    <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== options.threadID)">
+                    <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
                         (from <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
                     <span t-if="options.displayEmailIcons and message.hasCustomerEmailData()" class="o_thread_tooltip_container">
@@ -224,7 +339,7 @@
                             <t t-if="message.needsModerationByUser()">
                                 <t t-call="mail.MessageModerationDecision"/>
                             </t>
-                            <t t-elif="message.isAuthor()">
+                            <t t-elif="message.isMyselfAuthor()">
                                 <t t-call="mail.MessageModerationFeedback"/>
                             </t>
                         </t>
@@ -287,6 +402,9 @@
         </div>
     </t>
 
+    <!--
+        @param {mail.model.Message} message
+    -->
     <t t-name="mail.widget.Thread.MessageTracking">
         <ul class="o_mail_thread_message_tracking">
             <t t-foreach='message.getTrackingValues()' t-as='value'>
@@ -304,6 +422,9 @@
         </ul>
     </t>
 
+    <!--
+        @param {Array} attachments
+    -->
     <t t-name="mail.composer.Attachments">
         <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
             <t t-foreach="attachments" t-as='attachment'>
@@ -314,6 +435,12 @@
         </div>
     </t>
 
+    <!--
+        @param {Object} attachment
+        @param {integer} attachment.id
+        @param {string} attachment.name
+        @param {string} attachment.url
+    -->
     <t t-name="mail.AttachmentPreview">
         <div class="o_attachment" t-att-title="attachment.name">
             <div class="o_attachment_wrap">
@@ -330,6 +457,15 @@
         </div>
     </t>
 
+    <!--
+        @param {Object} attachment
+        @param {string} attachment.filename
+        @param {integer} attachment.id
+        @param {string} [attachment.mimetype]
+        @param {string} attachment.name
+        @param {boolean} attachment.upload
+        @param {string} attachment.url
+    -->
     <t t-name="mail.Attachment">
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
         <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
@@ -337,7 +473,7 @@
                 <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
                 <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
 
-                <div t-attf-class="o_image_box pull-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
+                <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
                     <div t-if="has_preview"
                          class="o_image o_hover"
                          t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
@@ -362,7 +498,7 @@
                 <div t-if="!editable" class="caption small">
                     <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
                     <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download pull-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
                 </div>
                 <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
@@ -370,13 +506,17 @@
         </div>
     </t>
 
+    <!--
+        @param {Object} options
+        @param {boolean} [options.loadMoreOnScroll]
+    -->
      <t t-name="mail.widget.Thread.LoadMore">
         <div class="o_thread_show_more">
             <t t-if="options.loadMoreOnScroll">
                 <span><i class="fa fa-spinner fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
             </t>
             <t t-else="">
-                <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
+                <button class="btn btn-link">-------- Show older messages --------</button>
             </t>
         </div>
     </t>

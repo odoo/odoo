@@ -17,6 +17,7 @@ import uuid
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
@@ -110,7 +111,7 @@ class Attendee(models.Model):
 
     _name = 'calendar.attendee'
     _rec_name = 'common_name'
-    _description = 'Attendee information'
+    _description = 'Calendar Registration'
 
     def _default_access_token(self):
         return uuid.uuid4().hex
@@ -141,14 +142,15 @@ class Attendee(models.Model):
         """ Make entry on email and availability on change of partner_id field. """
         self.email = self.partner_id.email
 
-    @api.model
-    def create(self, values):
-        if not values.get("email") and values.get("common_name"):
-            common_nameval = values.get("common_name").split(':')
-            email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
-            values['email'] = email and email[0] or ''
-            values['common_name'] = values.get("common_name")
-        return super(Attendee, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get("email") and values.get("common_name"):
+                common_nameval = values.get("common_name").split(':')
+                email = [x for x in common_nameval if '@' in x] # TODO JEM : should be refactored
+                values['email'] = email and email[0] or ''
+                values['common_name'] = values.get("common_name")
+        return super(Attendee, self).create(vals_list)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -194,7 +196,7 @@ class Attendee(models.Model):
             if attendee.email or attendee.partner_id.email:
                 # FIXME: is ics_file text or bytes?
                 ics_file = ics_files.get(attendee.event_id.id)
-                mail_id = invitation_template.send_mail(attendee.id)
+                mail_id = invitation_template.send_mail(attendee.id, notif_layout='mail.mail_notification_light')
 
                 vals = {}
                 if ics_file:
@@ -349,7 +351,7 @@ class AlarmManager(models.AbstractModel):
 
     @api.model
     def get_next_mail(self):
-        now = fields.Datetime.now()
+        now = fields.Datetime.to_string(fields.Datetime.now())
         last_notif_mail = self.env['ir.config_parameter'].sudo().get_param('calendar.last_notif_mail', default=now)
 
         try:
@@ -389,7 +391,7 @@ class AlarmManager(models.AbstractModel):
                     if at_least_one and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                in_date_format = datetime.strptime(meeting.start, DEFAULT_SERVER_DATETIME_FORMAT)
+                in_date_format = meeting.start
                 last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                 for alert in last_found:
                     self.do_mail_reminder(alert)
@@ -871,9 +873,9 @@ class Meeting(models.Model):
         """
         for meeting in self:
             if meeting.allday:
-                meeting.start_date = meeting.start
+                meeting.start_date = meeting.start.date()
                 meeting.start_datetime = False
-                meeting.stop_date = meeting.stop
+                meeting.stop_date = meeting.stop.date()
                 meeting.stop_datetime = False
 
                 meeting.duration = 0.0
@@ -895,13 +897,13 @@ class Meeting(models.Model):
                 enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
                 enddate = enddate.astimezone(pytz.utc)
-                meeting.stop = fields.Datetime.to_string(enddate)
+                meeting.stop = enddate
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
                 startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                meeting.start = fields.Datetime.to_string(startdate)
+                meeting.start = startdate
             else:
                 meeting.write({'start': meeting.start_datetime,
                                'stop': meeting.stop_datetime})
@@ -943,9 +945,17 @@ class Meeting(models.Model):
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
         if self.start_datetime:
-            start = fields.Datetime.from_string(self.start_datetime)
+            start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = fields.Datetime.to_string(start + timedelta(hours=self.duration))
+            self.stop = start + timedelta(hours=self.duration)
+
+    @api.onchange('start_date')
+    def _onchange_start_date(self):
+        self.start = self.start_date
+
+    @api.onchange('stop_date')
+    def _onchange_stop_date(self):
+        self.stop = self.stop_date
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -961,9 +971,9 @@ class Meeting(models.Model):
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return fields.Date.from_string(idate)
+                    return idate
                 else:
-                    return fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
+                    return idate.replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -979,7 +989,7 @@ class Meeting(models.Model):
 
             if not meeting.start or not meeting.stop:
                 raise UserError(_("First you have to specify the date of the invitation."))
-            event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            event.add('created').value = ics_datetime(fields.Datetime.now())
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting.name
@@ -1098,6 +1108,24 @@ class Meeting(models.Model):
         if 'id' not in order_fields:
             order_fields.append('id')
 
+        leaf_evaluations = None
+        #compose a query of the type SELECT id, condition1 as domain1, condition2 as domaine2
+        #This allows to load leaf interpretation of the where clause in one query
+        #leaf_evaluations is then used when running custom interpretation of domain for recuring events
+        if self:
+            select_fields = ["id"]
+            where_params_list = []
+            for pos, arg in enumerate(domain):
+                if not arg[0] in ('start', 'stop', 'final_date', '&', '|'):
+                    e = expression.expression([arg], self)
+                    where_clause, where_params = e.to_sql()  # CAUTION, wont work if field is autojoin, not supported
+                    select_fields.append("%s as \"%s\"" % (where_clause, str(pos)))
+                    where_params_list += where_params
+            if len(select_fields) > 1:
+                query = "SELECT %s FROM calendar_event WHERE id in %%s" % (", ".join(select_fields))  # could be improved by only taking event with recurency ?
+                where_params_list += [tuple(self.ids)]
+                self._cr.execute(query, where_params_list)
+                leaf_evaluations = dict([(row['id'], row) for row in self._cr.dictfetchall()])
         result_data = []
         result = []
         for meeting in self:
@@ -1115,7 +1143,7 @@ class Meeting(models.Model):
                 pile = []
                 ok = True
                 r_date = r_start_date  # default for empty domain
-                for arg in domain:
+                for pos, arg in enumerate(domain):
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
                         if str(arg[0]) == 'start':
                             r_date = r_start_date
@@ -1140,6 +1168,8 @@ class Meeting(models.Model):
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
+                    elif leaf_evaluations and meeting.id in leaf_evaluations:
+                        pile.append(bool(leaf_evaluations[meeting.id][str(pos)]))
                     else:
                         pile.append(True)
                 pile.reverse()
@@ -1215,7 +1245,8 @@ class Meeting(models.Model):
             return ''
 
         def get_end_date():
-            end_date_new = ''.join((re.compile('\d')).findall(self.final_date)) + 'T235959Z' if self.final_date else False
+            final_date = fields.Date.to_string(self.final_date)
+            end_date_new = ''.join((re.compile('\d')).findall(final_date)) + 'T235959Z' if final_date else False
             return (self.end_type == 'count' and (';COUNT=' + str(self.count)) or '') +\
                 ((end_date_new and self.end_type == 'end_date' and (';UNTIL=' + end_date_new)) or '')
 
@@ -1349,6 +1380,7 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
+        d_class = fields.Date if data['allday'] else fields.Datetime
         if data.get('rrule'):
             data.update(
                 values,
@@ -1357,7 +1389,8 @@ class Meeting(models.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=d_class.from_string(data.get('start')) \
+                    + timedelta(hours=values.get('duration', False) or data.get('duration'))
             )
 
             # do not copy the id
@@ -1466,6 +1499,10 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         # compute duration, only if start and stop are modified
         if not 'duration' in values and 'start' in values and 'stop' in values:
             values['duration'] = self._get_duration(values['start'], values['stop'])
@@ -1534,6 +1571,10 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
 
@@ -1740,3 +1781,13 @@ class Meeting(models.Model):
                 activity_values['user_id'] = values['user_id']
             if activity_values.keys():
                 self.mapped('activity_ids').write(activity_values)
+
+    @api.model
+    def _fix_rrule(self, values):
+        rule_str = values.get('rrule')
+        if rule_str:
+            rule = rrule.rrulestr(rule_str)
+            if not rule._until and not rule._count:
+                rule._count = 100
+                rule_str = str(rule).split('RRULE:')[-1]
+        return rule_str

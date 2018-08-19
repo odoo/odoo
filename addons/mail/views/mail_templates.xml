@@ -18,16 +18,28 @@
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/services/mail_service.js"></script>
                 <!-- Models -->
-                <script type="text/javascript" src="/mail/static/src/js/models/channel.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/models/dm.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/models/document_thread.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/models/mail_failure.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/models/mailbox.js"></script>
                     <!-- messages -->
                     <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/models/messages/message.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/models/thread.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/models/thread_with_cache.js"></script>
+                    <!-- threads -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
+                        <!-- channels -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/channel.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/multi_user_channel.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/two_user_channel.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/create_mode_document_thread.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/dm_chat.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/document_thread.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/livechat.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/mailbox.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/searchable_thread.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/thread.js"></script>
+                        <!-- thread typing mixin -->
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timer.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timers.js"></script>
+                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/cc_throttle_function.js"></script>
                 <!-- Widgets -->
                     <!-- thread windows -->
                     <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
@@ -46,14 +58,19 @@
                 <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
                     <!-- systray -->
                     <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <!-- Activity view type -->
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_view.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_model.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_controller.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_renderer.js"></script>
                 <!-- Others -->
                 <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
 
@@ -67,6 +84,8 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/systray.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
             </xpath>
         </template>
 
@@ -87,7 +106,13 @@
                 <!-- systray -->
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_activity_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_mail_failure_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/discuss_typing_notification_tests.js"></script>
+                <!-- models -->
+                    <script type="text/javascript" src="/mail/static/tests/models/cc_throttle_function_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timer_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/models/timers_tests.js"></script>
             </xpath>
         </template>
 
@@ -103,45 +128,6 @@
                     <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>
             </p>
-        </template>
-
-        <template id="message_user_assigned">
-<p style="margin: 0px;">
-    <span>Dear <t t-esc="object.user_id.name"/>,</span><br />
-    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
-</p>
-<p style="margin-top: 24px; margin-bottom: 16px;">
-    <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
-            View <t t-esc="object._description.lower()"/>
-    </a>
-</p>
-        </template>
-
-        <template id="message_activity_done">
-<div>
-    <p>
-        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
-        <span t-if="activity.summary" t-field="activity.summary"/>
-    </p>
-    <div t-field="activity.note" style="margin-left: 8px;"/>
-    <div t-if="activity.feedback" style="margin-top: 8px;">
-        <strong> Feedback</strong>
-    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
-    </div>
-</div>
-        </template>
-
-        <template id="mail_bounce_catchall">
-<div>
-    <p>Hello <t t-esc="message['email_from']"/>,</p>
-    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
-    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
-    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
-    <p>Regards,</p>
-    <p>The <t t-esc="res_company.name"/> team.</p>
-</div>
-<blockquote><t t-esc="message['body']"/></blockquote>
         </template>
 
     </data>

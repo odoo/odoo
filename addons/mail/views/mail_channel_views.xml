@@ -67,8 +67,8 @@
                                     <p class="oe_module_name">
                                         <field name="description"/>
                                     </p>
-                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>
-                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',False), ('group_ids', '!=', [])]}" class="btn btn-default pull-right btn-sm" name="action_unfollow">Leave</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',True), ('group_ids', '!=', [])]}" class="btn btn-primary float-right" name="channel_join_and_get_info">Join</button>
+                                    <button type="object" attrs="{'invisible':['|', ('is_subscribed','=',False), ('group_ids', '!=', [])]}" class="btn btn-secondary float-right" name="action_unfollow">Leave</button>
                                 </div>
                             </div>
                         </t>
@@ -89,7 +89,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <field name="is_moderator" invisible="1"/>
-                            <button class="btn btn-sm oe_stat_button" name="mail.mail_moderation_action" type="action" attrs="{'invisible':[('is_moderator', '=', False)]}" icon="fa-bars" context="{'search_default_channel_id': active_id}">
+                            <button class="btn oe_stat_button" name="mail.mail_moderation_action" type="action" attrs="{'invisible':[('is_moderator', '=', False)]}" icon="fa-bars" context="{'search_default_channel_id': active_id}">
                             <field string="Ban List" name="moderation_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -155,7 +155,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="mail_channel_view_tree" model="ir.ui.view">
             <field name="name">mail.channel.tree</field>
             <field name="model">mail.channel</field>
@@ -193,9 +193,9 @@
 
 
 
-    <record id="mail_channel_action_client_chat" model="ir.actions.client">
-            <field name="name">Chat</field>
-            <field name="tag">mail.chat.instant_messaging</field>
+    <record id="action_discuss" model="ir.actions.client">
+            <field name="name">Discuss</field>
+            <field name="tag">mail.discuss</field>
             <field name="res_model">mail.channel</field>
             <field name="params" eval="&quot;{
                 'default_active_id': 'mailbox_inbox'
@@ -203,9 +203,9 @@
         </record>
 
     <menuitem
-        id="mail.mail_channel_menu_root_chat"
+        id="mail.menu_root_discuss"
         name="Discuss"
-        action="mail_channel_action_client_chat"
+        action="action_discuss"
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>
@@ -216,7 +216,7 @@
     -->
     <record id="mail.mail_channel_integrations_menu" model="ir.ui.menu">
         <field name="name">Integrations</field>
-        <field name="parent_id" ref="mail.mail_channel_menu_root_chat"></field>
+        <field name="parent_id" ref="mail.menu_root_discuss"></field>
         <field name="active" eval="False"></field>
     </record>
 

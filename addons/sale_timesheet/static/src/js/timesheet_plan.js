@@ -232,7 +232,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
             views: [[false, 'list'], [false, 'form']],
             view_type: 'list',
             view_mode: 'form',
-            domain: domain,
+            domain: domain || [],
         });
     },
     /**
@@ -242,12 +242,16 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
     _onClickStatButton: function (event) {
         var self = this;
         var data = $(event.currentTarget).data();
+        var parameters = {
+            domain: data.domain || [],
+            res_model: data.resModel,
+        }
+        if (data.resId) {
+            parameters['res_id'] = data.resId;
+        }
         return this._rpc({
             route:"/timesheet/plan/action",
-            params: {
-                domain: data.domain,
-                res_model: data.resModel,
-            },
+            params: parameters,
         }).then(function(action){
             self.do_action(action);
         });

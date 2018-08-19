@@ -22,6 +22,12 @@ class UoMCategory(models.Model):
         ('uom_category_unique_type', 'UNIQUE(measure_type)', 'You can have only one category per measurement type.'),
     ]
 
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda categ: categ.measure_type == 'time'):
+            raise UserError(_("You cannot delete this UoM Category as it is used by the system."))
+        return super(UoMCategory, self).unlink()
+
 
 class UoM(models.Model):
     _name = 'uom.uom'
@@ -53,7 +59,7 @@ class UoM(models.Model):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be greater than 0!')
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be strictly positive.')
     ]
 
     @api.one
@@ -87,12 +93,13 @@ class UoM(models.Model):
             if uom_data['uom_count'] > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
-    @api.model
-    def create(self, values):
-        if 'factor_inv' in values:
-            factor_inv = values.pop('factor_inv')
-            values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(UoM, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if 'factor_inv' in values:
+                factor_inv = values.pop('factor_inv')
+                values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
+        return super(UoM, self).create(vals_list)
 
     @api.multi
     def write(self, values):
@@ -100,6 +107,12 @@ class UoM(models.Model):
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
         return super(UoM, self).write(values)
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda uom: uom.measure_type == 'time'):
+            raise UserError(_("You cannot delete this UoM as it is used by the system. You should rather archive it."))
+        return super(UoM, self).unlink()
 
     @api.model
     def name_create(self, name):

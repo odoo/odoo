@@ -25,7 +25,7 @@ class KarmaError(Forbidden):
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
 
     @api.model_cr
     def init(self):
@@ -55,11 +55,11 @@ class Forum(models.Model):
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <h1 class="text-center" style="text-align: left;">Welcome!</h1>
                                 <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
                             </div>
                         </div>
@@ -208,6 +208,7 @@ class Post(models.Model):
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -312,7 +313,7 @@ class Post(models.Model):
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
         if self.create_date:
-            days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            days = (datetime.today() - self.create_date).days
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
@@ -497,7 +498,7 @@ class Post(models.Model):
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
         if 'tag_ids' in vals:
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
-            if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+            if any(set(post.tag_ids.ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
         if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
@@ -833,15 +834,13 @@ class Post(models.Model):
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
-    def message_get_message_notify_values(self, message, message_values):
+    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        if message.message_type == 'comment':
-            return {
-                'needaction_partner_ids': [],
-                'partner_ids': [],
-            }
+        msg_type = msg_vals.get('message_type') or message.message_type
+        if msg_type == 'comment':
+            return {'needaction_partner_ids': [], 'partner_ids': []}
         return {}
 
 

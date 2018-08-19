@@ -4,10 +4,9 @@
     'name': 'Discuss',
     'version': '1.0',
     'category': 'Discuss',
-    'sequence': 25,
-    'summary': 'Discussions, Mailing Lists, News',
+    'summary': 'Chat, mail gateway and private channels',
     'description': "",
-    'website': 'https://www.odoo.com/page/enterprise-social-network',
+    'website': 'https://www.odoo.com/page/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
         'wizard/invite_view.xml',
@@ -37,6 +36,8 @@
         'views/ir_actions_views.xml',
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
+        'views/mail_blacklist_views.xml',
+        'views/mail_channel_partner_views.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -46,6 +47,7 @@
     'application': True,
     'qweb': [
         'static/src/xml/activity.xml',
+        'static/src/xml/activity_view.xml',
         'static/src/xml/composer.xml',
         'static/src/xml/chatter.xml',
         'static/src/xml/discuss.xml',

@@ -7,7 +7,7 @@
     'category': 'Tools',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
-    'summary': 'Notes, Reminders, Todos',
+    'summary': 'Organize your work with memos',
     'sequence': 45,
     'depends': [
         'mail',

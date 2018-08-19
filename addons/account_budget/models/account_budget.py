@@ -205,22 +205,21 @@ class CrossoveredBudgetLines(models.Model):
     @api.multi
     def _compute_theoritical_amount(self):
         # beware: 'today' variable is mocked in the python tests and thus, its implementation matter
-        today = fields.Datetime.from_string(fields.Date.today())
+        today = fields.Date.today()
         for line in self:
             if line.paid_date:
-                if fields.Datetime.to_string(today) <= line.paid_date:
+                if today <= line.paid_date:
                     theo_amt = 0.00
                 else:
                     theo_amt = line.planned_amount
             else:
-                line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(
-                    line.date_from)
-                elapsed_timedelta = today - fields.Datetime.from_string(line.date_from)
+                line_timedelta = line.date_to - line.date_from
+                elapsed_timedelta = today - line.date_from
 
                 if elapsed_timedelta.days < 0:
                     # If the budget line has not started yet, theoretical amount should be zero
                     theo_amt = 0.00
-                elif line_timedelta.days > 0 and today < fields.Datetime.from_string(line.date_to):
+                elif line_timedelta.days > 0 and today < line.date_to:
                     # If today is between the budget line date_from and date_to
                     theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
                 else:
@@ -265,14 +264,14 @@ class CrossoveredBudgetLines(models.Model):
     @api.one
     @api.constrains('date_from', 'date_to')
     def _line_dates_between_budget_dates(self):
-        budget_date_from = fields.Datetime.from_string(self.crossovered_budget_id.date_from)
-        budget_date_to = fields.Datetime.from_string(self.crossovered_budget_id.date_to)
+        budget_date_from = self.crossovered_budget_id.date_from
+        budget_date_to = self.crossovered_budget_id.date_to
         if self.date_from:
-            date_from = fields.Datetime.from_string(self.date_from)
+            date_from = self.date_from
             if date_from < budget_date_from or date_from > budget_date_to:
                 raise ValidationError(_('"Start Date" of the budget line should be included in the Period of the budget'))
 
         if self.date_to:
-            date_to = fields.Datetime.from_string(self.date_to)
+            date_to = self.date_to
             if date_to < budget_date_from or date_to > budget_date_to:
                 raise ValidationError(_('"End Date" of the budget line should be included in the Period of the budget'))

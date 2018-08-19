@@ -15,8 +15,8 @@ var ActivityMenu = Widget.extend({
     name: 'activity_menu',
     template:'mail.systray.ActivityMenu',
     events: {
-        'click': '_onActivityMenuClick',
         'click .o_mail_preview': '_onActivityFilterClick',
+        'show.bs.dropdown': '_onActivityMenuShow',
     },
     willStart: function () {
         return $.when(this.call('mail_service', 'isReady'));
@@ -60,14 +60,6 @@ var ActivityMenu = Widget.extend({
             model: model,
             method: 'get_activity_view_id'
         });
-    },
-    /**
-     * Check wether activity systray dropdown is open or not
-     * @private
-     * @returns {boolean}
-     */
-    _isOpen: function () {
-        return this.$el.hasClass('open');
     },
     /**
      * Update(render) activity system tray view on activity updation.
@@ -132,14 +124,10 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
-     * When menu clicked update activity preview if counter updated
      * @private
-     * @param {MouseEvent} event
      */
-    _onActivityMenuClick: function () {
-        if (!this._isOpen()) {
-            this._updateActivityPreview();
-        }
+    _onActivityMenuShow: function () {
+         this._updateActivityPreview();
     },
 });
 

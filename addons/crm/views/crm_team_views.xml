@@ -148,7 +148,7 @@
         </record>
 
         <record id="crm_team_act_tree" model="ir.actions.act_window">
-            <field name="name">Cases by Sales Channel</field>
+            <field name="name">Cases by Sales Team</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
@@ -201,14 +201,14 @@
                             </a>
                         </div>
                         <div class="row" t-if="record.opportunities_count.raw_value">
-                            <div class="col-xs-8">
+                            <div class="col-8">
                                 <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"> <!-- context="{'search_default_probability': NOT or < 100}" -->
                                     <field name="opportunities_count"/>
                                     <t t-if="record.opportunities_count.raw_value == 1">Open Opportunity</t>
                                     <t t-else="">Open Opportunities</t>
                                 </a>
                             </div>
-                            <div class="col-xs-4 text-right">
+                            <div class="col-4 text-right">
                                 <field name="opportunities_amount" widget="monetary"/>
                             </div>
                         </div>
@@ -258,6 +258,7 @@
 
         <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
             <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['crm.lead', 'res.partner'])]</field>
+            <field name="context">{'default_res_model': 'crm.lead'}</field>
         </record>
 
 </odoo>

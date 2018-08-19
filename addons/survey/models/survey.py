@@ -326,7 +326,8 @@ class Survey(models.Model):
             default_survey_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            default_composition_mode='comment'
+            default_composition_mode='comment',
+            notif_layout='mail.mail_notification_light',
         )
         return {
             'type': 'ir.actions.act_window',
@@ -822,12 +823,13 @@ class SurveyUserInputLine(models.Model):
         mark = label.quizz_mark if label.exists() else 0.0
         return mark
 
-    @api.model
-    def create(self, vals):
-        value_suggested = vals.get('value_suggested')
-        if value_suggested:
-            vals.update({'quizz_mark': self._get_mark(value_suggested)})
-        return super(SurveyUserInputLine, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            value_suggested = vals.get('value_suggested')
+            if value_suggested:
+                vals.update({'quizz_mark': self._get_mark(value_suggested)})
+        return super(SurveyUserInputLine, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

@@ -7,15 +7,15 @@
     <t t-name="mail.AbstractThreadWindow">
         <div class="o_thread_window o_in_home_menu">
             <div class="o_thread_window_header">
-                <t t-call="mail.AbstractThreadWindowHeaderContent">
-                    <t t-set="status" t-value="widget.getStatus()"/>
+                <t t-call="mail.AbstractThreadWindow.HeaderContent">
+                    <t t-set="status" t-value="widget.getThreadStatus()"/>
                     <t t-set="title" t-value="widget.getTitle()"/>
                     <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
                 </t>
             </div>
-            <div class="o_chat_content">
+            <div class="o_thread_window_content">
             </div>
-            <div t-if='widget.hasThread()' class="o_thread_composer o_chat_mini_composer">
+            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
                 <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
             </div>
         </div>
@@ -41,8 +41,8 @@
             <ul class="dropdown-menu" role="menu">
                 <t t-foreach="threadWindows" t-as="threadWindow">
                     <li role="menuitem" class="o_thread_window_header" t-att-data-thread-id="threadWindow.getID()">
-                        <t t-call="mail.AbstractThreadWindowHeaderContent">
-                            <t t-set="status" t-value="threadWindow.getStatus()"/>
+                        <t t-call="mail.AbstractThreadWindow.HeaderContent">
+                            <t t-set="status" t-value="threadWindow.getThreadStatus()"/>
                             <t t-set="title" t-value="threadWindow.getTitle()"/>
                             <t t-set="unreadCounter" t-value="threadWindow.getUnreadCounter()"/>
                         </t>
@@ -62,7 +62,7 @@
         @param {function} widget.isMobile function without any param that
           states whether it should render for desktop or mobile screen.
     -->
-    <t t-name="mail.AbstractThreadWindowHeaderContent">
+    <t t-name="mail.AbstractThreadWindow.HeaderContent">
         <span t-if="widget.isMobile()">
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left mr4" aria-label="Close chat window" title="Close chat window"/>
         </span>
