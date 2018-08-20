@@ -468,8 +468,6 @@ class Website(models.Model):
             country_id = request.env['res.country'].search([('code', '=', country)], limit=1).id
 
         website_id = self._get_current_website_id(domain_name, country_id)
-        if request:
-            request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name', 'country_id')
