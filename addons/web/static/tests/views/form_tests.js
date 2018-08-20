@@ -7036,6 +7036,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('switching to next/previous record on swipe in readonly mode', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                    '</sheet>' +
+                '</form>',
+            viewOptions: {
+                ids: [1, 2],
+                index: 0,
+            },
+            res_id: 1,
+            config: {device: {isMobile: true}}, // Mimic touchSwipe library's swipe method
+            mockRPC: function (route, args) {
+              if (route === '/web/dataset/call_kw/partner/read') {
+                    assert.step(args.args[0][0]);
+                }
+                return this._super(route, args);
+            },
+        }).then(function (form){
+            form._onSwipeLeft();
+            assert.strictEqual(form.pager.$('.o_pager_value').text(), '2', 'pager value should be 2');
+
+            // trigger right swipe
+            form._onSwipeRight();
+            assert.strictEqual(form.pager.$('.o_pager_value').text(), '1', 'pager value should be 1');
+
+            // check that read rpc is performed with proper ids
+            assert.verifySteps([1, 2, 1]);
+            // form.destroy();
+            form.destroy();
+            done();
+        });
+    });
+
 
     QUnit.module('FormViewTABMainButtons');
 
