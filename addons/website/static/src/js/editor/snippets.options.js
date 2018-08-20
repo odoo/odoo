@@ -938,6 +938,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "masonry" layout.
      */
     masonry: function () {
+        var self = this;
         var imgs = this._getImages();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -960,7 +961,7 @@ options.registry.gallery = options.Class.extend({
             var $lowest;
             _.each(cols, function (col) {
                 var $col = $(col);
-                var height = $col.height();
+                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
                     min = height;
                     $lowest = $col;
