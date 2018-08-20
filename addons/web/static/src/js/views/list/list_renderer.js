@@ -66,6 +66,7 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
+        this.isGrouped = this.state.groupedBy.length > 0;
     },
 
     //--------------------------------------------------------------------------
@@ -83,6 +84,7 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     updateState: function (state, params) {
+        this.isGrouped = state.groupedBy.length > 0;
         this._processColumns(params.columnInvisibleFields || {});
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
@@ -216,11 +218,13 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
 
         return _.map(this.columns, function (column, index) {
-            if (isHeader && index < HEADING_COLUMNS_TO_SKIP_IN_GROUPS - 1 &&
-                self.columns.length > HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
+            if (isHeader  && index === 0) {
                 return;
             }
             var $cell = $('<td>');
+            if (config.debug) {
+                $cell.addClass(column.attrs.name);
+            }
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
@@ -324,6 +328,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderButton: function (record, node) {
+        var self = this;
         var $button = this._renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
@@ -333,7 +338,6 @@ var ListRenderer = BasicRenderer.extend({
 
         if (record.res_id) {
             // TODO this should be moved to a handler
-            var self = this;
             $button.on("click", function (e) {
                 e.stopPropagation();
                 self.trigger_up('button_clicked', {
@@ -343,7 +347,6 @@ var ListRenderer = BasicRenderer.extend({
             });
         } else {
             if (node.attrs.options.warn) {
-                var self = this;
                 $button.on("click", function (e) {
                     e.stopPropagation();
                     self.do_warn(_t("Warning"), _t('Please click on the "save" button first.'));
@@ -437,7 +440,7 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
             .addClass('o_group_name')
             .text(name + ' (' + group.count + ')');
-        if (this.columns.length >= HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
+        if (this.hasSelectors) {
             $th.attr('colspan', HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
         }
         var $arrow = $('<span>')
@@ -451,7 +454,7 @@ var ListRenderer = BasicRenderer.extend({
         $th.prepend($arrow);
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
             var $pager = this._renderGroupPager(group);
-            var $lastCell = $cells[$cells.length - 1];
+            var $lastCell = $cells[$cells.length - 1] || $th;
             $lastCell.addClass('o_group_pager').append($pager);
         }
         return $('<tr>')
@@ -657,11 +660,10 @@ var ListRenderer = BasicRenderer.extend({
         var $table = $('<table>').addClass('o_list_view table table-sm table-hover table-striped');
         this.$el.addClass('table-responsive')
             .append($table);
-        var is_grouped = !!this.state.groupedBy.length;
         this._computeAggregates();
-        $table.toggleClass('o_list_view_grouped', is_grouped);
-        $table.toggleClass('o_list_view_ungrouped', !is_grouped);
-        if (is_grouped) {
+        $table.toggleClass('o_list_view_grouped', this.isGrouped);
+        $table.toggleClass('o_list_view_ungrouped', !this.isGrouped);
+        if (this.isGrouped) {
             $table
                 .append(this._renderHeader(true))
                 .append(this._renderGroups(this.state.data))

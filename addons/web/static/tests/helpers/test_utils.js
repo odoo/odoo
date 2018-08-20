@@ -207,6 +207,9 @@ function createAsyncView(params) {
         context: params.context || {},
         groupBy: params.groupBy || [],
     };
+    if (params.hasSelectors) {
+        viewOptions.hasSelectors = params.hasSelectors;
+    }
 
     _.extend(viewOptions, params.viewOptions);
 
