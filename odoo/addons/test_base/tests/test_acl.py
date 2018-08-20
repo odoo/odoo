@@ -62,42 +62,42 @@ class TestACL(TransactionCase):
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):
         "Read/Write RPC access to restricted field should be forbidden"
-        partner = self.env['res.partner'].browse(1).sudo(self.demo_user)
+        test_record = self.env.ref('test_base.test_model_data_1').sudo(self.demo_user)
 
         # Verify the test environment first
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group")
-        self.assert_(partner.read(['bank_ids']))
-        self.assert_(partner.write({'bank_ids': []}))
+        self.assert_(test_record.read(['one2many_ids']))
+        self.assert_(test_record.write({'one2many_ids': []}))
 
         # Now restrict access to the field and check it's forbidden
-        self._set_field_groups(partner, 'bank_ids', GROUP_SYSTEM)
+        self._set_field_groups(test_record, 'one2many_ids', GROUP_SYSTEM)
 
         with self.assertRaises(AccessError):
-            partner.read(['bank_ids'])
+            test_record.read(['one2many_ids'])
         with self.assertRaises(AccessError):
-            partner.write({'bank_ids': []})
+            test_record.write({'one2many_ids': []})
 
         # Add the restricted group, and check that it works again
         self.erp_system_group.users += self.demo_user
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
-        self.assert_(partner.read(['bank_ids']))
-        self.assert_(partner.write({'bank_ids': []}))
+        self.assert_(test_record.read(['one2many_ids']))
+        self.assert_(test_record.write({'one2many_ids': []}))
 
     @mute_logger('odoo.models')
     def test_fields_browse_restriction(self):
         """Test access to records having restricted fields"""
-        partner = self.env['res.partner'].sudo(self.demo_user)
-        self._set_field_groups(partner, 'email', GROUP_SYSTEM)
+        test_record = self.env.ref('test_base.test_model_data_1').sudo(self.demo_user)
+        self._set_field_groups(test_record, 'email', GROUP_SYSTEM)
 
         # accessing fields must no raise exceptions...
-        partner = partner.search([], limit=1)
-        partner.name
+        record = test_record.search([], limit=1)
+        record.name
         # ... except if they are restricted
         with self.assertRaises(AccessError):
             with mute_logger('odoo.models'):
-                partner.email
+                record.email
 
     def test_view_create_edit_button_invisibility(self):
         """ Test form view Create, Edit, Delete button visibility based on access right of model"""
@@ -145,71 +145,71 @@ class TestACL(TransactionCase):
 class TestIrRule(TransactionCase):
 
     def test_ir_rule(self):
-        model_res_partner = self.env.ref('base.model_res_partner')
+        base_test_model = self.env.ref('test_base.model_test_base_model')
         group_user = self.env.ref('base.group_user')
         user_demo = self.env.ref('base.user_demo')
 
         # create an ir_rule for the Employee group with an blank domain
         rule1 = self.env['ir.rule'].create({
             'name': 'test_rule1',
-            'model_id': model_res_partner.id,
+            'model_id': base_test_model.id,
             'domain_force': False,
             'groups': [(6, 0, group_user.ids)],
         })
 
-        # read as demo user the partners (one blank domain)
-        partners_demo = self.env['res.partner'].sudo(user_demo)
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        # read as demo user (one blank domain)
+        base_test_record = self.env['test_base.model'].sudo(user_demo)
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some test records.")
 
         # same with domain 1=1
         rule1.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some test records.")
 
         # same with domain []
         rule1.domain_force = "[]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some test records.")
 
         # create another ir_rule for the Employee group (to test multiple rules)
         rule2 = self.env['ir.rule'].create({
             'name': 'test_rule2',
-            'model_id': model_res_partner.id,
+            'model_id': base_test_model.id,
             'domain_force': False,
             'groups': [(6, 0, group_user.ids)],
         })
 
         # read as demo user with domains [] and blank
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # same with domains 1=1 and blank
         rule1.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # same with domains 1=1 and 1=1
         rule2.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # create another ir_rule for the Employee group (to test multiple rules)
         rule3 = self.env['ir.rule'].create({
             'name': 'test_rule3',
-            'model_id': model_res_partner.id,
+            'model_id': base_test_model.id,
             'domain_force': False,
             'groups': [(6, 0, group_user.ids)],
         })
 
-        # read the partners as demo user
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        # read the records as demo user
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # same with domains 1=1, 1=1 and 1=1
         rule3.domain_force = "[(1,'=',1)]"
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # modify the global rule on res_company which triggers a recursive check
         # of the rules on company
@@ -217,17 +217,17 @@ class TestIrRule(TransactionCase):
         global_rule.domain_force = "[('id','child_of',[user.company_id.id])]"
 
         # read as demo user (exercising the global company rule)
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # Modify the ir_rule for employee to have a rule that fordids seeing any
         # record. We use a domain with implicit AND operator for later tests on
         # normalization.
         rule2.domain_force = "[('id','=',False),('name','=',False)]"
 
-        # check that demo user still sees partners, because group-rules are OR'ed
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partner.")
+        # check that demo user still sees records, because group-rules are OR'ed
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")
 
         # create a new group with demo user in it, and a complex rule
         group_test = self.env['res.groups'].create({
@@ -243,13 +243,13 @@ class TestIrRule(TransactionCase):
             'groups': [(6, 0, group_test.ids)],
         })
 
-        # read the partners again as demo user, which should give results
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see partners even with the combined rules.")
+        # read the records again as demo user, which should give results
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see records even with the combined rules.")
 
         # delete global domains (to combine only group domains)
         self.env['ir.rule'].search([('groups', '=', False)]).unlink()
 
-        # read the partners as demo user (several group domains, no global domain)
-        partners = partners_demo.search([])
-        self.assertTrue(partners, "Demo user should see some partners.")
+        # read the records as demo user (several group domains, no global domain)
+        records = base_test_record.search([])
+        self.assertTrue(records, "Demo user should see some records.")

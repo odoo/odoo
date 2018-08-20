@@ -12,7 +12,7 @@ class TestXMLID(TransactionCase):
         return self.env['ir.model.data'].search(domain)
 
     def test_create(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_base.model']
         xml_id = 'test_convert.category_foo'
 
         # create category (flag 'noupdate' should be False by default)
@@ -37,7 +37,7 @@ class TestXMLID(TransactionCase):
         self.assertEqual(self.get_data(xml_id).noupdate, False)
 
     def test_create_noupdate(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_base.model']
         xml_id = 'test_convert.category_foo'
 
         # create category
@@ -62,7 +62,7 @@ class TestXMLID(TransactionCase):
         self.assertEqual(self.get_data(xml_id).noupdate, True)
 
     def test_create_noupdate_multi(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_base.model']
         data_list = [
             dict(xml_id='test_convert.category_foo', values={'name': 'Foo'}, noupdate=True),
             dict(xml_id='test_convert.category_bar', values={'name': 'Bar'}, noupdate=True),
@@ -81,7 +81,7 @@ class TestXMLID(TransactionCase):
         self.assertEqual(self.get_data('test_convert.category_bar').noupdate, True)
 
     def test_create_order(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_base.model']
         data_list = [
             dict(xml_id='test_convert.category_foo', values={'name': 'Foo'}),
             dict(xml_id='test_convert.category_bar', values={'name': 'Bar'}, noupdate=True),
@@ -118,7 +118,7 @@ class TestXMLID(TransactionCase):
         self.assertEqual(user.login, 'foo')
 
     def test_recreate(self):
-        model = self.env['res.partner.category']
+        model = self.env['test_base.model']
         xml_id = 'test_convert.category_foo'
         data = dict(xml_id=xml_id, values={'name': 'Foo'})
 

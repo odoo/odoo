@@ -7,4 +7,8 @@
     'description': """A module to test orm, api, expression features.""",
     'depends': ['base'],
     'version': '0.0.1',
+    'data': [
+        'data/test_data.xml',
+        'security/ir.model.access.csv',
+    ]
 }

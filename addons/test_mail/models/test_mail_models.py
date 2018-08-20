@@ -3,6 +3,9 @@
 
 from odoo import api, fields, models
 
+class MailTestModel(models.Model):
+    _name = "test_base.model"
+    _inherit = ['test_base.model', 'mail.thread', 'mail.activity.mixin', 'mail.blacklist.mixin']
 
 class MailTestSimple(models.Model):
     """ A very simple model only inheriting from mail.thread when only

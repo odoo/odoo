@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Many2one relational model level1 -->
+    <record id="test_m2o_level_record_1" model="test_m2o_level_1.model">
+        <field name="name">Many2one Level1 Record-1</field>
+    </record>
+    <record id="test_m2o_level_record_2" model="test_m2o_level_1.model">
+        <field name="name">Many2one Level1 Record-2</field>
+    </record>
+    
+    <!-- Many2one relational model -->
+    <record id="test_m2o_record_1" model="test_m2o_relational.model">
+        <field name="name">Many2one Record-1</field>
+        <field name="many2one_level_id" ref="test_m2o_level_record_1"/>
+    </record>
+    <record id="test_m2o_record_2" model="test_m2o_relational.model">
+        <field name="name">Many2one Record-2</field>
+        <field name="many2one_level_id" ref="test_m2o_level_record_2"/>
+    </record>
+
+    <!-- One2many relational model -->
+    <record id="test_o2m_record_1" model="test_o2m_relational.model">
+        <field name="name">one2many Record-1</field>
+    </record>
+    <record id="test_o2m_record_2" model="test_o2m_relational.model">
+        <field name="name">one2many Record-2</field>
+    </record>
+
+    <!-- Many2many relational model -->
+    <record id="test_m2m_record_1" model="test_m2m_relational.model">
+        <field name="name">many2many Record-1</field>
+    </record>
+    <record id="test_m2m_record_2" model="test_m2m_relational.model">
+        <field name="name">many2many Record-2</field>
+    </record>
+    <record id="test_m2m_record_3" model="test_m2m_relational.model">
+        <field name="name">many2many Record-3</field>
+        <field name="parent_id" ref="test_m2m_record_1"/>
+    </record>
+    <record id="test_m2m_record_4" model="test_m2m_relational.model">
+        <field name="name">many2many Record-4</field>
+        <field name="parent_id" ref="test_m2m_record_2"/>
+    </record>
+
+    <!-- Base test main model -->
+    <record id="test_model_data_1" model="test_base.model">
+        <field name="name">Record-1</field>
+        <field name="sequence">1</field>
+        <field name="many2one_id" ref="test_m2o_record_1"/>
+        <field name="many2many_ids" eval="[(6, 0, [ref('test_m2m_record_1'), ref('test_m2m_record_2')])]"/>
+    </record>
+    <record id="test_model_data_2" model="test_base.model">
+        <field name="name">Record-2</field>
+        <field name="sequence">2</field>
+        <field name="many2one_id" ref="test_m2o_record_2"/>
+        <field name="many2many_ids"  eval="[(6, 0, [ref('test_m2m_record_1')])]"/>
+        <field name="parent_id"  ref="test_model_data_1"/>
+    </record>
+    <record id="test_model_data_3" model="test_base.model">
+        <field name="name">Record-3</field>
+        <field name="sequence">3</field>
+        <field name="parent_id"  ref="test_model_data_1"/>
+    </record>
+    <record id="test_model_data_4" model="test_base.model">
+        <field name="name">Record-4</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="test_model_data_5" model="test_base.model">
+        <field name="name">Record-5</field>
+        <field name="sequence">5</field>
+    </record>
+    <record id="test_model_data_6" model="test_base.model">
+        <field name="name">Record-6</field>
+        <field name="sequence">6</field>
+        <field name="parent_id" ref="test_model_data_5"/>
+        <field name="is_boolean">False</field>
+    </record>
+
+
+    <!-- Many2one required model  -->
+    <record id="test_m2o_required_record_1" model="test_required_relational.model">
+        <field name="name">M2o required Record-1</field>
+    </record>
+    <record id="test_m2o_required_record_2" model="test_required_relational.model">
+        <field name="name">M2o required Record-2</field>
+    </record>
+
+    <!-- Required field model test -->
+    <record id="test_required_model_data_1" model="test_required.model">
+        <field name="name">Record-1</field>
+        <field name="m2o_required_id" ref="test_m2o_required_record_1"/>
+    </record>
+    <record id="test_required_model_data_2" model="test_required.model">
+        <field name="name">Record-2</field>
+        <field name="m2o_required_id" ref="test_m2o_required_record_2"/>
+    </record>
+    <record id="test_required_model_data_3" model="test_required.model">
+        <field name="name">Record-3</field>
+        <field name="m2o_required_id" ref="test_m2o_required_record_2"/>
+    </record>
+    
+    <!-- Translation field model test -->
+    <record id="test_translation_model_data_1" model="test_translation.model">
+        <field name="name">Record-1</field>
+    </record>
+    <record id="test_translation_model_data_2" model="test_translation.model">
+        <field name="name">Record-2</field>
+    </record>
+
+
+    <act_window
+        id="action_base_test"
+        res_model="test_m2o_relational.model"
+        src_model="test_base.model"
+        target="new"
+        multi="True"
+        key2="client_action_multi"
+        view_mode="form"
+        name="Action Base Test"/>
+
+    <record id="action_base_test_model" model="ir.actions.act_window">
+        <field name="name">Base Test</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">test_base.model</field>
+        <field name="view_type">form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new document
+            </p>
+        </field>
+    </record>
+
+    <record id="ir_default_test_action" model="ir.actions.act_window">
+        <field name="name">User-defined Defaults</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.default</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem action="action_base_test_model" id="menu_base_test" sequence="0"/>
+
+</odoo>

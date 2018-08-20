@@ -7,18 +7,18 @@ from odoo.tests.common import TransactionCase
 class test_search(TransactionCase):
 
     def test_00_search_order(self):
-        # Create 6 partners with a given name, and a given creation order to
+        # Create 6 Records with a given name, and a given creation order to
         # ensure the order of their ID. Some are set as inactive to verify they
         # are by default excluded from the searches and to provide a second
         # `order` argument.
 
-        Partner = self.env['res.partner']
-        c = Partner.create({'name': 'test_search_order_C'})
-        d = Partner.create({'name': 'test_search_order_D', 'active': False})
-        a = Partner.create({'name': 'test_search_order_A'})
-        b = Partner.create({'name': 'test_search_order_B'})
-        ab = Partner.create({'name': 'test_search_order_AB'})
-        e = Partner.create({'name': 'test_search_order_E', 'active': False})
+        BaseTestModel = self.env['test_base.model']
+        c = BaseTestModel.create({'name': 'test_search_order_C'})
+        d = BaseTestModel.create({'name': 'test_search_order_D', 'active': False})
+        a = BaseTestModel.create({'name': 'test_search_order_A'})
+        b = BaseTestModel.create({'name': 'test_search_order_B'})
+        ab = BaseTestModel.create({'name': 'test_search_order_AB'})
+        e = BaseTestModel.create({'name': 'test_search_order_E', 'active': False})
 
         # The tests.
 
@@ -26,34 +26,34 @@ class test_search(TransactionCase):
         # The order of the returned ids should be given by the `order`
         # parameter of search().
 
-        name_asc = Partner.search([('name', 'like', 'test_search_order%')], order="name asc")
+        name_asc = BaseTestModel.search([('name', 'like', 'test_search_order%')], order="name asc")
         self.assertEqual([a, ab, b, c], list(name_asc), "Search with 'NAME ASC' order failed.")
-        name_desc = Partner.search([('name', 'like', 'test_search_order%')], order="name desc")
+        name_desc = BaseTestModel.search([('name', 'like', 'test_search_order%')], order="name desc")
         self.assertEqual([c, b, ab, a], list(name_desc), "Search with 'NAME DESC' order failed.")
-        id_asc = Partner.search([('name', 'like', 'test_search_order%')], order="id asc")
+        id_asc = BaseTestModel.search([('name', 'like', 'test_search_order%')], order="id asc")
         self.assertEqual([c, a, b, ab], list(id_asc), "Search with 'ID ASC' order failed.")
-        id_desc = Partner.search([('name', 'like', 'test_search_order%')], order="id desc")
+        id_desc = BaseTestModel.search([('name', 'like', 'test_search_order%')], order="id desc")
         self.assertEqual([ab, b, a, c], list(id_desc), "Search with 'ID DESC' order failed.")
 
         # The inactive records shouldn't be excluded as soon as a condition on
         # that field is present in the domain. The `order` parameter of
         # search() should support any legal coma-separated values.
 
-        active_asc_id_asc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id asc")
+        active_asc_id_asc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id asc")
         self.assertEqual([d, e, c, a, b, ab], list(active_asc_id_asc), "Search with 'ACTIVE ASC, ID ASC' order failed.")
-        active_desc_id_asc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active desc, id asc")
+        active_desc_id_asc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active desc, id asc")
         self.assertEqual([c, a, b, ab, d, e], list(active_desc_id_asc), "Search with 'ACTIVE DESC, ID ASC' order failed.")
-        active_asc_id_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id desc")
+        active_asc_id_desc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id desc")
         self.assertEqual([e, d, ab, b, a, c], list(active_asc_id_desc), "Search with 'ACTIVE ASC, ID DESC' order failed.")
-        active_desc_id_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active desc, id desc")
+        active_desc_id_desc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active desc, id desc")
         self.assertEqual([ab, b, a, c, e, d], list(active_desc_id_desc), "Search with 'ACTIVE DESC, ID DESC' order failed.")
-        id_asc_active_asc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id asc, active asc")
+        id_asc_active_asc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id asc, active asc")
         self.assertEqual([c, d, a, b, ab, e], list(id_asc_active_asc), "Search with 'ID ASC, ACTIVE ASC' order failed.")
-        id_asc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id asc, active desc")
+        id_asc_active_desc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id asc, active desc")
         self.assertEqual([c, d, a, b, ab, e], list(id_asc_active_desc), "Search with 'ID ASC, ACTIVE DESC' order failed.")
-        id_desc_active_asc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active asc")
+        id_desc_active_asc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active asc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_asc), "Search with 'ID DESC, ACTIVE ASC' order failed.")
-        id_desc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
+        id_desc_active_desc = BaseTestModel.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_desc), "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
     def test_10_inherits_m2order(self):
