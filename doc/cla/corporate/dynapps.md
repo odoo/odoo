@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Pieter Paulussen pieter_paulussen@me.com https://github.com/PieterPaulussen
+Pieter Paulussen pieter.paulussen@dynapps.be https://github.com/PieterPaulussen
 
 List of contributors:
 
