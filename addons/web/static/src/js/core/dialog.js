@@ -58,7 +58,7 @@ var Dialog = Widget.extend({
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
-            fullscreen: true,
+            fullscreen: false,
             dialogClass: '',
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
