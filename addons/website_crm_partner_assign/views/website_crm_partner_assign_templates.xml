@@ -189,7 +189,7 @@
     </template>
     <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_layout" priority="15">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'lead' or lead">
+            <li t-if="page_name == 'lead' or lead" class="breadcrumb-item">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
                     My Leads
                 </a>
@@ -197,10 +197,10 @@
                     My Leads
                 </t>
             </li>
-            <li t-if="lead">
+            <li t-if="lead" class="breadcrumb-item">
                 <span t-field="lead.name"/>
             </li>
-            <li t-if="page_name == 'opportunity' or opportunity">
+            <li t-if="page_name == 'opportunity' or opportunity" class="breadcrumb-item">
                 <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
                     My Opportunities
                 </a>
@@ -208,7 +208,7 @@
                     My Opportunities
                 </t>
             </li>
-            <li t-if="opportunity">
+            <li t-if="opportunity" class="breadcrumb-item">
                 <span t-field="opportunity.name"/>
             </li>
         </xpath>

@@ -2,18 +2,18 @@
 <odoo>
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_layout" priority="40">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'project' or project">
+            <li t-if="page_name == 'project' or project" class="breadcrumb-item">
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
                 <t t-else="">Projects</t>
             </li>
-            <li t-if="project">
+            <li t-if="project" class="breadcrumb-item">
                 <t t-esc="project.name"/>
             </li>
-            <li t-if="page_name == 'task' or task">
+            <li t-if="page_name == 'task' or task" class="breadcrumb-item">
                 <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
                 <t t-else="">Tasks</t>
             </li>
-            <li t-if="task">
+            <li t-if="task" class="breadcrumb-item">
                 <span t-field="task.name"/>
             </li>
         </xpath>
