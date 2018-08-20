@@ -52,6 +52,10 @@
             <field name="name">Switzerland VAT Form: grid 381 base</field>
             <field name="applicability">taxes</field>
         </record>
+        <record id="vat_tag_382_a" model="account.account.tag">
+            <field name="name">Switzerland VAT Form: grid 382 base</field>
+            <field name="applicability">taxes</field>
+        </record>
         <record id="vat_tag_301_b" model="account.account.tag">
             <field name="name">Switzerland VAT Form: grid 301 tax</field>
             <field name="applicability">taxes</field>
@@ -76,6 +80,10 @@
             <field name="name">Switzerland VAT Form: grid 381 tax</field>
             <field name="applicability">taxes</field>
         </record>
+        <record id="vat_tag_382_b" model="account.account.tag">
+            <field name="name">Switzerland VAT Form: grid 382 tax</field>
+            <field name="applicability">taxes</field>
+        </record>
         <record id="vat_tag_400" model="account.account.tag">
             <field name="name">Switzerland VAT Form: grid 400</field>
             <field name="applicability">taxes</field>
@@ -98,7 +106,7 @@
         </record>
 
         <record id="vat_tag_dedouanement" model="account.account.tag">
-           <field name="name">Switzerland VAT Form: 100% dédouanement (base in grid 400)</field>
+            <field name="name">Switzerland VAT Form: 100% dédouanement (base in grid 400)</field>
             <field name="applicability">taxes</field>
         </record>
 
@@ -388,6 +396,18 @@
             <field name="account_id" ref="ch_coa_1171"/>
             <field name="tag_ids" eval="[(6,0,[ref('vat_tag_405')])]"/>
         </record>
+        <record model="account.tax.template" id="vat_77_purchase_return">
+            <field name="name">TVA due a 7.7% (TN) (return)</field>
+            <field name="description">7.7% achat (return)</field>
+            <field name="amount" eval="-7.7"/>
+            <field name="amount_type">percent</field>
+            <field name="sequence" eval="0"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="refund_account_id" ref="ch_coa_1170"/>
+            <field name="account_id" ref="ch_coa_1170"/>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_382_a'),ref('vat_tag_382_b')])]"/>
+        </record>
         <record model="account.tax.template" id="vat_80">
             <field name="name">TVA due a 8.0% (TN)</field>
             <field name="description">8.0%</field>
@@ -500,5 +520,16 @@
             <field name="refund_account_id" ref="ch_coa_1171"/>
             <field name="account_id" ref="ch_coa_1171"/>
             <field name="tag_ids" eval="[(6,0,[ref('vat_tag_dedouanement')])]"/>
+        </record>
+        <!--# for reverse charge or VAT on Acquisition (group of taxes)-->
+        <record model="account.tax.template" id="vat_77_purchase_reverse">
+            <field name="description">7.7% achat</field>
+            <field name="name">TVA 7.7% sur achat service a l'etranger (reverse charge)</field>
+            <field name="amount" eval="7.7"/>
+            <field name="amount_type">group</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="children_tax_ids" eval="[(6, 0, [ref('vat_77_purchase_return'), ref('vat_77_purchase')])]"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_382_a'), ref('vat_tag_382_b')])]"/>
         </record>
 </odoo>
