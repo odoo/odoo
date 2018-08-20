@@ -209,9 +209,9 @@
         @param {mail.model.AbstractThread} thread
     -->
     <t t-name="mail.widget.Thread.TypingNotificationBar">
-        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.DESC"/>
-        <div class="o_thread_typing_notification_bar"/>
         <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.ASC"/>
+        <div class="o_thread_typing_notification_bar"/>
+        <div class="o_thread_typing_notification_free_space" t-if="options.displayOrder === ORDER.DESC"/>
     </t>
 
     <!--
