@@ -721,7 +721,11 @@ table.table_desc tr td {
     &.o_slideshow {
         .carousel {
             height: 100%;
-            .item {
+            .carousel-inner {
+                height: 100%;
+            }
+            .carousel-item {
+                height: 100%;
                 padding-bottom: 64px;
             }
             img {
@@ -730,7 +734,6 @@ table.table_desc tr td {
                 margin: auto;
             }
             ul.carousel-indicators {
-                display: block;
                 height: auto;
                 padding: 0;
                 border-width: 0;
@@ -748,6 +751,7 @@ table.table_desc tr td {
                     background-size: cover;
                     background-color: #fff;
                     border-radius: 0;
+                    flex: 0 0 40px;
                     &:not(.active) {
                         opacity: 0.8;
                         -webkit-filter: grayscale(100%);
@@ -758,12 +762,6 @@ table.table_desc tr td {
                     &:first-child {
                         margin-left: 0;
                     }
-                }
-            }
-            .carousel-control {
-                &.right, &.left {
-                    background-image: none;
-                    background-color: transparent;
                 }
             }
         }
