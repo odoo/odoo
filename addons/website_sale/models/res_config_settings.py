@@ -5,6 +5,7 @@ from ast import literal_eval
 
 from odoo import api, models, fields
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -22,7 +23,7 @@ class ResConfigSettings(models.TransientModel):
         ('none', 'No shipping management on website'),
         ('internal', "Delivery methods are only used internally: the customer doesn't pay for shipping costs"),
         ('website', "Delivery methods are selectable on the website: the customer pays for shipping costs"),
-        ], string="Shipping Management")
+    ], string="Shipping Management")
 
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
 
@@ -34,10 +35,10 @@ class ResConfigSettings(models.TransientModel):
 
     module_account = fields.Boolean("Invoicing")
 
-    cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email',
-        default=_default_recovery_mail_template, config_parameter='website_sale.cart_recovery_mail_template_id', domain="[('model', '=', 'sale.order')]")
+    cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
+                                                  default=_default_recovery_mail_template, related='website_id.cart_recovery_mail_template_id')
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
-                                        default=1.0, config_parameter='website_sale.cart_abandoned_delay')
+                                        default=1.0, related='website_id.cart_abandoned_delay')
 
     @api.model
     def get_values(self):

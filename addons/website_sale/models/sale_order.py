@@ -39,14 +39,14 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
-        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
         abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
             domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
-        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
         abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
         abandoned_domain = expression.normalize_domain([
             ('date_order', '<=', abandoned_datetime),
@@ -213,7 +213,7 @@ class SaleOrder(models.Model):
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
             default_template_id = default_template.id if default_template else False
-            template_id = int(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_recovery_mail_template_id', default_template_id))
+            template_id = self.website_id and self.website_id.cart_recovery_mail_template_id.id or default_template_id
         except:
             template_id = False
         return {
