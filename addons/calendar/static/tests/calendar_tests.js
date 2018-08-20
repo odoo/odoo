@@ -63,15 +63,15 @@ QUnit.module('calendar', {
         });
 
         assert.ok(form.$('.o_field_widget[name="partner_ids"]').hasClass('o_field_many2manytags'));
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > button').length, 2,
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button').length, 2,
             "there should be 2 tags");
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > button:first').text().trim(), "Jesus",
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button:first').text().trim(), "Jesus",
             "the tag should be correctly named");
-        assert.ok(form.$('.o_field_widget[name="partner_ids"] > button:first .o_calendar_invitation').hasClass('accepted'),
+        assert.ok(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button:first .o_calendar_invitation').hasClass('accepted'),
             "Jesus should attend the meeting");
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > button[data-id="2"]').text().trim(), "Mahomet",
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button[data-id="2"]').text().trim(), "Mahomet",
             "the tag should be correctly named");
-        assert.ok(form.$('.o_field_widget[name="partner_ids"] > button[data-id="2"] .o_calendar_invitation').hasClass('needsAction'),
+        assert.ok(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button[data-id="2"] .o_calendar_invitation').hasClass('needsAction'),
             "Mohamet should still confirm his attendance to the meeting");
 
         form.destroy();
