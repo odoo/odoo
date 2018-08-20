@@ -538,6 +538,7 @@ class StockMove(models.Model):
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
+            'ordered_qty': sum(self.mapped('ordered_qty')),
             'date': min(self.mapped('date')),
             'date_expected': min(self.mapped('date_expected')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date_expected')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
