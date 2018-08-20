@@ -188,7 +188,6 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper', function (assert) {
-        var done = assert.async();
         assert.expect(2);
         this.data.foo.records = [];
 
