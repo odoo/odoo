@@ -2357,6 +2357,7 @@ class TestStockValuation(TransactionCase):
         move5._action_done()
 
         self.assertEqual(move5.value, -477.6)
+        # 50 @ 15.92
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -2375,6 +2376,45 @@ class TestStockValuation(TransactionCase):
         move6._action_done()
 
         self.assertEqual(move6.value, 0)
+        # 50 @ 15.92 (qty_at_date)
+
+        # Receive 10 units and assign the partner of the current company as owner, the valuation
+        # should be impacted.
+        move7 = self.env['stock.move'].create({
+            'name': "10 units and the company's partner as owner",
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 99,
+        })
+        move7._action_confirm()
+        move7._action_assign()
+        move7.move_line_ids.qty_done = 10.0
+        move7.move_line_ids.owner_id = self.env.user.company_id.id
+        move7.with_context()._action_done()
+
+        self.assertEqual(move7.value, 990)
+        # 60 @ 29.77 (qty_at_date)
+        self.assertEqual(self.product1.standard_price, 29.77)
+
+        # Receive 10 @ 10
+        move8 = self.env['stock.move'].create({
+            'name': "IN10@10",
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+        })
+        move8._action_confirm()
+        move8._action_assign()
+        move8.move_line_ids.qty_done = 10.0
+        move8.with_context()._action_done()
+        self.assertEqual(move8.value, 100)
+        self.assertEqual(self.product1.standard_price, 26.95)
 
     def test_average_perpetual_2(self):
         self.product1.product_tmpl_id.cost_method = 'average'
