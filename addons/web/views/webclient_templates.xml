@@ -413,7 +413,9 @@
     <template id="web.menu">
         <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
             <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link"/>
+                <t t-call="web.menu_link">
+                    <t t-set="_classes" t-value="'nav-link'"/>
+                </t>
             </li>
         </ul>
 
@@ -445,7 +447,9 @@
     <template id="web.menu_secondary_submenu">
         <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
             <li t-foreach="menu['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link"/>
+                <t t-call="web.menu_link">
+                    <t t-set="_classes" t-value="'nav-link'"/>
+                </t>
                 <t t-call="web.menu_secondary_submenu"/>
             </li>
         </ul>
@@ -454,7 +458,7 @@
         <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
         <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
             role="menuitem"
-            t-attf-class="nav-link #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
+            t-attf-class="#{_classes} #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
             t-att-data-menu="menu['id']"
             t-att-data-menu-xmlid="menu.get('xmlid')"
             t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
