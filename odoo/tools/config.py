@@ -496,17 +496,6 @@ class configmanager(object):
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
 
-    def _is_addons_path(self, path):
-        from odoo.modules.module import MANIFEST_NAMES
-        for f in os.listdir(path):
-            modpath = os.path.join(path, f)
-            if os.path.isdir(modpath):
-                def hasfile(filename):
-                    return os.path.isfile(os.path.join(modpath, filename))
-                if hasfile('__init__.py') and any(hasfile(mname) for mname in MANIFEST_NAMES):
-                    return True
-        return False
-
     def _check_addons_path(self, option, opt, value, parser):
         ad_paths = []
         for path in value.split(','):
@@ -514,7 +503,7 @@ class configmanager(object):
             res = os.path.abspath(os.path.expanduser(path))
             if not os.path.isdir(res):
                 raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
-            if not self._is_addons_path(res):
+            if not odoo.modules.module.is_addons_path(res):
                 raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, path))
             ad_paths.append(res)
 

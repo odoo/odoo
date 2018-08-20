@@ -134,8 +134,9 @@ def initialize_sys_path():
 
     for ad in tools.config['addons_path'].split(','):
         ad = os.path.abspath(tools.ustr(ad.strip()))
-        if ad not in ad_paths:
-            ad_paths.append(ad)
+        for ad, _d, _f in os.walk(ad):
+            if is_addons_path(ad, recursive=False) and ad not in ad_paths:
+                ad_paths.append(ad)
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
@@ -153,6 +154,21 @@ def initialize_sys_path():
         sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
+
+def is_addons_path(path, recursive=True):
+    for path, dirnames, _f in os.walk(path):
+        for f in dirnames:
+            modpath = os.path.join(path, f)
+            if os.path.isdir(modpath):
+                def hasfile(filename):
+                    return os.path.isfile(os.path.join(modpath, filename))
+                if hasfile('__init__.py') and any(hasfile(mname) for mname in MANIFEST_NAMES):
+                    return True
+        if not recursive:
+            break
+    return False
+
+
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
 
@@ -161,7 +177,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
     path if nothing else is found.
 
     """
-    initialize_sys_path()
     for adp in ad_paths:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
@@ -363,7 +378,6 @@ def load_openerp_module(module_name):
     if module_name in loaded:
         return
 
-    initialize_sys_path()
     try:
         __import__('odoo.addons.' + module_name)
 
@@ -403,7 +417,6 @@ def get_modules():
         ]
 
     plist = []
-    initialize_sys_path()
     for ad in ad_paths:
         plist.extend(listdir(ad))
     return list(set(plist))
