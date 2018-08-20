@@ -5,7 +5,7 @@ odoo.define('partner.autocomplete.core', function (require) {
     var concurrency = require('web.concurrency');
 
     var core = require('web.core');
-    var _t = core._t;
+    // var _t = core._t;
 
     return {
         _dropPrevious: new concurrency.DropPrevious(),
@@ -73,7 +73,7 @@ odoo.define('partner.autocomplete.core', function (require) {
 
             rpc.query({
                 model: 'res.partner',
-                method: "search_by_vat",
+                method: "read_by_vat",
                 args: [value],
             }).then(function (vat_match) {
                 if(vat_match){
@@ -82,7 +82,7 @@ odoo.define('partner.autocomplete.core', function (require) {
                     vat_match.description = vat_match.vat;
 
                     if (!vat_match.domain) {
-                        vat_match.description += ' ' + _t('(source: VIES-VAT)');
+                        // vat_match.description += ' ' + _t('(source: VIES-VAT)');
 
                         self.getClearbitSuggestions(vat_match.name, true).then(function (suggestions) {
                             suggestions.map(function(suggestion){
@@ -108,7 +108,7 @@ odoo.define('partner.autocomplete.core', function (require) {
                 suggestions.map(function(suggestion){
                     suggestion.label = suggestion.name;
                     suggestion.description = suggestion.domain;
-                    if( addSource) suggestion.description += ' ' + _t('(source: Clearbit)');
+                    // if( addSource) suggestion.description += ' ' + _t('(source: Clearbit)');
                     return suggestion;
                 });
                 return suggestions;
@@ -146,6 +146,38 @@ odoo.define('partner.autocomplete.core', function (require) {
                 method: 'enrich_company',
                 args: [company_domain, company_data_id],
             });
+        },
+
+        /**
+         * Get enriched data + logo before populating partner form
+         * @param company
+         * @returns Promise
+         */
+        getCreateData: function (company) {
+            var def = $.Deferred();
+
+            if(company._formatted){
+                def.resolve({
+                    company: company._formatted,
+                    logo: false
+                });
+            }
+            else {
+                // Fetch additionnal company info via Autocomplete Enrichment API
+                var enrichPromise = this.enrichCompany(company.domain, company.company_data_id);
+
+                // Get logo
+                var logoPromise = this.getCompanyLogo(company.domain);
+
+                $.when(enrichPromise, logoPromise).done(function (company_data, logo) {
+                    def.resolve({
+                        company: company_data,
+                        logo: logo
+                    });
+                });
+            }
+
+            return def;
         },
 
         /**

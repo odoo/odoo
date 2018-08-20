@@ -19,10 +19,6 @@ class ResPartner(models.Model):
         enrichment_data = False
 
         try:
-            # make HTTP request to IAP service /
-
-            # TODO: Use IAP.jsonrpc instead
-
             url = 'http://odoo:8069/iap/partner_autocomplete/domain'
             params = {
                 'domain': company_domain,
@@ -31,11 +27,12 @@ class ResPartner(models.Model):
             }
 
             enrichment_data = jsonrpc(url, params=params)
+            enrichment_data = self._format_data_company(enrichment_data)
         except (ConnectionError, HTTPError, exceptions.AccessError ) as exception:
             _logger.error('Enrichment API error: %s' % str(exception))
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))
 
-        return self._format_data_company(enrichment_data)
+        return enrichment_data
 
     @api.model
     def _format_data_company(self, company_data):
@@ -60,32 +57,31 @@ class ResPartner(models.Model):
         if len(emails) > 0:
             email = emails.pop(0)
 
-        comment = _("""
-            Description: 
-            %s
-
-            Employees : %s
-            Annual revenue : %s
-            Estimated annual revenue : %s
-
-            Sector : 
-            %s
-
-            Tech : 
-            %s
-
-            Social networks :
-            www.facebook.com/%s
-            www.linkedin.com/%s
-            www.crunchbase.com/%s
-            www.twitter.com/%s
-
-            Email addresses :
-            %s
-
-            Phone numbers :
-            %s
-            """) % (company_data.get('description'),
+        comment = _("\
+            Description: \n\
+            %s\n\
+            \n\
+            Employees : %s\n\
+            Annual revenue : %s\n\
+            Estimated annual revenue : %s\n\
+            \n\
+            Sector : \n\
+            %s\n\
+            \n\
+            Tech : \n\
+            %s\n\
+            \n\
+            Social networks :\n\
+            www.facebook.com/%s\n\
+            www.linkedin.com/%s\n\
+            www.crunchbase.com/%s\n\
+            www.twitter.com/%s\n\
+            \n\
+            Email addresses :\n\
+            %s\n\
+            \n\
+            Phone numbers :\n\
+            %s") % (company_data.get('description'),
             lang.format('%.0f', float(company_data.get('employees')), True, True) if company_data.get('employees') else _('Unknown'),
             '$%s' % lang.format('%.0f', float(company_data.get('annual_revenue')), True, True) if company_data.get('annual_revenue') else _('Unknown'),
             company_data.get('estimated_annual_revenue') if company_data.get('estimated_annual_revenue') else _('Unknown'),
@@ -155,7 +151,7 @@ class ResPartner(models.Model):
         return result
 
     @api.model
-    def search_by_vat(self, vat):
+    def read_by_vat(self, vat):
         vies_vat_data = False
 
         try:
@@ -166,6 +162,7 @@ class ResPartner(models.Model):
             }
 
             vies_vat_data = jsonrpc(url, params=params)
+            vies_vat_data['_formatted'] = self._format_data_company(vies_vat_data)
         except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
             _logger.error('Enrichment API error: %s' % str(exception))
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))
@@ -175,7 +172,8 @@ class ResPartner(models.Model):
     @api.multi
     def write(self, values):
         res = super(ResPartner, self).write(values)
-        if values.get('vat') and self.company_data_id:
+        country_code = values.get('vat') and values.get('vat')[:2]
+        if values.get('vat') and self.company_data_id and self._is_company_in_europe(country_code):
             try:
                 url = 'http://odoo:8069/iap/partner_autocomplete/update_vat'
                 params = {
@@ -184,6 +182,18 @@ class ResPartner(models.Model):
                 }
                 jsonrpc(url, params=params)
             except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
-                _logger.error('Enrichment API error: %s' % str(exception))
+                _logger.error('Enrichment API - VAT Update Error: %s' % str(exception))
 
         return res
+
+    @api.model
+    def _is_company_in_europe(self, country_code):
+        country = self.env['res.country'].search([('code', '=', country_code)])
+        if country:
+            country_id = country.id
+            europe = self.env.ref('base.europe')
+            if not europe:
+                europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
+            if not europe or country_id not in europe.country_ids.ids:
+                return False
+        return True

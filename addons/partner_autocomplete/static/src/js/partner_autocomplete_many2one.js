@@ -39,13 +39,13 @@ odoo.define('partner.autocomplete.many2one', function (require) {
                         });
                         _.each(suggestions, function (suggestion) {
                             choices.push({
-                                label: suggestion.name + ' (' + suggestion.domain + ')',
+                                label: _.str.sprintf('%s (%s)', suggestion.label, suggestion.description),
                                 value: suggestion.domain,
                                 action: function () {
                                     self._createPartner(suggestion);
                                 },
                                 classname: 'o_m2o_dropdown_option'
-                            })
+                            });
                         });
                     }
 
@@ -59,7 +59,7 @@ odoo.define('partner.autocomplete.many2one', function (require) {
         /**
          * Action : create popup form with pre-filled values from Autocomplete
          *
-         * @param company_domain
+         * @param company
          * @returns Promise
          * @private
          */
@@ -67,20 +67,14 @@ odoo.define('partner.autocomplete.many2one', function (require) {
             var self = this;
             self.$('input').val('');
 
-            // Fetch additionnal company info via Autocomplete Enrichment API
-            var enrichPromise = Autocomplete.enrichCompany(company.domain);
-
-            // Get logo
-            var logoPromise = Autocomplete.getCompanyLogo(company.domain);
-
-            return $.when(enrichPromise, logoPromise).done(function (data, logo) {
+            Autocomplete.getCreateData(company).then(function(data){
                 var context = {
                     'default_is_company': true
                 };
-                _.each(data, function (val, key) {
+                _.each(data.company, function (val, key) {
                     context['default_' + key] = val && val.id ? val.id : val;
                 });
-                if (logo) context.default_image = logo;
+                if (data.logo) context.default_image = data.logo;
 
                 return self._searchCreatePopup("form", false, context);
             });

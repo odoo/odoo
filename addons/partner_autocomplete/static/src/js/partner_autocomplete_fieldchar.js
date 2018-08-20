@@ -100,25 +100,21 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
         _selectCompany: function (company) {
             var self = this;
 
-            // Fetch additionnal company info via Autocomplete Enrichment API
-            var enrichPromise = Autocomplete.enrichCompany(company.domain, company.company_data_id);
-
-            // Get logo
-            var logoPromise = Autocomplete.getCompanyLogo(company.domain);
-
-            $.when(enrichPromise, logoPromise).done(function (company_data, logo) {
-                if (logo) {
+            Autocomplete.getCreateData(company).then(function(data){
+                if (data.logo) {
                     var logoField = self.model === 'res.partner' ? 'image' : 'logo';
-                    var deleteField = self.model === 'res.partner' ? 'logo' : 'image';
-                    company_data[logoField] = logo;
-                    delete company_data[deleteField];
+                    data.company[logoField] = data.logo;
                 }
-                if (self.model === 'res.company') delete company_data.comment; // No comment in Company
-                if (!company_data.country_id) delete company_data.country_id; // Delete if FALSE, else it will reset state_id
-                if (!company_data.state_id) delete company_data.state_id; // Delete if FALSE, else it will reset country_id
+                var deleteField = self.model === 'res.partner' ? 'logo' : 'image';
+                delete data.company[deleteField];
+
+                if (self.model === 'res.company') delete data.company.comment; // No comment in Company
+                if (!data.company.country_id) delete data.company.country_id; // Delete if FALSE, else it will reset state_id
+                if (!data.company.state_id) delete data.company.state_id; // Delete if FALSE, else it will reset country_id
+
                 self.trigger_up('field_changed', {
                     dataPointID: self.dataPointID,
-                    changes: company_data,
+                    changes: data.company,
                 });
             });
 
