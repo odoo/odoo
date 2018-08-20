@@ -64,7 +64,14 @@
             <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_id.name}
+<p>
+% if object.partner_id.parent_id:
+    Dear ${object.partner_id.name} (<i>${object.partner_id.parent_id.name}</i>),
+% else
+    Dear ${object.partner_id.name},
+% endif
+</p>
+
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
 % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
@@ -72,10 +79,6 @@
 % set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name == 'pay' and 'Accept and pay online' or pay_sign_name == 'sign' and 'Accept and sign online' or 'View %s' % doc_name
 % set access_url = is_online and object.get_mail_url() or ''
 
-% if object.partner_id.parent_id:
-    (<i>${object.partner_id.parent_id.name}</i>)
-% endif
-,</p>
 <p>
 Here is
 % if ctx.get('proforma')
