@@ -415,7 +415,7 @@ class ChromeBrowser():
         self.user_data_dir = ''
         self.chrome_process = None
         self.screencast_frames = []
-        self._chrome_start(['google-chrome'], self.user_data_dir)
+        self._chrome_start([odoo.tools.config['chrome_bin']], self.user_data_dir)
         _logger.info('Websocket url found: %s' % self.ws_url)
         self._open_websocket()
         _logger.info('Enable chrome headless console log notification')
