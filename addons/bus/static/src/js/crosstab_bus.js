@@ -295,8 +295,8 @@ var CrossTabBus = Longpolling.extend({
      * @param {string} event.newValue
      */
     _onStorage: function (e) {
-        var value = JSON.parse(e.newValue);
-        var key = e.key;
+        var value = JSON.parse(e.data.newValue);
+        var key = e.data.key;
 
         if (this._isRegistered && key === this._generateKey('master') && !value) {
             //master was unloaded
