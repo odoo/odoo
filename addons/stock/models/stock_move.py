@@ -46,7 +46,6 @@ class StockMove(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], index=True, required=True,
         states={'done': [('readonly', True)]})
-    ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True,
@@ -381,7 +380,6 @@ class StockMove(models.Model):
         # TDE CLEANME: why doing this tracking on picking here ? seems weird
         tracking = []
         for vals in vals_list:
-            vals['ordered_qty'] = vals.get('product_uom_qty')
             if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
                 initial_values = {picking.id: {'state': picking.state}}
