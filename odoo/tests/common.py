@@ -8,6 +8,7 @@ import base64
 import collections
 import errno
 import glob
+import inspect
 import importlib
 import itertools
 import json
@@ -29,6 +30,7 @@ import werkzeug.urls
 from contextlib import contextmanager
 from datetime import datetime, timedelta, date
 from pprint import pformat
+from unittest.mock import patch
 
 from decorator import decorator
 from lxml import etree, html
@@ -218,7 +220,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             return self._assertRaises(exception)
 
     @contextmanager
-    def assertQueryCount(self, default=0, margin=0, **counters):
+    def assertQueryCount(self, default=0, **counters):
         """ Context manager that counts queries. It may be invoked either with
             one value, or with a set of named arguments like ``login=value``::
 
@@ -231,22 +233,25 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             The second form is convenient when used with :func:`users`.
         """
         if self.warm:
-            login = self.env.user.login
-            expected = counters.get(login, default)
-            count0 = self.cr.sql_log_count
-            yield
-            count = self.cr.sql_log_count - count0
-            if count > (expected + margin):
-                msg = "Query count beyond margin for user %s: %d > %d"
-                self.fail(msg % (login, count, expected + margin))
-            elif count > expected and count <= (expected + margin):
-                logger = logging.getLogger(type(self).__module__)
-                msg = "Query count within margin for user %s: %d > %d (margin %s)"
-                logger.info(msg, login, count, expected, margin)
-            elif count < expected:
-                logger = logging.getLogger(type(self).__module__)
-                msg = "Query count less than expected for user %s: %d < %d"
-                logger.info(msg, login, count, expected)
+            # mock random in order to avoid random bus gc
+            with self.subTest(), patch('random.random', lambda: 1):
+                login = self.env.user.login
+                expected = counters.get(login, default)
+                count0 = self.cr.sql_log_count
+                yield
+                count = self.cr.sql_log_count - count0
+                if count != expected:
+                    # add some info on caller to allow semi-automatic update of query count
+                    frame, filename, linenum, funcname, lines, index = inspect.stack()[2]
+                    if "/odoo/addons/" in filename:
+                        filename = filename.rsplit("/odoo/addons/", 1)[1]
+                    if count > expected:
+                        msg = "Query count more than expected for user %s: %d > %d in %s at %s:%s"
+                        self.fail(msg % (login, count, expected, funcname, filename, linenum))
+                    else:
+                        logger = logging.getLogger(type(self).__module__)
+                        msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
+                        logger.info(msg, login, count, expected, funcname, filename, linenum)
         else:
             yield
 
@@ -828,10 +833,10 @@ def users(*logins):
                 for user in self.env['res.users'].search([('login', 'in', list(logins))])
             }
             for login in logins:
-                # switch user
-                self.uid = user_id[login]
-                # execute func
-                func(*args, **kwargs)
+                with self.subTest(login=login):
+                    # switch user and execute func
+                    self.uid = user_id[login]
+                    func(*args, **kwargs)
         finally:
             self.uid = old_uid
 
