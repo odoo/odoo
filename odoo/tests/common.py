@@ -477,6 +477,7 @@ class ChromeBrowser():
             return
         switches = {
             '--headless': '',
+            '--no-sandbox': '',
             '--enable-logging': 'stderr',
             '--no-default-browser-check': '',
             '--no-first-run': '',
