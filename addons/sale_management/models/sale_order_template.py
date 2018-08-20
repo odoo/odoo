@@ -11,10 +11,6 @@ class SaleOrderTemplate(models.Model):
     _description = "Quotation Template"
 
     def _get_default_require_signature(self):
-        # A confirmation mode (sign or pay) is mandatory on a quotation template
-        # If none has been activated in the settings, we force 'sign' as confirmation mode
-        if not self.env.user.company_id.portal_confirmation_pay:
-            return True
         return self.env.user.company_id.portal_confirmation_sign
 
     def _get_default_require_payment(self):
