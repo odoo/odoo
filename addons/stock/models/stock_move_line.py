@@ -41,8 +41,6 @@ class StockMoveLine(models.Model):
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
-    from_loc = fields.Char(compute='_compute_location_description')
-    to_loc = fields.Char(compute='_compute_location_description')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
@@ -54,11 +52,6 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
-
-    def _compute_location_description(self):
-        for operation, operation_sudo in izip(self, self.sudo()):
-            operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
-            operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
     @api.one
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
