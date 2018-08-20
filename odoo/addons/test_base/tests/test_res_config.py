@@ -16,32 +16,31 @@ class TestResConfig(TransactionCase):
         self.ResConfig = self.env['res.config.settings']
 
         # Define the test values
-        self.menu_xml_id = 'base.menu_action_res_users'
-        self.full_field_name = 'res.partner.lang'
-        self.error_msg = "WarningRedirect test string: %(field:res.partner.lang)s - %(menu:base.menu_action_res_users)s."
-        self.error_msg_wo_menu = "WarningRedirect test string: %(field:res.partner.lang)s."
+        # self.menu_xml_id = 'base.menu_action_res_users'
+        self.menu_xml_id = 'test_base.menu_base_test'
+        self.full_field_name = 'test_base.model.ref'
+        self.error_msg = "WarningRedirect test string: %(field:test_base.model.ref)s - %(menu:test_base.menu_base_test)s."
+        self.error_msg_wo_menu = "WarningRedirect test string: %(field:test_base.model.ref)s."
         # Note: see the get_config_warning() doc for a better example
 
         # Fetch the expected values
         menu = self.env.ref(self.menu_xml_id)
 
         model_name, field_name = self.full_field_name.rsplit('.', 1)
-
         self.expected_path = menu.complete_name
         self.expected_action_id = menu.action.id
         self.expected_name = self.env[model_name].fields_get([field_name])[field_name]['string']
         self.expected_final_error_msg = self.error_msg % {
-            'field:res.partner.lang': self.expected_name,
-            'menu:base.menu_action_res_users': self.expected_path
+            'field:test_base.model.ref': self.expected_name,
+            'menu:test_base.menu_base_test': self.expected_path
         }
         self.expected_final_error_msg_wo_menu = self.error_msg_wo_menu % {
-            'field:res.partner.lang': self.expected_name,
+            'field:test_base.model.ref': self.expected_name,
         }
 
     def test_00_get_option_path(self):
         """ The get_option_path() method should return a tuple containing a string and an integer """
         res = self.ResConfig.get_option_path(self.menu_xml_id)
-
         # Check types
         self.assertIsInstance(res, tuple)
         self.assertEqual(len(res), 2, "The result should contain 2 elements")

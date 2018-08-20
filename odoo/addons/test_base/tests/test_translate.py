@@ -36,7 +36,7 @@ class TranslationToolsTestCase(unittest.TestCase):
          \\\\nope\n\n"
          """)
 
-    def test_translate_xml_base(self):
+    def test_translate_xml_test_base(self):
         """ Test xml_translate() without formatting elements. """
         terms = []
         source = """<form string="Form stuff">
@@ -238,12 +238,12 @@ class TestTranslation(TransactionCase):
 
     def setUp(self):
         super(TestTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
-        self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
+        self.env['ir.translation'].load_module_terms(['test_base'], ['fr_FR'])
+        self.customers = self.env['test_translation.model'].create({'name': 'Customers'})
         self.env['ir.translation'].create({
             'type': 'model',
-            'name': 'res.partner.category,name',
-            'module':'base',
+            'name': 'test_translation.model,name',
+            'module': 'test_base',
             'lang': 'fr_FR',
             'res_id': self.customers.id,
             'value': 'Clients',
@@ -278,7 +278,7 @@ class TestTranslation(TransactionCase):
     def test_104_orderby_translated_field(self):
         """ Test search ordered by a translated field. """
         # create a category with a French translation
-        padawans = self.env['res.partner.category'].create({'name': 'Padawans'})
+        padawans = self.env['test_translation.model'].create({'name': 'Padawans'})
         padawans_fr = padawans.with_context(lang='fr_FR')
         padawans_fr.write({'name': 'Apprentis'})
         # search for categories, and sort them by (translated) name
@@ -289,11 +289,11 @@ class TestTranslation(TransactionCase):
     def test_105_duplicated_translation(self):
         """ Test synchronizing translations with duplicated source """
         # create a category with a French translation
-        padawans = self.env['res.partner.category'].create({'name': 'Padawan'})
+        padawans = self.env['test_translation.model'].create({'name': 'Padawan'})
         self.env['ir.translation'].create({
             'type': 'model',
-            'name': 'res.partner.category,name',
-            'module':'base',
+            'name': 'test_translation.model,name',
+            'module': 'test_base',
             'lang': 'fr_FR',
             'res_id': padawans.id,
             'value': 'Apprenti',
@@ -305,16 +305,16 @@ class TestTranslation(TransactionCase):
             with self.env.cr.savepoint():
                 self.env['ir.translation'].create({
                     'type': 'model',
-                    'name': 'res.partner.category,name',
-                    'module':'base',
+                    'name': 'test_translation.model,name',
+                    'module': 'test_base',
                     'lang': 'fr_FR',
                     'res_id': padawans.id,
                     'value': 'Apprentis',
                     'state': 'translated',
                 })
-        self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
+        self.env['ir.translation'].translate_fields('test_translation.model', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
-            ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
+            ('res_id', '=', padawans.id), ('name', '=', 'test_translation.model,name')
         ])
         self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
         self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
@@ -323,12 +323,12 @@ class TestTranslation(TransactionCase):
 class TestXMLTranslation(TransactionCase):
     def setUp(self):
         super(TestXMLTranslation, self).setUp()
-        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+        self.env['ir.translation'].load_module_terms(['test_base'], ['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({
             'name': 'test',
-            'model': 'res.partner',
+            'model': 'test_base.model',
             'arch': archf % terms,
         })
         for lang, trans_terms in kwargs.items():

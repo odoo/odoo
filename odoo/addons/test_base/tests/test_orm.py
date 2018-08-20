@@ -14,9 +14,9 @@ class TestORM(TransactionCase):
     @mute_logger('odoo.models')
     def test_access_deleted_records(self):
         """ Verify that accessing deleted records works as expected """
-        p1 = self.env['res.partner'].create({'name': 'W'})
-        p2 = self.env['res.partner'].create({'name': 'Y'})
-        p1.unlink()
+        r1 = self.env['test_base.model'].create({'name': 'W'})
+        r2 = self.env['test_base.model'].create({'name': 'Y'})
+        r1.unlink()
 
         # read() is expected to skip deleted records because our API is not
         # transactional for a sequence of search()->read() performed from the
@@ -28,104 +28,104 @@ class TestORM(TransactionCase):
             'login': 'test2',
             'groups_id': [4, self.ref('base.group_user')],
         })
-        ps = (p1 + p2).sudo(user)
-        self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
-        self.assertEqual([], ps[0].read(['name']), "read() should skip deleted records")
+        rs = (r1 + r2).sudo(user)
+        self.assertEqual([{'id': r2.id, 'name': 'Y'}], rs.read(['name']), "read() should skip deleted records")
+        self.assertEqual([], rs[0].read(['name']), "read() should skip deleted records")
 
         # Deleting an already deleted record should be simply ignored
-        self.assertTrue(p1.unlink(), "Re-deleting should be a no-op")
+        self.assertTrue(r1.unlink(), "Re-deleting should be a no-op")
 
         # Updating an already deleted record should raise, even as admin
         with self.assertRaises(MissingError):
-            p1.write({'name': 'foo'})
+            r1.write({'name': 'foo'})
 
     @mute_logger('odoo.models')
     def test_access_filtered_records(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
-        p1 = self.env['res.partner'].create({'name': 'W'})
-        p2 = self.env['res.partner'].create({'name': 'Y'})
+        r1 = self.env['test_base.model'].create({'name': 'W'})
+        r2 = self.env['test_base.model'].create({'name': 'Y'})
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
             'groups_id': [4, self.ref('base.group_user')],
         })
 
-        partner_model = self.env['ir.model'].search([('model','=','res.partner')])
+        test_model = self.env['ir.model'].search([('model', '=', 'test_base.model')])
         self.env['ir.rule'].create({
             'name': 'Y is invisible',
-            'domain_force': [('id', '!=', p1.id)],
-            'model_id': partner_model.id,
+            'domain_force': [('id', '!=', r1.id)],
+            'model_id': test_model.id,
         })
 
         # search as unprivileged user
-        partners = self.env['res.partner'].sudo(user).search([])
-        self.assertNotIn(p1, partners, "W should not be visible...")
-        self.assertIn(p2, partners, "... but Y should be visible")
+        records = self.env['test_base.model'].sudo(user).search([])
+        self.assertNotIn(r1, records, "W should not be visible...")
+        self.assertIn(r2, records, "... but Y should be visible")
 
         # read as unprivileged user
         with self.assertRaises(AccessError):
-            p1.sudo(user).read(['name'])
+            r1.sudo(user).read(['name'])
         # write as unprivileged user
         with self.assertRaises(AccessError):
-            p1.sudo(user).write({'name': 'foo'})
+            r1.sudo(user).write({'name': 'foo'})
         # unlink as unprivileged user
         with self.assertRaises(AccessError):
-            p1.sudo(user).unlink()
+            r1.sudo(user).unlink()
 
         # Prepare mixed case 
-        p2.unlink()
+        r2.unlink()
         # read mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
-            (p1 + p2).sudo(user).read(['name'])
+            (r1 + r2).sudo(user).read(['name'])
         # delete mixed records: some deleted and some filtered
         with self.assertRaises(AccessError):
-            (p1 + p2).sudo(user).unlink()
+            (r1 + r2).sudo(user).unlink()
 
     def test_read(self):
-        partner = self.env['res.partner'].create({'name': 'MyPartner1'})
-        result = partner.read()
+        records = self.env['test_base.model'].create({'name': 'MyRecord1'})
+        result = records.read()
         self.assertIsInstance(result, list)
 
     @mute_logger('odoo.models')
     def test_search_read(self):
-        partner = self.env['res.partner']
+        record = self.env['test_base.model']
 
         # simple search_read
-        partner.create({'name': 'MyPartner1'})
-        found = partner.search_read([('name', '=', 'MyPartner1')], ['name'])
+        record.create({'name': 'MyRecord1'})
+        found = record.search_read([('name', '=', 'MyRecord1')], ['name'])
         self.assertEqual(len(found), 1)
-        self.assertEqual(found[0]['name'], 'MyPartner1')
+        self.assertEqual(found[0]['name'], 'MyRecord1')
         self.assertIn('id', found[0])
 
         # search_read correct order
-        partner.create({'name': 'MyPartner2'})
-        found = partner.search_read([('name', 'like', 'MyPartner')], ['name'], order="name")
+        record.create({'name': 'MyRecord2'})
+        found = record.search_read([('name', 'like', 'MyRecord')], ['name'], order="name")
         self.assertEqual(len(found), 2)
-        self.assertEqual(found[0]['name'], 'MyPartner1')
-        self.assertEqual(found[1]['name'], 'MyPartner2')
-        found = partner.search_read([('name', 'like', 'MyPartner')], ['name'], order="name desc")
+        self.assertEqual(found[0]['name'], 'MyRecord1')
+        self.assertEqual(found[1]['name'], 'MyRecord2')
+        found = record.search_read([('name', 'like', 'MyRecord')], ['name'], order="name desc")
         self.assertEqual(len(found), 2)
-        self.assertEqual(found[0]['name'], 'MyPartner2')
-        self.assertEqual(found[1]['name'], 'MyPartner1')
+        self.assertEqual(found[0]['name'], 'MyRecord2')
+        self.assertEqual(found[1]['name'], 'MyRecord1')
 
         # search_read that finds nothing
-        found = partner.search_read([('name', '=', 'Does not exists')], ['name'])
+        found = record.search_read([('name', '=', 'Does not exists')], ['name'])
         self.assertEqual(len(found), 0)
 
     def test_exists(self):
-        partner = self.env['res.partner']
+        records = self.env['test_base.model']
 
         # check that records obtained from search exist
-        recs = partner.search([])
+        recs = records.search([])
         self.assertTrue(recs)
         self.assertEqual(recs.exists(), recs)
 
         # check that there is no record with id 0
-        recs = partner.browse([0])
+        recs = records.browse([0])
         self.assertFalse(recs.exists())
 
     def test_groupby_date(self):
-        partners_data = dict(
+        test_data = dict(
             A='2012-11-19',
             B='2012-12-17',
             C='2012-12-31',
@@ -135,56 +135,56 @@ class TestORM(TransactionCase):
             G='2013-02-11',
         )
 
-        partner_ids = []
-        partner_ids_by_day = defaultdict(list)
-        partner_ids_by_month = defaultdict(list)
-        partner_ids_by_year = defaultdict(list)
+        record_ids = []
+        record_ids_by_day = defaultdict(list)
+        record_ids_by_month = defaultdict(list)
+        record_ids_by_year = defaultdict(list)
 
-        partners = self.env['res.partner']
-        for name, date in partners_data.items():
-            p = partners.create(dict(name=name, date=date))
-            partner_ids.append(p.id)
-            partner_ids_by_day[date].append(p.id)
-            partner_ids_by_month[date.rsplit('-', 1)[0]].append(p.id)
-            partner_ids_by_year[date.split('-', 1)[0]].append(p.id)
+        records = self.env['test_base.model']
+        for name, date in test_data.items():
+            p = records.create(dict(name=name, date=date))
+            record_ids.append(p.id)
+            record_ids_by_day[date].append(p.id)
+            record_ids_by_month[date.rsplit('-', 1)[0]].append(p.id)
+            record_ids_by_year[date.split('-', 1)[0]].append(p.id)
 
         def read_group(interval):
-            domain = [('id', 'in', partner_ids)]
+            domain = [('id', 'in', record_ids)]
             result = {}
-            for grp in partners.read_group(domain, ['date'], ['date:' + interval]):
-                result[grp['date:' + interval]] = partners.search(grp['__domain'])
+            for grp in records.read_group(domain, ['date'], ['date:' + interval]):
+                result[grp['date:' + interval]] = records.search(grp['__domain'])
             return result
 
-        self.assertEqual(len(read_group('day')), len(partner_ids_by_day))
-        self.assertEqual(len(read_group('month')), len(partner_ids_by_month))
-        self.assertEqual(len(read_group('year')), len(partner_ids_by_year))
+        self.assertEqual(len(read_group('day')), len(record_ids_by_day))
+        self.assertEqual(len(read_group('month')), len(record_ids_by_month))
+        self.assertEqual(len(read_group('year')), len(record_ids_by_year))
 
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+        res = records.read_group([('id', 'in', record_ids)], ['date'],
                                   ['date:month', 'date:day'], lazy=False)
-        self.assertEqual(len(res), len(partner_ids))
+        self.assertEqual(len(res), len(record_ids))
 
         # combine groupby and orderby
         months = ['February 2013', 'January 2013', 'December 2012', 'November 2012']
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+        res = records.read_group([('id', 'in', record_ids)], ['date'],
                                   groupby=['date:month'], orderby='date:month DESC')
         self.assertEqual([item['date:month'] for item in res], months)
 
         # order by date should reorder by date:month
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+        res = records.read_group([('id', 'in', record_ids)], ['date'],
                                   groupby=['date:month'], orderby='date DESC')
         self.assertEqual([item['date:month'] for item in res], months)
 
         # order by date should reorder by date:day
         days = ['11 Feb 2013', '28 Jan 2013', '14 Jan 2013', '07 Jan 2013',
                 '31 Dec 2012', '17 Dec 2012', '19 Nov 2012']
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+        res = records.read_group([('id', 'in', record_ids)], ['date'],
                                   groupby=['date:month', 'date:day'],
                                   orderby='date DESC', lazy=False)
         self.assertEqual([item['date:day'] for item in res], days)
 
     def test_write_duplicate(self):
-        p1 = self.env['res.partner'].create({'name': 'W'})
-        (p1 + p1).write({'name': 'X'})
+        r1 = self.env['test_base.model'].create({'name': 'W'})
+        (r1 + r1).write({'name': 'X'})
 
     def test_m2m_store_trigger(self):
         group_user = self.env.ref('base.group_user')
@@ -210,18 +210,18 @@ class TestORM(TransactionCase):
             'login': 'saucisson',
             'groups_id': [4, self.ref('base.group_partner_manager')],
         })
-        p1 = self.env['res.partner'].sudo(user).create({'name': 'Zorro'})
+        r1 = self.env['test_base.model'].sudo(user).create({'name': 'Zorro'})
         p1_prop = self.env['ir.property'].sudo(user).create({
             'name': 'Slip en laine',
-            'res_id': 'res.partner,{}'.format(p1.id),
+            'res_id': 'test_base.model,{}'.format(r1.id),
             'fields_id': self.env['ir.model.fields'].search([
-                ('model', '=', 'res.partner'), ('name', '=', 'ref')], limit=1).id,
+                ('model', '=', 'test_base.model'), ('name', '=', 'ref')], limit=1).id,
             'value_text': 'Nain poilu',
             'type': 'char',
         })
 
         # Unlink with unprivileged user
-        p1.unlink()
+        r1.unlink()
 
         # ir.property is deleted
         self.assertEqual(
@@ -229,19 +229,18 @@ class TestORM(TransactionCase):
 
     def test_create_multi(self):
         """ create for multiple records """
-        # assumption: 'res.bank' does not override 'create'
         vals_list = [{'name': name} for name in ('Foo', 'Bar', 'Baz')]
         vals_list[0]['email'] = 'foo@example.com'
         for vals in vals_list:
-            record = self.env['res.bank'].create(vals)
+            record = self.env['test_base.model'].create(vals)
             self.assertEqual(len(record), 1)
             self.assertEqual(record.name, vals['name'])
             self.assertEqual(record.email, vals.get('email', False))
 
-        records = self.env['res.bank'].create([])
+        records = self.env['test_base.model'].create([])
         self.assertFalse(records)
 
-        records = self.env['res.bank'].create(vals_list)
+        records = self.env['test_base.model'].create(vals_list)
         self.assertEqual(len(records), len(vals_list))
         for record, vals in zip(records, vals_list):
             self.assertEqual(record.name, vals['name'])
@@ -250,7 +249,7 @@ class TestORM(TransactionCase):
         # create countries and states
         vals_list = [{
             'name': 'Foo',
-            'state_ids': [
+            'one2many_ids': [
                 (0, 0, {'name': 'North Foo', 'code': 'NF'}),
                 (0, 0, {'name': 'South Foo', 'code': 'SF'}),
                 (0, 0, {'name': 'West Foo', 'code': 'WF'}),
@@ -258,16 +257,16 @@ class TestORM(TransactionCase):
             ],
         }, {
             'name': 'Bar',
-            'state_ids': [
+            'one2many_ids': [
                 (0, 0, {'name': 'North Bar', 'code': 'NB'}),
                 (0, 0, {'name': 'South Bar', 'code': 'SB'}),
             ],
         }]
-        foo, bar = self.env['res.country'].create(vals_list)
+        foo, bar = self.env['test_base.model'].create(vals_list)
         self.assertEqual(foo.name, 'Foo')
-        self.assertCountEqual(foo.mapped('state_ids.code'), ['NF', 'SF', 'WF', 'EF'])
+        self.assertCountEqual(foo.mapped('one2many_ids.code'), ['NF', 'SF', 'WF', 'EF'])
         self.assertEqual(bar.name, 'Bar')
-        self.assertCountEqual(bar.mapped('state_ids.code'), ['NB', 'SB'])
+        self.assertCountEqual(bar.mapped('one2many_ids.code'), ['NB', 'SB'])
 
 
 class TestInherits(TransactionCase):
@@ -277,9 +276,9 @@ class TestInherits(TransactionCase):
 
     def test_default(self):
         """ `default_get` cannot return a dictionary or a new id """
-        defaults = self.env['res.users'].default_get(['partner_id'])
-        if 'partner_id' in defaults:
-            self.assertIsInstance(defaults['partner_id'], (bool, int))
+        defaults = self.env['test_base.model'].default_get(['many2one_id'])
+        if 'many2one_id' in defaults:
+            self.assertIsInstance(defaults['many2one_id'], (bool, int))
 
     def test_create(self):
         """ creating a user should automatically create a new partner """
@@ -383,29 +382,29 @@ class TestO2MSerialization(TransactionCase):
 
     def setUp(self):
         super(TestO2MSerialization, self).setUp()
-        self.partner = self.registry('res.partner')
+        self.record = self.registry('test_base.model')
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', [])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', [])
         self.assertEqual(results, [])
 
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
         values = [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', [CREATE(v) for v in values])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', [CREATE(v) for v in values])
         self.assertEqual(results, values)
 
     def test_LINK_TO_command(self):
         " reads the records from the database, records are returned with their ids. "
         ids = [
-            self.env['res.partner'].create({'name': 'foo'}).id,
-            self.env['res.partner'].create({'name': 'bar'}).id,
-            self.env['res.partner'].create({'name': 'baz'}).id,
+            self.env['test_base.model'].create({'name': 'foo'}).id,
+            self.env['test_base.model'].create({'name': 'bar'}).id,
+            self.env['test_base.model'].create({'name': 'baz'}).id,
         ]
         commands = [LINK_TO(v) for v in ids]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertItemsEqual(results, [
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
@@ -415,12 +414,12 @@ class TestO2MSerialization(TransactionCase):
     def test_bare_ids_command(self):
         " same as the equivalent LINK_TO commands "
         ids = [
-            self.env['res.partner'].create({'name': 'foo'}).id,
-            self.env['res.partner'].create({'name': 'bar'}).id,
-            self.env['res.partner'].create({'name': 'baz'}).id,
+            self.env['test_base.model'].create({'name': 'foo'}).id,
+            self.env['test_base.model'].create({'name': 'bar'}).id,
+            self.env['test_base.model'].create({'name': 'baz'}).id,
         ]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', ids, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', ids, ['name'])
         self.assertItemsEqual(results, [
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
@@ -429,37 +428,37 @@ class TestO2MSerialization(TransactionCase):
 
     def test_UPDATE_command(self):
         " take the in-db records and merge the provided information in "
-        foo = self.env['res.partner'].create({'name': 'foo'})
-        bar = self.env['res.partner'].create({'name': 'bar'})
-        baz = self.env['res.partner'].create({'name': 'baz', 'city': 'tag'})
+        foo = self.env['test_base.model'].create({'name': 'foo'})
+        bar = self.env['test_base.model'].create({'name': 'bar'})
+        baz = self.env['test_base.model'].create({'name': 'baz', 'ref': 'tag'})
         commands = [
             LINK_TO(foo.id),
-            UPDATE(bar.id, {'name': 'qux', 'city': 'tagtag'}),
+            UPDATE(bar.id, {'name': 'qux', 'ref': 'tagtag'}),
             UPDATE(baz.id, {'name': 'quux'}),
         ]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name', 'city'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name', 'ref'])
         self.assertItemsEqual(results, [
-            {'id': foo.id, 'name': 'foo', 'city': False},
-            {'id': bar.id, 'name': 'qux', 'city': 'tagtag'},
-            {'id': baz.id, 'name': 'quux', 'city': 'tag'},
+            {'id': foo.id, 'name': 'foo', 'ref': False},
+            {'id': bar.id, 'name': 'qux', 'ref': 'tagtag'},
+            {'id': baz.id, 'name': 'quux', 'ref': 'tag'},
         ])
 
     def test_DELETE_command(self):
         " deleted records are not returned at all. "
         ids = [
-            self.env['res.partner'].create({'name': 'foo'}).id,
-            self.env['res.partner'].create({'name': 'bar'}).id,
-            self.env['res.partner'].create({'name': 'baz'}).id,
+            self.env['test_base.model'].create({'name': 'foo'}).id,
+            self.env['test_base.model'].create({'name': 'bar'}).id,
+            self.env['test_base.model'].create({'name': 'baz'}).id,
         ]
         commands = [DELETE(v) for v in ids]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertEqual(results, [])
 
     def test_mixed_commands(self):
         ids = [
-            self.env['res.partner'].create({'name': name}).id
+            self.env['test_base.model'].create({'name': name}).id
             for name in ['NObar', 'baz', 'qux', 'NOquux', 'NOcorge', 'garply']
         ]
         commands = [
@@ -473,7 +472,7 @@ class TestO2MSerialization(TransactionCase):
             LINK_TO(ids[5]),
         ]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertItemsEqual(results, [
             {'name': 'foo'},
             {'id': ids[0], 'name': 'bar'},
@@ -487,13 +486,13 @@ class TestO2MSerialization(TransactionCase):
     def test_LINK_TO_pairs(self):
         "LINK_TO commands can be written as pairs, instead of triplets"
         ids = [
-            self.env['res.partner'].create({'name': 'foo'}).id,
-            self.env['res.partner'].create({'name': 'bar'}).id,
-            self.env['res.partner'].create({'name': 'baz'}).id,
+            self.env['test_base.model'].create({'name': 'foo'}).id,
+            self.env['test_base.model'].create({'name': 'bar'}).id,
+            self.env['test_base.model'].create({'name': 'baz'}).id,
         ]
         commands = [(4, id) for id in ids]
 
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertItemsEqual(results, [
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
@@ -503,5 +502,5 @@ class TestO2MSerialization(TransactionCase):
     def test_singleton_commands(self):
         "DELETE_ALL can appear as a singleton"
         commands = [DELETE_ALL()]
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
+        results = self.env['test_base.model'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertEqual(results, [])
