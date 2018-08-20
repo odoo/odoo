@@ -28,7 +28,7 @@ class ResConfigSettings(models.TransientModel):
     website_default_lang_code = fields.Char(
         'Default language code', related='website_id.default_lang_code',
         oldname='default_lang_code')
-    specific_user_account = fields.Boolean('Specific User Account', config_parameter='website_id.specific_user_account',
+    specific_user_account = fields.Boolean(related='website_id.specific_user_account',
                                            help='Are newly created user accounts website specific')
 
     google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')

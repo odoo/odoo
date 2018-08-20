@@ -103,6 +103,7 @@ class Website(models.Model):
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
+    specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),

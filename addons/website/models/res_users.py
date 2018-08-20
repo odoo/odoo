@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -48,7 +49,9 @@ class ResUsers(models.Model):
     @api.model
     def _signup_create_user(self, values):
         new_user = super(ResUsers, self)._signup_create_user(values)
-        new_user.website_id = self.env['website'].get_current_website()
+        current_website = self.env['website'].get_current_website()
+        if request and current_website.specific_user_account:
+            new_user.website_id = current_website
         return new_user
 
     @api.model
