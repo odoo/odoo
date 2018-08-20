@@ -387,6 +387,25 @@ class StockMove(models.Model):
             picking.message_track(picking.fields_get(['state']), initial_values)
         return res
 
+    def _propagate_qty_to_next_move(self, diff):
+        """Propagates the difference of initial demand to the following moves"""
+        self.ensure_one()
+        propagate_qty = self.env.context.get('propagate_qty_to_next_move', True)
+        not_propagate = self.env.context.get('do_not_propagate', False)
+        if propagate_qty and not not_propagate and self.move_dest_ids and self.propagate:
+            next_move = self.move_dest_ids.filtered(
+                lambda m: m.state not in ('done', 'cancel'))
+            next_move.ensure_one()
+            product_uom_qty = next_move.product_uom_qty + diff
+            ordered_qty = next_move.ordered_qty + diff
+            vals = {
+                'product_uom_qty': product_uom_qty,
+                'ordered_qty': ordered_qty,
+            }
+            # Use do_not_unreserve = True flag to avoid unreserving stock for
+            # partially available moves
+            next_move.with_context(do_not_unreserve=True).write(vals)
+
     def write(self, vals):
         # FIXME: pim fix your crap
         receipt_moves_to_reassign = self.env['stock.move']
@@ -394,6 +413,7 @@ class StockMove(models.Model):
             for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
                 if vals['product_uom_qty'] != move.product_uom_qty:
                     self.env['stock.move.line']._log_message(move.picking_id, move, 'stock.track_move_template', vals)
+                    move._propagate_qty_to_next_move((vals['product_uom_qty'] - move.product_uom_qty))
             if self.env.context.get('do_not_unreserve') is None:
                 move_to_unreserve = self.filtered(lambda m: m.state not in ['draft', 'done', 'cancel'] and m.reserved_availability > vals.get('product_uom_qty'))
                 move_to_unreserve._do_unreserve()
@@ -593,7 +613,7 @@ class StockMove(models.Model):
             # link all move lines to record 0 (the one we will keep).
             moves.mapped('move_line_ids').write({'move_id': moves[0].id})
             # merge move data
-            moves[0].write(moves._merge_moves_fields())
+            moves[0].with_context(propagate_qty_to_next_move=False).write(moves._merge_moves_fields())
             # update merged moves dicts
             moves_to_unlink |= moves[1:]
 
