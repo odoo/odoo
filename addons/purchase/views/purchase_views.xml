@@ -304,10 +304,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Expected Date" name="expected_date" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Vendor" name="groupby_partner_id" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Purchase Representative" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Order Date" name="groupby_date_order" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" name="groupby_date_planned" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                 </search>
             </field>
@@ -484,10 +484,10 @@
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
                     <group expand="0" string="Group By">
-                        <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
-                        <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter name="groupby_supplier" string="groupby_partner_id" domain="[]" context="{'group_by' : 'partner_id'}" />
+                        <filter name="groupby_product_id" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
+                        <filter string="Order Reference" name="groupby_order_id" domain="[]" context="{'group_by' :'order_id'}"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
                 </search>
             </field>

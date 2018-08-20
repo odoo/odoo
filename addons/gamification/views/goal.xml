@@ -115,10 +115,10 @@
                 <field name="definition_id"/>
                 <field name="challenge_id"/>
                 <group expand="0" string="Group By">
-                    <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter name="group_by_definition" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
-                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="End Date" name="enddate" domain="[]" context="{'group_by':'end_date'}"/>
+                    <filter name="groupby_user_id" string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter name="groupby_definition_id" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
+                    <filter string="State" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="End Date" name="groupby_end_date" domain="[]" context="{'group_by':'end_date'}"/>
                 </group>
             </search>
         </field>
@@ -280,8 +280,8 @@
                 <field name="model_id"/>
                 <field name="field_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
-                    <filter string="Computation Mode" name="computationmode" domain="[]" context="{'group_by':'computation_mode'}"/>
+                    <filter string="Model" name="groupby_model_id" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Computation Mode" name="groupby_computation_mode" domain="[]" context="{'group_by':'computation_mode'}"/>
                 </group>
             </search>
         </field>

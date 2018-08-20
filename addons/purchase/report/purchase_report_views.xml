@@ -68,15 +68,15 @@
                     <field name="category_id" filter_domain="[('category_id', 'child_of', self)]"/>
                 </group>
                 <group expand="1" string="Group By">
-                    <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
-                    <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
-                    <filter string="Purchase Representative" name="user_id" context="{'group_by':'user_id'}"/>
-                    <filter string="Product Category" name="group_category_id" context="{'group_by':'category_id'}"/>
-                    <filter string="Order Date" name="order_month" context="{'group_by': 'date_order:month'}"/>
-                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Vendor" name="groupby_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner's Country" name="groupby_country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Purchase Representative" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Product Category" name="groupby_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Order Date" name="groupby_date_order_month" context="{'group_by': 'date_order:month'}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
-                    <filter string="Fiscal Position" name="fiscal_position" context="{'group_by':'fiscal_position_id'}" help="Purchase Order Fiscal Position"/>
+                    <filter string="Fiscal Position" name="groupby_fiscal_position_id" context="{'group_by':'fiscal_position_id'}" help="Purchase Order Fiscal Position"/>
                 </group>
             </search>
         </field>

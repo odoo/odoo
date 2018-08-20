@@ -253,11 +253,11 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                   <group expand="0" string="Group By">
-                      <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                      <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
-                      <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                      <filter string="Warranty Expiration" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}"/>
-                      <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                      <filter string="Partner" name="groupby_partner_id" domain="[]" context="{'group_by':'partner_id'}"/>
+                      <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by':'product_id'}"/>
+                      <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                      <filter string="Warranty Expiration" name="groupby_guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}"/>
+                      <filter string="Company" name="groupby_company_id" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
               </search>
           </field>

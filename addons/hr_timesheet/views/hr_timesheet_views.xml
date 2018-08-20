@@ -130,9 +130,9 @@
                     <separator/>
                     <filter name="month" string="Date" date="date"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by':'task_id'}"/>
+                        <filter string="Employee" name="groupby_employee_id" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Project" name="groupby_project_id" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" name="groupby_task_id" domain="[]" context="{'group_by':'task_id'}"/>
                         <filter string="Timesheet Date" name="groupby_date" domain="[]" context="{'group_by':'date'}" help="Timesheet by Date"/>
                     </group>
                 </search>
@@ -238,9 +238,9 @@
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{
                 'search_default_week':1,
-                'search_default_groupby_employee':1,
-                'search_default_groupby_project':1,
-                'search_default_groupby_task':1,
+                'search_default_groupby_employee_id':1,
+                'search_default_groupby_project_id':1,
+                'search_default_groupby_task_id':1,
             }</field>
         </record>
 

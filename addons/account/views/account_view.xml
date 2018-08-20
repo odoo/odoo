@@ -145,7 +145,7 @@
                     <filter string="Expenses" name="expensesacc" domain="[('internal_group','=', 'expense')]"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" name="groupby_user_type_id" domain="" context="{'group_by':'user_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -634,9 +634,9 @@
                     <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
-                        <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
-                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
-                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                        <filter string="Journal" name="groupby_journal_id" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="groupby_date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
@@ -1097,8 +1097,8 @@
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
                     <group string="Group By">
-                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Tax Application" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Company" name="groupby_company_id" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Tax Application" name="groupby_type_tax_use" domain="[]" context="{'group_by':'type_tax_use'}"/>
                     </group>
                 </search>
             </field>
@@ -1414,9 +1414,9 @@
                     <field name="tax_line_id"/>
                     <field name="tax_ids" />
                     <group expand="0" string="Group By">
-                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account" name="account" context="{'group_by':'account_id'}"/>
+                        <filter string="Partner" name="groupby_partner_id" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="groupby_journal_id" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account" name="groupby_account_id" context="{'group_by':'account_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
@@ -1634,10 +1634,10 @@
                     <field name="journal_id"/>
                     <field name="dummy_account_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Date"/>
+                        <filter string="Partner" name="groupby_partner_id" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="groupby_journal_id" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" name="groupby_date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Date"/>
                     </group>
                 </search>
             </field>
@@ -1875,7 +1875,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" name="accounttype" domain="[]" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" name="groupby_user_type_id" domain="[]" context="{'group_by':'user_type_id'}"/>
                    </group>
                 </search>
             </field>
@@ -1928,10 +1928,10 @@
                     <field name="cash_account_code_prefix"/>
                     <field name="transfer_account_code_prefix"/>
                     <group expand="0" string="Group By">
-                        <filter string="Receivable Account" name="receivalbeacc" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
-                        <filter string="Payable Account" name="payableacc" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
-                        <filter string="Income Account" name="incomeacc" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
-                        <filter string="Expense Account" name="expenseacc" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
+                        <filter string="Receivable Account" name="groupby_property_account_receivable_id" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
+                        <filter string="Payable Account" name="groupby_property_account_payable_id" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
+                        <filter string="Income Account" name="groupby_property_account_income_categ_id" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
+                        <filter string="Expense Account" name="groupby_property_account_expense_categ_id" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
                     </group>
                 </search>
             </field>
@@ -2279,8 +2279,8 @@
                     <field name="type"/>
                     <field name="account_report_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Parent Report" name="parentreport" domain="" context="{'group_by':'parent_id'}"/>
-                        <filter string="Report Type" name="reporttype" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Parent Report" name="groupby_parent_id" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Report Type" name="groupby_type" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>

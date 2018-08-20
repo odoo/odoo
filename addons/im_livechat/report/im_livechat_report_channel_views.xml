@@ -35,12 +35,12 @@
                     <filter name="last_24h" string="Last 24h" domain="[('start_date','&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d') )]"/>
                     <filter name="start_date_filter" string="Start Date" date="start_date" default_period="this_week"/>
                     <group expand="0" string="Group By...">
-                        <filter name="group_by_session" string="Code" domain="[]" context="{'group_by':'technical_name'}"/>
-                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
-                        <filter name="group_by_operator" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
+                        <filter name="groupby_technical_name" string="Code" domain="[]" context="{'group_by':'technical_name'}"/>
+                        <filter name="groupby_channel_id" string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
+                        <filter name="groupby_partner_id" string="Operator" domain="[('partner_id','!=', False)]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
-                        <filter name="group_by_hour" string="Creation date (hour)" domain="[]" context="{'group_by':'start_date_hour'}"/>
-                        <filter name="group_by_month" string="Creation date" domain="[]" context="{'group_by':'start_date:month'}" />
+                        <filter name="groupby_start_date_hour" string="Creation date (hour)" domain="[]" context="{'group_by':'start_date_hour'}"/>
+                        <filter name="groupby_start_date_month" string="Creation date" domain="[]" context="{'group_by':'start_date:month'}" />
                     </group>
                 </search>
             </field>

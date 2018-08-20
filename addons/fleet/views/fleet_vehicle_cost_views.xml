@@ -105,7 +105,7 @@
                         <filter name="groupby_vehicle_id" context="{'group_by': 'vehicle_id'}" string="Vehicle"/>
                         <filter name="groupby_parent_id" context="{'group_by': 'parent_id'}" string="Parent"/>
                         <separator/>
-                        <filter name="groupby_date" context="{'group_by': 'date:month'}" string="Date" help="Vehicle Costs by Date"/>
+                        <filter name="groupby_date_month" context="{'group_by': 'date:month'}" string="Date" help="Vehicle Costs by Date"/>
                     </group>
                 </search>
             </field>
@@ -351,7 +351,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
+                    <filter string="Vehicle" name="groupby_vehicle_id" context="{'group_by':'vehicle_id'}"/>
                 </group>
             </search>
         </field>
@@ -474,7 +474,7 @@
                 <field name="liter" />
                 <field name="amount" sum="Price"/>
                 <group expand="0" string="Group By">
-                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                 </group>
             </search>
         </field>

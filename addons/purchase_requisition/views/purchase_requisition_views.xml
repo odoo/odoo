@@ -287,11 +287,11 @@
                     <filter string="My Agreements" name="my_agreements" domain="[('user_id','=', uid)]"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" name="source" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" name="ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Date" name="end_month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Purchase Representative" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" name="groupby_origin" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" name="groupby_ordering_date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Date" name="groupby_date_end" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>

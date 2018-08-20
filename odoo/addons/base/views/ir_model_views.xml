@@ -374,8 +374,8 @@
                     <field name="required"/>
                     <field name="readonly"/>
                     <group expand="0" string="Group By">
-                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
-                        <filter string="Type" name="group_by_ttype" domain="[]" context="{'group_by':'ttype'}"/>
+                        <filter string="Object" name="groupby_model_id" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Type" name="groupby_ttype" domain="[]" context="{'group_by':'ttype'}"/>
                     </group>
                 </search>
             </field>
@@ -440,8 +440,8 @@
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <group expand="0" string="Group By">
-                        <filter string="Module" name="group_by_module" domain="[]" context="{'group_by':'module'}"/>
-                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Module" name="groupby_module" domain="[]" context="{'group_by':'module'}"/>
+                        <filter string="Object" name="groupby_model" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>
@@ -580,8 +580,8 @@
                     <field name="model_id"/>
                     <field name="group_id"/>
                     <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
-                        <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
-                        <filter string="Object" name="group_by_object" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Group" name="groupby_group_id" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Object" name="groupby_model_id" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>

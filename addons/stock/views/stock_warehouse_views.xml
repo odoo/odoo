@@ -186,8 +186,8 @@
                     <field name="product_id"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by':'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
-                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Warehouse" name="groupby_warehouse_id" domain="[]"  context="{'group_by':'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                        <filter string="Location" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
                     </group>
                 </search>
             </field>

@@ -16,9 +16,9 @@
                     <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
                     <filter string="Test" name="test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
-                        <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
-                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter name="groupby_survey_id" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
+                        <filter string="Email" name="groupby_email" domain="[]" context="{'group_by': 'email'}"/>
+                        <filter string="Partner" name="groupby_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
                     </group>
                 </search>
             </field>
@@ -124,7 +124,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="survey_user_input_tree"></field>
             <field name="search_view_id" ref="survey_user_input_search"/>
-            <field name="context">{'search_default_group_by_survey': True}</field>
+            <field name="context">{'search_default_groupby_survey_id': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 Nobody has replied to your surveys yet
@@ -364,7 +364,7 @@
                     <field name="title" string="Page"/>
                     <field name="survey_id" string="Survey"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
+                        <filter name="groupby_survey_id" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
                 </search>
             </field>
@@ -376,7 +376,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_page_search"/>
-            <field name="context">{'search_default_group_by_survey': True}</field>
+            <field name="context">{'search_default_groupby_survey_id': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No pages found
@@ -552,8 +552,8 @@
                     <field name="page_id" string="Page"/>
                     <field name="type" string="Type"/>
                     <group expand="1" string="Group By">
-                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
-                        <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
+                        <filter name="groupby_page_id" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
+                        <filter name="groupby_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
@@ -565,7 +565,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_question_search"/>
-            <field name="context">{'search_default_group_by_page': True}</field>
+            <field name="context">{'search_default_groupby_page_id': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No questions found
@@ -593,7 +593,7 @@
             <field name="arch" type="xml">
                 <search string="Search Label">
                     <field name="question_id" string="Question"/>
-                    <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                    <filter name="groupby_question_id" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
                 </search>
             </field>
         </record>
@@ -604,7 +604,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_label_search"/>
-            <field name="context">{'search_default_group_by_question': True}</field>
+            <field name="context">{'search_default_groupby_question_id': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No survey labels found
@@ -663,8 +663,8 @@
                     <field name="user_input_id"/>
                     <field name="survey_id"/>
                     <group expand="1" string="Group By">
-                        <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
-                        <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
+                        <filter name="groupby_survey_id" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
+                        <filter name="groupby_user_input_id" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
                     </group>
                 </search>
             </field>
@@ -675,7 +675,7 @@
             <field name="res_model">survey.user_input_line</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_response_line_search"/>
-            <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+            <field name="context">{'search_default_groupby_survey_id': True, 'search_default_groupby_user_input_id': True}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No user input lines found

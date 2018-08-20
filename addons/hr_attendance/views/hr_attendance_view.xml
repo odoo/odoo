@@ -73,9 +73,9 @@
                 <separator/>
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                 <group expand="0" string="Group By">
-                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="groupby_employee_id" string="Employee" context="{'group_by':'employee_id'}"/>
                     <separator/>
-                    <filter name="groupby_name" string="Date" context="{'group_by':'check_in'}"/>
+                    <filter name="groupby_check_in" string="Date" context="{'group_by':'check_in'}"/>
                 </group>
             </search>
         </field>

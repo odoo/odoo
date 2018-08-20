@@ -54,10 +54,10 @@
                 <field name="amount_select"/>
                 <field name="slip_id"/>
                 <group col="8" colspan="4" expand="0" string="Group By">
-                    <filter string="Salary Rule Category" name="category_id" context="{'group_by':'category_id'}"/>
-                    <filter string="Contribution Register" name="register_id" context="{'group_by':'register_id'}"/>
-                    <filter string="Amount Type" name="amount_select" context="{'group_by':'amount_select'}"/>
-                    <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
+                    <filter string="Salary Rule Category" name="groupby_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Contribution Register" name="groupby_register_id" context="{'group_by':'register_id'}"/>
+                    <filter string="Amount Type" name="groupby_amount_select" context="{'group_by':'amount_select'}"/>
+                    <filter string="Employees" name="groupby_employee_id" context="{'group_by':'employee_id'}"/>
                 </group>
             </search>
         </field>
@@ -272,10 +272,10 @@
                 <field name="employee_id"/>
                 <field name="payslip_run_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
-                    <filter string="PaySlip Batch" name="payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
-                    <filter string="Companies" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
-                    <filter string="States" name="state" context="{'group_by':'state'}"/>
+                    <filter string="Employees" name="groupby_employee_id" context="{'group_by':'employee_id'}"/>
+                    <filter string="PaySlip Batch" name="groupby_payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
+                    <filter string="Companies" name="groupby_company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="States" name="groupby_state" context="{'group_by':'state'}"/>
                 </group>
             </search>
         </field>

@@ -42,11 +42,11 @@
                     <field name="product_id"/>
                     <field name="product_categ_id"/>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Product Category" name="product_category" context="{'group_by':'product_categ_id'}"/>
-                        <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                        <filter string="Salesperson" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                        <filter string="Product Category" name="groupby_product_categ_id" context="{'group_by':'product_categ_id'}"/>
+                        <filter string="Product" name="groupby_product_id" context="{'group_by':'product_id'}"/>
                         <separator/>
-                        <filter string="Order Date" name="order_month" context="{'group_by':'date:month'}"/>
+                        <filter string="Order Date" name="groupby_date_month" context="{'group_by':'date:month'}"/>
                     </group>
                 </search>
             </field>

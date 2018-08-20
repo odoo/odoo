@@ -21,12 +21,12 @@
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
-                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
-                    <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
-                    <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
-                    <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
-                    <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
-                    <filter string='Company' name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string='Location' name="groupby_location_id" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string='Product' name="groupby_product_id" context="{'group_by': 'product_id'}"/>
+                    <filter string='Owner' name="groupby_owner_id" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                    <filter string='Lot/Serial Number' name="groupby_lot_id" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string='Package' name="groupby_package_id" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string='Company' name="groupby_company_id" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -155,9 +155,9 @@
                 <field name="location_id"/>
                 <field name="packaging_id"/>
                 <group  expand='0' string='Group by...'>
-                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
-                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'packaging_id'}"/>
-                   <filter string='Company' name="company" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
+                   <filter string='Location' name="groupby_location_id" domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <filter string='Packaging' name="groupby_packaging_id" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Company' name="groupby_company_id" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>

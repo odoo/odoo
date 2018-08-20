@@ -61,8 +61,8 @@
                     <separator/>
                     <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" name="User" context="{'group_by':'alias_user_id'}"/>
-                        <filter string="Model" name="Model" context="{'group_by':'alias_model_id'}"/>
+                        <filter string="User" name="groupby_alias_user_id" context="{'group_by':'alias_user_id'}"/>
+                        <filter string="Model" name="groupby_alias_model_ids" context="{'group_by':'alias_model_id'}"/>
                     </group>
                 </search>
             </field>

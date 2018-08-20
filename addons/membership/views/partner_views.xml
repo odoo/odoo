@@ -35,11 +35,11 @@
                     <filter name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
-                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
-                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member'}"/>
-                        <filter string=" Membership State" name="membership_state" domain="[]" context="{'group_by':'membership_state'}"/>
-                        <filter string="Start Date" name="start_month" help="Starting Date Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
-                        <filter string="End Date" name="end_month" help="Ending Date Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
+                        <filter string="Salesperson" name="groupby_user_id" domain="[]" context="{'group_by' : 'user_id'}"/>
+                        <filter string="Associate Member" name = "groupby_associate_member" domain="[]" context="{'group_by':'associate_member'}"/>
+                        <filter string=" Membership State" name="groupby_membership_state" domain="[]" context="{'group_by':'membership_state'}"/>
+                        <filter string="Start Date" name="groupby_membership_start" help="Starting Date Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
+                        <filter string="End Date" name="groupby_membership_stop" help="Ending Date Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
                     </group>
                 </search>
             </field>

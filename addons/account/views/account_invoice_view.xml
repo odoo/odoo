@@ -657,12 +657,12 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
-                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter name="groupby_commercial_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
+                        <filter string="Salesperson" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                        <filter name="groupby_state" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Invoice Date" name="invoicedate" context="{'group_by':'date_invoice'}"/>
-                        <filter string="Due Date" name="duedate" context="{'group_by':'date_due'}"/>
+                        <filter string="Invoice Date" name="groupby_date_invoice" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Due Date" name="groupby_date_due" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
             </field>

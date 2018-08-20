@@ -7,12 +7,12 @@
         <field name="inherit_id" ref="rating.rating_rating_view_search"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='resource']" position="replace">
-                <filter string="Code" name="resource" context="{'group_by':'res_name'}"/>
+            <xpath expr="//filter[@name='groupby_res_name']" position="replace">
+                <filter string="Code" name="groupby_res_name" context="{'group_by':'res_name'}"/>
             </xpath>
-            <xpath expr="//filter[@name='resource']" position="after">
+            <xpath expr="//filter[@name='groupby_res_name']" position="after">
                 <field name="parent_res_name"/>
-                <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
+                <filter string="Livechat Channel" name="groupby_parent_res_name" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
                 <filter string="Creation Date" name="creation_date_filter" date="create_date" default_period="this_week"/>

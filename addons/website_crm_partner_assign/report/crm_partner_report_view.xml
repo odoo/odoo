@@ -12,16 +12,16 @@
                     <field name="grade_id"/>
                     <field name="activation"/>
                     <group  expand="1" string="Group By">
-                        <filter string="Salesperson" name="user"
+                        <filter string="Salesperson" name="groupby_user_id"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" name="sales_team"
+                        <filter string="Sales Team" name="groupby_team_id"
                             context="{'group_by':'team_id'}"/>
-                        <filter string="Partner" name="partner"
+                        <filter string="Partner" name="groupby_partner_id"
                             context="{'group_by':'partner_id'}" />
                         <separator/>
-                        <filter string="Date Partnership" name="group_date_partnership"
+                        <filter string="Date Partnership" name="groupby_date_partnership"
                             context="{'group_by':'date_partnership'}" />
-                        <filter string="Date Review" name="group_date_review"
+                        <filter string="Date Review" name="groupby_date_review"
                             context="{'group_by':'date_review'}" />
                     </group>
                 </search>

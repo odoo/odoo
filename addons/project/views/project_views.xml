@@ -50,11 +50,11 @@
                     <separator/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
-                        <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" name="task" context="{'group_by':'name'}"/>
-                        <filter string="Assigned to" name="user" context="{'group_by':'user_id'}"/>
-                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Project" name="groupby_project_id" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" name="groupby_name" context="{'group_by':'name'}"/>
+                        <filter string="Assigned to" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                        <filter string="Stage" name="groupby_stage_id" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -197,8 +197,8 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Manager" name="Manager" context="{'group_by':'user_id'}"/>
-                        <filter string="Contact" name="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Manager" name="groupby_user_id" context="{'group_by':'user_id'}"/>
+                        <filter string="Contact" name="groupby_partner_id" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
             </field>

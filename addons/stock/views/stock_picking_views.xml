@@ -373,12 +373,12 @@
                     <field name="picking_type_id"/>
                     <field name="group_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" name="order_date" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" name="expected_date" domain="[]" context="{'group_by':'scheduled_date'}"/>
-                        <filter string="Origin" name="origin" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
-                        <filter string="Procurement Group" name="procurement_group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Status" name="groupby_state" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" name="groupby_date" domain="[]"  context="{'group_by':'date'}"/>
+                        <filter string="Expected Date" name="groupby_scheduled_date" domain="[]" context="{'group_by':'scheduled_date'}"/>
+                        <filter string="Origin" name="groupby_origin" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter name="groupby_picking_type_id" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                        <filter string="Procurement Group" name="groupby_group_id" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>
             </field>

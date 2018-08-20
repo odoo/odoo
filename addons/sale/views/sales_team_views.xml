@@ -26,8 +26,8 @@
             <field name="model">account.invoice.report</field>
             <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//group/filter[@name='user']" position="after">
-                    <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
+                <xpath expr="//group/filter[@name='groupby_user_id']" position="after">
+                    <filter string="Sales Team" name="groupby_team_id" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
             </field>
         </record>

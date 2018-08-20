@@ -85,15 +85,15 @@
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <field name="account_analytic_id"/>
                 <group expand="1" string="Group By">
-                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
-                    <filter string="Salesperson" name='user' context="{'group_by':'user_id'}"/>
-                    <filter string="Product Category" name="category_product" context="{'group_by':'categ_id','residual_invisible':True}"/>
-                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Partner" name="groupby_partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Salesperson" name='groupby_user_id' context="{'group_by':'user_id'}"/>
+                    <filter string="Product Category" name="groupby_categ_id" context="{'group_by':'categ_id','residual_invisible':True}"/>
+                    <filter string="Status" name="groupby_state" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="groupby_company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
-                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
-                    <filter string="Due Date" name="duemonth" context="{'group_by':'date_due:month'}"/>
-                    <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
+                    <filter string="Date" name="groupby_date" context="{'group_by':'date'}"/>
+                    <filter string="Due Date" name="groupby_date_due_month" context="{'group_by':'date_due:month'}"/>
+                    <filter string="Analytic Account" name="groupby_account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                 </group>
             </search>
         </field>

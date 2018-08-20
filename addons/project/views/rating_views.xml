@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="rating.rating_rating_view_search"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='resource']" position="after">
+            <xpath expr="//filter[@name='groupby_res_name']" position="after">
                 <field name="parent_res_name"/>
-                <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
+                <filter string="Project" name="groupby_parent_res_name" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
                 <filter string="Creation Date" name="rating_last_30_days" date="create_date" default_period="last_30_days"/>

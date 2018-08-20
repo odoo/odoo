@@ -22,9 +22,9 @@
                     <filter name="date_filter" string="Date" date="date" default_period="today"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_order_id" string="By Order" context="{'group_by':'order_id'}"/>
-                        <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
-                        <filter name="group_by_date" string="Order Date" context="{'group_by':'date'}" help="Vendor Orders by Date"/>
+                        <filter name="groupby_order_id" string="By Order" context="{'group_by':'order_id'}"/>
+                        <filter name="groupby_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
+                        <filter name="groupby_date" string="Order Date" context="{'group_by':'date'}" help="Vendor Orders by Date"/>
                     </group>
                 </search>
             </field>
@@ -40,8 +40,8 @@
                     <field name="user_id"/>
                     <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
                     <separator/>
-                    <filter name='is_mine_group' string="My Account grouped" domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
-                    <filter name="group_by_user" string="By User" context="{'group_by':'user_id'}"/>
+                    <filter name='groupby_mine_user_id' string="My Account grouped" domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
+                    <filter name="groupby_user_id" string="By User" context="{'group_by':'user_id'}"/>
                 </search>
             </field>
         </record>
@@ -54,7 +54,7 @@
                     <field name="description"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
+                        <filter name='groupby_user_id' string="By Employee" context="{'group_by':'user_id'}"/>
                     </group>
                 </search>
             </field>
@@ -186,7 +186,7 @@
             <field name="res_model">lunch.cashmove</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="lunch_cashmove_view_search"/>
-            <field name="context">{"search_default_is_mine_group":1}</field>
+            <field name="context">{"search_default_groupby_mine_user_id":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
@@ -206,7 +206,7 @@
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree,kanban</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
-            <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
+            <field name="context">{"search_default_groupby_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 Nothing to order today
@@ -227,7 +227,7 @@
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree,kanban</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
-            <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
+            <field name="context">{"search_default_groupby_date":1, "search_default_groupby_supplier":1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 No lunch order yet
@@ -248,7 +248,7 @@
             <field name="res_model">lunch.cashmove</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="lunch_cashmove_view_search_2"/>
-            <field name="context">{"search_default_group_by_user":1}</field>
+            <field name="context">{"search_default_groupby_user_id":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

@@ -70,7 +70,7 @@
                     <field name="url_to"/>
 
                     <group string="Group By">
-                        <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'type'}"/>
+                        <filter string="Redirection Type" name="groupby_type" domain="[]" context="{'group_by': 'type'}"/>
                     </group>
                 </search>
             </field>
@@ -247,9 +247,9 @@
                     <field name="url"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <group string="Group By">
-                        <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
-                        <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
+                        <filter string="name" name="groupby_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="url" name="groupby_url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="website"  name="groupby_website_id" domain="[]" context="{'group_by':'website_id'}"/>
                     </group>
                 </search>
             </field>
