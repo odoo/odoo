@@ -111,7 +111,16 @@ var MockServer = Class.extend({
             args = JSON.parse(JSON.stringify(args));
         }
         var def = this._performRpc(route, args);
-        var abort = def.abort;
+
+        var abort = def.abort || def.reject;
+        if (abort) {
+            abort = abort.bind(def);
+        } else {
+            abort = function () {
+                throw new Error("Can't abort this request");
+            };
+        }
+
         def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (debug) {
@@ -125,8 +134,10 @@ var MockServer = Class.extend({
             }
             return $.Deferred().reject(errorString, event || $.Event());
         });
-        def.abort = abort;
-        return def;
+
+        var promise = def.promise();
+        promise.abort = abort;
+        return promise;
     },
 
     //--------------------------------------------------------------------------
@@ -1021,7 +1032,91 @@ var MockServer = Class.extend({
     /**
      * Dispatch a RPC call to the correct helper function
      *
+     * @private
+     * @param {string} route
+     * @param {Object} args
+     * @returns {Deferred<any>}
+     *          Resolved with the result of the RPC. If the RPC should fail, the
+     *          deferred should either be rejected or the call should throw an
+     *          exception (@see performRpc for error handling).
+     */
+    _dispatchPerformRpc: function (route, args) {
+        switch (route) {
+            case '/web/action/load':
+                return this._mockLoadAction(args.kwargs);
+
+            case '/web/dataset/search_read':
+                return this._mockSearchReadController(args);
+
+            case '/web/dataset/resequence':
+                return null;
+        }
+        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
+            return null;
+        }
+        switch (args.method) {
+            case 'copy':
+                return this._mockCopy(args.model, args.args[0]);
+
+            case 'create':
+                return this._mockCreate(args.model, args.args[0]);
+
+            case 'default_get':
+                return this._mockDefaultGet(args.model, args.args, args.kwargs);
+
+            case 'fields_get':
+                return this._mockFieldsGet(args.model, args.args);
+
+            case 'load_views':
+                return this._mockLoadViews(args.model, args.kwargs);
+
+            case 'name_get':
+                return this._mockNameGet(args.model, args.args);
+
+            case 'name_create':
+                return this._mockNameCreate(args.model, args.args);
+
+            case 'name_search':
+                return this._mockNameSearch(args.model, args.args, args.kwargs);
+
+            case 'onchange':
+                return this._mockOnchange(args.model, args.args);
+
+            case 'read':
+                return this._mockRead(args.model, args.args, args.kwargs);
+
+            case 'read_group':
+                return this._mockReadGroup(args.model, args.kwargs);
+
+            case 'read_progress_bar':
+                return this._mockReadProgressBar(args.model, args.kwargs);
+
+            case 'search_count':
+                return this._mockSearchCount(args.model, args.args);
+
+            case 'search_read':
+                return this._mockSearchRead(args.model, args.args, args.kwargs);
+
+            case 'unlink':
+                return this._mockUnlink(args.model, args.args);
+
+            case 'write':
+                return this._mockWrite(args.model, args.args);
+        }
+        var model = this.data[args.model];
+        if (model && typeof model[args.method] === 'function') {
+            return this.data[args.model][args.method](args.args, args.kwargs);
+        }
+
+        throw new Error("Unimplemented route: " + route);
+    },
+
+    /**
+     * Dispatch a RPC call to the correct helper function, and add to the request
+     * the abord method like the jQery rpc call.
+     *
      * @see performRpc
+     * @see _dispatchPerformRpc
      *
      * @private
      * @param {string} route
@@ -1032,74 +1127,11 @@ var MockServer = Class.extend({
      *          exception (@see performRpc for error handling).
      */
     _performRpc: function (route, args) {
-        switch (route) {
-            case '/web/action/load':
-                return $.when(this._mockLoadAction(args.kwargs));
-
-            case '/web/dataset/search_read':
-                return $.when(this._mockSearchReadController(args));
-
-            case '/web/dataset/resequence':
-                return $.when();
-        }
-        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
-            return $.when();
-        }
-        switch (args.method) {
-            case 'copy':
-                return $.when(this._mockCopy(args.model, args.args[0]));
-
-            case 'create':
-                return $.when(this._mockCreate(args.model, args.args[0]));
-
-            case 'default_get':
-                return $.when(this._mockDefaultGet(args.model, args.args, args.kwargs));
-
-            case 'fields_get':
-                return $.when(this._mockFieldsGet(args.model, args.args));
-
-            case 'load_views':
-                return $.when(this._mockLoadViews(args.model, args.kwargs));
-
-            case 'name_get':
-                return $.when(this._mockNameGet(args.model, args.args));
-
-            case 'name_create':
-                return $.when(this._mockNameCreate(args.model, args.args));
-
-            case 'name_search':
-                return $.when(this._mockNameSearch(args.model, args.args, args.kwargs));
-
-            case 'onchange':
-                return $.when(this._mockOnchange(args.model, args.args));
-
-            case 'read':
-                return $.when(this._mockRead(args.model, args.args, args.kwargs));
-
-            case 'read_group':
-                return $.when(this._mockReadGroup(args.model, args.kwargs));
-
-            case 'read_progress_bar':
-                return $.when(this._mockReadProgressBar(args.model, args.kwargs));
-
-            case 'search_count':
-                return $.when(this._mockSearchCount(args.model, args.args));
-
-            case 'search_read':
-                return $.when(this._mockSearchRead(args.model, args.args, args.kwargs));
-
-            case 'unlink':
-                return $.when(this._mockUnlink(args.model, args.args));
-
-            case 'write':
-                return $.when(this._mockWrite(args.model, args.args));
-        }
-        var model = this.data[args.model];
-        if (model && typeof model[args.method] === 'function') {
-            return $.when(this.data[args.model][args.method](args.args, args.kwargs));
-        }
-
-        throw new Error("Unimplemented route: " + route);
+        var def = $.when(this._dispatchPerformRpc(route, args));
+        def.abort = function () {
+            throw new Error("Can't abort the request, the request are already resolved in the mock server");
+        };
+        return def;
     },
     /**
      * helper function: traverse a tree and apply the function f to each of its
