@@ -73,21 +73,26 @@ odoo.define('partner.autocomplete.core', function (require) {
 
             rpc.query({
                 model: 'res.partner',
-                method: "vies_vat_search",
+                method: "search_by_vat",
                 args: [value],
             }).then(function (vat_match) {
-                if (vat_match) {
-                    vat_match.logo = '';
+                if(vat_match){
+                    vat_match.logo = vat_match.logo || '';
                     vat_match.label = vat_match.name;
-                    vat_match.description = vat_match.vat + ' ' + _t('(source: VIES-VAT)');
+                    vat_match.description = vat_match.vat;
 
-                    self.getClearbitSuggestions(vat_match.short_name, true).then(function (suggestions) {
-                        suggestions.unshift(vat_match);
-                        def.resolve(suggestions);
-                    });
-                } else {
-                    def.resolve([vat_match]);
-                }
+                    if (!vat_match.domain) {
+                        vat_match.description += ' ' + _t('(source: VIES-VAT)');
+
+                        self.getClearbitSuggestions(vat_match.name, true).then(function (suggestions) {
+                            suggestions.map(function(suggestion){
+                                suggestion.company_data_id = vat_match.company_data_id;
+                            });
+                            suggestions.unshift(vat_match);
+                            def.resolve(suggestions);
+                        });
+                    } else def.resolve([vat_match]);
+                } else def.reject()
             });
 
             this._dropPrevious.add(def);
@@ -135,11 +140,11 @@ odoo.define('partner.autocomplete.core', function (require) {
          * @returns Promise
          * @private
          */
-        enrichCompany: function (company_domain) {
+        enrichCompany: function (company_domain, company_data_id) {
             return rpc.query({
                 model: 'res.partner',
                 method: 'enrich_company',
-                args: [company_domain],
+                args: [company_domain, company_data_id],
             });
         },
 

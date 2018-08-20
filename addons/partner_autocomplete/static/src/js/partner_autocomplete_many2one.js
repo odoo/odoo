@@ -42,7 +42,7 @@ odoo.define('partner.autocomplete.many2one', function (require) {
                                 label: suggestion.name + ' (' + suggestion.domain + ')',
                                 value: suggestion.domain,
                                 action: function () {
-                                    self._createPartner(suggestion.domain);
+                                    self._createPartner(suggestion);
                                 },
                                 classname: 'o_m2o_dropdown_option'
                             })
@@ -63,15 +63,15 @@ odoo.define('partner.autocomplete.many2one', function (require) {
          * @returns Promise
          * @private
          */
-        _createPartner: function (company_domain) {
+        _createPartner: function (company) {
             var self = this;
             self.$('input').val('');
 
             // Fetch additionnal company info via Autocomplete Enrichment API
-            var enrichPromise = Autocomplete.enrichCompany(company_domain);
+            var enrichPromise = Autocomplete.enrichCompany(company.domain);
 
             // Get logo
-            var logoPromise = Autocomplete.getCompanyLogo(company_domain);
+            var logoPromise = Autocomplete.getCompanyLogo(company.domain);
 
             return $.when(enrichPromise, logoPromise).done(function (data, logo) {
                 var context = {
