@@ -1,11 +1,11 @@
 <odoo>
 	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'invoice'" class="active">
+            <li t-if="page_name == 'invoice'" class="breadcrumb-item active">
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
                 <t t-else="">Invoices</t>
             </li>
-            <li t-if="invoice">
+            <li t-if="invoice" class="breadcrumb-item">
                 <t t-esc="invoice.number"/>
             </li>
         </xpath>

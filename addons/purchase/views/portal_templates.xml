@@ -3,11 +3,11 @@
 
   <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="portal.portal_layout" priority="25">
     <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-      <li t-if="page_name == 'purchase' or purchase_order">
+      <li t-if="page_name == 'purchase' or purchase_order" class="breadcrumb-item">
         <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
         <t t-else="">Purchase Orders</t>
       </li>
-      <li t-if="purchase_order">
+      <li t-if="purchase_order" class="breadcrumb-item">
         <t t-esc="purchase_order.name"/>
       </li>
     </xpath>
