@@ -583,7 +583,7 @@ var ListRenderer = BasicRenderer.extend({
                     .data('id', record.id)
                     .append($cells);
         if (this.hasSelectors) {
-            $tr.prepend(this._renderSelector('td'));
+            $tr.prepend(this._renderSelector('td', !record.res_id));
         }
         this._setDecorationClasses(record, $tr);
         return $tr;
@@ -610,8 +610,9 @@ var ListRenderer = BasicRenderer.extend({
      * @param {any} tag either th or td
      * @returns {jQueryElement}
      */
-    _renderSelector: function (tag) {
+    _renderSelector: function (tag, disable) {
         var $content = dom.renderCheckbox();
+        $content.find("input[type='checkbox']").prop('disabled', disable);
         return $('<' + tag + ' width="1">')
                     .addClass('o_list_record_selector')
                     .append($content);
@@ -770,7 +771,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onToggleSelection: function (event) {
         var checked = $(event.currentTarget).prop('checked') || false;
-        this.$('tbody .o_list_record_selector input').prop('checked', checked);
+        this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
     },
 });
