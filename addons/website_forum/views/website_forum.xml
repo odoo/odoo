@@ -269,8 +269,8 @@
 
                 <t t-esc="question.child_count"/>
                 <t t-if="question.post_type == 'question'">
-                    <t t-if="question.child_count&lt;=1">View</t>
-                    <t t-else="">Views</t>
+                    <t t-if="question.child_count&lt;=1">Answer</t>
+                    <t t-else="">Answers</t>
                 </t>
                 <t t-if="question.post_type != 'question'">
                     <t t-if="question.child_count&lt;=1">Comment</t>
