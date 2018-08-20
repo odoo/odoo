@@ -270,7 +270,7 @@
     <template id="categories_recursive" name="Category list">
         <li class="nav-item">
             <a t-att-href="keep('/shop/category/' + slug(c), category=0)" t-attf-class="nav-link#{' active' if c.id == int(category or 0) else ''}">
-                <span t-field="c.name"/> <span t-if="not c.website_published" class="text-danger">(Unpublished)</span>
+                <span t-field="c.name"/>
             </a>
             <ul t-if="c.child_id" class="nav nav-pills flex-column nav-hierarchy">
                 <t t-foreach="c.child_id" t-as="c">

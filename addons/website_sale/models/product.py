@@ -53,7 +53,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata", "website.published.multi.mixin"]
+    _inherit = ["website.seo.metadata", "website.multi.mixin"]
     _description = "Website Product Category"
     _order = "sequence, name"
 
