@@ -160,8 +160,8 @@ class Employee(models.Model):
         leave_data = {}
         for holiday in holidays:
             leave_data[holiday.employee_id.id] = {}
-            leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from
-            leave_data[holiday.employee_id.id]['leave_date_to'] = holiday.date_to
+            leave_data[holiday.employee_id.id]['leave_date_from'] = holiday.date_from.date()
+            leave_data[holiday.employee_id.id]['leave_date_to'] = holiday.date_to.date()
             leave_data[holiday.employee_id.id]['current_leave_state'] = holiday.state
             leave_data[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
 
