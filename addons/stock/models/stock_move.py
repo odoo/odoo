@@ -1048,6 +1048,9 @@ class StockMove(models.Model):
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
                     move.move_dest_ids._action_cancel()
+                else:
+                    # but at least update quantities
+                    move._propagate_qty_to_next_move((0 - move.product_uom_qty))
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
