@@ -126,6 +126,7 @@ class StockPackageLevel(models.Model):
                         'package_level_id': package_level.id,
                     })
 
+    @api.model
     def create(self, vals):
         result = super(StockPackageLevel, self).create(vals)
         if vals.get('location_dest_id'):
