@@ -831,7 +831,7 @@ var MailManager =  AbstractService.extend({
             (filter === 'mailbox_inbox' || !filter)
         ) {
             elems.push({
-                title: _t("<b>OdooBot</b> has a request"),
+                title: _t("OdooBot has a request"),
                 imageSRC: "/mail/static/src/img/odoobot.png",
                 status: 'bot',
                 body:  _t("Enable desktop notifications to chat"),
