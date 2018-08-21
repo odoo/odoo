@@ -49,7 +49,7 @@ odoo.define('partner.autocomplete.core', function (require) {
          * @private
          */
         validateSearchTerm: function (search_val) {
-            return search_val && search_val.length > 1;
+            return search_val && search_val.length > 2;
         },
 
         /**
@@ -60,6 +60,44 @@ odoo.define('partner.autocomplete.core', function (require) {
          * @private
          */
         autocomplete: function (value) {
+            if (this._isVAT(value)) {
+                return this.getVatSuggestions(value);
+            } else {
+                return this.getNameSuggestions(value);
+            }
+        },
+
+        getVatSuggestions: function (value) {
+            var self = this;
+            var def = $.Deferred();
+
+            rpc.query({
+                model: 'res.partner',
+                method: "read_by_vat",
+                args: [value],
+            }).then(function (vat_match) {
+                if(vat_match){
+                    vat_match.logo = vat_match.logo || '';
+                    vat_match.label = vat_match.name;
+                    vat_match.description = vat_match.vat;
+
+                    if (!vat_match.domain) {
+                        self.getNameSuggestions(vat_match.name).then(function (suggestions) {
+                            suggestions.map(function(suggestion){
+                                suggestion.company_data_id = vat_match.company_data_id;
+                            });
+                            suggestions.unshift(vat_match);
+                            def.resolve(suggestions);
+                        });
+                    } else def.resolve([vat_match]);
+                } else def.reject()
+            });
+
+            this._dropPrevious.add(def);
+            return def;
+        },
+
+        getNameSuggestions: function (value) {
             var def = rpc.query({
                 model: 'res.partner',
                 method: "autocomplete",
@@ -69,6 +107,12 @@ odoo.define('partner.autocomplete.core', function (require) {
                     suggestion.label = suggestion.name;
                     if(suggestion.vat) suggestion.description = suggestion.vat;
                     else if(suggestion.website) suggestion.description = suggestion.website;
+
+                    if(suggestion.country_id && suggestion.country_id.display_name){
+                        if(suggestion.description) suggestion.description += _.str.sprintf(' (%s)', suggestion.country_id.display_name);
+                        else suggestion.description += suggestion.country_id.display_name;
+                    }
+
                     return suggestion;
                 });
                 return suggestions;
@@ -77,63 +121,23 @@ odoo.define('partner.autocomplete.core', function (require) {
             this._dropPrevious.add(def);
             return def;
 
-            // if (this._isVAT(value)) {
-            //     return this.getVatSuggestions(value);
-            // } else {
-            //     return this.getClearbitSuggestions(value);
-            // }
+            // var def = $.ajax({
+            //     url: _.str.sprintf('https://autocomplete.clearbit.com/v1/companies/suggest?query=%s', value),
+            //     type: 'GET',
+            //     dataType: 'json'
+            // }).then(function(suggestions){
+            //     suggestions.map(function(suggestion){
+            //         suggestion.label = suggestion.name;
+            //         suggestion.description = suggestion.domain;
+            //         // if( addSource) suggestion.description += ' ' + _t('(source: Clearbit)');
+            //         return suggestion;
+            //     });
+            //     return suggestions;
+            // });
+            //
+            // this._dropPrevious.add(def);
+            // return def;
         },
-
-        // getVatSuggestions: function (value) {
-        //     var self = this;
-        //     var def = $.Deferred();
-        //
-        //     rpc.query({
-        //         model: 'res.partner',
-        //         method: "read_by_vat",
-        //         args: [value],
-        //     }).then(function (vat_match) {
-        //         if(vat_match){
-        //             vat_match.logo = vat_match.logo || '';
-        //             vat_match.label = vat_match.name;
-        //             vat_match.description = vat_match.vat;
-        //
-        //             if (!vat_match.domain) {
-        //                 // vat_match.description += ' ' + _t('(source: VIES-VAT)');
-        //
-        //                 self.getClearbitSuggestions(vat_match.name, true).then(function (suggestions) {
-        //                     suggestions.map(function(suggestion){
-        //                         suggestion.company_data_id = vat_match.company_data_id;
-        //                     });
-        //                     suggestions.unshift(vat_match);
-        //                     def.resolve(suggestions);
-        //                 });
-        //             } else def.resolve([vat_match]);
-        //         } else def.reject()
-        //     });
-        //
-        //     this._dropPrevious.add(def);
-        //     return def;
-        // },
-
-        // getClearbitSuggestions: function (value, addSource) {
-        //     var def = $.ajax({
-        //         url: _.str.sprintf('https://autocomplete.clearbit.com/v1/companies/suggest?query=%s', value),
-        //         type: 'GET',
-        //         dataType: 'json'
-        //     }).then(function(suggestions){
-        //         suggestions.map(function(suggestion){
-        //             suggestion.label = suggestion.name;
-        //             suggestion.description = suggestion.domain;
-        //             // if( addSource) suggestion.description += ' ' + _t('(source: Clearbit)');
-        //             return suggestion;
-        //         });
-        //         return suggestions;
-        //     });
-        //
-        //     this._dropPrevious.add(def);
-        //     return def;
-        // },
 
         /**
          * Get the company logo as Base 64 image from domain
@@ -160,7 +164,7 @@ odoo.define('partner.autocomplete.core', function (require) {
             return rpc.query({
                 model: 'res.partner',
                 method: 'enrich_company',
-                args: [company.domain, company.company_data_id],
+                args: [company.website, company.company_data_id],
             });
         },
 
@@ -170,6 +174,12 @@ odoo.define('partner.autocomplete.core', function (require) {
          * @returns Promise
          */
         getCreateData: function (company) {
+            var removeUselessFields = function(company){
+                delete company.label;
+                delete company.description;
+                delete company.logo;
+            };
+
             var def = $.Deferred();
 
             // Fetch additional company info via Autocomplete Enrichment API
@@ -178,10 +188,11 @@ odoo.define('partner.autocomplete.core', function (require) {
             // Get logo
             var logoPromise = company.logo ? this.getCompanyLogo(company.logo) : false;
 
-            // Delete logo attribute to avoid "Field_changed" errors
-            delete company.logo;
+            // Delete attribute to avoid "Field_changed" errors
+            removeUselessFields(company)
 
             $.when(enrichPromise, logoPromise).done(function (company_data, logo_data) {
+                removeUselessFields(company_data)
                 def.resolve({
                     company: company_data,
                     logo: logo_data

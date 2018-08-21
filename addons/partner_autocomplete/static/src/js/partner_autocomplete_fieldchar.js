@@ -112,6 +112,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                 if (!data.company.country_id) delete data.company.country_id; // Delete if FALSE, else it will reset state_id
                 if (!data.company.state_id) delete data.company.state_id; // Delete if FALSE, else it will reset country_id
 
+                console.log( data )
                 self.trigger_up('field_changed', {
                     dataPointID: self.dataPointID,
                     changes: data.company,
@@ -130,7 +131,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
          */
         _suggestCompanies: function (value) {
             var self = this;
-            if (value.length > 0 && Autocomplete.isOnline()) {
+            if (Autocomplete.validateSearchTerm(value) && Autocomplete.isOnline()) {
                 return Autocomplete.autocomplete(value).then(function(suggestions){
                     self.suggestions = suggestions;
                     self._showDropdown()
