@@ -313,7 +313,12 @@ var PivotModel = AbstractModel.extend({
     get: function (options) {
         var isRaw = options && options.raw;
         if (!this.data.has_data) {
-            return {has_data: false};
+            return {
+                has_data: false,
+                colGroupBys: this.data.main_col.groupbys,
+                rowGroupBys:  this.data.main_row.groupbys,
+                measures: this.data.measures,
+            };
         }
         return {
             colGroupBys: this.data.main_col.groupbys,
