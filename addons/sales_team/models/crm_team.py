@@ -37,8 +37,8 @@ class CrmTeam(models.Model):
                 try:
                     default_team_id.check_access_rule('read')
                 except AccessError:
-                    return False
-                if self.env.context.get('default_type') != 'lead' or default_team_id.use_leads:
+                    return self.env['crm.team']
+                if self.env.context.get('default_type') != 'lead' or default_team_id.use_leads and default_team_id.active:
                     team_id = default_team_id
         return team_id
 
