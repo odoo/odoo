@@ -129,7 +129,7 @@ class AccountVoucher(models.Model):
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
                 total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
+                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
@@ -288,10 +288,11 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
+                'quantity': line.quantity,
+                'product_id': line.product_id.id,
                 'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
                 'date': self.account_date,
