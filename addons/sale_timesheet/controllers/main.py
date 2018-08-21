@@ -3,6 +3,7 @@
 from ast import literal_eval
 import babel
 from dateutil.relativedelta import relativedelta
+import itertools
 import json
 
 from odoo import http, fields, _
@@ -88,7 +89,12 @@ class SaleTimesheetController(http.Controller):
         #
         # Time Repartition (per employee per billable types)
         #
-        employees = projects.mapped('tasks.user_id.employee_ids') | request.env['account.analytic.line'].search([('project_id', 'in', projects.ids)]).mapped('employee_id')
+        user_ids = request.env['project.task'].sudo().search_read([('project_id', 'in', projects.ids), ('user_id', '!=', False)], ['user_id'])
+        user_ids = [user_id['user_id'][0] for user_id in user_ids]
+        employee_ids = request.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
+        # flatten the list of list
+        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
+        employees = request.env['hr.employee'].sudo().browse(employee_ids) | request.env['account.analytic.line'].search([('project_id', 'in', projects.ids)]).mapped('employee_id')
         repartition_domain = [('project_id', 'in', projects.ids), ('employee_id', '!=', False), ('timesheet_invoice_type', '!=', False)]  # force billable type
         repartition_data = request.env['account.analytic.line'].read_group(repartition_domain, ['employee_id', 'timesheet_invoice_type', 'unit_amount'], ['employee_id', 'timesheet_invoice_type'], lazy=False)
 

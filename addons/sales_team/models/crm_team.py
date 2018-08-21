@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 import json
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
@@ -33,8 +33,13 @@ class CrmTeam(models.Model):
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         if not team_id:
             default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
-            if default_team_id and (self.env.context.get('default_type') != 'lead' or default_team_id.use_leads):
-                team_id = default_team_id
+            if default_team_id:
+                try:
+                    default_team_id.check_access_rule('read')
+                except AccessError:
+                    return self.env['crm.team']
+                if self.env.context.get('default_type') != 'lead' or default_team_id.use_leads and default_team_id.active:
+                    team_id = default_team_id
         return team_id
 
     def _get_default_favorite_user_ids(self):
