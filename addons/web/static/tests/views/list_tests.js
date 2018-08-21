@@ -626,7 +626,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             groupBy: ['foo'],
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree>' +
                     '<field name="foo"/>' +
                     '<field name="int_field" sum="Sum"/>' +
