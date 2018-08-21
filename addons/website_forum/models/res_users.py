@@ -86,7 +86,9 @@ class Users(models.Model):
                 params['forum_id'] = forum_id
             base_url = self.env['ir.config_parameter'].get_param('web.base.url')
             token_url = base_url + '/forum/validate_email?%s' % urlencode(params)
-            activation_template.sudo().with_context(token_url=token_url).send_mail(self.id, force_send=True)
+            with self._cr.savepoint():
+                activation_template.sudo().with_context(token_url=token_url).send_mail(
+                    self.id, force_send=True, raise_exception=True)
         return True
 
     @api.one
