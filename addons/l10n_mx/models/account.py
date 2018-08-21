@@ -50,6 +50,15 @@ class AccountAccount(models.Model):
             tags = self.mx_search_tags(self.code)
             self.tag_ids = tags
 
+    @api.onchange('tag_ids')
+    def _onchange_tag(self):
+        if self.company_id.country_id.id == self.env.ref('base.mx').id and len(
+                self.tag_ids.filtered(lambda t: t.color == 4).ids) > 1:
+            return {'warning': {
+                'title': 'Error!',
+                'message': _('Only must be assigned one Mexican tag by account')
+            }}
+
 
 class AccountAccountTag(models.Model):
     _inherit = 'account.account.tag'
