@@ -60,7 +60,7 @@ var ListRenderer = BasicRenderer.extend({
                 return py.parse(py.tokenize(value));
             }).value();
         this.hasSelectors = params.hasSelectors;
-        this.selection = [];
+        this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
     },
@@ -81,7 +81,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     updateState: function (state, params) {
         this._processColumns(params.columnInvisibleFields || {});
-        this.selection = [];
+        if (params.selectedRecords) {
+            this.selection = params.selectedRecords;
+        }
         return this._super.apply(this, arguments);
     },
 

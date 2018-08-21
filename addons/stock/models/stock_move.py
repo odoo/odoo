@@ -716,7 +716,7 @@ class StockMove(models.Model):
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
             move.write({'picking_id': picking.id})
-
+            move._assign_picking_post_process(new=recompute)
             # If this method is called in batch by a write on a one2many and
             # at some point had to create a picking, some next iterations could
             # try to find back the created picking. As we look for it by searching
@@ -725,6 +725,9 @@ class StockMove(models.Model):
             if recompute:
                 move.recompute()
         return True
+
+    def _assign_picking_post_process(self, new=False):
+        pass
 
     def _get_new_picking_values(self):
         """ Prepares a new picking for this move as it could not be assigned to

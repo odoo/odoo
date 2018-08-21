@@ -480,7 +480,7 @@ class PurchaseOrder(models.Model):
                     'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
                     'min_qty': 0.0,
-                    'price': self.currency_id.compute(line.price_unit, currency),
+                    'price': self.currency_id.compute(line.price_unit, currency, round=False),
                     'currency_id': currency.id,
                     'delay': 0,
                 }
