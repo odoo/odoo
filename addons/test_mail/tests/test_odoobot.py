@@ -33,7 +33,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
             self.assertNextMessage(
                 self.test_record_employe.with_context({'mail_post_autofollow': True}).message_post(**kwargs),
                 sender=self.odoobot,
-                answer=["Yep, Odoobot is in the place!"] 
+                answer=["Yep, OdooBot is in the place!"]
             )
         # Odoobot should not be a follower but user_employee and user_admin should
         follower = self.test_record.message_follower_ids.mapped('partner_id')
