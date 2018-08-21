@@ -689,7 +689,7 @@ class MailThread(models.AbstractModel):
             view_title = _('View')
 
         default_groups = [
-            ('user', lambda partner: bool(partner.user_ids) and not any(user.share for user in partner.user_ids), {}),
+            ('user', lambda partner: bool(partner.user_ids) and any(not user.share for user in partner.user_ids), {}),
             ('portal', lambda partner: bool(partner.user_ids) and all(user.share for user in partner.user_ids), {
                 'has_button_access': False,
             }),
