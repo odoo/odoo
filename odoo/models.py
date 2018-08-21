@@ -55,7 +55,7 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, pycompat, groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 
@@ -3232,11 +3232,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # set the value of non-column fields
         if other_fields:
             # discard default values from context
-            other = self.with_context({
-                key: val
-                for key, val in self._context.items()
-                if not key.startswith('default_')
-            })
+            other = self.with_context(clean_context(self._context))
 
             for field in sorted(other_fields, key=attrgetter('_sequence')):
                 field.write(other, vals[field.name])
@@ -3404,11 +3400,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # set the value of non-column fields
             if other_fields:
                 # discard default values from context
-                other = self.with_context({
-                    key: val
-                    for key, val in self._context.items()
-                    if not key.startswith('default_')
-                })
+                other = self.with_context(clean_context(self._context))
 
                 for field in sorted(other_fields, key=attrgetter('_sequence')):
                     field.write(other, vals[field.name], create=True)
