@@ -40,6 +40,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_move_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
                  'associate_member.membership_state')
@@ -105,12 +106,16 @@ class Partner(models.Model):
             if partner.membership_stop and today > partner.membership_stop:
                 res[partner.id] = 'free' if partner.free_member else 'old'
                 continue
+            if partner.associate_member:
+                res_state = partner.associate_member._membership_state()
+                res[partner.id] = res_state[partner.associate_member.id]
+                continue
 
             s = 4
             if partner.member_lines:
                 for mline in partner.member_lines:
                     if (mline.date_to or '0000-00-00') >= today and (mline.date_from or '0000-00-00') <= today:
-                        if mline.account_invoice_line.invoice_id:
+                        if mline.account_invoice_line.invoice_id.partner_id == partner:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':
                                 s = 0
@@ -145,9 +150,6 @@ class Partner(models.Model):
                     res[partner.id] = 'none'
             if partner.free_member and s != 0:
                 res[partner.id] = 'free'
-            if partner.associate_member:
-                res_state = partner.associate_member._membership_state()
-                res[partner.id] = res_state[partner.associate_member.id]
         return res
 
     @api.one
