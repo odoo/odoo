@@ -165,6 +165,13 @@ class MrpWorkcenter(models.Model):
         times.write({'date_end': fields.Datetime.now()})
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+    @api.model
+    def create(self, vals):
+        # resource_type is 'human' by default. As we are not living in
+        # /r/latestagecapitalism, workcenters are 'material'
+        return super(MrpWorkcenter, self.with_context({
+            'default_resource_type': 'material'})).create(vals)
+
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"
