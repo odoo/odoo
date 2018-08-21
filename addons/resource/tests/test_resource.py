@@ -260,9 +260,11 @@ class TestCalendar(TestResourceCommon):
         time = self.calendar_jean.plan_hours(-10, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
         self.assertEqual(time, datetime_tz(2018, 4, 6, 14, 0, 0, tzinfo=self.jean.tz))
 
-        # zero planning
-        time = self.calendar_jean.plan_hours(0, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
-        self.assertEqual(time, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz))
+        # zero planning with holidays
+        time = self.calendar_jean.plan_hours(0, datetime_tz(2018, 4, 11, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
+        self.assertEqual(time, datetime_tz(2018, 4, 12, 8, 0, 0, tzinfo=self.jean.tz))
+        time = self.calendar_jean.plan_hours(0, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=False)
+        self.assertEqual(time, datetime_tz(2018, 4, 10, 8, 0, 0, tzinfo=self.jean.tz))
 
         # very small planning
         time = self.calendar_jean.plan_hours(0.0002, datetime_tz(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz), compute_leaves=True)
