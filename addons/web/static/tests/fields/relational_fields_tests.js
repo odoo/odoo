@@ -10168,6 +10168,72 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with onchange, required field, shortcut enter', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.onchanges = {
+            turtle_foo: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+            // simulate what happens in the client:
+            // the new value isn't notified directly to the model
+            fieldDebounce: 5000,
+        });
+
+        var value = "hello";
+
+        // add a new line
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        // we want to add a delay to simulate an onchange
+        def = $.Deferred();
+
+        // write something in the field
+        var $input = form.$('input[name="turtle_foo"]');
+        $input.val(value).trigger('input');
+
+        // trigger keydown ENTER
+        $input.trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ENTER,
+            which: $.ui.keyCode.ENTER,
+        }));
+
+        // check that nothing changed before the onchange finished
+        assert.strictEqual($input.val(), value, "input content shouldn't change");
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should still contain only one row");
+
+        // unlock onchange
+        def.resolve();
+
+        // check the current line is added with the correct content and a new line is editable
+        assert.strictEqual(form.$('td.o_data_cell').text(), value);
+        assert.strictEqual(form.$('input[name="turtle_foo"]').val(), '');
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "should now contain two rows");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

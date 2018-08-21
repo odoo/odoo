@@ -114,7 +114,7 @@ var DebouncedField = AbstractField.extend({
      */
     commitChanges: function () {
         if (this._isDirty && this.mode === 'edit') {
-            this._doAction();
+            return this._doAction();
         }
     },
 
@@ -135,7 +135,7 @@ var DebouncedField = AbstractField.extend({
         // do anything (commitChanges ensures that if it has local changes, they
         // are triggered up before the widget is destroyed, if necessary).
         if (!this.isDestroyed()) {
-            this._setValue(this._getValue());
+            return this._setValue(this._getValue());
         }
     },
     /**

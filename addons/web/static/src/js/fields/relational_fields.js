@@ -1124,6 +1124,14 @@ var FieldX2Many = AbstractField.extend({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
+            }).done(function () {
+                if (ev.data.onSuccess) {
+                    ev.data.onSuccess();
+                }
+            }).fail(function () {
+                if (ev.data.onFailure) {
+                    ev.data.onFailure();
+                }
             });
         }
     },
