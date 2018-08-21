@@ -2206,7 +2206,7 @@ var FieldSelection = AbstractField.extend({
     _renderEdit: function () {
         this.$el.empty();
         for (var i = 0 ; i < this.values.length ; i++) {
-            this.$el.append($('<option/>', {
+            this.$el.filter('select').append($('<option/>', {
                 value: JSON.stringify(this.values[i][0]),
                 text: this.values[i][1]
             }));

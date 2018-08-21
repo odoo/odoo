@@ -40,7 +40,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @override
      * @private
      */
-    _render: function () {
+    _renderEdit: function () {
         this._super.apply(this, arguments);
         this._renderTimezoneMismatch();
     },
