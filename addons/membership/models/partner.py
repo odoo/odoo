@@ -39,6 +39,7 @@ class Partner(models.Model):
     @api.depends('member_lines.account_invoice_line.invoice_id.state',
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_move_line_ids',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
                  'associate_member.membership_state')
@@ -114,8 +115,8 @@ class Partner(models.Model):
                             if mstate == 'paid':
                                 s = 0
                                 inv = mline.account_invoice_line.invoice_id
-                                for payment in inv.payment_ids:
-                                    if any(payment.invoice_ids.filtered(lambda inv: inv.type == 'out_refund')):
+                                for ml in inv.payment_move_line_ids:
+                                    if any(ml.invoice_id.filtered(lambda inv: inv.type == 'out_refund')):
                                         s = 2
                                 break
                             elif mstate == 'open' and s != 0:
