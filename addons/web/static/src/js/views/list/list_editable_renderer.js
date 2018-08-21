@@ -487,22 +487,24 @@ ListRenderer.include({
      * @private
      */
     _moveToNextLine: function () {
+        var self = this;
         var record = this.state.data[this.currentRow];
-        var fieldNames = this.canBeSaved(record.id);
-        if (fieldNames.length) {
-            return;
-        }
+        this.commitChanges(record.id).then(function () {
+            var fieldNames = self.canBeSaved(record.id);
+            if (fieldNames.length) {
+                return;
+            }
 
-        if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, 0);
-        } else {
-            var self = this;
-            this.unselectRow().then(function () {
-                self.trigger_up('add_record', {
-                    onFail: self._selectCell.bind(self, 0, 0, {}),
+            if (self.currentRow < self.state.data.length - 1) {
+                self._selectCell(self.currentRow + 1, 0);
+            } else {
+                self.unselectRow().then(function () {
+                    self.trigger_up('add_record', {
+                        onFail: self._selectCell.bind(self, 0, 0, {}),
+                    });
                 });
-            });
-        }
+            }
+        });
     },
     /**
      * @override
