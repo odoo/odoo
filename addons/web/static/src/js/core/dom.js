@@ -74,12 +74,12 @@ return {
 
         function resize() {
             $fixedTextarea.insertAfter($textarea);
-            var heightOffset;
+            var heightOffset = 0;
             var style = window.getComputedStyle($textarea[0], null);
-            if (style.boxSizing === 'content-box') {
-                heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
-            } else {
-                heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+            if (style.boxSizing === 'border-box') {
+                var paddingHeight = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+                var borderHeight = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+                heightOffset = borderHeight + paddingHeight;
             }
             $fixedTextarea.width($textarea.width());
             $fixedTextarea.val($textarea.val());

@@ -1457,6 +1457,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('text fields edit mode inside list have correct height on focus', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<list editable="top">' +
+                    '<field name="txt"/>' +
+                '</list>',
+        });
+
+        // Click to enter edit: in this test we specifically rely on setting
+        // the focus on the textarea to trigger the resize.
+        // The main goal is to test the size is correct, not how it is triggered.
+        list.$('.o_data_cell:first').click();
+        var $textarea = list.$('textarea:first');
+
+        // make sure the correct data is there
+        assert.strictEqual($textarea.val(), this.data.partner.records[0].txt);
+
+        // make sure there is no scroll bar
+        assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
+            "textarea should not have a scroll bar");
+
+        list.destroy();
+    });
+
     QUnit.test('text field translatable', function (assert) {
         assert.expect(3);
 
