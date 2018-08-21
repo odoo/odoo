@@ -27,6 +27,7 @@ from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.tools import pycompat, ustr
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -280,7 +281,7 @@ class MailThread(models.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
-            track_self.message_track(tracked_fields, initial_values)
+            track_self.with_context(clean_context(self._context)).message_track(tracked_fields, initial_values)
 
         return result
 
