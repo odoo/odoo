@@ -91,7 +91,8 @@ return {
         minHeight = (options && options.min_height) || 50;
 
         $fixedTextarea = $('<textarea disabled>', {
-            class: $textarea[0].className,});
+            class: $textarea[0].className,
+        });
 
         var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
         $fixedTextarea.css({
@@ -111,7 +112,7 @@ return {
         resize();
         $textarea.data("auto_resize", true);
 
-        $textarea.on('input focus', resize);
+        $textarea.on('input focus change', resize);
         if (options.parent) {
             core.bus.on('DOM_updated', options.parent, resize);
             core.bus.on('view_shown', options.parent, resize);

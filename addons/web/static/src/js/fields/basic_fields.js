@@ -1066,7 +1066,17 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         }
         return this._super();
     },
-
+    /**
+     * Override to force a resize of the textarea when its value has changed
+     *
+     * @override
+     */
+    reset: function () {
+        var self = this;
+        return $.when(this._super.apply(this, arguments)).then(function () {
+            self.$input.trigger('change');
+        });
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
