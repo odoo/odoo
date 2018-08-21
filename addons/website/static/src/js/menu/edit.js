@@ -2,6 +2,7 @@ odoo.define('website.editMenu', function (require) {
 'use strict';
 
 var core = require('web.core');
+var session = require('web.session');
 var weContext = require('web_editor.context');
 var editor = require('web_editor.editor');
 var websiteNavbarData = require('website.navbar');
@@ -33,6 +34,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
+        var self = this;
         var def = this._super.apply(this, arguments);
 
         // If we auto start the editor, do not show a welcome message
@@ -47,7 +49,15 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
 
         // If readonly empty page, show the welcome message
-        this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
+        this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message', {
+            websiteName: session.website_name,
+        }));
+        // Hack to show to tooltip guide area only if there actually is a tooltip guiding the user.
+        setTimeout(function () {
+            if ($('.o_tooltip').not(self.$welcomeMessage.find('.o_tooltip')).length) {
+                self.$welcomeMessage.find('.o_tooltip_container').addClass('show');
+            }
+        }, 2000);
         this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
         $wrap.empty().append(this.$welcomeMessage);
 

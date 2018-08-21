@@ -161,9 +161,10 @@ class Website(models.Model):
 
         new_homepage_view = '''<t name="Homepage" t-name="website.homepage%s">
     <t t-call="website.layout">
-%s
+        <t t-set="pageName" t-value="'homepage'"/>
+        <div id="wrap" class="oe_structure oe_empty"/>
     </t>
-</t>''' % (self.id, self.env['ir.ui.view'].render_template('website.default_homepage', values={'website': self}).decode())
+</t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
