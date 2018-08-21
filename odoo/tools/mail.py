@@ -48,6 +48,7 @@ class _Cleaner(clean.Cleaner):
         'float', 'vertical-align', 'display',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
+        'white-space',
         # box model
         'border', 'border-color', 'border-radius', 'border-style', 'border-width',
         'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
