@@ -215,9 +215,9 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {integer} currentIndex
      * @return {integer}
      */
-    _activateNextFieldWidget: function (record, currentIndex) {
+    _activateNextFieldWidget: function (record, currentIndex, event) {
         currentIndex = (currentIndex + 1) % (this.allFieldWidgets[record.id] || []).length;
-        return this._activateFieldWidget(record, currentIndex, {inc: 1});
+        return this._activateFieldWidget(record, currentIndex, {inc: 1, event: event});
     },
     /**
      * This is a wrapper of the {@see _activateFieldWidget} function to select
@@ -228,9 +228,9 @@ var BasicRenderer = AbstractRenderer.extend({
      * @param {integer} currentIndex
      * @return {integer}
      */
-    _activatePreviousFieldWidget: function (record, currentIndex) {
+    _activatePreviousFieldWidget: function (record, currentIndex, event) {
         currentIndex = currentIndex ? (currentIndex - 1) : ((this.allFieldWidgets[record.id] || []).length - 1);
-        return this._activateFieldWidget(record, currentIndex, {inc:-1});
+        return this._activateFieldWidget(record, currentIndex, {inc:-1, event: event});
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The

@@ -879,10 +879,10 @@ var FormRenderer = BasicRenderer.extend({
         var index;
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
-            this._activateNextFieldWidget(this.state, index);
+            this._activateNextFieldWidget(this.state, index, ev);
         } else if (ev.data.direction === "previous") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
-            this._activatePreviousFieldWidget(this.state, index);
+            this._activatePreviousFieldWidget(this.state, index, ev);
         }
     },
     /**
