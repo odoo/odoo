@@ -1130,9 +1130,9 @@
 </t>
 
 <div t-name="web.TimeRangeMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle o_time_range_menu_button" data-toggle="dropdown"
+    <button t-att-class="'o_dropdown_toggler_btn btn btn-secondary dropdown-toggle o_time_range_menu_button' + (widget.isMobile ? ' o-no-caret' : '')" data-toggle="dropdown"
         aria-expanded="false" tabindex="-1">
-        <span class="fa fa-calendar"/> Time Ranges <span class="caret"/>
+        <span class="fa fa-calendar"/> Time Ranges <span t-att-class="widget.symbol"/>
     </button>
     <div class="dropdown-menu o_dropdown_menu o_time_range_menu" role="menu">
         <div class="dropdown-item-text">

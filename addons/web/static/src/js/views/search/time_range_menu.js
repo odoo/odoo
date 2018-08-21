@@ -1,6 +1,7 @@
 odoo.define('web.TimeRangeMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var TimeRangeMenuOptions = require('web.TimeRangeMenuOptions');
@@ -26,6 +27,8 @@ var TimeRangeMenu = Widget.extend({
      */
     init: function(parent, fields, configuration) {
         var self = this;
+        this.isMobile = config.device.isMobile;
+        this.symbol = this.isMobile ? 'fa fa-chevron-right float-right mt4' : 'caret';
         this._super(parent);
         this.dateFields = [];
         _.each(fields, function (field, name) {
