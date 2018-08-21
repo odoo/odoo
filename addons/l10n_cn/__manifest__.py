@@ -5,6 +5,7 @@
 #                         维智众源 oldrev@gmail.com  <states data>
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+# Copyright (C) 2018-now  jeffery9@gmail.com
 
 {
     'name': 'China - Accounting',
@@ -22,9 +23,10 @@ Include those data/包含以下数据
     State Data/省份数据
 
     """,
-    'depends': ['base', 'account', 'l10n_multilang'],
+    'depends': ['base', 'account', 'l10n_multilang','base_address_city'],
     'data': [
         'data/res_country_state_data.xml',
+        'data/res_city_data.xml',
         'data/account_account_type_data.xml',
         'data/account_tax_group_data.xml',
     ],
