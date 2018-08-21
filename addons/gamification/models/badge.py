@@ -157,18 +157,18 @@ class GamificationBadge(models.Model):
     @api.depends('owner_ids.badge_id', 'owner_ids.create_date', 'owner_ids.user_id')
     def _get_badge_user_stats(self):
         """Return stats related to badge users"""
-        first_month_day = fields.Date.to_string(date.today().replace(day=1))
+        first_month_day = date.today().replace(day=1)
 
         for badge in self:
             owners = badge.owner_ids
-            badge.stats_my = sum(o.user_id == self.env.user for o in owners)
-            badge.stats_this_month = sum(o.create_date >= first_month_day for o in owners)
-            badge.stats_my_this_month = sum(
-                o.user_id == self.env.user and o.create_date >= first_month_day
+            badge.stat_my = sum(o.user_id == self.env.user for o in owners)
+            badge.stat_this_month = sum(o.create_date.date() >= first_month_day for o in owners)
+            badge.stat_my_this_month = sum(
+                o.user_id == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
-            badge.stats_my_monthly_sending = sum(
-                o.create_uid == self.env.user and o.create_date >= first_month_day
+            badge.stat_my_monthly_sending = sum(
+                o.create_uid == self.env.user and o.create_date.date() >= first_month_day
                 for o in owners
             )
 
