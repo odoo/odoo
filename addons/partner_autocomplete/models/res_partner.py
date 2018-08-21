@@ -15,6 +15,25 @@ class ResPartner(models.Model):
     company_data_id = fields.Integer('Company database ID')
 
     @api.model
+    def autocomplete(self, query):
+        enrichment_data = False
+
+        try:
+            url = 'http://odoo:8069/iap/partner_autocomplete/name'
+            params = {
+                'query': query,
+                'country_code': self.env.user.company_id.country_id.code,
+            }
+
+            suggestions = jsonrpc(url, params=params)
+            suggestions = self._format_data_company(suggestions)
+        except (ConnectionError, HTTPError, exceptions.AccessError ) as exception:
+            _logger.error('Autocomplete API error: %s' % str(exception))
+            raise exceptions.UserError(_('Connection to Autocomplete API failed.'))
+
+        return suggestions
+
+    @api.model
     def enrich_company(self, company_domain, company_data_id):
         enrichment_data = False
 
@@ -150,40 +169,43 @@ class ResPartner(models.Model):
 
         return result
 
-    @api.model
-    def read_by_vat(self, vat):
-        vies_vat_data = False
-
-        try:
-            url = 'http://odoo:8069/iap/partner_autocomplete/vat'
-            params = {
-                'vat': vat,
-                'country_code': self.env.user.company_id.country_id.code,
-            }
-
-            vies_vat_data = jsonrpc(url, params=params)
-            vies_vat_data['_formatted'] = self._format_data_company(vies_vat_data)
-        except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
-            _logger.error('Enrichment API error: %s' % str(exception))
-            raise exceptions.UserError(_('Connection to Encrichment API failed.'))
-
-        return vies_vat_data
+    # @api.model
+    # def read_by_vat(self, vat):
+    #     vies_vat_data = False
+    #
+    #     try:
+    #         url = 'http://odoo:8069/iap/partner_autocomplete/vat'
+    #         params = {
+    #             'vat': vat,
+    #             'country_code': self.env.user.company_id.country_id.code,
+    #         }
+    #
+    #         vies_vat_data = jsonrpc(url, params=params)
+    #         vies_vat_data['_formatted'] = self._format_data_company(vies_vat_data)
+    #     except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
+    #         _logger.error('Enrichment API error: %s' % str(exception))
+    #         raise exceptions.UserError(_('Connection to Encrichment API failed.'))
+    #
+    #     return vies_vat_data
 
     @api.multi
     def write(self, values):
         res = super(ResPartner, self).write(values)
-        country_code = values.get('vat') and values.get('vat')[:2]
-        if values.get('vat') and self.company_data_id and self._is_company_in_europe(country_code):
-            try:
-                url = 'http://odoo:8069/iap/partner_autocomplete/update_vat'
-                params = {
-                    'vat': values.get('vat'),
-                    'company_data_id': self.company_data_id,
-                }
-                jsonrpc(url, params=params)
-            except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
-                _logger.error('Enrichment API - VAT Update Error: %s' % str(exception))
 
+        vat = values.get('vat')
+        if vat and self.company_data_id:
+            vat_country_code = vat[:2]
+            partner_country_code = self.country_id and self.country_id.code
+            if self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code):
+                try:
+                    url = 'http://odoo:8069/iap/partner_autocomplete/update_vat'
+                    params = {
+                        'vat': values.get('vat'),
+                        'company_data_id': self.company_data_id,
+                    }
+                    jsonrpc(url, params=params)
+                except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
+                    _logger.error('Autocomplete API - VAT Update Error: %s' % str(exception))
         return res
 
     @api.model

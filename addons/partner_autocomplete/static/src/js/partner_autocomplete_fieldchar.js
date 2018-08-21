@@ -105,8 +105,8 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                     var logoField = self.model === 'res.partner' ? 'image' : 'logo';
                     data.company[logoField] = data.logo;
                 }
-                var deleteField = self.model === 'res.partner' ? 'logo' : 'image';
-                delete data.company[deleteField];
+                // var deleteField = self.model === 'res.partner' ? 'logo' : 'image';
+                // delete data.company[deleteField];
 
                 if (self.model === 'res.company') delete data.company.comment; // No comment in Company
                 if (!data.company.country_id) delete data.company.country_id; // Delete if FALSE, else it will reset state_id
