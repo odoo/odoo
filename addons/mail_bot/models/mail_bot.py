@@ -75,7 +75,7 @@ class MailBot(models.AbstractModel):
                     _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language...<br/>I can show you features if you write")+ ": '<b>"+_('start the tour')+"</b>'.",
                 ])
         elif self._is_bot_pinged(values):
-            return random.choice([_("Yep, Odoobot is in the place!"), _("Pong.")])
+            return random.choice([_("Yep, OdooBot is in the place!"), _("Pong.")])
         return False
 
     def _body_contains_emoji(self, body):

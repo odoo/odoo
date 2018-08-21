@@ -560,7 +560,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     _getAuthorName: function () {
         if (this._isOdoobotAuthor()) {
-            return "Odoobot";
+            return "OdooBot";
         }
         return this._super.apply(this, arguments);
     },
@@ -572,7 +572,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._moduleIcon;
     },
     /**
-     * State if the author of this message is Odoobot
+     * State if the author of this message is OdooBot
      * This is the default author for transient messages.
      *
      * @private
