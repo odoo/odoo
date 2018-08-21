@@ -383,9 +383,12 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id)
+        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function () {
+            // necessary to trigger resize on fieldtexts
+            core.bus.trigger('DOM_updated');
+        });
     },
     /**
      * This method is called whenever we click/move outside of a row that was

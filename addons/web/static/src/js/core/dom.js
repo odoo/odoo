@@ -115,7 +115,6 @@ return {
         $textarea.on('input focus change', resize);
         if (options.parent) {
             core.bus.on('DOM_updated', options.parent, resize);
-            core.bus.on('view_shown', options.parent, resize);
         }
     },
     /**

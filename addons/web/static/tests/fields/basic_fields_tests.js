@@ -1457,7 +1457,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('text fields edit mode inside list have correct height on focus', function (assert) {
+    QUnit.test('text fields in editable list have correct height', function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
@@ -1467,13 +1467,15 @@ QUnit.module('basic_fields', {
             model: 'partner',
             data: this.data,
             arch: '<list editable="top">' +
+                    '<field name="foo"/>' +
                     '<field name="txt"/>' +
                 '</list>',
         });
 
-        // Click to enter edit: in this test we specifically rely on setting
-        // the focus on the textarea to trigger the resize.
-        // The main goal is to test the size is correct, not how it is triggered.
+        // Click to enter edit: in this test we specifically do not set
+        // the focus on the textarea by clicking on another column.
+        // The main goal is to test the resize is actually triggered in this
+        // particular case.
         list.$('.o_data_cell:first').click();
         var $textarea = list.$('textarea:first');
 
