@@ -171,7 +171,7 @@ class Message(models.Model):
     @api.multi
     def _compute_need_moderation(self):
         for message in self:
-            self.need_moderation = False
+            message.need_moderation = False
 
     @api.model
     def _search_need_moderation(self, operator, operand):
