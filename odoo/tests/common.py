@@ -403,6 +403,7 @@ class SavepointCase(SingleTransactionCase):
 
 
 class ChromeBrowser():
+    """ Helper object to control a Chrome headless process. """
 
     def __init__(self):
         if websocket is None:
@@ -663,7 +664,7 @@ class ChromeBrowser():
             _logger.info('Waiting for frame "%s" to stop loading' % frame_id)
             self._websocket_wait_event('Page.frameStoppedLoading', params={'frameId': frame_id})
 
-    def browser_cleanup(self):
+    def clear(self):
         self._websocket_send('Page.stopScreencast')
         self.screencast_frames = []
         self._websocket_send('Page.stopLoading')
@@ -674,11 +675,12 @@ class ChromeBrowser():
         self._websocket_wait_id(cl_id)
         self.navigate_to('about:blank', wait_stop=True)
 
+
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
     """
     registry_test_mode = True
-    chrome_browser = None
+    browser = None
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
@@ -691,15 +693,16 @@ class HttpCase(TransactionCase):
         self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
-    def start_chrome(cls):
-        if cls.chrome_browser is None:
-            cls.chrome_browser = ChromeBrowser()
+    def start_browser(cls):
+        # start browser on demand
+        if cls.browser is None:
+            cls.browser = ChromeBrowser()
 
     @classmethod
     def tearDownClass(cls):
-        if cls.chrome_browser:
-            cls.chrome_browser.stop()
-            cls.chrome_browser = None
+        if cls.browser:
+            cls.browser.stop()
+            cls.browser = None
         super(HttpCase, cls).tearDownClass()
 
     def setUp(self):
@@ -768,9 +771,9 @@ class HttpCase(TransactionCase):
         session._fix_lang(session.context)
 
         odoo.http.root.session_store.save(session)
-        if self.chrome_browser:
-            _logger.info('Setting session cookie in chrome headless')
-            self.chrome_browser.set_cookie('session_id', self.session_id, '/', '127.0.0.1')
+        if self.browser:
+            _logger.info('Setting session cookie in browser')
+            self.browser.set_cookie('session_id', self.session_id, '/', '127.0.0.1')
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -787,29 +790,27 @@ class HttpCase(TransactionCase):
 
         If neither are done before timeout test fails.
         """
-
-        # Start chrome only if needed (instead of using a setupClass)
-        self.start_chrome()
+        self.start_browser()
 
         try:
             self.authenticate(login, login)
             url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
-            _logger.info('Open "%s" in chrome headless' % url)
+            _logger.info('Open "%s" in browser' % url)
 
             _logger.info('Starting screen cast')
-            self.chrome_browser.start_screencast()
-            self.chrome_browser.navigate_to(url)
+            self.browser.start_screencast()
+            self.browser.navigate_to(url)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
             ready = ready or "document.readyState === 'complete'"
-            self.assertTrue(self.chrome_browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
-            self.assertTrue(self.chrome_browser._wait_code_ok(code, timeout), 'The test code "%s" failed' % code)
+            self.assertTrue(self.browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+            self.assertTrue(self.browser._wait_code_ok(code, timeout), 'The test code "%s" failed' % code)
 
         finally:
-            # better at the end of the method, in case we call the method multiple
-            # times in the same test
-            self.chrome_browser.browser_cleanup()
+            # clear browser to make it stop sending requests, in case we call
+            # the method several times in a test method
+            self.browser.clear()
             self._wait_remaining_requests()
 
     phantom_js = browser_js
