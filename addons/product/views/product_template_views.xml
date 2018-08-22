@@ -71,6 +71,8 @@
                 <field name="product_variant_count"/>
                 <field name="product_variant_ids"/>
                 <field name="currency_id"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">

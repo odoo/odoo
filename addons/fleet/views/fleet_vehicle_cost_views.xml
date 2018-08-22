@@ -291,6 +291,8 @@
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">

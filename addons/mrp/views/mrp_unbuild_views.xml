@@ -68,6 +68,8 @@
                     <field name="product_uom_id"/>
                     <field name="state"/>
                     <field name="location_id"/>
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">

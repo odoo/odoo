@@ -196,6 +196,8 @@
                      <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_planned_start"/>
                     <field name="state"/>
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
