@@ -114,6 +114,53 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertItemsEqual(terms,
             ['Form stuff', 'Blah blah blah'])
 
+    def test_translate_xml_inline4(self):
+        """ Test xml_translate() with formatting elements without actual text
+        but a translatable attribute. """
+        terms = []
+        source = """<form string="Form stuff">
+                        <div>
+                            <span class="before"/>
+                            <h1 title="blah">Blah blah blah</h1>
+                            <span class="after">
+                                <i title="hack"/>
+                            </span>
+                        </div>
+                    </form>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'blah', 'Blah blah blah', 'hack'])
+
+    def test_translate_xml_inline5(self):
+        """ Test xml_translate() with formatting elements containing inline
+        elements inside an inline element."""
+        terms = []
+        source = """<form string="Form stuff">
+                        <div>
+                            <span class="before">Foo <i title="bar"/></span>
+                        </div>
+                    </form>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['Form stuff', '<span class="before">Foo <i title="bar"/></span>'])
+
+
+    def test_translate_xml_inline6(self):
+        """ Test xml_translate() with formatting elements containing inline elements."""
+        terms = []
+        source = """<form string="Form stuff">
+                        <div>
+                            <div class="before">Foo <i title="bar"/></div>
+                        </div>
+                    </form>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms,
+            ['Form stuff', 'Foo <i title="bar"/>'])
+
+
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """
         terms = []
