@@ -55,3 +55,18 @@
         }
     }
 }
+
+.o_catch_attention {
+    position: relative;
+    z-index: 1;
+    animation: catchAttention 200ms ease 0s infinite normal;
+}
+
+@keyframes catchAttention {
+    0% {
+        outline: 0px solid fade-out($o-brand-primary, 0.0);
+    }
+    100% {
+        outline: 20px solid fade-out($o-brand-primary, 1.0);
+    }
+}
