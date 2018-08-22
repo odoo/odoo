@@ -173,3 +173,10 @@ class Event(models.Model):
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = '/event/%s/ics?%s' % (slug(self), encoded_params)
         return {'google_url': google_url, 'iCal_url': iCal_url}
+
+    def _default_website_meta(self):
+        res = super(Event, self)._default_website_meta()
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.date_begin
+        res['default_twitter']['twitter:card'] = 'summary'
+        return res

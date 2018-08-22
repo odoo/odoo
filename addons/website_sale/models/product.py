@@ -170,6 +170,13 @@ class ProductTemplate(models.Model):
         else:
             return self.set_sequence_bottom()
 
+    def _default_website_meta(self):
+        res = super(ProductTemplate, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        return res
+
     @api.multi
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()

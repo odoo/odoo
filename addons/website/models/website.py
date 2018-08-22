@@ -694,6 +694,71 @@ class SeoMetadata(models.AbstractModel):
     website_meta_title = fields.Char("Website meta title", translate=True)
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
+    website_meta_og_img = fields.Char("Website opengraph image")
+
+    def _default_website_meta(self):
+        """ This method will return default meta information. It return the dict
+            contains meta property as a key and meta content as a value.
+            e.g. 'og:type': 'website'.
+
+            Override this method in case you want to change default value
+            from any model. e.g. change value of og:image to product specific
+            images instead of default images
+        """
+        self.ensure_one()
+        company = request.website.company_id.sudo()
+        title = (request.website or company).name
+        if 'name' in self:
+            title = '%s | %s' % (self.name, title)
+        # Default meta for OpenGraph
+        default_opengraph = {
+            'og:type': 'website',
+            'og:title': title,
+            'og:site_name': company.name,
+            'og:url': request.httprequest.url,
+            'og:image': '/web/image/res.company/%s/logo' % company.id,
+        }
+        # Default meta for Twitter
+        default_twitter = {
+            'twitter:card': 'summary_large_image',
+            'twitter:title': title,
+            'twitter:image': '/web/image/res.company/%s/logo' % company.id,
+        }
+        if company.social_twitter:
+            default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
+
+        return {
+            'default_opengraph': default_opengraph,
+            'default_twitter': default_twitter
+        }
+
+    def get_website_meta(self):
+        """ This method will return final meta information. It will replace
+            default values with user's custom value (if user modified it from
+            the seo popup of fronted)
+
+            This method is not meant for overridden. To customize meta values
+            override `_default_website_meta` method instead of this method. This
+            method only replaces user custom values in defaults.
+        """
+        root_url = request.httprequest.url_root.strip('/')
+        default_meta = self._default_website_meta()
+        opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
+        if self.website_meta_title:
+            opengraph_meta['og:title'] = self.website_meta_title
+            twitter_meta['twitter:title'] = self.website_meta_title
+        if self.website_meta_description:
+            opengraph_meta['og:description'] = self.website_meta_description
+            twitter_meta['twitter:description'] = self.website_meta_description
+        meta_image = self.website_meta_og_img or opengraph_meta['og:image']
+        if meta_image.startswith('/'):
+            meta_image = "%s%s" % (root_url, meta_image)
+        opengraph_meta['og:image'] = meta_image
+        twitter_meta['twitter:image'] = meta_image
+        return {
+            'opengraph_meta': opengraph_meta,
+            'twitter_meta': twitter_meta
+        }
 
 
 class WebsiteMultiMixin(models.AbstractModel):
@@ -965,6 +1030,10 @@ class Page(models.Model):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
         return super(Page, self).write(vals)
+
+    def get_website_meta(self):
+        self.ensure_one()
+        return self.view_id.get_website_meta()
 
 
 class Menu(models.Model):
