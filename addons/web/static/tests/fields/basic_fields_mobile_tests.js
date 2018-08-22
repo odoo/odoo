@@ -1,4 +1,4 @@
-odoo.define('web.basic_fields_tests', function (require) {
+odoo.define('web.basic_fields_mobile_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
@@ -109,13 +109,13 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
         });
 
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
-            "should have 5 cells");
+        assert.strictEqual(list.$('.o_data_row').length, 3,
+            "should have 3 record");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly");
 
         var $phoneLink = list.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 5,
+        assert.strictEqual($phoneLink.length, 3,
             "should have anchors with correct classes");
         assert.strictEqual($phoneLink.first().attr('href'), 'tel:yop',
             "should have proper tel prefix");
@@ -135,7 +135,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
         $phoneLink = list.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 5,
+        assert.strictEqual($phoneLink.length, 3,
             "should still have anchors with correct classes");
         assert.strictEqual($phoneLink.first().attr('href'), 'tel:new',
             "should still have proper tel prefix");
