@@ -59,12 +59,12 @@
                             </ol>
                         </div>
                         <div class="col-md-4 text-right">
-                            <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <div class="form-group">
+                            <form class="form-inline float-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="input-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
                                         t-att-value="search or None"/>
-                                    <button type="submit" class="btn btn-secondary">Search</button>
+                                    <button type="submit" class="btn btn-secondary ml-2">Search</button>
                                 </div>
                             </form>
                         </div>
@@ -98,12 +98,12 @@
                             </ol>
                         </div>
                         <div class="col-md-4 text-right" t-if="forum">
-                            <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <div class="form-group">
+                            <form class="form-inline float-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="input-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
                                         t-att-value="search or None"/>
-                                    <button type="submit" class="btn btn-secondary">Search</button>
+                                    <button type="submit" class="btn btn-secondary ml-2">Search</button>
                                 </div>
                             </form>
                         </div>
