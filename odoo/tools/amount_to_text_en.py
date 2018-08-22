@@ -3,6 +3,7 @@
 
 import logging
 from translate import _
+from odoo.tools.amount_to_text import add_amount_to_text_function, _translate_funcs
 
 _logger = logging.getLogger(__name__)
 
@@ -77,9 +78,8 @@ def amount_to_text(number, currency):
 #-------------------------------------------------------------
 # Generic functions
 #-------------------------------------------------------------
+add_amount_to_text_function('en', amount_to_text)
 
-_translate_funcs = {'en' : amount_to_text}
-    
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
 def amount_to_text(nbr, lang='en', currency='euro'):

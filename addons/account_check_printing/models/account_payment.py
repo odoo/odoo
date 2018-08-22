@@ -51,8 +51,9 @@ class AccountPayment(models.Model):
 
     def _get_check_amount_in_words(self, amount):
         # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
-        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
-        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
+        check_lang = self.company_id.partner_id.lang and self.company_id.partner_id.lang.split('_')[0] or 'en'
+        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang=check_lang, currency='')
+        check_amount_in_words = check_amount_in_words.replace(_(' and Zero Cent'), '')  # Ugh
         decimals = amount % 1
         if not float_is_zero(decimals, precision_digits=2):
             check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
