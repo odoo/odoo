@@ -1226,7 +1226,7 @@ class TestStockValuation(TransactionCase):
         self.product1.product_tmpl_id.cost_method = 'fifo'
 
         # We expect the user to set manually set a standard price to its products if its first
-        # transfer is sending products that he doesn't have.
+        # operation is sending products that he doesn't have.
         self.product1.product_tmpl_id.standard_price = 8.0
 
         # ---------------------------------------------------------------------

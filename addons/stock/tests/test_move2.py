@@ -119,7 +119,7 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(picking_client.state, 'assigned', 'The state of the client should be assigned')
 
-        # Now partially transfer the ship
+        # Now partially operation the ship
         picking_client.move_lines[0].move_line_ids[0].qty_done = 5
         picking_client.action_done() # no new in order to create backorder
 

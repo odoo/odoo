@@ -90,8 +90,8 @@ class StockMove(models.Model):
         'stock.move', 'stock_move_move_rel', 'move_dest_id', 'move_orig_id', 'Original Move',
         copy=False,
         help="Optional: previous stock move when chaining them")
-    picking_id = fields.Many2one('stock.picking', 'Transfer Reference', index=True, states={'done': [('readonly', True)]})
-    picking_partner_id = fields.Many2one('res.partner', 'Transfer Destination Address', related='picking_id.partner_id', readonly=False)
+    picking_id = fields.Many2one('stock.picking', 'Operation Reference', index=True, states={'done': [('readonly', True)]})
+    picking_partner_id = fields.Many2one('res.partner', 'Operation Destination Address', related='picking_id.partner_id', readonly=False)
     note = fields.Text('Notes')
     state = fields.Selection([
         ('draft', 'New'), ('cancel', 'Cancelled'),
@@ -1130,7 +1130,7 @@ class StockMove(models.Model):
                 .mapped('move_line_ids.result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                raise UserError(_('You cannot move the same package content more than once in the same operation or split the same package into two location.'))
         picking = moves_todo and moves_todo[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()

@@ -104,7 +104,7 @@ class TestStockFlow(TestStockCommon):
         total_qty = sum(self.StockPackObj.search([('move_id', 'in', picking_in.move_lines.ids)]).mapped('qty_done'))
         self.assertEqual(total_qty, 23,  'Wrong quantity in pack operation')
 
-        # Transfer Incoming Shipment.
+        # Operation Incoming Shipment.
         picking_in.action_done()
 
         # ----------------------------------------------------------------------
@@ -242,7 +242,7 @@ class TestStockFlow(TestStockCommon):
             'move_id': move_cust_c.id})
         move_cust_d.move_line_ids.qty_done = 6.0
 
-        # Transfer picking.
+        # Operation picking.
         picking_out.action_done()
 
         # ----------------------------------------------------------------------
@@ -426,7 +426,7 @@ class TestStockFlow(TestStockCommon):
         self.assertGreaterEqual(float_round(sum(total_qty), precision_rounding=0.0001), 1, 'Total stock location quantity for product A should not be nagative.')
 
     def test_10_pickings_transfer_with_different_uom(self):
-        """ Picking transfer with diffrent unit of meassure. """
+        """ Picking operation with diffrent unit of meassure. """
 
         # ----------------------------------------------------------------------
         # Create incoming shipment of products DozA, SDozA, SDozARound, kgB, gB
@@ -637,7 +637,7 @@ class TestStockFlow(TestStockCommon):
         })
 
         # -----------------
-        # Transfer product.
+        # Operation product.
         # -----------------
 
         res_dict = picking_in_B.button_validate()
@@ -755,7 +755,7 @@ class TestStockFlow(TestStockCommon):
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
 
-        # Check quantity difference after stock transfer.
+        # Check quantity difference after stock operation.
         quantity_diff = before_out_quantity - self.kgB.qty_available
         self.assertEqual(float_round(quantity_diff, precision_rounding=0.0001), 0.001, 'Wrong quantity diffrence.')
         self.assertEqual(self.kgB.qty_available, 0.039, 'Wrong quantity available (%s found instead of 0.039)' % (self.kgB.qty_available))
@@ -919,13 +919,13 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(packKG.product_qty, 1000, 'Wrong product real quantity in pack operation (%s found instead of 1000)' % (packKG.product_qty))
         self.assertEqual(packKG.product_uom_qty, 1, 'Wrong product quantity in pack operation (%s found instead of 1)' % (packKG.product_uom_qty))
         self.assertEqual(packKG.product_uom_id.id, self.uom_tone.id, 'Wrong product uom in pack operation.')
-        # Transfer Incoming shipment.
+        # Operation Incoming shipment.
         res_dict = picking_in.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
 
         # -----------------------------------------------------------------------
-        # Check incoming shipment after transfer.
+        # Check incoming shipment after operation.
         # -----------------------------------------------------------------------
 
         # Check incoming shipment state.

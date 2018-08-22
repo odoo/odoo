@@ -21,7 +21,7 @@
               </ul>
           </div>
           <div class="mt16" t-if="impacted_pickings">
-              <p>Next transfer(s) impacted:</p>
+              <p>Next operation(s) impacted:</p>
               <ul t-foreach="impacted_pickings" t-as="picking">
                   <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
               </ul>

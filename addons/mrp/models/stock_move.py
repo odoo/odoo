@@ -74,7 +74,7 @@ class StockMove(models.Model):
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
     def _unreserve_initial_demand(self, new_move):
-        # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
+        # If you were already putting stock.move.lots on the next one in the work order, operation those to the new move
         self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
         .mapped('move_line_ids')\
         .filtered(lambda ml: ml.qty_done == 0.0)\

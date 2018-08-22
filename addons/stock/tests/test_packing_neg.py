@@ -77,7 +77,7 @@ class TestPackingNeg(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_stock')
         })
 
-        # Transfer the receipt
+        # Operation the receipt
         pick_neg.action_done()
 
         # Make a delivery order of 300 pieces to the customer

@@ -45,7 +45,7 @@
                 </ul>
             </div>
             <div class="mt16" t-if="not cancel and impacted_pickings">
-                <p>Impacted Transfer(s):</p>
+                <p>Impacted Operation(s):</p>
                 <ul t-foreach="impacted_pickings" t-as="picking">
                     <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
                 </ul>

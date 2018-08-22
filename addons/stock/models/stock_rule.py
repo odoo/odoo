@@ -53,7 +53,7 @@ class StockRule(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)
-    delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
+    delay = fields.Integer('Delay', default=0, help="The expected date of the created operation will be computed based on this delay.")
     partner_address_id = fields.Many2one('res.partner', 'Partner Address', help="Address where goods should be delivered. Optional.")
     propagate = fields.Boolean(
         'Propagate cancel and split', default=True,

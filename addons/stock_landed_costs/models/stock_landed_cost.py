@@ -27,7 +27,7 @@ class LandedCost(models.Model):
         'Date', default=fields.Date.context_today,
         copy=False, required=True, states={'done': [('readonly', True)]}, track_visibility='onchange')
     picking_ids = fields.Many2many(
-        'stock.picking', string='Transfers',
+        'stock.picking', string='Operations',
         copy=False, states={'done': [('readonly', True)]})
     cost_lines = fields.One2many(
         'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
@@ -160,7 +160,7 @@ class LandedCost(models.Model):
             lines.append(vals)
 
         if not lines and self.mapped('picking_ids'):
-            raise UserError(_("You cannot apply landed costs on the chosen transfer(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
+            raise UserError(_("You cannot apply landed costs on the chosen operation(s). Landed costs can only be applied for products with automated inventory valuation and FIFO costing method."))
         return lines
 
     @api.multi

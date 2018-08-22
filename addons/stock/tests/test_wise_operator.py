@@ -57,7 +57,7 @@ class TestWiseOperator(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_14')
         })
 
-        # Transfer the receipt
+        # Operation the receipt
         pick1_wise.action_done()
 
         # Check the system created 3 quants

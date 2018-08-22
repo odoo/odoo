@@ -163,7 +163,7 @@ class PickingType(models.Model):
 class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Transfer"
+    _description = "Operation"
     _order = "priority desc, date asc, id desc"
 
     name = fields.Char(
@@ -226,7 +226,7 @@ class Picking(models.Model):
         default=fields.Datetime.now, index=True, track_visibility='onchange',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Creation Date, usually the time of the order")
-    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
+    date_done = fields.Datetime('Date of Operations', copy=False, readonly=True, help="Date at which the Operations has been processed or cancelled.")
 
     location_id = fields.Many2one(
         'stock.location', "Source Location",
@@ -507,7 +507,7 @@ class Picking(models.Model):
         if vals.get('move_lines'):
             # Do not run autoconfirm if any of the moves has an initial demand. If an initial demand
             # is present in any of the moves, it means the picking was created through the "planned
-            # transfer" mechanism.
+            # operation" mechanism.
             pickings_to_not_autoconfirm = self.env['stock.picking']
             for picking in self:
                 if picking.state != 'draft':
@@ -715,7 +715,7 @@ class Picking(models.Model):
         no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
-            raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
+            raise UserError(_('You cannot validate a operation if no quantites are reserved nor done. To force the operation, switch in edit more and encode the done quantities.'))
 
         if picking_type.use_create_lots or picking_type.use_existing_lots:
             lines_to_check = self.move_line_ids
@@ -735,7 +735,7 @@ class Picking(models.Model):
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({'pick_ids': [(4, self.id)]})
             return {
-                'name': _('Immediate Transfer?'),
+                'name': _('Immediate Operation?'),
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',

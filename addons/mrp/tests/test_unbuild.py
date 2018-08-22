@@ -565,7 +565,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(picking.location_id.id, unbuild_location.id, 'Wrong source location in picking')
         self.assertEqual(picking.location_dest_id.id, self.stock_location.id, 'Wrong destination location in picking')
 
-        # Transfer it
+        # Operation it
         for ml in picking.move_ids_without_package:
             ml.quantity_done = 1
         picking.action_done()

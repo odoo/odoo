@@ -232,7 +232,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         """ Two product incoming shipment. """
         # Confirm incoming shipment.
         self.picking_in.action_confirm()
-        # Transfer incoming shipment
+        # Operation incoming shipment
         res_dict = self.picking_in.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
@@ -244,7 +244,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         self.picking_out.action_confirm()
         # Product assign to outgoing shipments
         self.picking_out.action_assign()
-        # Transfer picking.
+        # Operation picking.
 
         res_dict = self.picking_out.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))

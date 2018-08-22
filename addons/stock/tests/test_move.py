@@ -2551,7 +2551,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_1(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
-        directly adapts the transfer. In this case, we edit the sublocation where we take the
+        directly adapts the operation. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is available.
         """
         shelf1_location = self.env['stock.location'].create({
@@ -2597,7 +2597,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_2(self):
         """ Test that editing a done stock move line linked to a tracked product correctly and directly
-        adapts the transfer. In this case, we edit the lot to another available one.
+        adapts the operation. In this case, we edit the lot to another available one.
         """
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
@@ -2640,7 +2640,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_3(self):
         """ Test that editing a done stock move line linked to a packed product correctly and directly
-        adapts the transfer. In this case, we edit the package to another available one.
+        adapts the operation. In this case, we edit the package to another available one.
         """
         package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
         package2 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_3'})
@@ -2676,7 +2676,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_4(self):
         """ Test that editing a done stock move line linked to an owned product correctly and directly
-        adapts the transfer. In this case, we edit the owner to another available one.
+        adapts the operation. In this case, we edit the owner to another available one.
         """
         owner1 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_1'})
         owner2 = self.env['res.partner'].create({'name': 'test_edit_reserved_move_line_4_2'})
@@ -2712,7 +2712,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_5(self):
         """ Test that editing a done stock move line linked to a packed and tracked product correctly
-        and directly adapts the transfer. In this case, we edit the lot to another available one
+        and directly adapts the operation. In this case, we edit the lot to another available one
         that is not in a pack.
         """
         lot1 = self.env['stock.production.lot'].create({
@@ -2756,7 +2756,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_6(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
-        directly adapts the transfer. In this case, we edit the sublocation where we take the
+        directly adapts the operation. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is NOT available.
         """
         shelf1_location = self.env['stock.location'].create({
@@ -2800,7 +2800,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_7(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
-        directly adapts the transfer. In this case, we edit the sublocation where we take the
+        directly adapts the operation. In this case, we edit the sublocation where we take the
         product to another sublocation where a product is NOT available because it has been reserved
         by another move.
         """
@@ -2858,7 +2858,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_8(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
-        directly adapts the transfer. In this case, we increment the quantity done (and we do not
+        directly adapts the operation. In this case, we increment the quantity done (and we do not
         have more in stock.
         """
         shelf1_location = self.env['stock.location'].create({
@@ -2899,7 +2899,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_9(self):
         """ Test that editing a done stock move line linked to an untracked product correctly and
-        directly adapts the transfer. In this case, we "cancel" the move by zeroing the qty done.
+        directly adapts the operation. In this case, we "cancel" the move by zeroing the qty done.
         """
         shelf1_location = self.env['stock.location'].create({
             'name': 'shelf1',
@@ -3005,7 +3005,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_12(self):
         """ Test that editing a done stock move line linked a tracked product correctly and directly
-        adapts the transfer. In this case, we edit the lot to another one, but the original move line
+        adapts the operation. In this case, we edit the lot to another one, but the original move line
         is not in the default product's UOM.
         """
         lot1 = self.env['stock.production.lot'].create({
@@ -3038,7 +3038,7 @@ class StockMove(TransactionCase):
 
     def test_edit_done_move_line_13(self):
         """ Test that editing a done stock move line linked to a packed and tracked product correctly
-        and directly adapts the transfer. In this case, we edit the lot to another available one
+        and directly adapts the operation. In this case, we edit the lot to another available one
         that we put in the same pack.
         """
         lot1 = self.env['stock.production.lot'].create({
