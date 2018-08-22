@@ -45,31 +45,37 @@ class ResConfigSettings(models.TransientModel):
     favicon = fields.Binary('Favicon', related='website_id.favicon')
 
     google_maps_api_key = fields.Char(related='website_id.google_maps_api_key')
-    has_google_analytics = fields.Boolean(related='website_id.has_google_analytics')
-    has_google_analytics_dashboard = fields.Boolean(related='website_id.has_google_analytics_dashboard')
-    has_google_maps = fields.Boolean(related='website_id.has_google_maps')
-
-    social_twitter = fields.Char(related='website_id.social_twitter')
-    social_facebook = fields.Char(related='website_id.social_facebook')
-    social_github = fields.Char(related='website_id.social_github')
-    social_linkedin = fields.Char(related='website_id.social_linkedin')
-    social_youtube = fields.Char(related='website_id.social_youtube')
-    social_googleplus = fields.Char(related='website_id.social_googleplus')
-
     group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
 
-    @api.onchange('has_google_analytics')
-    def onchange_has_google_analytics(self):
+    @api.depends('website_id')
+    def has_google_analytics(self):
+        self.has_google_analytics = bool(self.google_analytics_key)
+
+    @api.depends('website_id')
+    def has_google_analytics_dashboard(self):
+        self.has_google_analytics_dashboard = bool(self.google_management_client_id)
+
+    @api.depends('website_id')
+    def has_google_maps(self):
+        self.has_google_maps = bool(self.google_maps_api_key)
+
+    def inverse_has_google_analytics(self):
         if not self.has_google_analytics:
             self.has_google_analytics_dashboard = False
-        if not self.has_google_analytics:
             self.google_analytics_key = False
 
-    @api.onchange('has_google_analytics_dashboard')
-    def onchange_has_google_analytics_dashboard(self):
+    def inverse_has_google_maps(self):
+        if not self.inverse_has_google_maps:
+            self._has_google_maps = False
+
+    def inverse_has_google_analytics_dashboard(self):
         if not self.has_google_analytics_dashboard:
             self.google_management_client_id = False
             self.google_management_client_secret = False
+
+    has_google_analytics = fields.Boolean("Google Analytics", compute=has_google_analytics, inverse=inverse_has_google_analytics)
+    has_google_analytics_dashboard = fields.Boolean("Google Analytics Dashboard", compute=has_google_analytics_dashboard, inverse=inverse_has_google_analytics_dashboard)
+    has_google_maps = fields.Boolean("Google Maps", compute=has_google_maps, inverse=inverse_has_google_maps)
 
     @api.onchange('language_ids')
     def _onchange_language_ids(self):
@@ -101,4 +107,25 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_url',
             'url': '/',
             'target': 'self',
+        }
+
+    def company_go_to(self):
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'res_id': self.website_id.company_id.id,
+        }
+
+    def action_website_create_new(self):
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': self.env.ref('website.view_website_form').id,
+            'res_model': 'website',
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+            'res_id': False,
         }

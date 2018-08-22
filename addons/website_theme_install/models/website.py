@@ -15,11 +15,3 @@ class Website(models.Model):
             'url': '/web#action=website_theme_install.theme_install_kanban_action',
             'target': 'self',
         }
-
-    def button_go_website(self):
-        self._force()
-        return {
-            'type': 'ir.actions.act_url',
-            'url': '/',
-            'target': 'self',
-        }

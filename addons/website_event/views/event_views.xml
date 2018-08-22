@@ -31,7 +31,7 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <field name="organizer_id" position="before">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
             </field>
             <button name="toggle_active" position="before">
                 <field name="website_url" invisible="1"/>

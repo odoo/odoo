@@ -5,10 +5,8 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='domain_setting']/div[hasclass('o_setting_right_pane')]" position="inside">
-                <div>
-                    <button name="install_theme_on_current_website" type="object" string="Change theme" class="btn-link" icon="fa-arrow-right"/>
-                </div>
+            <xpath expr="//button[@name='website_go_to']" position="after">
+                <button name="install_theme_on_current_website" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
             </xpath>
         </field>
     </record>
