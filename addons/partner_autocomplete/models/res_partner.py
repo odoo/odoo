@@ -94,7 +94,6 @@ class ResPartner(models.Model):
             'vat': company_data.get('vat'),
             'logo': company_data.get('logo'),
         }
-
         street = self._split_street_with_params('%s %s' % (company_data.get('street_name'), company_data.get('street_number')), '%(street_name)s, %(street_number)s/%(street_number2)s')
         company.update(street)
 
@@ -175,7 +174,6 @@ class ResPartner(models.Model):
                 'company_data_id': company_data_id,
                 'country_code': self.env.user.company_id.country_id.code,
             }
-
             enrichment_data = jsonrpc(url, params=params)
             enrichment_data = self._format_data_company(enrichment_data)
         except (ConnectionError, HTTPError, exceptions.AccessError ) as exception:
@@ -196,7 +194,8 @@ class ResPartner(models.Model):
             }
 
             vies_vat_data = jsonrpc(url, params=params)
-            vies_vat_data['_formatted'] = self._format_data_company(vies_vat_data)
+            if vies_vat_data:
+                vies_vat_data = self._format_data_company(vies_vat_data)
         except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
             _logger.error('Enrichment API error: %s' % str(exception))
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))

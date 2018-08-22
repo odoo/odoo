@@ -39,7 +39,7 @@ odoo.define('partner.autocomplete.many2one', function (require) {
                         });
                         _.each(suggestions, function (suggestion) {
                             choices.push({
-                                label: _.str.sprintf('%s (%s)', suggestion.label, suggestion.description),
+                                label: _.str.sprintf('%s - %s', suggestion.label, suggestion.description),
                                 value: suggestion.domain,
                                 action: function () {
                                     self._createPartner(suggestion);

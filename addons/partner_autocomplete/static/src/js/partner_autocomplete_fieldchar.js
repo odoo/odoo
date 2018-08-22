@@ -89,6 +89,19 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                 this.$dropdown.appendTo(this.$el);
             }
         },
+
+        _showLoading: function () {
+            this._removeDropdown();
+            this.$dropdown = $(QWeb.render('partner_autocomplete.loading'));
+            this.$dropdown.appendTo(this.$el);
+        },
+
+        _showNoResult: function () {
+            this._removeDropdown();
+            this.$dropdown = $(QWeb.render('partner_autocomplete.no_result'));
+            this.$dropdown.appendTo(this.$el);
+        },
+
         /**
          * Selects the given company suggestions by notifying changes to the view
          * for the "name", "website" and "image" fields. This is of course intended
@@ -100,7 +113,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
         _selectCompany: function (company) {
             var self = this;
 
-            Autocomplete.getCreateData(company).then(function(data){
+            Autocomplete.getCreateData(company).then(function (data) {
                 if (data.logo) {
                     var logoField = self.model === 'res.partner' ? 'image' : 'logo';
                     data.company[logoField] = data.logo;
@@ -112,7 +125,6 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                 if (!data.company.country_id) delete data.company.country_id; // Delete if FALSE, else it will reset state_id
                 if (!data.company.state_id) delete data.company.state_id; // Delete if FALSE, else it will reset country_id
 
-                console.log( data )
                 self.trigger_up('field_changed', {
                     dataPointID: self.dataPointID,
                     changes: data.company,
@@ -132,9 +144,16 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
         _suggestCompanies: function (value) {
             var self = this;
             if (Autocomplete.validateSearchTerm(value) && Autocomplete.isOnline()) {
-                return Autocomplete.autocomplete(value).then(function(suggestions){
-                    self.suggestions = suggestions;
-                    self._showDropdown()
+                this._showLoading();
+                return Autocomplete.autocomplete(value).then(function (suggestions) {
+                    if (suggestions && suggestions.length) {
+                        self.suggestions = suggestions;
+                        self._showDropdown();
+                    } else {
+                        self._showNoResult();
+                    }
+                }).fail(function () {
+                    self._showNoResult();
                 });
             } else {
                 this._removeDropdown();
@@ -214,7 +233,7 @@ odoo.define('partner.autocomplete.fieldchar', function (require) {
                         break;
                     }
                     e.preventDefault();
-                    var $active = this.$dropdown.find('.active > .o_partner_autocomplete_suggestion');
+                    var $active = this.$dropdown.find('.o_partner_autocomplete_suggestion.active');
                     if (!$active.length) {
                         return;
                     }

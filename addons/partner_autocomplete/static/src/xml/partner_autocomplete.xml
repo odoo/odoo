@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
+    <div t-name="partner_autocomplete.loading" class="o_partner_autocomplete_dropdown dropdown-menu show" role="menu">
+        <a class="dropdown-item">
+            <i class='fa fa-lg fa-spin fa-spinner' role="img" aria-label="Searching..." title="Searching..."></i>
+            <div class="o_partner_autocomplete_info">
+                <strong>Searching...</strong>
+            </div>
+        </a>
+    </div>
+
+    <div t-name="partner_autocomplete.no_result" class="o_partner_autocomplete_dropdown dropdown-menu show" role="menu">
+        <a class="dropdown-item">
+            <i class='fa fa-lg fa-exclamation-circle' role="img" aria-label="No result..." title="No result..."></i>
+            <div class="o_partner_autocomplete_info">
+                <strong>No suggestion found...</strong>
+            </div>
+        </a>
+    </div>
+
     <div t-name="partner_autocomplete.dropdown" class="o_partner_autocomplete_dropdown dropdown-menu show" role="menu">
         <t t-foreach="suggestions" t-as="info">
             <a role="menuitem" href="#"

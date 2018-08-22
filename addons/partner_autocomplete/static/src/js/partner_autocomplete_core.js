@@ -4,7 +4,7 @@ odoo.define('partner.autocomplete.core', function (require) {
     var rpc = require('web.rpc');
     var concurrency = require('web.concurrency');
 
-    var core = require('web.core');
+    // var core = require('web.core');
     // var _t = core._t;
 
     return {
@@ -18,28 +18,28 @@ odoo.define('partner.autocomplete.core', function (require) {
             return navigator && navigator.onLine;
         },
 
-        // /**
-        //  * Sanitize search value by removing all not alphanumeric
-        //  *
-        //  * @param search_value
-        //  * @returns {string}
-        //  * @private
-        //  */
-        // _sanitizeVAT: function (search_value) {
-        //     return search_value ? search_value.replace(/[^A-Za-z0-9]/g, '') : '';
-        // },
-        //
-        // /**
-        //  * Check if searched value is possibly a VAT : 2 first chars = alpha + min 5 numbers
-        //  *
-        //  * @param search_val
-        //  * @returns {boolean}
-        //  * @private
-        //  */
-        // _isVAT: function (search_val) {
-        //     var str = this._sanitizeVAT(search_val);
-        //     return checkVATNumber(str).valid_vat
-        // },
+        /**
+         * Sanitize search value by removing all not alphanumeric
+         *
+         * @param search_value
+         * @returns {string}
+         * @private
+         */
+        _sanitizeVAT: function (search_value) {
+            return search_value ? search_value.replace(/[^A-Za-z0-9]/g, '') : '';
+        },
+
+        /**
+         * Check if searched value is possibly a VAT : 2 first chars = alpha + min 5 numbers
+         *
+         * @param search_val
+         * @returns {boolean}
+         * @private
+         */
+        _isVAT: function (search_val) {
+            var str = this._sanitizeVAT(search_val);
+            return checkVATNumber(str).valid_vat
+        },
 
         /**
          * Validate: Not empty and length > 1
@@ -75,16 +75,18 @@ odoo.define('partner.autocomplete.core', function (require) {
                 model: 'res.partner',
                 method: "read_by_vat",
                 args: [value],
+            },{
+                shadow: true,
             }).then(function (vat_match) {
-                if(vat_match){
+                if (vat_match) {
                     vat_match.logo = vat_match.logo || '';
-                    vat_match.label = vat_match.name;
+                    vat_match.label = vat_match.legal_name || vat_match.name;
                     vat_match.description = vat_match.vat;
 
-                    if (!vat_match.domain) {
+                    if (!vat_match.website) {
                         self.getNameSuggestions(vat_match.name).then(function (suggestions) {
-                            suggestions.map(function(suggestion){
-                                suggestion.company_data_id = vat_match.company_data_id;
+                            suggestions.map(function (suggestion) {
+                                suggestion.vat = vat_match.vat;
                             });
                             suggestions.unshift(vat_match);
                             def.resolve(suggestions);
@@ -102,14 +104,16 @@ odoo.define('partner.autocomplete.core', function (require) {
                 model: 'res.partner',
                 method: "autocomplete",
                 args: [value],
+            },{
+                shadow: true,
             }).then(function (suggestions) {
-                suggestions.map(function(suggestion){
-                    suggestion.label = suggestion.name;
-                    if(suggestion.vat) suggestion.description = suggestion.vat;
-                    else if(suggestion.website) suggestion.description = suggestion.website;
+                suggestions.map(function (suggestion) {
+                    suggestion.label = suggestion.legal_name || suggestion.name;
+                    if (suggestion.vat) suggestion.description = suggestion.vat;
+                    else if (suggestion.website) suggestion.description = suggestion.website;
 
-                    if(suggestion.country_id && suggestion.country_id.display_name){
-                        if(suggestion.description) suggestion.description += _.str.sprintf(' (%s)', suggestion.country_id.display_name);
+                    if (suggestion.country_id && suggestion.country_id.display_name) {
+                        if (suggestion.description) suggestion.description += _.str.sprintf(' (%s)', suggestion.country_id.display_name);
                         else suggestion.description += suggestion.country_id.display_name;
                     }
 
@@ -120,27 +124,10 @@ odoo.define('partner.autocomplete.core', function (require) {
 
             this._dropPrevious.add(def);
             return def;
-
-            // var def = $.ajax({
-            //     url: _.str.sprintf('https://autocomplete.clearbit.com/v1/companies/suggest?query=%s', value),
-            //     type: 'GET',
-            //     dataType: 'json'
-            // }).then(function(suggestions){
-            //     suggestions.map(function(suggestion){
-            //         suggestion.label = suggestion.name;
-            //         suggestion.description = suggestion.domain;
-            //         // if( addSource) suggestion.description += ' ' + _t('(source: Clearbit)');
-            //         return suggestion;
-            //     });
-            //     return suggestions;
-            // });
-            //
-            // this._dropPrevious.add(def);
-            // return def;
         },
 
         /**
-         * Get the company logo as Base 64 image from domain
+         * Get the company logo as Base 64 image from url
          *
          * @param url
          * @returns {Promise}
@@ -174,25 +161,35 @@ odoo.define('partner.autocomplete.core', function (require) {
          * @returns Promise
          */
         getCreateData: function (company) {
-            var removeUselessFields = function(company){
-                delete company.label;
-                delete company.description;
-                delete company.logo;
+            var removeUselessFields = function (company) {
+                var fields = 'label,description,logo,legal_name'.split(',');
+                fields.forEach(function(field){
+                    delete company[field];
+                });
+
+                var notEmptyFields = "country_id,state_id,vat".split(',');
+                notEmptyFields.forEach(function(field){
+                    if(!company[field]) delete company[field];
+                });
             };
 
             var def = $.Deferred();
 
             // Fetch additional company info via Autocomplete Enrichment API
-            var enrichPromise = company.company_data_id ? company : this.enrichCompany(company);
+            var enrichPromise = company.company_data_id || !company.website ? company : this.enrichCompany(company);
 
             // Get logo
             var logoPromise = company.logo ? this.getCompanyLogo(company.logo) : false;
 
             // Delete attribute to avoid "Field_changed" errors
-            removeUselessFields(company)
+            // removeUselessFields(company);
 
             $.when(enrichPromise, logoPromise).done(function (company_data, logo_data) {
-                removeUselessFields(company_data)
+                // Delete attribute to avoid "Field_changed" errors
+                removeUselessFields(company_data);
+
+                // Assign VAT coming from parent VIES VAT query
+                if(company.vat) company_data.vat = company.vat;
                 def.resolve({
                     company: company_data,
                     logo: logo_data
