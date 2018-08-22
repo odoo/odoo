@@ -740,7 +740,6 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
         data: this.data,
         services: this.services,
         session: { partner_id: 3 },
-        debug: true,
         mockRPC: function (route, args) {
             if (args.method === 'mark_all_as_read') {
                 _.each(this.data['mail.message'].records, function (message) {
@@ -783,7 +782,7 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
         $markAllReadButton.click();
 
         markAllReadDef.then(function () {
-            // immediately jump to end of the fadebout animation on messages
+            // immediately jump to end of the fadeout animation on messages
             $inbox = discuss.$('.o_mail_discuss_item[data-thread-id="mailbox_inbox"]');
             discuss.$('.o_thread_message').stop(false, true);
             assert.strictEqual($inbox.find('.o_mail_sidebar_needaction').text().trim(), "0",
