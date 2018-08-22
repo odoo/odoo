@@ -23,7 +23,6 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
-    # theme_id = fields.Many2one('ir.module.module')
 
     @api.multi
     def _compute_first_page_id(self):
