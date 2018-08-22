@@ -259,7 +259,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=47, emp=67):  # com runbot: 45 - 65 // test_mail only: 47 - 67
+        with self.assertQueryCount(admin=48, emp=68):  # com runbot: 45 - 65 // test_mail only: 48 - 68
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -395,7 +395,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(admin=79, emp=102):  # com runbot 90 - 113 // test_mail only: 97 - 120
+        with self.assertQueryCount(admin=80, emp=103):  # com runbot 90 - 113 // test_mail only: 97 - 120
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -412,7 +412,7 @@ class TestHeavyMailPerformance(TransactionCase):
         record = self.umbrella.sudo(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(admin=98, emp=133):  # com runbot 109 - 144 // test_mail only: 116 - 151
+        with self.assertQueryCount(admin=99, emp=134):  # com runbot 109 - 144 // test_mail only: 116 - 151
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
