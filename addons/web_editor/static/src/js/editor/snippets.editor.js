@@ -1239,10 +1239,10 @@ var SnippetsMenu = Widget.extend({
             stop: function (ev, ui) {
                 $toInsert.removeClass('oe_snippet_body');
 
-                if (! dropped && self.$editable.find('.oe_drop_zone') && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
-                    var el = self.$editable.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
-                    if (el.length) {
-                        el.after($toInsert);
+                if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
+                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+                    if ($el.length) {
+                        $el.after($toInsert);
                         dropped = true;
                     }
                 }
