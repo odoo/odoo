@@ -1297,7 +1297,7 @@
     </div>
 
     <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
-        data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
+        data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
     <div data-js="content"
         data-selector="blockquote, .s_btn, .s_card, .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr"
