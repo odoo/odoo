@@ -803,10 +803,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
             .note-color-btn {
                 float: left;
-                height: 20px;
-                width: 20px;
                 margin: 1px 1px 0 0;
-                border: 1px solid black;
+                border-color: black;
                 @include o-alpha-button-preview;
 
                 &.o_small {
@@ -843,10 +841,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     .note-color {
         .note-back-color-preview, .note-fore-color-preview {
             .dropdown-toggle {
-                padding: 0px 7px;
-                height: 35px;
+                padding: 2px 7px;
                 width: auto;
-                border-top: none !important;
                 border-bottom: 3px solid;
                 &:after {
                     display: none;
@@ -870,6 +866,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     background-color: gray('400');
                     color: black
                 }
+            }
+            .note-color-btn {
+                height: 20px;
+                width: 20px;
+                border: 1px solid white;
             }
         }
     }
