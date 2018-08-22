@@ -51,6 +51,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click to post your question."),
         position: "bottom",
     }, {
+        extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
         auto: true,
     }, {
@@ -64,6 +65,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click to post your answer."),
         position: "bottom",
     }, {
+        extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
         auto: true,
     }, {
