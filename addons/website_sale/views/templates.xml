@@ -1241,7 +1241,7 @@
                                         <div class="w-100"/>
                                         <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                                             <label class="col-form-label" for="country_id">Country</label>
-                                            <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
+                                            <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                                 <option value="">Country...</option>
                                                 <t t-foreach="countries" t-as="c">
                                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
