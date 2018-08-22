@@ -25,6 +25,12 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
 }
 .o_footer {
     @include o-bg-color(color('footer'));
+
+    > #footer {
+        // FIXME needed to prevent the dropzone at the bottom of the #wrap element
+        // to be at the same place of the dropzone at the top of the #footer element
+        border-top: 1px solid transparent;
+    }
 }
 h2, h3, h4, h5, h6 {
     color: color('h2');
