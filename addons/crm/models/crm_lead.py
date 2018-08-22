@@ -667,7 +667,7 @@ class Lead(FormatAddress, models.Model):
             partner_match_domain.append(('partner_id', '=', partner_id))
         partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
-            return []
+            return self.env['crm.lead']
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
