@@ -326,6 +326,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 2.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 2)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
+        self.env['stock.quant']._unlink_zero_quants()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 1)
 
@@ -363,6 +364,7 @@ class StockQuant(TransactionCase):
         })
         self.env = self.env(user=self.demo_user)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
+        self.env['stock.quant']._unlink_zero_quants()
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 0)
 
     def test_increase_reserved_quantity_1(self):

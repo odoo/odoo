@@ -189,6 +189,7 @@ class StockMoveLine(models.Model):
                             Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                             Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                     Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+                    Quant._unlink_zero_quants()
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
@@ -305,6 +306,7 @@ class StockMoveLine(models.Model):
                 if ml.picking_id:
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
 
+        Quant._unlink_zero_quants()
         res = super(StockMoveLine, self).write(vals)
 
         # Update scrap object linked to move_lines to the new quantity.
@@ -339,6 +341,7 @@ class StockMoveLine(models.Model):
                     else:
                         raise
         moves = self.mapped('move_id')
+        self.env['stock.quant']._unlink_zero_quants()
         res = super(StockMoveLine, self).unlink()
         if moves:
             moves._recompute_state()
@@ -353,6 +356,7 @@ class StockMoveLine(models.Model):
         intended to be called when editing a `done` move (that's what the override of `write` here
         is done.
         """
+        Quant = self.env['stock.quant']
 
         # First, we loop over all the move lines to do a preliminary check: `qty_done` should not
         # be negative and, according to the presence of a picking type or a linked inventory
@@ -406,7 +410,6 @@ class StockMoveLine(models.Model):
         done_ml = self.env['stock.move.line']
         for ml in self - ml_to_delete:
             if ml.product_id.type == 'product':
-                Quant = self.env['stock.quant']
                 rounding = ml.product_uom_id.rounding
 
                 # if this move line is force assigned, unreserve elsewhere if needed
@@ -432,6 +435,7 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
             done_ml |= ml
+        Quant._unlink_zero_quants()
         # Reset the reserved quantity as we just moved it to the destination location.
         (self - ml_to_delete).with_context(bypass_reservation_update=True).write({
             'product_uom_qty': 0.00,
