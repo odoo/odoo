@@ -115,6 +115,14 @@ return {
         }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
+        // The following line is necessary to prevent the scrollbar to appear
+        // on the textarea on Firefox when adding a new line if the current line
+        // has just enough characters to completely fill the line.
+        // This fix should be fine since we compute the height depending on the
+        // content, there should never be an overflow.
+        // TODO ideally understand why and fix this another way if possible.
+        $textarea.css({'overflow-y': 'hidden'});
+
         resize();
         removeVerticalResize();
         $textarea.data("auto_resize", true);
