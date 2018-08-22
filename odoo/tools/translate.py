@@ -241,11 +241,14 @@ def translate_xml_node(node, callback, parse, serialize):
                 # child is translatable inline; add it to todo
                 todo.append(child)
                 todo_has_text = todo_has_text or child_has_text
-
         # determine whether node is translatable inline
         if (
             node.tag in TRANSLATED_ELEMENTS and
-            not (result.text or len(result)) and
+            not (
+                result.text or
+                len(result) or
+                set(result.attrib.keys()) & set(TRANSLATED_ATTRS)
+            ) and
             not any(name.startswith("t-") for name in node.attrib)
         ):
             # complete result and return it
