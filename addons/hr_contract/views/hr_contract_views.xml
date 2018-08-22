@@ -191,6 +191,8 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_small_column">
                     <field name="employee_id"/>
+                    <field name="activity_state"/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
