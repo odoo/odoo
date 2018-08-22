@@ -7,7 +7,6 @@
        Auto-complete partner companies' data
     """,
     'author': "Odoo SA",
-    'website': "http://www.odoo.com",
     'category': 'Tools',
     'version': '1.0',
 

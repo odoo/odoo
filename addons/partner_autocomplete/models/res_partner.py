@@ -140,6 +140,10 @@ class ResPartner(models.Model):
         def format_results(suggestions):
             results = []
             for suggestion in suggestions:
+                # If coming from our IAP DB, should be reformatted
+                # ex: company.domain -> company.website
+                #     concat comments
+                #     etc...
                 if suggestion.get('company_data_id'):
                     results.append(self._format_data_company(suggestion))
                 else:
@@ -149,7 +153,7 @@ class ResPartner(models.Model):
         suggestions = False
 
         try:
-            url = 'http://odoo:8069/iap/partner_autocomplete/search'
+            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/search'
             params = {
                 'query': query,
                 'country_code': self.env.user.company_id.country_id.code,
@@ -168,14 +172,15 @@ class ResPartner(models.Model):
         enrichment_data = False
 
         try:
-            url = 'http://odoo:8069/iap/partner_autocomplete/enrich'
+            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/enrich'
             params = {
                 'domain': company_domain,
                 'company_data_id': company_data_id,
                 'country_code': self.env.user.company_id.country_id.code,
             }
             enrichment_data = jsonrpc(url, params=params)
-            enrichment_data = self._format_data_company(enrichment_data)
+            if enrichment_data:
+                enrichment_data = self._format_data_company(enrichment_data)
         except (ConnectionError, HTTPError, exceptions.AccessError ) as exception:
             _logger.error('Enrichment API error: %s' % str(exception))
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))
@@ -187,7 +192,7 @@ class ResPartner(models.Model):
         vies_vat_data = False
 
         try:
-            url = 'http://odoo:8069/iap/partner_autocomplete/search_vat'
+            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/search_vat'
             params = {
                 'vat': vat,
                 'country_code': self.env.user.company_id.country_id.code,
@@ -201,47 +206,3 @@ class ResPartner(models.Model):
             raise exceptions.UserError(_('Connection to Encrichment API failed.'))
 
         return vies_vat_data
-
-
-    def _update_autocomplete_vat(self, vat):
-        self.ensure_one()
-        if vat and self.company_data_id:
-            vat_country_code = vat[:2]
-            partner_country_code = self.country_id and self.country_id.code
-            if self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code):
-                try:
-                    url = 'http://odoo:8069/iap/partner_autocomplete/update_vat'
-                    params = {
-                        'vat': vat,
-                        'company_data_id': self.company_data_id,
-                    }
-                    jsonrpc(url, params=params)
-                except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
-                    _logger.error('Autocomplete API - VAT Update Error: %s' % str(exception))
-
-    @api.model
-    def create(self, values):
-        record = super(ResPartner, self).create(values)
-        if values.get('vat', False):
-            record._update_autocomplete_vat(values.get('vat'))
-        return record
-
-    @api.multi
-    def write(self, values):
-        vat = values.get('vat', False)
-        if vat:
-            for partner in self.filtered(lambda partner: partner.vat != vat):
-                partner._update_autocomplete_vat(vat)
-        return super(ResPartner, self).write(values)
-
-    @api.model
-    def _is_company_in_europe(self, country_code):
-        country = self.env['res.country'].search([('code', '=', country_code)])
-        if country:
-            country_id = country.id
-            europe = self.env.ref('base.europe')
-            if not europe:
-                europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
-            if not europe or country_id not in europe.country_ids.ids:
-                return False
-        return True
