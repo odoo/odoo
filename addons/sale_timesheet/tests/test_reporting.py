@@ -15,7 +15,10 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
-        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+        # tweak demo data: force currency and remove confusing rates
+        company_currency = cls.env.user.company_id.currency_id
+        cls.env.ref('product.list0').currency_id = company_currency
+        cls.env['res.currency.rate'].search([('currency_id', '=', company_currency.id), ('company_id', '=', cls.env.user.company_id.id)]).unlink()  # there a rate to convert USD into USD in demo data
 
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
