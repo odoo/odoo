@@ -151,6 +151,12 @@
                                     <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="border-bottom:1px solid #dddddd;">
                                             <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
+                                                <td><span t-esc="amount_by_group[0]"/></td>
+                                                <td class="text-right">
+                                                    <span t-esc="amount_by_group[3]" />
+                                                </td>
+                                            </t>
+                                            <t t-else="">
                                                 <td>
                                                     <span t-esc="amount_by_group[0]"/>
                                                     <span>&amp;nbsp;<span>on</span>
@@ -159,12 +165,6 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <span t-esc="amount_by_group[3]"/>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
-                                                <td><span t-esc="amount_by_group[0]"/></td>
-                                                <td class="text-right">
-                                                    <span t-esc="amount_by_group[3]" />
                                                 </td>
                                             </t>
                                         </tr>

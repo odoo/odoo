@@ -318,8 +318,8 @@ class AccountVoucher(models.Model):
                             'move_id': move_id,
                             'date': self.account_date,
                             'partner_id': self.partner_id.id,
-                            'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
-                            'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                            'debit': self.voucher_type != 'sale' and tax_vals['amount'] or 0.0,
+                            'credit': self.voucher_type == 'sale' and tax_vals['amount'] or 0.0,
                             'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                         }
                         if company_currency != current_currency:

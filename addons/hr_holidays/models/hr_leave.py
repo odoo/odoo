@@ -622,12 +622,12 @@ class HolidaysRequest(models.Model):
             elif holiday.state == 'confirm':
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_approval',
-                    user_id=holiday._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id)
             elif holiday.state == 'validate1':
                 holiday.activity_feedback(['hr_holidays.mail_act_leave_approval'])
                 holiday.activity_schedule(
                     'hr_holidays.mail_act_leave_second_approval',
-                    user_id=holiday._get_responsible_for_approval().id)
+                    user_id=holiday.sudo()._get_responsible_for_approval().id)
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':
