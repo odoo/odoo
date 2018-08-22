@@ -605,18 +605,17 @@ odoo.define('website_form_editor.tour', function(require) {
             run: function () {
                 var mailDef = rpc.query({
                         model: 'mail.mail',
-                        method: 'search_read',
-                        domain: [
+                        method: 'search_count',
+                        args: [[
                             ['email_to', '=', 'test@test.test'],
                             ['body_html', 'like', 'A useless message'],
                             ['body_html', 'like', 'Service : Development Service'],
                             ['body_html', 'like', 'State : Belgium'],
                             ['body_html', 'like', 'Products : Xperia,Wiko Stairway']
-                        ],
-                        fields: [],
+                        ]],
                     });
-                var success = function(model, data) {
-                    if(data.length) {
+                var success = function(model, count) {
+                    if (count > 0) {
                         $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
                     }
                 };
