@@ -608,6 +608,21 @@ class AccountMoveLine(models.Model):
             :param excluded_ids: list of ids of move lines that should not be fetched
             :param str: search string
         """
+        epsilon = 0.0001
+
+        def _domain_range_amount(field, amount, signed=False):
+            def build_for_amount(amount):
+                return expression.AND([
+                    [(field, '>=', amount - epsilon)],
+                    [(field, '<=', amount + epsilon)]
+                ])
+
+            unsigned_domain = build_for_amount(amount)
+            if not signed:
+                return unsigned_domain
+
+            return expression.OR([unsigned_domain, build_for_amount(-amount)])
+
         context = (self._context or {})
         if excluded_ids is None:
             excluded_ids = []
@@ -624,14 +639,20 @@ class AccountMoveLine(models.Model):
             ]
             try:
                 amount = float(str)
-                amount_domain = [
-                    '|', ('amount_residual', '=', amount),
-                    '|', ('amount_residual_currency', '=', amount),
-                    '|', ('amount_residual', '=', -amount),
-                    '|', ('amount_residual_currency', '=', -amount),
-                    '&', ('account_id.internal_type', '=', 'liquidity'),
-                    '|', '|', ('debit', '=', amount), ('credit', '=', amount), ('amount_currency', '=', amount),
-                ]
+                residual_domain = expression.OR([
+                    _domain_range_amount(field, amount, True)
+                    for field in ('amount_residual', 'amount_residual_currency')
+                ])
+
+                liquidity_domain = expression.AND([
+                    [('account_id.internal_type', '=', 'liquidity')],
+                    expression.OR([
+                        _domain_range_amount(field, amount)
+                        for field in ('debit', 'credit', 'amount_currency')
+                    ])
+                ])
+
+                amount_domain = expression.OR([residual_domain, liquidity_domain])
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
                 pass
