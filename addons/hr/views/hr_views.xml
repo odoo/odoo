@@ -409,7 +409,7 @@
                 <kanban class="o_kanban_mobile">
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_global_click">
                                 <div>
                                     <strong><field name="name"/></strong>
                                 </div>
@@ -418,7 +418,7 @@
                                 </div>
                                 <div>
                                     <span>Vacancies : <field name="expected_employees"/></span>
-                                    <span t-att-class="'float-right badge badge-success' if record.state.raw_value == 'recruit' else 'float-right badge badge-danger'">
+                                    <span t-att-class="record.state.raw_value == 'recruit'  and 'float-right badge badge-success' or 'float-right badge badge-danger'">
                                         <field name="state"/>
                                     </span>
                                 </div>

@@ -5,13 +5,13 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
-                <t t-if="o.move_lines and o.move_lines[0].partner_id and not o.partner_id" name="partner_header">
+                <t t-if="o.move_lines and o.move_lines[0].partner_id" name="partner_header">
                     <t t-set="address">
                         <div t-field="o.move_lines[0].partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                    </t>
                 </t>
-                <t t-if="o.partner_id" name="partner_header">
+                <t t-if="not (o.move_lines and o.move_lines[0].partner_id) and o.partner_id" name="partner_header">
                     <t t-set="address">
                         <div t-field="o.partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>

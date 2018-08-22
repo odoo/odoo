@@ -36,6 +36,15 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('refund_invoice_ids')
         return rslt
 
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        if new and self.sale_line_id and self.sale_line_id.order_id:
+            self.picking_id.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
