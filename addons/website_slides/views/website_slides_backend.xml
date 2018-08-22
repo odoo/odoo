@@ -231,7 +231,7 @@
                             <page string="General">
                                 <group>
                                     <group>
-                                        <field name="website_id" groups="website.group_multi_website"/>
+                                        <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                         <field name="promote_strategy" widget="radio"/>
                                         <field name="custom_slide_id" class="oe_edit_only" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}" domain="[('channel_id','=',id), ('website_published','=',True)]"/>
                                         <field name="promoted_slide_id" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}"/>

@@ -107,7 +107,7 @@
                     <group name="shop">
                         <group string="Shop">
                             <field name="website_url" invisible="1"/>
-                            <field name="website_id" groups="website.group_multi_website"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
@@ -199,7 +199,7 @@
                         <group>
                             <field name="name"/>
                             <field name="parent_id"/>
-                            <field name="website_id" groups="website.group_multi_website"/>
+                            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             <field name="sequence"/>
                         </group>
                     </div>
@@ -243,7 +243,7 @@
         <field name="arch" type="xml">
             <field name='currency_id' position='after'>
                 <field name="selectable"/>
-                <field name="website_id" string="Allow to use on " placeholder="None website"/>
+                <field name="website_id" options="{'no_create': True}" string="Allow to use on " placeholder="None website"/>
             </field>
         </field>
     </record>
@@ -255,6 +255,7 @@
         <field name="arch" type="xml">
             <field name="currency_id" position="after">
                 <field name="selectable" />
+                <field name="website_id" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

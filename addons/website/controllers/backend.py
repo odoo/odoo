@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.tools.translate import _
 
 
 class WebsiteBackend(http.Controller):
@@ -30,12 +31,10 @@ class WebsiteBackend(http.Controller):
                 website['selected'] = True
 
         if has_group_designer:
-            config = request.env['res.config.settings'].sudo().create({})
-            config.website_id = current_website
-            if config.has_google_analytics_dashboard:
+            if current_website.google_management_client_id and current_website.google_analytics_key:
                 dashboard_data['dashboards']['visits'] = dict(
-                    ga_client_id=config.google_management_client_id or '',  # void string instead of stringified False
-                    ga_analytics_key=config.google_analytics_key or '',  # void string instead of stringified False
+                    ga_client_id=current_website.google_management_client_id or '',
+                    ga_analytics_key=current_website.google_analytics_key or '',
                 )
         return dashboard_data
 
@@ -44,23 +43,21 @@ class WebsiteBackend(http.Controller):
         if not request.env.user.has_group('base.group_system'):
             return {
                 'error': {
-                    'title': 'Access Error',
-                    'message': 'You do not have sufficient rights to perform that action.',
+                    'title': _('Access Error'),
+                    'message': _('You do not have sufficient rights to perform that action.'),
                 }
             }
         if not ga_analytics_key or not ga_client_id.endswith('.apps.googleusercontent.com'):
             return {
                 'error': {
-                    'title': 'Incorrect Client ID / Key',
-                    'message': 'The Google Analytics Client ID or Key you entered seems incorrect.',
+                    'title': _('Incorrect Client ID / Key'),
+                    'message': _('The Google Analytics Client ID or Key you entered seems incorrect.'),
                 }
             }
         Website = request.env['website']
         current_website = website_id and Website.browse(website_id) or Website.get_current_website()
 
         request.env['res.config.settings'].create({
-            'has_google_analytics': True,
-            'has_google_analytics_dashboard': True,
             'google_management_client_id': ga_client_id,
             'google_analytics_key': ga_analytics_key,
             'website_id': current_website,
