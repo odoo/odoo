@@ -48,9 +48,9 @@
                     <section class="container wishlist-section">
                         <h3>My Wishlist</h3>
                         <div class="checkbox">
-                            <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" />Add product to my cart but keep it in my wishlist</label>
+                            <label class='text-muted'><input type="checkbox" id='b2b_wish' value="1" class="mr8"/>Add product to my cart but keep it in my wishlist</label>
                         </div>
-                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator" id="o_comparelist_table">
+                        <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
                             <body>
                                 <t t-foreach="wishes" t-as="wish">
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
@@ -64,11 +64,7 @@
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
-                                        <td style='width:80px'>
-                                            <t t-if='wish.price_new != wish.price'>
-                                                <del class='text-danger'><t t-esc='wish.price' t-options="{'widget': 'monetary', 'display_currency': wish.currency_id}"/></del>
-                                                <br/>
-                                            </t>
+                                        <td>
                                             <t t-esc="wish.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.pricelist_id.currency_id}"/>
                                         </td>
                                         <td class='text-center td-wish-btn'>
