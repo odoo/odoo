@@ -307,15 +307,6 @@ var ListController = BasicController.extend({
         });
     },
     /**
-     * Hides the create button when groupedby list
-    */
-    _onToggleCreate: function (){
-        if (this.$buttons){
-            var state = this.model.get(this.handle);
-            var $createButton = this.$buttons.find('.o_list_button_add');
-            $createButton.toggleClass('o_hidden', !!state.groupedBy.length);        }
-    },
-    /**
      * This function is the hook called by the field manager mixin to confirm
      * that a record has been saved.
      *
@@ -580,6 +571,18 @@ var ListController = BasicController.extend({
         this.model.setSort(data.id, ev.data.name).then(function () {
             self.update({});
         });
+    },
+    /**
+     * Hides the create button in a grouped list
+     *
+     * @private
+     */
+    _onToggleCreate: function () {
+        if (this.$buttons) {
+            var state = this.model.get(this.handle);
+            var $createButton = this.$buttons.find('.o_list_button_add');
+            $createButton.toggleClass('o_hidden', !!state.groupedBy.length);
+        }
     },
     /**
      * In a grouped list view, each group can be clicked on to open/close them.
