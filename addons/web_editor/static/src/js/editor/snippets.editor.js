@@ -668,7 +668,10 @@ var SnippetsMenu = Widget.extend({
             $selectorChildren.each(function () {
                 var $zone = $(this);
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
                 var $drop = zone_template.clone();
 
                 $zone.append($drop);
@@ -680,7 +683,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block',
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
                 }
 
@@ -695,7 +698,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block'
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
                 }
                 if (test) {
@@ -712,18 +715,21 @@ var SnippetsMenu = Widget.extend({
                 var $zone = $(this);
                 var $drop;
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
                     }
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
                     }
                     $zone.after($drop);
