@@ -1223,8 +1223,10 @@ var SnippetsMenu = Widget.extend({
 
                 $('.oe_drop_zone').droppable({
                     over: function () {
-                        dropped = true;
-                        $(this).first().after($toInsert).addClass('d-none');
+                        if (!dropped) {
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('d-none');
+                        }
                     },
                     out: function () {
                         var prev = $toInsert.prev();
