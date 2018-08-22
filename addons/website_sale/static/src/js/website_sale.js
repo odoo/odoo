@@ -344,7 +344,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         this._rpc({
             route: "/shop/country_infos/" + $("#country_id").val(),
             params: {
-                mode: 'shipping',
+                mode: $("#country_id").attr('mode'),
             },
         }).then(function (data) {
             // placeholder phone_code
