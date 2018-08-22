@@ -267,6 +267,19 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Triggers up an event to cancel the quick creation
+     *
+     * @override
+     * @private
+     */
+    _cancel: function () {
+        if (!this.folded) {
+            this.folded = true;
+            this.$input.val('');
+            this._update();
+        }
+    },
+    /**
      * Triggers up an event to quick create a column with the given value
      *
      * @override
