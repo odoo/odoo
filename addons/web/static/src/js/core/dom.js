@@ -87,6 +87,18 @@ return {
             $textarea.css({height: Math.max(height + heightOffset, minHeight)});
         }
 
+        function removeVerticalResize() {
+            // We already compute the correct height:
+            // we don't want the user to resize it vertically.
+            // On Chrome this needs to be called after the DOM is ready.
+            var style = window.getComputedStyle($textarea[0], null);
+            if (style.resize === 'vertical') {
+                $textarea[0].style.resize = 'none';
+            } else if (style.resize === 'both') {
+                $textarea[0].style.resize = 'horizontal';
+            }
+        }
+
         options = options || {};
         minHeight = (options && options.min_height) || 50;
 
@@ -103,18 +115,16 @@ return {
         }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
-        var style = window.getComputedStyle($textarea[0], null);
-        if (style.resize === 'vertical') {
-            $textarea[0].style.resize = 'none';
-        } else if (style.resize === 'both') {
-            $textarea[0].style.resize = 'horizontal';
-        }
         resize();
+        removeVerticalResize();
         $textarea.data("auto_resize", true);
 
         $textarea.on('input focus change', resize);
         if (options.parent) {
-            core.bus.on('DOM_updated', options.parent, resize);
+            core.bus.on('DOM_updated', options.parent, function () {
+                resize();
+                removeVerticalResize();
+            });
         }
     },
     /**
