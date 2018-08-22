@@ -241,8 +241,7 @@ var BasicModel = AbstractModel.extend({
             var fieldType = group.fields[rawGroupField].type;
             if (fieldType === 'many2one'){
                 value = group.res_id || false;
-            }
-            else if (fieldType === 'selection') {
+            } else if (fieldType === 'selection') {
                 var choice = _.find(group.fields[groupByField].selection, function (option) {
                     return option[1] === group.value;
                 });

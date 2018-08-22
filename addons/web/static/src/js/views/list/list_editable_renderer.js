@@ -236,7 +236,7 @@ ListRenderer.include({
         // been applied
         var currentRowID, currentWidget, focusedElement, selectionRange;
         if (this.currentRow !== null) {
-            currentRowID = self.getRecordID(this.currentRow);
+            currentRowID = this.getRecordID(this.currentRow);
             currentWidget = this.allFieldWidgets[currentRowID][this.currentFieldIndex];
             if (currentWidget) {
                 focusedElement = currentWidget.getFocusableElement().get(0);
@@ -281,14 +281,14 @@ ListRenderer.include({
                 return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true}
                     ).then(function () {
                     // restore the cursor position
-                        currentRowID = self.getRecordID(newRowIndex);
-                        currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
-                        if (currentWidget) {
-                            focusedElement = currentWidget.getFocusableElement().get(0);
-                            if (selectionRange) {
-                                dom.setSelectionRange(focusedElement, selectionRange);
-                            }
+                    currentRowID = self.getRecordID(newRowIndex);
+                    currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
+                    if (currentWidget) {
+                        focusedElement = currentWidget.getFocusableElement().get(0);
+                        if (selectionRange) {
+                            dom.setSelectionRange(focusedElement, selectionRange);
                         }
+                    }
                 });
             }
         });
@@ -350,6 +350,7 @@ ListRenderer.include({
     setRowMode: function (recordID, mode) {
         var self = this;
 
+        // find the record and its row index (handles ungrouped and grouped cases)
         var record = self.getRecord(recordID);
         var $row = this.getRow(recordID);
         if (!record) {
