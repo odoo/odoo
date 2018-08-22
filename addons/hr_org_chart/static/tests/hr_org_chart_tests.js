@@ -77,6 +77,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [],
                         managers_more: false,
@@ -129,6 +130,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [{
                             direct_sub_count: 1,
