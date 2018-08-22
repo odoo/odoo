@@ -59,12 +59,14 @@
                             </ol>
                         </div>
                         <div class="col-md-4 text-right">
-                            <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <div class="form-group">
+                            <form class="form-inline justify-content-end" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="input-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
                                         t-att-value="search or None"/>
-                                    <button type="submit" class="btn btn-secondary">Search</button>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-secondary">Search</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -98,12 +100,14 @@
                             </ol>
                         </div>
                         <div class="col-md-4 text-right" t-if="forum">
-                            <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <div class="form-group">
+                            <form class="form-inline justify-content-end" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="input-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search..."
                                         t-att-value="search or None"/>
-                                    <button type="submit" class="btn btn-secondary">Search</button>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-secondary">Search</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
