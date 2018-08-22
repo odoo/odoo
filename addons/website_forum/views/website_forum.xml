@@ -102,7 +102,7 @@
         </div>
 
         <div id="wrap" class="container">
-            <div class="row mb16">
+            <div class="row mt-3 mb-3">
                 <div class="col-md-9">
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable" role="status">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&amp;times;</button>
@@ -1272,10 +1272,10 @@
 <template id="edit_profile">
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
-        <div class="row">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form" enctype="multipart/form-data">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
+        <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
+            <div class="row">
                 <div class="col-lg-2">
                     <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
                         <i class="fa fa-pencil fa-1g float-left" title="Edit"></i>
@@ -1288,20 +1288,20 @@
                 <div class="col-lg-10">
                     <input name="user_id" t-att-value="user.id" type="hidden"/>
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_name">Real name</label>
+                        <label class="col-lg-3 col-form-label mb16" for="user_name">Real name</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                        <label class="col-lg-3 col-form-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
                         <div class="col-lg-8 mb16" t-if="user.id == uid">
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_website">Website</label>
+                        <label class="col-lg-3 col-form-label mb16" for="user_website">Website</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                         </div>
@@ -1311,19 +1311,19 @@
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                         </div>
-                        <label class="col-lg-2 col-form-label mb16" for="user_email">Email</label>
+                        <label class="col-lg-3 col-form-label mb16" for="user_email">Email</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_city">City</label>
+                        <label class="col-lg-3 col-form-label mb16" for="user_city">City</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16">Country</label>
+                        <label class="col-lg-3 col-form-label mb16">Country</label>
                         <div class="col-lg-8 mb16">
                             <select class="form-control" name="country">
                                 <option value="">Country...</option>
@@ -1335,18 +1335,20 @@
                     </div>
                     <!--Note: using website_description fiels instead of using commnt firld of partner-->
                     <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="description">Biography</label>
+                        <label class="col-lg-3 col-form-label mb16" for="description">Biography</label>
                         <div class="col-lg-8 mb16">
                             <textarea name="description" id="description" style="min-height: 120px" required="True"
                                 class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                         </div>
                     </div>
-                    <div class="offset-md-2 col-lg-2 mb16"><!-- FIXME should in a row -->
-                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    <div class="form-group row">
+                        <div class="offset-lg-3 col-lg-8">
+                            <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </t>
 </template>
 
