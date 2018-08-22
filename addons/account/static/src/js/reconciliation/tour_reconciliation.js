@@ -27,20 +27,14 @@ Tour.register('bank_statement_reconciliation', {
                     throw new Error("'account.bank.statement' named 'BNK/2014/001' not found");
                 });
             },
-            timeout: 5000
         },
-        {
-            content: "wait reconciliation page",
-            trigger: '.o_reconciliation',
-            run: function () {},
-        },
-
         // Reconciliation of 'SAJ/2018/002'
         // Select the 'INV/2018/0002' line and click on reconcile.
 
         {
             content: "open the last line in match mode to test the reconcile button",
             trigger: '.toggle_match:last',
+            extra_trigger: '.o_reconciliation',
         },
         {
             content: "select the 'INV/2018/0002' line",
