@@ -103,6 +103,14 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
          * return {undefined|false}
          */
         _onKeyDown: function (keyDownEvent) {
+            if ($('body.o_ui_blocked').length &&
+            (keyDownEvent.altKey || keyDownEvent.key === 'Alt') &&
+            !keyDownEvent.ctrlKey) {
+                if (keyDownEvent.preventDefault) keyDownEvent.preventDefault(); else keyDownEvent.returnValue = false;
+                if (keyDownEvent.stopPropagation) keyDownEvent.stopPropagation();
+                if (keyDownEvent.cancelBubble) keyDownEvent.cancelBubble = true;
+                return false;
+            }
             if (!this._areAccessKeyVisible &&
                 (keyDownEvent.altKey || keyDownEvent.key === 'Alt') &&
                 !keyDownEvent.ctrlKey) {
