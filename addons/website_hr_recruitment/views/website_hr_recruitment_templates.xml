@@ -83,7 +83,7 @@
                     </div>
                     <label class="mb0 mt16"><a href="/jobs">Jobs</a></label> /
                     <h1 class="mb0 mt0" t-field="job.name"/>
-                    <h4 class="mt0" t-field="job.address_id" t-field-options='{
+                    <h4 class="mt0" t-field="job.address_id" t-options='{
                         "widget": "contact",
                         "fields": ["city"],
                         "no_tag_br": True
@@ -407,7 +407,7 @@
                                         <h3 class="mb32 text-center">Your application has been sent to:</h3>
                                     </div>
                                     <div class="col-lg-1 offset-lg-4">
-                                        <p t-field="responsible.image_small" t-field-options="{'widget': 'image', 'class': 'rounded-circle d-block mx-auto'}"/>
+                                        <p t-field="responsible.image_small" t-options="{'widget': 'image', 'class': 'rounded-circle d-block mx-auto'}"/>
                                     </div>
                                     <div class="col-lg-5 o_responsible_data">
                                         <h4 class="mt0" t-field="responsible.name"/>
