@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import random
+import json
 
 import itertools
 
@@ -266,3 +267,11 @@ class BlogPost(models.Model):
         if msg_type == 'comment':
             return {'needaction_partner_ids': []}
         return {}
+
+    def _default_website_meta(self):
+        res = super(BlogPost, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
+        blog_post_cover_properties = json.loads(self.cover_properties)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        return res
