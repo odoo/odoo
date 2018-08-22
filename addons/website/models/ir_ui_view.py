@@ -204,6 +204,9 @@ class View(models.Model):
                     new_context = dict(self._context, inherit_branding=True)
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
+            # Fallback incase main_object dont't inherit 'website.seo.metadata'
+            if values and 'main_object' in values and not hasattr(values['main_object'], 'get_website_meta'):
+                values['main_object'].get_website_meta = lambda: {}
 
         if self._context != new_context:
             self = self.with_context(new_context)
