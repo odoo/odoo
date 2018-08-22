@@ -75,10 +75,11 @@ def amount_to_text(number, currency):
     return ' '.join(filter(None, [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name]))
 
 
+add_amount_to_text_function('en', amount_to_text)
+
 #-------------------------------------------------------------
 # Generic functions
 #-------------------------------------------------------------
-add_amount_to_text_function('en', amount_to_text)
 
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
