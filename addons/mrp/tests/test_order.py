@@ -589,6 +589,46 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "Production order should be in done state.")
 
+    def test_product_produce_4(self):
+        """ Possibility to produce with a given raw material in multiple locations. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.stock_shelf_1 = self.env.ref('stock.stock_location_components')
+        self.stock_shelf_2 = self.env.ref('stock.stock_location_14')
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=5)
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_1, 2)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_shelf_2, 3)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 1)
+
+        mo.action_assign()
+        ml_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1).mapped('move_line_ids')
+        ml_p2 = mo.move_raw_ids.filtered(lambda x: x.product_id == p2).mapped('move_line_ids')
+        self.assertEqual(len(ml_p1), 2)
+        self.assertEqual(len(ml_p2), 1)
+
+        # Add some quantity already done to force an extra move line to be created
+        ml_p1[0].qty_done = 1.0
+
+        # Produce baby!
+        product_produce = self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }).create({
+            'product_qty': 1.0,
+        })
+        product_produce._onchange_product_qty()
+        product_produce.do_produce()
+
+        ml_p1 = mo.move_raw_ids.filtered(lambda x: x.product_id == p1).mapped('move_line_ids')
+        self.assertEqual(len(ml_p1), 4)
+        for ml in ml_p1:
+            self.assertIn(ml.qty_done, [1.0, 2.0], 'Quantity done should be 1.0, 2.0 or 3.0')
+        self.assertEqual(sum(ml_p1.mapped('qty_done')), 6.0, 'Total qty consumed should be 6.0')
+        self.assertEqual(sum(ml_p1.mapped('product_uom_qty')), 5.0, 'Total qty reserved should be 5.0')
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
     def test_product_produce_uom(self):
         plastic_laminate = self.env.ref('mrp.product_product_plastic_laminate')
         bom = self.env.ref('mrp.mrp_bom_plastic_laminate')
