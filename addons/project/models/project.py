@@ -789,7 +789,7 @@ class Task(models.Model):
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = (
             'group_project_user',
-            lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups']
+            lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'],
             {},
         )
 
