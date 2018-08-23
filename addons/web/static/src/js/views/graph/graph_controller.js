@@ -164,6 +164,9 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
         _.each(this.$measureList.find('.dropdown-item'), function (item) {
             var $item = $(item);
             $item.toggleClass('selected', $item.data('field') === state.measure);
+            if ($item.data('field') === state.measure) {
+                 $item.parents('.btn-group').find('.dropdown-toggle').text($item.text());
+            }
         });
     },
 

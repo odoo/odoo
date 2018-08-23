@@ -177,7 +177,7 @@ QUnit.module('Views', {
 
     QUnit.test('switching measures', function (assert) {
         var done = assert.async();
-        assert.expect(4);
+        assert.expect(5);
 
         var rpcCount = 0;
 
@@ -204,6 +204,8 @@ QUnit.module('Views', {
         }).then(function () {
             assert.ok(graph.$('text.nv-legend-text:contains(Foo)').length,
                 "should now use the Foo measure");
+            assert.strictEqual(graph.$buttons.find('.dropdown-toggle').text(), "Foo",
+                "button should now have text Foo");
             assert.strictEqual(rpcCount, 2, "should have done 2 rpcs (2 readgroups)");
             graph.destroy();
             done();
