@@ -49,7 +49,7 @@ class SaleReport(models.Model):
     discount = fields.Float('Discount %', readonly=True)
     discount_amount = fields.Float('Discount Amount', readonly=True)
 
-    order_id = fields.Integer('Order ID', readonly=True)
+    order_id = fields.Many2one('sale.order', 'Order ID', readonly=True)
 
     def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
         with_ = ("WITH %s" % with_clause) if with_clause else ""
