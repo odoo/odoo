@@ -32,7 +32,7 @@
 
 
 {
-    'name': 'Deutschland SKR03 - Accounting',
+    'name': 'Germany SKR03 - Accounting',
     'version': '3.0',
     'author': 'openbig.org',
     'website': 'http://www.openbig.org',
