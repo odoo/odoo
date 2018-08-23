@@ -52,6 +52,7 @@ class StockWarehouse(models.Model):
                 'pbm_sam': [
                     self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
                     self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
+                    self.Routing(production_location_id, warehouse.sam_loc_id, warehouse.sam_type_id, 'push'),
                 ],
             })
         return result
@@ -147,7 +148,7 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
-                    'action': 'pull_push',
+                    'action': 'pull',
                     'auto': 'manual',
                     'propagate': True,
                     'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', 'Manufacture').id,
