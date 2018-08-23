@@ -152,42 +152,6 @@ class MailActivity(models.Model):
         help='Technical field for UX purpose')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
 
-    @api.model
-    def get_activity_data(self, res_model, domain):
-        res = self.env[res_model].search(domain)
-        activity_domain = [('res_id', 'in', res.ids), ('res_model', '=', res_model)]
-        grouped_activities = self.env['mail.activity'].read_group(activity_domain, ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'], ['res_id', 'activity_type_id'], lazy=False)
-        activity_type_ids = self.env['mail.activity.type']
-        res_list = set()
-        activity_data = defaultdict(dict)
-        for group in grouped_activities:
-            res_id = group['res_id']
-            res_name = group['res_name']
-            activity_type_id = group['activity_type_id'][0]
-            activity_type_ids |= self.env['mail.activity.type'].browse(activity_type_id)  # we will get the name when reading mail_template_ids
-            res_list.add((res_id, res_name))
-            state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
-            activity_data[res_id][activity_type_id] = {
-                'count': group['__count'],
-                'domain': group['__domain'],
-                'ids': group['ids'],
-                'state': state,
-                'o_closest_deadline': group['date_deadline'],
-            }
-        activity_type_infos = []
-        for elem in activity_type_ids:
-            mail_template_info = []
-            for mail_template_id in elem.mail_template_ids:
-                mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
-            activity_type_infos.append([elem.id, elem.name, mail_template_info])
-
-        return {
-            'activity_types': activity_type_infos,
-            'res_ids': list(res_list),
-            'grouped_activities': activity_data,
-            'model': res_model,
-        }
-
     @api.multi
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):
@@ -434,6 +398,42 @@ class MailActivity(models.Model):
         for activity in activities:
             activity['mail_template_ids'] = [mail_template_dict[mail_template_id] for mail_template_id in activity['mail_template_ids']]
         return activities
+
+    @api.model
+    def get_activity_data(self, res_model, domain):
+        res = self.env[res_model].search(domain)
+        activity_domain = [('res_id', 'in', res.ids), ('res_model', '=', res_model)]
+        grouped_activities = self.env['mail.activity'].read_group(activity_domain, ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'], ['res_id', 'activity_type_id'], lazy=False)
+        activity_type_ids = self.env['mail.activity.type']
+        res_list = set()
+        activity_data = defaultdict(dict)
+        for group in grouped_activities:
+            res_id = group['res_id']
+            res_name = group['res_name']
+            activity_type_id = group['activity_type_id'][0]
+            activity_type_ids |= self.env['mail.activity.type'].browse(activity_type_id)  # we will get the name when reading mail_template_ids
+            res_list.add((res_id, res_name))
+            state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
+            activity_data[res_id][activity_type_id] = {
+                'count': group['__count'],
+                'domain': group['__domain'],
+                'ids': group['ids'],
+                'state': state,
+                'o_closest_deadline': group['date_deadline'],
+            }
+        activity_type_infos = []
+        for elem in activity_type_ids:
+            mail_template_info = []
+            for mail_template_id in elem.mail_template_ids:
+                mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
+            activity_type_infos.append([elem.id, elem.name, mail_template_info])
+
+        return {
+            'activity_types': activity_type_infos,
+            'res_ids': list(res_list),
+            'grouped_activities': activity_data,
+            'model': res_model,
+        }
 
 
 class MailActivityMixin(models.AbstractModel):
