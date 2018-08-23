@@ -39,6 +39,16 @@ var TimeRangeMenu = Widget.extend({
             }
         });
         this.periodOptions = PeriodOptions;
+        this.periodGroups = PeriodOptions.reduce(
+            function (acc, option) {
+                if (!_.contains(acc, option.groupId)) {
+                    acc.push(option.groupId);
+                }
+                return acc;
+            },
+            []
+        );
+
         this.comparisonOptions = ComparisonOptions;
 
         // Following steps determine initial configuration

@@ -187,6 +187,9 @@ QUnit.module('Search View', {
         };
 
         this.periodOptions = [
+          'last_7_days',
+          'last_30_days',
+          'last_365_days',
           'today',
           'this_week',
           'this_month',
@@ -197,13 +200,16 @@ QUnit.module('Search View', {
           'last_month',
           'last_quarter',
           'last_year',
-          'last_7_days',
-          'last_30_days',
-          'last_365_days'
         ];
 
         // assuming that the current time is: 2017-03-22:01:00:00
         this.periodDomains = [
+            // last 7 days (whole days)
+            ['&', ["date_field", ">=", "2017-03-15"],["date_field", "<", "2017-03-22"]],
+            // last 30 days
+            ['&', ["date_field", ">=", "2017-02-20"],["date_field", "<", "2017-03-22"]],
+            // last 365 days
+            ['&', ["date_field", ">=", "2016-03-22"],["date_field", "<", "2017-03-22"]],
             // today
             ['&', ["date_field", ">=", "2017-03-22"],["date_field", "<", "2017-03-23"]],
             // this week
@@ -224,16 +230,16 @@ QUnit.module('Search View', {
             ['&', ["date_field", ">=", "2016-10-01"],["date_field", "<", "2017-01-01"]],
             // last year
             ['&', ["date_field", ">=", "2016-01-01"],["date_field", "<", "2017-01-01"]],
-            // last 7 days (whole days)
-            ['&', ["date_field", ">=", "2017-03-15"],["date_field", "<", "2017-03-22"]],
-            // last 30 days
-            ['&', ["date_field", ">=", "2017-02-20"],["date_field", "<", "2017-03-22"]],
-            // last 365 days
-            ['&', ["date_field", ">=", "2016-03-22"],["date_field", "<", "2017-03-22"]],
         ];
 
         // assuming that the current time is: 2017-03-22:01:00:00
         this.previousPeriodDomains = [
+            // last 7 days (whole days) - 1 week
+            ['&', ["date_field", ">=", "2017-03-08"],["date_field", "<", "2017-03-15"]],
+            // last 30 days - 30 days
+            ['&', ["date_field", ">=", "2017-01-21"],["date_field", "<", "2017-02-20"]],
+            // last 365 days
+            ['&', ["date_field", ">=", "2015-03-23"],["date_field", "<", "2016-03-22"]],
             // today - 1 day
             ['&', ["date_field", ">=", "2017-03-21"],["date_field", "<", "2017-03-22"]],
             // this week - 1 week
@@ -254,12 +260,6 @@ QUnit.module('Search View', {
             ['&', ["date_field", ">=", "2016-07-01"],["date_field", "<", "2016-10-01"]],
             // last year - 1 year
             ['&', ["date_field", ">=", "2015-01-01"],["date_field", "<", "2016-01-01"]],
-            // last 7 days (whole days) - 1 week
-            ['&', ["date_field", ">=", "2017-03-08"],["date_field", "<", "2017-03-15"]],
-            // last 30 days - 30 days
-            ['&', ["date_field", ">=", "2017-01-21"],["date_field", "<", "2017-02-20"]],
-            // last 365 days
-            ['&', ["date_field", ">=", "2015-03-23"],["date_field", "<", "2016-03-22"]],
         ];
     },
 }, function () {
@@ -540,6 +540,9 @@ QUnit.module('Search View', {
         assert.deepEqual(periodOptions, this.periodOptions,
             "13 period options should be available:");
 
+        $('.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
+        $('.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
         $('.o_menu_item .o_item_option[data-option_id="today"]').click();
         $('.o_menu_item .o_item_option[data-option_id="this_week"]').click();
         $('.o_menu_item .o_item_option[data-option_id="this_month"]').click();
@@ -550,9 +553,6 @@ QUnit.module('Search View', {
         $('.o_menu_item .o_item_option[data-option_id="last_month"]').click();
         $('.o_menu_item .o_item_option[data-option_id="last_quarter"]').click();
         $('.o_menu_item .o_item_option[data-option_id="last_year"]').click();
-        $('.o_menu_item .o_item_option[data-option_id="last_7_days"]').click();
-        $('.o_menu_item .o_item_option[data-option_id="last_30_days"]').click();
-        $('.o_menu_item .o_item_option[data-option_id="last_365_days"]').click();
 
         actionManager.destroy();
         window.Date = RealDate;
@@ -583,7 +583,7 @@ QUnit.module('Search View', {
         actionManager.doAction(6);
         $('span.fa-filter').click();
         $('.o_filters_menu .o_menu_item a').click();
-        $('.o_item_option:first').click();
+        $('.o_item_option[data-option_id="today"]').click();
         $('span.fa-star').click();
         $('.o_favorites_menu .o_save_search a').click();
         $('.o_favorites_menu .o_save_name button').click();
