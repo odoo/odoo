@@ -12,8 +12,6 @@
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an leave type that is 'active' (active field is True)"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                <separator/>
                 <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
                 <filter name="my_team_leaves" string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
                 <separator/>
