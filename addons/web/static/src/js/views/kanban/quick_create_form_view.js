@@ -6,8 +6,8 @@ odoo.define('web.QuickCreateFormView', function (require) {
  * is used by the RecordQuickCreate in Kanban views.
  */
 
-var FormController = require('web.FormController');
 var BasicModel = require('web.BasicModel');
+var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 

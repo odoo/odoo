@@ -358,17 +358,20 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
-     * @param {KanbanColumn} event.target the column in which the record should
+     * @param {OdooEvent} ev
+     * @param {KanbanColumn} ev.target the column in which the record should
      *   be added
-     * @param {Object} event.data.values the field values of the record to
+     * @param {Object} ev.data.values the field values of the record to
      *   create; if values only contains the value of the 'display_name', a
      *   'name_create' is performed instead of 'create'
+     * @param {function} [ev.data.onFailure] called when the quick creation
+     *   failed
      */
-    _onQuickCreateRecord: function (event) {
+    _onQuickCreateRecord: function (ev) {
         var self = this;
-        var values = event.data.values;
-        var column = event.target;
+        var values = ev.data.values;
+        var column = ev.target;
+        var onFailure = ev.data.onFailure || function () {};
 
         // function that updates the kanban view once the record has been added
         // it receives the local id of the created record in arguments
@@ -380,7 +383,7 @@ var KanbanController = BasicController.extend({
             return self.renderer
                 .updateColumn(columnState.id, columnState, {openQuickCreate: true, state: state})
                 .then(function () {
-                    if (event.data.openRecord) {
+                    if (ev.data.openRecord) {
                         self.trigger_up('open_record', {id: db_id, mode: 'edit'});
                     }
                 });
@@ -388,8 +391,8 @@ var KanbanController = BasicController.extend({
 
         this.model.createRecordInGroup(column.db_id, values)
             .then(update)
-            .fail(function (error, event) {
-                event.preventDefault();
+            .fail(function (error, ev) {
+                ev.preventDefault();
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
@@ -403,7 +406,7 @@ var KanbanController = BasicController.extend({
                         self.model.addRecordToGroup(column.db_id, record.res_id)
                             .then(update);
                     },
-                }).open();
+                }).open().opened(onFailure);
             });
     },
     /**
