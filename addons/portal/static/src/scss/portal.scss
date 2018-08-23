@@ -60,6 +60,11 @@ header {
         }
     }
 }
+.o_page_header {
+    padding-bottom: 0.625rem;
+    margin: 2.5rem 0 1.25rem;
+    border-bottom: 0.0625rem solid #eee;
+}
 @include media-breakpoint-up(md) {
     .navbar-expand-md ul.nav > li.divider {
         display: list-item;
@@ -290,7 +295,7 @@ img.o_we_custom_image {
 }
 
 .o_portal_wrap {
-    .o_portal_my_home > .page-header > a:hover {
+    .o_portal_my_home > .o_page_header > a:hover {
         text-decoration: none;
     }
 
