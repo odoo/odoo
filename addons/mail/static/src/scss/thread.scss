@@ -36,28 +36,6 @@
     .o_thread_tooltip_container {
         display: inline;
         position: relative;
-
-        .o_thread_tooltip_content {
-            top: 10px;
-            background: gray('200');
-            padding: 4px;
-            border: solid gray('200') 1px;
-            border-radius: 5px;
-            color: gray;
-            width: 300px;
-            display: none;
-            opacity: 0;
-            position: absolute;
-            transition: opacity 0.5s;
-            i.fa-exclamation {
-                color: red;
-            }
-        }
-
-        .o_thread_tooltip:hover + .o_thread_tooltip_content {
-            display: inline;
-            opacity: 1;
-        }
     }
 
     .o_thread_date_separator {
@@ -235,28 +213,6 @@
             .o_thread_tooltip_container {
                 display: inline;
                 position: relative;
-
-                .o_thread_tooltip_content {
-                    top: 10px;
-                    background: theme-color('light');
-                    padding: 4px;
-                    border: solid theme-color('light') 1px;
-                    border-radius: 5px;
-                    color: gray;
-                    width: 300px;
-                    display: none;
-                    opacity: 0;
-                    position: absolute;
-                    transition: opacity 0.5s;
-                    i.fa-exclamation {
-                        color: red;
-                    }
-                }
-
-                .o_thread_tooltip:hover + .o_thread_tooltip_content {
-                    display: inline;
-                    opacity: 1;
-                }
             }
         }
     }
@@ -276,6 +232,10 @@
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
     }
+}
+
+.o_web_client .popover .o_thread_tooltip_icon {
+    min-width: 1rem;
 }
 
 .o_web_client.o_touch_device {

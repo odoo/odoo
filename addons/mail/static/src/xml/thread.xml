@@ -315,19 +315,6 @@
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'" t-att-data-message-id="message.getID()"/>
-                        <span class="o_thread_tooltip_content">
-                            <t t-foreach="message.getCustomerEmailData()" t-as="customerEmailData">
-                                <span>
-                                    <t t-if="customerEmailData[2] === 'sent'"><i class='fa fa-check' title="Sent" role="img" aria-label="Sent"/></t>
-                                    <t t-if="customerEmailData[2] === 'bounce'"><i class='fa fa-exclamation' title="Bounced" role="img" aria-label="Bounced"/></t>
-                                    <t t-if="customerEmailData[2] === 'exception'"><i class='fa fa-exclamation' title="Error" role="img" aria-label="Error"/></t>
-                                    <t t-if="customerEmailData[2] === 'ready'"><i class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/></t>
-                                    <t t-if="customerEmailData[2] === 'canceled'"><i class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/></t>
-                                    <t t-esc="customerEmailData[1]"/>
-                                </span>
-                                <br />
-                            </t>
-                        </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
@@ -379,6 +366,24 @@
         <t t-if="options.messagesSeparatorPosition == message.getID()">
             <t t-call="mail.MessagesSeparator"/>
         </t>
+    </t>
+
+    <!--
+        @param {Object[]|undefined} list of customer email data of a given message.
+           A customer email data is a list with the following format:
+           [partnerID, partnerName, emailStatus]
+    -->
+    <t t-name="mail.widget.Thread.Message.MailTooltip">
+        <div t-foreach="data" t-as="customerEmailData">
+            <span class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+            </span>
+            <span t-esc="customerEmailData[1]"/>
+        </div>
     </t>
 
     <!--

@@ -79,12 +79,19 @@ var ThreadWidget = Widget.extend({
         };
         this._selectedMessageID = null;
         this._currentThreadID = null;
+        this._messageMailPopover = null;
     },
     /**
+     * The message mail popover may still be shown at this moment. If we do not
+     * remove it, it stays visible on the page until a page reload.
+     *
      * @override
      */
     destroy: function () {
         clearInterval(this._updateTimestampsInterval);
+        if (this._messageMailPopover) {
+            this._messageMailPopover.popover('hide');
+        }
     },
     /**
      * @param {mail.model.AbstractThread} thread the thread to render.
@@ -195,6 +202,8 @@ var ThreadWidget = Widget.extend({
                 self._updateTimestamps();
             }, 1000*60);
         }
+
+        this._renderMessageMailPopover(messages);
     },
 
     //--------------------------------------------------------------------------
@@ -419,6 +428,36 @@ var ThreadWidget = Widget.extend({
             this.trigger('redirect', options.model, options.id);
         }
     }, 500, true),
+    /**
+     * Render the popover when mouse-hovering on the mail icon of a message
+     * in the thread. There is at most one such popover at any given time.
+     *
+     * @private
+     * @param {mail.model.AbstractMessage[]} messages list of messages in the
+     *   rendered thread, for which popover on mouseover interaction is
+     *   permitted.
+     */
+    _renderMessageMailPopover: function (messages) {
+        if (this._messageMailPopover) {
+            this._messageMailPopover.popover('hide');
+        }
+        this._messageMailPopover = this.$('.o_thread_tooltip').popover({
+            html: true,
+            boundary: 'viewport',
+            placement: 'auto',
+            trigger: 'hover',
+            offset: '0, 1',
+            content: function () {
+                var messageID = $(this).data('message-id');
+                var message = _.find(messages, function (message) {
+                    return message.getID() === messageID;
+                });
+                return QWeb.render('mail.widget.Thread.Message.MailTooltip', {
+                    data: message.getCustomerEmailData()
+                });
+            },
+        });
+    },
     /**
      * @private
      */
