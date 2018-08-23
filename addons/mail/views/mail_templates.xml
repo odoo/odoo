@@ -64,7 +64,8 @@
                     <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
                     <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
+                    <!-- utils -->
+                    <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
                 <!-- Activity view type -->
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_view.js"></script>
@@ -98,7 +99,10 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/thread_window_tests.js"></script>
+                <!-- thread window -->
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/basic_thread_window_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/blank_thread_window_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/hidden_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/document_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>

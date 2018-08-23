@@ -10,9 +10,6 @@ var Widget = require('web.Widget');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var HEIGHT_OPEN = '400px';
-var HEIGHT_FOLDED = '34px';
-
 /**
  * This is an abstract widget for rendering thread windows.
  *
@@ -38,6 +35,9 @@ var AbstractThreadWindow = Widget.extend({
         'keydown .o_composer_text_field': '_onKeydown',
         'keypress .o_composer_text_field': '_onKeypress',
     },
+    FOLD_ANIMATION_DURATION: 200, // duration in ms for (un)fold transition
+    HEIGHT_OPEN: '400px', // height in px of thread window when open
+    HEIGHT_FOLDED: '34px', // height, in px, of thread window when folded
     /**
      * Children of this class must make use of `thread`, which is an object that
      * represent the thread that is linked to this thread window.
@@ -85,7 +85,7 @@ var AbstractThreadWindow = Widget.extend({
         });
 
         if (this.isFolded()) {
-            this.$el.css('height', HEIGHT_FOLDED);
+            this.$el.css('height', this.HEIGHT_FOLDED);
         } else if (this.options.autofocus) {
             this._focusInput();
         }
@@ -301,8 +301,8 @@ var AbstractThreadWindow = Widget.extend({
      */
     _animateFold: function () {
         this.$el.animate({
-            height: this.isFolded() ? HEIGHT_FOLDED : HEIGHT_OPEN
-        }, 200);
+            height: this.isFolded() ? this.HEIGHT_FOLDED : this.HEIGHT_OPEN
+        }, this.FOLD_ANIMATION_DURATION);
     },
     /**
      * Set the focus on the composer of the thread window. This operation is
@@ -368,6 +368,7 @@ var AbstractThreadWindow = Widget.extend({
     },
     /**
      * Update the fold state of the thread.
+     *
      * This function is called when toggling the fold state of this window.
      * If there is no thread linked to this window, it means this is the
      * "blank" thread window, therefore we use the internal state 'folded'
@@ -380,6 +381,7 @@ var AbstractThreadWindow = Widget.extend({
             this._thread.fold(folded);
         } else {
             this._folded = folded;
+            this.updateVisualFoldState();
         }
     },
     /**
@@ -395,7 +397,8 @@ var AbstractThreadWindow = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Close the thread
+     * Close the thread window.
+     * Mark the thread as read if the thread window was open.
      *
      * @private
      * @param {MouseEvent} ev
@@ -403,10 +406,18 @@ var AbstractThreadWindow = Widget.extend({
     _onClickClose: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
+        if (
+            this.hasThread() &&
+            this._thread.getUnreadCounter() > 0 &&
+            !this.isFolded()
+        ) {
+            this._thread.markAsRead();
+        }
         this.close();
     },
     /**
-     * Fold/unfold the thread window
+     * Fold/unfold the thread window.
+     * Also mark the thread as read.
      *
      * @private
      */
