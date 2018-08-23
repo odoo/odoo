@@ -319,8 +319,12 @@ QUnit.test('needaction messages in channels should appear, in addition to channe
     messagingMenu.destroy();
 });
 
-QUnit.test('preview of message on a document', function (assert) {
-    assert.expect(3);
+QUnit.test('preview of message on a document + mark as read', function (assert) {
+    assert.expect(7);
+
+    this.data.initMessaging = {
+        needaction_inbox_counter: 1,
+    };
 
     var partnerID = 44;
     var needactionMessage = {
@@ -353,15 +357,26 @@ QUnit.test('preview of message on a document', function (assert) {
         },
     });
     messagingMenu.appendTo($('#qunit-fixture'));
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '1',
+        "should display a counter of 1 on the messaging menu icon");
 
     messagingMenu.$('.dropdown-toggle').click();
 
-    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
-        "should display two channel previews");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should display one preview");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').data('preview-id'),
+        "some.res.model_1",
+        "preview should be the document thread preview");
     assert.ok(messagingMenu.$('.o_mail_preview:first').hasClass('o_preview_unread'),
         "document thread preview should be marked as unread");
     assert.strictEqual(messagingMenu.$('.o_preview_unread .o_last_message_preview').text().replace(/\s/g, ''),
         "Demo:*MessageOnDocument*", "should correctly display the preview");
+
+    messagingMenu.$('.o_mail_preview_mark_as_read').click();
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '0',
+        "should display a counter of 0 on the messaging menu icon");
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 0,
+        "should not display any preview");
 
     messagingMenu.destroy();
 });
