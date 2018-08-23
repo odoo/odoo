@@ -87,11 +87,12 @@
                         <group>
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="technician_user_id" string="Responsible"/>
-                            <label for="schedule_date"/>
-                            <div class="o_row">
-                                <field name="schedule_date"/>
-                                <label for="duration" string="for"/>
-                                <field name="duration" class="oe_inline"/> hours
+                            <field name="schedule_date"/>
+                            <label for="duration"/>
+                            <div>
+                                <field name="duration"
+                                       widget="float_time"
+                                       class="oe_inline"/> <span class="ml8">hours</span>
                             </div>
                             <field name="priority" widget="priority"/>
                         </group>
