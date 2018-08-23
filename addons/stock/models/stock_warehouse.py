@@ -924,7 +924,7 @@ class Orderpoint(models.Model):
             # These days will be substracted when creating the PO
             days += self.product_id._select_seller(
                 quantity=product_qty,
-                date=fields.Date.to_string(start_date),
+                date=start_date,
                 uom_id=self.product_uom).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)

@@ -220,7 +220,7 @@ class SaleOrderLine(models.Model):
         supplierinfo = self.product_id._select_seller(
             partner_id=purchase_order.partner_id,
             quantity=purchase_qty_uom,
-            date=purchase_order.date_order, # and purchase_order.date_order[:10],
+            date=purchase_order.date_order and purchase_order.date_order.date(), # and purchase_order.date_order[:10],
             uom_id=self.product_id.uom_po_id
         )
         fpos = purchase_order.fiscal_position_id

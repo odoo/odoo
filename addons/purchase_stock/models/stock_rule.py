@@ -88,7 +88,7 @@ class StockRule(models.Model):
         seller = product_id._select_seller(
             partner_id=partner,
             quantity=product_qty,
-            date=fields.Date.to_string(schedule_date),
+            date=schedule_date and schedule_date.date(),
             uom_id=product_uom)
 
         return schedule_date - relativedelta(days=int(seller.delay))
