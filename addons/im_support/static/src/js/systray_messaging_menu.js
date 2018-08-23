@@ -10,6 +10,13 @@ var session = require('web.session');
 var _t = core._t;
 var SUPPORT_CHANNEL_ID = 'SupportChannel';
 
+var DEFAULT_SUPPORT_CHANNEL_PREVIEW = {
+    id: SUPPORT_CHANNEL_ID,
+    channelType: 'support_channel',
+    name: _t("Support"),
+    imageSRC: '/mail/static/src/img/odoo_o.png',
+}
+
 // Disable Support in mobile for design purposes (for now at least), and don't
 // add it to the messaging dropdown if it isn't available
 if (config.device.isMobile || !session.support_token || !session.support_origin) {
@@ -21,15 +28,13 @@ if (config.device.isMobile || !session.support_token || !session.support_origin)
  */
 MessagingMenu.include({
     /**
+     * Override so that there is by default a support channel preview.
+     *
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.supportChannel = {
-            id: SUPPORT_CHANNEL_ID,
-            name: _t("Support"),
-            imageSRC: '/mail/static/src/img/odoo_o.png',
-        };
+        this.previews = [DEFAULT_SUPPORT_CHANNEL_PREVIEW];
     },
     /**
      * Overrides to add a className to the bottom part of the dropdown
@@ -45,6 +50,27 @@ MessagingMenu.include({
         return this._super.apply(this, arguments).then(function () {
             self.$('.o_mail_systray_dropdown_bottom').addClass('o_mail_systray_dropdown_items');
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Override so that there must be the channel support in the previews at
+     * any time in the list of previews.
+     *
+     * @override
+     * @private
+     * @param {Object[]} list of objects that are compatible with mail.Preview
+     *   template.
+     */
+    _updatePreviews: function (previews) {
+        var supportChannelPreview = _.findWhere(previews, { channelType: 'support_channel'});
+        if (!supportChannelPreview) {
+            previews.push(DEFAULT_SUPPORT_CHANNEL_PREVIEW);
+        }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
