@@ -50,7 +50,7 @@ class BaseFunctionalTest(common.SavepointCase):
             for partner in partners:
                 if partner.user_ids:
                     init[partner] = {
-                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner]),
+                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
             yield
         finally:
