@@ -93,7 +93,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h3>
+                                    <h3 class="o_page_header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h3>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">
@@ -126,7 +126,7 @@
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure"></div>
-                <h3 class="page-header">Your Documents</h3>
+                <h3 class="o_page_header">Your Documents</h3>
                 <ul class="o_portal_docs list-group">
                 </ul>
             </div>
@@ -243,7 +243,7 @@
     </template>
 
     <template id="portal_contact" name="Contact">
-        <h3 class="page-header"><t t-esc="title"/></h3>
+        <h3 class="o_page_header"><t t-esc="title"/></h3>
         <h5 t-esc="sales_user.name"/>
         <p><a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/></p>
         <p t-esc="sales_user.phone"/>
@@ -251,7 +251,7 @@
     </template>
 
     <template id="portal_archive_groups" name="Portal Archive Groups">
-        <h3 class="page-header">Archives</h3>
+        <h3 class="o_page_header">Archives</h3>
         <ul class="nav nav-pills flex-column">
             <t t-foreach="archive_groups" t-as="group">
                 <t t-if="group['date_begin'] == date">

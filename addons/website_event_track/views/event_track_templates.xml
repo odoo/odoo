@@ -55,7 +55,7 @@
         <section class="container" t-foreach="dayslist" t-as="day">
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
-            <h3 class="page-header mt0">
+            <h3 class="o_page_header mt0">
                 <span t-field="tracks_by_days[day][0].date" t-options="{'widget': 'date'}"/>
                 <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
             </h3>
@@ -318,7 +318,7 @@
                 <div class="col-lg-8">
                     <div class="oe_structure">
                         <section>
-                            <h3 class="page-header mt16">
+                            <h3 class="o_page_header mt16">
                                 Introduction
                             </h3>
                             <p>
@@ -332,7 +332,7 @@
                             </p>
                         </section>
                         <section>
-                            <h3 class="page-header">Application</h3>
+                            <h3 class="o_page_header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
 

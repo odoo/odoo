@@ -12,7 +12,7 @@
         <template id="toc" name="Documentation Index">
             <t t-set="level" t-value="level+1"/>
             <t t-foreach="titles" t-as="title">
-                <div t-attf-class="h#{str(level) + (level&lt;3 and ' page-header' or '')}">
+                <div t-attf-class="h#{str(level) + (level&lt;3 and ' o_page_header' or '')}">
                     <t t-esc="title.name"/>
                     <small t-if="len(title.post_ids)">
                         <t t-esc="len(title.post_ids)"/>
@@ -74,7 +74,7 @@
                 </section>
                 <section class="container">
                     <t t-set="level" t-value="toc and 1 or 0"/>
-                    <h1 class="page-header" t-if="toc">
+                    <h1 class="o_page_header" t-if="toc">
                         <t t-esc="toc.name"/>
                     </h1>
                     <t t-set="titles" t-value="sections"/>
@@ -117,7 +117,7 @@
                 <section class="container">
                     <div class="row">
                         <div class="col-md-9">
-                            <h1 class="page-header" t-field="post.name"/>
+                            <h1 class="o_page_header" t-field="post.name"/>
                             <blockquote class="oe_toc_content" t-if="bool(post.content)">
                                 <t t-raw="post.content"/>
                             </blockquote>
@@ -126,7 +126,7 @@
                                 <t t-raw="post.child_ids[0].content"/>
                             </t>
                             <div t-if="len(toc.post_ids)&gt;1">
-                                <h2 class="page-header">Related topics</h2>
+                                <h2 class="o_page_header">Related topics</h2>
                                 <ul>
                                     <t t-foreach="toc.post_ids" t-as="topic">
                                         <li t-if="post.id != topic.id">
@@ -175,7 +175,7 @@
         <template id="promote_question">
             <t t-call="website.layout">
                 <section class="container">
-                    <h1 class="page-header">Promote question to documentation</h1>
+                    <h1 class="o_page_header">Promote question to documentation</h1>
                     <p>
                         To be promoted in the official documentation the question
                         and answer must satisfy the following criteria:
@@ -225,7 +225,7 @@
                     </div>
                 </div>
                 <section class="container">
-                    <h2 class="page-header">Samples</h2>
+                    <h2 class="o_page_header">Samples</h2>
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Good question titles</h4>

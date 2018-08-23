@@ -251,8 +251,7 @@ table.table_desc tr td {
         &:after  { margin: 0 -100% 0 $grid-gutter-width/2; }
     }
     .s_title_underlined {
-        padding-bottom: $grid-gutter-width/3;
-        border-bottom: 1px solid;
+        @extend %o-page-header;
     }
     .s_title_small_caps {
         font-variant: small-caps;
