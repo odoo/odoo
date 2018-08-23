@@ -4,7 +4,7 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_is_zero, pycompat
 from odoo.tools import float_compare, float_round, float_repr
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo.exceptions import UserError, ValidationError
 
 import time
@@ -512,7 +512,7 @@ class AccountBankStatementLine(models.Model):
             'ref': self.ref,
             'note': self.note or "",
             'name': self.name,
-            'date': self.date,
+            'date': format_date(self.env, self.date),
             'amount': amount,
             'amount_str': amount_str,  # Amount in the statement line currency
             'currency_id': self.currency_id.id or statement_currency.id,

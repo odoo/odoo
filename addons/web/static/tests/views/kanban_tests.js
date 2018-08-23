@@ -1203,7 +1203,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record & column in grouped on m2o', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         var kanban = createView({
             View: KanbanView,
@@ -1230,6 +1230,13 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
             "the last column should be the newly created one");
+
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 1,
+            "the quick create column should still be opened for mass creation");
+        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', { keyCode: $.ui.keyCode.ESCAPE }));
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 0,
+            "the quick create column should now be closed");
+
         kanban.destroy();
     });
 
