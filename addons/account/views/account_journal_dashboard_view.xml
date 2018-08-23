@@ -173,7 +173,7 @@
                                     <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'view_no_maturity': 1}">Journal Entries</a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_toreview': 1, 'view_no_maturity': 1}">Entries to Review</a>
+                                    <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_unposted': 1, 'view_no_maturity': 1}">Entries to Review</a>
                                 </div>
                                 <div>
                                     <a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a>
@@ -242,7 +242,7 @@
                         <div class="col-7 o_kanban_primary_right">
                             <div class="row">
                                 <div class="col-7">
-                                    <span title="Balance in Odoo">Balance in GL</span>
+                                    <span title="Balance in Odoo">Balance in General Ledger</span>
                                 </div>
                                 <div class="col-5 text-right">
                                     <span><t t-esc="dashboard.account_balance"/></span>
