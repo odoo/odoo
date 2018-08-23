@@ -59,7 +59,8 @@ class UoM(models.Model):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be strictly positive.')
+        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding precision must be strictly positive.'),
+        ('factor_reference_is_one', "CHECK((uom_type = 'reference' AND factor = 1.0) OR (uom_type != 'reference'))", "The reference unit must have a conversion factor equal to 1.")
     ]
 
     @api.one
