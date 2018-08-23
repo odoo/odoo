@@ -892,23 +892,27 @@ def _reexec(updated_modules=None):
     os.execve(sys.executable, args, os.environ)
 
 def load_test_file_py(registry, test_file):
-    test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
-        for mod_mod in get_test_modules(mod):
-            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-            if test_path == mod_path:
-                suite = unittest.TestSuite()
-                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
-                    suite.addTest(t)
-                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = odoo.modules.module.TestStream()
-                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
-                success = result.wasSuccessful()
-                if hasattr(registry._assertion_report,'report_result'):
-                    registry._assertion_report.report_result(success)
-                if not success:
-                    _logger.error('%s: at least one error occurred in a test', test_file)
-                return
+    threading.currentThread().testing = True
+    try:
+        test_path, _ = os.path.splitext(os.path.abspath(test_file))
+        for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
+            for mod_mod in get_test_modules(mod):
+                mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
+                if test_path == mod_path:
+                    suite = unittest.TestSuite()
+                    for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
+                        suite.addTest(t)
+                    _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
+                    stream = odoo.modules.module.TestStream()
+                    result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                    success = result.wasSuccessful()
+                    if hasattr(registry._assertion_report,'report_result'):
+                        registry._assertion_report.report_result(success)
+                    if not success:
+                        _logger.error('%s: at least one error occurred in a test', test_file)
+                    return
+    finally:
+        threading.currentThread().testing = False
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
