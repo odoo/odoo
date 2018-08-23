@@ -83,7 +83,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
         self._check_location_and_routes()
-        self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 2)
+        self.assertEqual(len(self.warehouse.pbm_route_id.rule_ids), 3)
         self.assertEqual(self.warehouse.manufacture_pull_id.location_id.id, self.warehouse.sam_loc_id.id)
 
     def test_manufacturing_flow(self):
