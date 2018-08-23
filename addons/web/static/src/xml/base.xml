@@ -1136,7 +1136,7 @@
     </button>
     <div class="dropdown-menu o_dropdown_menu o_time_range_menu" role="menu">
         <div class="dropdown-item-text">
-            <label for="date_field_selector">Date Field</label>
+            <label for="date_field_selector">Based On</label>
             <select id="date_field_selector" class="o_input o_date_field_selector">
                 <t t-foreach="widget.dateFields" t-as="field">
                     <t t-if="widget.dateField.name === field.name">
@@ -1153,19 +1153,24 @@
             </select>
         </div>
         <div class="dropdown-item-text">
-            <label for="time_range_selector">Date Range</label>
+            <label for="time_range_selector">Range</label>
             <select id="time_range_selector" class="o_input o_time_range_selector">
-                <t t-foreach="widget.periodOptions" t-as="option">
-                    <t t-if="widget.timeRangeId === option.optionId">
-                        <option t-att-value="option.optionId" selected="selected">
-                            <t t-esc="option.description"/>
-                        </option>
-                    </t>
-                    <t t-else="">
-                        <option t-att-value="option.optionId">
-                            <t t-esc="option.description"/>
-                        </option>
-                    </t>
+                <t t-foreach="widget.periodGroups" t-as="group">
+                    <optgroup t-if="group !== 1"/>
+                        <t t-foreach="widget.periodOptions" t-as="option">
+                            <t t-if="option.groupId === group">
+                                <t t-if="widget.timeRangeId === option.optionId">
+                                    <option t-att-value="option.optionId" selected="selected">
+                                        <t t-esc="option.description"/>
+                                    </option>
+                                </t>
+                                <t t-else="">
+                                    <option t-att-value="option.optionId">
+                                        <t t-esc="option.description"/>
+                                    </option>
+                                </t>
+                            </t>
+                        </t>
                 </t>
             </select>
         </div>
