@@ -374,7 +374,7 @@
                     </t>
 
                     <div id="sale_order_communication">
-                        <h1 class="page-header">Communication</h1>
+                        <h1 class="o_page_header">Communication</h1>
                         <t t-call="portal.message_thread">
                             <t t-set="object" t-value="sale_order"/>
                         </t>
@@ -391,7 +391,7 @@
     -->
     <template id="sale_order_portal_content" name="Sales Order Portal Content">
         <!-- Intro -->
-        <div id="introduction" class="page-header mt16">
+        <div id="introduction" class="o_page_header mt16">
             <h1>
                 <span t-field="sale_order.type_name"></span>
                 <em t-esc="sale_order.name"/>
@@ -472,7 +472,7 @@
         </div>
 
         <section id="details" style="page-break-inside: auto;">
-            <h1 class="page-header" id="details">Details</h1>
+            <h1 class="o_page_header" id="details">Details</h1>
 
             <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
@@ -619,7 +619,7 @@
         </section>
 
         <section id="terms" class="container" t-if="sale_order.note">
-            <h2 class="page-header">Terms &amp; Conditions</h2>
+            <h2 class="o_page_header">Terms &amp; Conditions</h2>
             <p t-field="sale_order.note"/>
         </section>
 

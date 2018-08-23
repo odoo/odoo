@@ -147,6 +147,18 @@ hr {
     color: color-yiq($list-group-bg);
 }
 
+// Replaces old BS3 page-header class
+%o-page-header {
+    margin-bottom: $headings-margin-bottom * 2;
+    padding-bottom: $headings-margin-bottom;
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: $border-color;
+}
+.o_page_header {
+    @extend %o-page-header;
+}
+
 // Force table to their minimum width for fitting their col-*-auto parent
 .table.o_table_column_fit {
     width: 1px;
@@ -290,7 +302,7 @@ img.o_we_custom_image {
 }
 
 .o_portal_wrap {
-    .o_portal_my_home > .page-header > a:hover {
+    .o_portal_my_home > .o_page_header > a:hover {
         text-decoration: none;
     }
 

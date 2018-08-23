@@ -1054,7 +1054,7 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h3 class="page-header mt8">Billing Address</h3>
+                                    <h3 class="o_page_header mt8">Billing Address</h3>
                                 </div>
                                 <div class="col-lg-6 one_kanban">
                                     <t t-call="website_sale.address_kanban">
@@ -1067,7 +1067,7 @@
                             <t t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <h3 class="page-header mt16 mb4">Shipping Address</h3>
+                                        <h3 class="o_page_header mt16 mb4">Shipping Address</h3>
                                     </div>
                                 </div>
                                 <div class="row all_shipping">
@@ -1162,16 +1162,16 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="page-header mt8">Your Address
+                                    <h2 class="o_page_header mt8">Your Address
                                         <small> or </small>
                                         <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h2 class="page-header mt8">Your Address</h2>
+                                    <h2 class="o_page_header mt8">Your Address</h2>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h2 class="page-header mt8">Shipping Address </h2>
+                                    <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />

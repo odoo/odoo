@@ -30,7 +30,7 @@
         <xpath expr="//section[@id='signature']" position="after">
             <t t-if="any([(not option.line_id) for option in sale_order.sale_order_option_ids])">
                 <section>
-                    <h1 class="page-header">Optional Products</h1>
+                    <h1 class="o_page_header">Optional Products</h1>
                     <t t-set="display_discount" t-value="True in [option.discount for option in sale_order.sale_order_option_ids]"/>
                     <table class="table table-hover">
                         <thead>
