@@ -379,8 +379,8 @@ class Channel(models.Model):
                     AND P.partner_id IN %s
                     AND channel_type LIKE 'chat'
                 GROUP BY P.channel_id
-                HAVING COUNT(P.partner_id) = %s
-            """, (tuple(partners_to), len(partners_to),))
+                HAVING array_agg(P.partner_id ORDER BY P.partner_id) = %s
+            """, (tuple(partners_to), sorted(list(partners_to)),))
             result = self.env.cr.dictfetchall()
             if result:
                 # get the existing channel between the given partners
