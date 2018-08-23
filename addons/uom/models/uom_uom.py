@@ -94,12 +94,6 @@ class UoM(models.Model):
             if uom_data['uom_count'] > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
-    @api.constrains('factor','uom_type')
-    def _check_factor_uom_type(self):
-        for uom in self:
-            if uom.uom_type == 'reference' and uom.factor != 1:
-                raise UserError(_('The factor of this reference unit : %s need to be egal to 1.') % uom.display_name)
-
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
