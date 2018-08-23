@@ -11,6 +11,7 @@ TYPE2FIELD = {
     'boolean': 'value_integer',
     'integer': 'value_integer',
     'text': 'value_text',
+    'html': 'value_text',
     'binary': 'value_binary',
     'many2one': 'value_reference',
     'date': 'value_datetime',
@@ -24,6 +25,7 @@ TYPE2CLEAN = {
     'float': lambda val: val or False,
     'char': lambda val: val or False,
     'text': lambda val: val or False,
+    'html': lambda val: val or False,
     'selection': lambda val: val or False,
     'binary': lambda val: val or False,
     'date': lambda val: val.date() if val else False,
@@ -50,6 +52,7 @@ class Property(models.Model):
                              ('boolean', 'Boolean'),
                              ('integer', 'Integer'),
                              ('text', 'Text'),
+                             ('html', 'Html'),
                              ('binary', 'Binary'),
                              ('many2one', 'Many2One'),
                              ('date', 'Date'),
@@ -144,7 +147,7 @@ class Property(models.Model):
 
     def get_by_record(self):
         self.ensure_one()
-        if self.type in ('char', 'text', 'selection'):
+        if self.type in ('char', 'text', 'selection', 'html'):
             return self.value_text
         elif self.type == 'float':
             return self.value_float
