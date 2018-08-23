@@ -559,10 +559,11 @@ class Users(models.Model):
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
                     user = self.search(self._get_login_domain(login))
-                    if user:
-                        user = user.sudo(user.id)
-                        user._check_credentials(password)
-                        user._update_last_login()
+                    if not user:
+                        raise AccessDenied()
+                    user = user.sudo(user.id)
+                    user._check_credentials(password)
+                    user._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
             raise
