@@ -62,12 +62,12 @@
                 <div class='navbar'>
                     <div>
                         <t t-call="website.pager"/>
-                        <form action="" method="get" class="navbar-search float-right pagination form-inline"><!-- FIXME -->
-                            <div class="form-group float-right">
-                                <input type="text" name="search" class="search-query col-lg-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                    </div>
+                        <form action="" method="get" class="pagination form-inline"><!-- FIXME -->
+                            <div class="form-group">
+                                <input type="text" name="search" class="search-query mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                             </div>
                         </form>
-                    </div>
                 </div>
                 <div>
                     <p t-if="not partners">No result found</p>
