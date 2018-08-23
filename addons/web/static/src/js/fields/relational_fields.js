@@ -1900,7 +1900,11 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      * @private
      */
     _onCloseColorPicker: function () {
-        this.$color_picker.remove();
+        if (this.$current_badge) {
+            // Remove all events of dropdown because dropdown click event stop propagating others events
+            this.$current_badge.dropdown('dispose');
+            this.$color_picker.remove();
+        }
     },
     /**
      * @private
@@ -1916,8 +1920,9 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 'tag_id': tagID,
             }));
 
-            $(ev.currentTarget).after(this.$color_picker);
-            this.$color_picker.dropdown();
+            this.$current_badge = $(ev.currentTarget);
+            this.$current_badge.after(this.$color_picker);
+            this.$current_badge.dropdown('toggle');
             this.$color_picker.attr("tabindex", 1).focus();
             if (!tagColor) {
                 this.$('.custom-checkbox input').prop('checked', true);
