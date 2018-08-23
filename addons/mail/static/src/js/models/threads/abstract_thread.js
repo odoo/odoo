@@ -127,7 +127,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {$.Promise}
      */
     markAsRead: function () {
-        if (this._unreadCounter > 0) {
+        if (this._unreadCounter >= 0) {
             return this._markAsRead();
         }
         return $.when();
