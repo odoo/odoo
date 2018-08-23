@@ -202,7 +202,7 @@ class AccountInvoice(models.Model):
         return invoice_form.save()
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         # OVERRIDE
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
