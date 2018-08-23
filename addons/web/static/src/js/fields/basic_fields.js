@@ -2006,31 +2006,9 @@ var FieldBooleanButton = AbstractField.extend({
 });
 
 var BooleanToggle = FieldBoolean.extend({
+    className: FieldBoolean.prototype.className + ' o_boolean_toggle',
     events: {
         'click': '_onClick'
-    },
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     */
-    _render: function () {
-        this._super.apply(this, arguments);
-        this._renderToggleSwitch();
-    },
-
-    /**
-     * Display toggle switch
-     *
-     * @private
-     */
-    _renderToggleSwitch: function () {
-        this.$el.addClass("o_boolean_toggle");
-        var $div = $('<div class="slider"></div>');
-        $div.insertAfter(this.$("input[type=checkbox]"));
     },
 
     //--------------------------------------------------------------------------
@@ -2048,7 +2026,6 @@ var BooleanToggle = FieldBoolean.extend({
         this._setValue(!this.value);
         this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
     },
-
 });
 
 var StatInfo = AbstractField.extend({
