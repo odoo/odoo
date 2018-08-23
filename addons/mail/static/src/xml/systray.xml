@@ -3,45 +3,70 @@
 
     <!--
         @param {mail.systray.MessagingMenu} widget
+        @param {integer} [widget.counter=0]
+        @param {string|false} [widget.filter=false]
     -->
     <t t-name="mail.systray.MessagingMenu">
-        <li class="o_mail_systray_item">
+        <li class="o_mail_systray_item o_no_notification">
             <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" title="Conversations" href="#" role="button">
-                <i class="fa fa-comments" role="img" aria-label="Messages"/> <span class="o_notification_counter badge badge-pill"/>
+                <i class="fa fa-comments" role="img" aria-label="Messages"/>
+                <span class="o_notification_counter badge badge-pill">
+                    <t t-call="mail.systray.Counter"/>
+                </span>
             </a>
-            <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
-                <t t-if="widget.isMobile()">
-                    <div class="o_mail_systray_mobile_header">
-                        <button type="button" class="btn btn-secondary o_new_message"> New message </button>
-                    </div>
-                </t>
-                <div t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
-                    <div>
-                        <button type="button" class="btn btn-link o_filter_button active" role="tab"> All </button>
-                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat' role="tab"> Chat </button>
-                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels' role="tab"> Channels </button>
-                    </div>
-                    <button type="button" class="btn btn-link o_new_message"> New message </button>
-                </div>
-                <div class="o_mail_systray_dropdown_items"/>
-                <t t-if="widget.isMobile()">
-                    <div class="o_mail_mobile_tabs">
-                        <div class="o_mail_mobile_tab o_filter_button active" role="tab">
-                            <span class="fa fa-envelope"/>
-                            <span class="o_tab_title">All</span>
-                        </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat' role="tab">
-                            <span class="fa fa-user"/>
-                            <span class="o_tab_title">Chat</span>
-                        </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels' role="tab">
-                            <span class="fa fa-users"/>
-                            <span class="o_tab_title">Channels</span>
-                        </div>
-                    </div>
-                </t>
+            <div class="o_mail_systray_dropdown o_systray_menu_content dropdown-menu dropdown-menu-right" role="menu">
+                <t t-call="mail.systray.MessagingMenu.Content"/>
             </div>
         </li>
+    </t>
+
+    <!--
+        @param {mail.systray.MessagingMenu} widget
+        @param {integer} [widget.counter=0]
+        @param {string|false} [widget.filter=false]
+    -->
+    <t t-name="mail.systray.MessagingMenu.Content">
+        <t t-if="widget.isMobile()">
+            <div class="o_mail_systray_mobile_header">
+                <button type="button" class="btn btn-secondary o_new_message"> New message </button>
+            </div>
+        </t>
+        <div t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
+            <div>
+                <button type="button" t-attf-class="btn btn-link o_filter_button #{!widget.filter ? 'active' : ''}" role="tab"> All </button>
+                <button type="button" t-attf-class="btn btn-link o_filter_button #{widget.filter === 'chat' ? 'active' : ''}" data-filter='chat' role="tab"> Chat </button>
+                <button type="button" t-attf-class="btn btn-link o_filter_button #{widget.filter === 'channels' ? 'active' : ''}" data-filter='channels' role="tab"> Channels </button>
+            </div>
+            <button type="button" class="btn btn-link o_new_message"> New message </button>
+        </div>
+
+        <t t-set="previews" t-value="widget.previews"/>
+        <t t-call="mail.systray.MessagingMenu.Previews"/>
+
+        <t t-if="widget.isMobile()">
+            <div class="o_mail_mobile_tabs">
+                <div t-attf-class="o_mail_mobile_tab o_filter_button  #{!widget.filter ? 'active' : ''}" role="tab">
+                    <span class="fa fa-envelope"/>
+                    <span class="o_tab_title">All</span>
+                </div>
+                <div t-attf-class="o_mail_mobile_tab o_filter_button #{widget.filter === 'chat' ? 'active' : ''}" data-filter='chat' role="tab">
+                    <span class="fa fa-user"/>
+                    <span class="o_tab_title">Chat</span>
+                </div>
+                <div t-attf-class="o_mail_mobile_tab o_filter_button #{widget.filter === 'channels' ? 'active' : ''}" data-filter='channels' role="tab">
+                    <span class="fa fa-users"/>
+                    <span class="o_tab_title">Channels</span>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.systray.MessagingMenu} widget
+        @param {integer} [widget.counter=0]
+     -->
+    <t t-name="mail.systray.Counter">
+        <t t-if="widget.counter > 0" t-esc="widget.counter"/>
     </t>
 
     <!--
@@ -49,14 +74,69 @@
           (see mail.Preview template)
     -->
     <t t-name="mail.systray.MessagingMenu.Previews">
-         <t t-if="_.isEmpty(previews)">
-            <li class="text-center o_no_activity mt16">
-                <span>No conversation yet...</span>
-            </li>
-        </t>
-        <t t-foreach="previews" t-as="preview">
-            <t t-call="mail.Preview"/>
-        </t>
+        <div class="o_mail_systray_dropdown_items">
+            <t t-if="_.isEmpty(previews)">
+                <t t-call="mail.systray.MessagingMenu.EmptyPreviews"/>
+            </t>
+            <t t-foreach="previews" t-as="preview">
+                <t t-call="mail.Preview"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.systray.MessagingMenu.EmptyPreviews">
+        <div class="text-center o_no_activity mt16">
+            <span>No conversation yet...</span>
+        </div>
+    </t>
+
+    <!--
+        The preview template is used by the discuss in mobile, and by the systray menu
+        In order to show preview of threads / mail failures / odoobot
+
+        @param {Object} preview a valid object for preview rendering
+        @param {integer} [preview.documentID]
+        @param {string} [preview.documentModel]
+        @param {string|integer} preview.id
+        @param {string} [preview.imageSRC]
+        @param {boolean} [preview.isMyselfAuthor]
+        @param {moment} [preview.date]
+        @param {string} [preview.author]
+        @param {string} [preview.body]
+        @param {string} [preview.title]
+        @param {string} [preview.status]
+        @param {integer} [preview.unreadCounter]
+    -->
+    <t t-name="mail.Preview">
+        <div t-attf-class="o_mail_preview #{preview.unreadCounter &gt; 0 ? 'o_preview_unread' : ''}"
+             t-att-data-preview-id="preview.id" t-att-data-document-id="preview.documentID" t-att-data-document-model="preview.documentModel" t-att-data-unread-counter="preview.unreadCounter">
+            <div t-attf-class="o_mail_preview_image #{preview.documentModel ? 'o_mail_preview_app' : ''}">
+                <img class="o_mail_preview_image" t-att-src="preview.imageSRC" alt="Preview"/>
+                <i t-if="preview.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+                <i t-if="preview.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            </div>
+            <div class="o_preview_info">
+                <div class="o_preview_title">
+                    <span class="o_preview_name">
+                        <t t-esc="preview.title"/>
+                    </span>
+                    <span class="o_preview_counter">
+                        <t t-if="preview.unreadCounter &gt; 0">&amp;nbsp;(<t t-esc="preview.unreadCounter"/>)</t>
+                    </span>
+                    <span class="o_last_message_date"> <t t-esc="preview.date ? preview.date.fromNow() : ''"/> </span>
+                </div>
+                <div t-if="preview.body" class="o_last_message_preview">
+                    <t t-if="preview.isMyselfAuthor">
+                        <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
+                    </t>
+                    <t t-elif="preview.author">
+                        <t t-esc="preview.author"/>:
+                    </t>
+                    <t t-raw="preview.body"/>
+                </div>
+                <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>
+            </div>
+        </div>
     </t>
 
     <!--

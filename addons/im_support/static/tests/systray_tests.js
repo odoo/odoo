@@ -41,7 +41,7 @@ QUnit.test('messaging menu displays the Support channel', function (assert) {
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.destroy();
@@ -75,7 +75,7 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
@@ -88,7 +88,7 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
 
     assert.verifySteps([
         '/mail/init_messaging',
-        'message_fetch',
+        'message_fetch', // comes from inbox messages preview
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);
@@ -120,7 +120,7 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
@@ -133,7 +133,7 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
 
     assert.verifySteps([
         '/mail/init_messaging',
-        'message_fetch',
+        'message_fetch', // comes from inbox messages preview
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
     ]);
@@ -165,7 +165,7 @@ QUnit.test('post messages in Support channel', function (assert) {
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
@@ -178,7 +178,7 @@ QUnit.test('post messages in Support channel', function (assert) {
 
     assert.verifySteps([
         '/mail/init_messaging',
-        'message_fetch',
+        'message_fetch', // comes from inbox messages preview
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
         'cors: /odoo_im_support/chat_post',
@@ -216,7 +216,7 @@ QUnit.test('fold Support channel', function (assert) {
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
@@ -230,7 +230,7 @@ QUnit.test('fold Support channel', function (assert) {
 
     assert.verifySteps([
         '/mail/init_messaging',
-        'message_fetch',
+        'message_fetch', // comes from inbox messages preview
         'cors: /odoo_im_support/get_support_channel',
         'LocalStorage: setItem im_support.channel_state,open',
         'cors: /odoo_im_support/fetch_messages',
@@ -243,7 +243,7 @@ QUnit.test('fold Support channel', function (assert) {
 });
 
 QUnit.test('restore Support channel if necessary', function (assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
@@ -273,13 +273,14 @@ QUnit.test('restore Support channel if necessary', function (assert) {
         '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
+        'message_fetch', // comes from inbox messages preview
     ]);
 
     messagingMenu.destroy();
 });
 
 QUnit.test('receive messages in the Support channel', function (assert) {
-    assert.expect(10);
+    assert.expect(11);
 
     var supportChannelID;
 
@@ -331,6 +332,7 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         '/mail/init_messaging',
         'cors: /odoo_im_support/get_support_channel',
         'cors: /odoo_im_support/fetch_messages',
+        'message_fetch', // comes from inbox messages preview
     ]);
 
     messagingMenu.destroy();

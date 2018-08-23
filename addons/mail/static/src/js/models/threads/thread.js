@@ -124,6 +124,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
      */
     getPreview: function () {
         return {
+            channelType: this.getType(),
             id: this.getID(),
             imageSRC: '/mail/static/src/img/smiley/avatar.jpg',
             isTwoUserThread: this.isTwoUserThread(),
