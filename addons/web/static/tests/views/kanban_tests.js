@@ -810,6 +810,56 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record: validate with ENTER', function (assert) {
+        // in this test, we accurately mock the behavior of the webclient by specifying a
+        // fieldDebounce > 0, meaning that the changes in an InputField aren't notified to the model
+        // on 'input' events, but they wait for the 'change' event (or a call to 'commitChanges',
+        // e.g. triggered by a navigation event)
+        // in this scenario, the call to 'commitChanges' actually does something (i.e. it notifies
+        // the new value of the char field), whereas it does nothing if the changes are notified
+        // directly
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field"/>' +
+                '</form>',
+            },
+            groupBy: ['bar'],
+            fieldDebounce: 5000,
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 4,
+            "should have 4 records at the beginning");
+
+        // add an element and confirm by pressing ENTER
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        kanban.$('.o_kanban_quick_create').find('input[name=foo]')
+            .val('new partner')
+            .trigger('input') // changes aren't notified here thanks to the fieldDebounce
+            .trigger($.Event('keydown', {
+                keyCode: $.ui.keyCode.ENTER,
+                which: $.ui.keyCode.ENTER,
+            })); // triggers a navigation event, leading to the 'commitChanges' and record creation
+
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 5,
+            "should have created a new record");
+        assert.strictEqual(kanban.$('.o_kanban_quick_create input[name=foo]').val(), '',
+            "quick create should now be empty");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create when first column is folded', function (assert) {
         assert.expect(6);
 
