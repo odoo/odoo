@@ -1455,7 +1455,7 @@ class Meeting(models.Model):
             event.message_needaction = rec.message_needaction
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         thread_id = self.id
         if isinstance(self.id, pycompat.string_types):
