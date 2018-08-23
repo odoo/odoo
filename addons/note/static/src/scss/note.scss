@@ -7,13 +7,20 @@
     .o_form_statusbar {
         margin-bottom: 0;
     }
+    .o_form_sheet {
+        max-width: 100%;
+    }
     .oe_form_field.oe_memo {
         margin: 0 ($input-btn-padding-x-lg * -1);
         padding: 0;
-        min-height: 200px;
+        min-height: 70vh;
 
         .note-editor {
             border: none;
+
+            .note-editable {
+                min-height: 63vh;
+            }
         }
     }
     &.o_form_readonly {
