@@ -10,7 +10,7 @@
 
     <record id="group_hr_manager" model="res.groups">
         <field name="name">Manager</field>
-        <field name="comment">The user will have an access to the human resources configuration as well as statistic reports.</field>
+        <field name="comment">The user will have access to the human resources configuration as well as statistic reports.</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('group_hr_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
