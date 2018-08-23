@@ -5,7 +5,7 @@ from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
@@ -789,8 +789,8 @@ class AccountMoveLine(models.Model):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
-                'date': line.date,
+                'date_maturity': format_date(self.env, line.date_maturity),
+                'date': format_date(self.env, line.date),
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
