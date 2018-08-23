@@ -242,17 +242,8 @@ class StockWarehouse(models.Model):
         return routes
 
     def _update_location_manufacture(self, new_manufacture_step):
-        switch_warehouses = self.filtered(lambda wh: wh.manufacture_steps != new_manufacture_step)
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.pbm_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('pbm_loc_id').write({'active': False})
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.sam_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('sam_loc_id').write({'active': False})
-        if new_manufacture_step != 'mrp_one_step':
-            self.mapped('pbm_loc_id').write({'active': True})
-        if new_manufacture_step == 'pbm_sam':
-            self.mapped('sam_loc_id').write({'active': True})
+        self.mapped('pbm_loc_id').write({'active': new_manufacture_step != 'mrp_one_step'})
+        self.mapped('sam_loc_id').write({'active': new_manufacture_step == 'pbm_sam'})
 
     @api.multi
     def _update_name_and_code(self, name=False, code=False):

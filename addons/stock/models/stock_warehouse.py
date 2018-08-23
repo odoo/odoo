@@ -121,7 +121,7 @@ class Warehouse(models.Model):
 
     def write(self, vals):
         Route = self.env['stock.location.route']
-        warehouses = self.with_context(active_test=False)  # TDE FIXME: check this
+        warehouses = self.with_context(active_test=False)
 
         if vals.get('code') or vals.get('name'):
             warehouses._update_name_and_code(vals.get('name'), vals.get('code'))
@@ -146,7 +146,7 @@ class Warehouse(models.Model):
 
         res = super(Warehouse, self).write(vals)
 
-        for warehouse in self:
+        for warehouse in warehouses:
             # check if we need to delete and recreate route
             depends = [depend for depends in [value['depends'] for value in warehouse._get_routes_values().values()] for depend in depends]
             if any(depend in vals for depend in depends):
@@ -166,12 +166,66 @@ class Warehouse(models.Model):
                     any(depend in vals for depend in depends):
                 warehouse._create_or_update_global_routes_rules()
 
+            if 'active' in vals:
+                picking_type_ids = self.env['stock.picking.type'].with_context(active_test=False).search([('warehouse_id', '=', warehouse.id)])
+                move_ids = self.env['stock.move'].search([
+                    ('picking_type_id', 'in', picking_type_ids.ids),
+                    ('state', 'not in', ('done', 'cancel')),
+                ])
+                if move_ids:
+                    raise UserError(_('You still have ongoing operations for picking\
+                        types %s in warehouse %s') %
+                        (', '.join(move_ids.mapped('picking_type_id.name')), warehouse.name))
+                else:
+                    picking_type_ids.write({'active': vals['active']})
+                location_ids = self.env['stock.location'].with_context(active_test=False).search([('location_id', 'child_of', warehouse.view_location_id.id)])
+                picking_type_using_locations = self.env['stock.picking.type'].search([
+                    ('default_location_src_id', 'in', location_ids.ids),
+                    ('default_location_dest_id', 'in', location_ids.ids),
+                    ('id', 'not in', picking_type_ids.ids),
+                ])
+                if picking_type_using_locations:
+                    raise UserError(_('%s use default source or destination locations\
+                        from warehouse %s that will be archived.') %
+                        (', '.join(picking_type_using_locations.mapped('name')), warehouse.name))
+                warehouse.view_location_id.write({'active': vals['active']})
+
+                rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', self.id)])
+                # Only modify route that apply on this warehouse.
+                route_ids = warehouse.route_ids.filtered(lambda r: len(r.warehouse_ids) == 1).write({'active': vals['active']})
+                rule_ids.write({'active': vals['active']})
+
+                if warehouse.active:
+                    # Catch all warehouse fields that trigger a modfication on
+                    # routes, rules, picking types and locations (e.g the reception
+                    # steps). The purpose is to write on it in order to let the
+                    # write method set the correct field to active or archive.
+                    depends = set([])
+                    for rule_item in warehouse._get_global_route_rules_values().values():
+                        for depend in rule_item.get('depends', []):
+                            depends.add(depend)
+                    for rule_item in warehouse._get_routes_values().values():
+                        for depend in rule_item.get('depends', []):
+                            depends.add(depend)
+                    values = {'resupply_route_ids': [(4, route.id) for route in warehouse.resupply_route_ids]}
+                    for depend in depends:
+                        values.update({depend: warehouse[depend]})
+                    warehouse.write(values)
+
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
                 to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
-                    warehouse.create_resupply_routes(to_add)
+                    existing_route = Route.search([
+                        ('supplied_wh_id', '=', warehouse.id),
+                        ('supplier_wh_id', 'in', to_remove.ids),
+                        ('active', '=', False)
+                    ])
+                    if existing_route:
+                        existing_route.write({'active': True})
+                    else:
+                        warehouse.create_resupply_routes(to_add)
                 if to_remove:
                     Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).write({'active': False})
                     # TDE FIXME: shouldn't we remove stock rules also ? because this could make them global (not sure)
@@ -366,7 +420,8 @@ class Warehouse(models.Model):
                 'routing_key': self.reception_steps,
                 'depends': ['reception_steps'],
                 'route_update_values': {
-                    'name': self._format_routename(route_type=self.reception_steps)
+                    'name': self._format_routename(route_type=self.reception_steps),
+                    'active': self.active,
                 },
                 'route_create_values': {
                     'product_categ_selectable': True,
@@ -384,7 +439,8 @@ class Warehouse(models.Model):
                 'routing_key': self.delivery_steps,
                 'depends': ['delivery_steps'],
                 'route_update_values': {
-                    'name': self._format_routename(route_type=self.delivery_steps)
+                    'name': self._format_routename(route_type=self.delivery_steps),
+                    'active': self.active,
                 },
                 'route_create_values': {
                     'product_categ_selectable': True,
@@ -665,26 +721,12 @@ class Warehouse(models.Model):
             warehouse.int_type_id.sequence_id.write(sequence_data['int_type_id'])
 
     def _update_location_reception(self, new_reception_step):
-        switch_warehouses = self.filtered(lambda wh: wh.reception_steps != new_reception_step and not wh._location_used(wh.wh_input_stock_loc_id))
-        if switch_warehouses:
-            (switch_warehouses.mapped('wh_input_stock_loc_id') + switch_warehouses.mapped('wh_qc_stock_loc_id')).write({'active': False})
-        if new_reception_step == 'three_steps':
-            self.mapped('wh_qc_stock_loc_id').write({'active': True})
-        if new_reception_step != 'one_step':
-            self.mapped('wh_input_stock_loc_id').write({'active': True})
+        self.mapped('wh_qc_stock_loc_id').write({'active': new_reception_step == 'three_steps'})
+        self.mapped('wh_input_stock_loc_id').write({'active': new_reception_step != 'one_step'})
 
     def _update_location_delivery(self, new_delivery_step):
-        switch_warehouses = self.filtered(lambda wh: wh.delivery_steps != new_delivery_step)
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.wh_output_stock_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('wh_output_stock_loc_id').write({'active': False})
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.wh_pack_stock_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('wh_pack_stock_loc_id').write({'active': False})
-        if new_delivery_step == 'pick_pack_ship':
-            self.mapped('wh_pack_stock_loc_id').write({'active': True})
-        if new_delivery_step != 'ship_only':
-            self.mapped('wh_output_stock_loc_id').write({'active': True})
+        self.mapped('wh_pack_stock_loc_id').write({'active': new_delivery_step == 'pick_pack_ship'})
+        self.mapped('wh_output_stock_loc_id').write({'active': new_delivery_step != 'ship_only'})
 
     def _location_used(self, location):
         rules = self.env['stock.rule'].search_count([
