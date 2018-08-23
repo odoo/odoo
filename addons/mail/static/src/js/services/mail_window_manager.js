@@ -11,8 +11,6 @@ var utils = require('web.utils');
 var QWeb = core.qweb;
 var _t = core._t;
 
-var THREAD_WINDOW_WIDTH = 325 + 5;  // 5 pixels between windows
-
 /**
  * Mail Window Manager
  *
@@ -24,8 +22,12 @@ MailManager.include({
         close_blank_thread_window: '_onCloseBlankThreadWindow',
     }),
 
-    // tell where to append thread window
+    // width of 'hidden thread window' dropdown button
+    HIDDEN_THREAD_WINDOW_DROPDOWN_BUTTON_WIDTH: 50,
+    // where thread windows are appended
     THREAD_WINDOW_APPENDTO: 'body',
+    // width of a thread window (+ 5 pixels between windows)
+    THREAD_WINDOW_WIDTH: 325 + 5,
 
     //--------------------------------------------------------------------------
     // Public
@@ -152,13 +154,28 @@ MailManager.include({
     //--------------------------------------------------------------------------
 
     /**
-     * Add the thread window such that it will be the left-most visible window
+     * Add the thread window such that it will be the left-most visible window.
+     * Note that adding a new thread window may decrement the amount of
+     * available slots for visible thread windows.
+     * For example:
+     *
+     * - global width of 800px
+     * - button width of 100px
+     * - thread width of 250px
+     *
+     * Without button: 3 thread windows (3*250px = 750px < 800px)
+     *    With button: 2 thread windows (2*250px + 100px = 600px < 800px)
+     *
+     * So in order for the thread window to be the left-most visible window,
+     * we should compute available slots after insertion of the thread window.
      *
      * @private
      * @param {mail.ThreadWindow} threadWindow
      */
     _addThreadWindow: function (threadWindow) {
-        this._computeAvailableSlotsForThreadWindows(this._threadWindows.length+1);
+        this._threadWindows.push(threadWindow);
+        this._computeAvailableSlotsForThreadWindows();
+        this._threadWindows.pop();
         this._threadWindows.splice(this._availableSlotsForThreadWindows-1, 0, threadWindow);
     },
     /**
@@ -206,22 +223,23 @@ MailManager.include({
      * method call.
      *
      * @private
-     * @param {integer} nbWindows
      */
-    _computeAvailableSlotsForThreadWindows: function (nbWindows) {
+    _computeAvailableSlotsForThreadWindows: function () {
         if (config.device.isMobile) {
             // one thread window full screen in mobile
             this._availableSlotsForThreadWindows = 1;
             return;
         }
-        var width = window.innerWidth;
-        var availableSlots = Math.floor(width/THREAD_WINDOW_WIDTH);
-        var spaceLeft = width - (Math.min(availableSlots, nbWindows)*THREAD_WINDOW_WIDTH);
-        if (availableSlots < nbWindows && spaceLeft < 50) {
-            // leave at least 50px for the hidden windows dropdown button
+        var GLOBAL_WIDTH = this._getGlobalWidth();
+        var THREAD_WINDOW_NUM = this._threadWindows.length;
+        var availableSlots = Math.floor(GLOBAL_WIDTH/this.THREAD_WINDOW_WIDTH);
+        var spaceLeft = GLOBAL_WIDTH - (Math.min(availableSlots, THREAD_WINDOW_NUM)*this.THREAD_WINDOW_WIDTH);
+        if (availableSlots < THREAD_WINDOW_NUM && spaceLeft < this.HIDDEN_THREAD_WINDOW_DROPDOWN_BUTTON_WIDTH) {
+            // leave at least space for the hidden windows dropdown button
             availableSlots--;
-            spaceLeft += THREAD_WINDOW_WIDTH;
+            spaceLeft += this.THREAD_WINDOW_WIDTH;
         }
+
         this._availableSlotsForThreadWindows = availableSlots;
         this._spaceLeftForThreadWindows = spaceLeft;
     },
@@ -240,6 +258,16 @@ MailManager.include({
         return _.find(this._threadWindows, function (threadWindow) {
             return threadWindow.getID() === '_blank';
         });
+    },
+    /**
+     * Get the width of the browser, which is useful to determine how many
+     * open thread windows are visible or hidden.
+     *
+     * @private
+     * @returns {integer}
+     */
+    _getGlobalWidth: function () {
+        return window.innerWidth;
     },
     /**
      * Get thread window in the hidden windows matching ID `threadID`.
@@ -320,7 +348,7 @@ MailManager.include({
         if (this._hiddenThreadWindows.length) {
             this._$hiddenThreadWindowsDropdown = this._renderHiddenThreadWindowsDropdown();
             var $hiddenWindowsDropdown = this._$hiddenThreadWindowsDropdown;
-            $hiddenWindowsDropdown.css({right: THREAD_WINDOW_WIDTH * this._availableSlotsForThreadWindows, bottom: 0 })
+            $hiddenWindowsDropdown.css({right: this.THREAD_WINDOW_WIDTH * this._availableSlotsForThreadWindows, bottom: 0 })
                                   .appendTo(this.THREAD_WINDOW_APPENDTO);
             this._repositionHiddenWindowsDropdown();
             this._keepHiddenThreadWindowsDropdownOpen = false;
@@ -469,15 +497,14 @@ MailManager.include({
      * attribute `threadWindows` should be hidden. Those thread windows are put
      * in the hidden thread window dropdown menu.
      *
+     * This function assumes that we have already computed the available slots.
+     *
      * @private
-     * @param {integer} startIndex the index of the first thread window to hide,
-     *   in increasing order of the thread windows in the `threadWindows`
-     *   attribute
      */
-    _repositionHiddenThreadWindows: function (startIndex) {
+    _repositionHiddenThreadWindows: function () {
         var hiddenWindows = [];
         var hiddenUnreadCounter = 0;
-        var index = startIndex;
+        var index = this._availableSlotsForThreadWindows;
         while (index < this._threadWindows.length) {
             var threadWindow = this._threadWindows[index];
             hiddenWindows.push(threadWindow);
@@ -508,27 +535,27 @@ MailManager.include({
         if (this._areAllThreadWindowsHidden()) {
             return;
         }
-        this._computeAvailableSlotsForThreadWindows(this._threadWindows.length);
-        var availableSlots = this._availableSlotsForThreadWindows;
+        this._computeAvailableSlotsForThreadWindows();
 
-        this._repositionVisibleThreadWindows(availableSlots-1);
-        this._repositionHiddenThreadWindows(availableSlots);
+        this._repositionVisibleThreadWindows();
+        this._repositionHiddenThreadWindows();
     },
     /**
      * Reposition the thread windows that should be visible on the screen.
      *
+     * This function assumes that we have already computed the available slots.
+     *
      * @private
-     * @param {integer} count how many thread windows can should be visible,
-     *   which are picked in the attribute `_threadWindows` in increasing index
-     *   order of appearance in the array. constraint:
-     *   0 <= count < this._threadWindows.length
      */
-    _repositionVisibleThreadWindows: function (count) {
+    _repositionVisibleThreadWindows: function () {
         var index = 0;
-        while (index < count && index < this._threadWindows.length) {
+        while (
+            index < this._availableSlotsForThreadWindows &&
+            index < this._threadWindows.length
+        ) {
             var threadWindow = this._threadWindows[index];
             var cssProps = {bottom: 0};
-            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = THREAD_WINDOW_WIDTH*index;
+            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = this.THREAD_WINDOW_WIDTH*index;
             threadWindow.$el.css(cssProps);
             threadWindow.do_show();
             index++;
