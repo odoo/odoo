@@ -9,8 +9,8 @@ Tour.register('bank_statement_reconciliation', {
         test: true,
         // Go to the reconciliation page of the statement: "BNK/2014/001"
     }, [
-        // Reconciliation of 'INV/2018/0002'
-        // Click on reconcile (matching done automatically by the reconciliation rule).
+        // Reconciliation of 'SAJ/2018/002'
+        // Select the 'INV/2018/0002' line and click on reconcile.
 
         {
             content: "reconcile the line",
