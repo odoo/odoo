@@ -160,7 +160,7 @@
                                         <t t-foreach="ratings" t-as="rating">
                                             <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png'
                                                 class="mt4 o_rating_image"
-                                                t-att-alt="rating.name"
+                                                t-att-alt="rating.res_name"
                                                 t-att-data-id="rating.id"
                                                 t-att-data-rating-date="rating.write_date"/>
                                             <t t-call="project.portal_project_rating_popover"/>
