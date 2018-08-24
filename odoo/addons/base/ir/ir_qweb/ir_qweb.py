@@ -344,7 +344,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
                 elif can_aggregate(src) and el.tag == 'script':
                     atype = 'text/javascript'
-                    path = [segment for segment in href.split('/') if segment]
+                    path = [segment for segment in src.split('/') if segment]
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
