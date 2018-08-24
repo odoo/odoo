@@ -52,6 +52,29 @@ if ($.blockUI) {
 }
 
 
+/**
+ * Remove the "accesskey" attributes to avoid the use of the access keys
+ * while the blockUI is enable.
+ */
+
+function blockAccessKeys() {
+    var elementWithAccessKey = [];
+    elementWithAccessKey = document.querySelectorAll('[accesskey]');
+    _.each(elementWithAccessKey, function (elem) {
+        elem.setAttribute("data-accesskey",elem.getAttribute('accesskey'));
+        elem.removeAttribute('accesskey');
+    });
+}
+
+function unblockAccessKeys() {
+    var elementWithDataAccessKey = [];
+    elementWithDataAccessKey = document.querySelectorAll('[data-accesskey]');
+    _.each(elementWithDataAccessKey, function (elem) {
+        elem.setAttribute('accesskey', elem.getAttribute('data-accesskey'));
+        elem.removeAttribute('data-accesskey');
+    });
+}
+
 var throbbers = [];
 
 function blockUI() {
@@ -60,6 +83,7 @@ function blockUI() {
     throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
     $(document.body).addClass('o_ui_blocked');
+    blockAccessKeys();
     return tmp;
 }
 
@@ -67,6 +91,7 @@ function unblockUI() {
     _.invoke(throbbers, 'destroy');
     throbbers = [];
     $(document.body).removeClass('o_ui_blocked');
+    unblockAccessKeys();
     return $.unblockUI.apply($, arguments);
 }
 

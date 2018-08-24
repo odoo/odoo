@@ -905,8 +905,14 @@ var BasicModel = AbstractModel.extend({
                 params: params,
             })
             .then(function () {
+                var offset = options.offset ? options.offset : 0;
+                var old_data = data.data.slice();
                 data.data = _.sortBy(data.data, function (d) {
-                    return _.indexOf(resIDs, self.localData[d].res_id);
+                    if (_.contains(resIDs, self.localData[d].res_id)) {
+                        return _.indexOf(resIDs, self.localData[d].res_id) + offset;
+                    } else {
+                        return _.indexOf(old_data, d);
+                    }
                 });
                 data.res_ids = [];
                 _.each(data.data, function (d) {
