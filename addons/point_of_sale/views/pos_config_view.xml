@@ -435,7 +435,8 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('iface_invoicing', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-md-3 o_light_label"/>
-                                        <field name="invoice_journal_id"/>
+                                        <field name="invoice_journal_id"
+                                               attrs="{'required': [('iface_invoicing', '=', True)]}"/>
                                     </div>
                                 </div>
                             </div>
