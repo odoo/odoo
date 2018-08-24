@@ -896,6 +896,11 @@ var FieldFloatTime = FieldFloat.extend({
     // 'float_time', but for the sake of clarity, we explicitely define a
     // FieldFloatTime widget with formatType = 'float_time'.
     formatType: 'float_time',
+
+    init: function () {
+        this._super.apply(this, arguments);
+        this.formatType = 'float_time';
+    }
 });
 
 var FieldFloatFactor = FieldFloat.extend({
