@@ -167,6 +167,13 @@
     @return $-map;
 }
 
+// Function to swap two values in a list
+@function o-swap($list, $i, $j) {
+    $tmp: nth($list, $i);
+    $list: set-nth($list, $i, nth($list, $j));
+    @return set-nth($list, $j, $tmp);
+}
+
 // ------- Kanban grouped mixins -------
 @mixin o-kanban-icon($base-opacity: 0.5) {
     display: block;
