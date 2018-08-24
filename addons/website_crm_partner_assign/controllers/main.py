@@ -235,7 +235,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
             grade_domain, ["id", "grade_id"],
-            groupby="grade_id", orderby="sequence")
+            groupby="grade_id")
         grades_partners = partner_obj.sudo().search_count(grade_domain)
         # flag active grade
         for grade_dict in grades:
