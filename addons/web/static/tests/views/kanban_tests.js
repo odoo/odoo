@@ -1654,7 +1654,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.only('hide and display help message (ESC) in kanban quick create', function (assert) {
+    QUnit.test('hide and display help message (ESC) in kanban quick create', function (assert) {
         assert.expect(2);
 
         var kanban = createView({
