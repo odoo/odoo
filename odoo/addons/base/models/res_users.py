@@ -16,7 +16,7 @@ from lxml import etree
 from lxml.builder import E
 import passlib.context
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, ADMINUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -584,7 +584,7 @@ class Users(models.Model):
                relevant environment attributes
         """
         uid = cls._login(db, login, password)
-        if uid == SUPERUSER_ID:
+        if uid == ADMINUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
             if user_agent_env and user_agent_env.get('base_location'):
