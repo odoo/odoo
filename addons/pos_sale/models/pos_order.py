@@ -13,4 +13,4 @@ class PosOrder(models.Model):
     def _compute_currency_rate(self):
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            order.currency_rate = order.pricelist_id.currency_id._get_rates(order.company_id, date_order).get(order.company_id.currency_id.id, 1.0)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.pricelist_id.currency_id, order.company_id.currency_id, order.company_id, date_order)
