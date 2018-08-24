@@ -2428,6 +2428,25 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field should closed on blur', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            debug: true,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_datepicker_input').click();
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        form.$('.o_datepicker_input').trigger('blur');
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'date picker should have been closed when clicked outside');
+        form.destroy();
+    });
+
     QUnit.test('date field in form view (with positive time zone offset)', function (assert) {
         assert.expect(8);
 
