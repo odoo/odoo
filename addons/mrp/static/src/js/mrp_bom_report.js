@@ -172,6 +172,7 @@ var MrpBomReport = stock_report_generic.extend({
         });
     },
     _onClickShowAttachment: function (ev) {
+        ev.preventDefault();
         var ids = $(ev.currentTarget).data('res-id');
         return this.do_action({
             name: _t('Attachments'),
