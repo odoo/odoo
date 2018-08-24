@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         help='Utility field to express amount currency')
     default_purchase_method = fields.Selection([
         ('purchase', 'Ordered quantities'),
-        ('receive', 'Delivered quantities'),
+        ('receive', 'Received quantities'),
         ], string="Bill Control", default_model="product.template",
         help="This default value is applied to any new product created. "
         "This can be changed in the product detail form.", default="receive")
