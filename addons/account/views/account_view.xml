@@ -335,6 +335,11 @@
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>
+                                    <group string="Control-Access" groups="base.group_no_one">
+                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
+                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="account_control_ids" widget="many2many_tags"/>
+                                    </group>
                                     <group string="Payment Method Types" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -355,12 +360,7 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('alias_domain', '!=', False)]}">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
-                                    </div>
-                                    </group>
-                                    <group string="Control-Access" groups="base.group_no_one">
-                                        <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
-                                        <field name="account_control_ids" widget="many2many_tags"/>
+                                        </div>
                                     </group>
                                 </group>
                             </page>
