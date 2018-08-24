@@ -277,7 +277,7 @@
                     <field name="is_public"/>
                     <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Creation Month" name="group_create_date"
+                        <filter string="Creation Period" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
                     </group>
                 </search>
@@ -448,8 +448,8 @@
                         <filter string="Sent By" name="sent_by" domain="[]"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Sent Month" name="sent_month"
-                            domain="[]" context="{'group_by':'sent_date:month'}"/>
+                        <filter string="Sent Period" name="sent_date"
+                            domain="[]" context="{'group_by':'sent_date'}"/>
                     </group>
                 </search>
             </field>
