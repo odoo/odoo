@@ -25,8 +25,18 @@ var DateWidget = Widget.extend({
         this._super.apply(this, arguments);
 
         this.name = parent.name;
+        var format;
+        if(this.type_of_date === 'datetime' && options && options.timeFormat) {
+            format = time.getLangDateFormat() + " " + options.timeFormat;
+        }
+        else if (this.type_of_date === 'datetime') {
+            format = time.getLangDatetimeFormat();
+        }
+        else {
+            format = time.getLangDateFormat();
+        }
         this.options = _.extend({
-            format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
+            format : format,
             minDate: moment({ y: 1900 }),
             maxDate: moment().add(200, "y"),
             useCurrent: false,
@@ -177,7 +187,12 @@ var DateWidget = Widget.extend({
      * @returns {Moment}
      */
     _parseClient: function (v) {
-        return field_utils.parse[this.type_of_date](v, null, {timezone: false});
+        var options = {timezone: false};
+        if (this.options.timeFormat) {
+            options.timeFormat = this.options.timeFormat;
+        }
+        var val = field_utils.parse[this.type_of_date](v, null, options);
+        return val;
     },
     /**
      * @private
