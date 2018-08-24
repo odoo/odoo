@@ -243,17 +243,21 @@
                     border: solid theme-color('light') 1px;
                     border-radius: 5px;
                     color: gray;
-                    width: 300px;
-                    display: none;
+                    width: auto;
+                    min-width: 180px;
                     opacity: 0;
                     position: absolute;
+                    top: 100%;
+                    right: -50%;
                     transition: opacity 0.5s;
+                    z-index: 1;
                     i.fa-exclamation {
                         color: red;
                     }
                 }
 
-                .o_thread_tooltip:hover + .o_thread_tooltip_content {
+                .o_thread_tooltip:hover + .o_thread_tooltip_content,
+                .o_thread_tooltip_content:hover {
                     display: inline;
                     opacity: 1;
                 }
