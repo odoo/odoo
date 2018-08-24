@@ -366,19 +366,19 @@
                         <page string="Other Info" name="other_info">
                             <group>
                                 <group>
+                                    <field name="user_id" string="Purchase Representative"/>
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
                                         attrs="{'readonly':[('move_name','!=',False)]}"/>
-                                    <field name="user_id" string="Purchase Representative"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
-                                    <field name="payment_term_id" options="{'no_create': True}"/>
-                                    <field name="incoterm_id" options="{'no_create': True}"/>
+                                    <field name="date" groups="account.group_account_user"/>
                                     <field name="name"/>
                                 </group>
                                 <group>
+                                    <field name="incoterm_id" options="{'no_create': True}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>
+                                    <field name="payment_term_id" options="{'no_create': True}"/>
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
-                                    <field name="date" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
                             </group>
@@ -574,20 +574,20 @@
                         <page string="Other Info" name="other_info">
                             <group>
                                 <group>
-                                    <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="journal_id" groups="account.group_account_user"
                                         options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable'), ('deprecated', '=', False)]"
                                         name="account_id" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field domain="[('partner_id.ref_company_ids', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
+                                    <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                    <field name="name"/>
                                 </group>
                                 <group>
+                                    <field name="incoterm_id" options="{'no_create': True}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
-                                    <field name="incoterm_id" options="{'no_create': True}"/>
-                                    <field name="name"/>
-                                    <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
