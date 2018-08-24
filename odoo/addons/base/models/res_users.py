@@ -290,8 +290,9 @@ class Users(models.Model):
     @api.model
     def check_credentials(self, password):
         """ Override this method to plug additional authentication methods"""
+        assert password
         self.env.cr.execute(
-            'SELECT password FROM res_users WHERE id=%s',
+            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
             [self.env.user.id]
         )
         [hashed] = self.env.cr.fetchone()
