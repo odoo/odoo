@@ -3,25 +3,20 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# 钟小华 <mackz@sina.com>, 2016
-# Martin Trigaux, 2016
-# fausthuang, 2016
-# Talway <9010446@qq.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# 菜小蛇 <lttlsnk@gmail.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# Tison He <hedisen@sina.com>, 2018
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2018
+# fausthuang, 2018
+# 菜小蛇 <lttlsnk@gmail.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -32,10 +27,15 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid "<b>Shipping Method: </b>"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid ""
-"<span class=\"badge pull-right o_delivery_compute\">Select to compute "
-"delivery rate</span>"
-msgstr "<span class=\"badge pull-right o_delivery_compute\">选择计算送达率</span>"
+"<span class=\"float-right badge badge-secondary o_delivery_compute\">Select "
+"to compute delivery rate</span>"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
@@ -112,14 +112,14 @@ msgid "FedEx Delivery Methods"
 msgstr "FedEx 交货方式"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Free"
 msgstr "空闲"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has an order line set for delivery"
-msgstr "对交货有个订单行的设置"
+msgstr "对交货有订单行的设置"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
@@ -127,12 +127,17 @@ msgid "Has delivery"
 msgstr "已发货"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
-msgstr "订单上没有选择正确的送货方式及送货地址，请完善。"
+msgstr "你当前的订单上没有可供的送货方式及送货地址，请联系我们获取更多信息。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
@@ -157,10 +162,15 @@ msgid "Quotation"
 msgstr "报价单"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "报歉，您的订单我们无法运送"
+msgstr "报歉，你的订单我们无法运送"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
@@ -170,12 +180,12 @@ msgstr "不含税金的总额。"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
 msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整网址。"
+msgstr "通过网站访问单据的完整URL。"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
+#: model:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
-msgstr "追踪"
+msgstr "追踪:"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -184,8 +194,13 @@ msgstr "USPS 交货方式"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "网站"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url

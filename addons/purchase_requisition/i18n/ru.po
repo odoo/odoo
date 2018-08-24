@@ -3,27 +3,14 @@
 # * purchase_requisition
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Collex100, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
-# Sergey Vilizhanin, 2017
-# Vladimir Lukianov <lvm.mobile@gmail.com>, 2017
-# Dmitry sky <d.v.selitsky@gmail.com>, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2018
-# Mekan Bash <tmbashimov@gmail.com>, 2018
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
-# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,6 +129,11 @@ msgstr "Заказать одеяло"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Blanket order"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:purchase.requisition.type,name:purchase_requisition.type_multi
+msgid "Call for Tender"
 msgstr ""
 
 #. module: purchase_requisition
@@ -472,11 +464,6 @@ msgid "Procurement"
 msgstr "Поставка"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Правило поставки"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
@@ -574,16 +561,12 @@ msgid "Purchase Requisition Line"
 msgstr "Позиция запроса закупки"
 
 #. module: purchase_requisition
-#: model:purchase.requisition.type,name:purchase_requisition.type_multi
-msgid "Purchase Tender"
-msgstr "Покупка Тендер"
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
 msgstr "Заказы закупки"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
 msgid "Quantities"
@@ -707,6 +690,11 @@ msgid "Stock Move"
 msgstr "Перемещение запасов"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
 msgstr ""
@@ -805,7 +793,7 @@ msgstr ""
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:122
 #, python-format
-msgid "You cannot confirm agreement because there is no product line."
+msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition

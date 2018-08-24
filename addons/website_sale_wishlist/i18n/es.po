@@ -3,28 +3,17 @@
 # * website_sale_wishlist
 # 
 # Translators:
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Antonio Trueba, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
-# Eric Antones <eantones@users.noreply.github.com>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# Martin Trigaux, 2017
 # e2f <projects@e2f.com>, 2018
+# ES R2 <e2fds74f5ds412@outlook.com>, 2018
+# Martin Trigaux, 2018
+# Eric Antones <eantones@users.noreply.github.com>, 2018
 # e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +27,9 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-heart\"/>\n"
 "                        Wishlist"
-msgstr "<i class=\"fa fa-heart\"/>"
+msgstr ""
+"<i class=\"fa fa-heart\"/>\n"
+"                        Lista de deseos"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -52,8 +43,8 @@ msgstr "Activo"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"hidden-xs\">to Cart</span>"
-msgstr "<span class=\"hidden-xs\"/>"
+msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -69,7 +60,7 @@ msgstr "Añadir a lista de deseos"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
 msgid "Added Date"
-msgstr "Fecha de añadido"
+msgstr "Fecha en la que se añadió"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -85,21 +76,6 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
 msgid "Currency"
 msgstr "Moneda"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__current_session
-msgid "Current Session"
-msgstr "Sesión actual"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price"
-msgstr "Precio actual"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price of this product, using same pricelist, ..."
-msgstr "Precio actual de este producto, usando la misma lista de precios, ..."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
@@ -154,7 +130,7 @@ msgstr "Tarifa"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr "Lista de precios al añadirlo"
+msgstr "Lista de precios cuando se añadió"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
@@ -162,9 +138,9 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__session
-msgid "Session"
-msgstr "Sesión"
+#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Product image"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -180,13 +156,6 @@ msgstr "Usuarios"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
 msgstr "Sitio web"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__session
-msgid "Website session identifier where this product was wishlisted."
-msgstr ""
-"Identificador de sesión del sitio web donde se agregó este producto a la "
-"lista de deseos."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids

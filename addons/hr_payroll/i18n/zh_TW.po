@@ -3,17 +3,14 @@
 # * hr_payroll
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Martin Trigaux, 2018
-# Michael Yeung, 2018
-# Bill Hsu <hcm86@icloud.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +42,19 @@ msgstr ""
 " * 如果薪資單被確認，狀態設定為「完成」。\n"
 " \n"
 " * 當使用者取消薪資單時狀態為「已拒絕」。"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+" selected employee(s) based on the dates and credit note specified on "
+"Payslips Run.</span>"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -626,7 +636,7 @@ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:177
+#: code:addons/hr_payroll/models/hr_salary_rule.py:178
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
@@ -1012,11 +1022,6 @@ msgstr "薪資表"
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
 msgstr "薪資條目"
-
-#. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
-msgid "Payroll Rules"
-msgstr "薪資規則"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
@@ -1425,13 +1430,6 @@ msgid ""
 msgstr "這將用於計算%字段的值；一般來說是基數，但您也可以用小寫的類別代碼作為一個變量名（hra，ma，lta等）和可變的基數。"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
-msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
-msgstr "嚮導將根據薪資單生成器指定的日期以及退款單，為所有被選員工生成薪資單。"
-
-#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -1502,31 +1500,31 @@ msgid "Working Schedule"
 msgstr "工作安排"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:209
+#: code:addons/hr_payroll/models/hr_salary_rule.py:210
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s)百分比基數或者數量定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:215
+#: code:addons/hr_payroll/models/hr_salary_rule.py:216
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s) Python代碼定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:238
+#: code:addons/hr_payroll/models/hr_salary_rule.py:239
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s) Python條件定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:202
+#: code:addons/hr_payroll/models/hr_salary_rule.py:203
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "為薪資規則  %s (%s) 定義的數量錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:232
+#: code:addons/hr_payroll/models/hr_salary_rule.py:233
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "薪資規則%s (%s) 範圍條件定義錯誤。"
@@ -1550,7 +1548,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "您必須選擇員工以生成薪資單。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:524
+#: code:addons/hr_payroll/models/hr_payslip.py:525
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "您必須設定一份合同以創建薪資單。"

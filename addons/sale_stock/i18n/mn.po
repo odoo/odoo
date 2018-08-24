@@ -3,6 +3,7 @@
 # * sale_stock
 # 
 # Translators:
+# Jacara <baskhuujacara@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
 # nasaaskii <nasaaskii@gmail.com>, 2018
@@ -10,10 +11,10 @@
 # Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:249
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
 "\n"
@@ -39,40 +40,42 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
 "times\"/> Cancelled</span>"
 msgstr ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Цуцлагдсан</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Бэлтгэлт</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
 "truck\"/> Shipped</span>"
 msgstr ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Хүргэгдсэн</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Зарим нь байгаа</span>"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sale Orders</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "<span class=\"o_stat_text\">Sold</span>"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -80,7 +83,7 @@ msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Захиалагчийн Код:</strong>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
 msgstr "<strong>Хүргэх Захиалгууд</strong>"
 
@@ -116,9 +119,24 @@ msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific rotues"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Компаниуд"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -136,11 +154,6 @@ msgid "Delivery"
 msgstr "Хүргэлт"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__module_sale_order_dates
-msgid "Delivery Date"
-msgstr "Хүргэлтийн Огноо"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Хүргэлтийн захиалгууд"
@@ -156,6 +169,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
+msgstr "Зохимжтой Огноо"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__has_group_route_so_lines
@@ -242,9 +260,9 @@ msgid "Invoicing"
 msgstr "Нэхэмжлэх"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Manage delivery dates from sales orders"
-msgstr ""
+#: model:ir.model,name:sale_stock.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Цуврал"
 
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
@@ -288,7 +306,7 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:256
+#: code:addons/sale_stock/models/sale_order.py:276
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Бараа материал хүрэлцээгүй!"
@@ -299,7 +317,7 @@ msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:270
+#: code:addons/sale_stock/models/sale_order.py:290
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Захиалсан тоо багассан!"
@@ -328,11 +346,6 @@ msgstr "Татан авалтын Бүлэг"
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
 msgstr "Татан авалтын Шаардах"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Татан авалтын Дүрэм"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -374,9 +387,14 @@ msgid "Sale Order"
 msgstr "Борлуулах захиалга"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "Sales"
-msgstr "Борлуулалт"
+#: model:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr "Борлуулалтын захиалга"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
+msgid "Sale order count"
+msgstr "Борлуулалтын захиалгын тоо"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
@@ -392,6 +410,11 @@ msgstr "Борлуулалтын Захиалгын Мөр"
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
 msgstr "Борлуулалтын Захиалгын Мөрүүд"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
+msgid "Sales Orders"
+msgstr "Борлуулалтын Захиалгууд"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -426,22 +449,23 @@ msgstr "Борлуулалтын захиалгын мөрүүд дээр сон
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Бүх бараа бэлэн болсон үед хүргэнэ"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Shipping Information"
-msgstr "Хүргэлтийн Мэдээлэл"
+"Бэлэн байгаа барааг түрүүлж хүргэнэ, дутуу бараанд нөхөн баримт үүсгэнэ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Тээвэрлэлтийн Бодлого"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sold in the last 365 days"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -455,6 +479,11 @@ msgid "Stock Moves"
 msgstr "Барааны Хөдөлгөөнүүд"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "This allows to apply a special route on sales order lines (e.g. "
@@ -464,15 +493,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid ""
-"This option introduces extra fields in the sales order to easily schedule "
-"product deliveries on your own: expected date, commitment date, effective "
-"date."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:363
+#: code:addons/sale_stock/models/sale_order.py:388
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Энэ бараа нь %.2f %s-р багцлагдсан. Таны зарвал зохих %.2f %s."
@@ -499,7 +520,7 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:362
+#: code:addons/sale_stock/models/sale_order.py:387
 #, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
@@ -507,15 +528,15 @@ msgstr "Анхааруулга"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Борлуулсан барааг хэзээ нөөцөөс хасах вэ?"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Хэзээ хүргэлт хийж эхлэх вэ"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:271
+#: code:addons/sale_stock/models/sale_order.py:291
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -525,7 +546,7 @@ msgstr ""
 "гараараа шинэчилэхээ мартаж болохгүй шүү."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:403
+#: code:addons/sale_stock/models/sale_order.py:428
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -533,7 +554,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:245
+#: code:addons/sale_stock/models/sale_order.py:265
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
@@ -566,6 +587,16 @@ msgid "processed instead of"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "report.stock.report_stock_rule"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "stock.rules.report"
+msgstr ""

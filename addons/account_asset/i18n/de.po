@@ -3,31 +3,14 @@
 # * account_asset
 # 
 # Translators:
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Martin Trigaux, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Wolfgang Taferner, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Niki Waibel, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Dejan Dinic, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Renzo Meister, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:426
+#: code:addons/account_asset/models/account_asset.py:429
 #, python-format
 msgid " (copy)"
 msgstr " (Kopie)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:561
+#: code:addons/account_asset/models/account_asset.py:571
 #, python-format
 msgid " (grouped)"
 msgstr "(gruppiert)"
@@ -114,7 +97,7 @@ msgid "Additional Options"
 msgstr "Zusätzliche Optionen"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:627
+#: code:addons/account_asset/models/account_asset.py:639
 #, python-format
 msgid "Amount"
 msgstr "Betrag"
@@ -130,9 +113,16 @@ msgid "Amount of Installment Lines"
 msgstr "Summe bei Teilzahlungen"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__account_analytic_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category__account_analytic_id
 msgid "Analytic Account"
 msgstr "Analysekonto"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__analytic_tag_ids
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category__analytic_tag_ids
+msgid "Analytic Tag"
+msgstr "Kostenstellen Tag"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line__asset_id
@@ -208,7 +198,7 @@ msgid "Asset category"
 msgstr "Anlagenkategorie"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:297
+#: code:addons/account_asset/models/account_asset.py:296
 #, python-format
 msgid "Asset created"
 msgstr "Anlage erzeugt"
@@ -219,7 +209,7 @@ msgid "Asset depreciation line"
 msgstr "Anlage Abschreibungszeile"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:345
+#: code:addons/account_asset/models/account_asset.py:344
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "Anlage verkauft oder vernichtet. Posten erwartet Validierung."
@@ -429,7 +419,7 @@ msgid "Cumulative Depreciation"
 msgstr "Kumulierte Abschreibung"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:627
+#: code:addons/account_asset/models/account_asset.py:639
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__currency_id
 #, python-format
 msgid "Currency"
@@ -571,7 +561,7 @@ msgid "Depreciation board modified"
 msgstr "Abschreibungsspiegel verändert"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:630
+#: code:addons/account_asset/models/account_asset.py:642
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Abschreibungszeile gebucht."
@@ -587,19 +577,19 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:300
+#: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
 msgstr "Verschrottungsbuchung"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:303
+#: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
 msgstr "Verschrottungsbuchungen"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:609
+#: code:addons/account_asset/models/account_asset.py:621
 #, python-format
 msgid "Document closed."
 msgstr "Dokument geschlossen"
@@ -780,7 +770,7 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:460
+#: code:addons/account_asset/models/account_asset.py:463
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -940,7 +930,7 @@ msgid "One Entry Every"
 msgstr "Eine Buchung alle"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:629
+#: code:addons/account_asset/models/account_asset.py:641
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report__partner_id
 #, python-format
@@ -995,7 +985,7 @@ msgid "Prorata Temporis"
 msgstr "Pro rata temporis"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:391
+#: code:addons/account_asset/models/account_asset.py:392
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for the \"number of depreciations\" "
@@ -1119,7 +1109,7 @@ msgstr ""
 "vollständig abschreibt."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_invoice.py:63
+#: code:addons/account_asset/models/account_invoice.py:62
 #, python-format
 msgid ""
 "The number of depreciations or the period length of your asset category "
@@ -1143,7 +1133,7 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:503
+#: code:addons/account_asset/models/account_asset.py:506
 #, python-format
 msgid ""
 "This depreciation is already linked to a journal entry. Please post or "
@@ -1236,25 +1226,25 @@ msgid "Year"
 msgstr "Jahr"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:134
+#: code:addons/account_asset/models/account_asset.py:136
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "Sie dürfen ein Dokument, mit gebuchten Posten, nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:131
+#: code:addons/account_asset/models/account_asset.py:133
 #, python-format
 msgid "You cannot delete a document that is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:638
+#: code:addons/account_asset/models/account_asset.py:650
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Sie dürfen gebuchte Abschreibungspositionen nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:640
+#: code:addons/account_asset/models/account_asset.py:652
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Sie dürfen gebuchte Zuschreibungen nicht löschen."

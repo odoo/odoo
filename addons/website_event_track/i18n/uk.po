@@ -3,20 +3,18 @@
 # * website_event_track
 # 
 # Translators:
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 # Yaroslav Molochko <onorua@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Zoriana Zaiats, 2018
-# Olga Lugova <trolka.olug@gmail.com>, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Olga Lugova <trolka.olug@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +129,7 @@ msgstr ""
 "Етап доріжки канбану вказує на особливі ситуації, що впливають на неї:\n"
 "  * Сірий - типова ситуація\n"
 "  * Червоний означає, що щось перешкоджає просуванню цієї доріжки\n"
-"  * Зелений показує, що доріжка готова дотягнути до наступного етапу"
+"  * Зелений показує, що доріжка готова до перетягування на наступний етап"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -311,6 +309,11 @@ msgstr "Назва для відображення"
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "Documents"
 msgstr "Документи"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
@@ -525,12 +528,17 @@ msgstr "Зображення"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Introduction"
-msgstr "Передмова"
+msgstr "Загальний огляд"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
 msgid "Is Follower"
 msgstr "Стежить"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -1128,8 +1136,8 @@ msgstr "Переглянути відстеження"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
-msgid "Visible in Website"
-msgstr "Видимий на сайті"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1189,6 +1197,11 @@ msgstr "Мета-ключі сайту"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
 msgstr "Мета-заголовок сайту"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal

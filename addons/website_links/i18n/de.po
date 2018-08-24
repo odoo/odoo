@@ -3,20 +3,20 @@
 # * website_links
 # 
 # Translators:
-# aNj <anj2j@yahoo.de>, 2017
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# jonas <jonas.hillebrecht@bklynsoap.com>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
 # e2f <projects@e2f.com>, 2018
+# aNj <anj2j@yahoo.de>, 2018
+# Philipp Hug <philipp@hug.cx>, 2018
+# Martin Trigaux, 2018
+# Wolfgang Taferner, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgstr "Länder"
 #: code:addons/website_links/static/src/js/website_links_charts.js:57
 #, python-format
 msgid "# of clicks"
-msgstr "# an Klicks"
+msgstr "Anzahl an Klicks"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.share_page_menu
@@ -84,18 +84,16 @@ msgstr "<strong>Verfolgter Link</strong>"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr "Alle Zeiten"
+msgstr "Immer"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 msgstr ""
-"Kampagne<i class=\"fa fa-info-circle\" data-placement=\"top\" data-"
-"toggle=\"tooltip\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -106,15 +104,30 @@ msgstr "Kopieren"
 
 #. module: website_links
 #. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: model:ir.ui.view,arch_db:website_links.graphs
+#, python-format
+msgid "Edit code"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:356
 #, python-format
 msgid "Generating link..."
-msgstr "Verknüpfung wird erstellt …"
+msgstr "Link wird erstellt …"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
 msgstr "Verfolgten Link abrufen"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#, python-format
+msgid "Icon"
+msgstr "Icon"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -136,12 +149,10 @@ msgstr "Link Tracker"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 msgstr ""
-"Medium<i class=\"fa fa-info-circle\" data-placement=\"top\" data-"
-"toggle=\"tooltip\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -164,19 +175,17 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Teilen <strong>Sie diese Seite mit einem kurzen Link, der "
-"einen</strong><strong/> Analytics-Tracker enthält."
+"Teilen Sie diese Seite mit einem <strong>kurzen Link</strong>, der einen "
+"<strong>Analytics-Tracker</strong> enthält."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 msgstr ""
-"Herkunft<i class=\"fa fa-info-circle\" data-placement=\"top\" data-"
-"toggle=\"tooltip\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -205,9 +214,9 @@ msgid ""
 "Those trackers can be used in Google Analytics to track clicks and visitors,"
 " or in Odoo reports to track opportunities and related revenues."
 msgstr ""
-"Diese Tracker können bei Google Analytics verwendet werden, um Klicke und "
-"Besucher zu verfolgen, oder bei Odoo-Berichten, um Gelegenheiten und damit "
-"verbundene Einnahmen zu verfolgen."
+"Diese Tracker können bei Google Analytics verwendet werden, um Klicks und "
+"Besucher zu verfolgen, oder bei Odoo-Berichten, um Chancen und damit "
+"verbundene Umsätze zu verfolgen."
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -272,14 +281,14 @@ msgstr "z. B. Newsletter, soziales Netzwerk, …"
 #: code:addons/website_links/static/src/js/website_links.js:263
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
-msgstr "z. B. Promotion des Monats Juni, Winter-Newsletter, …"
+msgstr "z. B. Juni-Angebot, Winter-Newsletter, …"
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:269
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
-msgstr "z. B. Suchmaschine, Website, …"
+msgstr "z. B. Suchmaschine, Website-Seite, …"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url

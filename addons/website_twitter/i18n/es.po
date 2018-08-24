@@ -3,32 +3,54 @@
 # * website_twitter
 # 
 # Translators:
-# oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Antonio Trueba, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Jose Ramon Roca <jrroca@pobox.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# enjolras <yo@miguelrevilla.com>, 2018
+# Martin Trigaux, 2018
+# Ana Juaristi <ajuaristio@gmail.com>, 2018
+# Alejandro Die Sanchis <marketing@domatix.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# Gelo Joga Landoo <gj@landoo.es>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# Jose Ramon Roca <jrroca@pobox.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr "<strong>Sitio web: </strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -43,6 +65,13 @@ msgid "API secret"
 msgstr "Secreto de la API"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
@@ -51,6 +80,18 @@ msgid ""
 msgstr ""
 "Los datos de acreditación se han perdido o son incorrectos. Puede ser que "
 "los tweets  de nombre de usuario estén protegidos."
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr "Crear una nueva aplicación Twiter en"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -65,7 +106,7 @@ msgstr "Creado el"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
@@ -83,6 +124,11 @@ msgstr "Obtener favoritos desde este nombre"
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "Error HTTP: Algo está mal configurado"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr "Cómo configurar el acceso al API de Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -164,13 +210,17 @@ msgid ""
 "does not have to match the API Key/Secret."
 msgstr ""
 "Nombre de la cuenta de Twitter desde la que se desean cargar los favoritos. "
-"No tiene porque ser la misma que la de la clave de API."
+"No tiene porqué ser la misma que la de la clave de API."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Show me how to obtain the Twitter API key and Twitter API secret"
 msgstr ""
-"Muéstreme cómo obtener la clave de API y la palabra secreta de Twitter"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
+msgstr "Cambiar a la pestaña de claves de API:<br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -219,11 +269,6 @@ msgid "There was no new data to return."
 msgstr "No hay nuevos datos que devolver."
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr "Tutorial"
-
-#. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
 msgid "Tweet ID"
 msgstr "ID del tuit"
@@ -257,7 +302,7 @@ msgstr "Clave del API de Twitter"
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
-"La clave de la API de Twitter que puede obtener de https://apps.twitter.com/"
+"La clave API de Twitter que puede obtener de https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
@@ -279,11 +324,6 @@ msgid "Twitter Configuration"
 msgstr "Configuración de Twitter"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "Panel de Twitter"
-
-#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
@@ -302,8 +342,18 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
-"Twitter parece fuera de servicio. Vuelva a intentarlo más tarde. Considerar "
+"Twitter parece fuera de servicio. Vuelva a intentarlo más tarde. Considere "
 "reportar el problema en los foros de Twitter para obtener ayuda."
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -312,15 +362,22 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
-"Usuario Twitter @%(username)s tiene menos de 12 tuits favoritos. Añada por "
-"favor más o escoja un nombre diferente."
+"Usuario Twitter @%(username)s tiene menos de 12 tuits favoritos. Por favor "
+"agregue más o escoja un nombre diferente."
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr "Twitter: Obtener nuevos favoritos"
+msgstr "Twitter: Buscar nuevos favoritos"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58
@@ -336,6 +393,16 @@ msgid "Website"
 msgstr "Sitio web"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr "https://apps.twitter.com/app/new"
+
+#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
@@ -344,3 +411,8 @@ msgstr "res.config.settings"
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr "con los siguientes valores:"

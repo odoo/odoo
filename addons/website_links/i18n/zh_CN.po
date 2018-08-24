@@ -3,19 +3,21 @@
 # * website_links
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Liping Wang <lynn.config@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2018
+# Liping Wang <lynn.config@gmail.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,17 +64,17 @@ msgstr "<strong>中等</strong>"
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Original URL</strong>"
-msgstr "<strong>原始URL</strong>"
+msgstr "<strong>原始网址</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Redirected URL</strong>"
-msgstr "<strong>重定向网址</strong>"
+msgstr "<strong>重新定向网址</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Source</strong>"
-msgstr "<strong>源</strong>"
+msgstr "<strong>来源</strong>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -88,12 +90,10 @@ msgstr "一直"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 msgstr ""
-"活动 <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
 
 #. module: website_links
 #. openerp-web
@@ -101,6 +101,14 @@ msgstr ""
 #, python-format
 msgid "Copy"
 msgstr "复制"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: model:ir.ui.view,arch_db:website_links.graphs
+#, python-format
+msgid "Edit code"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
@@ -113,6 +121,13 @@ msgstr "生成链接..."
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
 msgstr "获取跟踪链接"
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#, python-format
+msgid "Icon"
+msgstr "图标"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -134,12 +149,10 @@ msgstr "链接跟踪"
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 msgstr ""
-"中等 <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -167,12 +180,10 @@ msgstr "使用包含<strong>分析跟踪器</strong>的<strong>短链接</strong
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 msgstr ""
-"源<i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -205,7 +216,7 @@ msgstr "这些跟踪器可以被谷歌分析去跟踪点击和访问，或者在
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "URL"
-msgstr "URL"
+msgstr "网址"
 
 #. module: website_links
 #. openerp-web
@@ -226,7 +237,7 @@ msgstr "未定义的"
 #: code:addons/website_links/static/src/js/website_links.js:248
 #, python-format
 msgid "You don't have any recent links."
-msgstr "没有任何最近链接"
+msgstr "你没有任何最近的链接。"
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -258,7 +269,7 @@ msgstr "复制"
 #: code:addons/website_links/static/src/js/website_links.js:266
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
-msgstr "例如：即时通讯，社交网络，..."
+msgstr "例如：快讯、社交网络、..."
 
 #. module: website_links
 #. openerp-web

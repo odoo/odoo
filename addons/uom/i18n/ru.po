@@ -3,21 +3,16 @@
 # * uom
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Collex100, 2018
-# Sergey Vilizhanin, 2018
-# Evgeny <transingularity@gmail.com>, 2018
 # Dmitry sky <d.v.selitsky@gmail.com>, 2018
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
-# Max Belyanin <maxbelyanin@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +23,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Активный"
+msgstr "Активно"
 
 #. module: uom
 #: model:ir.actions.act_window,help:uom.product_uom_form_action
@@ -65,20 +60,10 @@ msgstr ""
 " категории. Преобразование будет сделано на основе коэффициентов."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:138
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr ""
-"Преобразование ед.изм. товара %s в ед.изм. по умолчанию %s невозможно "
-"поскольку они принадлежат различным категориям!"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
@@ -130,25 +115,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
-msgstr "ID"
+msgstr "Номер"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "Изменено"
+msgstr "Последнее изменение"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "Последний раз обновлено"
+msgstr "Последнее обновление"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -174,7 +159,7 @@ msgstr "Управление несколькими единицами изме�
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Name"
-msgstr "Наименование"
+msgstr "Название"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -223,8 +208,23 @@ msgstr ""
 
 #. module: uom
 #: sql_constraint:uom.uom:0
-msgid "The rounding precision must be greater than 0!"
-msgstr "Точность округления должна быть больше 0!"
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr ""
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be strictly positive."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:152
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category than the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -257,7 +257,7 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr "Единица"
+msgstr "Ед."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -305,7 +305,7 @@ msgstr ""
 "             Часы, Дни."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:86
+#: code:addons/uom/models/uom_uom.py:93
 #, python-format
 msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
@@ -313,7 +313,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:88
+#: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -343,6 +343,20 @@ msgstr "Рабочее время"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:28
+#, python-format
+msgid "You cannot delete this UoM Category as it is used by the system."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:115
+#, python-format
+msgid ""
+"You cannot delete this UoM as it is used by the system. You should rather "
+"archive it."
 msgstr ""
 
 #. module: uom

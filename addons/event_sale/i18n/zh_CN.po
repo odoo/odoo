@@ -3,20 +3,14 @@
 # * event_sale
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# guohuadeng <guohuadeng@hotmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
-# Martin Trigaux, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Parco Yau <pya@odoo.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,11 +156,12 @@ msgstr "活动的入场券"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "活动"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
 msgstr "空闲"
@@ -227,7 +222,7 @@ msgid "Maximum Available Seats"
 msgstr "最多可用席位"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:249
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -235,7 +230,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:179
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "该入场券没有可用座位"
@@ -247,7 +242,7 @@ msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "无"
@@ -263,13 +258,13 @@ msgid "Original Registration"
 msgstr "原始登记"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:233
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "已付款"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:234
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "付款"
@@ -378,13 +373,13 @@ msgid "Source Sales Order"
 msgstr "源销售订单"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
 msgstr "必须缴纳登记费。"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "服务单"
@@ -414,7 +409,7 @@ msgid "Tickets"
 msgstr "入场券"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:230
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
 msgstr "待支付"
@@ -423,6 +418,12 @@ msgstr "待支付"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "未确认的席位预订"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "件"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0

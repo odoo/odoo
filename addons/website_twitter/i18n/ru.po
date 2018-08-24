@@ -3,23 +3,46 @@
 # * website_twitter
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Collex100, 2017
-# Evgeny <transingularity@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Collex100, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Evgeny <transingularity@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Collex100, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr "<strong>Вебсайт:</strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -34,6 +57,13 @@ msgid "API secret"
 msgstr ""
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
@@ -42,6 +72,18 @@ msgid ""
 msgstr ""
 "Удостоверения подлинности отсутствуют или указаны неверно. Возможно, твиты с"
 " именем экрана защищены."
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr "Создать новое приложение Твиттера на"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -74,6 +116,11 @@ msgstr "Получать избранное с этого никнейма"
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "Ошибка HTTP: Что-то неотконфигурировано"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr "Как настроить доступ к API Твиттера"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -158,9 +205,14 @@ msgstr ""
 " обязательно должен совпадать с ключом API/секретным ключом."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr "Показать мне, как получить ключ и секретный ключ к API Твиттера"
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Show me how to obtain the Twitter API key and Twitter API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
+msgstr "Перейдите на вкладку API Keys:<br>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -205,11 +257,6 @@ msgstr ""
 #, python-format
 msgid "There was no new data to return."
 msgstr "Не было новых данных для возврата."
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -264,11 +311,6 @@ msgid "Twitter Configuration"
 msgstr "Конфигурация Твиттера"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "Ролик Твиттера"
-
-#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
@@ -292,6 +334,16 @@ msgstr ""
 "помощь."
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
@@ -300,6 +352,13 @@ msgid ""
 msgstr ""
 "У пользователя Твиттера @%(username)s меньше 12 избранных твитов. "
 "Пожалуйста, добавьте больше или выберите другой никнейм."
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -322,6 +381,16 @@ msgid "Website"
 msgstr "Вебсайт"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr "https://apps.twitter.com/app/new"
+
+#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
@@ -330,3 +399,8 @@ msgstr "res.config.settings"
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr "со следующими значениями:"

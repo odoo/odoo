@@ -4,122 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2018
-# Cozmin Candea <office@terrabit.ro>, 2018
-# sharkutz <sharkutz4life@yahoo.com>, 2018
-# Sergiu Baltariu <s_baltariu@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Sergiu Baltariu <s_baltariu@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_module_install_project
-msgid ""
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Try creating a task by sending an email to </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
-"                                        <span>to collaborate</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Track hours with timesheets,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Plan tasks and resources with forecasts,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Bill time on tasks or issues,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>And much more...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
-"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
-"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
-"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
-"                                </span><span> or with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -158,8 +55,8 @@ msgid "% On"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:288
-#: code:addons/project/models/project.py:626
+#: code:addons/project/models/project.py:293
+#: code:addons/project/models/project.py:614
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -173,7 +70,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:73
+#: code:addons/project/static/src/js/tour.js:85
 #, python-format
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
@@ -182,23 +79,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:84
+#: code:addons/project/static/src/js/tour.js:96
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:98
-#, python-format
-msgid ""
-"<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
-msgstr ""
-"<b>Invită colaboratori</b> prin email.<br/><i>Introdu un email pe linie.</i>"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:58
+#: code:addons/project/static/src/js/tour.js:65
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
@@ -299,7 +187,7 @@ msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:122
+#: code:addons/project/models/project.py:121
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -310,7 +198,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:150
+#: code:addons/project/models/project.py:149
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -319,9 +207,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:53
+#: code:addons/project/static/src/js/tour.js:60
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
+msgstr ""
+
+#. module: project
+#: model:digest.tip,tip_description:project.digest_tip_project_0
+msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
 
 #. module: project
@@ -389,6 +282,12 @@ msgid "Accept Emails From"
 msgstr "Acceptă emailuri de la"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__access_warning
+#: model:ir.model.fields,field_description:project.field_project_task__access_warning
+msgid "Access warning"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 msgid "Action Needed"
@@ -424,10 +323,11 @@ msgstr "Adaugă o descriere..."
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:34
+#: code:addons/project/static/src/js/tour.js:41
 #, python-format
 msgid ""
-"Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
-"Specification &gt; Development &gt; Done</i>"
+"Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
+"Progress - Done</i>"
 msgstr ""
 
 #. module: project
@@ -468,7 +368,7 @@ msgid "Aliased Model"
 msgstr "Model de Alias"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:91
+#: code:addons/project/controllers/portal.py:115
 #, python-format
 msgid "All"
 msgstr "Tot"
@@ -531,7 +431,10 @@ msgstr ""
 "locul etichetelor implicite."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/xml/project.xml:7
 #: model:ir.ui.view,arch_db:project.portal_my_task
+#, python-format
 msgid "Attachment"
 msgstr "Atașament"
 
@@ -541,7 +444,7 @@ msgid "Attachment that don't come from message."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:115
+#: code:addons/project/models/project.py:114
 #: model:ir.ui.view,arch_db:project.portal_my_task
 #, python-format
 msgid "Attachments"
@@ -584,7 +487,7 @@ msgid "Basic"
 msgstr "De bază"
 
 #. module: project
-#: code:addons/project/models/project.py:30
+#: code:addons/project/models/project.py:29
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -628,7 +531,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:48
+#: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
@@ -658,14 +561,23 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:63
+#: code:addons/project/static/src/js/tour.js:70
 #, python-format
 msgid "Click on a card to get the details of the task."
 msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:68
+#: code:addons/project/static/src/js/tour.js:75
+#, python-format
+msgid ""
+"Click on the card to write more information about it and collaborate with "
+"your coworkers."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:80
 #, python-format
 msgid "Click on this button to modify the task."
 msgstr "Clic pe acest buton pentru a modifica o sarcină"
@@ -688,11 +600,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_res_company
-msgid "Companies"
-msgstr "Companii"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
 #: model:ir.model.fields,field_description:project.field_project_task__company_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__company_id
@@ -713,13 +620,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Configuration"
 msgstr "Configurare"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:94
-#, python-format
-msgid "Configuration options are available in the Settings app."
-msgstr "Opțiunile de configurare sunt disponibile în meniul Setări"
 
 #. module: project
 #. openerp-web
@@ -800,6 +700,11 @@ msgid "Created on"
 msgstr "Creat în"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.rating_rating_view_search_project
+msgid "Creation Date"
+msgstr "Data creării"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_cumulative_flow
 msgid "Cumulative Flow"
 msgstr "Flux Cumulativ"
@@ -820,7 +725,7 @@ msgid "Current stage of this task"
 msgstr "Stadiul curent al acestei sarcini"
 
 #. module: project
-#: code:addons/project/models/project.py:940
+#: code:addons/project/models/project.py:869
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
@@ -830,8 +735,8 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: project
-#: code:addons/project/models/project.py:940
-#: code:addons/project/models/project.py:943
+#: code:addons/project/models/project.py:869
+#: code:addons/project/models/project.py:872
 #, python-format
 msgid "Customer Email"
 msgstr "E-mail client"
@@ -844,8 +749,8 @@ msgid "Customer Feedback"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_project__portal_url
-#: model:ir.model.fields,help:project.field_project_task__portal_url
+#: model:ir.model.fields,help:project.field_project_project__access_url
+#: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
 msgstr ""
 
@@ -956,6 +861,11 @@ msgid "Development"
 msgstr "Dezvoltare"
 
 #. module: project
+#: model:ir.model,name:project.model_digest_digest
+msgid "Digest"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
@@ -980,6 +890,12 @@ msgid "Display Name"
 msgstr "Nume afișat"
 
 #. module: project
+#: code:addons/project/models/digest.py:16
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Documents"
 msgstr "Documente"
@@ -1001,6 +917,11 @@ msgstr "Efectuat"
 #, python-format
 msgid "Draft"
 msgstr "Ciornă"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -1054,7 +975,7 @@ msgid "Ending Date"
 msgstr "Dată sfârșit"
 
 #. module: project
-#: code:addons/project/models/project.py:633
+#: code:addons/project/models/project.py:621
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of task(s)."
 msgstr ""
@@ -1191,13 +1112,6 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista de sarcini."
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:103
-#, python-format
-msgid "Good job! You completed the Project Management tour."
-msgstr ""
-
-#. module: project
 #: selection:project.task,kanban_state:0
 msgid "Green"
 msgstr "Verde"
@@ -1240,6 +1154,12 @@ msgid "Happy % on Task"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Happy face"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,priority:0
 msgid "High"
 msgstr "Ridicat"
@@ -1271,7 +1191,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:867
+#: code:addons/project/models/project.py:798
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -1345,7 +1265,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/models/project.py:36
+#: code:addons/project/models/project.py:35
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #: model:project.task,legend_normal:project.project_task_data_0
 #: model:project.task,legend_normal:project.project_task_data_1
@@ -1434,13 +1354,17 @@ msgid "Kanban Valid Explanation"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
+msgid "Kpi Project Task Opened Value"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.rating_project_rating_page
 msgid "Last 3 months"
 msgstr "Ultimele 2 luni"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.rating_project_rating_page
-#: model:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Last 30 days"
 msgstr "Ultimele 20 zile"
 
@@ -1459,7 +1383,7 @@ msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:88
+#: code:addons/project/controllers/portal.py:112
 #: model:ir.model.fields,field_description:project.field_project_task__date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
@@ -1502,6 +1426,11 @@ msgid "Latest Rating: Satisfied"
 msgstr "Ultima evaluare: Satisfăcător"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Legend priority"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
@@ -1510,7 +1439,7 @@ msgstr "Creați primul proiect"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:42
+#: code:addons/project/static/src/js/tour.js:49
 #, python-format
 msgid "Let's create your first task."
 msgstr ""
@@ -1527,6 +1456,11 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Log time on tasks"
 msgstr ""
 
 #. module: project
@@ -1603,7 +1537,7 @@ msgid "My Tasks"
 msgstr "Sarcinile mele"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:35
+#: code:addons/project/controllers/portal.py:46
 #: model:ir.model.fields,field_description:project.field_project_project__name
 #: model:ir.model.fields,field_description:project.field_project_tags__name
 #: model:ir.ui.view,arch_db:project.portal_my_projects
@@ -1616,6 +1550,12 @@ msgstr "Nume"
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
 msgstr "Denumirea sarcinilor:"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Neutral face"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1641,8 +1581,15 @@ msgid "New Projects"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:34
-#: code:addons/project/controllers/portal.py:85
+#: model:digest.tip,tip_description:project.digest_tip_project_0
+msgid ""
+"New tasks can be generated from incoming emails. You just need to set email "
+"aliases on your projects.<br>"
+msgstr ""
+
+#. module: project
+#: code:addons/project/controllers/portal.py:45
+#: code:addons/project/controllers/portal.py:109
 #, python-format
 msgid "Newest"
 msgstr "Cele mai noi"
@@ -1669,7 +1616,7 @@ msgid "Next Activity Type"
 msgstr "Tip de activitate urmatoare"
 
 #. module: project
-#: code:addons/project/models/project.py:913
+#: code:addons/project/models/project.py:842
 #, python-format
 msgid "No Subject"
 msgstr "Fără subiect"
@@ -1696,7 +1643,7 @@ msgid "No scheduled activity at the moment"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:101
+#: code:addons/project/controllers/portal.py:125
 #, python-format
 msgid "None"
 msgstr "Fără"
@@ -1765,7 +1712,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:206
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -1784,6 +1731,11 @@ msgid ""
 "Once a task is specified, set it %s in the Specifications column, so that "
 "developers know they can pull it. If you work in sprints, use %s to mark "
 "tasks of the current sprint."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
+msgid "Open Tasks"
 msgstr ""
 
 #. module: project
@@ -1866,7 +1818,7 @@ msgid "Parent Record Thread ID"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:980
+#: code:addons/project/models/project.py:909
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
@@ -1894,6 +1846,12 @@ msgid "Periodical Rating"
 msgstr "Evaluare periodică"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+#: model:ir.ui.view,arch_db:project.portal_project_rating_popover
+msgid "Placeholder"
+msgstr ""
+
+#. module: project
 #: selection:project.task,activity_state:0
 msgid "Planned"
 msgstr "Planificată"
@@ -1913,8 +1871,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__portal_url
-#: model:ir.model.fields,field_description:project.field_project_task__portal_url
+#: model:ir.model.fields,field_description:project.field_project_project__access_url
+#: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
 msgstr ""
 
@@ -1930,12 +1888,13 @@ msgid "Privacy"
 msgstr "Confidențialitate"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:102
+#: code:addons/project/controllers/portal.py:126
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__project_id
 #: model:ir.model.fields,field_description:project.field_res_users__group_project_user
 #: model:ir.ui.menu,name:project.menu_main_pm
+#: model:ir.ui.view,arch_db:project.digest_digest_view_form
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model:ir.ui.view,arch_db:project.rating_rating_view_search_project
@@ -1982,13 +1941,6 @@ msgid "Project Tasks"
 msgstr "Sarcini Proiect"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_res_company__project_time_mode_id
-#: model:ir.model.fields,field_description:project.field_res_config_settings__project_time_mode_id
-#: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
-msgid "Project Time Unit"
-msgstr "Unitate de timp Proiect"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
 msgstr "Sarcini proiect"
@@ -2022,6 +1974,12 @@ msgstr "Proiecte"
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
 msgstr "Trimestrial"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+#: model:ir.ui.view,arch_db:project.portal_project_rating_popover
+msgid "Rated partner"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2086,13 +2044,13 @@ msgid "Ratings"
 msgstr "Evaluări"
 
 #. module: project
-#: code:addons/project/models/project.py:398
+#: code:addons/project/models/project.py:379
 #, python-format
 msgid "Ratings of %s"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:33
+#: code:addons/project/models/project.py:32
 #: model:project.task,legend_done:project.project_task_data_0
 #: model:project.task,legend_done:project.project_task_data_1
 #: model:project.task,legend_done:project.project_task_data_11
@@ -2205,6 +2163,12 @@ msgid "Responsible User"
 msgstr "Utilizator responsabil"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Sad face"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
@@ -2216,7 +2180,7 @@ msgid "Search"
 msgstr "Caută"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:94
+#: code:addons/project/controllers/portal.py:118
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
 msgstr ""
@@ -2227,27 +2191,33 @@ msgid "Search Project"
 msgstr "Caută proiect"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:98
+#: code:addons/project/controllers/portal.py:122
 #, python-format
 msgid "Search in All"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:96
+#: code:addons/project/controllers/portal.py:120
 #, python-format
 msgid "Search in Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:95
+#: code:addons/project/controllers/portal.py:119
 #, python-format
 msgid "Search in Messages"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:97
+#: code:addons/project/controllers/portal.py:121
 #, python-format
 msgid "Search in Stages"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__access_token
+#: model:ir.model.fields,field_description:project.field_project_task__access_token
+msgid "Security Token"
 msgstr ""
 
 #. module: project
@@ -2270,6 +2240,11 @@ msgid "Set Cover Image"
 msgstr ""
 
 #. module: project
+#: model:digest.tip,tip_description:project.digest_tip_project_0
+msgid "Set Email Aliases"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
 msgstr ""
@@ -2287,6 +2262,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Settings"
 msgstr "Setări"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.edit_project
+#: model:ir.ui.view,arch_db:project.view_project_kanban
+#: model:ir.ui.view,arch_db:project.view_task_form2
+#: model:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Share"
+msgstr "Partajează"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -2319,7 +2302,7 @@ msgid "Split your tasks to organize your work into sub-milestones"
 msgstr ""
 
 #. module: project
-#: code:addons/project/controllers/portal.py:87
+#: code:addons/project/controllers/portal.py:111
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2437,7 +2420,7 @@ msgid "Task"
 msgstr "Sarcină"
 
 #. module: project
-#: code:addons/project/models/project.py:618
+#: code:addons/project/models/project.py:606
 #, python-format
 msgid "Task %s cannot have several subtask levels."
 msgstr ""
@@ -2471,6 +2454,11 @@ msgid "Task Created"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
+msgid "Task Logs"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
 msgstr ""
@@ -2501,6 +2489,7 @@ msgstr "Etapa Sarcinii Modificata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
+#: model:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
 msgstr "Nume sarcină"
 
@@ -2513,6 +2502,16 @@ msgstr "Nume sarcină..."
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
 msgstr "Sarcină blocată"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Task in progress. Click to block or set as done."
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr ""
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2613,6 +2612,24 @@ msgstr ""
 "adresă."
 
 #. module: project
+#: code:addons/project/models/project.py:252
+#, python-format
+msgid ""
+"The project cannot be shared with the recipient(s) because the privacy of "
+"the project is too restricted. Set the privacy to 'Visible by following "
+"customers' in order to make it accessible by the recipient(s)."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:561
+#, python-format
+msgid ""
+"The task cannot be shared with the recipient(s) because the privacy of the "
+"project is too restricted. Set the privacy of the project to 'Visible by "
+"following customers' in order to make it accessible by the recipient(s)."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
 msgstr "Nu există proiecte"
@@ -2681,22 +2698,16 @@ msgstr ""
 "afișat în acest stadiu"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/tour.js:27
-#, python-format
-msgid "This will create new project and redirect us to its tasks."
+#: model:ir.ui.view,arch_db:project.task_type_edit
+msgid "This step is done. Click to block or set in progress."
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_res_company__project_time_mode_id
-#: model:ir.model.fields,help:project.field_res_config_settings__project_time_mode_id
-#: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+#. openerp-web
+#: code:addons/project/static/src/js/tour.js:27
+#, python-format
+msgid "This will create a new project and redirect us to its stages."
 msgstr ""
-"Acesta va seta unitatea de măsură folosită în proiecte și sarcini.\n"
-"Dacă folosiți fișa de pontaj asociată proiectelor, nu uitați să setați unitatea de masură corectă la angajații dumneavoastră."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2714,7 +2725,7 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Programul orelor lucrate pentru a regla raportul diagramei Gantt"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:86
+#: code:addons/project/controllers/portal.py:110
 #: model:ir.model.fields,field_description:project.field_project_task__name
 #, python-format
 msgid "Title"
@@ -2814,7 +2825,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:89
+#: code:addons/project/static/src/js/tour.js:101
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
@@ -2835,14 +2846,14 @@ msgid "Users"
 msgstr "Utilizatori"
 
 #. module: project
-#: code:addons/project/models/project.py:207
+#: code:addons/project/models/project.py:206
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "Vizibil tuturor angajaților"
 
 #. module: project
-#: code:addons/project/models/project.py:208
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -2973,7 +2984,7 @@ msgstr ""
 "disponibile în vizualizările kanban și formularul."
 
 #. module: project
-#: code:addons/project/models/project.py:87
+#: code:addons/project/models/project.py:86
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
@@ -2981,13 +2992,18 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model:mail.template,subject:project.mail_template_data_module_install_project
-msgid "Your Odoo Project application"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid "activate a sample project"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid "activate a sample project"
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+msgid "average"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
+msgid "bad"
 msgstr ""
 
 #. module: project
@@ -3016,7 +3032,7 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: project
-#: code:addons/project/models/project.py:678
+#: code:addons/project/models/project.py:625
 #, python-format
 msgid "task"
 msgstr ""

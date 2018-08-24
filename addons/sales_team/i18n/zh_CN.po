@@ -3,28 +3,22 @@
 # * sales_team
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# xiaobin wu <bd5dml@gmail.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Xu Lei <xulei8@qq.com>, 2016
-# Martin Trigaux, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
-# Liping Wang <lynn.config@gmail.com>, 2017
-# zpq001 <zpq001@live.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# zpq001 <zpq001@live.com>, 2018
+# xiaobin wu <bd5dml@gmail.com>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +29,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>New</span>"
-msgstr "<span>新</span>"
+msgstr "<span>新建</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -45,7 +39,7 @@ msgstr "<span>报表</span>"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr "<span>视图</span>"
+msgstr "<span>查看</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
@@ -68,30 +62,25 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr "头像"
+
+#. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
 msgstr "条"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:269
+#: code:addons/sales_team/models/crm_team.py:274
 #, python-format
 msgid "Big Pretty Button :)"
 msgstr "大漂亮按钮：）"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
-msgid "Channel Leader"
-msgstr "渠道领导"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
 msgstr "渠道人员"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
-msgid "Channel Type"
-msgstr "频道类型"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -156,7 +145,7 @@ msgstr "日"
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Define a new sales channel"
+msgid "Define a new Sales Team"
 msgstr ""
 
 #. module: sales_team
@@ -241,16 +230,16 @@ msgstr ""
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
-msgstr "如果设置了，这种销售渠道将用于销售和合作伙伴的相关矩阵"
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"channel without removing it."
-msgstr "如果活动字段设置为false，它将允许您在不删除它的情况下隐藏销售通道。"
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -275,7 +264,7 @@ msgstr "上月"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
@@ -323,10 +312,10 @@ msgid "My Favorites"
 msgstr "我的收藏夹"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:255
+#: code:addons/sales_team/models/crm_team.py:260
 #, python-format
 msgid "Not Defined"
-msgstr "没有定义"
+msgstr "未定义"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
@@ -377,35 +366,30 @@ msgid "Sales"
 msgstr "销售"
 
 #. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+msgid "Sales Dashboard"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Channel"
-msgstr "销售渠道"
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-msgid "Sales Channel Dashboard"
-msgstr ""
+msgid "Sales Team"
+msgstr "销售团队"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
 msgid ""
-"Sales Channel the user is member of. Used to compute the members of a sales "
-"channel through the inverse one2many"
-msgstr "销售渠道用户是会员。用于计算一个销售渠道成员通过逆one2many"
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-msgid "Sales Channels"
-msgstr "销售渠道"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
-msgid "Sales Team"
+msgid "Sales Teams"
 msgstr "销售团队"
 
 #. module: sales_team
@@ -416,7 +400,7 @@ msgstr "销售员"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Salesteam name..."
-msgstr "销售团队名称"
+msgstr "销售团队名称…"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -439,9 +423,10 @@ msgid "Show on dashboard"
 msgstr "显示仪表"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
-msgstr "团队领导"
+msgstr "团队负责人"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -449,21 +434,26 @@ msgid "Team Members"
 msgstr "团队成员"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
+msgid "Team Type"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
-msgstr "通道的颜色"
+msgstr "渠道的颜色"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales channel"
-msgstr "电子邮件地址放在“回复”发送的所有电子邮件的Odoo案件这一销售渠道"
+"cases in this Sales Team"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr "此图通道将显示在仪表板中。\n"
+msgstr "此渠道的图形将显示在仪表板中。\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
@@ -473,13 +463,13 @@ msgstr "此通道的仪表板图将考虑的时间段。"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr "此通道将显示在仪表板中的图形类型。"
+msgstr "此渠道将显示在仪表板中的图形类型。"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
-msgstr "此通道的类型，它将定义此通道使用的资源。"
+msgstr "此渠道的类型，它将定义此渠道使用的资源。"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
@@ -487,11 +477,11 @@ msgid "Type"
 msgstr "类型"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:146
-#: code:addons/sales_team/models/crm_team.py:173
+#: code:addons/sales_team/models/crm_team.py:151
+#: code:addons/sales_team/models/crm_team.py:178
 #, python-format
-msgid "Undefined graph model for Sales Channel: %s"
-msgstr "销售渠道的不确定图模型：%s"
+msgid "Undefined graph model for Sales Team: %s"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
@@ -507,12 +497,14 @@ msgstr "未读消息计数器"
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales channels to organize your sales departments. \n"
+"Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
-"利用销售渠道组织销售部门。\n"
-"\n"
-"每个通道将与一个单独的管道一起工作。"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User's Sales Team"
+msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -568,11 +560,11 @@ msgstr "用户可访问销售系统中每个人的所有记录。"
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "在销售应用，用户只能访问自己的数据"
+msgstr "在销售应用，用户只能访问自己的数据。"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
-msgstr "用户将有权限访问销售配置及统计报表。"
+msgstr "用户将有权访问销售配置及统计报告。"

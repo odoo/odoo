@@ -3,65 +3,21 @@
 # * product
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Hamid Darabi, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Clo <clo@odoo.com>, 2016
-# Fabri Yohann <psn@fabri.pw>, 2016
-# Lionel Sausin <ls@numerigraphe.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
-# Florian Hatat, 2016
-# zoe <yann.hoareau@migs.re>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Simon CARRIER <carrier.sim@gmail.com>, 2016
-# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
-# Sylvain LE GAL <sylvain.legal@grap.coop>, 2016
-# Nicolas JEUDY <njeudy@panda-chi.io>, 2016
-# Fabien Bourgeois <fabien@yaltik.com>, 2016
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Simon Maillard <simon@ogesta.fr>, 2017
-# nthnnl <nathan070@me.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
-# fr rev <e2ffr04@hotmail.com>, 2018
-# Lucas Deliege <lud@openerp.com>, 2018
-# fr trans <e2ftrans1@yahoo.com>, 2018
-# Olivier Dony <odo@odoo.com>, 2018
-# Hubert TETARD <htetard@apik-conseils.com>, 2018
-# Micky Jault <micky037@hotmail.fr>, 2018
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
+# Martin Trigaux, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: product
-#. openerp-web
-#: code:addons/product/static/src/js/product_template_import.js:13
-#, python-format
-msgid " Import Template for Products"
-msgstr ""
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -80,19 +36,19 @@ msgid "# Products"
 msgstr "Nb. produits"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:446
+#: code:addons/product/models/product_pricelist.py:453
 #, python-format
 msgid "%s %% discount"
 msgstr "%s %% remise"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:448
+#: code:addons/product/models/product_pricelist.py:455
 #, python-format
 msgid "%s %% discount and %s surcharge"
 msgstr "%s %% remisé et %s surtaxé"
 
 #. module: product
-#: code:addons/product/models/product_template.py:355
+#: code:addons/product/models/product_template.py:359
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -107,6 +63,11 @@ msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\"/><span "
 "attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\"/><span "
 "attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\"/>"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span class=\"o_form_label\">New Price =</span>"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -138,6 +99,11 @@ msgstr "<strong>Description</strong>"
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
 msgstr "<strong>Nom de la liste de prix</strong> :<br/>"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.report_simple_label
+msgid "<strong>Price:</strong>"
+msgstr "<strong>Prix:</strong>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -200,15 +166,11 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__type
 #: model:ir.model.fields,help:product.field_product_template__type
 msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A storable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
 "A consumable product, on the other hand, is a product for which stock is not managed.\n"
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
-"Un produit « stockable » est un produit pour lequel vous désirez gérer le stock. L'application « Inventaire » doit être installée.\n"
-"Un produit « consommable », en revanche, est un produit non géré en stock.\n"
-"Un service est un bien immatériel que vous fournissez ou achetez.\n"
-"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres électronique, musique, photos, …). Le module « Produits numériques » doit être installé."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
@@ -242,7 +204,7 @@ msgid "All"
 msgstr "Tous"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:441
+#: code:addons/product/models/product_pricelist.py:448
 #, python-format
 msgid "All Products"
 msgstr "Tous les produits"
@@ -331,6 +293,8 @@ msgstr "Attributs et variantes"
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
 #: model:ir.model.fields,field_description:product.field_product_product__barcode
 #: model:ir.model.fields,field_description:product.field_product_template__barcode
+#: model:ir.ui.view,arch_db:product.report_simple_barcode
+#: model:ir.ui.view,arch_db:product.report_simple_label
 msgid "Barcode"
 msgstr "Code Barre"
 
@@ -409,7 +373,7 @@ msgid "Category name"
 msgstr "Nom de la catégorie"
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:435
+#: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid "Category: %s"
 msgstr "Catégorie : %s"
@@ -636,11 +600,6 @@ msgstr "Description"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
 msgstr "Description pour les clients"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Description for Internal"
-msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -874,6 +833,24 @@ msgstr ""
 "dimensions du modèle d'article)"
 
 #. module: product
+#: code:addons/product/models/product_pricelist.py:339
+#, python-format
+msgid "Import Template for Pricelists"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:498
+#, python-format
+msgid "Import Template for Products"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product.py:648
+#, python-format
+msgid "Import Template for Vendor Pricelists"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "In which unit of measure do you manage your weights"
 msgstr ""
@@ -882,6 +859,11 @@ msgstr ""
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product vendor"
 msgstr "Information sur le vendeur de l'article"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Internal Notes"
+msgstr "Notes internes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
@@ -992,6 +974,11 @@ msgid "Lines"
 msgstr "Lignes"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Logistics"
+msgstr "Logistique"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_res_users__has_group_pricelist_item
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
@@ -1077,11 +1064,6 @@ msgstr "Quantité minimale"
 #: model:ir.model.fields,field_description:product.field_product_template__name
 msgid "Name"
 msgstr "Nom"
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "New Price ="
-msgstr "Nouveau prix ="
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
@@ -1265,6 +1247,8 @@ msgstr "Liste de prix"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_id
 #: model:ir.model.fields,field_description:product.field_product_template__pricelist_id
+#: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist"
 msgstr "Liste de prix"
@@ -1336,12 +1320,14 @@ msgstr "Imprimer"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_id
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_id
+#: model:ir.ui.view,arch_db:product.product_kanban_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model:ir.ui.view,arch_db:product.product_search_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:ir.ui.view,arch_db:product.product_template_tree_view
 #: selection:product.pricelist.item,applied_on:0
@@ -1371,6 +1357,12 @@ msgid "Product Attributes"
 msgstr "Caractéristiques d'articles"
 
 #. module: product
+#: model:ir.actions.report,name:product.report_product_product_barcode
+#: model:ir.actions.report,name:product.report_product_template_barcode
+msgid "Product Barcode (PDF)"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.view,arch_db:product.product_category_list_view
 #: model:ir.ui.view,arch_db:product.product_category_search_view
@@ -1385,6 +1377,12 @@ msgstr "Catégories d'articles"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Product Category"
 msgstr "Catégorie d'article"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_label
+#: model:ir.actions.report,name:product.report_product_template_label
+msgid "Product Label (PDF)"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1454,12 +1452,6 @@ msgid "Products"
 msgstr "Articles"
 
 #. module: product
-#: model:ir.actions.report,name:product.report_product_label
-#: model:ir.actions.report,name:product.report_product_template_label
-msgid "Products Labels"
-msgstr "Étiquettes d'articles"
-
-#. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
 msgstr "Prix d'articles"
@@ -1476,7 +1468,7 @@ msgid "Products Price Search"
 msgstr "Recherche de prix d'articles"
 
 #. module: product
-#: code:addons/product/models/product.py:464
+#: code:addons/product/models/product.py:465
 #, python-format
 msgid "Products: "
 msgstr "Articles : "
@@ -1560,12 +1552,6 @@ msgstr "Description vente"
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sale Price"
 msgstr "Prix de vente"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_res_partner__property_product_pricelist
-#: model:ir.model.fields,field_description:product.field_res_users__property_product_pricelist
-msgid "Sale Pricelist"
-msgstr "Liste de prix de vente"
 
 #. module: product
 #: model:product.category,name:product.product_category_1
@@ -1766,8 +1752,8 @@ msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Produit stockable"
+msgid "Storable Product"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__pricelist_id
@@ -1787,7 +1773,7 @@ msgstr ""
 "Le prix calculé est exprimé dans l'unité de mesure par défaut de l'article."
 
 #. module: product
-#: code:addons/product/models/product_template.py:304
+#: code:addons/product/models/product_template.py:305
 #, python-format
 msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
@@ -1810,7 +1796,7 @@ msgstr ""
 "mesure du fournisseur, si pas, dans l'unité de mesure par défaut du produit."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:427
+#: code:addons/product/models/product_pricelist.py:434
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
 msgstr ""
@@ -1949,9 +1935,16 @@ msgstr "Activités du Jour"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__uom_name
+#: model:ir.model.fields,field_description:product.field_product_template__uom_name
+msgid "Unit of Measure Name"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2076,11 +2069,6 @@ msgid "Vendor Product Name"
 msgstr "Nom de l'article chez le fournisseur"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
-msgid "Vendor Unit of Measure"
-msgstr "Unité de mesure du Fournisseur"
-
-#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__name
 msgid "Vendor of this product"
 msgstr "Fournisseur de cet article"
@@ -2153,7 +2141,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:421
+#: code:addons/product/models/product_pricelist.py:428
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
@@ -2251,8 +2239,8 @@ msgid "e.g. USD Retailers"
 msgstr "ex. Revendeurs USD"
 
 #. module: product
-#: code:addons/product/models/product.py:570
-#: code:addons/product/models/product_template.py:484
+#: code:addons/product/models/product.py:571
+#: code:addons/product/models/product_template.py:491
 #, python-format
 msgid "product"
 msgstr ""

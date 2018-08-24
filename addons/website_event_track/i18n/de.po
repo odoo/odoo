@@ -3,34 +3,23 @@
 # * website_event_track
 # 
 # Translators:
-# Wolfgang Taferner, 2017
-# Martin Trigaux, 2017
-# Renzo Meister, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Niki Waibel, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# Constantin Ehrenstein <transifex@skiller.eu>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2017
-# David Vidal <david.vidal@trespinos.es>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
-# Andi, 2017
 # e2f <projects@e2f.com>, 2018
-# Ralf Hilgenstock <rh@dialoge.info>, 2018
-# Tom, 2018
+# Martin Trigaux, 2018
+# Wolfgang Taferner, 2018
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# darenkster <inactive+darenkster@transifex.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2018
+# Jan Meyer, 2018
+# David Vidal <david.vidal@trespinos.es>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Tom, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: David Vidal <david.vidal@trespinos.es>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +55,7 @@ msgstr "<b>Datum</b><br/>"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>E-Mail</b>:"
+msgstr "<b>E-Mail:</b>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -81,7 +70,7 @@ msgstr "<b>Vorgeschlagen von:</b>"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speakers Biography</b>:"
-msgstr "<b>Biographie der Vortragenden:</b>"
+msgstr "<b>Biographie der Referenten:</b>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -131,8 +120,8 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
-"<strong>Regelmäßige Vorträge:</strong> Dies sind übliche Vorträge mit Präsentationen,\n"
-" mit einem zeitlichen Umfang von 60 Minuten."
+"<strong>Regelmäßige Vorträge:</strong> Dies sind übliche Vorträge mit "
+"Präsentationen, mit einem zeitlichen Umfang von 60 Minuten."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -205,8 +194,8 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
 msgstr ""
-"Die Video- und Audioaufzeichnung ihrer Präsentation\n"
-"für die Veröffentlichung auf unserer Website erlauben."
+"Erlaubniss zur Video und Audioaufzeichung \n"
+"                   des Vortrags zur Veröffentlichung auf unserer Website."
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -327,6 +316,11 @@ msgid "Documents"
 msgstr "Dokumente"
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
 msgid "Duration"
 msgstr "Dauer"
@@ -375,7 +369,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "Event Sponsor"
-msgstr "Veranstaltungssponsor"
+msgstr "Event-Sponsor"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
@@ -391,7 +385,7 @@ msgstr "Sponsorentypen"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
 msgid "Event Sponsors"
-msgstr "Veranstaltungssponsoren"
+msgstr "Event-Sponsoren"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
@@ -438,8 +432,8 @@ msgid ""
 "Find out what people see and say about this event,\n"
 "                        and join the conversation."
 msgstr ""
-"Finden Sie heraus, was andere über diese Veranstaltung berichten\n"
-" und schließen Sie sich der Unterhaltung an."
+"Finden Sie heraus, was andere über dieses Event berichten und schließen Sie "
+"sich der Unterhaltung an."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -547,6 +541,11 @@ msgid "Is Follower"
 msgstr "Ist ein Abonnent"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
 msgstr "Kanban-Status"
@@ -607,7 +606,7 @@ msgstr "Niedrig"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "Medium"
+msgstr "Mittel"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
@@ -798,7 +797,7 @@ msgstr "Raum"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Nummernfolge"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -831,17 +830,17 @@ msgstr "Referenten Biographie"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
 #, python-format
 msgid "Speaker Email"
-msgstr "E-Mail-Adresse des Vortragenden"
+msgstr "E-Mail-Adresse des Referenten"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
 msgid "Speaker Name"
-msgstr "Name des Vortragenden"
+msgstr "Name des Referenten"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
 msgid "Speaker Phone"
-msgstr "Telefonnummer des Vortragenden"
+msgstr "Telefonnummer des Referenten"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:184
@@ -895,7 +894,7 @@ msgstr "Stufe"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr "Bezeichnung Stufe"
+msgstr "Stufenbezeichnung"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1109,8 +1108,8 @@ msgid ""
 "Tracks define the schedule of your event. These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
-"Tracks definieren den Zeitplan Ihrer Veranstaltung. Dies umfasst Vorträge, "
-"runde Tische, Meetings usw."
+"Tracks definieren den Zeitplan Ihres Events. Dies umfasst Vorträge, "
+"Gesprächsrunden, Meetings usw."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -1142,8 +1141,8 @@ msgstr "Track ansehen"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
-msgid "Visible in Website"
-msgstr "Sichtbar auf der Website"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1203,6 +1202,11 @@ msgstr "Website Schlüsselwörter"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
 msgstr "Website Meta-Titel"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
