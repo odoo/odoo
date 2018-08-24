@@ -410,7 +410,7 @@ options.registry.layout_column = options.Class.extend({
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\b(col-lg-|offset-lg)?\d+\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
