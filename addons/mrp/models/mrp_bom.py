@@ -235,7 +235,7 @@ class MrpBomLine(models.Model):
     child_line_ids = fields.One2many(
         'mrp.bom.line', string="BOM lines of the referred bom",
         compute='_compute_child_line_ids')
-    has_attachments = fields.Boolean('Has Attachments', compute='_compute_has_attachments')
+    attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
 
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>=0)', 'All product quantities must be greater or equal to 0.\n'
@@ -256,12 +256,12 @@ class MrpBomLine(models.Model):
 
     @api.one
     @api.depends('product_id')
-    def _compute_has_attachments(self):
-        nbr_attach = self.env['ir.attachment'].search_count([
+    def _compute_attachments_count(self):
+        nbr_attach = self.env['mrp.document'].search_count([
             '|',
             '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
             '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)])
-        self.has_attachments = bool(nbr_attach)
+        self.attachments_count = nbr_attach
 
     @api.one
     @api.depends('child_bom_id')
