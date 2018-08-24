@@ -538,17 +538,17 @@
                                         <div class="col-lg-4">
                                             <h4 class="mt0 oe_slides_statistics_title">Views</h4>
                                             <ul class="list-group">
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill"><t t-esc="slide.total_views"/></span>
-                                                    <i class="fa fa-play"></i> Total Views
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-play mr-2"></i> Total Views
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="slide.total_views"/></span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill"><t t-esc="slide.slide_views"/></span>
-                                                    <i class="fa fa-circle-o"></i> Website Views
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-circle-o mr-2"></i> Website Views
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="slide.slide_views"/></span>
                                                 </li>
-                                                <li class="list-group-item" t-if="not slide.document_id">
-                                                    <span class="badge badge-pill"><t t-esc="slide.embed_views"/></span>
-                                                    <i class="fa fa-code"></i> Embedded Views
+                                                <li class="list-group-item d-flex align-items-center" t-if="not slide.document_id">
+                                                    <i class="fa fa-code mr-2"></i> Embedded Views
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="slide.embed_views"/></span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -556,21 +556,21 @@
                                         <div class="col-lg-4">
                                             <h4 class="mt0 oe_slides_statistics_title">Actions</h4>
                                             <ul class="list-group">
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill" id="total-share">0</span>
-                                                    <i class="fa fa-share-alt"></i> Social Shares
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-share-alt mr-2"></i> Social Shares
+                                                    <span class="badge badge-pill badge-secondary ml-auto" id="total-share">0</span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill"><t t-esc="slide.likes"/></span>
-                                                    <i class="fa fa-thumbs-up"></i> Likes
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-thumbs-up mr-2"></i> Likes
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="slide.likes"/></span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill"><t t-esc="slide.dislikes"/></span>
-                                                    <i class="fa fa-thumbs-down"></i> Dislikes
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-thumbs-down mr-2"></i> Dislikes
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="slide.dislikes"/></span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill"><t t-esc="len(slide.website_message_ids)"/></span>
-                                                    <i class="fa fa-comments-o"></i> Comments
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-comments-o mr-2"></i> Comments
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="len(slide.website_message_ids)"/></span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -578,21 +578,21 @@
                                         <div class="col-lg-4">
                                             <h4 class="mt0 oe_slides_statistics_title">Share count</h4>
                                             <ul class="list-group">
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill" id="facebook-badge">0</span>
-                                                    <i class="fa fa-facebook-square"></i> Facebook
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-facebook-square mr-2"></i> Facebook
+                                                    <span class="badge badge-pill badge-secondary ml-auto" id="facebook-badge">0</span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill" id="twitter-badge">0</span>
-                                                    <i class="fa fa-twitter-square"></i> Twitter
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-twitter-square mr-2"></i> Twitter
+                                                    <span class="badge badge-pill badge-secondary ml-auto" id="twitter-badge">0</span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill" id="linkedin-badge">0</span>
-                                                    <i class="fa fa-linkedin-square"></i> LinkedIn
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-linkedin-square mr-2"></i> LinkedIn
+                                                    <span class="badge badge-pill badge-secondary ml-auto" id="linkedin-badge">0</span>
                                                 </li>
-                                                <li class="list-group-item">
-                                                    <span class="badge badge-pill" id="google-badge">0</span>
-                                                    <i class="fa fa-google-plus-square"></i> Google+
+                                                <li class="list-group-item d-flex align-items-center">
+                                                    <i class="fa fa-google-plus-square mr-2"></i> Google+
+                                                    <span class="badge badge-pill badge-secondary ml-auto" id="google-badge">0</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -605,9 +605,9 @@
                                                 </span>
                                             </h4>
                                             <ul class="list-group" style="height: 150px;overflow: auto;">
-                                                <li class="list-group-item" t-foreach="slide.embedcount_ids" t-as="count">
-                                                    <span class="badge badge-pill"><t t-esc="count.count_views"/></span>
+                                                <li class="list-group-item d-flex align-items-center" t-foreach="slide.embedcount_ids" t-as="count">
                                                     <t t-esc="count.url"/>
+                                                    <span class="badge badge-pill badge-secondary ml-auto"><t t-esc="count.count_views"/></span>
                                                 </li>
                                             </ul>
                                         </div>
