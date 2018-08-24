@@ -153,7 +153,7 @@ class ResPartner(models.Model):
         suggestions = False
 
         try:
-            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/search'
+            url = 'http://odoo:8069/iap/partner_autocomplete/search'
             params = {
                 'query': query,
                 'country_code': self.env.user.company_id.country_id.code,
@@ -172,7 +172,7 @@ class ResPartner(models.Model):
         enrichment_data = False
 
         try:
-            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/enrich'
+            url = 'http://odoo:8069/iap/partner_autocomplete/enrich'
             params = {
                 'domain': company_domain,
                 'company_data_id': company_data_id,
@@ -192,7 +192,7 @@ class ResPartner(models.Model):
         vies_vat_data = False
 
         try:
-            url = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete/search_vat'
+            url = 'http://odoo:8069/iap/partner_autocomplete/search_vat'
             params = {
                 'vat': vat,
                 'country_code': self.env.user.company_id.country_id.code,

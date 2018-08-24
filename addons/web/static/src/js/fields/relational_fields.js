@@ -202,31 +202,29 @@ var FieldMany2One = AbstractField.extend({
     /**
      * Add a source to the autocomplete results
      *
-     * @param method : A function that returns a list of results. Can be async
-     * @param placeholder : placeholder text while the result is loading
-     * @param order : order of the result in the autocomplete list
-     * @param validation : validation function for the searched Term (ex: only for not empty search string)
+     * @param {function} method : A function that returns a list of results. If async source, the function should return a promise
+     * @param {Object} params : Parameters containing placeholder/validation/order
      * @private
      */
-    _addAutocompleteSource: function (method, placeholder, order, validation) {
+    _addAutocompleteSource: function (method, params) {
         this._autocompleteSources.push({
             method: method,
-            placeholder: (placeholder ? _t(placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
-            validation: validation,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            validation: params.validation,
             loading: false,
-            order: order || 999
+            order: params.order || 999
         });
 
         this._autocompleteSources = _.sortBy(this._autocompleteSources, 'order');
     },
 
     /**
-     * Concatenate async results for autocomplete. The callback render the result after it loaded
+     * Concatenate async results for autocomplete.
      *
-     * @param callback
+     * @returns {Array}
      * @private
      */
-    _concatenateAutocompleteResults: function (callback) {
+    _concatenateAutocompleteResults: function () {
         var results = [];
         _.each(this._autocompleteSources, function (source) {
             if (source.results && source.results.length) {
@@ -237,7 +235,7 @@ var FieldMany2One = AbstractField.extend({
                 });
             }
         });
-        callback(results);
+        return results;
     },
 
     /**
@@ -260,8 +258,8 @@ var FieldMany2One = AbstractField.extend({
                         $.when(source.method.call(self, req.term)).then(function (results) {
                             source.results = results;
                             source.loading = false;
-                            self._concatenateAutocompleteResults(resp);
-                        })
+                            resp(self._concatenateAutocompleteResults());
+                        });
                     }
                 });
             },
@@ -426,16 +424,13 @@ var FieldMany2One = AbstractField.extend({
      * @param {String} search_val: the value to search
      * @returns {Deferred}
      */
-    _search: function (search_val, additionalContext) {
+    _search: function (search_val) {
         var self = this;
         var def = $.Deferred();
         this.orderer.add(def);
 
-        var context = _.extend(this.record.getContext(this.recordParams), additionalContext || {});
+        var context = this.record.getContext(this.recordParams);
         var domain = this.record.getDomain(this.recordParams);
-
-        // Add the additionalContext
-        _.extend(context, this.additionalContext)
 
         var blacklisted_ids = this._getSearchBlacklist();
         if (blacklisted_ids.length > 0) {
@@ -453,7 +448,70 @@ var FieldMany2One = AbstractField.extend({
                 context: context,
             }})
             .then(function (result) {
-                self._searchProcessResult(def, search_val, context, domain, result);
+                // possible selections for the m2o
+                var values = _.map(result, function (x) {
+                    x[1] = self._getDisplayName(x[1]);
+                    return {
+                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
+                        value: x[1],
+                        name: x[1],
+                        id: x[0],
+                    };
+                });
+
+                // search more... if more results than limit
+                if (values.length > self.limit) {
+                    values = values.slice(0, self.limit);
+                    values.push({
+                        label: _t("Search More..."),
+                        action: function () {
+                            self._rpc({
+                                model: self.field.relation,
+                                method: 'name_search',
+                                kwargs: {
+                                    name: search_val,
+                                    args: domain,
+                                    operator: "ilike",
+                                    limit: 160,
+                                    context: context,
+                                },
+                            })
+                                .then(self._searchCreatePopup.bind(self, "search"));
+                        },
+                        classname: 'o_m2o_dropdown_option',
+                    });
+                }
+                var create_enabled = self.can_create && !self.nodeOptions.no_create;
+                // quick create
+                var raw_result = _.map(result, function (x) { return x[1]; });
+                if (create_enabled && !self.nodeOptions.no_quick_create &&
+                    search_val.length > 0 && !_.contains(raw_result, search_val)) {
+                    values.push({
+                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                            $('<span />').text(search_val).html()),
+                        action: self._quickCreate.bind(self, search_val),
+                        classname: 'o_m2o_dropdown_option'
+                    });
+                }
+                // create and edit ...
+                if (create_enabled && !self.nodeOptions.no_create_edit) {
+                    var createAndEditAction = function () {
+                        // Clear the value in case the user clicks on discard
+                        self.$('input').val('');
+                        return self._searchCreatePopup("form", false, self._createContext(search_val));
+                    };
+                    values.push({
+                        label: _t("Create and Edit..."),
+                        action: createAndEditAction,
+                        classname: 'o_m2o_dropdown_option',
+                    });
+                } else if (values.length === 0) {
+                    values.push({
+                        label: _t("No results to show..."),
+                    });
+                }
+
+                def.resolve(values);
             });
 
         return def;
@@ -481,159 +539,6 @@ var FieldMany2One = AbstractField.extend({
                 self.activate();
             }
         })).open();
-    },
-    /**
-     * Computes the "Create and Edit" line according to a search_val.
-     *
-     * @private
-     * @param {String} search_val
-     * @param {Object} context
-     * @param {Object} domain
-     * @param {Array} result
-     * @returns {Object} create and edit line
-     */
-    _searchComputeCreateAndEdit: function (search_val, context, domain, result) {
-        var self = this;
-        var createAndEditAction = function () {
-            // Clear the value in case the user clicks on discard
-            self.$('input').val('');
-            return self._searchCreatePopup("form", false, self._createContext(search_val));
-        };
-        return {
-            label: _t("Create and Edit..."),
-            action: createAndEditAction,
-            classname: 'o_m2o_dropdown_option',
-        };
-    },
-    /**
-     * Computes the model lines to display according to the result of a name_search.
-     *
-     * @private
-     * @param {String} search_val
-     * @param {Object} context
-     * @param {Object} domain
-     * @param {Array} result
-     * @returns {Array} model lines to display
-     */
-    _searchComputeDisplayLines: function (search_val, context, domain, result) {
-        var self = this;
-        var values = _.map(result, function (x) {
-            x[1] = self._getDisplayName(x[1]);
-            return {
-                label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                value: x[1],
-                name: x[1],
-                id: x[0],
-            };
-        });
-
-        if (values.length > self.limit) {
-            values = values.slice(0, self.limit);
-        }
-
-        return values;
-    },
-    /**
-     * Computes the "No result" line
-     *
-     * @private
-     * @returns {Object} no result line
-     */
-    _searchComputeNoResult: function (search_val, context, domain, result) {
-        return {
-            label: _t("No results to show..."),
-        };
-    },
-    /**
-     * Computes the "Create" line according to a search_val.
-     *
-     * @private
-     * @param {String} search_val
-     * @param {Object} context
-     * @param {Object} domain
-     * @param {Array} result
-     * @returns {Object} quick create line
-     */
-    _searchComputeQuickCreate: function (search_val, context, domain, result) {
-        var self = this;
-        return {
-            label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                $('<span />').text(search_val).html()),
-            action: self._quickCreate.bind(self, search_val),
-            classname: 'o_m2o_dropdown_option'
-        };
-    },
-    /**
-     * Computes the "Search More" line according to a search_val.
-     *
-     * @private
-     * @param {String} search_val
-     * @param {Object} context
-     * @param {Object} domain
-     * @param {Array} result
-     * @returns {Object} search more line
-     */
-    _searchComputeSearchMore: function (search_val, context, domain, result) {
-        var self = this;
-        return {
-            label: _t("Search More..."),
-            action: function () {
-                self._rpc({
-                        model: self.field.relation,
-                        method: 'name_search',
-                        kwargs: {
-                            name: search_val,
-                            args: domain,
-                            operator: "ilike",
-                            limit: 160,
-                            context: context,
-                        },
-                    })
-                    .then(self._searchCreatePopup.bind(self, "search"));
-            },
-            classname: 'o_m2o_dropdown_option',
-        };
-    },
-    /**
-     * Processes the result of a name_search.
-     *
-     * @private
-     * @param {Deferred} def
-     * @param {String} search_val
-     * @param {Object} context
-     * @param {Object} domain
-     * @param {Array} result
-     * @returns {Array} lines to display
-     */
-    _searchProcessResult: function (def, search_val, context, domain, result) {
-        var self = this;
-        // possible selections for the m2o
-        var values = self._searchComputeDisplayLines(search_val, context, domain, result);
-
-        // search more... if more results than limit
-        if (result.length > self.limit) {
-            values.push(self._searchComputeSearchMore(search_val, context, domain, result));
-        }
-
-        var create_enabled = self.can_create && !self.nodeOptions.no_create;
-
-        var raw_result = _.map(result, function (x) { return x[1]; });
-
-        // quick create...
-        if (create_enabled && !self.nodeOptions.no_quick_create &&
-            search_val.length > 0 && !_.contains(raw_result, search_val)
-        ) {
-            values.push(self._searchComputeQuickCreate(search_val, context, domain, result));
-        }
-
-        // create and edit...
-        if (create_enabled && !self.nodeOptions.no_create_edit) {
-            values.push(self._searchComputeCreateAndEdit(search_val, context, domain, result));
-        } else if (result.length === 0) {
-            values.push(self._searchComputeNoResult(search_val, context, domain, result));
-        }
-
-        def.resolve(values);
     },
     /**
      * @private
@@ -1464,13 +1369,9 @@ var FieldOne2Many = FieldX2Many.extend({
      *   a one2many with control/create tags.
      */
     _openFormDialog: function (params) {
-        var context = this.record.getContext(_.extend({},
-            this.recordParams,
-            { additionalContext: params.context }
-        ));
         this.trigger_up('open_one2many_record', _.extend(params, {
             domain: this.record.getDomain(this.recordParams),
-            context: context,
+            context: this.record.getContext(this.recordParams),
             field: this.field,
             fields_view: this.attrs.views && this.attrs.views.form,
             parentID: this.value.id,

@@ -10,7 +10,7 @@
     'category': 'Tools',
     'version': '1.0',
 
-    'depends': ['web', 'base_setup', 'iap'],
+    'depends': ['web', 'iap'],
     'data': [
         'views/partner_autocomplete_assets.xml',
         'views/res_partner_views.xml',
