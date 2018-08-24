@@ -1655,7 +1655,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('hide and display help message (ESC) in kanban quick create', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         var kanban = createView({
             View: KanbanView,
@@ -1679,6 +1679,13 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_header').click();
         assert.notOk(kanban.$('.o_discard_msg').is(':visible'),
             'the ESC to discard message is no longer visible');
+
+
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 1,
+            "the quick create column should still be opened for mass creation");
+        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', { keyCode: $.ui.keyCode.ESCAPE }));
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 0,
+            "the quick create column should now be closed");
 
         kanban.destroy();
     });
