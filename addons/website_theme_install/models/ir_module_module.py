@@ -126,7 +126,7 @@ class IrModuleModule(models.Model):
             views_todel.unlink()
 
     def _remove_theme_on_website(self, website):
-        installed_deps = website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
+        installed_deps = self + website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
         for mod in installed_deps:
             mod._unload_one_theme_module(website)
 
