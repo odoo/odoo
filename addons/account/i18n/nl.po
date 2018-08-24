@@ -6,13 +6,15 @@
 # Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 09:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +84,7 @@ msgstr "&amp;nbsp;<span>op</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_chatter
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -408,7 +410,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.(%)</span>"
-msgstr ""
+msgstr "<span>Krt.(%)</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -493,7 +495,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Total</span>"
-msgstr ""
+msgstr "<span>Totaal</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -674,7 +676,7 @@ msgstr "<strong>Subtotaal:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal:</strong>"
-msgstr ""
+msgstr "<strong>Subtotaal:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1161,6 +1163,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Bankrekening naamhouder, indien de naam anders is dan de naam van de "
+"bankrekeninghouder"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1213,6 +1217,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"De grootboekrekening welke wordt ingesteld op regels aangemaakt met het "
+"kasbasis stelsel, om zo de BTW grondslag te kunnen bijhouden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1386,7 +1392,7 @@ msgstr "Voeg een dagboek toe"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a line"
-msgstr ""
+msgstr "Regel toevoegen"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -1401,7 +1407,7 @@ msgstr "Voeg een nieuw label toe"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Add a note"
-msgstr ""
+msgstr "Voeg een notitie toe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1442,7 +1448,7 @@ msgstr "Voeg interne notitie toe..."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Add contacts to notify..."
-msgstr ""
+msgstr "Voeg contacten toe om te informeren..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__partner_ids
@@ -1660,6 +1666,7 @@ msgstr "Sta toe om BTW's te configureren op kasbasis methode"
 #: model:res.groups,name:account.group_fiscal_year
 msgid "Allow to define fiscal years of more or less than a year"
 msgstr ""
+"Sta het definiëren van fiscale jaren van meer of minder dan een jaar toe"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1863,7 +1870,7 @@ msgstr "Kostenplaats"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr ""
+msgstr "Kostenplaatsenboekingen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -1914,6 +1921,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Antwoorden gaan niet naar de discussie van het originele document. Dit heeft"
+" gevolgen voor het gegenereerde bericht-id."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_exigible
@@ -2024,12 +2033,12 @@ msgstr "Ten minste één uitgaand"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Bijlage toevoegen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "Bijlagen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__attachment_ids
@@ -2037,6 +2046,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Bijlages zijn gelinkt aan het document via het model / res_id en aan het "
+"bericht via dit veld."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2046,7 +2057,7 @@ msgstr "Augustus"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__author_id
 msgid "Author"
-msgstr ""
+msgstr "Auteur"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__author_id
@@ -2054,11 +2065,13 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Schrijver van het bericht. Als deze niet ingesteld is, kan email_from een "
+"e-mailadres bevatten wat niet overeenkomt met een relatie."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Avatar van auteur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2344,7 +2357,7 @@ msgstr "Grondslag"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "Ontvangen BTW grondslagrekening"
 
 #. module: account
 #: code:addons/account/models/company.py:19
@@ -2534,7 +2547,7 @@ msgstr "CAMT import"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "Vrachtvrij inclusief verzekering tot"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CPT
@@ -2544,7 +2557,7 @@ msgstr "Vrachtvrij tot"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr ""
+msgstr "Kostprijs en vracht"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_CIF
@@ -2789,7 +2802,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__channel_ids
 msgid "Channels"
-msgstr ""
+msgstr "Kanalen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__chart_template_id
@@ -2897,7 +2910,7 @@ msgstr "Controles"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__child_ids
 msgid "Child Messages"
-msgstr ""
+msgstr "Onderliggende berichten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
@@ -2932,25 +2945,27 @@ msgid ""
 "Choose how you want to credit this invoice. You cannot Modify and Cancel if "
 "the invoice is already reconciled"
 msgstr ""
+"Kies hoe u deze factuur wilt crediteren. U kan de factuur niet wijzigen of "
+"annuleren als ze al afgeletterd is."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.actions_account_fiscal_year
 msgid "Click here to create a new fiscal year."
-msgstr ""
+msgstr "Klik hier om een nieuw fiscaal jaar aan te maken."
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tour.js:19
 #, python-format
 msgid "Click to <b>send the invoice by email.</b>"
-msgstr ""
+msgstr "Klik om <b>de factuur te verzenden per e-mail.</b>"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tour.js:23
 #, python-format
 msgid "Click to <b>send the invoice.</b>"
-msgstr ""
+msgstr "Klik om <b>de factuur te verzenden.</b>"
 
 #. module: account
 #. openerp-web
@@ -2960,6 +2975,8 @@ msgid ""
 "Click to <b>validate your invoice.</b> A reference will be assigned to this "
 "invoice and you will not be able to modify it anymore."
 msgstr ""
+"Klik om<b>uw factuur te bevestigen.</b> Een factuurnummer wordt  toewezen en"
+" u kunt de factuur niet meer bewerken."
 
 #. module: account
 #. openerp-web
@@ -2986,7 +3003,7 @@ msgstr "Afschrift afsluiten"
 #: selection:res.company,account_dashboard_onboarding_state:0
 #: selection:res.company,account_invoice_onboarding_state:0
 msgid "Closed"
-msgstr ""
+msgstr "Gesloten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__date_done
@@ -3147,7 +3164,7 @@ msgstr "Complete set van belastingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr ""
+msgstr "Composer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -3187,7 +3204,7 @@ msgstr "Configureren"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
 msgid "Configure your document layout"
-msgstr ""
+msgstr "Configureer uw document lay-out"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -3252,7 +3269,7 @@ msgstr "Contact"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Contact us"
-msgstr ""
+msgstr "Contacteer ons"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -3299,6 +3316,8 @@ msgid ""
 "Could not install new chart of account as there are already accounting "
 "entries existing."
 msgstr ""
+"Kan nieuw grootboekschema niet installeren aangezien er reeds boekingen "
+"bestaan."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__counterpart
@@ -3336,7 +3355,7 @@ msgstr "Aanmaken"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__create_or_link_option
 msgid "Create Or Link Option"
-msgstr ""
+msgstr "Maak of link optie"
 
 #. module: account
 #: code:addons/account/models/company.py:279
@@ -3383,7 +3402,7 @@ msgstr "Maak een nieuw cash log"
 #: model:ir.actions.act_window,help:account.action_account_fiscal_position_form
 #: model:ir.actions.act_window,help:account.action_account_fiscal_position_template_form
 msgid "Create a new fiscal position"
-msgstr ""
+msgstr "Maak een nieuwe fiscale positie"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_incoterms_tree
@@ -3738,6 +3757,7 @@ msgstr "Huidige jaarinkomsten"
 #: model:ir.model.fields,help:account.field_account_invoice_send__starred
 msgid "Current user has a starred notification linked to this message"
 msgstr ""
+"De huidige gebruiker heeft een ster notificatie gekoppeld aan dit bericht."
 
 #. module: account
 #: selection:account.abstract.payment,partner_type:0
@@ -3838,7 +3858,7 @@ msgstr "AFGELEVERD BIJ TERMINAL"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr ""
+msgstr "Franco inclusief rechten"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDU
@@ -3848,12 +3868,12 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "Franco af kade (exclusief rechten)"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr ""
+msgstr "Franco af schip"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -4115,17 +4135,17 @@ msgstr "Mate waarin u vertrouwen heeft in deze betaler"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Verwijderen emails"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Verwijder bericht kopie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Verwijder verzonden e-mails (alleen bulk mailingen)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -4309,7 +4329,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Soort weergave"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -4484,7 +4504,7 @@ msgstr "EU digitale goederen BTW"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "Af fabriek"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:387
@@ -4503,7 +4523,7 @@ msgstr "Of beide debet en credit passeren of geen."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4516,6 +4536,9 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"E-mailadres van de verzender. Dit veld is ingesteld wanneer er geen "
+"overeenkomende relatie wordt gevonden en vervangt het author_id veld in de "
+"chatter."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
@@ -4687,12 +4710,12 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr ""
+msgstr "Vrij langszij schip"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "Vrachtvrij tot vervoerder"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
@@ -4979,7 +5002,7 @@ msgstr "Formulier inhoud ontbreekt, dit rapport kan niet afgedrukt worden."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
 msgid "From"
-msgstr ""
+msgstr "Van"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5223,7 +5246,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
 #: model:ir.model.fields,help:account.field_account_invoice_send__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Heeft fout"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__hide_payment_method
@@ -5240,7 +5263,7 @@ msgstr "Verberg gebruik kasbasis optie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_chatter
 msgid "History"
-msgstr ""
+msgstr "Geschiedenis"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5708,7 +5731,7 @@ msgstr "Onjuiste handeling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__incoterm_id
 msgid "Incoterm"
-msgstr ""
+msgstr "Leveringscondities"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
@@ -5732,6 +5755,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incoterms zijn een reeks van verkoop condities.   Deze worden gebruikt om de"
+" transactiekosten en de verantwoordelijkheden tussen koper en verkoper te "
+"verdelen."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_incoterms_tree
@@ -5745,7 +5771,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_payment.xml:25
 #, python-format
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -5755,7 +5781,7 @@ msgstr "Informatie"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Initiële bericht thread"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_input_categ_id
@@ -6713,7 +6739,7 @@ msgstr "Laatste afletterdatum voor facturen en betalingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
 msgid "Layout"
-msgstr ""
+msgstr "Layout"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -6808,7 +6834,7 @@ msgstr "Laad meer"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:151
 #, python-format
 msgid "Load more... ("
-msgstr ""
+msgstr "Laad meer... ("
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
@@ -6856,7 +6882,7 @@ msgstr "MEM"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Mail activiteit soort"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6962,7 +6988,7 @@ msgstr "Markeer factuur als volledig betaald"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_id
 msgid "Mass Mailing"
-msgstr ""
+msgstr "Bulkmailing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mass_mailing_campaign_id
@@ -7125,12 +7151,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Gemodereerd door"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Moderatie status"
 
 #. module: account
 #. openerp-web
@@ -7262,12 +7288,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__needaction
 #: model:ir.model.fields,help:account.field_account_invoice_send__needaction
 msgid "Need Action"
-msgstr ""
+msgstr "Vereist actie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__need_moderation
 msgid "Need moderation"
-msgstr ""
+msgstr "Vereist controle"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
@@ -7360,7 +7386,7 @@ msgstr "Geen detail"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__no_auto_thread
 msgid "No threading for answers"
-msgstr ""
+msgstr "Geen berichten voor antwoorden"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -7457,12 +7483,12 @@ msgstr "Niets te doen!"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__notification_ids
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaties"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__notify
 msgid "Notify followers"
-msgstr ""
+msgstr "Meld volgers"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__notify
@@ -7879,7 +7905,7 @@ msgstr "Bovenliggend grootboekschema sjabloon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__parent_id
 msgid "Parent Message"
-msgstr ""
+msgstr "Bovenliggend bericht"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
@@ -7967,7 +7993,7 @@ msgstr "Relaties"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Relaties met Nodige Actie"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:95
@@ -8409,7 +8435,7 @@ msgstr "Geboekte boekingsregels"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Powered by"
-msgstr ""
+msgstr "Aangeboden door"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -8459,7 +8485,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Preview"
-msgstr ""
+msgstr "Voorbeeld"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -8630,7 +8656,7 @@ msgstr "Hoeveelheid"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Quantity:"
-msgstr ""
+msgstr "Hoeveelheid:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__rating_value
@@ -8697,12 +8723,12 @@ msgstr "Ontvangen"
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_account_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments__partner_bank_account_id
 msgid "Recipient Bank Account"
-msgstr ""
+msgstr "Rekeningnummer begunstigde"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Recipients"
-msgstr ""
+msgstr "Ontvangers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -8889,17 +8915,17 @@ msgstr "Normaal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "Gerelateerde document ID"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Gerelateerde document model"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Gekoppelde beoordelingen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__residual_company_signed
@@ -8926,12 +8952,12 @@ msgstr "Vervangende belasting"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "Antwoord e-mail adres."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
 msgid "Reply-To"
-msgstr ""
+msgstr "Antwoord aan"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_form
@@ -9017,7 +9043,7 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 msgid "Revenue"
-msgstr ""
+msgstr "Opbrengst"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_deferred_revenue
@@ -9066,7 +9092,7 @@ msgstr "Omgekeerde mutatie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Review"
-msgstr ""
+msgstr "Controle"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -9113,7 +9139,7 @@ msgstr "Afrondboom"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Run"
-msgstr ""
+msgstr "Uitvoeren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -9224,7 +9250,7 @@ msgstr "Sla op als nieuw sjabloon"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Save as new template"
-msgstr ""
+msgstr "Opslaan als nieuw sjabloon"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9422,7 +9448,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.invoice_send
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Send"
-msgstr ""
+msgstr "Verzenden"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -9433,7 +9459,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
 msgid "Send Email"
-msgstr ""
+msgstr "Verzend e-mail"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:605
@@ -9466,7 +9492,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Send sample"
-msgstr ""
+msgstr "Verstuur voorbeeld"
 
 #. module: account
 #: selection:account.payment,state:0
@@ -9536,7 +9562,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Set taxes"
-msgstr ""
+msgstr "Stel belastingtarieven in"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__visible
@@ -9591,7 +9617,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.server,name:account.model_account_invoice_action_share
 msgid "Share"
-msgstr ""
+msgstr "Deel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__code
@@ -9644,14 +9670,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_users__has_group_show_line_subtotals_tax_included
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "Subtotalen met prijzen inclusief BTW weergeven (B2C)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_excluded
 #: model:ir.model.fields,field_description:account.field_res_users__has_group_show_line_subtotals_tax_excluded
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_excluded
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "Toon subtotalen zonder BTW (B2B)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report__sign
@@ -9672,6 +9698,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Klein formaat afbeelding van dit Contact. Afbeelding is automatisch "
+"geschaald naar een 64x64 afbeelding met behoud van de verhoudingen. Gebruik "
+"dit veld overal waar een kleine afbeelding vereist is."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -9716,7 +9745,7 @@ msgstr "Specificeer op welke manier de factuur moet worden afgerond"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__starred
 msgid "Starred"
-msgstr ""
+msgstr "Met ster"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance__date_from
@@ -9888,7 +9917,7 @@ msgstr "Onderwerp"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Subject..."
-msgstr ""
+msgstr "Onderwerp..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__subtotal
@@ -9899,7 +9928,7 @@ msgstr "Subtotaal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__subtype_id
 msgid "Subtype"
-msgstr ""
+msgstr "Subtype"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10141,7 +10170,7 @@ msgstr "BTW afrondingsmethode"
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
 msgid "Tax display B2B"
-msgstr ""
+msgstr "BTW weergave B2B"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_included
@@ -11489,11 +11518,14 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Traceringswaardes worden bewaard in een apart model. Dit veld staat de "
+"reconstructie van traceringen toe en staat toe statistieken te genereren op "
+"het model."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Traceringswaardes"
 
 #. module: account
 #. openerp-web
@@ -11709,7 +11741,7 @@ msgstr "Gebruik een specifiek dagboek"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "Gebruik actief domein"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
@@ -12229,6 +12261,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Het is niet mogelijk om striktere regels te definiëren voor een controller "
+"dan voor gewone gebruikers. Zorg ervoor dat de blokkeerdatum voor "
+"controllers is ingesteld voor de blokkeerdatum van gewone gebruikers. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:584
@@ -12315,6 +12350,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Het is niet mogelijk een periode te blokkeren welke nog niet gereed is. Zorg"
+" ervoor dat de blokkeerdatum niet is ingesteld na de laatste dag van de "
+"vorige maand."
 
 #. module: account
 #. openerp-web
