@@ -52,6 +52,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Beste ${object.name},<br/>\n"
+"    Bedankt voor uw aanvraag.<br/>\n"
+"    Hier is uw badge voor het evenement ${object.event_id.name}.<br/>\n"
+"    Laat het ons weten wanneer u vragen heeft.\n"
+"    <br/><br/>\n"
+"    Bedankt,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -1483,6 +1494,8 @@ msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
 msgstr ""
+"Plan en organiseer uw evenementen efficiënt:\n"
+"traceer registraties en deelnemers, automatiseer de bevestiging e-mails, verkoop tickets, enzo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
