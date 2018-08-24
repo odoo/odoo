@@ -3,27 +3,14 @@
 # * hr_holidays
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# zhichen ge <mangoge1999@gmail.com>, 2016
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Martin Trigaux, 2018
-# waveyeung <waveyeung@qq.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# mrshelly <mrshelly@hotmail.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,6 +118,18 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new_request
+#: model:ir.ui.view,arch_db:hr_holidays.edit_new_allocation
+msgid "<span class=\"ml8\">Days</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new_request
+#: model:ir.ui.view,arch_db:hr_holidays.edit_new_allocation
+msgid "<span class=\"ml8\">Hours</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "<strong>Departments and Employees</strong>"
 msgstr "<strong>部门和员工</strong>"
@@ -182,6 +181,7 @@ msgstr "今日缺勤"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual
 msgid "Accrual"
 msgstr ""
 
@@ -285,11 +285,6 @@ msgid "Allocated Days"
 msgstr "分配的天数"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
-msgid "Allocation"
-msgstr "分配"
-
-#. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 msgid "Allocation Approval"
 msgstr ""
@@ -336,6 +331,11 @@ msgstr "待批准的分配申请"
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
 msgid "Allocation Second Approve"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Allocation Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -422,11 +422,6 @@ msgid "Assign Leaves"
 msgstr "指派休假"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_applicability
-msgid "Available For Employee :"
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
 msgid "Black"
 msgstr "黑色"
@@ -435,6 +430,11 @@ msgstr "黑色"
 #: selection:hr.leave.type,color_name:0
 msgid "Blue"
 msgstr "蓝色"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,employee_applicability:0
+msgid "Both"
+msgstr "全部"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -491,6 +491,16 @@ msgstr "日历"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__can_approve
 msgid "Can Approve"
 msgstr "能批准"
+
+#. module: hr_holidays
+#: selection:hr.leave.type,employee_applicability:0
+msgid "Can be allocated"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.leave.type,employee_applicability:0
+msgid "Can be requested"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
@@ -576,6 +586,7 @@ msgid "Create a new leave allocation request"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.hr_leave_action_my_tree
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
@@ -698,6 +709,12 @@ msgid "Double Validation"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new_request
+#: model:ir.ui.view,arch_db:hr_holidays.edit_new_allocation
+msgid "Duration"
+msgstr "时长"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__number_of_days_temp
 msgid "Duration (Days)"
 msgstr ""
@@ -730,6 +747,11 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: hr_holidays
+#: selection:hr.leave.type,validation_type:0
+msgid "Employee Manager"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__category_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__category_id
@@ -753,6 +775,11 @@ msgstr "结束日期"
 #: code:addons/hr_holidays/models/hr_leave_type.py:107
 #, python-format
 msgid "End of validity period should be greater than start of validity period"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__limit
+msgid "Exceed Allocation"
 msgstr ""
 
 #. module: hr_holidays
@@ -868,7 +895,7 @@ msgstr "小时"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,validation_type:0
-msgid "Human Resource Responsible"
+msgid "Human Resource officer"
 msgstr ""
 
 #. module: hr_holidays
@@ -923,11 +950,6 @@ msgstr ""
 #: sql_constraint:hr.leave:0
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual
-msgid "Is Accrual"
 msgstr ""
 
 #. module: hr_holidays
@@ -1153,8 +1175,8 @@ msgid "Leaves Refused"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
+#: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my_tree
+#: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
 msgid "Leaves Request"
 msgstr "休假申请"
 
@@ -1262,7 +1284,6 @@ msgid "Magenta"
 msgstr "洋红色"
 
 #. module: hr_holidays
-#: selection:hr.leave.type,validation_type:0
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__manager_id
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -1329,6 +1350,7 @@ msgid "Messages"
 msgstr "消息"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_applicability
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new_request
 #: model:ir.ui.view,arch_db:hr_holidays.edit_new_allocation
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
@@ -1385,6 +1407,12 @@ msgstr "我团队的休假"
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
 msgstr "新的"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
+msgid "New Request"
+msgstr "新的请求"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -1483,11 +1511,6 @@ msgid "Officer"
 msgstr "主管"
 
 #. module: hr_holidays
-#: selection:hr.leave.type,employee_applicability:0
-msgid "On Leave As Well As On Allocation"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__categ_id
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
@@ -1495,6 +1518,7 @@ msgid ""
 msgstr "一旦休假被批准，Odoo会在日历上生成一个这种类型的活动。"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.hr_leave_action_my_tree
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
 msgid ""
@@ -1507,16 +1531,6 @@ msgstr ""
 " 给经理进行验证。确定休假的 \n"
 " 正确类型（康复期、法定休假、病假）和与休假相关的确切 \n"
 " 的开放天数。"
-
-#. module: hr_holidays
-#: selection:hr.leave.type,employee_applicability:0
-msgid "Only On Allocation"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.leave.type,employee_applicability:0
-msgid "Only On Leave"
-msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:559
@@ -2031,11 +2045,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__interval_unit
 msgid "Unit of time between two intervals"
 msgstr ""
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__limit
-msgid "Unlimited"
-msgstr "无限制的"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_unpaid

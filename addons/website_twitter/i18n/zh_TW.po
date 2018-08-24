@@ -3,22 +3,46 @@
 # * website_twitter
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Martin Trigaux, 2018
-# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Michael Yeung, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr "<strong>網站: </strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -33,12 +57,31 @@ msgid "API secret"
 msgstr "API 密鑰"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr "身份驗證證明丟失或者錯誤。可能是螢幕名稱推文被保護。"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr "創建新的Twitter應用程序"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -71,6 +114,11 @@ msgstr "獲取這個名稱的收藏"
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP錯誤：某些配置錯誤。"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr "如何設定 Twitter API"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -147,9 +195,14 @@ msgid ""
 msgstr "您想從中上載的喜好推特帳號的螢幕名稱。它不必與 API 密鑰/秘密相匹配。"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr "告訴我如何獲取Twitter API key和Secret"
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Show me how to obtain the Twitter API key and Twitter API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
+msgstr "切換到API密鑰選項："
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -187,11 +240,6 @@ msgstr "請求無效或者無法提供此服務。沒有認證請求被視為無
 #, python-format
 msgid "There was no new data to return."
 msgstr "沒有新數據返回。"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr "教程"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -246,11 +294,6 @@ msgid "Twitter Configuration"
 msgstr "Twitter 配置"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "推特滾捲條"
-
-#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
@@ -271,12 +314,29 @@ msgid ""
 msgstr "Twitter似乎斷開。請稍後重試。您可以考慮在Twitter的論壇中提出問題以獲取幫助。"
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr "推特使用者 @%(username)s少於12個的喜好推文。請加入更多或選擇一個不同的螢幕名稱。"
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -299,6 +359,16 @@ msgid "Website"
 msgstr "網站"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr "https://apps.twitter.com/app/new"
+
+#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
@@ -307,3 +377,8 @@ msgstr "res.config.settings"
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr "用下列值:"

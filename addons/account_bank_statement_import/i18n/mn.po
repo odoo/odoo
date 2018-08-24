@@ -3,19 +3,14 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Bayarkhuu Bataa, 2018
 # Martin Trigaux, 2018
-# Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# nasaaskii <nasaaskii@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,11 +134,6 @@ msgstr "Банкны Хуулгын Файл"
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Банкны хуулгын мөр"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Bank setup marked as done"
-msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
@@ -466,6 +456,11 @@ msgid "OK"
 msgstr "OK"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid "Post At Bank Reconciliation"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "Ашгийн Данс"
@@ -507,11 +502,6 @@ msgstr "Богино код"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Show journal on dashboard"
 msgstr "Журналыг хянах самбарт харуулах"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Technical field used in the special view for the setup bar step."
-msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -613,6 +603,14 @@ msgid ""
 msgstr ""
 "Кассын төгсгөлийн баланс системийн тооцоолсон балансаас зөрж байгаа "
 "тохиолдолд ашигийг бүртгэхэд хэрэглэгддэг"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid ""
+"Whether or not the payments made in this journal should be generated in "
+"draft state, so that the related journal entries are only posted when "
+"performing bank reconciliation."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard

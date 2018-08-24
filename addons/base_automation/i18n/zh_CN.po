@@ -3,23 +3,14 @@
 # * base_automation
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# Talway <9010446@qq.com>, 2017
-# Martin Trigaux, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# fausthuang, 2017
-# Si Ling Lau <happy8645@hotmail.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +53,16 @@ msgstr "动作类型"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
 msgstr "有效"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Activity"
+msgstr "活动"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
+msgid "Activity User Type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -222,6 +223,16 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
+msgid "Due Date In"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
+msgid "Due type"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
 msgstr "Email模板"
@@ -361,6 +372,11 @@ msgid "New"
 msgstr "新建"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
+msgid "Note"
+msgstr "备注"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
 msgstr "变化字段的触发器"
@@ -430,6 +446,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr "移除与此服务器动作相关的上下文动作"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "负责人"
@@ -477,6 +494,16 @@ msgid "Subject"
 msgstr "主题"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Summary"
+msgstr "摘要"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
+msgid "Technical name of the user on the record"
+msgstr ""
+
+#. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
 #, python-format
 msgid ""
@@ -520,6 +547,14 @@ msgid "Usage"
 msgstr "用途"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
 msgstr "使用日历"
@@ -529,19 +564,20 @@ msgstr "使用日历"
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales channel, or an\n"
+"                be automatically set to a specific Sales Team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"使用自动操作来自动触发actions的操作\n"
-"                 各种屏幕。 示例：由特定用户创建的潜在客户可以\n"
-"                 被自动设置为特定的销售渠道，或者\n"
-"                 在14天之后还有待处理的机会可能"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
 msgid "User"
 msgstr "用户"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
+msgid "User field name"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -586,8 +622,8 @@ msgstr "如果不选中，此规则被隐藏且不被执行"
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
-" for use; help about pyhon expression is given in the help tab."
-msgstr "编写将运行的Python代码。可以使用有限的特定变量，详细帮助请参阅 帮助 页签。"
+" for use; help about python expression is given in the help tab."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

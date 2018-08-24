@@ -8,10 +8,10 @@
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +19,31 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -33,6 +58,13 @@ msgid "API secret"
 msgstr "API-hemmelighet"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
@@ -41,6 +73,18 @@ msgid ""
 msgstr ""
 "Brukernavn og passord mangler eller er feil. Tweets fra brukeren kan være "
 "beskyttet."
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -73,6 +117,11 @@ msgstr "Denne brukerens favoritter"
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP Error : Noe er feilkonfigurert"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -149,8 +198,13 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Show me how to obtain the Twitter API key and Twitter API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
 msgstr ""
 
 #. module: website_twitter
@@ -189,11 +243,6 @@ msgstr ""
 #, python-format
 msgid "There was no new data to return."
 msgstr "Ingen nye data å hente."
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr "Veiledning"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -248,11 +297,6 @@ msgid "Twitter Configuration"
 msgstr "Twitter Konfigurasjon"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr ""
-
-#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
@@ -273,6 +317,16 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
@@ -281,6 +335,13 @@ msgid ""
 msgstr ""
 "Twitterbruker @%(username)s har færre enn 12 favoritt-tweeter. Legg til "
 "flere eller velg en annen Twitter-bruker."
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
@@ -303,6 +364,16 @@ msgid "Website"
 msgstr "Nettsted"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr ""
+
+#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
@@ -311,3 +382,8 @@ msgstr "res.config.settings"
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr ""

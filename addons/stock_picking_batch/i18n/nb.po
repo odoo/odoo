@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Viktor Basso <viktor@voit.no>, 2018
 # Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
+msgstr "<strong>Forpakning</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -43,12 +57,18 @@ msgid "Add to Batch"
 msgstr ""
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "Strekkode"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
 msgid "Batch"
 msgstr ""
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
@@ -95,6 +115,11 @@ msgid "Cancelled"
 msgstr "Kansellert"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Commitment Date"
+msgstr "Forpliktelsesdato"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
 msgstr "Bekreft"
@@ -120,6 +145,11 @@ msgstr "Opprettet av"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
 msgid "Created on"
 msgstr "Opprettet"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Destination"
+msgstr "Mål"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
@@ -280,6 +310,16 @@ msgid "Pick To Backorder"
 msgstr ""
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking"
+msgstr "Plukking"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking Reference"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Picking to backorder"
 msgstr ""
@@ -296,6 +336,16 @@ msgid "Print"
 msgstr "Skriv ut"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "Produkt"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "Antall"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Responsible"
 msgstr "Ansvarlig"
@@ -304,6 +354,11 @@ msgstr "Ansvarlig"
 #: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "Kjører"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "Planlagt dato"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -342,10 +397,20 @@ msgid "State"
 msgstr "Stat"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "Status"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Picking"
 msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "Oppsummering:"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -354,6 +419,11 @@ msgid ""
 "            (needs to) be done together in order to increase their efficiency.\n"
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "To take from:"
 msgstr ""
 
 #. module: stock_picking_batch

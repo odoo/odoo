@@ -4,17 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# nasaaskii <nasaaskii@gmail.com>, 2018
-# Batzul B <batzul.active@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -168,11 +164,12 @@ msgstr "Арга хэмжээний Тасалбар"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "Арга хэмжээ"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
 msgstr "үнэгүй"
@@ -233,7 +230,7 @@ msgid "Maximum Available Seats"
 msgstr "Хамгийн их боломжит суудлууд"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:249
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -241,7 +238,7 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:179
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Энэ тасалбарын суудал дууссан"
@@ -253,7 +250,7 @@ msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "Байхгүй"
@@ -269,13 +266,13 @@ msgid "Original Registration"
 msgstr "Эх Бүртгэл"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:233
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "Төлөгдсөн"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:234
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "Төлбөр"
@@ -384,13 +381,13 @@ msgid "Source Sales Order"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "Тасалбар"
@@ -420,7 +417,7 @@ msgid "Tickets"
 msgstr "Тасалбарууд"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:230
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
 msgstr "Төлөх"
@@ -429,6 +426,12 @@ msgstr "Төлөх"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Батлагдаагүй урьдчилж захиалсан суудал"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "Ширхэг(үүд)"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0

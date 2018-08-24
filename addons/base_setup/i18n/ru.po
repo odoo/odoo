@@ -3,31 +3,43 @@
 # * base_setup
 # 
 # Translators:
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Collex100, 2017
-# KingOPl Slav <87slava13@gmail.com>, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Андрей Гусев <gaussgss@gmail.com>, 2017
-# VItaly Skopin <skopin@lab49.ru>, 2017
-# Dmitry sky <d.v.selitsky@gmail.com>, 2017
-# Yuriy Ney <k_wizard@mail.ru>, 2018
-# Denis Trepalin <zekarious@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-lg fa-building-o\"/>\n"
+"                                            <span class=\"text-muted\">\n"
+"                                                the creation of documents between your companies\n"
+"                                            </span>"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Document Template</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Format</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -94,7 +106,7 @@ msgid "Change Document Template"
 msgstr "Изменить шаблон документа"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:98
+#: code:addons/base_setup/models/res_config_settings.py:99
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Выберите шаблон документа"
@@ -151,15 +163,14 @@ msgid "Default Access Rights"
 msgstr "Права доступа по умолчанию"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
 msgstr "Шаблон документа"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Edit Header"
-msgstr "Редактировать Заголовок"
+msgid "Edit Layout"
+msgstr "Редактировать макет"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
@@ -170,6 +181,11 @@ msgstr "Внешние Почтовые Сервера"
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
 msgstr "Извлечь и проанализировать данные Odoo из Google Spreadsheet"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Find free high-resolution images from Unsplash"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
@@ -330,6 +346,11 @@ msgid "Translate your website with Gengo"
 msgstr ""
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr ""
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
 msgstr ""
@@ -360,8 +381,3 @@ msgstr "Пользователи"
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "the creation of documents between your companies"
-msgstr ""

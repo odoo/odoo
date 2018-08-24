@@ -3,18 +3,17 @@
 # * website_sale_options
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Julia van Orsouw <julia@odooexperts.nl>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,38 +24,38 @@ msgstr ""
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid ""
-"<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Continue "
-"Shopping</span><span class=\"visible-xs-inline\">Continue</span>"
+"<i class=\"fa fa-chevron-left\"/> <span class=\"d-none d-md-"
+"inline\">Continue Shopping</span><span class=\"d-inline d-md-"
+"none\">Continue</span>"
 msgstr ""
-"<i class=\"fa fa-chevron-left\"/> <span class=\"hidden-xs\">Verder "
-"winkelen</span><span class=\"visible-xs-inline\">Verdergaan</span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid ""
-"<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Proceed "
-"to Checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
+"<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"d-none d-md-"
+"inline\">Proceed to Checkout</span><span class=\"d-inline d-md-"
+"none\">Checkout</span>"
 msgstr ""
-"<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Ga naar "
-"de kassa</span><span class=\"visible-xs-inline\">Kassa</span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<small>Remove <span class=\"hidden-xs\"> from Cart</span></small>"
+msgid "<small>Remove <span class=\"d-none d-md-inline\"> from Cart</span></small>"
 msgstr ""
-"<small>Verwijderen <span class=\"hidden-xs\"> uit "
-"winkelmandje</span></small>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
-msgstr "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
+msgid "<span class=\"js_item\">1 </span><span class=\"js_items d-none\">5 </span>"
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "<strong>Add<span class=\"hidden-xs\"> to Cart</span></strong>"
+msgid "<strong>Add<span class=\"d-none d-md-inline\"> to Cart</span></strong>"
 msgstr ""
-"<strong>Toevoegen<span class=\"hidden-xs\"> aan winkelmandje</span></strong>"
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Add one"
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -64,9 +63,19 @@ msgid "Add to Cart"
 msgstr "Voeg toe aan mandje"
 
 #. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Close"
+msgstr "Sluiten"
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Continue shopping"
+msgstr ""
+
+#. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line__linked_line_id
 msgid "Linked Order Line"
-msgstr "Gelinkte orderregel"
+msgstr "Gekoppelde orderregel"
 
 #. module: website_sale_options
 #: code:addons/website_sale_options/models/sale_order.py:46
@@ -100,12 +109,17 @@ msgstr ""
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line__option_line_ids
 msgid "Options Linked"
-msgstr "Gelinkte opties"
+msgstr "Gekoppelde opties"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Price"
 msgstr "Prijs"
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Proceed to checkout"
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -131,6 +145,11 @@ msgstr "Hoeveelheid"
 #: model:ir.model,name:website_sale_options.model_sale_order
 msgid "Quotation"
 msgstr "Offerte"
+
+#. module: website_sale_options
+#: model:ir.ui.view,arch_db:website_sale_options.modal
+msgid "Remove one"
+msgstr ""
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line

@@ -3,37 +3,15 @@
 # * fleet
 # 
 # Translators:
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Martin Trigaux, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Antonio Trueba, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Pablo Fuentes <pablo@studio73.es>, 2017
-# José Matias Zuazo <jose.zuazo@tpsistemas.com.ar>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
-# Manuel Vázquez Acosta <mva.led@gmail.com>, 2018
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2018
-# Javier Ramirez <elbomba887@gmail.com>, 2018
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Miguel Orueta <mo@landoo.es>, 2018
+# Martin Trigaux, 2018
+# ES T2 <e2f48ds4f2ds1@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"Last-Translator: ES T2 <e2f48ds4f2ds1@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,6 +105,11 @@ msgid "Assignation Logs"
 msgstr ""
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,transmission:0
 msgid "Automatic"
 msgstr "Automático"
@@ -138,6 +121,11 @@ msgstr "Automático"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__auto_generated
 msgid "Automatically Generated"
 msgstr "Generado automáticamente"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+msgid "Brand"
+msgstr "Marca"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
@@ -1020,10 +1008,12 @@ msgstr "Logo (pequeño)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Make"
 msgstr "Marca"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
 msgid "Make of the vehicle"
 msgstr "Marca del vehículo"
@@ -1189,7 +1179,7 @@ msgid "No"
 msgstr "No"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:84
+#: code:addons/fleet/models/fleet_vehicle.py:85
 #, python-format
 msgid "No Plate"
 msgstr ""
@@ -1331,6 +1321,11 @@ msgstr ""
 "Los costos se crean generalmente de los servicios y del contrato y aparece aquí."
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Abierto"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "Otro"
@@ -1414,7 +1409,7 @@ msgid "Refueling Details"
 msgstr "Detalles de reabastecimiento de combustible"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:201
+#: code:addons/fleet/models/fleet_vehicle_cost.py:209
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1736,6 +1731,7 @@ msgstr "Valor del vehículo comprado"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
@@ -1856,6 +1852,11 @@ msgstr "Proveedores"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Fecha de aviso"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0

@@ -4,15 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +29,11 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "Бэлэн байдал"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -58,7 +61,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
@@ -75,7 +78,6 @@ msgid "In stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory"
 msgstr "Хадгалах"
@@ -154,15 +156,32 @@ msgid "Temporarily out of stock"
 msgstr ""
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Шилжүүлэх"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
 msgstr "Вэбсайт"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web

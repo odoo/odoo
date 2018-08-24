@@ -3,37 +3,14 @@
 # * maintenance
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Wolfgang Taferner, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Niki Waibel, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Renzo Meister, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Tom, 2017
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
-# Martin K <martinkuenz@gmail.com>, 2017
-# Constantin Ehrenstein <transifex@skiller.eu>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# DE R1 <e2fes1@hotmail.com>, 2017
-# DE T1 <e2f8846@yahoo.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
-# Andi, 2017
-# e2f <projects@e2f.com>, 2018
-# Bülent Tiknas <btiknas@googlemail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,8 +40,13 @@ msgstr "<b>Seriennummer:</b>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "<span class=\"label label-warning pull-right\">Canceled</span>"
-msgstr "<span class=\"label label-warning pull-right\">Abgebrochen</span>"
+msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "<span class=\"ml8\">hours</span>"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -338,6 +320,13 @@ msgid "Dashboard"
 msgstr "Dashboard"
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+msgid ""
+"Date at which the equipment became effective. This date will be used to "
+"compute the Mean Time Between Failure."
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
 msgid "Date of the next preventive maintenance"
 msgstr "Datum der nächsten vorbeugenden Wartung"
@@ -399,6 +388,12 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__duration
 msgid "Duration"
 msgstr "Dauer"
@@ -413,6 +408,11 @@ msgstr "Dauer in Minuten und Sekunden"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Edit..."
 msgstr "Bearbeiten ..."
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
+msgid "Effective Date"
+msgstr "Effektives Datum"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
@@ -1052,7 +1052,7 @@ msgid "Request Done"
 msgstr "Anfrage erledigt"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:369
+#: code:addons/maintenance/models/maintenance.py:375
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 msgstr ""
@@ -1367,12 +1367,6 @@ msgid "days"
 msgstr "Tage"
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "for"
-msgstr "für"
-
-#. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "hours"
 msgstr "Stunden"

@@ -3,25 +3,17 @@
 # * website_sale_wishlist
 # 
 # Translators:
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Niki Waibel, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Martin Trigaux, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# key six <mobile.umts@gmail.com>, 2017
-# Renzo Meister, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Wolfgang Taferner, 2017
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# key six <mobile.umts@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: key six <mobile.umts@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +26,9 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-heart\"/>\n"
 "                        Wishlist"
-msgstr "<i class=\"fa fa-heart\"/>"
+msgstr ""
+"<i class=\"fa fa-heart\"/>\n"
+" Wunschliste"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -48,8 +42,8 @@ msgstr "Aktiv"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"hidden-xs\">to Cart</span>"
-msgstr "<span class=\"hidden-xs\"/>"
+msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -65,7 +59,7 @@ msgstr "Zur Wunschliste hinzufügen"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
 msgid "Added Date"
-msgstr "Datum beim Hinzufügen"
+msgstr "Hinzugefügt am"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -81,21 +75,6 @@ msgstr "Erstellt von"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
 msgid "Currency"
 msgstr "Währung"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__current_session
-msgid "Current Session"
-msgstr "Aktuelle Session"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price"
-msgstr "Aktueller Preis"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price of this product, using same pricelist, ..."
-msgstr "Aktueller Preis dieses Produkts, unter derselben Preisliste …"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
@@ -158,9 +137,9 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__session
-msgid "Session"
-msgstr "Sitzung"
+#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Product image"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -176,13 +155,6 @@ msgstr "Benutzer"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
 msgstr "Website"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__session
-msgid "Website session identifier where this product was wishlisted."
-msgstr ""
-"ID der Website-Session, in der dieses Produkt zur Wunschliste hinzugefügt "
-"wurde."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids

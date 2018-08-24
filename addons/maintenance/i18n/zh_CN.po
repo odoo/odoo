@@ -3,23 +3,14 @@
 # * maintenance
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
-# Eddie Lim <bhweelim@yahoo.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Martin Trigaux, 2017
-# e2f <projects@e2f.com>, 2018
-# waveyeung <waveyeung@qq.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# Xu Lei <xulei8@qq.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,8 +40,13 @@ msgstr "<b>序列号:</b>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "<span class=\"label label-warning pull-right\">Canceled</span>"
-msgstr "<span class=\"label label-warning pull-right\">取消</span>"
+msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "<span class=\"ml8\">hours</span>"
+msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -322,6 +318,13 @@ msgid "Dashboard"
 msgstr "仪表板"
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+msgid ""
+"Date at which the equipment became effective. This date will be used to "
+"compute the Mean Time Between Failure."
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
 msgid "Date of the next preventive maintenance"
 msgstr "下次预防维护日期"
@@ -381,6 +384,12 @@ msgid "Done"
 msgstr "完成"
 
 #. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__duration
 msgid "Duration"
 msgstr "持续时间"
@@ -395,6 +404,11 @@ msgstr "抓紧时间."
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Edit..."
 msgstr "编辑..."
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
+msgid "Effective Date"
+msgstr "实际日期"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
@@ -1024,7 +1038,7 @@ msgid "Request Done"
 msgstr "请求完成"
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:369
+#: code:addons/maintenance/models/maintenance.py:375
 #, python-format
 msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
 msgstr ""
@@ -1327,12 +1341,6 @@ msgid "days"
 msgstr "天"
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "for"
-msgstr "由于"
-
-#. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "hours"
 msgstr "小时"

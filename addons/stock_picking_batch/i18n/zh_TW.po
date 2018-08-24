@@ -3,22 +3,36 @@
 # * stock_picking_batch
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Martin Trigaux, 2018
-# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Michael Yeung, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>批次/序列號碼</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Package</strong>"
+msgstr "<strong>包裹</strong>"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Responsible:</strong>"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -43,12 +57,18 @@ msgid "Add to Batch"
 msgstr "添加到批"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Barcode"
+msgstr "條碼"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
 msgid "Batch"
 msgstr "批"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
+#: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
@@ -95,6 +115,11 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Commitment Date"
+msgstr "承諾日期"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Confirm"
 msgstr "確認"
@@ -120,6 +145,11 @@ msgstr "創建者"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__create_date
 msgid "Created on"
 msgstr "創建時間"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Destination"
+msgstr "目的地"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
@@ -280,6 +310,16 @@ msgid "Pick To Backorder"
 msgstr "選擇延期交貨"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking"
+msgstr "揀貨"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Picking Reference"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
 msgid "Picking to backorder"
 msgstr "選擇延期交貨"
@@ -296,6 +336,16 @@ msgid "Print"
 msgstr "列印"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Product"
+msgstr "產品"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Quantity"
+msgstr "數量"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
 msgid "Responsible"
 msgstr "負責"
@@ -304,6 +354,11 @@ msgstr "負責"
 #: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "運行中"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Scheduled Date"
+msgstr "預定交貨日期"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -342,10 +397,20 @@ msgid "State"
 msgstr "州/省"
 
 #. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Status"
+msgstr "狀態"
+
+#. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Picking"
 msgstr "庫存批量揀貨"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "Summary:"
+msgstr "摘要:"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -359,6 +424,11 @@ msgstr ""
 "（需要）一起完成，以提高效率。\n"
 "對於分配工作（一個人=一批）也是有用的或者\n"
 "幫助操作的時間管理（任務在下午1點完成）。"
+
+#. module: stock_picking_batch
+#: model:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "To take from:"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
