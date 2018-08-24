@@ -280,7 +280,7 @@ class IrHttp(models.AbstractModel):
             obj = env.ref(xmlid, False)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
-            if not consteq(obj.access_token, access_token):
+            if not consteq(obj.access_token or '', access_token):
                 return (403, [], None)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
