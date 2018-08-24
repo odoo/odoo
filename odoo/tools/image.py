@@ -201,6 +201,8 @@ def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
         raise ValueError('ERROR: invalid value for crop_type')
     if size:
         thumbnail = Image.open(io.BytesIO(output_stream.getvalue()))
+        output_stream.truncate(0)
+        output_stream.seek(0)
         thumbnail.thumbnail(size, Image.ANTIALIAS)
         thumbnail.save(output_stream, image_format)
     return base64.b64encode(output_stream.getvalue())
