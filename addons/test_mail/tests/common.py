@@ -20,7 +20,7 @@ class BaseFunctionalTest(common.SavepointCase):
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
         }
-        cls._quick_create_user_ctx = dict(cls._quick_create_ctx, no_reset_password=True)
+        cls._quick_create_user_ctx = dict(cls._quick_create_ctx, no_reset_password=True, note_skip_user_stages=True)
 
         user_group_employee = cls.env.ref('base.group_user')
         cls.user_employee = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
