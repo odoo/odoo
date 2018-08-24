@@ -2983,35 +2983,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # mention the first one only to keep the error message readable
                 raise ValidationError(_('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
-    @api.multi
-    def _check_record_rules_result_count(self, result_ids, operation):
-        """ Verify the returned rows after applying record rules matches the
-            length of ``self``, and raise an appropriate exception if it does not.
-        """
-        ids, result_ids = set(self.ids), set(result_ids)
-        missing_ids = ids - result_ids
-        if missing_ids:
-            # Attempt to distinguish record rule restriction vs deleted records,
-            # to provide a more specific error message
-            self._cr.execute('SELECT id FROM %s WHERE id IN %%s' % self._table, (tuple(missing_ids),))
-            forbidden_ids = [x[0] for x in self._cr.fetchall()]
-            if forbidden_ids:
-                # the missing ids are (at least partially) hidden by access rules
-                if self._uid == SUPERUSER_ID:
-                    return
-                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, self._uid, self._name)
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                    (self._description, operation))
-            else:
-                # If we get here, the missing_ids are not in the database
-                if operation in ('read','unlink'):
-                    # No need to warn about deleting an already deleted record.
-                    # And no error when reading a record that was deleted, to prevent spurious
-                    # errors for non-transactional search/read sequences coming from clients
-                    return
-                _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
-                raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
-
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
         """ Verifies that the operation given by ``operation`` is allowed for
@@ -3031,26 +3002,56 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self._uid == SUPERUSER_ID:
             return
 
+        invalid = self - self._filter_access_rules(operation)
+        if not invalid:
+            return
+
+        forbidden = invalid.exists()
+        if forbidden:
+            # the invalid records are (partially) hidden by access rules
+            if self.is_transient():
+                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
+            else:
+                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden.ids, self._uid, self._name)
+                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                  (self._description, operation))
+
+        # If we get here, the invalid records are not in the database.
+        if operation in ('read', 'unlink'):
+            # No need to warn about deleting an already deleted record.
+            # And no error when reading a record that was deleted, to prevent spurious
+            # errors for non-transactional search/read sequences coming from clients.
+            return
+        _logger.info('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, self._uid, self._name)
+        raise MissingError(_('Missing document(s)') + ':' + _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+
+    def _filter_access_rules(self, operation):
+        """ Return the subset of ``self`` for which ``operation`` is allowed. """
+        if self._uid == SUPERUSER_ID:
+            return self
+
         if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
             # have log_access enabled so that the create_uid column is always there.
             # And even with _inherits, these fields are always present in the local
             # table too, so no need for JOINs.
-            query = "SELECT DISTINCT create_uid FROM %s WHERE id IN %%s" % self._table
-            self._cr.execute(query, (tuple(self.ids),))
-            uids = [x[0] for x in self._cr.fetchall()]
-            if len(uids) != 1 or uids[0] != self._uid:
-                raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-        else:
-            where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-            if where_clause:
-                query = "SELECT %s.id FROM %s WHERE %s.id IN %%s AND " % (self._table, ",".join(tables), self._table)
-                query = query + " AND ".join(where_clause)
-                for sub_ids in self._cr.split_for_in_conditions(self.ids):
-                    self._cr.execute(query, [sub_ids] + where_params)
-                    returned_ids = [x[0] for x in self._cr.fetchall()]
-                    self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
+            query = "SELECT id FROM {} WHERE id IN %s AND create_uid=%s".format(self._table)
+            self._cr.execute(query, (tuple(self.ids), self._uid))
+            return self.browse([row[0] for row in self._cr.fetchall()])
+
+        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
+        if not where_clause:
+            return self
+
+        valid_ids = []
+        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
+            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
+        )
+        for sub_ids in self._cr.split_for_in_conditions(self.ids):
+            self._cr.execute(query, [sub_ids] + where_params)
+            valid_ids.extend(row[0] for row in self._cr.fetchall())
+        return self.browse(valid_ids)
 
     @api.multi
     def unlink(self):
