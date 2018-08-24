@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="action_website_add_features" model="ir.actions.act_window">
-            <field name="name">Apps</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
-        </record>
-
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.website</field>
             <field name="model">res.config.settings</field>
@@ -227,7 +219,7 @@
                                             Add links to social media on your website
                                         </div>
                                         <div class="content-group">
-                                            <button type="object" name="company_go_to" string="Configure my social media links" icon="fa-arrow-right" class="btn-link"/>
+                                            <button type="object" name="company_go_to" string="Configure social media links" icon="fa-arrow-right" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
