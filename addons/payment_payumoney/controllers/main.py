@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PayuMoneyController(http.Controller):
-    @http.route(['/payment/payumoney/return', '/payment/payumoney/cancel', '/payment/payumoney/error'], type='http', auth='public', csrf=False)
+    @http.route(['/payment/payumoney/return', '/payment/payumoney/cancel', '/payment/payumoney/error'], type='http', auth='public', csrf=False, website=True)
     def payu_return(self, **post):
         """ PayUmoney."""
         _logger.info(

@@ -16,7 +16,7 @@ class AdyenController(http.Controller):
 
     @http.route([
         '/payment/adyen/return',
-    ], type='http', auth='none', csrf=False)
+    ], type='http', auth='none', csrf=False, website=True)
     def adyen_return(self, **post):
         _logger.info('Beginning Adyen form_feedback with post data %s', pprint.pformat(post))  # debug
         if post.get('authResult') not in ['CANCELLED']:

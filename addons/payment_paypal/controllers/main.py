@@ -90,7 +90,7 @@ class PaypalController(http.Controller):
             _logger.warning('Paypal: unrecognized paypal answer, received %s instead of VERIFIED/SUCCESS or INVALID/FAIL (validation: %s)' % (resp, 'PDT' if pdt_request else 'IPN/DPN'))
         return res
 
-    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'], csrf=False)
+    @http.route('/payment/paypal/ipn/', type='http', auth='none', methods=['POST'], csrf=False, website=True)
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
@@ -100,7 +100,7 @@ class PaypalController(http.Controller):
             _logger.exception('Unable to validate the Paypal payment')
         return ''
 
-    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False)
+    @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False, website=True)
     def paypal_dpn(self, **post):
         """ Paypal DPN """
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
