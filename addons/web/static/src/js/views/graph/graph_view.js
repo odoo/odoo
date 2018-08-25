@@ -35,7 +35,7 @@ var GraphView = AbstractView.extend({
     /**
      * @override
      */
-    init: function (viewInfo) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
         var measure;
@@ -62,13 +62,22 @@ var GraphView = AbstractView.extend({
             }
         });
 
+        // give highest priority to graph_groupbys if given in action context
+        // then group_by key of action context then type='row/col' fields of graph view for groupBys
+        if (params.action && params.action.context.graph_groupbys && params.action.context.graph_groupbys.length) {
+            groupBys = params.action.context.graph_groupbys;
+        } else if (params.action && params.action.context.group_by && params.action.context.group_by.length) {
+            groupBys = params.action.context.group_by;
+        }
+
         this.controllerParams.measures = measures;
         this.rendererParams.stacked = viewInfo.arch.attrs.stacked !== "False";
 
         this.loadParams.mode = viewInfo.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';
-        this.loadParams.groupBys = groupBys || [];
+        this.loadParams.groupBys = groupBys;
         this.loadParams.fields = viewInfo.fields;
+        this.loadParams.groupedBy = params.viewGroupBys ? params.viewGroupBys.graphGroupBy : this.loadParams.groupedBy;
     },
 });
 

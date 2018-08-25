@@ -154,6 +154,30 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('displaying line chart data with multiple groupbys', function (assert) {
+        var done = assert.async();
+        assert.expect(3);
+
+        // this test makes sure the line chart show all data labels when apply multiple groupbys
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph type="line"><field name="foo" /></graph>',
+            groupBy: ['product_id', 'bar'],
+        });
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 1,
+                        'should contain a text element with product in legend is xphone');
+            assert.strictEqual(graph.$('text:contains(xpad)').length, 1,
+                        'should contain a text element with product in legend is xpad');
+            assert.strictEqual(graph.$('text:contains(true)').length, 1,
+                        'second groupby should be with bar field');
+            graph.destroy();
+            done();
+        });
+    });
+
     QUnit.test('switching measures', function (assert) {
         var done = assert.async();
         assert.expect(4);
@@ -235,7 +259,7 @@ QUnit.module('Views', {
             assert.notOk(graph.$('text:contains(red)').length,
                         "should not contain a text element with color in legend");
 
-            graph.update({groupBy: ['color_id']});
+            graph.update({viewGroupBys: {graphGroupBy: ['color_id']}});
 
             return concurrency.delay(0);
         }).then(function () {
@@ -287,7 +311,7 @@ QUnit.module('Views', {
                 graph_groupbys: ['product_id'],
             }, "context should be correct");
 
-            graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
+            graph.update({viewGroupBys: {graphGroupBy: ['product_id', 'color_id']}}); // change groupbys
 
             return concurrency.delay(0);
         }).then(function () {
@@ -410,6 +434,64 @@ QUnit.module('Views', {
             assert.strictEqual(graph.$('text:contains(red)').length, 1,
                         "should contain a text element with color in legend");
 
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('higher priority to graph_groupbys in action context then group_by', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph><field name="product_id" /></graph>',
+            viewOptions: {
+                action: {
+                    context: {
+                        group_by: ['foo'],
+                        graph_groupbys: ['color_id'],
+                    }
+                },
+                context: {
+                    graph_measure: 'foo',
+                    graph_mode: 'line',
+                },
+            },
+        });
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 0,
+                        'should not contain a text element with product in legend');
+            assert.strictEqual(graph.$('text:contains(red)').length, 1,
+                        'should contain a text element with color in legend');
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('if type="row" given to field then initial group_by should be field', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph><field name="product_id" type="row" /></graph>',
+            viewOptions: {
+                context: {
+                    graph_measure: 'foo',
+                    graph_mode: 'line',
+                },
+            },
+        });
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 1,
+                        'should contain a text element with product in legend');
+            assert.strictEqual(graph.$('text:contains(red)').length, 0,
+                        'should not contain a text element with color in legend');
             graph.destroy();
             done();
         });
