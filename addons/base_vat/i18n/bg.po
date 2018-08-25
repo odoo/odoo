@@ -3,18 +3,14 @@
 # * base_vat
 # 
 # Translators:
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# kalatchev, 2016
-# kirily <kiril@teracomp.eu>, 2017
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Boris Stefanov <borkata@gmail.com>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2016\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +21,7 @@ msgstr ""
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "Предприятия"
+msgstr "Компании"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
@@ -33,13 +29,14 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
-"Ако е маркирано, Партньорските ДДС номера ще бъдат проверявани чрез VIES "
-"услугата на ЕС, а не само чрез контролна сума."
+"Ако е отметнато, ДДС номерата на контрагентите ще бъдат напълно валидирани "
+"чрез Система за обмен на информация за ДДС - VIES на ЕС, а не само чрез "
+"опростената валидизация на формата (контролна сума)."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:131
@@ -48,7 +45,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"ДДС номера [%s] за партньор [%s] не изглежда валиден.\n"
+"ДДС номерът [%s] на контрагента [%s] не изглежда валиден.\n"
 "Забележка: очакваният формат е %s"
 
 #. module: base_vat
@@ -58,15 +55,15 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"ДДС номера [%s] за партньор [%s] или не е преминал проверката за ДДС за "
-"VIES, или не е спазил очаквания формат %s."
+"ДДС номерът [%s] за контрагент [%s] или не е преминал проверката за "
+"валидиране на ДДС за VIES, или не е спазил очаквания формат %s."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
-msgstr "VIES ДДС проверка"
+msgstr "Проверка чрез Система за обмен на информация за ДДС - VIES"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr "напр. BG123456789"
+msgstr "напр. BE0477472701"
