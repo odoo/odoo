@@ -3,9 +3,9 @@
 # * barcodes
 # 
 # Translators:
-# Martin Trigaux, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
+# Martin Trigaux, 2016
 # kirily <kiril@teracomp.eu>, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "<i>Номенклатурите на баркодове</i> определят как баркодовете се признават и категоризират.\n"
 "                                Когато баркодът е сканиран, той вече е присъединен към <i>първото</i> правило с подходящ\n"
-"                                шаблон. Синтаксисът на шаблона е от типа 'регулярен израз', a баркодът е съчетан,\n"
+"                                шаблон. Синтаксисът на шаблона е от типа 'регулярен израз', a баркодът е съответстващ,\n"
 "                                ако регулярният израз се съчетава с префикс на баркода."
 
 #. module: barcodes
@@ -166,7 +166,7 @@ msgstr "Откажете"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Discounted Product"
-msgstr "Намален продукт"
+msgstr "Преоценен продукт"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
@@ -214,7 +214,7 @@ msgstr "Грешка : Липсва сканиран баркод"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
 msgid "ID"
-msgstr "ID/идентификация"
+msgstr "Идентификация"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
@@ -238,7 +238,7 @@ msgstr "Последно обновено на"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Location"
-msgstr "Местонахождение"
+msgstr "Местоположение"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -272,8 +272,8 @@ msgid ""
 msgstr ""
 "Шаблоните могат и да определят как цифровите стойности като тегло или цена могат да бъдат\n"
 "                                кодирани в баркода. Те са посочени от <code>{NNN}</code> където N\n"
-"                                определят къде са кодирани цифрите на номерата. Плаващите се поддържат и с \n"
-"                                десетични стойности с D като <code>{NNNDD}</code>. В тези случаи \n"
+"                                определят къде са кодирани цифрите на номерата. Плаващите запетаи се поддържат и с \n"
+"                                десетични стойности с D като <code>{NNNDD}</code>. В подобни случаи \n"
 "                                полето с баркода на сродните записи <i>трябва да</i> показва тези цифри като \n"
 "                                нули."
 
@@ -309,7 +309,7 @@ msgstr "Последователност"
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
 #, python-format
 msgid "Set quantity"
-msgstr "Заложете количество"
+msgstr "Настройте количество"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -319,12 +319,12 @@ msgstr "Таблици"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
 msgid "The barcode matching pattern"
-msgstr "Шаблон за съчетаване на баркода"
+msgstr "Шаблонът за съчетаване на баркод"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
 msgid "The list of barcode rules"
-msgstr "Списъкът с правилата на баркодовете"
+msgstr "Списъкът с правила за баркодове"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
@@ -360,7 +360,7 @@ msgstr "За да промените този докумант, моля зап�
 #: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
 #, python-format
 msgid "To set the quantity please scan a barcode first."
-msgstr "За да заложите количество, моля първо сканирайте кода."
+msgstr "За да настроите количество, моля първо сканирайте кода."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type

@@ -7,7 +7,6 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Martin Trigaux, 2016
-# preslav <hackerz99999@gmail.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
@@ -32,10 +31,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-" * Етапът 'Чернова' се използва, когато потребителят кодира нов и непотвърден ваучер.\n"
-" * Етапът 'Проформа' се използва, когато ваучерът не притежава номер.\n"
-" * Етапът 'Публикуван' се използва, когато потребителят създава ваучер, създаден е номер на ваучер и записите на ваучера са създадени в сметка.\n"
-" * Етапът 'Отменен' се използва, когато потребителят отмени/анулира ваучер."
+" * Статусът 'Чернова' се използва, когато потребителят кодира нов и непотвърден ваучер.\n"
+" * Статусът 'Проформа' се използва, когато ваучерът не притежава номер.\n"
+" * Статусът 'Публикуван' се използва, когато потребителят създава ваучер, създаден е номер на ваучер и записите на ваучера са създадени в сметка.\n"
+" * Статусът 'Отменен' се използва, когато потребителят отмени ваучер."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -89,7 +88,7 @@ msgstr "Иформация за фактура за покупка"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr "Референция към фактура за покупка"
+msgstr "Референция за фактура за покупка"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -126,13 +125,13 @@ msgstr "Натиснете бутона, за да създадете касов
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
 msgid "Company"
-msgstr "Компания/фирма"
+msgstr "Компания"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr "Компания/фирма, свързана с този журнал"
+msgstr "Компания, свързана с този журнал"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -216,7 +215,7 @@ msgstr "Групирайте по"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
 msgid "ID"
-msgstr "ID/идентификация"
+msgstr "Идентификация"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -276,33 +275,33 @@ msgstr "Бележки"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
 msgid "Number"
-msgstr "Число"
+msgstr "Номер"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
-msgstr "Само когато данъкът е изключен от цената"
+msgstr "Само когато данъкът е изваден от цената"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
 msgid "Paid"
-msgstr "Платено"
+msgstr "Платен"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr "Директно плащане"
+msgstr "Платете директно"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr "Платете по-късно"
+msgstr "Платете на по-късен етап"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -344,7 +343,7 @@ msgstr "Публикувани ваучери"
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr "Про-форма"
+msgstr "Проформа"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
@@ -422,17 +421,17 @@ msgstr "Врънете в чернова"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Status"
-msgstr "Етап/състояние"
+msgstr "Статус"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr "Смяна на етапа"
+msgstr "Смяна на статуса"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr "Етапът променен"
+msgstr "Статусът променен"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
@@ -462,7 +461,7 @@ msgstr "Сметката за приходи или разходи, свърза
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr "Референция към партньора по този документ."
+msgstr "Референция за контрагента по този документ."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -561,10 +560,10 @@ msgid ""
 "                payment related to this sales receipt."
 msgstr ""
 "Когато касовата бележка за покупка е потвърдена, можете да запишете\n"
-"                плащането на клиента, свързано с тази квитанция за продажба."
+"                плащането на клиента, свързано с тази касова бележка за продажби."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:361
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Първо трябва да изберете партньор!"
+msgstr "Първо трябва да изберете контрагент!"

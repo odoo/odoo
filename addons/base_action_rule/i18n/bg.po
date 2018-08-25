@@ -3,10 +3,10 @@
 # * base_action_rule
 # 
 # Translators:
-# kalatchev, 2016
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Martin Trigaux, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# kalatchev, 2016
+# Martin Trigaux, 2016
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr "<b>Моля изберете вида документ преди да настроите етапите.</b>"
+msgstr "<b>Моля изберете вида документ преди да настроите условията.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -36,12 +36,12 @@ msgstr "Правило за действие"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
 msgid "Action Rule Line Test"
-msgstr "Тест на реда на правилото за действие"
+msgstr "Тест на ред на правило за действие"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr "Тест на правилото за действие"
+msgstr "Тест на правило за действие"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -78,12 +78,12 @@ msgstr "Автоматизирани действия"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr "Въз основа на промяна на формата"
+msgstr "Въз основа на промяна на форма"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Timed Condition"
-msgstr "Въз основа на времеви етап"
+msgstr "Въз основа на времево условие"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -103,7 +103,7 @@ msgstr "Отменен"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr "Проверете това поле, ако този контакт е клиент."
+msgstr "Отметнете това поле, ако този контакт е клиент."
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -230,7 +230,7 @@ msgstr "Часове"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
-msgstr "Iидентификация"
+msgstr "Идентификация"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_domain
@@ -249,8 +249,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr ""
-"before executing the action rule. Ако е налице, това условие трябва да бъде "
-"изпълнено преди актуализацията на записа"
+"Ако е налице, това условие трябва да бъде изпълнено преди актуализацията на "
+"записа"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -283,7 +283,7 @@ msgstr "Последно действие"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
@@ -367,7 +367,7 @@ msgstr "В процес на актуализиране"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_partner_id
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -400,7 +400,7 @@ msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
 msgstr ""
-"Изберете, когато действието трябва да бъде дтартирано и изберете записи "
+"Изберете, когато действието трябва да бъде стартирано и изберете записи "
 "и/или условията по сроковете."
 
 #. module: base_action_rule
@@ -422,17 +422,17 @@ msgstr "Сървърни действия за изпълняване"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_user_id
 msgid "Set Responsible"
-msgstr "Задайте отговорен"
+msgstr "Настройте отговорен"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr "Задайте селекция въз основа на филтър за търсене:"
+msgstr "Настройте подбор въз основа на филтър за търсене:"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
 msgid "Status"
-msgstr "Състояние"
+msgstr "Статус"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_name
@@ -442,12 +442,12 @@ msgstr "Тема"
 #. module: base_action_rule
 #: model:ir.actions.server,name:base_action_rule.test_action
 msgid "Test Server Action"
-msgstr "Тествайте дейността на сървъра"
+msgstr "Тествайте дейност на сървър"
 
 #. module: base_action_rule
 #: model:ir.actions.server,name:base_action_rule.test_action_context
 msgid "Test Server Action Context"
-msgstr "Тествайте контекста на дейността на сървъра"
+msgstr "Тествайте контекст на дейност на сървър"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
@@ -484,10 +484,10 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "Използвайте автоматизирани действия, за да задействате автоматично действия за\n"
-"                различни екрати. Пример: лийд, създаден от специфичен потребител може да\n"
-"                бъде автоматично зададен на специфичен търговски отдел или\n"
-"                възможност, която все още е в състояние висяща, след 14 дни би могла да\n"
-"                задейства автоматичен напомнящ имейл."
+"                различни екрани. Пример: лийд, създаден от конкретен потребител може да\n"
+"                бъде автоматично зададен на конкретен търговски отдел или\n"
+"                възможност, която все още е със статус 'предстоящя', след 14 дни би могла да\n"
+"                задейства автоматично напомнящ имейл."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
@@ -500,7 +500,7 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"При изчисляване на времево състояние на ежедневна база, е възможно да "
+"При изчисляване на времево условие на ежедневна база, е възможно да "
 "използвате календар, за да изчислите датата въз основа на работните дни."
 
 #. module: base_action_rule
@@ -509,8 +509,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Кога трябва да се стартира етапът.\n"
-"                                  Ако е налице, ще бъде отметната от планьора. Ако мястото е празно, ще бъде отметнато при създаването и обновяването."
+"Когато се налага условието да влезе в сила.\n"
+"                                  Ако е налице, ще бъде отметнато от планьора. Ако мястото е празно, ще бъде отметнато при създаването и актуализирането."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind

@@ -7,20 +7,19 @@
 # Anton Vassilev, 2016
 # kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Turhan Aydn <taydin@unionproject.eu>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2017
 # kirily <kiril@teracomp.eu>, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,6 +195,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s поканен %(new_partner)s на <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:550
@@ -320,6 +322,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Речник Python, който ще бъде оценен, за да предоставя стойности по "
+"подразбиране при създаването на нови записи за този alias."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -400,7 +404,7 @@ msgstr "Нужно е действие"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_default
 msgid "Activated by default when subscribing."
-msgstr ""
+msgstr "Активирано по подразбиране при абонамент."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -491,12 +495,12 @@ msgstr "Синоним"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_contact
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Защита на контакт-синоним"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "Домейн на синоним"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_name
@@ -599,7 +603,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Partners"
-msgstr ""
+msgstr "Идентифицирани контрагенти"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_id
@@ -624,6 +628,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Автор на съобщението. Ако не е настроен, email_from може да съдържа имейл "
+"адрес, който не пасва на никой контрагент."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
@@ -680,7 +686,7 @@ msgstr "Тяло"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Ръст"
 
 #. module: mail
 #: selection:mail.notification,email_status:0
@@ -784,7 +790,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr ""
+msgstr "Канали/Контрагент"
 
 #. module: mail
 #. openerp-web
@@ -852,7 +858,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Разделени от запетаи идентификации на контрагенти на получатели"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_partner_to
@@ -861,6 +867,8 @@ msgstr ""
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Разделени от запетая идентификации на контрагенти-получатели (тук могат да "
+"се използват заместители)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -936,7 +944,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,help:mail.field_res_users_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Брояч, отчитащ ръста на имейли при този контакт"
 
 #. module: mail
 #. openerp-web
@@ -1113,6 +1121,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
+"Получатели на записа - по подразбиране:\n"
+"- партньор (използващ идентификация за контрагент или полето partner_id) ИЛИ\n"
+"- имейл (използващ email_from или поле на имейл)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
@@ -1158,6 +1169,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Описание, което ще бъде добавено в съобщението, публикувано за този подтип. "
+"Ако е празно, вместо него ще бъде добавено име."
 
 #. module: mail
 #. openerp-web
@@ -1325,6 +1338,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Имейл адрес на изпращача. Това поле е настроено, когато не е открит нито "
+"един съвпадащ контрагент и подменя полето author_id в чатъра."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1372,12 +1387,15 @@ msgstr ""
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
 msgstr ""
+"Грешка, един контрагент не може да последва два пъти един и същ обект."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid ""
 "Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
+"Грешка: Един последовател трябва да е или контрагент или канал (но не и "
+"двете)."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
@@ -1454,6 +1472,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Поле, имащо за цел да обвърже свързания модел с подвид модел при използване "
+"на автоматичен абонамент за свързан документ. Полето се използва, за да "
+"изчисли getattr(related_document.relation_field)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_copyvalue
@@ -1671,7 +1692,7 @@ msgstr "Последователи (канали)"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Последователи (партньори)"
+msgstr "Последователи (контрагенти)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -1747,7 +1768,7 @@ msgstr "Скрит"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_hidden
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Скрийте подвида при следващите възможности"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_id
@@ -1929,6 +1950,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
+"Ако е отметнато, контрагентите ще получат имел, който ги предупреждава, че "
+"са добавени при последователите на документа."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
@@ -1948,6 +1971,10 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the partners when performing mass mailing."
 msgstr ""
+"В случай че опцията за отказ е отметната, този контакт е отказал да получава"
+" имейли за масова поща и меркетингова компания. Филтърът 'На разположение за"
+" масова поща' позволява на потребителите да пресяват контрагентите, когато "
+"разпращат масова поща."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_scheduled_date
@@ -1997,7 +2024,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
 msgid "Internal Only"
-msgstr ""
+msgstr "Само вътрешни"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:99
@@ -2338,6 +2365,8 @@ msgstr ""
 msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
+"Списък с контрагенти, които ще бъдат добавени като последователи на "
+"настоящия документ."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:663
@@ -2420,7 +2449,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
 msgid "Mailing Opt-Out"
-msgstr ""
+msgstr "Опция за отказ от поща"
 
 #. module: mail
 #. openerp-web
@@ -2744,7 +2773,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Нова плаваща стойност"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
@@ -3106,7 +3135,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Стара плаваща стойност"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
@@ -3144,7 +3173,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:111
 #, python-format
 msgid "Online"
-msgstr "На линия"
+msgstr "Онлайн"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -3179,7 +3208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr ""
+msgstr "Опция за отказ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -3214,6 +3243,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. "
 "${object.partner_id.lang}."
 msgstr ""
+"Незадължителен език за превод (код ISO) за избор при изпращане на имейл. Ако"
+" не е настроен, ще се използва английската версия. Това обикновено трябва да"
+" е израз-заместител, който предоставя подходящия език, напр. "
+"${object.partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
@@ -3305,23 +3338,25 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Partner Mass Mailing"
-msgstr ""
+msgstr "Масова поща до контрагенти"
 
 #. module: mail
 #: code:addons/mail/models/res_partner.py:39
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Профил на контрагент"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_opt_out_search
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
+"Партньори, които не са пожелали да не бъдат включвани в масовите пощенски "
+"кампании"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -3329,7 +3364,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Контрагенти с необходимо действие"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
@@ -3368,14 +3403,14 @@ msgstr "Израз-заместител"
 #: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "Моля, попълнете данните на контрагента"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:68
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "Моля, попълнете данни и имейл на контрагента"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3401,6 +3436,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Политика за публикуване на съобщение в документа чрез пощенската кутия.\n"
+"- всеки: всеки може да публикува\n"
+"- контрагенти: само удостоверени контрагенти\n"
+"- последователи: само последователи на свързан документ или членове на следващите канали\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -3498,7 +3537,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_references
 msgid "References"
-msgstr "Отпратки"
+msgstr "Референции"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_res_id
@@ -3530,7 +3569,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_partner_id
 msgid "Related Partner"
-msgstr "Свързан Партньор"
+msgstr "Свързан контрагент"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_relation_field
@@ -4052,7 +4091,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template_partner_to
 msgid "To (Partners)"
-msgstr ""
+msgstr "До (контрагенти)"
 
 #. module: mail
 #. openerp-web
@@ -4737,7 +4776,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "пренастройка на thread_id"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1

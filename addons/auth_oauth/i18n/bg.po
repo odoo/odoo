@@ -7,6 +7,7 @@
 # Martin Trigaux, 2016
 # kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Boyan Rabchev <boyan.rabchev@plana.solutions>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
@@ -32,18 +33,18 @@ msgstr "Отказан достъп"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_payable_id
 msgid "Account Payable"
-msgstr "Разплащателна сметка"
+msgstr "Сметка плащания към клиенти"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Приходна сметка"
+msgstr "Сметка вземания от клиенти"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
-msgstr "Позволете на потребителите да влизат в Google"
+msgstr "Позволете на потребителите да се регистрират в Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
@@ -73,7 +74,7 @@ msgstr "Тяло"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
-msgstr "клас CSS"
+msgstr "Клас CSS"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -81,7 +82,7 @@ msgid ""
 "Check that the application type is set on <b>Web Application</b>. \n"
 "                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
-"Проверете дали типът приложение е настроен <b>Уеб приложение</b>. \n"
+"Проверете дали видът приложение е настроен <b>Уеб приложение</b>. \n"
 "                                        Сега конфигурирайте позволените страници, към които ще бъдете пренасочени."
 
 #. module: auth_oauth
@@ -109,12 +110,12 @@ msgstr "Идентификация на клиент"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Компании, свързани с партньор"
+msgstr "Компании, свързани с контрагент"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Connect to your Google account and go to"
-msgstr "Свържете с Google профила си и идете в"
+msgstr "Свържете с Google профила си и отидете в"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -184,7 +185,7 @@ msgstr "Притежава необединени записи"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
-msgstr "ID/идентификация"
+msgstr "Идентификация"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
@@ -205,7 +206,7 @@ msgstr "Статии в журнал"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
@@ -224,9 +225,9 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"При последната операция за този партньор бе извършено съчетаване на фактури "
-"и плащания. То се определя или ако няма поне един необединен дебит  и един "
-"необединен кредит, или пък ако натиснете бутона \"Done - Извършен\"."
+"При последната операция за този контрагент бе извършено съчетаване на "
+"фактури и плащания. То се определя или ако няма поне един необединен дебит  "
+"и един необединен кредит, или пък ако натиснете бутона \"Извършен\"."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
@@ -246,12 +247,12 @@ msgstr "OAuth означение за достъп"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuth доставчик"
+msgstr "Доставчик на OAuth "
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr "OAuth доставчици"
+msgstr "Доставчици на OAuth"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
@@ -266,7 +267,7 @@ msgstr "OAuth идентификация на потребител"
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr "OAuth2 доставчик"
+msgstr "Доставчик на OAuth2"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -276,7 +277,7 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Oauth Provider user_id"
+msgstr "Доставчик на Oauth user_id"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -284,8 +285,8 @@ msgid ""
 "On the left side menu, select the sub menu <b>Credentials</b> \n"
 "                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
 msgstr ""
-"В менюто от лявата страна, изберете подменю <b>Акредитива</b> \n"
-"                                        (от <b>API Мениджър</b>), след което изберете <b>OAuth екран за съгласие</b>."
+"В менюто от лявата страна, изберете подменю <b>Акредитиви</b> \n"
+"                                        (от <b>API мениджър</b>), след което изберете <b>OAuth екран за съгласие</b>."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -301,7 +302,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
-msgstr "Платим лимит"
+msgstr "Лимит на сметка задължения към доставчици"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
@@ -316,7 +317,7 @@ msgstr "Доставчици"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Return to Top"
-msgstr "Върнете се горе"
+msgstr "Върнете се най-горе"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
@@ -366,8 +367,8 @@ msgstr "Регистриране в тази база данни не е раз�
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr ""
-"Фискалната позиция ще определи данъците и сметките, използвани за партньора."
-" "
+"Фискалната позиция ще определи данъците и сметките, използвани за "
+"контрагента. "
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
@@ -375,8 +376,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
-"Партньорът има поне един необединен дебит и кредит откакто е било извършено "
-"последното съгласуване на фактури и плащания."
+"Контрагентът има поне един необединен дебит и кредит откакто е било "
+"извършено последното съгласуване на фактури и плащания."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -385,7 +386,7 @@ msgid ""
 "                                        (OAuth 2.0 Client ID)."
 msgstr ""
 "Тогава натиснете бутона <b>Добавете акредитиви</b> и изберете втория вариант \n"
-"                                        (OAuth 2.0 Client ID)."
+"                                        (OAuth 2.0 идентификация на клиент)."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -398,8 +399,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Тази сметка ще бъде използвана като сметка за плащане вместо сметката по "
-"подразбиране за настоящия партньор."
+"Тази сметка ще бъде използвана вместо сметката по подразбиране в качеството "
+"ѝ на сметка задължения към доставчици за настоящия контрагент."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
@@ -407,8 +408,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Тази сметка ще бъде използвана като сметка за получаване вместо сметката по "
-"подрабиране за настоящия партньор."
+"Тази сметка ще бъде използвана вместо сметката по подразбиране в качеството "
+"ѝ на сметка вземания от клиенти за настоящия контрагент."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
@@ -434,7 +435,7 @@ msgid ""
 "To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
 "                                        Copy paste the following link in the box"
 msgstr ""
-"За да постигнете това, завършете полето <b>Упълномощени URI за пренасочване</b>.\n"
+"За да постигнете това, попълнете полето <b>Упълномощени URI за пренасочване</b>.\n"
 "                                        Копирайте и поставете следния линк в полето."
 
 #. module: auth_oauth
@@ -443,7 +444,7 @@ msgid ""
 "To setup the sign in process with Google, you have to perform \n"
 "                                    the following steps first."
 msgstr ""
-"За да настроите процеса по вписване с Google, първо трябва да изпълните  \n"
+"За да настроите процеса порегистрация в Google, първо трябва да изпълните  \n"
 "                                    следните стъпки."
 
 #. module: auth_oauth
@@ -454,12 +455,12 @@ msgstr "Общо фактурирани"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
 msgid "Total Payable"
-msgstr "Общо за плащане"
+msgstr "Тотал на сметки задължения към доставчици"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "Общо за получаване"
+msgstr "Тотал на сметки вземания от клиенти"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
@@ -469,7 +470,7 @@ msgstr "Обща сума, дължима от клиента."
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Обща сума, която трябва да платите на този търговец/доставчик."
+msgstr "Обща сума, която трябва да платите на този доставчик."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -489,7 +490,7 @@ msgstr "Валидиране URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Условия за плащане на доставчици"
+msgstr "Срокове за плащане на доставчици"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101

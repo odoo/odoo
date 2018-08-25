@@ -201,6 +201,9 @@ msgid ""
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Описание на продукта, който искате да предоставите на клиентите си. Това "
+"описание ще бъде копирано на всяка поръчка за продажба, поръчка за доставка "
+"и клиентска фактура/кредитно известие"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
@@ -340,7 +343,7 @@ msgstr "Архивирани"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr "Определя приоритета към списъка на доставчика на продукти."
+msgstr "Разпределя приоритета към списъка на доставчика на продукти."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -651,7 +654,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
-msgstr "Предприятия"
+msgstr "Компании"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_company_id
@@ -661,7 +664,7 @@ msgstr "Предприятия"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
 #: model:ir.model.fields,field_description:product.field_product_template_company_id
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -796,6 +799,12 @@ msgid ""
 " about iMac from the inside out. The result is an advanced, elegant all-in-"
 "one computer that’s as much a work of art as it is state of the art."
 msgstr ""
+"Създаването на такъв зашеметяващо тънък дизайн изискваше еднакво "
+"зашеметяващи постижения в областта на технологичните нововъведения. Ние "
+"усъвършенствахме, претворихме или преустроихме всичко, свързано с iMac "
+"отвътре навън. Резултатът се явява разширен, елегантен компютър от типа "
+"\"всичко в едно\", който е колкото произведение на изкуството, толкова и "
+"ултрамодерно технологично устройство."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
@@ -947,7 +956,7 @@ msgstr "Крайна дата"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
 msgid "End date for this vendor price"
-msgstr "Крайна дата на цената от този доставчик"
+msgstr "Крайна дата за цената на този доставчик"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_end
@@ -1114,6 +1123,13 @@ msgid ""
 "Weight: 10.2 grams\n"
 "            "
 msgstr ""
+"Честота: 5Hz до 21kHz\n"
+"Импеданс: 23 ohms\n"
+"Чувствителност: 109 dB SPL/mW\n"
+"Драйвери: двустранна балансирана арматура\n"
+"Кабелна дължина: 1065 мм\n"
+"Тежест: 10.2 грама\n"
+"            "
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1683,7 +1699,7 @@ msgstr "Родителска категория"
 #. module: product
 #: model:ir.model,name:product.model_res_partner
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1849,7 +1865,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "Ценови листи се управляват в"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2083,7 +2099,7 @@ msgstr "Съотношение"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr "Мерна единица за тази категория"
+msgstr "Референтна мерна единица за тази категория"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2242,7 +2258,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr "Споделяйте продукта с всички компании"
+msgstr "Споделяйте продукт с всички компании"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2251,6 +2267,9 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"Споделяйте продустите си с всички компании, определени по Вашия случай.\n"
+" * Отметнато: Продуктите са видими за всяка компания, дори и ако дадена компания е определена от контрагента.\n"
+" * Неотметнато: Всяка компания може да вижда единствено своите продукти (продукт, в който се определя компания).Продукти, който не са свързани с дадена компания са видими от всички компании."
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2281,7 +2300,7 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "По-малко от референтната мерна единица"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2354,7 +2373,7 @@ msgstr "Начална дата"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
 msgid "Start date for this vendor price"
-msgstr "Начална дата на тази цена на продавача"
+msgstr "Начална дата за тази доставна цена"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_date_start
@@ -2462,7 +2481,7 @@ msgstr "Коефициентът на преобразуване за едини
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "Работен плот в най-разширената му форма."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
@@ -2499,6 +2518,9 @@ msgid ""
 "Product Unit of Measure if not any, in the default unit of measure of the "
 "product otherwise."
 msgstr ""
+"Минималното количество, което трябва да се закупи от този доставчик, "
+"изразено в мерната единица на доставния продукт, а в случай че такава липсва"
+" - в мерната единица на продукта, зададена по подразбиране ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_product_count
@@ -2670,8 +2692,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Тази ценова листа ще бъде използвана, а не тази по подразбиране, за продажби"
-" за настоящ партньор"
+"Тази ценова листа ще бъде използвана вместо ценовата листа по подразбиране, "
+"за продажби на настоящ контрагент"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2679,6 +2701,8 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Този код на доставния продукт ще се използва, когато разпечатвате заявка за "
+"оферта. Дръжте мястото празно, за да използвате вътрешната."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_name
@@ -2686,6 +2710,8 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Това име на доставния продукт ще се използва, когато разпечатвате заявка за "
+"оферта. Дръжте мястото празно, за да използвате вътрешната."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2852,12 +2878,12 @@ msgstr "Доставчик"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr "Информация за Доставчик"
+msgstr "Информация за доставчик"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr "Ценови листи на доставчика"
+msgstr "Ценови листи на доставчик"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -2867,12 +2893,12 @@ msgstr "Продуктов код на доставчик"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_name
 msgid "Vendor Product Name"
-msgstr "Име на доставчика на продукта"
+msgstr "Име на продукта на доставчика "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_uom
 msgid "Vendor Unit of Measure"
-msgstr "Мерна единица на Доставчика"
+msgstr "Мерна единица на доставчика"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
@@ -2942,6 +2968,8 @@ msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
 msgstr ""
+"Когато това поле е попълнено, данните за доставчика ще се отнасят само за "
+"конкретния случай."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3
@@ -2977,6 +3005,11 @@ msgid ""
 "                                   lets you download content, stream video,\n"
 "                                   and browse the web at amazing speeds."
 msgstr ""
+"С разширения Wi‑Fi - два пъти по-бърз от \n"
+"                                   всеки iPad от предишно поколение - и достъп до бързи\n"
+"                                   клетъчни мрежи за пренос на данни по целия свят, iPad mini\n"
+"                                   Ви дава възможност да изтегляте съдържание, да пускате видео\n"
+"                                  и да сърфирате в интернет с изумителна скорост."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
@@ -3226,7 +3259,7 @@ msgstr "report.product.report_pricelist"
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
 msgid "the parent company"
-msgstr "фирмата майка"
+msgstr "компанията-майка"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view

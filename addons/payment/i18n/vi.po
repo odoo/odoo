@@ -50,6 +50,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Sản xuất</span>\n"
+"<span class=\"o_stat_text\">Môi trường</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -552,22 +554,23 @@ msgstr "Thông điệp"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
 msgid "Message displayed after having done the payment process."
-msgstr ""
+msgstr "Thông báo được hiển thị sau khi thực hiện quy trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
+msgstr "Thông báo được hiển thị để giải thích và giúp quá trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Thông báo được hiển thị, nếu xảy ra lỗi trong quá trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
+"Thông báo được hiển thị, nếu đơn đặt hàng bị hủy trong quá trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -575,6 +578,8 @@ msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
 msgstr ""
+"Thông báo được hiển thị, nếu lệnh được thực hiện thành công sau khi thực "
+"hiện quy trình thanh toán."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
@@ -582,6 +587,8 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"Thông báo được hiển thị, nếu đơn đặt hàng đang ở trạng thái chờ xử lý sau "
+"khi đã thực hiện quy trình thanh toán."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -725,7 +732,7 @@ msgstr "Các thanh toán"
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0

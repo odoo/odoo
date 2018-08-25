@@ -7,7 +7,6 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Todor Mladenov <tmladenov@dir.bg>, 2016
 # kirily <kiril@teracomp.eu>, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Boyan Rabchev <boyan.rabchev@plana.solutions>, 2018
@@ -50,12 +49,12 @@ msgstr "# от амортизационни редове "
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "# от редове частично плащане"
+msgstr "# от редове на вноски"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
 msgid "Account Date"
-msgstr "Дата на сметката"
+msgstr "Дата на сметка"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_move
@@ -67,7 +66,7 @@ msgstr "Запис на сметка"
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
 "Сметка, използвана в амортизационните записи, с цел намаляване стойността на"
-" актива "
+" актива. "
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -75,16 +74,16 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
-"Сметка, използвана в периодичните записи, с цел записване на част от "
-"активите като разход"
+"Сметка, използвана в периодичните записи, с цел записване на част от актива "
+"като разход"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
-"Сметка, използвана за запис на придобиване активи на първоначалната им "
-"стойност"
+"Сметка, използвана да регистрира придобиване актив на първоначалната му "
+"цена."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -111,7 +110,7 @@ msgstr "Сума от амортизационни редове"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr "Сума от редове частично плащане"
+msgstr "Сума от редове на вноски"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -143,27 +142,27 @@ msgstr "Категория активи"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr "Продължителност на активите, подлежащи на промяна"
+msgstr "Продължителност на активите за коригиране"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
-msgstr "Краен срок на актива"
+msgstr "Крайна дата на актива"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
 msgid "Asset Method Time"
-msgstr "Период/срок на метода на активите"
+msgstr "Период на метода на активите"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
 msgid "Asset Name"
-msgstr "Наименование активи"
+msgstr "Име на актив"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
-msgstr "Начална дата активи"
+msgstr "Начална дата на активи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
@@ -195,19 +194,19 @@ msgstr "Създаден актив"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Амортизационен ред на актива"
+msgstr "Амортизационен ред на актив"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:296
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
-"Актив - разпродаден или пласиран. Счетоводен запис, очакващ потвърждение."
+"Актив - разпродаден или пласиран. Счетоводен запис, очакващ валидиране."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Активи/Признаване на приходи"
+msgstr "Признаване на активи/приходи"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -225,12 +224,12 @@ msgstr "Активи"
 #: model:ir.ui.view,arch_db:account_asset.action_account_asset_report_pivot
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets Analysis"
-msgstr "Анализ на активите"
+msgstr "Анализ на активи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr "Амортизационни редове на активите "
+msgstr "Амортизационни редове на активи "
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -245,12 +244,12 @@ msgstr "Активи в затворено състояние"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Assets in draft and open states"
-msgstr "Активи в етап 'Чернова' и 'Отворени'"
+msgstr "Активи в състояние чернова и отворени"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr "Активи в етап 'Чернова'"
+msgstr "Активи в състояние чернова"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -266,7 +265,7 @@ msgstr "Активи - автоматично потвърждение "
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Откажете"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_category_id
@@ -286,14 +285,14 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
-"Проверете това, ако желаете автоматично да потвърдите активите на тази "
+"Отметнете това, ако желаете автоматично да потвърдите активите на тази "
 "категория, когато са създадени чрез фактури."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
-"Проверете това, ако желаете да групирате създадените записи по категории."
+"Отметнете това, ако желаете да групирате създадените записи по категории."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -304,8 +303,8 @@ msgid ""
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
 "Изберете метод, който да използвате, за да изчислите количеството амортизационни редове.\n"
-"* Линеен: Изчислен на базата на: брутната стойност / брой амортизации\n"
-"*  Дегресивен (нелинеен): Изчислен на базата на: остатъчната стойност\n"
+"* Линеен: изчислен на базата на: брутната стойност/брой амортизации\n"
+"*  Дегресивен (нелинеен): изчислен на базата на: остатъчната стойност\n"
 "* Дегресивен (нелинеен) фактор"
 
 #. module: account_asset
@@ -317,8 +316,8 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
 "Изберете метод, който да използвате, за да изчислите периодите и броя на амортизационните редове.\n"
-"* Брой амортизации: Определете броя на амортизационните линии и времето между две амортизации.\n"
-"* Кроен срок: Изберете периода между 2 амортизации и датата на приключване на амортизациите."
+"* Брой амортизации: определете броя на амортизационните редове и времето между две амортизации.\n"
+"* Кроен срок: изберете периода между 2 амортизации и датата на приключване на амортизациите."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -326,13 +325,13 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Изберете периода, за който желаете автоматично нанасяте/въвеждане "
+"Изберете периода, за който желаете автоматично да публикувате "
 "амортизационните редове на текущите активи."
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "Затвори"
+msgstr "Затворете"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -345,18 +344,18 @@ msgstr "Затворен"
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_company_id
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Company"
-msgstr "Фирма/Компания"
+msgstr "Компания"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method
 msgid "Computation Method"
-msgstr "Метод на изчисление"
+msgstr "Изчислителен метод"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid "Compute Asset"
-msgstr "Изчислете актива"
+msgstr "Изчислете актив"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -372,13 +371,13 @@ msgstr "Потвърдете"
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Asset Moves"
-msgstr "Създадени прехвърляния на активи"
+msgstr "Създадени движения на активи"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/asset_depreciation_confirmation_wizard.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "Създадени прехвърляния на приходи"
+msgstr "Създадени движения на приходи"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -413,12 +412,12 @@ msgstr "Валута"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
 msgid "Current"
-msgstr "Текущ"
+msgstr "Настоящ"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
-msgstr "Текуща амортизация"
+msgstr "Настоящя амортизация"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -444,13 +443,13 @@ msgstr "Дата на амортизация"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr "Сметка/Отчет разсрочен приход"
+msgstr "Отчет разсрочен приход"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
-msgstr "Тип разсрочен приход"
+msgstr "Вид разсрочен приход"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -461,7 +460,7 @@ msgstr "Разсрочени приходи"
 #: selection:account.asset.asset,method:0
 #: selection:account.asset.category,method:0
 msgid "Degressive"
-msgstr "Дегресивен (нелинеен)"
+msgstr "Дегресивен - нелинеен"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_progress_factor
@@ -482,7 +481,7 @@ msgstr "Сметка амортизационни активи"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Board"
-msgstr "Амортизационен борд"
+msgstr "Depreciation Board"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciation_date
@@ -509,7 +508,7 @@ msgstr "Запис амортизация"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr "Сметка/отчет амортизационни разходи"
+msgstr "Сметка разходи по амортизация"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -541,13 +540,13 @@ msgstr "Наименование на амортизацията"
 #: code:addons/account_asset/wizard/asset_modify.py:85
 #, python-format
 msgid "Depreciation board modified"
-msgstr "Модифициран амортизационен борд"
+msgstr "Коригиран Depreciation board"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:571
 #, python-format
 msgid "Depreciation line posted."
-msgstr "Нанесена/вписан амортизационен ред"
+msgstr "Публикуван амортизационен ред"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -557,25 +556,25 @@ msgstr "Нанесена/вписан амортизационен ред"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_display_name
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_display_name
 msgid "Display Name"
-msgstr "Име на дисплей // Покажете име"
+msgstr "Покажете име"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
-msgstr "Прехвърляне (на остатък)"
+msgstr "Двеижение на актив"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
-msgstr "Прехвърляния (на остатък)"
+msgstr "Движение на активи"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:550
 #, python-format
 msgid "Document closed."
-msgstr "Документ затворен."
+msgstr "Затворен документ"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -588,13 +587,13 @@ msgstr "Чернова"
 #: selection:account.asset.category,method_time:0
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_end
 msgid "Ending Date"
-msgstr "Крайна дата/срок"
+msgstr "Крайна дата"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_end
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_method_end
 msgid "Ending date"
-msgstr "Крайна дата/срок"
+msgstr "Крайна дата"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -607,8 +606,8 @@ msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
 "            search bar can also be used to personalize your assets depreciation reporting."
 msgstr ""
-"Настоящият доклад предлага преглед на всички амортизации.\n"
-"Търсачката също може да бъде използвана с цел персонализиране отчитането на амортизационните активи. "
+"Настоящият отчет предлага преглед на всички амортизации.\n"
+"Търсачката също може да бъде използвана с цел да персонализирате отчитането амортизацията на активите си."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -633,7 +632,7 @@ msgstr "Брутна стойност"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr "Брутна стойност на актива"
+msgstr "Брутна стойност на актив"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -659,7 +658,7 @@ msgstr "Групирайте записи в журнала"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_id
 msgid "ID"
-msgstr "ID / идентификация"
+msgstr "Идентификация"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_prorata
@@ -668,9 +667,8 @@ msgid ""
 "from the purchase date instead of the first January / Start date of fiscal "
 "year"
 msgstr ""
-"Посочва, че първият запис на амортизация за този актив трябва да бъде "
-"извършен от датата на закупуване вместо от 1 януари / началната дата на "
-"фискалната година."
+"Посочва, че първият запис на амортизация за този актив трябва да се случи на"
+" датата на покупката вместо на 1 януари/началната дата на фискалната година."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_prorata
@@ -678,8 +676,8 @@ msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first of January"
 msgstr ""
-"Посочва, че първият запис на амортизация за този актив трябва да бъде "
-"извършено от датата на закупуване вместо от 1 януари."
+"Посочва, че първият запис на амортизация за този актив трябва да се случи на"
+" датата на покупката вместо на 1 януари."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -691,19 +689,19 @@ msgstr "Фактура"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Ред от фактура"
+msgstr "Ред на фактура"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
 msgstr ""
-"Това е сумата, която възнамерявате да разполагате и която не подлежи на "
+"Това е сумата, с която възнамерявате да разполагате и която не подлежи на "
 "амортизация."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Items"
-msgstr "Редове/статии"
+msgstr "Редове"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_journal_id
@@ -725,7 +723,7 @@ msgstr "Записи в журнал"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard___last_update
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_write_uid
@@ -759,19 +757,19 @@ msgstr "Свързан"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Modify"
-msgstr "Видоизменен / модифициран"
+msgstr "Коригирайте"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_modify
 #: model:ir.model,name:account_asset.model_asset_modify
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Modify Asset"
-msgstr "Модифицирайте актива"
+msgstr "Коригирайте актив"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Modify Depreciation"
-msgstr "Модифицирайте амортизацията"
+msgstr "Коригирайте амортизация"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -781,7 +779,7 @@ msgstr "Месец"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
 msgid "Monthly Recurring Revenue"
-msgstr "Месечни повтарящи се приходи"
+msgstr "Ежемесечно повтарящ се приход"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
@@ -791,7 +789,7 @@ msgstr "Амортизация за следващ период"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_note
 msgid "Note"
-msgstr "Бележка / полица"
+msgstr "Бележка"
 
 #. module: account_asset
 #: selection:account.asset.asset,method_time:0
@@ -823,7 +821,7 @@ msgstr "Един запис на всеки..."
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #, python-format
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_period
@@ -839,7 +837,7 @@ msgstr "Периодичност"
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 msgid "Post Depreciation Lines"
-msgstr "Впишете амортизационните редове"
+msgstr "Публикувайте амортизационни редове"
 
 #. module: account_asset
 #. openerp-web
@@ -849,12 +847,12 @@ msgstr "Впишете амортизационните редове"
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 #, python-format
 msgid "Posted"
-msgstr "Вписан / публикуван"
+msgstr "Публикуван"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
 msgid "Posted Amount"
-msgstr "Вписано количество"
+msgstr "Публикувана сума"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -864,13 +862,13 @@ msgstr "Вписани амортизационни редове"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_product_template
 msgid "Product Template"
-msgstr "Шаблон за продукт"
+msgstr "Продуктов шаблон"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_prorata
 msgid "Prorata Temporis"
-msgstr "В крак/съответствие с времето (лат.)"
+msgstr "В крак с времето "
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:342
@@ -879,8 +877,8 @@ msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
 msgstr ""
-"Функцията Prorata temporis (в съответствие с времето) може да бъде приложена"
-" само за времевия метод \"брой амортизации\"."
+"Функцията 'в крак с времето' може да бъде приложена само за времевия метод "
+"\"брой амортизации\"."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -890,12 +888,12 @@ msgstr "Покупка"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr "Месец на закупуване"
+msgstr "Месец на покупка"
 
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Purchase: Asset"
-msgstr "Закупуване: Актив"
+msgstr "Покупка: Актив"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_name
@@ -905,17 +903,17 @@ msgstr "Причина"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr "Сметка / отчет - признати"
+msgstr "Отчет признаване"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
-msgstr "Сметка/отчет признат/деклариран доход"
+msgstr "Отчет признат приход"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
 msgid "Reference"
-msgstr "Означение/референция/справка/указание"
+msgstr "Референция"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -951,12 +949,12 @@ msgstr "Стойност спасяване"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Search Asset Category"
-msgstr "Търсене по категория актив"
+msgstr "Потърсете категория актив"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr "Разпродавайте или пласирайте "
+msgstr "Продавайте или пласирайте "
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -966,12 +964,12 @@ msgstr "Последователност"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Set to Draft"
-msgstr "Върнете в чернова"
+msgstr "Настройте на чернова"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_period
 msgid "State here the time between 2 depreciations, in months"
-msgstr "Постановете тук времето между 2 амортизации, по месеци"
+msgstr "Постановете тук времето между 2 амортизации, в месеци"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_parent_state
@@ -982,19 +980,18 @@ msgstr "Състояние актив"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_state
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_state
 msgid "Status"
-msgstr "Състояние / статус"
+msgstr "Статус"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_period
 msgid "The amount of time between two depreciations, in months"
-msgstr "Количеството време между две амортизации, по месеци."
+msgstr "Времеви период между две амортизации, в месеци."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_number
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
-"Брой необходими амортизации необходими за амортизиране на Вашия актив."
+msgstr "Брой амортизации, необходими, за да амортизирате актива си."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:477
@@ -1003,8 +1000,8 @@ msgid ""
 "This depreciation is already linked to a journal entry! Please post or "
 "delete it."
 msgstr ""
-"Тази амортизация е вече свързана с запис в журнала. Моля въведете я или я "
-"изтрийте."
+"Тази амортизация е вече свързана със запис в журнала. Моля, публикувайте я "
+"или я изтрийте."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -1025,32 +1022,32 @@ msgstr "Времеви метод"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr "Времеви метод, основан на"
+msgstr "Времеви метод въз основа на"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_type
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Type"
-msgstr "Тип"
+msgstr "Вид"
 
 #. module: account_asset
 #. openerp-web
 #: code:addons/account_asset/static/src/js/account_asset.js:28
 #, python-format
 msgid "Unposted"
-msgstr "Невъведен / невписан"
+msgstr "Непубликуван"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr "Невъведена / невписана сума"
+msgstr "Непубликувана сума"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 msgid "Vendor"
-msgstr "Продавач / доставчик"
+msgstr "Доставчик"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_state
@@ -1060,9 +1057,9 @@ msgid ""
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"При създаване на актив етапът се явява 'Чернова'.\n"
-"В случай,че активът е потвърден, статусът преминава в 'Текущ' и амортизационните редове могат да бъдат въведени в счетоводството. \n"
-"Можете собственоръчно да закриете актива, когато амортизацията приключи. Ако последният ред на амортизацията е въведен, активът автоматично преминава в това състояние/статус."
+"При създаване на актив статусът е 'Чернова'.\n"
+"В случай че активът е потвърден, статусът преминава в 'Текущ', а амортизационните редове могат да бъдат публикувани в счетоводството. \n"
+"Когато амортизацията приключи, можете механично да закриете даден актив. Ако последният ред на амортизацията е публикуван, активът автоматично преминава в този статус."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1073,31 +1070,30 @@ msgstr "Година"
 #: code:addons/account_asset/models/account_asset.py:107
 #, python-format
 msgid "You cannot delete a document is in %s state."
-msgstr "You cannot delete a document is in %s state."
+msgstr "Не можете да изтриете документ в %s състояние."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:110
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr ""
-"Не можете да изтриете даден документ, който съдържа въведени вписвания."
+msgstr "Не можете да изтриете документ, който съдържа публикувани записи."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:579
 #, python-format
 msgid "You cannot delete posted depreciation lines."
-msgstr "Не можете да изтриете въведени амортизационни редове."
+msgstr "Не можете да изтриете публикувани амортизационни редове."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:581
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "Не можете да изтриете въведени редове частично плащане."
+msgstr "Не можете да изтриете публикувани редове на вноски."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr "актив.амортизация.потвърждение.wizart"
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -1107,10 +1103,10 @@ msgstr "напр. Компютри"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "e.g. Laptop iBook"
-msgstr "напр. Лаптоп, iBook"
+msgstr "напр. лаптоп, iBook"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
-msgstr "месеца"
+msgstr "месеци"

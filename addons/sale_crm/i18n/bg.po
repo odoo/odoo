@@ -123,6 +123,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Посочва етапа на членство.\n"
+"-Нечленуващ: контрагент, който не е кандидатствал за никакво членство.\n"
+"-Анулиран член: член, който е прекъснал членството си.\n"
+"-Стар член: член, чието членство е изтекло.\n"
+"-Изчакващ член: член, кандидатствал за членство, на който му предстои изготвяне на фактура.\n"
+"-Фактуриран член: член, чиято фактура е създадена.\n"
+"-Плащащ член: член, заплатил членската си такса."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -249,7 +256,7 @@ msgstr "Етикети"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Цената, договорена от контрагента"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
@@ -258,7 +265,7 @@ msgid ""
 "destination location for goods you send to this partner"
 msgstr ""
 "Това местонахождение ще се използва вместо това по подрабиране като крайно "
-"местонахождение за стоките които пращате на този партньор"
+"местонахождение за стоките които пращате на този контрагент"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
@@ -266,8 +273,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Когато получавате стоки от текущия партньор като източник ще бъде използвано"
-" това местонахождение вместо това по подразбиране"
+"Това стоково местонахождение ще бъде използвано вместо местоположението по "
+"подразбиране в качеството му на източник на стоки, които получавате от "
+"текущия контрагент"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -277,4 +285,4 @@ msgstr "Потребители"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr ""
+msgstr "Местоположение на доставчик"
