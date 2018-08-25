@@ -260,12 +260,12 @@ msgstr "Условие"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Честито! Сега вече сте сребърен контрагент!"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Честито! Сега вече сте един от нашите златни контрагенти!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:385
@@ -469,6 +469,11 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Филтрирайте, за да изберете съвпадащите записи на ресурси, принадлежащи на "
+"този сегмент. Новите филтри могат да се създават и запазват посредством "
+"разширено търсене в изгледа със списъка на ресурсите. Ако не е зададен "
+"никакъв филтър, всички записи са избрани без филтриране. Режимът на "
+"синхронизиране също може да добави критерий към филтъра."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -778,7 +783,7 @@ msgid ""
 msgstr ""
 "Маркетинг компанията на Odoo Ви позволява да автоматизирате комуникацията\n"
 "            към изгледите Ви. Можете да определите сегмент (набор от условия) на\n"
-"            лийдовете и параметрите си, за да осъществите кампанията си."
+"            лийдовете и контрагентите си, за да осъществите кампанията си."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -799,17 +804,17 @@ msgstr "Изходящи преходи"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
-msgstr ""
+msgstr "Поле на контрагент"
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr "Партньори"
+msgstr "Контрагенти"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -859,7 +864,7 @@ msgstr "Справки"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Reset"
-msgstr "Изчистване"
+msgstr "Пренастройване"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_res_id
@@ -1073,6 +1078,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Създадените работни редове ще бъдат съединени към контрагент, свързан със "
+"записа. Ако записът е самият контрагент, оставете това поле празно. Това е "
+"полезно за за целите на отчитането чрез изгледите 'Анализ на кампания' или "
+"'Последваща кампания'."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1139,7 +1148,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "Добре дошли в канала за контрагенти на Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0

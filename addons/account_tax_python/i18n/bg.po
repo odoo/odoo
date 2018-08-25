@@ -3,17 +3,15 @@
 # * account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2016\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +23,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
 msgid "Applicable Code"
-msgstr "Приложим Код"
+msgstr "Приложим код"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
@@ -39,14 +37,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Изчислете размера на данъка, като зададете променливата \"резултат\".\n"
+"Изчислете размера на данъка, като зададете променливата величина \"резултат\".\n"
 "\n"
-": param base_amount: float, действителна сума, върху която се прилага данъкът\n"
-": параметър price_unit: float\n"
-": param количество: float\n"
-": param компания: res.company recordset singleton\n"
-": param продукт: продукт.product recordset singleton или None\n"
-": Param партньор: res.partner записи singleton или None"
+": параметър base_amount: плаваща запетая, действителна сума, върху която се прилага данъкът\n"
+": параметър price_unit: плаваща запетая\n"
+": параметър количество: плаваща запетая\n"
+": параметър компания: res.company набор записи, единичен тон\n"
+": параметър продукт: product.product  набор записи, единичен тон или нищо\n"
+": параметър контрагент: res.partner набор записи, единичен тон или нищо"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -59,13 +57,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Изчислява размера на данъка въз основа на променливата 'result'.\n"
+"Изчислява размера на данъка въз основа на променливата величина 'резултат'.\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":параметър base_amount: плаваща запетая, действителна сума, която се облага с данък\n"
+":параметър price_unit: плаваща запетая\n"
+":параметър количество: плаваща запетая\n"
+":параметър продукт: product.product набор записи, единичен тон или нищо\n"
+":параметър контрагент: res.partner набор записи, единичен тон или нищо"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -78,13 +76,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Определете дали данъкът ще бъде приложен чрез задаване на променливата \"резултат\" на True или False.\n"
+"Определете дали данъкът ще бъде приложен чрез задаване на променливата величина \"резултат\" на 'Правилно' или 'Грешно'.\n"
 "\n"
-": параметър price_unit: float\n"
-": param количество: плувка\n"
-": param компания: res.company recordset singleton\n"
-": param продукт: продукт.product recordset singleton или None\n"
-": Param партньор: res.partner записи singleton или None"
+": параметър price_unit: плаваща запетая\n"
+": параметър количество: плаваща запетая\n"
+": параметър компания: res.company набор записи, единичен тон\n"
+": параметър продукт: product.product набор записи, единичен тон или нищо\n"
+": параметър контрагент: набор записи, единичен тон или нищо"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -96,18 +94,18 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Определете дали данъкът ще бъде приложен чрез задаване на променливата \"резултат\" на True или False.\n"
+"Определете дали данъкът ще бъде приложен чрез задаване на променливата величина \"резултат\" на 'Правилно' или 'Грешно'.\n"
 "\n"
-": параметър price_unit: float\n"
-": param количество: плувка\n"
-": param продукт: продукт.product recordset singleton или None\n"
-": Param партньор: res.partner записи singleton или None"
+": параметър price_unit: плаваща запетая\n"
+": параметър количество: плаваща запетая\n"
+": параметър продукт: product.product набор записи, единичен тон или нищо\n"
+": параметър контрагент: res.partner набор записи, единичен тон или нищо"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
 msgid "Python Code"
-msgstr "Python код"
+msgstr "Код Python"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -117,4 +115,4 @@ msgstr "Данък"
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr "Шаблон за Данъци"
+msgstr "Шаблони за данъци"

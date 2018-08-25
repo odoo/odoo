@@ -75,6 +75,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Уважаеми/а ${object.partner_id.name}\n"
+"% настройте access_action = object.with_context(force_website=True).get_access_action()\n"
+"% настройте doc_name = 'quotation' ако object.state in ('чернова', 'изпратена') също така 'потвърждение на поръчка'\n"
+"% настройте is_online = access_action и access_action['type'] == 'ir.actions.act_url'\n"
+"% настройте access_name = is_online и object.template_id и doc_name == 'оферта' и 'Приемете и платете %s онлайн' % doc_name или 'Изглед %s' % doc_name\n"
+"% настройте access_url = is_online и access_action['url'] или нищо\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Ето Вашето ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(с референция: ${object.origin} )\n"
+"% endif\n"
+"възлизащо на <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"от ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(или вижте прикрепен PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>В случай, че имате някакви въпроси, можете да отговорите на този имейл.</p>\n"
+"<p>С благодарност,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -289,7 +328,7 @@ msgstr "<strong>Общо</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>Ваша референция:</strong>"
+msgstr "<strong>Вашата референция:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -336,6 +375,8 @@ msgstr "Аванс: %s"
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
 msgstr ""
+"Разширено ценообразуване въз основа на формули (отстъпка, маржове, "
+"закръгляне)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -509,7 +550,7 @@ msgstr "Търговско вписване"
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr "Предприятия"
+msgstr "Компании"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_company_id
@@ -518,14 +559,14 @@ msgstr "Предприятия"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Възможности за конфигурации са налични в приложението с настройките."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -604,7 +645,7 @@ msgstr "Клиент"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_client_order_ref
 msgid "Customer Reference"
-msgstr "Клиентска референция"
+msgstr "Референция за клиент"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -852,8 +893,8 @@ msgid ""
 "Advanced pricing based on formula: You can have all the rights on pricelist"
 msgstr ""
 "Фиксирана цена: всички цени се определят от продажната цена на продуктите.\n"
-"Различни цени за клиент: можете да определите цена при закупуване на минимално количество в маркера продажби на продукти.\n"
-"Сложно ценообразуване базирано на формула: Можете да имате всички права върху ценовата листа."
+"Различни цени за клиент: можете да определите цена при закупуване на минимално количество в търговския маркер.\n"
+"Разширено ценообразуване въз основа на формула: Можете да имате всички права върху ценовата листа."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1082,7 +1123,7 @@ msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
 msgstr ""
-"Адресите за фактуриране и шипинг са винаги едни и същи (Пример: компании за "
+"Адресите за фактуриране и шипинг са винаги едни и същи (пример: компании за "
 "услуги)"
 
 #. module: sale
@@ -1325,7 +1366,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "Онлайн оферти"
 
 #. module: sale
 #. openerp-web
@@ -1371,7 +1412,7 @@ msgstr "Номер на поръчка"
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
-msgstr "Референция към поръчка"
+msgstr "Референция за поръчка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
@@ -1397,6 +1438,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Поръчано количество: фактура въз основа на количеството, поръчано от клиента.\n"
+"Доставено количество: фактурирано въз основа на количеството, доставено от доставчика (време или доставки)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1438,17 +1481,17 @@ msgstr "Друга информация"
 #: model:ir.model,name:sale.model_res_partner
 #: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr "Държава"
+msgstr "Държава на контрагент"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr "Държава"
+msgstr "Държава на контрагент"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1719,7 +1762,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr ""
-"Референция към документа, който създаде това запитване за поръчка за "
+"Референция за документа, който създаде това запитване за поръчка за "
 "продажби."
 
 #. module: sale
@@ -1965,6 +2008,8 @@ msgstr "Изпращане по ел. поща"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
+"Изпращайте оферти, за да могат клиентите Ви да одобряват & плащат отлайн "
+"(напреднали)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2041,6 +2086,8 @@ msgstr ""
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Някои продукти могат да се продават/купуват в различни мерни единици "
+"(разширени)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2204,6 +2251,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Този отчет извършва анализ на Вашите оферти и поръчки за продажба. Анализът "
+"проверява приходите Ви от продяжби и ги сортира според различни групови "
+"критерии (продавач, контрагент, продукт и т.н.) Използвайте този отчет, за "
+"да извършите анализ на продажбите, които все още не са фактурирани. Ако "
+"желаете да анализирате оборота си, трябва да изпълзвате отчета за анализ на "
+"фактурите в счетоводното приложение."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2214,6 +2267,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Този отчет извършва анализ на Вашите оферти. Анализът проверява приходите Ви"
+" от продяжби и ги сортира според различни групови критерии (продавач, "
+"контрагент, продукт и т.н.) Използвайте този отчет, за да извършите анализ "
+"на продажбите, които все още не са фактурирани. Ако желаете да анализирате "
+"оборота си, трябва да изпълзвате отчета за анализ на фактурите в "
+"счетоводното приложение."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2224,6 +2283,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Този отчет извършва анализ на Вашите поръчки за продажби. Анализът проверява"
+" приходите Ви от продяжби и ги сортира според различни групови критерии "
+"(продавач, контрагент, продукт и т.н.) Използвайте този отчет, за да "
+"извършите анализ на продажбите, които все още не са фактурирани. Ако желаете"
+" да анализирате оборота си, трябва да изпълзвате отчета за анализ на "
+"фактурите в счетоводното приложение."
 
 #. module: sale
 #: selection:product.template,track_service:0

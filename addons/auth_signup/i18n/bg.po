@@ -3,9 +3,9 @@
 # * auth_signup
 # 
 # Translators:
-# kalatchev <kalatchev@gmail.com>, 2016
+# kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kirily <kiril@teracomp.eu>, 2017
 msgid ""
 msgstr ""
@@ -62,14 +62,14 @@ msgstr ""
 "    </table>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <p>Уважаеми ${object.name},</p>\n"
-"    <p>Поискано е нулиране на паролата за профила на Odoo, свързан с този имейл.</p>\n"
-"    <p>Можете да смените вашата парола чрез следната връзка, която ще бъде активна през следващите 24 часа:</p>\n"
+"    <p>Уважаеми/а ${object.name},</p>\n"
+"    <p>Заявена е пренастройка на паролата за профила на Odoo, свързана с този имейл.</p>\n"
+"    <p>Можете да смените паролата си, като последвате следния линк, който ще бъде активен през следващите 24 часа:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Cмяна на парола</a>\n"
 "    </div>\n"
 "    <p>Ако не сте пожелали смяна на парола, може да игнорирате този имейл.</p>\n"
-"    <p>Най-добри пожелания,</p>\n"
+"    <p>С най-добри пожелания,</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "    ${user.signature | safe}\n"
@@ -122,7 +122,7 @@ msgstr ""
 "    </table>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"<p>Уважаеми ${object.name},</p>\n"
+"<p>Уважаеми/а ${object.name},</p>\n"
 "    <p>\n"
 "        Поканени сте да се присъедините към \"${object.company_id.name}\" за да получите достъп до доументите си в Odoo.\n"
 "    </p>\n"
@@ -130,7 +130,7 @@ msgstr ""
 "        За да приемете поканата, последвайте следния линк:\n"
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Приемане на поканата към \"${object.company_id.name}\"</a>\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Приемане на поканата в \"${object.company_id.name}\"</a>\n"
 "    </div>\n"
 "    <p>С най-добри пожелания,</p>\n"
 "</div>\n"
@@ -144,7 +144,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr "${object.company_id.name} покана за присъединяване към Odoo"
+msgstr "${object.company_id.name} покана за свързване с Odoo"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -152,8 +152,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"<strong>Този потребител е пожелал нулиране на паролата. Изпратен е имейл "
-"съдържаш следния линк:</strong>"
+"<strong>Този потребител е пожелал пренастройка на паролата. Изпратен е имейл"
+" съдържаш следния линк:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -167,19 +167,19 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr "Позволява външни потребители да се регистрират"
+msgstr "Позволява на външни потребители да се регистрират"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "Изпратен е имейл с упътвания за нулиране на паролата ви"
+msgstr "Изпратен е имейл с упътвания за пренастройка на паролата Ви"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "Друг потребител вече е регистрирал този имейл адрес."
+msgstr "Друг потребител вече се е регистрирал с този имейл адрес."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
@@ -191,23 +191,23 @@ msgstr "Неуспешна идентификация."
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
-msgstr "Обратно към вход"
+msgstr "Обратно към влизане в системата"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr "Неможе да се изпрати имейл: потребител %s няма имейл адрес."
+msgstr "Не може да се изпрати имейл: потребител %s няма имейл адрес."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr "Потвърждаване"
+msgstr "Потвърдете"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "Потвърдете паролата"
+msgstr "Потвърдете парола"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -218,30 +218,30 @@ msgstr "Потвърден"
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
-msgstr "Не може да се направи нова сметка."
+msgstr "Не може да се създаде нова сметка."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:63
 #, python-format
 msgid "Could not reset your password"
-msgstr "Вашата парола не може да се нулира"
+msgstr "Вашата парола не може да се пренастрои"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "Enable password reset from Login page"
-msgstr "Разрешаване нулиране на паролата от страницата за влизане"
+msgstr "Разрешаване пренастройка на паролата от страницата за влизане"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
-"Ако не е отбелязано само поканените потребители могат да се регистрират."
+"Ако не е отметнато, могат да се регистрират само поканени потребители ."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
 #, python-format
 msgid "Invalid signup token"
-msgstr "Грешен токен за регистриране"
+msgstr "Грешно означение за регистриране"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -251,7 +251,7 @@ msgstr "Никога не е свързван"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -261,23 +261,23 @@ msgstr "Парола"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Нулиране на паролата"
+msgstr "Пренастройка на парола"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr "Нулиране на паролата"
+msgstr "Пренастройте парола"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:108
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr "Нулиране на паролата: грешно потребителско име или имейл"
+msgstr "Пренастройте парола: грешно потребителско име или имейл"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
-msgstr "Изпращане на инструкции за нулиране на паролата"
+msgstr "Изпратете инструкции за пренастройка на парола"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -288,19 +288,19 @@ msgstr "Изпращане на имейл за покана"
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr "Регистриране"
+msgstr "Регистрирайте се"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr "Тип на токена за реистриране"
+msgstr "Вид на означението за реистриране"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr "Токена за регистриране е валиден"
+msgstr "Означението за регистриране е валидно"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
@@ -312,18 +312,18 @@ msgstr "URL за регистриране"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup expiration"
-msgstr "Изтичане на регистрацията"
+msgstr "Регистрирайте изтичане"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup token"
-msgstr "Токен за регистриране"
+msgstr "Регистрирайте означение"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
-msgstr "Състояние"
+msgstr "Статус"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
@@ -333,14 +333,14 @@ msgstr "Шаблон за нови потребители създадени ч�
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr "Пълен URL за достъп до документа през уебсайта."
+msgstr "Пълният URL за достъп до документа през уебсайта."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
 msgid "This allows users to trigger a password reset from the Login page."
 msgstr ""
-"Позволява на потребителите да превключват ресет на паролата от логин "
-"страницата"
+"Позволява на потребителите да стартират пренастройка на парола от страницата"
+" за регистрация"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -350,37 +350,37 @@ msgstr "Потребители"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr "Видим в уеб сайта"
+msgstr "Видим в уебсайт"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr "Пълно описание на уебсайт на партньора"
+msgstr "Пълно описание на уебсайт на контрагент"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr "Кратко описание на уебсайт на партньора"
+msgstr "Кратко описание на уебсайт на контрагент"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr "URL на Уебсайта"
+msgstr "URL на уебсайт"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr "Уебсайт Мета описание"
+msgstr "Мета описание на уебсайт"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Уебсайт Мета ключови думи"
+msgstr "Мета ключови думи на уебсайт"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr "Уебсайт Мета заглавие"
+msgstr "Мета заглавие на уебсайт"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -391,7 +391,7 @@ msgstr "Вашият имейл"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr "Вашето Име"
+msgstr "Вашето име"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -401,4 +401,4 @@ msgstr "base.config.settings"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "нап. Иван Иванов"
+msgstr "напр. Иван Петров"
