@@ -585,6 +585,10 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"Theo mặc định, giá nhà cung cấp có thể được đặt theo cách thủ công trong "
+"biểu mẫu chi tiết sản phẩm. Nếu nhà cung cấp của bạn cung cấp cho bạn các "
+"tệp bảng giá, tùy chọn này cho phép bạn dễ dàng nhập chúng vào hệ thống từ "
+"trình đơn ‘Mua hàng> Bảng giá nhà cung cấp’."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -599,6 +603,11 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Các cuộc gọi đấu thầu được sử dụng khi bạn muốn tạo các yêu cầu trích dẫn "
+"cho một số nhà cung cấp cho một tập hợp các sản phẩm nhất định. Bạn có thể "
+"định cấu hình cho mỗi sản phẩm nếu bạn trực tiếp thực hiện Yêu cầu báo giá "
+"cho một nhà cung cấp hoặc nếu bạn muốn một cuộc gọi cho người đấu giá để so "
+"sánh phiếu mua hàng từ một số nhà cung cấp."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:76
@@ -842,7 +851,7 @@ msgstr "Địa chỉ Drop Ship"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Vận chuyển giao hàng"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -855,6 +864,8 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Trợ giúp mã hóa. Khi được chọn, các dòng đơn đặt hàng được liên kết sẽ được "
+"thêm vào hóa đơn của nhà cung cấp. Có thể chọn một số PO."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -929,6 +940,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"Nếu được bật, kích hoạt khớp 3 chiều trên hóa đơn của nhà cung cấp: các mặt "
+"hàng phải được nhận để thanh toán hóa đơn"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1049,13 +1062,15 @@ msgstr "Đã khoá"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Logistics"
-msgstr ""
+msgstr "Tuyến hậu cần"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
+"Đảm bảo bạn chỉ thanh toán hóa đơn mà bạn đã nhận được hàng mà bạn đã đặt "
+"hàng"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -1192,6 +1207,8 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
+"Trường liên quan không được lưu trữ để cho phép người dùng cổng thông tin "
+"xem hình ảnh của sản phẩm mà anh ta đã đặt hàng"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1288,7 +1305,7 @@ msgstr "Đơn hàng"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
@@ -1630,7 +1647,7 @@ msgstr "Y/c báo giá đã được gửi"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1681,6 +1698,7 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Tham chiếu tài liệu đã tạo yêu cầu đơn đặt hàng này (ví dụ: đơn đặt hàng)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1916,6 +1934,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"Số lượng trên đơn đặt hàng của bạn cho biết ít hơn số tiền được lập hoá đơn."
+" Bạn nên yêu cầu hoàn lại tiền."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1975,6 +1995,12 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Điều này cho biết thêm một tuyến đường dropshipping để áp dụng trên các sản "
+"phẩm để yêu cầu các nhà cung cấp của bạn cung cấp cho khách hàng của bạn. "
+"Một sản phẩm để dropship sẽ tạo ra một yêu cầu mua hàng để báo giá khi đơn "
+"hàng đã được xác nhận. Đây là một luồng theo yêu cầu. Địa chỉ giao hàng được"
+" yêu cầu sẽ là địa chỉ giao hàng của khách hàng chứ không phải là nhà kho "
+"của bạn."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
