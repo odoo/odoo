@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * website_livechat
 # 
-# Translators:
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# Akram Alfusayal <akram_ma@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,24 +16,41 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Live Chat</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr "<span>قناة الدردشة المباشرة</span>"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
-msgstr "القناة"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
-msgstr "وصف القناة المعروضة على صفحة موقع الويب"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live Chat"
-msgstr "المحادثة الفورية"
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_livechat
+#: model:website.menu,name:website_livechat.menu_livechat
+msgid "Live Support"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -49,69 +60,89 @@ msgstr ""
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr "قناة الدردشة المباشرة"
-
-#. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
-msgstr "دعم الدردشة المباشرة"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
-msgstr "قنوات دعم الدردشة المباشرة"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Neutral face"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Sad face"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Statistics"
-msgstr "الإحصائيات"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "الـ"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The Team"
-msgstr "الفريق"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
-msgstr "لا توجد قناة دردشة حية عامة للعرض."
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "This is no rating for this channel for now."
-msgstr "لا يوجد تقييم لهذه القناة في الوقت الحالي."
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "الموقع الإلكتروني"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
 msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr "موقع قناة الدردشة الحية"
+msgstr ""
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
-msgstr "وصف الموقع"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr "آخر الاصداء"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"
+msgstr ""

@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * website_links
 # 
-# Translators:
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,12 +44,12 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
-msgstr "<strong>حملة</strong>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>متوسط </strong>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
@@ -70,24 +64,25 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Source</strong>"
-msgstr "<strong>المصدر</strong>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr "<strong>المتعقب لينك</strong>"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "All Time"
-msgstr "كل الوقت"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the context of your link. It might be an "
-"event you want to promote or a special promotion.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -95,58 +90,74 @@ msgstr ""
 #: code:addons/website_links/static/src/xml/recent_link.xml:37
 #, python-format
 msgid "Copy"
-msgstr "نسخ"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:358
+#: code:addons/website_links/static/src/xml/recent_link.xml:26
+#: model:ir.ui.view,arch_db:website_links.graphs
+#, python-format
+msgid "Edit code"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/js/website_links.js:356
 #, python-format
 msgid "Generating link..."
-msgstr "توليد صلة ..."
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
-msgstr "الحصول على وصلة تعقب"
+msgstr ""
+
+#. module: website_links
+#. openerp-web
+#: code:addons/website_links/static/src/xml/recent_link.xml:13
+#, python-format
+msgid "Icon"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
-msgstr "آخر شهر"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Week"
-msgstr "الاسبوع الماضى"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "رابط متتبع"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the medium used to share your link. It "
-"might be an email, or a Facebook Ads for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Most Clicked"
-msgstr "الأكثر نقرا"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
-msgstr "الأحدث"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Recently Used"
-msgstr "مستخدم حديثا"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -159,21 +170,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
 "Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
-"placement=\"top\" title=\"Defines the source from which your traffic will "
-"come from, Facebook or Twitter for instance.\"/>"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "Statistics"
-msgstr "الإحصائيات"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:38
 #, python-format
 msgid "Stats"
-msgstr "الاحصائيات"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
@@ -194,33 +206,33 @@ msgstr ""
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "URL"
-msgstr "رابط ويب"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:225
 #, python-format
 msgid "Unable to get recent links"
-msgstr "غير قادر على الحصول على وصلات الأخيرة"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links_charts.js:99
 #, python-format
 msgid "Undefined"
-msgstr "غير محدد"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/js/website_links.js:248
 #, python-format
 msgid "You don't have any recent links."
-msgstr "لم يكن لديك أي وصلات الأخيرة."
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr "الروابط تتبع الخاص بك"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
@@ -228,37 +240,37 @@ msgstr "الروابط تتبع الخاص بك"
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "cancel"
-msgstr "إلغاء"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
 #: code:addons/website_links/static/src/xml/recent_link.xml:8
 #, python-format
 msgid "clicks"
-msgstr "نقرات"
+msgstr ""
 
 #. module: website_links
 #: model:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
-msgstr "نسخ"
+msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:268
+#: code:addons/website_links/static/src/js/website_links.js:266
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:265
+#: code:addons/website_links/static/src/js/website_links.js:263
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr ""
 
 #. module: website_links
 #. openerp-web
-#: code:addons/website_links/static/src/js/website_links.js:271
+#: code:addons/website_links/static/src/js/website_links.js:269
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
 msgstr ""
@@ -282,4 +294,4 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "or"
-msgstr "أو"
+msgstr ""
