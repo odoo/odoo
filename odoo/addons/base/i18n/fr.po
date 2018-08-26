@@ -35,7 +35,7 @@
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Guewen Baconnier <guewen.baconnier@camptocamp.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Denis Ledoux <dle@odoo.com>, 2017
 # timo bellanger <bellanger.timo@gmail.com>, 2017
 # Hubert TETARD <htetard@apik-conseils.com>, 2017
@@ -8746,6 +8746,7 @@ msgstr "Compte bancaire"
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Type de compte banque: normal ou IBAN. Déterminé par le numéro de compte."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__bank_ids
@@ -15932,7 +15933,7 @@ msgstr "Modèle"
 #: code:addons/base/models/ir_model.py:489
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Le modèle %s n'existe pas"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:643
@@ -22518,7 +22519,7 @@ msgstr "Expéditions d'USPS (United States Postal Service)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
 msgid "Units of measure"
-msgstr ""
+msgstr "Unités de mesure"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -22780,7 +22781,7 @@ msgstr "Identifiant"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "User Type"
-msgstr ""
+msgstr "Type d'utilisateur"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
@@ -22790,12 +22791,12 @@ msgstr "Entrées du journal utilisateur"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__group_base_user
 msgid "User type"
-msgstr ""
+msgstr "Type d'utilisateur"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr ""
+msgstr "Types d'utilisateur"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_default_menu_action
@@ -23598,7 +23599,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "You can archive the contact"
-msgstr ""
+msgstr "Vous pouvez archiver le contact"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__type
@@ -23613,7 +23614,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:84
 #, python-format
 msgid "You can not create recursive tags."
-msgstr ""
+msgstr "Vous ne pouvez pas créer d'étiquettes récursives."
 
 #. module: base
 #: sql_constraint:res.users:0
@@ -23655,7 +23656,7 @@ msgstr "Vous ne pouvez pas créer de hiérarchie de partenaires récursive."
 #: code:addons/base/models/res_company.py:245
 #, python-format
 msgid "You cannot create recursive companies."
-msgstr ""
+msgstr "Vous ne pouvez pas créer de sociétés récursives."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:356
@@ -23691,6 +23692,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
 msgstr ""
+"Vous ne pouvez pas supprimer la langue définie comme langue préférée par un "
+"utilisateur."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:275
@@ -23702,7 +23705,7 @@ msgstr "Vous ne pouvez pas fusionner un contact avec l'un de ses parents."
 #: code:addons/base/wizard/base_partner_merge.py:374
 #, python-format
 msgid "You have to specify a filter for your selection."
-msgstr ""
+msgstr "Vous devez indiquer un filtre pour votre sélectio"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -23757,6 +23760,9 @@ msgid ""
 "instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
 "should do the trick."
 msgstr ""
+"Votre serveur Odoo ne prend pas en charge SMTP-sur-SSL. Vous pouvez utiliser"
+" STARTTLS à la place. Si SSL est requis, une mise à jour à Python 2.6 côté "
+"serveur devrait faire l'affaire."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:499
@@ -23982,7 +23988,7 @@ msgstr "Livraison eCommerce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_link_tracker
 msgid "eCommerce Link Tracker"
-msgstr ""
+msgstr "Surveillance des liens du magasin en ligne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_options
@@ -24394,7 +24400,7 @@ msgstr "sélection"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
-msgstr ""
+msgstr "social_media"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -24480,7 +24486,7 @@ msgstr "vrai"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web_dashboard"
-msgstr ""
+msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
