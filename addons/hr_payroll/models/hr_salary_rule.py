@@ -198,20 +198,20 @@ class HrSalaryRule(models.Model):
             try:
                 return self.amount_fix, float(safe_eval(self.quantity, localdict)), 100.0
             except Exception as e:
-                raise UserError(_('Wrong quantity defined for salary rule %s (%s).\nERROR: %s') % (self.name, self.code, e))
+                raise UserError(_('Wrong quantity defined for salary rule %s (%s).'+'\nERROR: %s') % (self.name, self.code, e))
         elif self.amount_select == 'percentage':
             try:
                 return (float(safe_eval(self.amount_percentage_base, localdict)),
                         float(safe_eval(self.quantity, localdict)),
                         self.amount_percentage)
             except Exception as e:
-                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).\nERROR: %s') % (self.name, self.code, e))
+                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).'+'\nERROR: %s') % (self.name, self.code, e))
         else:
             try:
                 safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except Exception as e:
-                raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (self.name, self.code, e))
+                raise UserError(_('Wrong python code defined for salary rule %s (%s).'+'\nERROR: %s') % (self.name, self.code, e))
 
     @api.multi
     def _satisfy_condition(self, localdict):
