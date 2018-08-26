@@ -16,13 +16,14 @@
 # Danilo Rodrigues, 2017
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:11+0000\n"
 "PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Clemilton Clementino <clemylton@hotmail.com>, 2018\n"
+"Last-Translator: Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1984,17 +1985,17 @@ msgstr "Número de ações"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr ""
+msgstr "Número de Ordens de Produção Atrasadas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr ""
+msgstr "Número de Ordens de Produção Aguardando"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_todo
 msgid "Number of Manufacturing Orders to Process"
-msgstr ""
+msgstr "Número de Ordens de Produção a Fazer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
@@ -3711,7 +3712,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr ""
+msgstr "Desempenho das Ordens de Serviço"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -3727,6 +3728,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Ordens de Serviço são operações processadas em um Centro de trabalho para "
+"finalizar uma Ordem de Produção. Ordens de Serviço são geradas através de "
+"Ordens de Produção e baseadas em suas Rotas definidas."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -3737,12 +3741,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:608
 #, python-format
 msgid "Work order %s is still running"
-msgstr ""
+msgstr "Ordem de serviço %s está em andamento"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr ""
+"Ordem de serviço em progresso. Clique para bloquear o centro de trabalho."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3818,12 +3823,14 @@ msgstr ""
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr ""
+"Você não pode cancelar a ordem de produção, uma ordem de serviço ainda está "
+"em andamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:250
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "Você não pode alterar uma ordem de serviço já concluída."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:594
@@ -4046,7 +4053,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr ""
+msgstr "ordens de serviço"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet

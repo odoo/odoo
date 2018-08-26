@@ -95,7 +95,7 @@ msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<div style=\"margin:auto;width:100%;\">\n"
 "                    <img src=\"/web/image/res.company/${user.company_id.id}/logo\" style=\"height: auto; width: 80px; margin-top:30px;\" alt=\"${user.company_id.name}\"/>\n"
-"                    <h1 style=\"color:#A9A9A9;\">ER IS ZIT NOG IETS IN UW WINKELWAGEN.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">ER ZIT NOG IETS IN UW WINKELWAGEN.</h1>\n"
 "                    <p>Wilt u de bestelling afmaken?</p><br/><br/>\n"
 "                    % if object.order_line:\n"
 "                    % for line in object.order_line:\n"
@@ -119,7 +119,7 @@ msgstr ""
 "                    <br/><br/>\n"
 "                    <center>\n"
 "                        <a href=\"/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Maak bestelling af</a><br/><br/><br/>\n"
-"                        <p><b>Bedankt voor het winkelen met ${user.company_id.name}!</b></p>\n"
+"                        <p><b>Bedankt voor het winkelen bij ${user.company_id.name}!</b></p>\n"
 "                    </center>\n"
 "                </div>            "
 
@@ -1179,6 +1179,8 @@ msgstr "Uitgifte van facturen aan klanten"
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
+"Het is verboden om een verkooporder te wijzigen die zich niet in de concept "
+"fase bevind."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update

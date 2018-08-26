@@ -51,7 +51,7 @@
 # Henri MARES <henri.mares@aliceadsl.fr>, 2017
 # Paul-Hervé Meyer <paulherve.meyer@mail.novancia.fr>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
@@ -1178,7 +1178,7 @@ msgstr ""
 #: model:ir.cron,cron_name:account.ir_cron_reverse_entry
 #: model:ir.cron,name:account.ir_cron_reverse_entry
 msgid "Account; Reverse entries"
-msgstr ""
+msgstr "Comptabilité; Annulation d'écritures"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_account_menu
@@ -1594,12 +1594,14 @@ msgstr "Autoriser la configuration des taxes via la comptabilité de caisse"
 #. module: account
 #: model:res.groups,name:account.group_fiscal_year
 msgid "Allow to define fiscal years of more or less than a year"
-msgstr ""
+msgstr "Permet de définir des années fiscales de plus de 12 mois"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
+"Permet de tagger des écritures analytiques et gérer la distribution sur "
+"plusieurs comptes analytiques"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1653,7 +1655,7 @@ msgstr "Devise"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__amount_rounding
 msgid "Amount Delta"
-msgstr ""
+msgstr "Différence de montant"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__residual
@@ -1780,7 +1782,7 @@ msgstr "Compte analytique"
 #: model:ir.ui.menu,name:account.account_analytic_group_menu
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "Groupe de comptes analytiques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_accounting
@@ -1953,12 +1955,12 @@ msgstr "août"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Complète automatiquement"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr ""
+msgstr "Complète automatiquement basé sur les anciennes factures"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2025,7 +2027,7 @@ msgstr "Prix moyen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__user_currency_price_average
 msgid "Average Price in Currency"
-msgstr ""
+msgstr "Montant moyen en devise"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:226
@@ -2208,13 +2210,14 @@ msgstr "Relevés bancaires"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_account_id
 msgid "Bank account that was used in this transaction."
-msgstr ""
+msgstr "Compte banque utilisé dans cette transaction"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
+"Type de compte banque: normal ou IBAN. Déterminé par le numéro de compte."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -2263,7 +2266,7 @@ msgstr "Montant de base"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "Base de la taxe perçue"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2342,7 +2345,7 @@ msgstr "Factures à payer"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr ""
+msgstr "Factures à valider"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:181
