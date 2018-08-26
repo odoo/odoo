@@ -805,6 +805,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Thêm và tùy chỉnh hoạt động tuyến đường để xử lý các chuyển động sản phẩm trong (các) nhà kho của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> cổ phiếu cho các sản phẩm đến, chọn> gói> tàu cho sản phẩm đi.\n"
+"  Bạn cũng có thể đặt chiến lược đặt cược vào vị trí nhà kho để gửi sản phẩm đến các vị trí con cụ thể ngay lập tức (ví dụ: thùng cụ thể, giá đỡ)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -815,6 +817,11 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Thêm và tùy chỉnh hoạt động tuyến đường để xử lý các chuyển động sản phẩm "
+"trong (các) nhà kho của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> cổ phiếu "
+"cho các sản phẩm đến, chọn> gói> tàu cho sản phẩm đi. Bạn cũng có thể đặt "
+"chiến lược đặt cược vào vị trí nhà kho để gửi sản phẩm đến các vị trí con cụ"
+" thể ngay lập tức (ví dụ: thùng cụ thể, giá đỡ)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -1867,7 +1874,7 @@ msgstr "GIAO HÀNG KHÔNG THANH TOÁN"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "DELIVERED EX QUAY"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
@@ -2326,7 +2333,7 @@ msgstr "Dịch chuyển dự thảo"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "EX WORKS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2568,7 +2575,7 @@ msgstr "Cổng B"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Vendors"
-msgstr ""
+msgstr "Nhà cung cấp IT chung"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2586,6 +2593,8 @@ msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
 msgstr ""
+"Cung cấp cho các thể loại chuyên ngành hơn, một ưu tiên cao hơn để có chúng "
+"ở đầu danh sách."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2629,7 +2638,7 @@ msgstr "Nhóm theo..."
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_9
 msgid "HDD SH-1"
-msgstr ""
+msgstr "HDD SH-1"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
@@ -2757,6 +2766,11 @@ msgid ""
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
 msgstr ""
+"Kem có thể được sản xuất hàng loạt và do đó có sẵn rộng rãi trong các bộ "
+"phận phát triển của thế giới. Kem có thể được mua trong thùng lớn (thùng và "
+"squrounds) từ siêu thị và cửa hàng tạp hóa, với số lượng nhỏ hơn từ các cửa "
+"hàng kem, cửa hàng tiện lợi và thanh sữa và trong các phần ăn cá nhân từ xe "
+"nhỏ hoặc xe tải tại các sự kiện công cộng."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -2774,6 +2788,8 @@ msgid ""
 "If checked, this shows the packs to be moved as a whole in the Operations "
 "tab all the time, even if there was no entire pack reserved."
 msgstr ""
+"Nếu được chọn, điều này cho thấy các gói được di chuyển như một toàn bộ "
+"trong tab Hoạt động mọi lúc, ngay cả khi không có toàn bộ gói được xí trước."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_propagate
@@ -2813,6 +2829,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Nếu trường kích hoạt được đặt thành Sai, nó sẽ cho phép bạn ẩn điểm đặt hàng"
+" mà không xóa nó."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_active
@@ -3374,7 +3392,7 @@ msgstr ""
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr ""
+msgstr "Nó không thể xí trước nhiều sản phẩm %s hơn bạn có trong kho."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:256
@@ -3382,6 +3400,7 @@ msgstr ""
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
+"Bạn không thể thôi xí được nhiều sản phẩm %s hơn số lượng bạn có trong kho."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3405,7 +3424,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "Nó chỉ định các thuộc tính của bao bì như loại, số lượng bao bì, v.v."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_type
@@ -3583,6 +3602,7 @@ msgstr "Để trống"
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr ""
+"Để trống trường này nếu tuyến đường này được chia sẻ giữa tất cả các công ty"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
@@ -3701,7 +3721,7 @@ msgstr "Khoá"
 #: model:ir.ui.view,arch_db:stock.view_location_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Logistics"
-msgstr ""
+msgstr "Tuyến hậu cần"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
@@ -4325,6 +4345,8 @@ msgid ""
 "Operation Type determines the way the picking should be shown in the view, "
 "reports, ..."
 msgstr ""
+"Loại hoạt động xác định cách chọn sẽ được hiển thị trong chế độ xem, báo "
+"cáo, ..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
@@ -5070,6 +5092,8 @@ msgid ""
 "Product this lot/serial number contains. You cannot change it anymore if it "
 "has already been moved."
 msgstr ""
+"Sản phẩm lô hàng/số sơ-ri này chứa. Bạn không thể thay đổi nó nữa nếu nó đã "
+"được di chuyển."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_tracking
@@ -6110,18 +6134,19 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "Chỉ định Gói để tập trung kho của bạn vào một Gói cụ thể."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
+"Chỉ định Danh mục sản phẩm để tập trung kho của bạn vào một Danh mục cụ thể."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "Chỉ định Sản phẩm để tập trung kho của bạn vào một Sản phẩm cụ thể."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6277,6 +6302,8 @@ msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
 msgstr ""
+"Lưu trữ sản phẩm ở các vị trí cụ thể trong kho của bạn (ví dụ: thùng, giá "
+"đỡ) và theo dõi tồn kho tương ứng."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -6393,6 +6420,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"Giá trị 'Thao tác thủ công' sẽ tạo ra dịch chuyển kho sau giá trị hiện tại. "
+"Với 'Tự động không thêm các bước', vị trí được thay thế trong bước di chuyển"
+" ban đầu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6456,7 +6486,7 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "Kho dự trữ mặc định phải khác với kho của chính nó!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_pull_ids
@@ -6646,6 +6676,9 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
+"Đây là vị trí đích mặc định khi bạn tạo lựa chọn thủ công với loại thao tác "
+"này. Tuy nhiên, có thể thay đổi nó hoặc các tuyến đường đặt một vị trí khác."
+" Nếu nó trống, nó sẽ kiểm tra vị trí của khách hàng trên đối tác."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -7407,6 +7440,10 @@ msgid ""
 " can be overridden by the routes on the Product/Product Categories or by the"
 " Preferred Routes on the Procurement"
 msgstr ""
+"Khi một nhà kho được chọn cho tuyến đường này, tuyến đường này sẽ được xem "
+"là tuyến đường mặc định khi các sản phẩm đi qua nhà kho này. Hành vi này có "
+"thể bị ghi đè bởi các tuyến đường trên Danh mục sản phẩm/sản phẩm hoặc bằng "
+"các Tuyến đường ưa thích trên Mua sắm"
 
 #. module: stock
 #: selection:stock.picking,move_type:0

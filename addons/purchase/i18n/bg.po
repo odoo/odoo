@@ -507,7 +507,7 @@ msgstr "Не може да изтриете ред който е в статус
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr ""
+msgstr "Натиснете този бутон, за да регистрирате фактура за покупка"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -680,7 +680,7 @@ msgstr "Описание"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Description for Vendors"
-msgstr ""
+msgstr "Описание за доставчици"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
@@ -735,6 +735,9 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Помощ при кодиране. Когато са избрани, свързаните редове на поръчки за "
+"покупки се добавят към фактурата за покупка. Могат да се изберат няколко "
+"центрове за продажба."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -938,7 +941,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
 msgid "Manage Vendor Price"
-msgstr ""
+msgstr "Управлявайте цена на доставчик"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1193,7 +1196,7 @@ msgstr "Сметка Разлика в цената"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Vendor"
-msgstr ""
+msgstr "Цена за доставчик"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1455,6 +1458,9 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Дайте адрес, ако желаете да доставяте директно от доставчика към клиента. В "
+"противен случай, дръжте мястото празно, за да доставяте на собствената си "
+"компания."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1559,6 +1565,10 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Справка за поръчката за продажба или офертата, изпратена от доставчика. "
+"Използва се, за да извършва подбора, когато получавате продуктите, тъй като "
+"тази справка обикновено е изписана на поръчката за доставка, изпратена от "
+"Вашия доставчик."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1774,6 +1784,9 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"Продуктовата форма съдържа подробна информация, която да подобри\n"
+"            процеса по купуване: цени, логистика на доставките, дчетоводни данни,\n"
+"            налични доставчици и т.н."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1801,6 +1814,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Заявката за оферта е първата стъпка от процеса по осъществяване на покупки. Веднъж\n"
+"                    конвертирана в поръчка за покупка, ще можете да контролирате касовата бележка\n"
+"                    на продуктите и поръчката за покупка."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:878
@@ -1849,6 +1865,8 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Тази валута ще бъде изполвана вместо валутата по подразбиране - за покупки "
+"от настоящия контрагент"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_default_purchase_method
@@ -1867,13 +1885,13 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:203
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Фактурата за покупка е създадена от: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:217
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Тази фактура за покупка е променена от: %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1942,6 +1960,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Не можете да отмените тази поръчка за покупка. Трябва първо да отмените "
+"свързаните с нея фактури за покупка."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1991,6 +2011,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Използвайте това меню, за да контролирате фактурите, които трябва да бъдат получени от Вашите\n"
+"            доставчици. Когато регистрирате нова фактура за покупка, настройте поръчката за покупка,\n"
+"            а Odoo ще попълни фактурата за покупка автоматично според поръчаните\n"
+"            или поручените количества."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2000,6 +2024,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Използвайте това меню, за да търсите в рамките на поръчките си за покупки по\n"
+"                справки, доставчик, продукти и т.н. За всяка поръчка за покупка,\n"
+"                можете да проследите свързаното с нея обсъждане с доставчика и да контролирате\n"
+"                както получените продукти, така и фактурите за покупка."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2122,6 +2150,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"Можете да управлявате фактурата от доставчика си според това,\n"
+"            което сте купили (услуги) или получили (продукти)."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2143,7 +2173,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:395
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Трябва да настроите местоположение на доставчик за този партньор %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
