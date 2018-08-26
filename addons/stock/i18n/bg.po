@@ -549,6 +549,8 @@ msgid ""
 "<strong>No address defined on the supplier partner:</strong> you have to "
 "complete an address for the default supplier for the product concerned."
 msgstr ""
+"<strong>Не е определен адрес за този доставчик контрагент:</strong> трябва "
+"да попълните адрес за доставчик по подразбиране за съответния продукт."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1923,6 +1925,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
+"Определете местонахождението си, за да отразите складовата си структура и\n"
+"            организация. Odoo е способна да управлява физически местонахождения\n"
+"            (складове, стелажи, контейнери и т.н.), партньорски местоположения (клиенти,\n"
+"            доставчици) и виртуални местоположения, които се явяват дубликат на\n"
+"            стоковите операции като производствените поръчки\n"
+"            потребление, наличност и т.н."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -2003,7 +2011,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Deployment"
-msgstr ""
+msgstr "Внедряване"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
@@ -2464,7 +2472,7 @@ msgstr "Врата B"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Vendors"
-msgstr ""
+msgstr "Общи доставчици на информационни технологии"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2802,6 +2810,8 @@ msgid ""
 "If you have less than 50 vendors, we recommend you\n"
 "                                        to create them manually."
 msgstr ""
+"Ако разполагате с по-малко от 50 доставчика, Ви препоръчваме\n"
+"                                        да ги създадете механично."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2833,7 +2843,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
+msgstr "Въвеждайте, като използвате горния ляв бутон в"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
@@ -4034,6 +4044,8 @@ msgid ""
 "Number of days after the orderpoint is triggered to receive the products or "
 "to order to the vendor"
 msgstr ""
+"Брой дни след задействането на поръчката - да получавате продукти или да "
+"поръчвате на доставчика"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_delay
@@ -4052,6 +4064,8 @@ msgid ""
 "Odoo handles <strong>advanced push/pull routes configuration</strong>, for "
 "example:"
 msgstr ""
+"Odoo борави с<strong>разширена конфигурация на маршрути за от типа "
+"натиснете/дръпнете</strong>, например:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4072,6 +4086,8 @@ msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
 msgstr ""
+"Odoo е способна да стартира разширено проследяване, като използва продуктови партиди и серийни\n"
+"                        номера, обикновено идентифицирани посредством баркодове, залепени на продуктите."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5437,7 +5453,7 @@ msgstr "Върнат пикинг"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "Обърнете прехвърлянето"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
@@ -5747,6 +5763,9 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Настройва метоположение, ако произвеждате на определено място. Това може да "
+"е местоположение на контрагент, в случай че възлагате подизпълнители за "
+"производствените операции."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -6643,6 +6662,9 @@ msgid ""
 "products may be sold/purchased in different unit of measures (advanced)</i> "
 "in the"
 msgstr ""
+"За да използвате по-точни мерни единици като фунтове или килограми, "
+"активирайте<i> Някои продукти могат да се продават/купуват в различни мерни "
+"единици (разширени)</i> в"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6719,7 +6741,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_id
 msgid "Transfer Reference"
-msgstr ""
+msgstr "Референция за трансфер"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -6821,6 +6843,8 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
 msgstr ""
+"В случай че не стартирате нов бизнес, вероятно разполагате със списък с "
+"доставчици, който желаете да въведете."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6951,12 +6975,12 @@ msgstr "Доставчик"
 #: model:ir.model.fields,field_description:stock.field_res_users_property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
-msgstr ""
+msgstr "Местоположение на доставчик"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr ""
+msgstr "Местоположения на доставчик"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -7538,7 +7562,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Your Vendors"
-msgstr ""
+msgstr "Вашите доставчици"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7650,7 +7674,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "from your vendor with the products and the requested quantities"
-msgstr ""
+msgstr "от Вашия доставчик с продуктите и заявените количества"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_3

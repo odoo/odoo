@@ -83,7 +83,7 @@ msgstr "Chân bàn 18″ x 2½″"
 #: model:product.product,description:mrp.product_product_laptop_charger
 #: model:product.template,description:mrp.product_product_laptop_charger_product_template
 msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
-msgstr ""
+msgstr "Bộ chuyển đổi loại pin 19v, 5,5 x 2,5 mm (bao gồm dây nguồn)"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:293
@@ -286,7 +286,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_access_token
 msgid "Access Token"
-msgstr ""
+msgstr "Token truy cập"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -649,7 +649,7 @@ msgstr "Kiểm tra tính khả dụng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: mrp
 #. openerp-web
@@ -773,7 +773,7 @@ msgstr "Chi tiết đã dùng cho tháo dỡ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr "Lệnh tiêu thụ Tháo dỡ"
+msgstr "Đơn hàng tháo gỡ đã dùng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
@@ -1500,6 +1500,8 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
+"Các dòng cần phải được xóa, nhưng không được vì bạn vẫn có một số lượng để "
+"tiêu thụ trong chúng."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1932,7 +1934,7 @@ msgstr "Mục tiêu OEE"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee_target
 msgid "OEE Target in percentage"
-msgstr "Mục tiêu Hiệu suất Thiết bị Toàn phần (OEE) theo phần trăm"
+msgstr "Mục tiêu Hiệu suất theo phần trăm"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -2016,19 +2018,18 @@ msgstr "Số lượng Sản xuất Ban đầu"
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr "Hiệu suất Thiết bị Toàn phần"
+msgstr "Hiệu quả thiết bị tổng thể"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr "Hiệu suất Thiết bị Toàn phần, dựa trên tháng trước"
+msgstr "Hiệu quả thiết bị tổng thể, dựa trên tháng trước"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time."
-msgstr ""
-"Hiệu suất Thiết bị Toàn phần: không hoạt động giờ nào hoặc bị phong toả."
+msgstr "Hiệu quả thiết bị tổng thể: không hoạt động giờ nào hoặc bị dừng."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
@@ -2313,17 +2314,17 @@ msgstr "Sản xuất"
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Productive"
-msgstr "Công suất đầy đủ"
+msgstr "Năng suất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productive_time
 msgid "Productive Time"
-msgstr "Thời gian Hữu ích"
+msgstr "Thời gian sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_productive_time
 msgid "Productive hour(s) over the last month"
-msgstr "Số giờ hữu ích (productive) của tháng trước"
+msgstr "Số giờ sản xuất của tháng trước"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_loss_action
@@ -2654,7 +2655,7 @@ msgstr "Di chuyển phế liệu"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 msgid "Scrap Orders"
-msgstr "Lệnh tháo dỡ phế liệu"
+msgstr "Đơn hàng phế liệu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_scrap_ids
@@ -3942,7 +3943,7 @@ msgstr "stock.traceability.report"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "stock.warn.insufficient.qty.unbuild"
-msgstr ""
+msgstr "stock.warn.insufficient.qty.unbuild"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
