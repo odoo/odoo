@@ -454,7 +454,7 @@
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"/>
-                                            <t t-esc="slide.likes"/>
+                                            <span class="o_like_unlike_count" t-esc="slide.likes"/>
                                         </span>
                                         <span
                                             class="oe_slide_js_unlike"
@@ -465,7 +465,7 @@
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"/>
-                                            <t t-esc="slide.dislikes"/>
+                                            <span class="o_like_unlike_count" t-esc="slide.dislikes"/>
                                         </span>
                                     </div>
                                 </div>
