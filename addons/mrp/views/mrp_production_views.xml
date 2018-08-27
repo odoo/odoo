@@ -326,48 +326,6 @@
             parent="menu_mrp_manufacturing"
             sequence="1"/>
 
-        <record id="mrp_production_action_planning" model="ir.actions.act_window">
-            <field name="name">Manufacturing Orders</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="domain">[('state', '=', 'confirmed'), ('routing_id', '!=', False)]</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new manufacturing order
-              </p><p>
-                A manufacturing order, based on a bill of materials, will
-                consume raw materials and produce finished products.
-              </p><p>
-                Manufacturing orders are usually proposed automatically based
-                on customer requirements or automated rules like the minimum
-                stock rule.
-              </p>
-            </field>
-        </record>
-
-        <record id="mrp_production_action_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Availability MO</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
-            <field name="domain">[('availability', 'in', ('waiting', 'partially_available'))]</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new manufacturing order
-              </p><p>
-                A manufacturing order, based on a bill of materials, will
-                consume raw materials and produce finished products.
-              </p><p>
-                Manufacturing orders are usually proposed automatically based
-                on customer requirements or automated rules like the minimum
-                stock rule.
-              </p>
-            </field>
-        </record>
-
     <record id="mrp_production_report" model="ir.actions.act_window">
         <field name="name">Manufacturing Orders</field>
         <field name="type">ir.actions.act_window</field>
