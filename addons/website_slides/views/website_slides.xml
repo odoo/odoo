@@ -690,7 +690,7 @@
 <template id='slide_social_email' name="Share by Email">
     <h4 class="mt0">Share with a friend</h4>
     <t t-if="not is_public_user">
-        <form class="form-group oe_slide_js_share_email" role="form">
+        <form class="form-row oe_slide_js_share_email" role="form">
             <div class="input-group col-lg-6">
                 <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
                 <span class="input-group-append">
@@ -702,8 +702,8 @@
                     </button>
                 </span>
             </div>
-            <span class="form-text">Send presentation through email</span>
         </form>
+        <span class="form-text">Send presentation through email</span>
     </t>
     <t t-if="is_public_user">
         <p>Please <a t-attf-href="/web?redirect=#{request.httprequest.url}"> login </a> to send this <t t-esc="slide.slide_type"/> by email!</p>
@@ -717,9 +717,9 @@
         <div class="form-group">
             <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
         </div>
-        <div class="form-group" t-if="slide.slide_type in ('presentation', 'document')">
-            <div class="form-text col-xl-3 col-lg-3 col-md-6 col-6">Select page to start with</div>
-            <div class="input-group col-xl-3 col-lg-3 col-md-6 col-6">
+        <div class="form-row" t-if="slide.slide_type in ('presentation', 'document')">
+            <div class="form-text col-lg-4 col-6">Select page to start with</div>
+            <div class="input-group col-lg-2 col-6">
                 <input type="number" value="1" class="form-control"/>
             </div>
         </div>
