@@ -99,15 +99,21 @@
             flex: 0 0 auto;
             border: 0;
             font-size: 12px;
-            color: white;
             cursor: pointer;
+            user-select: none;
 
-            > .o_badge_text {
+            a {
+                color: inherit;
+            }
+
+            .o_badge_text {
                 @include o-text-overflow(inline-block);
                 max-width: 200px;
+                color: inherit;
             }
 
             .o_delete {
+                color: inherit;
                 cursor: pointer;
             }
         }
@@ -168,13 +174,15 @@
                 } @else {
                     &, &::after {
                         background-color: nth($o-colors, $size);
+                        color: $white;
                     }
                 }
             }
         }        
-        > .o_tag_error{ 
+        .o_tag_error {
             box-shadow: inset 0 0 0 2px #FF0000;
-            > .o_delete {
+
+            .o_delete {
                 color: #FF0000;
             }
         }

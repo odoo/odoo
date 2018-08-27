@@ -11738,9 +11738,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > .dropdown > button').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > .dropdown > button:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags[name="timmy"] .badge:contains("gold")').length,
             "should contain newly added tag 'gold'");
 
         form.destroy();
@@ -11773,18 +11773,18 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge .dropdown-toggle').length, 2,
             "should contain 2 tags");
-        assert.ok(form.$('button:contains(gold)').length,
+        assert.ok(form.$('.badge .dropdown-toggle:contains(gold)').length,
             'should have fetched and rendered gold partner tag');
-        assert.ok(form.$('button:contains(silver)').length,
+        assert.ok(form.$('.badge .dropdown-toggle:contains(silver)').length,
             'should have fetched and rendered silver partner tag');
-        assert.strictEqual(form.$('button:first()').data('color'), 2,
+        assert.strictEqual(form.$('.badge:first()').data('color'), 2,
             'should have correctly fetched the color');
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge .dropdown-toggle').length, 2,
             "should still contain 2 tags in edit mode");
         assert.ok(form.$('.o_tag_color_2 .o_badge_text:contains(gold)').length,
             'first tag should still contain "gold" and be color 2 in edit mode');
@@ -11799,46 +11799,44 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li a:contains("red")').length, 1,
             "autocomplete dropdown should contain 'red'");
         $input.autocomplete('widget').find('li').click(); // add 'red'
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 3,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge .dropdown-toggle').length, 3,
             "should contain 3 tags");
-        assert.ok(form.$('.o_field_many2manytags > .dropdown > button:contains("red")').length,
+        assert.ok(form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("red")').length,
             "should contain newly added tag 'red'");
-        assert.ok(form.$('.o_field_many2manytags > .dropdown > button[data-color=8]:contains("red")').length,
+        assert.ok(form.$('.o_field_many2manytags .badge[data-color=8] .dropdown-toggle:contains("red")').length,
             "should have fetched the color of added tag");
 
         // remove tag with id 14
-        form.$('.o_field_many2manytags button[data-id=14] .o_delete').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 2,
+        form.$('.o_field_many2manytags .badge[data-id=14] .o_delete').click();
+        assert.strictEqual(form.$('.o_field_many2manytags .badge .dropdown-toggle').length, 2,
             "should contain 2 tags");
-        assert.ok(!form.$('.o_field_many2manytags > .dropdown > button:contains("silver")').length,
+        assert.ok(!form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("silver")').length,
             "should not contain tag 'silver' anymore");
 
         // save the record (should do the write RPC with the correct commands)
         form.$buttons.find('.o_form_button_save').click();
 
         // checkbox 'Hide in Kanban'
-        $input = form.$('.o_field_many2manytags button[data-id=13]'); // selects 'red' tag
+        $input = form.$('.o_field_many2manytags .badge[data-id=13] .dropdown-toggle'); // selects 'red' tag
         $input.click(); // opens the colorpicker dropdown
-        assert.ok(form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .custom-checkbox'), "should have a checkbox in the colorpicker dropdown menu");
-
-        $input.click();
-        var $checkBox = form.$('.o_field_many2manytags button[data-id=13]').next().find('.custom-checkbox input');
+        var $checkBox = form.$('.o_field_many2manytags .badge[data-id=13] .custom-checkbox input');
+        assert.strictEqual($checkBox.length, 1, "should have a checkbox in the colorpicker dropdown menu");
         assert.notOk($checkBox.is(':checked'), "should have unticked checkbox in colorpicker dropdown menu");
 
-        $checkBox.mousedown();
-        $input = form.$('.o_field_many2manytags button[data-id=13]'); // refresh
-        assert.equal($input.data('color'), "0", "should become transparent when toggling on checkbox");
+        $checkBox.mousedown().click();
 
+        $input = form.$('.o_field_many2manytags .badge[data-id=13] .dropdown-toggle'); // refresh
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags button[data-id=13]').next().find('.custom-checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags .badge[data-id=13] .custom-checkbox input'); // refresh
+        assert.equal($input.parent().data('color'), "0", "should become transparent when toggling on checkbox");
         assert.ok($checkBox.is(':checked'), "should have a ticked checkbox in colorpicker dropdown menu after mousedown");
 
-        $checkBox.mousedown();
-        $input = form.$('.o_field_many2manytags button[data-id=13]'); // refresh
-        assert.equal($input.data('color'), "8", "should revert to old color when toggling off checkbox");
+        $checkBox.mousedown().click();
 
+        $input = form.$('.o_field_many2manytags .badge[data-id=13] .dropdown-toggle'); // refresh
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags button[data-id=13]').next().find('.custom-checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags .badge[data-id=13] .custom-checkbox input'); // refresh
+        assert.equal($input.parent().data('color'), "8", "should revert to old color when toggling off checkbox");
         assert.notOk($checkBox.is(':checked'), "should have an unticked checkbox in colorpicker dropdown menu after 2nd click");
 
         // TODO: it would be nice to test the behaviors of the autocomplete dropdown
@@ -11871,9 +11869,9 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             }
         });
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('button:contains(gold)').length,
+        assert.ok(form.$('.badge:contains(gold)').length,
             'should have fetched and rendered gold partner tag');
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -11886,9 +11884,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li a:contains("silver")').length, 1,
             "autocomplete dropdown should contain 'silver'");
         $input.autocomplete('widget').find('li').click(); // add 'silver'
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 2,
             "should contain 2 tags");
-        assert.ok(form.$('.o_field_many2manytags > .dropdown > button:contains("silver")').length,
+        assert.ok(form.$('.o_field_many2manytags .badge:contains("silver")').length,
             "should contain newly added tag 'silver'");
 
         form.destroy();
@@ -11921,9 +11919,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags > .dropdown > button:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags .badge:contains("gold")').length,
             "should contain newly added tag 'gold'");
 
         // save the record (should do the write RPC with the correct commands)
@@ -11948,20 +11946,20 @@ QUnit.module('relational_fields', {
         });
 
         // First checks that default color 0 is rendered as 0 color
-        assert.ok(form.$('button:first()').is('.o_tag_color_0'),
+        assert.ok(form.$('.badge.dropdown:first()').is('.o_tag_color_0'),
             'first tag color should be 0');
 
         // Update the color in readonly
-        form.$('button:first()').click();
+        form.$('.badge:first() .dropdown-toggle').click();
         $('.o_colorpicker a[data-color="1"]').trigger('mousedown'); // choose color 1
-        assert.strictEqual(form.$('button:first()').data('color'), 1,
+        assert.strictEqual(form.$('.badge:first()').data('color'), 1,
             'should have correctly updated the color (in readonly)');
 
         // Update the color in edit
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('button:first()').click();
+        form.$('.badge:first() .dropdown-toggle').click();
         $('.o_colorpicker a[data-color="6"]').trigger('mousedown'); // choose color 6
-        assert.strictEqual(form.$('button:first()').data('color'), 6,
+        assert.strictEqual(form.$('.badge:first()').data('color'), 6,
             'should have correctly updated the color (in edit)');
         form.destroy();
     });
@@ -12099,7 +12097,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
         });
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > .dropdown > button').length, 100,
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 100,
             'should have rendered 100 tags');
         form.destroy();
     });
@@ -12124,14 +12122,14 @@ QUnit.module('relational_fields', {
         });
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 1,
             "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
         // -> m2mtags input should not have taken the focus
         form.$('input:first').focus();
         form.$('input:first').val('trigger onchange').trigger('input');
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 0,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 0,
             "should contain no tags");
         assert.strictEqual(form.$('input:first').get(0), document.activeElement,
             "foo input should have kept the focus");
@@ -12139,14 +12137,14 @@ QUnit.module('relational_fields', {
         // add a tag -> m2mtags input should still have the focus
         form.$('.o_field_many2manytags input').click(); // opens the dropdown
         form.$('.o_field_many2manytags input').autocomplete('widget').find('li:first').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 1,
             "should contain a tag");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");
 
         // remove a tag -> m2mtags input should still have the focus
         form.$('.o_field_many2manytags .o_delete').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > .dropdown > button').length, 0,
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').length, 0,
             "should contain no tags");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");

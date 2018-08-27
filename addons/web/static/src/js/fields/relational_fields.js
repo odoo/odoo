@@ -1841,6 +1841,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onDeleteTag: function (event) {
+        event.preventDefault();
         event.stopPropagation();
         this._removeTag($(event.target).parent().data('id'));
     },
@@ -1886,7 +1887,7 @@ var FieldMany2ManyTags = AbstractField.extend({
 
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .badge': '_onOpenColorPicker',
+        'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
         'focusout .o_colorpicker': '_onCloseColorPicker',
@@ -1907,8 +1908,9 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      * @param {MouseEvent} ev
      */
     _onOpenColorPicker: function (ev) {
-        var tagID = $(ev.currentTarget).data('id');
-        var tagColor = $(ev.currentTarget).data('color');
+        ev.preventDefault();
+        var tagID = $(ev.currentTarget).parent().data('id');
+        var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
@@ -1937,8 +1939,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var $target = $(ev.currentTarget);
         var color = $target.data('color');
         var id = $target.data('id');
-        var tag = this.$("button.badge[data-id='" + id + "']");
-        var currentColor = tag.data('color');
+        var $tag = this.$(".badge[data-id='" + id + "']");
+        var currentColor = $tag.data('color');
         var changes = {};
 
         if ($target.is('.o_hide_in_kanban')) {

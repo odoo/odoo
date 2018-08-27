@@ -1916,9 +1916,9 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     }).then(function (form) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps([[12, 14], [14], [14]]);
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
             "two tags should be present");
-        var firstTag = form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').first();
+        var firstTag = form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').first();
         assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
             "tag should only show display_name");
         assert.strictEqual(firstTag.find('.o_badge_text').attr('title'), "coucou@petite.perruche",
@@ -1971,7 +1971,7 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     });
 
     assert.verifySteps([[12]]);
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 1,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 1,
         "should contain one tag");
 
     // add an other existing tag
@@ -1990,7 +1990,7 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
     $('.modal-footer .btn-primary').click();
 
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
         "should contain the second tag");
     // should have read [14] three times: when opening the dropdown, when opening the modal, and
     // after the save
