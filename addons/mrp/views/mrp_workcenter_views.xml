@@ -127,7 +127,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
-            <field name="name">Work Orders Performance</field>
+            <field name="name">Work Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[]</field>
@@ -548,11 +548,9 @@
                 <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
                 <separator/>
                 <group expand='0' string='Group by...'>
-                    <filter string="Date" name="loss_date" context="{'group_by': 'date_start'}"/>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
                     <filter string='Workcenter' name="workcenter_group" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Loss Reason" name="loss_group" context="{'group_by': 'loss_id'}"/>
-                    <filter string="TPM Big Loss" name="loss_group_main" context="{'group_by': 'loss_type'}"/>
                 </group>
             </search>
         </field>
