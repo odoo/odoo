@@ -30,10 +30,19 @@ class StockProductionLot(models.Model):
             for field in mapped_fields.keys():
                 duration = getattr(product, mapped_fields[field])
                 if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
-                    res[field] = fields.Datetime.to_string(date)
+                    #La siguiente line fue modificado por Trescloud
+                    res[field] = self.get_date_product_life_time(duration)
         return res
-
+    
+    #Metodo agregado por Trescloud
+    def get_date_product_life_time (self, duration):
+        '''
+        Hook para calcular las fechas de caducidad
+        en base a fecha de fabricacion dada por el usuario.
+        '''
+        date = datetime.datetime.now() + datetime.timedelta(days=duration)
+        return fields.Datetime.to_string(date)
+    
     # Assign dates according to products data
     @api.model
     def create(self, vals):
