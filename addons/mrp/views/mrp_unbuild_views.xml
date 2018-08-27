@@ -113,13 +113,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" domain="[('bom_ids', '!=', False)]"/>
+                                <field name="product_id" domain="[('bom_ids', '!=', False)]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <field name="bom_id" domain="['|',
                                             ('product_id','=',product_id),
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
-                                                ('type', '=', 'normal')]"/>
+                                                ('type', '=', 'normal')]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
