@@ -14,7 +14,7 @@
             <t t-foreach="titles" t-as="title">
                 <div t-attf-class="h#{str(level) + (level&lt;3 and ' o_page_header' or '')}">
                     <t t-esc="title.name"/>
-                    <small t-if="len(title.post_ids)">
+                    <small t-if="len(title.post_ids)" class="text-muted">
                         <t t-esc="len(title.post_ids)"/>
                         <t t-if="len(title.post_ids)==1">essay</t>
                         <t t-if="len(title.post_ids)&gt;1">essays</t>
@@ -144,7 +144,10 @@
                                         from the Q&amp;A section where you can
                                         discuss it and get feedback.
                                     </div>
-                                    <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16 ml8"> Related question</a>
+                                    <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="mt16 ml8">
+                                        <i class="fa fa-arrow-right"/>
+                                        Related question
+                                    </a>
                                 </div>
                             </div>
                         </div>

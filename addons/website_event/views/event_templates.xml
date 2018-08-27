@@ -267,7 +267,7 @@
 <template id="event_details">
     <t t-call="website_event.layout">
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
-            <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
+            <h1 itemprop="name" class="text-center mt-3 mb-2" t-field="event.name"></h1>
             <div class="text-center">
                 <small t-if="event.is_participating" class="badge badge-info">Participating</small>
             </div>
