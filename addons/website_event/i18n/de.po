@@ -3,26 +3,21 @@
 # * website_event
 # 
 # Translators:
-# Wolfgang Taferner, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Martin Trigaux, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Niki Waibel, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# David Vidal <david.vidal@trespinos.es>, 2017
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
-# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2018
+# Wolfgang Taferner, 2018
 # Mathias Neef <mn@copado.de>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# Tina Rittmüller <tr@ife.de>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# David Vidal <david.vidal@trespinos.es>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Mathias Neef <mn@copado.de>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"Last-Translator: David Vidal <david.vidal@trespinos.es>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +50,7 @@ msgstr "<b>Preis</b>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Quantity</b>"
-msgstr "<b>Menge</b>"
+msgstr "<b>Anzahl</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -77,9 +72,23 @@ msgstr ""
 "                    <i class=\"fa fa-clock-o\"/> Bis "
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
+"                    Configure and Launch Event Registration</em>"
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> Von"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_right_country_event
+msgid ""
+"<i class=\"fa fa-flag fa-5x\"/>\n"
+"                            Events from Your Country"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -90,15 +99,6 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Zu Google-Kalender hinzufügen"
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Zu iCal/Outlook hinzufügen"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-"                    <em>Configure and Launch Event Registration</em>"
-msgstr ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-" <em>Veranstaltungsanmeldung konfigurieren und veröffentlichen</em>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -123,9 +123,9 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
-"<span content=\"http://schema.org/SoldOut\" itemprop=\"availability\">\n"
-" Ausverkauf\n"
-"</span>"
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Ausverkauft\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -139,9 +139,9 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
-"<span content=\"0\" itemprop=\"price\">\n"
-" Kostenfrei\n"
-"</span>"
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Eintritt frei\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -226,8 +226,8 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
-"Aktivieren Sie diese Option, wenn Sie für Ihre Veranstaltung auf der Website\n"
-" Menüs wünschen: Anmeldungen, Zeitplan, Karte, …"
+"Aktivieren Sie diese Option, wenn Sie für Ihr Event auf der Website Menüs "
+"wünschen: Anmeldungen, Zeitplan, Karte, …"
 
 #. module: website_event
 #. openerp-web
@@ -259,6 +259,11 @@ msgstr "Klicken Sie zur Veröffentlichung der Veranstaltung."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Close"
+msgstr "Schließen"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Continue"
 msgstr "Weiter"
 
@@ -279,8 +284,8 @@ msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr ""
-"Erstellt auf der Veranstaltungsseite der Website die Menüs Einführung, "
-"Standort und Anmelden."
+"Erstellt auf der Event-Seite der Website die Menüs Einführung, Standort und "
+"Anmelden."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
@@ -307,7 +312,7 @@ msgstr "E-Mail"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
-msgstr "Abzeichen bearbeiten"
+msgstr "Ausweise bearbeiten"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -377,11 +382,6 @@ msgid "Events"
 msgstr "Events"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_country_event
-msgid "Events from Your Country"
-msgstr "Veranstaltungen in Ihrem Land"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "Events in visitor's country"
 msgstr "Veranstaltungen im Land des Besuchers"
@@ -401,7 +401,12 @@ msgstr ""
 "                      berichten und verfolgen Sie die Konversation."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:73
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:70
 #, python-format
 msgid "Introduction"
 msgstr "Überblick"
@@ -409,13 +414,18 @@ msgstr "Überblick"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
-msgstr "nimmt teil"
+msgstr "Nimmt teil"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:74
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:71
 #, python-format
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Veranstaltungsort"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -429,7 +439,7 @@ msgstr "Name"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:191
+#: code:addons/website_event/controllers/main.py:200
 #: code:addons/website_event/static/src/js/website_event.editor.js:29
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -437,25 +447,25 @@ msgid "New Event"
 msgstr "Neue Veranstaltung"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:40
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Next Events"
 msgstr "Weitere Veranstaltungen"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:49
+#: code:addons/website_event/controllers/main.py:48
 #, python-format
 msgid "Next Week"
 msgstr "Nächste Woche"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:57
+#: code:addons/website_event/controllers/main.py:56
 #, python-format
 msgid "Next month"
 msgstr "Nächster Monat"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:152
+#: code:addons/website_event/models/event.py:150
 #, python-format
 msgid "No date has been specified for the event, no file will be generated."
 msgstr ""
@@ -469,12 +479,6 @@ msgstr "Keine Veranstaltung gefunden"
 #: model:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "Odoo"
 msgstr "Odoo"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:61
-#, python-format
-msgid "Old Events"
-msgstr "Vorherige Veranstaltungen"
 
 #. module: website_event
 #. openerp-web
@@ -513,6 +517,12 @@ msgstr "Unsere Trainings"
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Participating"
 msgstr "Teilnehmer"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:60
+#, python-format
+msgid "Past Events"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -557,7 +567,7 @@ msgid "Reference"
 msgstr "Referenz"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:75
+#: code:addons/website_event/models/event.py:72
 #, python-format
 msgid "Register"
 msgstr "Anmelden"
@@ -570,7 +580,12 @@ msgstr "Anmelden"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Registration for this event is now closed"
-msgstr "Die Anmeldung für diese Veranstaltung ist geschlossen."
+msgstr "Die Anmeldung für dieses Event ist geschlossen."
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -605,13 +620,13 @@ msgstr ""
 "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:45
+#: code:addons/website_event/controllers/main.py:44
 #, python-format
 msgid "This Week"
 msgstr "Diese Woche"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:53
+#: code:addons/website_event/controllers/main.py:52
 #, python-format
 msgid "This month"
 msgstr "Dieser Monat"
@@ -622,7 +637,7 @@ msgid "Ticket Type #"
 msgstr "Tickettyp #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:41
+#: code:addons/website_event/controllers/main.py:40
 #, python-format
 msgid "Today"
 msgstr "Heute"
@@ -630,25 +645,28 @@ msgstr "Heute"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
-msgstr ""
-"Erstellen Sie mit dem Topmenü <i>„Inhalte“</i> Ihre erste Veranstaltung."
+msgstr "Erstellen Sie über das Menü <i>„Inhalt“</i> oben Ihr erstes Event."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
-msgid "Visible in Website"
-msgstr "Sichtbar in Website"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr "Auf Google Maps visualisieren"
+msgstr "Auf Google Maps anzeigen"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
 msgstr ""
-"Wir freuen uns, Ihre Anmeldung bei unserer Veranstaltung bestätigen zu "
-"können."
+"Wir freuen uns, Ihre Anmeldung bei unserem Event bestätigen zu können."
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_id
+msgid "Website"
+msgstr "Website"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -658,7 +676,7 @@ msgstr "Website Homepage"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
-msgstr "Website-Menü"
+msgstr "Website Menü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
@@ -679,6 +697,11 @@ msgstr "Website Schlüsselwörter"
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
 msgid "Website meta title"
 msgstr "Website Meta-Titel"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full

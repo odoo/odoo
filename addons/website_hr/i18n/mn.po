@@ -3,16 +3,14 @@
 # * website_hr
 # 
 # Translators:
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2018
 # Otgonbayar.A <gobi.mn@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -23,8 +21,14 @@ msgstr ""
 
 #. module: website_hr
 #: model:ir.model,name:website_hr.model_hr_employee
+#: model:ir.ui.view,arch_db:website_hr.aboutus
 msgid "Employee"
 msgstr "Ажилтан"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_hr
 #: model:ir.ui.view,arch_db:website_hr.aboutus
@@ -37,14 +41,24 @@ msgid "Public Info"
 msgstr "Нийтийн Мэдээлэл"
 
 #. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_hr
 #: model:ir.model.fields,help:website_hr.field_hr_employee__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Вебсайтаар дамжин баримт руу хандах бүтэн URL."
 
 #. module: website_hr
 #: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_published
-msgid "Visible in Website"
-msgstr "Вебсайт дээр харагдах"
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_id
+msgid "Website"
+msgstr "Вэбсайт"
 
 #. module: website_hr
 #: model:ir.actions.act_url,name:website_hr.action_open_website

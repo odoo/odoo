@@ -87,7 +87,7 @@
                 <t t-set="email_error" t-value="'o_tag_error'"/>
             </t>
             <button t-attf-class="badge dropdown o_tag_color_0 #{email_error}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
-                <span class="o_badge_text" t-attf-title="#{el.email}"><t t-esc="el.display_name"/></span>
+                <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
                 <span t-if="!readonly" class="fa fa-times o_delete" role="img" aria-label="Delete" title="Delete"/>
             </button>
         </t>

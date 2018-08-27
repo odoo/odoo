@@ -794,6 +794,7 @@ class WebsiteSale(http.Controller):
 
         domain = expression.AND([
             ['&', ('website_published', '=', True), ('company_id', '=', order.company_id.id)],
+            ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)],
             ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
         ])
         acquirers = request.env['payment.acquirer'].search(domain)

@@ -202,6 +202,12 @@
                                         <field name="acc_number"/>
                                     </tree>
                                 </field>
+                                <button type="action" class="btn-link"
+                                    name="%(base.action_res_partner_bank_account_form)d"
+                                    context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
+                                    string="View accounts detail"
+                                    colspan="2"
+                                />
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
                                 <field name="currency_id" invisible="1"/>

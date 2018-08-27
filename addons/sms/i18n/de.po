@@ -3,20 +3,15 @@
 # * sms
 # 
 # Translators:
-# Henry Mineehen <info@mineehen.de>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Martin Trigaux, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Niki Waibel, 2017
-# Andi, 2017
+# Martin Trigaux, 2018
+# Andi, 2018
 # e2f FFE <e2f_de_FFE@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: e2f FFE <e2f_de_FFE@outlook.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -66,8 +68,7 @@ msgstr "ID"
 #: code:addons/sms/models/mail_thread.py:53
 #, python-format
 msgid "Insufficient credit, unable to send SMS message: %s"
-msgstr ""
-"Guthaben reicht nicht aus, folgende SMS kann nicht gesendet werden: %s"
+msgstr "Guthaben reicht nicht aus, die SMS kann nicht gesendet werden: %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_api____last_update
@@ -108,6 +109,13 @@ msgid "Recipients"
 msgstr "Empfänger"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr ""
+
+#. module: sms
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
@@ -121,6 +129,7 @@ msgstr "Senden"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "Sende SMS"
 

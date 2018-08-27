@@ -56,7 +56,7 @@
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
             <h3 class="page-header mt0">
-                <span t-field="tracks_by_days[day][0].date" t-field-options="{'widget': 'date'}"/>
+                <span t-field="tracks_by_days[day][0].date" t-options="{'widget': 'date'}"/>
                 <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
             </h3>
             <table id="table_search" class="table table-bordered table-sm">

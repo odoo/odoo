@@ -3,39 +3,35 @@
 # * website
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# niulin lnc. <admin@niulin.net>, 2016
-# fausthuang, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Martin Trigaux, 2016
-# Maie <m@maie.name>, 2016
-# 菜小蛇 <lttlsnk@gmail.com>, 2016
-# xiaobin wu <bd5dml@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Joray <13637815@qq.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Zamba Lee <zambalee@gmail.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# Rona Lin <ssauapw@qq.com>, 2016
-# Wei "oldrev" Li <liwei@sandwych.com>, 2016
-# SHOM <shanmuxin@yeah.net>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# Bo Cao, 2017
-# Liping Wang <lynn.config@gmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Connie Xiao <connie.xiao@elico-corp.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Maie <m@maie.name>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# fausthuang, 2018
+# xiaobin wu <bd5dml@gmail.com>, 2018
+# 菜小蛇 <lttlsnk@gmail.com>, 2018
+# Joray <13637815@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Bo Cao, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Zamba Lee <zambalee@gmail.com>, 2018
+# SHOM <shanmuxin@yeah.net>, 2018
+# Xia Fajin <xia.fajin@elico-corp.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2018
+# Rona Lin <ssauapw@qq.com>, 2018
 # Xu Lei <xulei8@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
 "Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -46,14 +42,14 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:1009
+#: code:addons/website/static/src/js/editor/snippets.options.js:1015
 #, python-format
 msgid " Add Images"
 msgstr "添加图像"
 
 #. module: website
-#: code:addons/website/models/website.py:241
-#: code:addons/website/models/website.py:310
+#: code:addons/website/models/website.py:324
+#: code:addons/website/models/website.py:390
 #, python-format
 msgid "%s (id:%s)"
 msgstr "%s (id:%s)"
@@ -72,7 +68,7 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
 #. module: website
 #: model:ir.ui.view,arch_db:website.default_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "xml version=\"1.0\" encoding=\"utf-8\";"
+msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -89,14 +85,13 @@ msgid "&times;"
 msgstr "&times;"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.list_website_pages
 msgid "' did not match any pages."
-msgstr "“不与任何页面匹配。"
+msgstr "“您的搜索条件不与任何页面匹配。\""
 
 #. module: website
-#: code:addons/website/models/website.py:737
-#: code:addons/website/models/website.py:739
-#: code:addons/website/models/website.py:757
+#: code:addons/website/models/website.py:989
+#: code:addons/website/models/website.py:1007
 #, python-format
 msgid "(copy)"
 msgstr "(复制)"
@@ -135,13 +130,23 @@ msgid ""
 ".\n"
 "            Changing its name will break these calls."
 msgstr ""
-".\n"
-" 更改它的名称将中断这些电话。"
+"。\n"
+" 更改它的名称将中断这些调用。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.default_csv
 msgid "1,2,3"
 msgstr "1,2,3"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "1/5"
+msgstr "1/5"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "100%"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -159,9 +164,19 @@ msgid "1s"
 msgstr "1秒"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "2/5"
+msgstr "2/5"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "24x7 toll-free support"
 msgstr "24x7免费电话支持"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "25%"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -170,8 +185,18 @@ msgstr "2秒"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
+msgid "3/5"
+msgstr "3/5"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
 msgid "3s"
 msgstr "3秒"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "4/5"
+msgstr "4/5"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
@@ -181,7 +206,17 @@ msgstr "403: 禁止"
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
 msgid "404: Page not found!"
-msgstr "404: 网页找不到!"
+msgstr "404: 找不到页面!"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "5/5"
+msgstr "5/5"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "50%"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -189,16 +224,21 @@ msgid "5s"
 msgstr "5秒"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_big_picture
-msgid "<b>A Small Subtitle</b>"
-msgstr "<b>小号小标题</b>"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "75%"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_call_to_action
+msgid "<b>50,000+ companies</b> run Odoo to grow their businesses."
+msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:15
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
-msgstr "<b>点击 编辑</b> 开始设计你的主页."
+msgstr "<b>点击编辑</b> 开始设计你的主页。"
 
 #. module: website
 #. openerp-web
@@ -207,35 +247,35 @@ msgstr "<b>点击 编辑</b> 开始设计你的主页."
 msgid ""
 "<b>Click on a text</b> to start editing it. <i>It's that easy to edit your "
 "content!</i>"
-msgstr "<b/><i/>"
+msgstr "<b>单击文本</b>开始编辑。<i>轻松编辑您的内容！</i>"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid ""
-"<b>Great stories are for everyone even when only written for\n"
-"                        just one person.</b> If you try to write with a wide general\n"
-"                        audience in mind, your story will ring false and be bland.\n"
-"                        No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest."
+"<b>Great stories are for everyone even when only written for just one "
+"person.</b> If you try to write with a wide general audience in mind, your "
+"story will ring false and be bland. No one will be interested. Write for one"
+" person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
-"伟大的故事是对每个人的，即使只对只有一个人写的。如果您尝试使用广泛的普通观众心目中的想法写，你的故事会很假，平淡的。没人会感兴趣。只为一个人写。如果是真的很好，那它对其他人也会很不错"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid ""
-"<b>Great stories have personality.</b> Consider telling\n"
-"                        a great story that provides personality. Writing a story\n"
-"                        with personality for potential clients will assists with\n"
-"                        making a relationship connection. This shows up in small\n"
-"                        quirks like word choices or phrases. Write from your point\n"
-"                        of view, not from someone else's experience."
-msgstr "<b/>"
+"<b>Great stories have personality.</b> Consider telling a great story that "
+"provides personality. Writing a story with personality for potential clients"
+" will assists with making a relationship connection. This shows up in small "
+"quirks like word choices or phrases. Write from your point of view, not from"
+" someone else's experience."
+msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:74
 #, python-format
 msgid "<b>Install a contact form</b> to improve this page."
-msgstr "<b/>"
+msgstr "<b>安装联系表单</b>以便改进此页面。"
 
 #. module: website
 #. openerp-web
@@ -244,27 +284,135 @@ msgstr "<b/>"
 msgid ""
 "<b>Install new apps</b> to get more features. Let's install the <i>'Contact "
 "form'</i> app."
-msgstr "<b/><i/>"
+msgstr "<b>安装新的应用</b>以便获取更多功能。让我们安装<i>“联系表单”</i>应用。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid ""
+"<font style=\"background-color: rgb(255, 255, 255);\">Good writing is "
+"simple, but not simplistic.</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid ""
+"<font style=\"font-size: 62px; background-color: rgb(255, 255, 255);\">Edit "
+"this title</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_banner
+msgid "<font style=\"font-size: 62px;\"><b>Sell Online.</b> Easily.</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_picture
+msgid "<font style=\"font-size: 62px;\">A punchy Headline</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_faq_collapse
+msgid "<font style=\"font-size: 62px;\">FAQ</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid "<font style=\"font-size: 62px;\">Our offers</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid "<font style=\"font-size: 62px;\">Slide Title</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_parallax
+#: model:ir.ui.view,arch_db:website.s_title
+msgid "<font style=\"font-size: 62px;\">Your Site Title</font>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_card
+msgid "<i class=\"fa fa-1x fa-clock-o mr8\"/><small>2 days ago</small>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_picture
+msgid ""
+"<i class=\"fa fa-1x fa-picture-o mr-2\"/>Add a caption to enhance the "
+"meaning of this image."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-align-left\"/>Alignment"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                                Create a Google Project and Get a Key"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                                How to get my Client ID"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                                How to get my Tracking ID"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-arrows\"/>Background Image Sizing"
-msgstr "<i class=\"fa fa-arrows\"/>"
+msgstr "<i class=\"fa fa-arrows\"/>背景图像尺寸"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-arrows\"/>Size"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-arrows-h\"/>Images spacing"
-msgstr "<i class=\"fa fa-arrows-h\"/>"
+msgstr "<i class=\"fa fa-arrows-h\"/>图像间距"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-arrows-h\"/>Width"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-arrows-v\"/>Alignment"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-clock-o\"/>Scroll Speed"
-msgstr "<i class=\"fa fa-clock-o\"/>"
+msgstr "<i class=\"fa fa-clock-o\"/>滚动速度"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-clock-o\"/>Slideshow speed"
 msgstr "<i class=\"fa fa-clock-o\"/>幻灯片播放速度"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-clock-o\"/>Speed"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-clone\"/>Transition"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -274,12 +422,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-diamond\"/> Feature"
-msgstr "特征"
+msgstr "<i class=\"fa fa-diamond\"/>特征"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-expand\"/>Margin"
-msgstr "<i class=\"fa fa-expand\"/>"
+msgid "<i class=\"fa fa-eye-slash\"/>Transparent"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -288,8 +436,13 @@ msgstr "<i class=\"fa fa-eyedropper\"/>背景颜色"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-eyedropper\"/>Overlay color"
-msgstr "<i class=\"fa fa-eyedropper\"/>"
+msgid "<i class=\"fa fa-eyedropper\"/>Color"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-eyedropper\"/>Filter"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -297,34 +450,66 @@ msgid "<i class=\"fa fa-facebook\"/>Options"
 msgstr "<i class=\"fa fa-facebook\"/>选项"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-font\"/>Typography"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-heart\"/>Hearts"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-indent\"/> Inner content"
-msgstr "<i class=\"fa fa-indent\"/>"
+msgstr "<i class=\"fa fa-indent\"/>内在内容"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_three_columns
+msgid ""
+"<i class=\"fa fa-info-circle mr-1\"/> <small>An additional "
+"information</small>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-magic icon-fix\"/> Effect"
-msgstr "<i class=\"fa fa-magic icon-fix\"/> 特效"
+msgstr "<i class=\"fa fa-magic icon-fix\"/> 效果"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-magic\"/>Mode"
-msgstr "<i class=\"fa fa-magic\"/>"
+msgstr "<i class=\"fa fa-magic\"/>模式"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-magnet\"/>Float"
-msgstr "<i class=\"fa fa-magnet\"/>"
+msgid "<i class=\"fa fa-magic\"/>Style"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-magic\"/>Styles"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-minus\"/>Thickness"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-paint-brush\"/>Styling"
-msgstr "<i class=\"fa fa-paint-brush\"/>"
+msgstr "<i class=\"fa fa-paint-brush\"/>样式"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-msgid "<i class=\"fa fa-picture-o\"/>Choose Background Image"
-msgstr "<i class=\"fa fa-picture-o\"/>选择背景图像"
+msgid "<i class=\"fa fa-pencil\"/>Style"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-picture-o\"/>Background Image"
+msgstr "<i class=\"fa fa-picture-o\"/>背景图像"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.language_selector
@@ -333,12 +518,12 @@ msgid ""
 "                Add a language..."
 msgstr ""
 "<i class=\"fa fa-plus-circle\"/>\n"
-"                增加语言..."
+"                添加语言..."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-plus-circle\"/>Add Slide"
-msgstr "<i class=\"fa fa-plus-circle\"/>增加幻灯片"
+msgstr "<i class=\"fa fa-plus-circle\"/>添加幻灯片"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -348,12 +533,27 @@ msgstr "<i class=\"fa fa-plus-circle\"/>添加图像"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-refresh\"/>Re-order"
-msgstr "<i class=\"fa fa-refresh\"/>"
+msgstr "<i class=\"fa fa-refresh\"/>重新组织"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-square\"/>Squares"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-star\"/>Stars"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "<i class=\"fa fa-tasks\"/>Progress Bar"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-th\"/>Columns"
-msgstr "<i class=\"fa fa-th\"/>"
+msgstr "<i class=\"fa fa-th\"/>列"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
@@ -362,13 +562,13 @@ msgstr "<i class=\"fa fa-th-large\"/> 结构"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "<i class=\"fa fa-th-large\"/> WEBSITE <b class=\"caret\"/>"
-msgstr "<i class=\"fa fa-th-large\"/> 网站 <b class=\"caret\"/>"
+msgid "<i class=\"fa fa-th-large\"/> WEBSITE"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-trash\"/>Remove all images"
-msgstr "<i class=\"fa fa-trash\"/>"
+msgstr "<i class=\"fa fa-trash\"/>删除所有图像"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -387,34 +587,28 @@ msgstr "<I>即时安装，满意或报销。</I>"
 msgid ""
 "<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages"
 " to your site or edit this page to make it even more awesome.</p>"
-msgstr "<p><b/></p><p/>"
+msgstr "<p><b>就是这样。</b> 您的主页已生成。</p><p>继续为您的网站添加更多页面或编辑此页面使其更完善。</p>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_image_floating
-msgid ""
-"<small class=\"text-muted\">A great way to catch your reader's attention is "
-"to tell a story. Everything you consider writing can be told as a "
-"story.</small>"
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid "<small>/ month</small>"
 msgstr ""
-"<small class=\"text-"
-"muted\">一个好的方式来吸引你的读者的注意力是讲一个故事。任何你考虑写的东西都能当成一个故事来讲。</small>"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_parallax_slider
-msgid "<small>Author of this quote</small>"
-msgstr "<small>此话的作者</small>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_parallax_slider
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
+#: model:ir.ui.view,arch_db:website.s_carousel
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
 msgid ""
-"<span class=\"caret\"/>\n"
-"                            <span class=\"sr-only\">Toggle Dropdown</span>"
-msgstr "<span class=\"caret\"/><span class=\"sr-only\"/>"
+"<span class=\"carousel-control-next-icon\"/>\n"
+"            <span class=\"sr-only\">Next</span>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"<span class=\"carousel-control-prev-icon\"/>\n"
+"            <span class=\"sr-only\">Previous</span>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -441,37 +635,51 @@ msgid ""
 "plus-circle\"/> Add Images</span>"
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
-"plus-circle\"/></span>"
+"plus-circle\"/> 添加图像</span>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>125</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>35</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>65</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "<span class=\"sr-only\">Toggle Dropdown</span>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid ""
 "<span/>\n"
-"                                <span class=\"css_publish\">Unpublished</span>\n"
-"                                <span class=\"css_unpublish\">Published</span>"
-msgstr "<span/><span class=\"css_publish\"/><span class=\"css_unpublish\"/>"
+"                            <span class=\"css_publish\">Unpublished</span>\n"
+"                            <span class=\"css_unpublish\">Published</span>"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "<span>$</span><b style=\"font-size: 60px\">125</b><small>.00</small>"
-msgstr "<span>$</span><b style=\"font-size: 60px\">125</b><small>.00</small>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "<span>$</span><b style=\"font-size: 60px\">35</b><small>.00</small>"
-msgstr "<span>$</span><b style=\"font-size: 60px\">35</b><small>.00</small>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
-msgstr "<span>$</span><b style=\"font-size: 60px\">65</b><small>.00</small>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_button
+#: model:ir.ui.view,arch_db:website.s_call_to_action
 msgid ""
-"<span>Contact Us Now</span>\n"
-"                        <i class=\"fa fa-chevron-right\"/>"
-msgstr "<span/><i class=\"fa fa-chevron-right\"/>"
+"<span>Contact us</span>\n"
+"                        <i class=\"fa fa-1x fa-fw fa-arrow-circle-right ml-1\"/>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -479,14 +687,14 @@ msgid "<span>Copyright &amp;copy;</span>"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_share
-msgid "<span>Share</span>"
-msgstr "<span>分享</span>"
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid "<span>— Jane DOE, CEO of <b>MyCompany</b></span>"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_button
-msgid "<strong>50,000+ companies run Odoo to grow their businesses.</strong>"
-msgstr "<STRONG>50000+ 公司使用Odoo发展其业务。</STRONG>"
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid "<span>— John DOE, CEO of <b>MyCompany</b></span>"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -501,20 +709,17 @@ msgid ""
 msgstr "CDN 帮助您向各地的访客提供高可用性和高性能的网站内容。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_text_block
-msgid "A Great Headline"
-msgstr "有力的标题"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_big_picture
-msgid "A Punchy Headline"
-msgstr "简洁有力的标题"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_image_text
 #: model:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
 msgstr "章节小标题"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_card
+msgid ""
+"A card is a flexible and extensible content container. It includes options "
+"for headers and footers, a wide variety of content, contextual background "
+"colors, and powerful display options."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
@@ -523,24 +728,21 @@ msgid ""
 "controller. The address is <base>/website/action/<website_path>. Set this "
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
-msgstr "<base><website_path>"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_text_block
-msgid "A good subtitle"
-msgstr "非常棒的小标题"
+msgstr ""
+"使用专用控制器可从网站上执行代码服务器操作。地址为<base> /website/action/<website_path>。将此字段设置为 "
+"True，可允许用户运行此操作。如果将此字段设置为 False，则无法通过网站运行该操作。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid ""
-"A great way to catch your reader's attention is to tell a story.\n"
-"                        Everything you consider writing can be told as a story."
-msgstr "好的方式来吸引你的读者的注意力是讲一个故事。任何你考虑写的东西都能被当作故事来讲"
+"A great way to catch your reader's attention is to tell a story. "
+"<br/>Everything you consider writing can be told as a story."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
-msgid "A small explanation of this great<br/>feature, in clear words."
-msgstr "小的解释这个伟大的<BR/>功能，用清晰的话。"
+msgid "A small explanation of this great <br/>feature, in clear words."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_version
@@ -556,6 +758,8 @@ msgstr "API Key"
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.footer_custom
+#: model:ir.ui.view,arch_db:website.s_carousel
+#: model:ir.ui.view,arch_db:website.s_cover
 #: model:website.page,arch_db:website.aboutus_page
 msgid "About us"
 msgstr "关于我们"
@@ -563,12 +767,7 @@ msgstr "关于我们"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
-msgstr "会计 &amp;  销售管理"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website__cdn_activated
-msgid "Activate CDN for assets"
-msgstr "为资产激活CDN"
+msgstr "会计和销售管理"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__active
@@ -579,10 +778,10 @@ msgstr "有效"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid ""
-"Adapt these three columns to fit you design need.\n"
-"                        To duplicate, delete or move columns, select the\n"
-"                        column and use the top icons to perform your action."
-msgstr "适应这三个字段，以适应你的设计需求。复制，删除或移动列，选择列，并使用顶部的图标来执行操作。"
+"Adapt these three columns to fit you design need. To duplicate, delete or "
+"move columns, select the column and use the top icons to perform your "
+"action."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -592,16 +791,26 @@ msgid "Add"
 msgstr "添加"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "Add Features"
+msgstr "增加功能"
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:49
+#: code:addons/website/static/src/xml/website.contentMenu.xml:51
 #, python-format
 msgid "Add Menu Entry"
 msgstr "添加菜单项"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Add a great slogan"
-msgstr "添加伟大口号"
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Add a great slogan."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Add links to social media on your website"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -615,7 +824,7 @@ msgstr "在菜单添加页面"
 #: code:addons/website/static/src/js/tours/banner.js:50
 #, python-format
 msgid "After having checked how it looks on mobile, <b>close the preview</b>."
-msgstr "<b/>"
+msgstr "在检查其在移动端的呈现视图后，<b>请关闭预览。</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -634,27 +843,28 @@ msgstr ""
 " 社区。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid ""
-"All these icons are licensed under creative commons so that you can use "
-"them."
-msgstr "所有图标的许可都是以知识共享的方式授权的,所以您可以的使用他们."
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "All these icons are completely free for commercial use."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
-"Although this Website may be linked to other websites, we are not, directly or\n"
-"                                indirectly, implying any approval, association, sponsorship, endorsement, or\n"
-"                                affiliation with any linked website, unless specifically stated herein."
+"Although this Website may be linked to other websites, we are not, directly "
+"or indirectly, implying any approval, association, sponsorship, endorsement,"
+" or affiliation with any linked website, unless specifically stated herein."
 msgstr ""
-"虽然该网站可能链接至其他网站上，但我们不会直接或 \n"
-" 间接的默示任何批准、关联、赞助、背书，或者 \n"
-" 与任何链接的网站联系，除非在此处明确规定。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "An error occured while rendering the template"
-msgstr "当渲染模板时出错"
+msgstr "当完成模板时出现的错误"
+
+#. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
+#: model:ir.ui.menu,name:website.menu_website_google_analytics
+msgid "Analytics"
+msgstr "分析"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -667,13 +877,9 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_title
-msgid "And a great subtitle too"
-msgstr "以及一个伟大的小标题"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "Apply"
+#: model:ir.actions.act_window,name:website.action_website_add_features
+#: model:ir.ui.menu,name:website.menu_website_add_features
+msgid "Apps"
 msgstr "应用"
 
 #. module: website
@@ -685,6 +891,11 @@ msgstr "Arch Blob"
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
 msgstr "Arch 文件名"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
+msgid "Are newly created user accounts website specific"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -706,7 +917,19 @@ msgstr "可用于网站"
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Back"
-msgstr "返回"
+msgstr "回退"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Background"
+msgstr "背景"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:39
+#, python-format
+msgid "Background colors"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_base
@@ -716,7 +939,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
-msgstr "基本的销售市场达到2用户"
+msgstr "基本销售和市场推广达到2用户"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -727,6 +950,32 @@ msgstr "初学者"
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Big"
 msgstr "大的"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Body"
+msgstr "正文"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Border"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Bordered"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Bottom"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Boxed"
+msgstr "盒装的"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -742,21 +991,25 @@ msgstr "CDN筛选"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:101
+#: code:addons/website/static/src/js/backend/dashboard.js:103
 #: code:addons/website/static/src/xml/website.xml:27
 #: model:ir.ui.view,arch_db:website.500
-#: model:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "Cancel"
 msgstr "取消"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Change Background"
-msgstr "更改背景"
+#: model:ir.ui.view,arch_db:website.s_cover
+msgid "Catchy Headline"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Center"
+msgstr "居中"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
 msgid "Change Icons"
 msgstr "更改图标"
 
@@ -772,12 +1025,41 @@ msgid "Child Menus"
 msgstr "下级菜单"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_big_picture
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose a pattern"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_picture
 msgid ""
-"Choose a vibrant image and write an inspiring paragraph\n"
-"                        about it. It does not have to be long, but it should\n"
-"                        reinforce your image."
-msgstr "选择一个充满活力的图像，写它一个鼓舞人心的段落。它不必很长，但它应该强化你的图像。"
+"Choose a vibrant image and write an inspiring paragraph about it.<br/> It "
+"does not have to be long, but it should reinforce your image."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose an image"
+msgstr "选择图像"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose the theme colors"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose your colors"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose your fonts"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Choose your layout"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -785,36 +1067,59 @@ msgid "Circle"
 msgstr "圆形"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Click on the icon to adapt it to your feature"
-msgstr "单击图标以适应你的功能"
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid "Clever Slogan"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_banner
+#. openerp-web
+#: code:addons/website/static/src/js/tours/customize.js:15
+#, python-format
+msgid ""
+"Click here to choose your main branding color.<br/>It will recompute the "
+"palette with suggested matching colors."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.seo.xml:146
+#, python-format
+msgid "Click to choose more images"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.default_homepage
 msgid "Click to customize this text"
-msgstr "单击以自定义文本"
+msgstr "点击以自定义本文本"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Client ID"
-msgstr "客户端 ID"
+msgstr "客户 ID"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "客户隐私"
+msgstr "客户秘密"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.one_page_line
 msgid "Clone this page"
 msgstr "复制此页面"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.gallery.xml:51
+#: model:ir.ui.view,arch_db:website.500
+#: model:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
 msgstr "关闭"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Colors"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_res_company
@@ -823,6 +1128,7 @@ msgstr "公司"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__company_id
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Company"
 msgstr "公司"
 
@@ -830,6 +1136,11 @@ msgstr "公司"
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Company name"
 msgstr "公司名称"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_company_team
+msgid "Company team"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -843,7 +1154,7 @@ msgstr "配置"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:24
+#: code:addons/website/static/src/js/editor/snippets.options.js:44
 #, python-format
 msgid "Confirmation"
 msgstr "确认"
@@ -855,6 +1166,7 @@ msgstr "连接我们"
 
 #. module: website
 #: model:ir.model,name:website.model_res_partner
+#: model:ir.ui.view,arch_db:website.s_tabs
 msgid "Contact"
 msgstr "联系人"
 
@@ -867,10 +1179,11 @@ msgstr "联系我们"
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
+#: model:ir.ui.view,arch_db:website.default_homepage
 #: model:ir.ui.view,arch_db:website.footer_custom
-#: model:ir.ui.view,arch_db:website.s_banner
-#: model:ir.ui.view,arch_db:website.s_big_message
+#: model:ir.ui.view,arch_db:website.s_carousel
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.s_cover
 #: model:website.menu,name:website.menu_contactus
 #: model:website.page,arch_db:website.contactus_page
 msgid "Contact us"
@@ -880,35 +1193,35 @@ msgstr "联系我们"
 #: model:ir.ui.view,arch_db:website.contactus
 #: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
 #: model:website.page,arch_db:website.contactus_page
-msgid "Contact us about anything related to our company or services."
-msgstr "任何有关我们公司或服务的问题请联系我们"
+msgid ""
+"Contact us about anything related to our company or services.<br/>\n"
+"                                                                We'll do our best to get back to you as soon as possible."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_big_picture
-msgid "Contact us »"
-msgstr "联系我们»"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.user_navbar
-msgid "Content"
-msgstr "内容"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
+#: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Content Delivery Network (CDN)"
 msgstr "内容发布网络 (CDN)"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:424
+#: code:addons/website/static/src/js/menu/content.js:442
 #: code:addons/website/static/src/xml/website.xml:26
 #, python-format
 msgid "Continue"
 msgstr "继续"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_country_group_ids
+#: model:ir.model.fields,field_description:website.field_website__country_group_ids
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Country Groups"
+msgstr "国家分组"
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:366
+#: code:addons/website/static/src/js/menu/content.js:384
 #, python-format
 msgid "Create Menu"
 msgstr "创建菜单"
@@ -922,16 +1235,6 @@ msgstr "创建网页"
 #: model:ir.ui.view,arch_db:website.brand_promotion
 msgid "Create a"
 msgstr "创建一个"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Create a Google Project and Get a Key"
-msgstr "创建 Google 项目并获取密钥"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Create several versions of your website pages"
-msgstr "创建网站页面的多个版本"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__create_uid
@@ -950,7 +1253,15 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.seo.xml:143
+#, python-format
+msgid "Custom"
+msgstr "自定义"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
+#: model:ir.model.fields,field_description:website.field_website__auth_signup_uninvited
 msgid "Customer Account"
 msgstr "客户账户"
 
@@ -975,19 +1286,31 @@ msgstr "通过这个菜单定制任何块。尝试改变横幅的背景。"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:33
+#, python-format
+msgid "Customize this theme"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/menu/edit.js:75
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website
-#: model:ir.actions.client,name:website.backend_dashboard
-#: model:ir.ui.menu,name:website.menu_dashboard
-msgid "Dashboard"
-msgstr "仪表板"
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Dark"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Dashed"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Default"
 msgstr "默认"
 
@@ -1013,6 +1336,11 @@ msgid "Default language code"
 msgstr "默认语言代码"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Default theme colors"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
@@ -1020,28 +1348,34 @@ msgid "Define Keywords"
 msgstr "定义关键字"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
+#: model:ir.ui.view,arch_db:website.s_features_grid
 msgid "Delete Blocks"
 msgstr "删除块"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:59
-#: code:addons/website/static/src/js/menu/content.js:797
+#: code:addons/website/static/src/js/menu/content.js:60
+#: code:addons/website/static/src/js/menu/content.js:958
 #, python-format
 msgid "Delete Page"
 msgstr "删除网页"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_three_columns
-msgid ""
-"Delete the above image or replace it with a picture\n"
-"                        that illustrates your message. Click on the picture to\n"
-"                        change it's <em>rounded corner</em> style."
-msgstr "删除上面的图像，或用说明消息的图像来代替。点击图像来改变它的<em>圆角</em>的风格。"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.contentMenu.xml:17
+#, python-format
+msgid "Delete menu"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.s_three_columns
+msgid ""
+"Delete the above image or replace it with a picture that illustrates your "
+"message. Click on the picture to change it's <em>rounded corner</em> style."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.one_page_line
 msgid "Delete this page"
 msgstr "删除该页面"
 
@@ -1066,17 +1400,27 @@ msgid "Description"
 msgstr "说明"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
+msgid "Details"
+msgstr "细节"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Disable autoplay"
 msgstr "禁用自动播放"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:46
-#: code:addons/website/static/src/js/menu/seo.js:343
+#: code:addons/website/static/src/js/menu/content.js:47
+#: code:addons/website/static/src/js/menu/seo.js:427
 #, python-format
 msgid "Discard"
-msgstr "放弃"
+msgstr "摒弃"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_image_text
+msgid "Discover more"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.external_snippets
@@ -1086,24 +1430,66 @@ msgstr "讨论群组"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__display_name
 #: model:ir.model.fields,field_description:website.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website.field_website_multi_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_page__display_name
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__display_name
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__display_name
 #: model:ir.model.fields,field_description:website.field_website_redirect__display_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: website
+#: code:addons/website/models/ir_qweb_fields.py:16
+#, python-format
+msgid "Display the badges"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/ir_qweb_fields.py:15
+#, python-format
+msgid "Display the biography"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/ir_qweb_fields.py:14
+#, python-format
+msgid "Display the website description"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Display this website for users from these country groups"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Display this website when users visit this domain"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_banner
+msgid "Do something"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:90
+#: code:addons/website/static/src/js/editor/snippets.options.js:110
 #, python-format
 msgid "Do you want to edit the company data ?"
 msgstr "您是否想要编辑公司数据？"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Domain"
-msgstr "领域"
+msgstr "域"
+
+#. module: website
+#: code:addons/website/models/ir_ui_view.py:231
+#, python-format
+msgid "Domain Based"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1113,8 +1499,23 @@ msgid "Don't forget to update all links referring to this page."
 msgstr "不要忘记更新所有指向该页面的链接。"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Dotted"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Double"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Double click an icon to replace it with one of your choice."
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:45
+#: code:addons/website/static/src/xml/website.contentMenu.xml:47
 #, python-format
 msgid "Drag a menu to the right to create a sub-menu"
 msgstr "向右拖动菜单创建子菜单"
@@ -1131,17 +1532,24 @@ msgstr "在封面下面，在您的页面中拖动另一个块。"
 #: code:addons/website/static/src/js/tours/banner.js:20
 #, python-format
 msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr "<i/>"
+msgstr "拖动<i>封面</i>区块并将其放在页面之中。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
+#. openerp-web
+#: code:addons/website/static/src/xml/website.contentMenu.xml:7
+#, python-format
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate"
 msgstr "复制"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Duplicate blocks to add more features."
-msgstr "复制块以添加更多功能"
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Duplicate blocks and columns to add more features."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
@@ -1150,11 +1558,16 @@ msgstr "编辑"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:453
+#: code:addons/website/static/src/js/menu/content.js:471
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Edit Menu"
 msgstr "编辑菜单"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Edit Styles"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1162,7 +1575,7 @@ msgid "Edit Top Menu"
 msgstr "编辑顶层菜单"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.one_page_line
 msgid "Edit code in backend"
 msgstr "在后端编辑代码"
 
@@ -1174,7 +1587,14 @@ msgstr "在后端编辑"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:28
+#: code:addons/website/static/src/xml/website.contentMenu.xml:16
+#, python-format
+msgid "Edit menu"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:32
 #, python-format
 msgid "Edit my Analytics Client ID"
 msgstr "编辑我的分析客户端ID"
@@ -1188,7 +1608,7 @@ msgstr "编辑线下面的内容替换默认\"page not found\"网页"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:35
+#: code:addons/website/static/src/js/editor/snippets.options.js:55
 #, python-format
 msgid "Edit the menu"
 msgstr "编辑菜单"
@@ -1204,9 +1624,15 @@ msgid "Email support"
 msgstr "电子邮件支持"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "Enterprise package"
-msgstr "企业包"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
+#: model:ir.model.fields,field_description:website.field_website__has_google_analytics_dashboard
+msgid "Embedded Google Analytics"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Equal height"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -1215,7 +1641,7 @@ msgstr "错误"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:19
+#: code:addons/website/static/src/xml/website.facebook_page.xml:22
 #, python-format
 msgid "Events"
 msgstr "活动"
@@ -1226,11 +1652,11 @@ msgid "Expert"
 msgstr "专家"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_well
+#: model:ir.ui.view,arch_db:website.s_alert
 msgid ""
-"Explain the benefits you offer. Don't write about products or\n"
-"            services here, write about solutions."
-msgstr "说明一下你提供的优势，这里不要写关于产品或服务的内容，写一些解决方案。"
+"Explain the benefits you offer. <br/>Don't write about products or services "
+"here, write about solutions."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
@@ -1239,20 +1665,21 @@ msgid "External ID"
 msgstr "外部 ID"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.snippet_options
-msgid "Extra-Large"
-msgstr "特大"
-
-#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_facebook
 #: model:ir.model.fields,field_description:website.field_website__social_facebook
 msgid "Facebook Account"
-msgstr "Facebook账号"
+msgstr "脸书账号"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:493
+#: code:addons/website/static/src/js/editor/snippets.options.js:505
 #, python-format
 msgid "Facebook Page"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Fade"
 msgstr ""
 
 #. module: website
@@ -1276,7 +1703,7 @@ msgid "Feature Three"
 msgstr "功能三"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_panel
+#: model:ir.ui.view,arch_db:website.s_card
 msgid "Feature Title"
 msgstr "功能标题"
 
@@ -1289,6 +1716,11 @@ msgstr "功能二"
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "First Feature"
 msgstr "第一功能"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "First list of Features"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_ui_view__first_page_id
@@ -1319,6 +1751,21 @@ msgid "Follow all the"
 msgstr "关注全部"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Follow your website traffic in Odoo."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Fonts"
+msgstr "字体"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Force your user to create an account per website"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind Company. He loves\n"
@@ -1330,21 +1777,14 @@ msgstr ""
 " 来充实自己。"
 
 #. module: website
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "Free sign up (B2C)"
-msgstr "免费注册 (B2C)"
+#: selection:website,auth_signup_uninvited:0
+msgid "Free sign up"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid ""
-"From the main container, you can change the background to highlight "
-"features."
-msgstr "通过主容器，你可以将背景改成高亮的功能"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_faq_collapse
-msgid "General Terms and Conditions / Service Policies"
-msgstr "一般条款和条件/服务政策"
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Full"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1358,7 +1798,7 @@ msgstr "访问所有的模块和功能"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/seo.js:340
+#: code:addons/website/static/src/js/menu/seo.js:424
 #, python-format
 msgid ""
 "Get this page efficiently referenced in search engines to attract more "
@@ -1366,20 +1806,21 @@ msgid ""
 msgstr "在搜索引擎中有效引用该页面，以便吸引更多的访客。"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_github
 #: model:ir.model.fields,field_description:website.field_website__social_github
 msgid "GitHub Account"
-msgstr "GitHub账号"
+msgstr "GitHub账户"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:50
+#: code:addons/website/static/src/js/menu/content.js:51
 #, python-format
 msgid "Go To Page"
 msgstr "转到页面"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:27
+#: code:addons/website/static/src/js/editor/snippets.options.js:47
 #, python-format
 msgid "Go to Link"
 msgstr "转到链接"
@@ -1391,10 +1832,15 @@ msgstr "转到页面管理器"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:93
+#: code:addons/website/static/src/xml/website.backend.xml:106
 #, python-format
 msgid "Go to Website"
 msgstr "转到网站"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Go to website"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1403,12 +1849,21 @@ msgstr "转到网站"
 msgid ""
 "Good Job! You created your first page. Let's check how this page looks like "
 "on <b>mobile devices</b>."
-msgstr "<b/>"
+msgstr "非常棒！您创建了第一个页面。让我们<b>检查一下该页面在移动设备</b>上的呈现效果。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid ""
+"Good copy starts with understanding how your product or service helps your "
+"customers. Simple words communicate better than big words and pompous "
+"language."
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:84
+#: code:addons/website/static/src/js/backend/dashboard.js:86
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
+#: model:ir.model.fields,field_description:website.field_website__has_google_analytics
 #, python-format
 msgid "Google Analytics"
 msgstr "Google 分析"
@@ -1417,16 +1872,11 @@ msgstr "Google 分析"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
-msgstr "Google 分析密钥"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics_dashboard
-msgid "Google Analytics in Dashboard"
-msgstr "仪表盘上的 Google Analytic"
+msgstr "谷歌分析密钥"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:48
+#: code:addons/website/static/src/xml/website.backend.xml:51
 #, python-format
 msgid ""
 "Google Analytics initialization failed. Maybe this domain is not whitelisted"
@@ -1447,24 +1897,27 @@ msgstr "Google 客户隐私"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
+#: model:ir.model.fields,field_description:website.field_website__has_google_maps
 #: model:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
 msgstr "Google 地图"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
+#: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
 msgstr "Google 地图 API 密钥"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
 #: model:ir.model.fields,field_description:website.field_website__social_googleplus
 msgid "Google+ Account"
-msgstr "Google+账号"
+msgstr "Google+账户"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
+#: model:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
-msgstr "伟大的价值"
+msgstr "大价值"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -1500,35 +1953,51 @@ msgid "HTTP routing"
 msgstr "HTTP 路由"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_cover
-msgid "Headline"
-msgstr "头条"
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Hamburger"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__header_color
+msgid "Header Color"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__header_overlay
+msgid "Header Overlay"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:37
+#: code:addons/website/static/src/xml/website.facebook_page.xml:42
 #, python-format
 msgid "Hide Cover Photo"
 msgstr "隐藏封面图片"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:114
+#: code:addons/website/static/src/xml/website.pageProperties.xml:112
 #, python-format
 msgid "Hide this page from search results"
 msgstr "在搜索结果中隐藏该页面"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.contentMenu.xml:54
+#: code:addons/website/static/src/xml/website.contentMenu.xml:56
 #, python-format
 msgid "Hint: Simply type '#' to create a container menu"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/models/website.py:178
+#: code:addons/website/static/src/xml/website.contentMenu.xml:13
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_custom
+#: model:ir.ui.view,arch_db:website.one_page_line
+#: model:ir.ui.view,arch_db:website.s_tabs
 #: model:website.menu,name:website.menu_homepage
+#, python-format
 msgid "Home"
 msgstr "首页"
 
@@ -1543,17 +2012,20 @@ msgid "Homepage"
 msgstr "主页"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.default_homepage
+msgid "Homepage of"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:58
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: code:addons/website/static/src/xml/website.backend.xml:63
 #, python-format
 msgid "How to get my Client ID"
 msgstr "如何获取客户 ID"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:53
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: code:addons/website/static/src/xml/website.backend.xml:57
 #, python-format
 msgid "How to get my Tracking ID"
 msgstr "如何获取我的跟踪 ID"
@@ -1561,8 +2033,10 @@ msgstr "如何获取我的跟踪 ID"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__id
 #: model:ir.model.fields,field_description:website.field_website_menu__id
+#: model:ir.model.fields,field_description:website.field_website_multi_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_page__id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__id
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__id
 #: model:ir.model.fields,field_description:website.field_website_redirect__id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 msgid "ID"
@@ -1579,21 +2053,29 @@ msgid "ID of the view defined in xml file"
 msgstr "定义在 XML 文件里的视图ID"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Icon"
+msgstr "图标"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_website__specific_user_account
+msgid "If True, new accounts will be associated to the current website"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset one or more templates to their <strong>factory "
 "settings</strong>."
-msgstr "如果此错误由模板中你的变化造成，你必须重新设置一个或多个模板到出厂设置"
+msgstr "如果此错误由模板中你的变化造成，你必须重新设置一个或多个模板到其<strong>出厂设置</strong>。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__groups_id
 msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
-msgstr ""
-"如果这字段是空，视图应用到所有用户。\n"
-"否则这些视图只能用于这些群组内的用户。"
+msgstr "如果这字段是空，视图应用到所有用户。否则这些视图只能用于这些群组内的用户。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__active
@@ -1603,16 +2085,23 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
-"此视图是否为继承的，\n"
-"* 如果是真的，则此视图始终扩展其父项，\n"
-"* 如果是假的，则此视图当前不扩展其父项，但可以启用\n"
+"如果此视图是继承的，\n"
+"* 如果为真，则此视图始终扩展其父项，\n"
+"* 如果为假，则此视图当前不扩展其父项，但可以启用"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.seo.xml:135
+#, python-format
+msgid "Image for Social Share"
+msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:68
 #, python-format
 msgid "In description"
-msgstr "描述"
+msgstr "在描述中"
 
 #. module: website
 #. openerp-web
@@ -1630,7 +2119,7 @@ msgstr "在标题中"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:112
+#: code:addons/website/static/src/xml/website.pageProperties.xml:110
 #: model:ir.ui.view,arch_db:website.index_management
 #, python-format
 msgid "Indexed"
@@ -1639,7 +2128,7 @@ msgstr "索引"
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Information about the"
-msgstr "信息关于"
+msgstr "关于"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_id
@@ -1667,8 +2156,13 @@ msgid "Installed Modules"
 msgstr "已安装的模块"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website__theme_id
+msgid "Installed theme"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:57
+#: code:addons/website/static/src/xml/website.facebook_page.xml:62
 #, python-format
 msgid "Invalid Facebook Page Url"
 msgstr ""
@@ -1695,6 +2189,13 @@ msgid "Is Visible"
 msgstr "可见"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_page__is_published
+#: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:23
 #, python-format
@@ -1703,19 +2204,20 @@ msgstr "似乎以下对象调用了您的文件"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:255
+#: code:addons/website/static/src/js/content/website_root.js:254
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
 "href=\"%s\">the classic Odoo interface</a>"
-msgstr "<a href=\"%s\"/>"
+msgstr "在<a href=\"%s\">经典 Odoo 界面</a>上可以编辑相关项目或修改问题。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_button
+#: model:ir.ui.view,arch_db:website.s_call_to_action
 msgid "Join us and make your company a better place."
 msgstr "加入我们，让你的公司能够名列前茅。"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_website_page__key
 msgid "Key"
 msgstr "键"
@@ -1746,8 +2248,10 @@ msgstr "大的"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website____last_update
 #: model:ir.model.fields,field_description:website.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website.field_website_multi_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_page____last_update
 #: model:ir.model.fields,field_description:website.field_website_published_mixin____last_update
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin____last_update
 #: model:ir.model.fields,field_description:website.field_website_redirect____last_update
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata____last_update
 msgid "Last Modified on"
@@ -1755,7 +2259,7 @@ msgstr "最后修改日"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:67
+#: code:addons/website/static/src/xml/website.backend.xml:72
 #, python-format
 msgid "Last Month"
 msgstr "上月"
@@ -1766,7 +2270,7 @@ msgstr "上月"
 #: model:ir.model.fields,field_description:website.field_website_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_redirect__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__write_date
@@ -1778,17 +2282,28 @@ msgstr "最后更新时间"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:66
+#: code:addons/website/static/src/xml/website.backend.xml:71
 #, python-format
 msgid "Last Week"
 msgstr "上周"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:68
+#: code:addons/website/static/src/xml/website.backend.xml:73
 #, python-format
 msgid "Last Year"
 msgstr "上年"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Layout"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_text_image
+#: model:ir.ui.view,arch_db:website.s_three_columns
+msgid "Learn more"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1812,12 +2327,22 @@ msgstr "让你的客户登录查看他们的证件"
 #: code:addons/website/static/src/xml/website.editor.xml:5
 #, python-format
 msgid "Let's start designing."
-msgstr "开始设计."
+msgstr "开始设计。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Light"
+msgstr "明亮"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "有限的定制"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Line-On-Sides"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
@@ -1826,29 +2351,25 @@ msgstr "链接跟踪"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:36
+#: code:addons/website/static/src/xml/website.backend.xml:40
 #, python-format
 msgid "Link my Analytics Account"
 msgstr "链接我的谷歌分析帐户"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_linkedin
 #: model:ir.model.fields,field_description:website.field_website__social_linkedin
 msgid "LinkedIn Account"
-msgstr "LinkedIn账号"
+msgstr "领英账号"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
-msgid "Links to other websites"
-msgstr "链接到其他网站"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "List of Features"
-msgstr "功能列表"
+msgid "Links to other Websites"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/seo.js:82
+#: code:addons/website/static/src/js/menu/seo.js:83
 #, python-format
 msgid "Loading..."
 msgstr "加载..."
@@ -1864,12 +2385,19 @@ msgid "Main Menu"
 msgstr "主菜单"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:31
+#, python-format
+msgid "Main colors"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "管理页面"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.list_website_pages
 msgid "Manage Your Pages"
 msgstr "管理您的页面"
 
@@ -1879,7 +2407,12 @@ msgid "Manage Your Website Pages"
 msgstr "管理您的网站页面"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Manage multiple websites"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "管理该页面"
 
@@ -1891,12 +2424,12 @@ msgstr "石工"
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 msgid "Maybe you were looking for one of these popular pages ?"
-msgstr "也许你正在寻找其中很流行的网页"
+msgstr "也许你正在寻找其中一个流行的网页？"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr "普通"
+msgstr "媒体"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -1904,21 +2437,28 @@ msgid "Meet the Executive Team"
 msgstr "执行团队风采"
 
 #. module: website
-#: code:addons/website/models/website.py:249
+#: code:addons/website/models/website.py:330
 #: model:ir.model.fields,field_description:website.field_website_menu__name
+#: model:ir.ui.view,arch_db:website.theme_customize
+#: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Menu"
 msgstr "菜单"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:380
+#: code:addons/website/static/src/js/menu/content.js:398
 #, python-format
 msgid "Menu Label"
 msgstr "菜单标签"
 
 #. module: website
-#: code:addons/website/models/website.py:251
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Menu text"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:332
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
 msgid "Menus"
@@ -1926,7 +2466,7 @@ msgstr "菜单"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:22
+#: code:addons/website/static/src/xml/website.facebook_page.xml:26
 #, python-format
 msgid "Messages"
 msgstr "消息"
@@ -1948,16 +2488,21 @@ msgstr ""
 " 今天的地位。Mich 是最优秀的人才之一。"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Middle"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/mobile_view.js:54
 #, python-format
 msgid "Mobile preview"
-msgstr "移动版预览"
+msgstr "移动预览"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model
 msgid "Model"
-msgstr "模型"
+msgstr "型号"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model_data_id
@@ -1967,14 +2512,14 @@ msgstr "模型数据"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model_ids
 msgid "Models"
-msgstr "模型"
+msgstr "型号"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
 msgid "Most searched topics related to your keywords, ordered by importance:"
-msgstr "大部分搜索主题与你的关键字相关，按重要性排列"
+msgstr "大部分搜索主题与你的关键字相关，按重要性排序："
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2007,6 +2552,18 @@ msgid "Moved temporarily (302)"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_users__has_group_multi_website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Multi-Websites"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__group_multi_website
+#: model:res.groups,name:website.group_multi_website
+msgid "Multi-website"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.layout
 msgid "My Website"
 msgstr "我的网站"
@@ -2014,7 +2571,7 @@ msgstr "我的网站"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:44
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.list_website_pages
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "Name"
@@ -2039,12 +2596,23 @@ msgid "New Window"
 msgstr "新窗口"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.external_snippets
-msgid "Newsletter"
-msgstr "新闻信"
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "New page"
+msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.external_snippets
+msgid "Newsletter"
+msgstr "快讯"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.gallery.xml:27
+#: code:addons/website/static/src/xml/website.gallery.xml:31
 #: model:ir.ui.view,arch_db:website.kanban_contain
+#: model:ir.ui.view,arch_db:website.s_carousel
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+#, python-format
 msgid "Next"
 msgstr "下一个"
 
@@ -2059,18 +2627,13 @@ msgid "No support"
 msgstr "不支持"
 
 #. module: website
-#: model:ir.actions.act_window,help:website.action_module_theme
-#: model:ir.actions.act_window,help:website.action_module_website
-msgid "No website module found!"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "No-scroll"
 msgstr "无卷轴"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
+#: model:ir.ui.view,arch_db:website.theme_customize
 msgid "None"
 msgstr "无"
 
@@ -2084,7 +2647,7 @@ msgstr "未使用"
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Note: To hide this page, uncheck it from the top Customize menu."
-msgstr "注意：要隐藏此网页，从顶部菜定制单取消勾选"
+msgstr "注意：要隐藏此网页，从顶部菜定制单取消勾选。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_count
@@ -2099,27 +2662,17 @@ msgstr "Odoo"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 1 for three columns"
-msgstr "Odoo - 三列示例 1"
+msgstr "Odoo－三列示例 1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 2 for three columns"
-msgstr "Odoo - 三列示例 2"
+msgstr "Odoo－三列示例 2"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Odoo - Sample 3 for three columns"
-msgstr "Odoo - 三列示例 3"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_big_picture
-msgid "Odoo CMS - a big picture"
-msgstr "Odoo CMS - 大图"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_image_floating
-msgid "Odoo CMS- Sample image floating"
-msgstr "Odoo CMS -图像浮动示例"
+msgstr "Odoo－三列示例 3"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2127,33 +2680,38 @@ msgid "Odoo Version"
 msgstr "Odoo版本"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_image_text
-msgid "Odoo image and text block"
-msgstr "Odoo图像文字块"
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+msgid ""
+"Odoo provides essential platform for our project management. Things are "
+"better organized and more visible with it."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_parallax_slider
-msgid ""
-"Odoo provides essential platform for our project management.\n"
-"                                                Things are better organized and more visible with it."
-msgstr "Odoo提供了必要的平台，为我们的项目管理。事情变得更好组织和更加清晰。"
+#: model:ir.ui.view,arch_db:website.s_picture
+msgid "Odoo • A picture with a caption"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_image_text
+msgid "Odoo • Image and Text"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_image
-msgid "Odoo text and image block"
-msgstr "Odoo文本图像块"
+msgid "Odoo • Text and Image"
+msgstr ""
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:5
 #, python-format
 msgid "On Website"
-msgstr "在网站上"
+msgstr "网站"
 
 #. module: website
-#: selection:res.config.settings,auth_signup_uninvited:0
-msgid "On invitation (B2B)"
-msgstr "应邀 (B2B)"
+#: selection:website,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__mode
@@ -2167,7 +2725,16 @@ msgid ""
 "different model than this one), then this view's inheritance specs\n"
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
-msgstr "<xpath/>"
+msgstr ""
+"仅适用于此视图继承于另一个视图的情况（inherit_id 不为 False/Null）。\n"
+"\n"
+"* 扩展（默认）情况下，如果请求此视图作为（通过inherit_id）\n"
+"所查看的最近主视图时，则应用继承\n"
+"此视图模型的所有视图\n"
+"* 如果是主视图，且最接近的主视图已完全解析（即使它使用\n"
+"与此视图不同的模型），则将应用此视图的继承规范\n"
+"(<xpath/>)，并将结果用作该视图的\n"
+"实际弧。\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -2181,7 +2748,7 @@ msgstr "优化SEO"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:26
+#: code:addons/website/static/src/xml/website.facebook_page.xml:31
 #, python-format
 msgid "Options"
 msgstr "选项"
@@ -2197,19 +2764,9 @@ msgid "Other Info"
 msgstr "其他信息"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "Our Offers"
-msgstr "我们提供的"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Our Products &amp; Services"
 msgstr "我们的产品和服务"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_references
-msgid "Our References"
-msgstr "我们的参考"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -2224,10 +2781,8 @@ msgstr "我们的团队"
 #: model:website.page,arch_db:website.aboutus_page
 msgid ""
 "Our products are designed for small to medium size companies willing to optimize\n"
-"                                                      their performance."
+"                                                    their performance."
 msgstr ""
-"我们的产品面向那些希望提高 \n"
-" 业绩的中小型企业。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
@@ -2237,26 +2792,31 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:214
-#: code:addons/website/models/website.py:283
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Overview"
+msgstr "概述"
+
+#. module: website
+#: code:addons/website/models/website.py:300
+#: code:addons/website/models/website.py:364
 #: model:ir.model,name:website.model_website_page
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__page_ids
 #: model:ir.model.fields,field_description:website.field_website_page__page_ids
 #, python-format
 msgid "Page"
-msgstr "网页"
+msgstr "页"
 
 #. module: website
-#: code:addons/website/models/website.py:221
+#: code:addons/website/models/website.py:307
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
-msgstr "<b/>"
+msgstr "页面 <b>%s</b> 包含跳转链接"
 
 #. module: website
-#: code:addons/website/models/website.py:290
+#: code:addons/website/models/website.py:371
 #, python-format
 msgid "Page <b>%s</b> is calling this file"
-msgstr "<b/>"
+msgstr "页面 <b>%s</b> 正在调用此文件"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
@@ -2272,11 +2832,16 @@ msgstr "页面名称"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:67
+#: code:addons/website/static/src/js/menu/content.js:68
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Page Properties"
 msgstr "页面属性"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_pages_tree_view
+msgid "Page Published"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2296,19 +2861,13 @@ msgid "Page URL"
 msgstr "页面 URL"
 
 #. module: website
-#: code:addons/website/models/website.py:216
-#: code:addons/website/models/website.py:285
+#: code:addons/website/models/website.py:302
+#: code:addons/website/models/website.py:366
 #: model:ir.ui.menu,name:website.menu_website_pages_list
+#: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
 msgid "Pages"
 msgstr "页面"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_panel
-msgid ""
-"Panels are a great tool to compare offers or to emphasize on\n"
-"                key features. To compare products, use the inside columns."
-msgstr "仪表板是一个很棒的工具，它可以用来比较以及强调关键特征。使用内部栏位对产品进行比较。"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
@@ -2327,15 +2886,10 @@ msgstr "用户的业务伙伴相关数据"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:58
+#: code:addons/website/static/src/xml/website.facebook_page.xml:63
 #, python-format
 msgid "Please enter valid facebook page URL for preview"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.theme_customize
-msgid "Please install a theme in order to customize your website."
-msgstr "请安装一个主题来自定义您的网站。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -2344,16 +2898,32 @@ msgstr "前一个"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:52
+#: code:addons/website/static/src/xml/website.facebook_page.xml:57
 #: code:addons/website/static/src/xml/website.seo.xml:28
+#: code:addons/website/static/src/xml/website.seo.xml:151
 #, python-format
 msgid "Preview"
 msgstr "预览"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.gallery.xml:23
+#: code:addons/website/static/src/xml/website.gallery.xml:30
+#: model:ir.ui.view,arch_db:website.s_carousel
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+#, python-format
+msgid "Previous"
+msgstr "以前"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Professional"
 msgstr "专业的"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
+msgid "Profile"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2362,7 +2932,7 @@ msgstr "促销"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/seo.js:339
+#: code:addons/website/static/src/js/menu/seo.js:423
 #, python-format
 msgid "Promote Page"
 msgstr "推广页面"
@@ -2370,7 +2940,7 @@ msgstr "推广页面"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote page on the web"
-msgstr "在web推广网页"
+msgstr "在网站推广页面"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__partner_id
@@ -2385,17 +2955,24 @@ msgstr "公众用户"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:45
-#: code:addons/website/static/src/xml/website.pageProperties.xml:126
+#: code:addons/website/static/src/xml/website.pageProperties.xml:122
 #, python-format
 msgid "Publish"
 msgstr "发布"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:152
+#, python-format
+msgid "Publish date"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/tours/banner.js:42
 #, python-format
 msgid "Publish your page by clicking on the <b>Save</b> button."
-msgstr "<b/>"
+msgstr "通过单击<b>保存</b>按钮发布您的页面。"
 
 #. module: website
 #. openerp-web
@@ -2408,7 +2985,7 @@ msgstr "已发布"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:137
+#: code:addons/website/static/src/xml/website.pageProperties.xml:146
 #: model:ir.model.fields,field_description:website.field_website_page__date_publish
 #, python-format
 msgid "Publishing Date"
@@ -2420,13 +2997,23 @@ msgid "QWeb"
 msgstr "QWeb"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_rating
+msgid "Quality"
+msgstr "质量"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_btn
+msgid "Read more"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_from
 msgid "Redirect From"
 msgstr "重定向自"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:66
+#: code:addons/website/static/src/xml/website.pageProperties.xml:68
 #, python-format
 msgid "Redirect Old URL"
 msgstr "重定向旧 URL"
@@ -2434,7 +3021,7 @@ msgstr "重定向旧 URL"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_to
 msgid "Redirect To"
-msgstr "重定向至"
+msgstr "重定向到"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__type
@@ -2446,6 +3033,17 @@ msgstr "重定向类型"
 #: model:ir.ui.menu,name:website.menu_website_redirect_list
 msgid "Redirects"
 msgstr "重定向"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_references
+msgid "References"
+msgstr "参考"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_partner__website_id
+#: model:ir.model.fields,field_description:website.field_res_users__website_id
+msgid "Registration Website"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_pages_form_view
@@ -2464,7 +3062,7 @@ msgstr "相关页面"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:68
+#: code:addons/website/static/src/xml/website.xml:69
 #, python-format
 msgid "Rename Page To:"
 msgstr "重命名网页为:"
@@ -2480,14 +3078,31 @@ msgid "Reset templates"
 msgstr "重置模板"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_website_multi_mixin__website_id
+#: model:ir.model.fields,help:website.field_website_page__website_id
+#: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website
 #: model:res.groups,name:website.group_website_publisher
 msgid "Restricted Editor"
 msgstr "受限编辑器"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
+msgid "Review"
+msgstr "审查"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Right"
 msgstr "右"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Rounded"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2500,18 +3115,28 @@ msgid "SEO metadata"
 msgstr "SEO元数据"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Sample images"
-msgstr "图像示例"
+#: model:ir.ui.menu,name:website.menu_website_dashboard
+msgid "Sales Dashboard"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Sample Icons"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/backend/dashboard.js:91
-#: code:addons/website/static/src/js/menu/content.js:45
-#: code:addons/website/static/src/js/menu/seo.js:342
+#: code:addons/website/static/src/js/backend/dashboard.js:93
+#: code:addons/website/static/src/js/menu/content.js:46
+#: code:addons/website/static/src/js/menu/seo.js:426
 #, python-format
 msgid "Save"
 msgstr "保存"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website_search_box
+msgid "Search"
+msgstr "搜索"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
@@ -2534,31 +3159,38 @@ msgid "Second Feature"
 msgstr "第二个功能"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Second List"
-msgstr "第二列表"
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Second list of Features"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "See Google Analytics data on your Website Dashboard"
-msgstr "在您的网站仪表盘上查看 Google Analytic 的数据"
+#: model:ir.ui.view,arch_db:website.s_image_text
+msgid "Section Subtitle"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:423
+#: code:addons/website/static/src/js/menu/content.js:441
 #, python-format
 msgid "Select a Menu"
 msgstr "选择菜单"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid "Select and delete blocks to remove some features."
-msgstr "选择并删除块以删除某些功能"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.seo.xml:136
+#, python-format
+msgid "Select an image to use in social share."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_big_message
-msgid "Sell Online. Easily."
-msgstr "轻松在线销售"
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Select and delete blocks to remove some features."
+msgstr "选择并删除块以删除某些功能。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Select the Website to Configure"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -2577,9 +3209,18 @@ msgstr "序号"
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
 #: model:ir.ui.menu,name:website.menu_website_website_settings
-#: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Settings"
 msgstr "设置"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Settings on this page will apply to this website"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Shadow"
+msgstr "阴影"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2587,9 +3228,26 @@ msgid "Shadows"
 msgstr "阴影"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.s_share
+msgid "Share"
+msgstr "共享"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:132
+#, python-format
+msgid "Share this page"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
+msgid "Shipping"
+msgstr "送货"
+
+#. module: website
 #: model:ir.model.fields,help:website.field_website__auto_redirect_lang
 msgid "Should users be redirected to their browser's language"
-msgstr "用户应该重定向到他们的浏览器语言"
+msgstr "是否应将用户重定向到他们的浏览器语言"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__customize_show
@@ -2599,14 +3257,14 @@ msgstr "作为可选继承显示"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:44
+#: code:addons/website/static/src/xml/website.facebook_page.xml:49
 #, python-format
 msgid "Show Friend's Faces"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:90
+#: code:addons/website/static/src/xml/website.pageProperties.xml:92
 #, python-format
 msgid "Show in Top Menu"
 msgstr "在顶部菜单中显示"
@@ -2614,12 +3272,24 @@ msgstr "在顶部菜单中显示"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Show your address on a map in the"
-msgstr "在以下页面的地图上显示您的地址："
+msgstr "在“联系我们”页面的地图上显示您的地址"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_banner
-msgid "Slider Odoo Image"
-msgstr "Odoo 幻灯片图像"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Size"
+msgstr "尺寸"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Slide"
+msgstr "幻灯片"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.gallery.xml:17
+#, python-format
+msgid "Slide image"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2637,21 +3307,37 @@ msgid "Small"
 msgstr "小"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Small Caps"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Social Media"
 msgstr "社交媒体"
 
 #. module: website
-#: code:addons/website/controllers/main.py:219
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Solid"
+msgstr ""
+
+#. module: website
+#: code:addons/website/controllers/main.py:224
 #, python-format
 msgid "Sort by Name"
 msgstr "按名称排序"
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: code:addons/website/controllers/main.py:223
 #, python-format
 msgid "Sort by Url"
 msgstr "按 Url 排序"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__specific_user_account
+#: model:ir.model.fields,field_description:website.field_website__specific_user_account
+msgid "Specific User Account"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2659,24 +3345,39 @@ msgid "Square"
 msgstr "方形"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_image_text
-#: model:ir.ui.view,arch_db:website.s_text_image
-msgid ""
-"Start with the customer – find out what they want\n"
-"                        and give it to them."
-msgstr "从客户开始 - 找到他们想要的东西，并给他们。"
+#: model:ir.ui.view,arch_db:website.s_comparisons
+msgid "Start now"
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "Starter package"
-msgstr "基础包"
+#: model:ir.ui.view,arch_db:website.s_image_text
+#: model:ir.ui.view,arch_db:website.s_text_image
+msgid "Start with the customer – find out what they want and give it to them."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid "Start your journey"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:50
+#: code:addons/website/static/src/xml/website.editor.xml:53
+#, python-format
+msgid "State colors"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:70
 #, python-format
 msgid "Stay on this page"
 msgstr "停留在该页面上"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid "Storytelling is powerful.<br/> It draws readers in and engages them."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2698,39 +3399,40 @@ msgid "Tabs"
 msgstr "选项卡"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_ir_attachment__key
+msgid ""
+"Technical field used to resolve multiple attachments in a multi-website "
+"environment."
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Technical name:"
 msgstr "技术名称："
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_feature_grid
-msgid ""
-"Tell features the visitor would like to know, not what you'd like to say."
-msgstr "告诉来访者希望知道的特性，而不是你想说的"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_features
-msgid "Tell what's the value for the<br/>customer for this feature."
-msgstr "告诉客户<br/>这一功能的价值"
+msgid "Tell what's the value for the <br/>customer for this feature."
+msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:233
-#: code:addons/website/models/website.py:303
+#: code:addons/website/models/website.py:316
+#: code:addons/website/models/website.py:383
 #, python-format
 msgid "Template"
 msgstr "模板"
 
 #. module: website
-#: code:addons/website/models/website.py:239
+#: code:addons/website/models/website.py:322
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
-msgstr "<b/>"
+msgstr "模板 <b>%s (id:%s)</b> 含跳转链接"
 
 #. module: website
-#: code:addons/website/models/website.py:309
+#: code:addons/website/models/website.py:389
 #, python-format
 msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr "<b/>"
+msgstr "模板 <b>% (id:%s)</b> 正在调用该文件"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -2738,8 +3440,8 @@ msgid "Template fallback"
 msgstr "模板回滚"
 
 #. module: website
-#: code:addons/website/models/website.py:235
-#: code:addons/website/models/website.py:305
+#: code:addons/website/models/website.py:318
+#: code:addons/website/models/website.py:385
 #, python-format
 msgid "Templates"
 msgstr "模板"
@@ -2750,9 +3452,21 @@ msgid "Terms of service"
 msgstr "服务条款"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:45
+#, python-format
+msgid "Text colors"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "The company this website belongs to"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The error occured while rendering the template"
-msgstr "这些错误可能在展示模板的时候发生"
+msgstr "错误在完成模板时发生"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -2762,6 +3476,7 @@ msgstr "下面的错误是由网站控制器引发的"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__website_url
 #: model:ir.model.fields,help:website.field_website_published_mixin__website_url
+#: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_url
 msgid "The full URL to access the document through the website."
 msgstr "通过网站访问单据的完整URL。"
 
@@ -2773,7 +3488,7 @@ msgstr "通过网站访问单据的完整URL。"
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "The page you were looking for could not be authorized."
-msgstr "你正在查找的网页可能未被授权"
+msgstr "你正在查找的网页可能未被授权。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
@@ -2781,21 +3496,28 @@ msgid ""
 "The page you were looking for could not be found; it is possible you have\n"
 "                        typed the address incorrectly, but it has most probably been removed due\n"
 "                        to the recent website reorganisation."
-msgstr "网页不可用，可能是你输错了地址，也可能是最近网站重构导致网页已被删除。"
+msgstr ""
+"网页不可用，可能是你\n"
+"输错了地址，也可能是最近网站重构导致网页已被移除。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "The selected templates will be reset to their factory settings."
-msgstr "选择的模板将会重置为出厂模式。"
+msgstr "选择的模板将会重置为其出厂模式。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.model.fields,field_description:website.field_website__theme_id
+msgid "Theme"
+msgstr "主题"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.list_website_pages
 msgid "There are currently no pages for your website."
 msgstr "目前没有您网站的页面。"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:35
+#: code:addons/website/static/src/xml/website.backend.xml:39
 #, python-format
 msgid "There is no data currently available."
 msgstr "目前没有可用的数据。"
@@ -2803,25 +3525,22 @@ msgstr "目前没有可用的数据。"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
-"These terms of service (\"Terms\", \"Agreement\") are an agreement between the website\n"
-"                                (\"Website operator\", \"us\", \"we\" or \"our\") and you (\"User\", \"you\" or \"your\")."
+"These terms of service (\"Terms\", \"Agreement\") are an agreement between "
+"the website (\"Website operator\", \"us\", \"we\" or \"our\") and you "
+"(\"User\", \"you\" or \"your\"). This Agreement sets forth the general terms"
+" and conditions of your use of this website and any of its products or "
+"services (collectively, \"Website\" or \"Services\")."
 msgstr ""
-"这些服务条款（“条款”、“协议”）是网站和 \n"
-"（“网站运营商”或“我方”）和您（“用户”或“贵方”）之间的协议。"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Thin"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Third Feature"
 msgstr "第三功能"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_faq_collapse
-msgid ""
-"This Agreement sets forth the general terms and conditions of your use of this website\n"
-"                                and any of its products or services (collectively, \"Website\" or \"Services\")."
-msgstr ""
-"本协议规定了使用本网站 \n"
-" 和任何产品或服务的一般条款和条件（集体“网站”或“服务”）。"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -2833,20 +3552,27 @@ msgstr "该字段保存用于在网站上显示图标的图像。"
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
 #: model:ir.model.fields,help:website.field_website__default_lang_code
 msgid "This field is used to set/get locales for user"
-msgstr "此字段用于设定或获取地区设置"
+msgstr "此字段用于为用户设定或获取地区设置"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_banner
+msgid ""
+"This is a simple hero unit, a simple jumbotron-style component <br/>for "
+"calling extra attention to featured content or information."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
 "this site."
-msgstr "该页面不存在，但是作为该站点管理员，你可以创建它。"
+msgstr "该页面不存在，但是作为该站点管理员，您可以创建它。"
 
 #. module: website
-#: code:addons/website/models/website.py:254
+#: code:addons/website/models/website.py:335
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
-msgstr "<b/>"
+msgstr "该页面位于菜单 <b>%s</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2855,19 +3581,23 @@ msgstr "缩略图"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:16
+#: code:addons/website/static/src/xml/website.facebook_page.xml:18
 #, python-format
 msgid "Timeline"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Title"
+msgstr "称谓"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid ""
-"To add a fourth column, reduce the size of these\n"
-"                        three columns using the right icon of each block.\n"
-"                        Then, duplicate one of the column to create a new\n"
-"                        one as a copy."
-msgstr "要添加第四列，减少这三个列的大小。然后，复制该列中的一个来创建一个新的。"
+"To add a fourth column, reduce the size of these three columns using the "
+"right icon of each block. Then, duplicate one of the column to create a new "
+"one as a copy."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2875,17 +3605,33 @@ msgid "Tony Fred, CEO"
 msgstr "Tony Fred，首席执行官"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Top"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.theme_customize
+msgid "Top Bar"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/content.js:418
+#: code:addons/website/static/src/js/menu/content.js:436
 #: model:website.menu,name:website.main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "顶层菜单"
 
 #. module: website
+#: code:addons/website/models/website.py:172
+#, python-format
+msgid "Top Menu for website %s"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Traceback"
-msgstr "Traceback"
+msgstr "回溯"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2910,6 +3656,17 @@ msgid "Transform the picture (click twice to reset transformation)"
 msgstr "更换图片（双击重置转换）"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Transparent"
+msgstr "透明"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "Turn every feature into a benefit for your reader."
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_twitter
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "Twitter Account"
 msgstr "Twitter账号"
@@ -2921,7 +3678,7 @@ msgstr "Twitter 滚动条"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.pageProperties.xml:80
+#: code:addons/website/static/src/xml/website.pageProperties.xml:82
 #, python-format
 msgid "Type"
 msgstr "类型"
@@ -2931,11 +3688,11 @@ msgstr "类型"
 msgid ""
 "Type '<i class=\"confirm_word\">yes</i>' in the box below if you want to "
 "confirm."
-msgstr "如果您想确认，在下面的框中键入yes。"
+msgstr "如果你想确认，在下面的框中键入‘<i class=\"confirm_word\">是</i>‘。"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:52
+#: code:addons/website/static/src/xml/website.backend.xml:55
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_website_form
 #, python-format
@@ -2946,12 +3703,12 @@ msgstr "UA-XXXXXXXX-Y"
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
 #: model:ir.model.fields,help:website.field_website__cdn_filters
 msgid "URL matching those filters will be rewritten using the CDN Base URL"
-msgstr "URL匹配这些筛选将被使用CDN基本URL重写"
+msgstr "网址匹配这些筛选将被使用CDN基本网址重写"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "Ultimate package"
-msgstr "终极包"
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Underlined"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.index_management
@@ -2966,7 +3723,7 @@ msgstr "无限制的CRM力量和支持"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Unlimited customization"
-msgstr "无限制的客户化定制"
+msgstr "无限制的订制"
 
 #. module: website
 #. openerp-web
@@ -2979,18 +3736,13 @@ msgstr "未发布"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__url
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.list_website_pages
 msgid "Url"
 msgstr "Url"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_faq_collapse
-msgid "Use Of Cookies"
-msgstr "使用 Cookie"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.facebook_page.xml:30
+#: code:addons/website/static/src/xml/website.facebook_page.xml:35
 #, python-format
 msgid "Use Small Header"
 msgstr ""
@@ -3001,16 +3753,29 @@ msgid "Use a CDN to optimize the availability of your website's content"
 msgstr "使用 CDN 优化网站内容的可用性"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
-msgid "Use a Content Delivery Network (CDN)"
-msgstr "使用内容分发网(CDN)"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:101
 #, python-format
 msgid "Use as Homepage"
 msgstr "用作主页"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_faq_collapse
+msgid "Use of Cookies"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_carousel
+msgid ""
+"Use this snippet to presents your content in a slideshow-like format.<br/> "
+"Don't write about products or services here, write about solutions."
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_country_group_ids
+#: model:ir.model.fields,help:website.field_website__country_group_ids
+msgid "Used when multiple websites have the same domain."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3028,18 +3793,23 @@ msgstr "用户"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
+msgid "Value"
+msgstr "值"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Fast"
 msgstr "迅速"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Slow"
-msgstr "龟爬"
+msgstr "很慢"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
-msgstr "查看"
+msgstr "视图"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch
@@ -3069,15 +3839,23 @@ msgstr "继承于此的视图"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_published
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:25
+#: code:addons/website/static/src/xml/website.backend.xml:29
 #, python-format
 msgid "Visits"
 msgstr "访问"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.facebook_page.xml:60
+#, python-format
+msgid "Warning"
+msgstr "警告"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -3085,12 +3863,9 @@ msgstr "访问"
 #: model:website.page,arch_db:website.aboutus_page
 msgid ""
 "We are a team of passionate people whose goal is to improve everyone's\n"
-"                                                      life through disruptive products. We build great products to solve your\n"
-"                                                      business problems."
+"                                                    life through disruptive products. We build great products to solve your\n"
+"                                                    business problems."
 msgstr ""
-"我们是一支充满热情的队伍，我们的目标是通过颠覆性产品来改善每一个人\n"
-" 生活。我们建造伟大的产品解决您的 \n"
-" 业务问题。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
@@ -3108,18 +3883,14 @@ msgid "We found these ones:"
 msgstr "我们发现了这些："
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.contactus
-#: model:ir.ui.view,arch_db:website.contactus_page_ir_ui_view
-#: model:website.page,arch_db:website.contactus_page
-msgid "We'll do our best to get back to you as soon as possible."
-msgstr "我们将尽快回复你"
-
-#. module: website
 #: model:ir.actions.act_url,name:website.action_website
 #: model:ir.model,name:website.model_website
+#: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
 #: model:ir.model.fields,field_description:website.field_website_menu__website_id
+#: model:ir.model.fields,field_description:website.field_website_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_page__website_id
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_id
 #: model:ir.model.fields,field_description:website.field_website_redirect__website_id
 #: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3128,11 +3899,12 @@ msgid "Website"
 msgstr "网站"
 
 #. module: website
-#: model:ir.actions.act_window,name:website.action_module_website
-msgid "Website Apps"
-msgstr "网站Apps"
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
+msgid "Website Company"
+msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
 #: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
 msgstr "网站域名"
@@ -3146,11 +3918,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
 msgstr "网站图标"
-
-#. module: website
-#: model:ir.actions.act_url,name:website.action_website_homepage
-msgid "Website Homepage"
-msgstr "网站主页"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
@@ -3194,7 +3961,7 @@ msgstr "网站路径"
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
 msgid "Website Redirect"
-msgstr "网站重新定向"
+msgstr "网站重定向"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_redirect_form_view
@@ -3213,11 +3980,6 @@ msgid "Website Settings"
 msgstr "网站设置"
 
 #. module: website
-#: model:ir.actions.act_window,name:website.action_module_theme
-msgid "Website Theme"
-msgstr "网站主题"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Title"
 msgstr "网站标题"
@@ -3226,6 +3988,7 @@ msgstr "网站标题"
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_url
 #: model:ir.model.fields,field_description:website.field_website_page__website_url
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_url
+#: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 msgid "Website URL"
 msgstr "网站网址"
 
@@ -3237,13 +4000,10 @@ msgstr "网站网址"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
-"Website may use cookies to personalize and facilitate maximum navigation of the\n"
-"                                User by this site. The User may configure his / her browser to notify and\n"
-"                                reject the installation of the cookies sent by us."
+"Website may use cookies to personalize and facilitate maximum navigation of "
+"the User by this site. The User may configure his / her browser to notify "
+"and reject the installation of the cookies sent by us."
 msgstr ""
-"网站可能使用 cookie 实现个性化，并且促进 \n"
-" 该站点用户的最大化导航。用户可能会配置他/她的浏览器，以便接收通知及 \n"
-" 拒绝由我方发送的安装 cookie 的消息。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_tree
@@ -3255,7 +4015,7 @@ msgstr "网站菜单"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
-msgstr "网站meta说明"
+msgstr "网站元说明"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
@@ -3272,12 +4032,21 @@ msgid "Website meta title"
 msgstr "网站meta标题"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
+#: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
+#: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
+
+#. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
+#: model:ir.actions.server,name:website.ir_actions_server_website_google_analytics
 msgid "Website: Dashboard"
 msgstr "网站：仪表盘"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_page__website_ids
+#: model:ir.actions.act_window,name:website.action_website_list
+#: model:ir.ui.menu,name:website.menu_website_websites_list
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "网站"
@@ -3296,67 +4065,71 @@ msgstr "欢迎进入您的主页"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:10
+#: code:addons/website/static/src/xml/website.editor.xml:9
 #, python-format
 msgid "What do you want to do?"
 msgstr "您想要做什么？"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_cover
-msgid "With a great subtitle"
-msgstr "附带很棒的副标题"
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:134
+#, python-format
+msgid ""
+"When enabled, this page will be shared between all the websites. This change"
+" is not reversible."
+msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_parallax_slider
+#: model:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model:ir.ui.view,arch_db:website.s_tabs
 msgid ""
-"Write a quote here from one of your customers. Quotes are a\n"
-"                                                great way to build confidence in your products or services."
-msgstr "把来自你的客户的引用写在这里。引用是一个很棒的方式来对你的产品或服务建立信心。"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_text_image
-msgid ""
-"Write one or two paragraphs describing your product or\n"
-"                        services.<br/>To be successful your content needs to be\n"
-"                        useful to your readers."
-msgstr "<br/>"
+"Write a quote here from one of your customers. Quotes are a great way to "
+"build confidence in your products or services."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
+#: model:ir.ui.view,arch_db:website.s_text_image
 msgid ""
-"Write one or two paragraphs describing your product,\n"
-"                        services or a specific feature. To be successful\n"
-"                        your content needs to be useful to your readers."
-msgstr "使用一两个图片来说明你的产品和服务。是你的内容对你的读者来说是有用的。"
+"Write one or two paragraphs describing your product or services. <br/>To be "
+"successful your content needs to be useful to your readers."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
 msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
-"feature. To be successful your content needs to be useful to your readers."
-msgstr "写一两个段落描述您的产品服务或特定功能。要想取得成功，您的内容需要对读者有用。"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_big_message
-msgid "Write one sentence to convince visitor about your message."
-msgstr "写一个消息来劝服你网站的访问者"
+"feature.<br/> To be successful your content needs to be useful to your "
+"readers."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid ""
-"Write what the customer would like to know,<br/>not what you want to show."
-msgstr "写客人所想的，而不是你想表现的。"
+"Write what the customer would like to know, <br/>not what you want to show."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_features_grid
+msgid "You can edit colors and background to highlight features."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/res_users.py:42 sql_constraint:res.users:0
+#, python-format
+msgid "You can not have two users with the same login!"
+msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:47
+#: code:addons/website/static/src/xml/website.backend.xml:50
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
-msgstr "你好像对此分析帐户没有访问权限."
+msgstr "你好像对此分析帐户没有访问权限。"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/seo.js:543
+#: code:addons/website/static/src/js/menu/seo.js:636
 #, python-format
 msgid ""
 "You have hidden this page from search results. It won't be indexed by search"
@@ -3365,7 +4138,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:46
+#: code:addons/website/static/src/xml/website.backend.xml:49
 #, python-format
 msgid "You need to log in to your Google Account before:"
 msgstr "您需要先登录您的 Google 账户，然后再："
@@ -3373,57 +4146,39 @@ msgstr "您需要先登录您的 Google 账户，然后再："
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
-"You should carefully review the legal statements and other conditions of use of\n"
-"                                any website which you access through a link from this Website. Your linking to\n"
-"                                any other off-site pages or other websites is at your own risk."
+"You should carefully review the legal statements and other conditions of use"
+" of any website which you access through a link from this Website. Your "
+"linking to any other off-site pages or other websites is at your own risk."
 msgstr ""
-"通过该网站的链接访问的 \n"
-" 其他任何网站，您都应该仔细审查法律声明和使用的其他条件。您链接到 \n"
-" 其他任何站点以外的页面或其他网站须自担风险。"
-
-#. module: website
-#: model:ir.actions.act_window,help:website.action_module_theme
-#: model:ir.actions.act_window,help:website.action_module_website
-msgid "You should try other search criteria."
-msgstr "你可以尝试其他搜索条件"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:56
+#: code:addons/website/static/src/xml/website.backend.xml:60
 #, python-format
 msgid "Your Client ID:"
 msgstr "您的客户 ID："
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_banner
-msgid "Your Slide Title"
-msgstr "您的滑动标题"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:51
+#: code:addons/website/static/src/xml/website.backend.xml:54
 #, python-format
 msgid "Your Tracking ID:"
 msgstr "您的跟踪 ID："
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.s_title
-msgid "Your Website Title"
-msgstr "你的网站标题"
-
-#. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:11
+#: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "Your current changes will be saved automatically."
 msgstr "您当前的更改将自动保存。"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.edit_website_pages
+#: model:ir.ui.view,arch_db:website.list_website_pages
 msgid "Your search '"
 msgstr "您的搜索”"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__social_youtube
 #: model:ir.model.fields,field_description:website.field_website__social_youtube
 msgid "Youtube Account"
 msgstr "Youtube账号"
@@ -3431,18 +4186,18 @@ msgstr "Youtube账号"
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "and evaluating the following expression:"
-msgstr "以及评估表达式"
+msgstr "以及评估表达式："
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
 msgid "describing your page content"
-msgstr "显示你的网页内容"
+msgstr "描述你的网页内容"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.xml:70
+#: code:addons/website/static/src/xml/website.xml:71
 #, python-format
 msgid "e.g. About Us"
 msgstr "例如，关于我们"
@@ -3452,12 +4207,19 @@ msgstr "例如，关于我们"
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
 msgid "found(s)"
-msgstr "命中数"
+msgstr "搜索结果数"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
 msgstr "免费的网站"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.seo.xml:151
+#, python-format
+msgid "how your page will be displayed on social media"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3467,39 +4229,9 @@ msgid "how your page will be listed on Google"
 msgstr "此网页将如何在Google列出"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://plus.google.com/+Odooapps"
-msgstr "https://plus.google.com/+Odooapps"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://twitter.com/Odoo"
-msgstr "https://twitter.com/Odoo"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://www.facebook.com/odoo"
-msgstr "https://www.facebook.com/odoo"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://www.linkedin.com/company/odoo"
-msgstr "https://www.linkedin.com/company/odoo"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://www.youtube.com/user/OpenERPonline"
-msgstr "https://www.youtube.com/user/OpenERPonline"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.view_website_form
-msgid "https://youraccount.github.io"
-msgstr "https://youraccount.github.io"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "instance of Odoo, the"
-msgstr "Odoo实例，这个"
+msgstr "Odoo实例，"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -3515,6 +4247,16 @@ msgstr "ir.attachment"
 #: model:ir.model,name:website.model_ir_qweb
 msgid "ir.qweb"
 msgstr "ir.qweb"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_contact
+msgid "ir.qweb.field.contact"
+msgstr "ir.qweb.field.contact"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "ir.rule"
+msgstr "ir.rule"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_ui_view
@@ -3537,6 +4279,11 @@ msgid "page"
 msgstr "页面"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.snippet_options
+msgid "px"
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "res.config.settings"
 msgstr "设置-基础设置"
@@ -3546,7 +4293,7 @@ msgstr "设置-基础设置"
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "signs to get your website ready in no time."
-msgstr "标志即可立即准备好您的网站。"
+msgstr "关注全部标志即可立即准备好您的网站。"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.robots
@@ -3556,12 +4303,7 @@ msgstr "sitemap.xml"
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "url"
-msgstr "url"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.s_comparisons
-msgid "user / month (billed annually)"
-msgstr "用户/月(每年结算)"
+msgstr "网址"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
@@ -3570,9 +4312,19 @@ msgid "website"
 msgstr "网站"
 
 #. module: website
+#: model:ir.model,name:website.model_website_multi_mixin
+msgid "website.multi.mixin"
+msgstr ""
+
+#. module: website
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "website.published.mixin"
 msgstr "website.published.mixin"
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_multi_mixin
+msgid "website.published.multi.mixin"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.brand_promotion
@@ -3582,4 +4334,9 @@ msgstr "使用"
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "yes"
-msgstr "yes"
+msgstr "是"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.s_tabs
+msgid "— Jane DOE, CEO of <b>MyCompany</b>"
+msgstr ""

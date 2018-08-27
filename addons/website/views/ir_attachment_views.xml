@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
             <field name="mimetype" position="after">
-                <field name="website_id" groups="base.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" groups="base.group_multi_website"/>
             </field>
         </field>
     </record>

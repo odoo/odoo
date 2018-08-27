@@ -83,7 +83,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 emails = odoo.tools.email_split(login)
                 if emails:
                     values['email'] = emails[0]
-            env.user.write(values)
+            env.ref('base.user_admin').write(values)
 
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()

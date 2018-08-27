@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgid " : Check Number Sequence"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:71
+#: code:addons/account_check_printing/models/account_payment.py:63
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr ""
@@ -161,7 +161,7 @@ msgid "ID"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:91
+#: code:addons/account_check_printing/models/account_payment.py:84
 #, python-format
 msgid "In order to print multiple checks at once, they must belong to the same bank journal."
 msgstr ""
@@ -226,7 +226,7 @@ msgid "Payments"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:88
+#: code:addons/account_check_printing/models/account_payment.py:81
 #, python-format
 msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
 msgstr ""
@@ -258,7 +258,7 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:94
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -290,6 +290,11 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid "Technical feature used to know whether check printing was enabled as payment method."
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_chart_template
+msgid "Templates for Account Chart"
 msgstr ""
 
 #. module: account_check_printing
@@ -332,7 +337,7 @@ msgid "Unmark Sent"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:123
+#: code:addons/account_check_printing/models/account_payment.py:116
 #, python-format
 msgid "You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."
 msgstr ""
@@ -355,10 +360,5 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
 msgstr ""
 

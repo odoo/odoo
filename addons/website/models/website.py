@@ -67,7 +67,7 @@ class Website(models.Model):
     def _default_social_googleplus(self):
         return self.env.ref('base.main_company').social_googleplus
 
-    name = fields.Char('Website Name')
+    name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
@@ -89,9 +89,6 @@ class Website(models.Model):
     google_management_client_secret = fields.Char('Google Client Secret')
 
     google_maps_api_key = fields.Char('Google Maps API Key')
-    has_google_analytics = fields.Boolean("Google Analytics")
-    has_google_analytics_dashboard = fields.Boolean("Embedded Google Analytics")
-    has_google_maps = fields.Boolean("Google Maps")
 
     user_id = fields.Many2one('res.users', string='Public User', required=True)
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
@@ -683,6 +680,14 @@ class Website(models.Model):
             return self.env.ref('website.backend_dashboard').read()[0]
         return self.env.ref('website.action_website').read()[0]
 
+    def button_go_website(self):
+        self._force()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/',
+            'target': 'self',
+        }
+
 
 class SeoMetadata(models.AbstractModel):
 
@@ -986,7 +991,6 @@ class Page(models.Model):
                 new_view = view.copy({'website_id': default.get('website_id')})
                 default['view_id'] = new_view.id
 
-            default['name'] = default.get('name', '%s %s' % (self.name, _('(copy)')))
             default['url'] = default.get('url', self.env['website'].get_unique_path(self.url))
         return super(Page, self).copy(default=default)
 
@@ -996,15 +1000,14 @@ class Page(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        new_page = page.copy(dict(website_id=self.env['website'].get_current_website().id))
+        new_page = page.copy(dict(name=page.name, website_id=self.env['website'].get_current_website().id))
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
             menu = self.env['website.menu'].search([('page_id', '=', page_id)], limit=1)
             if menu:
                 # If the page being cloned has a menu, clone it too
-                new_menu = menu.copy()
-                new_menu.write({'url': new_page.url, 'name': '%s %s' % (menu.name, _('(copy)')), 'page_id': new_page.id})
+                menu.copy({'url': new_page.url, 'name': menu.name, 'page_id': new_page.id})
 
         return new_page.url + '?enable_editor=1'
 

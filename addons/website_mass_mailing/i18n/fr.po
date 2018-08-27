@@ -3,27 +3,21 @@
 # * website_mass_mailing
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Loic <loic.richard2@gmail.com>, 2016
-# Martin Trigaux, 2016
-# lucasdeliege <deliegelucas@gmail.com>, 2016
-# Florian Hatat, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# e2f <projects@e2f.com>, 2018
-# Lucas Deliege <lud@odoo.com>, 2018
+# Quentin THEURET <odoo@kerpeo.com>, 2018
+# Martin Trigaux, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Fabien Pinckaers <fp@openerp.com>, 2018
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
+# Melanie Bernard <mbe@odoo.com>, 2018
+# Micky Jault <micky037@hotmail.fr>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +28,7 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "&amp;times;"
-msgstr "&times;"
+msgstr "&amp;times;"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -65,11 +59,6 @@ msgid "Change Newsletter"
 msgstr "Changer de bulletin de nouvelles"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "Choose your mailing subscriptions."
-msgstr "Choisissez vos abonnements de courriel. "
-
-#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
@@ -81,20 +70,29 @@ msgid "Encourage to subscribe to mailing lists with a popup"
 msgstr "Encouragez l'inscription à la liste de diffusion à l'aide d'un popup"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Google Plus"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
 msgstr "C'est ici pour éditer le contenu du dialogue"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
 msgid "Mailing List"
 msgstr "Liste de diffusion"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Mailing Subscriptions"
-msgstr "Abonnements par courriel"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -133,6 +131,11 @@ msgid ""
 msgstr ""
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Twitter"
+msgstr "Twitter"
+
+#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
@@ -166,31 +169,6 @@ msgid "Website Popup Redirect URL"
 msgstr "Lien de redirection ouvrant une pop-up vers le site internet"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "You are not subscribed to any of our mailing list."
-msgstr "Vous n'êtes pas abonné à l'une des notre liste d'envoi."
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr "<strong/>"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
-#, python-format
-msgid "Your changes have been saved."
-msgstr "Vos changements ont été sauvegardés. "
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
-#, python-format
-msgid "Your changes have not been saved, try again later."
-msgstr ""
-"Vos modifications n'ont pas été sauvegardées, veuillez réessayer plus tard."
-
-#. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
@@ -199,4 +177,4 @@ msgstr "res.config.settings"
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr "Votre adresse courriel..."
+msgstr "Votre adresse email..."

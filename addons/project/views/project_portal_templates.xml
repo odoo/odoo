@@ -89,13 +89,13 @@
                             <t t-if="project.partner_id">
                                 <strong>Customer</strong>
                                 <div t-if="project.partner_id">
-                                    <address t-field="project.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"]}'/>
+                                    <address t-field="project.partner_id" t-options='{"widget": "contact", "fields": ["name", "email"]}'/>
                                 </div>
                             </t>
                             <t t-if="project.user_id">
                                 <strong>Project Manager</strong>
                                 <div>
-                                    <address t-field="project.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                    <address t-field="project.user_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
                                 </div>
                             </t>
                         </div>
@@ -183,13 +183,13 @@
                     <div class='row'>
                         <div class="col-lg-6">
                             <div class="mb8">
-                                <strong>Date:</strong> <span t-field="task.create_date" t-field-options='{"widget": "date"}'/>
+                                <strong>Date:</strong> <span t-field="task.create_date" t-options='{"widget": "date"}'/>
                             </div>
 
                             <div t-if="task.user_id">
                                 <strong>Assigned to</strong>
                                 <div>
-                                    <address t-field="task.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                    <address t-field="task.user_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
                                 </div>
                             </div>
                             <div t-if="task.attachment_ids" class='card-footer'>
@@ -209,12 +209,12 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="mb8" t-if="task.date_deadline">
-                                <strong>Deadline:</strong> <span t-field="task.date_deadline" t-field-options='{"widget": "date"}'/>
+                                <strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/>
                             </div>
                             <div t-if="task.partner_id">
                                 <strong>Reported by</strong>
                                 <div>
-                                    <address t-field="task.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"]}'/>
+                                    <address t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name", "email"]}'/>
                                 </div>
                             </div>
                         </div>

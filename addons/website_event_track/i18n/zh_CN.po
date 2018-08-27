@@ -3,28 +3,25 @@
 # * website_event_track
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Talway <9010446@qq.com>, 2016
-# SHOM <shanmuxin@yeah.net>, 2016
-# fausthuang, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# 菜小蛇 <lttlsnk@gmail.com>, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2018
+# SHOM <shanmuxin@yeah.net>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# fausthuang, 2018
+# 菜小蛇 <lttlsnk@gmail.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +73,7 @@ msgstr "<b>提议者</b>:"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speakers Biography</b>:"
-msgstr "<b>演讲者履历</b>:"
+msgstr "<b>演讲人简介</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -109,19 +106,19 @@ msgstr "<span id=\"search_number\">0</span> 发现"
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
-msgstr "<strong>敏捷会谈</strong>。这是在30分钟内讨论许多不同的话题。大多数话题都可以接受闪电会谈。"
+msgstr "<strong>闪电会谈</strong>。这是在30分钟内讨论许多不同的话题。大多数话题都可以接受闪电会谈。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "<strong>Participate on Twitter</strong>"
-msgstr "<STRONG>参加Twitter</STRONG>"
+msgstr "<strong>以Twitter参与</strong>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
-msgstr "<strong>定期会谈</strong>. 使用幻灯的，在60分钟内的标准讨论"
+msgstr "<strong>定期会谈</strong>。使用幻灯片的，在60分钟内的标准讨论。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -194,18 +191,18 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
 msgstr ""
-"允许视频和音频的录制\n"
-"              介绍，在我们的网站上发布。"
+"允许录制视频和音频\n"
+"              介绍他们，以在我们的网站上发布。"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
-msgstr "公布"
+msgstr "已公布"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "应用程序"
+msgstr "应用"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -316,9 +313,14 @@ msgid "Documents"
 msgstr "文档"
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
 msgid "Duration"
-msgstr "持续时间"
+msgstr "时长"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -380,7 +382,7 @@ msgstr "主办单位的类型"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
 msgid "Event Sponsors"
-msgstr "事件发起人"
+msgstr "活动赞助人"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
@@ -414,7 +416,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
-msgstr "将你们的演讲填入该表单。"
+msgstr "填写此表单来建议你的讲座。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
@@ -458,7 +460,7 @@ msgstr "未来活动"
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
-msgstr "金"
+msgstr "黄金"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -534,6 +536,11 @@ msgid "Is Follower"
 msgstr "是关注者"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
 msgstr "看板状态"
@@ -558,7 +565,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_date
@@ -579,7 +586,7 @@ msgstr "逾期活动"
 #. module: website_event_track
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_location
 msgid "Locations"
-msgstr "地点"
+msgstr "位置"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_medium
@@ -594,7 +601,7 @@ msgstr "低"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "普通"
+msgstr "媒体"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
@@ -603,7 +610,7 @@ msgid ""
 "Medium-sized image of this contact. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr "该联系人的中等尺寸照片，它自动缩放为128x128px，保存纵横比。表单视图和一些看板视图使用这个字段"
+msgstr "该联系人的中等尺寸照片，它自动缩放为128x128px的图片，保存纵横比。使用表单视图和一些看板视图中的此字段。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
@@ -638,7 +645,7 @@ msgstr "新专场"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_event_track
 msgid "New Track Created"
-msgstr "新专场创建"
+msgstr "已创建的新专场"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -746,7 +753,10 @@ msgid ""
 "Put here the list of documents, like slides of\n"
 "                            the presentations. Remove the above t-if when\n"
 "                            it's implemented."
-msgstr "像演示幻灯片这样的文档列表放在这里。当它生效的时候移除上面的t-if。"
+msgstr ""
+"像演示的幻灯片\n"
+"这样将文档列表放在此处。当\n"
+"它生效的时候移除上面的 t-if。"
 
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
@@ -785,7 +795,7 @@ msgstr "序号"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records which has next action date is before today"
-msgstr "显示在今天之前的下一个行动日期的所有记录"
+msgstr "显示所有下一个活动日期在今天之前的记录"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
@@ -800,7 +810,7 @@ msgstr "社交圈"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 msgid "Speaker"
-msgstr "关注者"
+msgstr "讲者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
@@ -829,7 +839,7 @@ msgstr "发言人电话"
 #: code:addons/website_event_track/models/event_track.py:184
 #, python-format
 msgid "Speakers"
-msgstr "音箱"
+msgstr "讲者"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
@@ -850,7 +860,7 @@ msgstr "主办单位类型"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__url
 msgid "Sponsor Website"
-msgstr "赞助网站"
+msgstr "赞助人网站"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_id
@@ -866,7 +876,7 @@ msgstr "赞助类型"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_ids
 #: model:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Sponsors"
-msgstr "发起人"
+msgstr "赞助人"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -948,12 +958,12 @@ msgstr "演讲类型"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Thank you for your proposal."
-msgstr "谢谢您的建议。"
+msgstr "谢谢你的建议。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整网址。"
+msgstr "通过网站访问单据的完整URL。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -973,8 +983,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
 msgstr ""
-"演示材料的及时发布（幻灯片）,\n"
-"                 在我们的网站上发布。"
+"及时发布演示材料（幻灯片）,\n"
+"                 用以在我们的网站上发布。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -994,7 +1004,7 @@ msgstr "今天的活动"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr "专场"
+msgstr "追踪"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
@@ -1110,7 +1120,7 @@ msgstr "未读消息计数器"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
 msgid "Use this tag:"
-msgstr "用这个标签："
+msgstr "使用此标签："
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -1119,13 +1129,13 @@ msgstr "查看专场"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
-msgstr "我们要求发言者接受，他们承诺的协议"
+msgstr "我们要求发言者接受协议，他们承诺："
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1139,17 +1149,17 @@ msgid ""
 "                                inclusion in the programme."
 msgstr ""
 "我们将接受广泛的\n"
-"                 介绍，从学术报告和\n"
-"                 商业项目教程和案例\n"
-"                     研究。只要介绍是\n"
-"                  有趣的和潜在有用的\n"
-"                  观众，它会被认为是\n"
-"                 列入计划。"
+"                 演示，从学术报告和\n"
+"                 商业项目到教程和案例\n"
+"                  研究。只要演示是\n"
+"                 有趣的和对潜在观众有用的。\n"
+"                 它会被考虑\n"
+"                 列入计划当中。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr "我们将评估你的建议，得到结果尽快给您回复。"
+msgstr "我们将评估你的建议，并尽快给你回复。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
@@ -1182,9 +1192,14 @@ msgid "Website meta title"
 msgstr "网站meta标题"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Email"
-msgstr "您的电子邮件"
+msgstr "你的电子邮件"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1194,12 +1209,12 @@ msgstr "你的姓名"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Phone"
-msgstr "您的电话"
+msgstr "你的电话"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr "例如鼓舞人心的商务谈判"
+msgstr "例如：具启发性的商务谈判"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_form

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after" options="{'no_create': True}">
-                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>

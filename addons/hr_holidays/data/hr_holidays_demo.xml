@@ -59,7 +59,24 @@
     </record>
 
     <!-- approve the first 3 leave allocations -->
-    <function model="hr.leave.allocation" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_allocation_cl'), ref('hr_holidays.hr_holidays_employee1_int_tour'), ref('hr_holidays_employee1_allocation_hl')]]"/>
+    <function model="hr.leave.allocation" name="action_approve">
+        <value model="hr.leave.allocation" search="[
+            ('state', '=', 'confirm'),
+            ('id', 'in', [ref('hr_holidays.hr_holidays_employee1_allocation_cl')])
+        ]"/>
+    </function>
+    <function model="hr.leave.allocation" name="action_approve">
+        <value model="hr.leave.allocation" search="[
+            ('state', '=', 'confirm'),
+            ('id', 'in', [ref('hr_holidays.hr_holidays_employee1_int_tour')])
+        ]"/>
+    </function>
+    <function model="hr.leave.allocation" name="action_approve">
+        <value model="hr.leave.allocation" search="[
+            ('state', '=', 'confirm'),
+            ('id', 'in', [ref('hr_holidays_employee1_allocation_hl')])
+        ]"/>
+    </function>
 
     <record id="hr_holidays_employee1_cl" model="hr.leave">
         <field name="name">Trip with Family</field>
@@ -81,7 +98,12 @@
     </record>
 
     <!-- approve the leave request -->
-    <function model="hr.leave" name="action_approve" eval="[[ref('hr_holidays.hr_holidays_employee1_sl')]]"/>
+    <function model="hr.leave" name="action_approve">
+        <value model="hr.leave" search="[
+            ('state', '=', 'confirm'),
+            ('id', 'in', [ref('hr_holidays.hr_holidays_employee1_sl')])
+        ]"/>
+    </function>
 
 </data>
 </odoo>

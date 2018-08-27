@@ -45,6 +45,7 @@ var WebsiteRoot = BodyManager.extend({
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
         animation_stop_demand: '_onAnimationStopDemand',
+        main_object_request: '_onMainObjectRequest',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
@@ -222,6 +223,20 @@ var WebsiteRoot = BodyManager.extend({
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+    },
+    /**
+     * Checks information about the page main object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onMainObjectRequest: function (ev) {
+        var repr = $('html').data('main-object');
+        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+        ev.data.callback({
+            model: m[1],
+            id: m[2] | 0,
+        });
     },
     /**
      * @todo review

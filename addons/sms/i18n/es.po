@@ -3,19 +3,14 @@
 # * sms
 # 
 # Translators:
-# José Matias Zuazo <jose.zuazo@tpsistemas.com.ar>, 2017
-# e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017
-# Martin Trigaux, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Martin Trigaux, 2018
 # Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -23,6 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
 
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
@@ -48,7 +50,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:sms.field_sms_api__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -59,7 +61,7 @@ msgstr "Hilo de mensajes"
 #: model:ir.model.fields,field_description:sms.field_sms_api__id
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
-msgstr "ID (identificación)"
+msgstr "ID"
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:53
@@ -107,6 +109,13 @@ msgid "Recipients"
 msgstr "Destinatarios"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr ""
+
+#. module: sms
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
@@ -120,6 +129,7 @@ msgstr "Enviar"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "Enviar SMS"
 

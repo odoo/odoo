@@ -3,32 +3,14 @@
 # * event_sale
 # 
 # Translators:
-# Niki Waibel, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Dejan Dinic, 2017
-# Martin Trigaux, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Wolfgang Taferner, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# key six <mobile.umts@gmail.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Christian Lindmayer <christian.lindmayer@e-steiermark.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
-# Andi, 2017
-# Krakataua Katarajtu <shlok@hotmail.de>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Gab_Odoo <gab@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -181,11 +163,12 @@ msgstr "Veranstaltungsticket"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "Events"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
 msgstr "Verfügbar"
@@ -246,7 +229,7 @@ msgid "Maximum Available Seats"
 msgstr "Max. verfügbare Sitzungen"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:249
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -254,7 +237,7 @@ msgid "Name"
 msgstr "Name"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:179
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Keine weiteren Sitzplätze für diese Eintrittskarte verfügbar"
@@ -266,7 +249,7 @@ msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "Keine"
@@ -282,13 +265,13 @@ msgid "Original Registration"
 msgstr "Ursprüngliche Anmeldung"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:233
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "Bezahlt"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:234
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "Zahlung"
@@ -397,13 +380,13 @@ msgid "Source Sales Order"
 msgstr "Herkunft Verkaufsauftrag"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
 msgstr "Die Registrierung muss bezahlt werden. "
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "Ticket"
@@ -433,7 +416,7 @@ msgid "Tickets"
 msgstr "Tickets"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:230
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
 msgstr "Zu Bezahlen"
@@ -442,6 +425,12 @@ msgstr "Zu Bezahlen"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Unbestätigte Reservierung"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "Einheit(en)"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0

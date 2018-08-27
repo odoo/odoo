@@ -3,21 +3,14 @@
 # * account_check_printing
 # 
 # Translators:
-# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
-# Collex100, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Julia Alexeeva <inactive+juliaalexeeva_gtc_MjIzMD@transifex.com>, 2017
-# Martin Trigaux, 2017
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Артур Чеботарь <artcha.chebotar@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +25,7 @@ msgid " : Check Number Sequence"
 msgstr ": Проверьте порядковый номер"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:71
+#: code:addons/account_check_printing/models/account_payment.py:63
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Проверка памятки не может превышать 60 символов."
@@ -177,7 +170,7 @@ msgid "ID"
 msgstr "Номер"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:91
+#: code:addons/account_check_printing/models/account_payment.py:84
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
@@ -252,7 +245,7 @@ msgid "Payments"
 msgstr "Платежи"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:88
+#: code:addons/account_check_printing/models/account_payment.py:81
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -292,7 +285,7 @@ msgid "Print Date Label"
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:94
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -332,6 +325,11 @@ msgid ""
 msgstr ""
 "Техническая характеристика используется, чтобы узнать, была ли  печать чека "
 "включена в качестве метода оплаты."
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr "Шаблоны для плана счетов"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
@@ -393,7 +391,7 @@ msgid "Unmark Sent"
 msgstr "Снять отметку Отправлено"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:123
+#: code:addons/account_check_printing/models/account_payment.py:116
 #, python-format
 msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
@@ -419,8 +417,3 @@ msgstr ""
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "res.config.settings"
 msgstr "res.config.settings"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"

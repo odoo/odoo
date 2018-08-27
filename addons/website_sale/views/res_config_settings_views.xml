@@ -26,7 +26,7 @@
             </xpath>
 
             <div id="webmaster_settings" position="after">
-                <h2>Product Catalog</h2>
+                <h2>Products</h2>
                 <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
                     <div class="col-12 col-lg-6 o_setting_box" id="product_attributes_setting">
                         <div class="o_setting_left_pane">
@@ -55,18 +55,15 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <h2>Customer Experience</h2>
-                <div class="row mt16 o_settings_container" id="sale_customer_experience_settings">
-                    <div class="col-12 col-lg-6 o_setting_box" id="whishlist_option_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="wishlist_option_setting">
                         <div class="o_setting_left_pane">
                             <field name="module_website_sale_wishlist"/>
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="module_website_sale_wishlist"/>
                             <div class="text-muted">
-                                Let returning shoppers save products in a whishlist
+                                Let returning shoppers save products in a wishlist
                             </div>
                         </div>
                     </div>
@@ -309,32 +306,12 @@
                     </div>
                 </div>
 
-                <h2>Orders</h2>
+                <h2>Orders Followup</h2>
                 <div class="row mt16 o_settings_container" id="sale_checkout_settings">
-                    <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Abandoned carts are all carts for which no transaction has been confirmed while the customer has filled in their address. You can find them in *Website > Orders > Abandoned Carts*. From there you can send a recovery email to stimulate the customers to resume their order.">
-                        <div class="o_setting_left_pane"/>
-                        <div class="o_setting_right_pane">
-                            <span class="o_form_label">Abandoned Carts</span>
-                            <div class="text-muted">
-                                Send a recovery email when a cart is abandoned
-                            </div>
-                            <div class="content-group" title="This email template is suggested by default when you send a recovery email.">
-                                <div class="row mt16">
-                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-3 o_light_label"/>
-                                    <field name="cart_recovery_mail_template" class="oe_inline"/>
-                                </div>
-                            </div>
-                            <div class="content-group" title="Carts are flagged as abandoned after this delay.">
-                                <div class="row mt16">
-                                  <label for="cart_abandoned_delay" string="Cart is abandoned after" class="col-lg-6 o_light_label"/>
-                                  <span class="col-lg-3"><field name="cart_abandoned_delay"/>hour(s).</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-12 col-lg-6 o_setting_box" id="checkout_assignation_setting">
                         <div class="o_setting_right_pane">
                             <span class="o_form_label">Assignation</span>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                             <div class="text-muted">
                                 Assignation of online orders
                             </div>
@@ -346,6 +323,30 @@
                                 <div class="row">
                                     <label class="o_light_label col-lg-3" for="salesperson_id"/>
                                     <field name="salesperson_id"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-6 o_setting_box" id="abandoned_carts_setting" title="Abandoned carts are all carts for which no transaction has been confirmed while the customer has filled in their address. You can find them in *Website > Orders > Abandoned Carts*. From there you can send a recovery email to stimulate the customers to resume their order.">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Abandoned Carts</span>
+                            <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                            <div class="text-muted">
+                                Send a recovery email when a cart is abandoned
+                            </div>
+                            <div class="content-group" title="This email template is suggested by default when you send a recovery email.">
+                                <div class="row mt16">
+                                    <label for="cart_recovery_mail_template" string="Email Template" class="col-lg-4 o_light_label"/>
+                                    <field name="cart_recovery_mail_template" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <div class="content-group" title="Carts are flagged as abandoned after this delay.">
+                                <div class="row mt16">
+                                    <div class="col-12">
+                                      <label for="cart_abandoned_delay" string="Cart is abandoned after" class="o_light_label"/>
+                                      <field class="col-2" name="cart_abandoned_delay"/> hour(s).
+                                    </div>
                                 </div>
                             </div>
                         </div>

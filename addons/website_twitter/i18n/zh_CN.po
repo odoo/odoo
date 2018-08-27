@@ -3,31 +3,55 @@
 # * website_twitter
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# Maie <m@maie.name>, 2016
-# SHOM <shanmuxin@yeah.net>, 2016
-# Liping Wang <lynn.config@gmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Martin Trigaux, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Maie <m@maie.name>, 2018
+# mrshelly <mrshelly@hotmail.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# Liping Wang <lynn.config@gmail.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Twitter Roller</span>"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Callback URL: </strong>Leave blank"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Description: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Name: </strong> Odoo Twitter Integration"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "<strong>Website: </strong>"
+msgstr "<strong>网站: </strong>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_key
@@ -42,12 +66,31 @@ msgid "API secret"
 msgstr "API 密钥"
 
 #. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Accept terms of use and click on the Create your Twitter application button "
+"at the bottom"
+msgstr ""
+
+#. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
-msgstr "身份验证证书丢失或者错误。可能是名称为tweets的屏幕受保护。"
+msgstr "身份验证证明丢失或者错误。可能是屏幕名称推文被保护。"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid ""
+"Copy/Paste Consumer Key (API Key) and Consumer Secret (API Secret) keys "
+"below."
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Create a new Twitter application on"
+msgstr "创建新的Twitter应用程序"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_uid
@@ -73,13 +116,18 @@ msgstr "收藏来源"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_screen_name
 msgid "Get favorites from this screen name"
-msgstr "显示这个名称以便获得收藏"
+msgstr "获取这个名称的收藏"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP错误：某些配置错误。"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "How to configure the Twitter API access"
+msgstr "如何设置 Twitter API"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
@@ -90,7 +138,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr "网络连接被拒绝。"
+msgstr "网络连接被拒绝"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
@@ -100,7 +148,7 @@ msgstr "最后修改日"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_date
@@ -112,7 +160,7 @@ msgstr "最后更新时间"
 #: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
-msgstr "请再次确认你的Twiiter API 密钥和密码!"
+msgstr "请再次确认你的Twiiter API 密钥和秘密!"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:27
@@ -120,13 +168,13 @@ msgstr "请再次确认你的Twiiter API 密钥和密码!"
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr "请设置一个网站设置的推特屏幕名称来装入你的喜好（它不必是你自己的）"
+msgstr "请为一个网站设置的推特屏幕名称来上载你的喜好（它不必是你自己的）"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
-msgstr "请网站设置Twitter API密钥和匿名。"
+msgstr "请在网站设置Twitter API密钥和秘密。"
 
 #. module: website_twitter
 #. openerp-web
@@ -146,19 +194,24 @@ msgstr "无法为这个请求提供服务，因为资源的应用限制率已经
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__screen_name
 msgid "Screen Name"
-msgstr "显示名称"
+msgstr "屏幕名称"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
-msgstr "你想从中装入喜好的推特账号的屏幕名称。它不必与 API Key/私密 相匹配。"
+msgstr "你想从中上载的喜好推特账号的屏幕名称。它不必与 API 密钥/秘密相匹配。"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_tutorial
-msgid "Show me how to obtain the Twitter API Key and Secret"
-msgstr "告诉我如何获取Twitter API key和Secret"
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Show me how to obtain the Twitter API key and Twitter API secret"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Switch to the API Keys tab: <br/>"
+msgstr "切换到API密钥选项："
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:21
@@ -173,7 +226,7 @@ msgstr "Twiiter服务器在线，但是请求过载。请稍后重试。"
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
 "some failure within our stack. Try again later."
-msgstr "Twiiter服务器在线，但是由于我们的栈中某些错误，无法为此请求提供服务。请稍后重试。"
+msgstr "Twiiter服务器已运作，但是由于我们的栈中某些错误，无法为此请求提供服务。请稍后重试。"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:17
@@ -181,7 +234,7 @@ msgstr "Twiiter服务器在线，但是由于我们的栈中某些错误，无�
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
-msgstr "该请求可以被理解，但是被拒绝服务或者拒绝接入。请核查你的Twitter API密钥和密码。"
+msgstr "该请求可以被理解，但是已被拒绝或者拒绝访问。请核查你的Twitter API密钥和秘密。"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:15
@@ -189,18 +242,13 @@ msgstr "该请求可以被理解，但是被拒绝服务或者拒绝接入。请
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
-msgstr "请求无效或者无法提供此服务。没有认证请求被视为无效，并产生此响应。"
+msgstr "请求无效或者无法提供此服务。没有认证请求被视为无效，并产生此反应。"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
 msgstr "没有新数据返回。"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Tutorial"
-msgstr "教程"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__tweet_id
@@ -220,17 +268,17 @@ msgstr "Twitter API 凭据"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_key
 msgid "Twitter API Key"
-msgstr "Twitter API Key"
+msgstr "Twitter API 密钥"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API Secret"
+msgstr "Twitter API 秘密"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
 msgid "Twitter API key"
-msgstr "Twitter API key"
+msgstr "Twitter API 密钥"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_key
@@ -240,7 +288,7 @@ msgstr "您可以通过 https://apps.twitter.com/ 获取 Twitter API 密钥"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API secret"
+msgstr "Twitter API 秘密"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
@@ -253,11 +301,6 @@ msgstr "您可以通过 https://apps.twitter.com/ 获取 Twitter API 密钥"
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Twitter 配置"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
-msgid "Twitter Roller"
-msgstr "推特滚卷条"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
@@ -277,7 +320,17 @@ msgstr "Twitter关闭或者正在升级。"
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
-msgstr "Twitter似乎断开。请稍后重试。你可以考虑在Twitter的邮件列表中提出问题以获取帮助。"
+msgstr "Twitter似乎断开。请稍后重试。你可以考虑在Twitter的论坛中提出问题以获取帮助。"
+
+#. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_server_uri
+msgid "Twitter server uri"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter tutorial"
+msgstr ""
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
@@ -285,27 +338,44 @@ msgstr "Twitter似乎断开。请稍后重试。你可以考虑在Twitter的邮�
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
-msgstr "推特用户 @%(username)s少于12个的喜好推特。请加入更多或选择一个不同的屏幕名称。"
+msgstr "推特用户 @%(username)s少于12个的喜好推文。请加入更多或选择一个不同的屏幕名称。"
+
+#. module: website_twitter
+#. openerp-web
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#, python-format
+msgid "Twitter's user"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr "Twitter：获取新的收藏项"
+msgstr "推特：获取新的收藏项"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
-msgstr "无法到达twitter服务器。"
+msgstr "我们无法到达twitter服务器。"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
 msgstr "网站"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "api_key.png"
+msgstr ""
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "https://apps.twitter.com/app/new"
+msgstr "https://apps.twitter.com/app/new"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
@@ -316,3 +386,8 @@ msgstr "设置-基础设置"
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "with the following values:"
+msgstr "用下列值:"
