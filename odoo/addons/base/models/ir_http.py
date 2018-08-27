@@ -285,7 +285,7 @@ class IrHttp(models.AbstractModel):
             obj = cls._xmlid_to_obj(env, xmlid)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
-            if not consteq(obj.access_token, access_token):
+            if not consteq(obj.access_token or '', access_token):
                 return (403, [], None)
         elif id and share_id and share_token:
             share = env['documents.share'].sudo().browse(int(share_id))
