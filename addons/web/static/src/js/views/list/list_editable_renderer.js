@@ -335,10 +335,12 @@ ListRenderer.include({
         // When switching to edit mode, force the dimensions of all cells to
         // their current value so that they won't change if their content
         // changes, to prevent the view from flickering.
+        // We need to use getBoundingClientRect instead of outerWidth to
+        // prevent a rounding issue on Firefox.
         if (editMode) {
             $tds.each(function () {
                 var $td = $(this);
-                $td.css({width: $td.outerWidth()});
+                $td.css({width: $td[0].getBoundingClientRect().width});
             });
         }
 
