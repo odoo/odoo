@@ -41,7 +41,7 @@
         <record id="mass_mail_campaign_1" model="mail.mass_mailing.campaign">
             <field name="name">Newsletter</field>
             <field name="stage_id" ref="mass_mailing.campaign_stage_1"/>
-            <field name="user_id" eval="ref('base.user_root')"/>
+            <field name="user_id" eval="ref('base.user_admin')"/>
             <field name="campaign_id" eval="ref('utm.utm_campaign_email_campaign_products')"/>
             <field name="medium_id" eval="ref('utm.utm_medium_email')"/>
             <field name="source_id" eval="ref('mass_mailing.utm_source_0')"/> 
@@ -51,6 +51,7 @@
         <record id="mass_mail_1" model="mail.mass_mailing">
             <field name="name">First Newsletter</field>
             <field name="state">done</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
             <field name="sent_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
