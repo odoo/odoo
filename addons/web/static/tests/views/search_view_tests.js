@@ -514,7 +514,6 @@ QUnit.module('Search View', {
             data: this.data,
             intercepts: {
                 create_filter: function (ev) {
-                    console.log(ev.data);
                     assert.equal(
                         ev.data.filter.domain,
                         "['&', " +

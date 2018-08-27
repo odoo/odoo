@@ -344,9 +344,9 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             }
         };
 
-        return deferred.then(function () {
+        var promise = deferred.then(function () {
             if (aborted) {
-                var def = $.Deferred().reject('communication', $.Event(), 'abort', 'abort');
+                var def = $.Deferred().reject({message: "XmlHttpRequestError abort"}, $.Event('abort'));
                 def.abort = function () {};
                 return def;
             }
@@ -376,6 +376,9 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             xhrDef = fct(url, "call", params, options);
             return xhrDef;
         });
+
+        promise.abort = deferred.abort;
+        return promise;
     },
     url: function (path, params) {
         params = _.extend(params || {});
