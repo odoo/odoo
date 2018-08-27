@@ -59,21 +59,19 @@
             </div>
 
             <div class="col-lg-8 offset-lg-1" id="ref_content">
-                <div class='navbar'>
-                    <div>
-                        <t t-call="website.pager"/>
-                        <form action="" method="get" class="navbar-search float-right pagination form-inline"><!-- FIXME -->
-                            <div class="form-group float-right">
-                                <input type="text" name="search" class="search-query col-lg-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                            </div>
-                        </form>
-                    </div>
+                <div class='d-flex m-2'>
+                    <t t-call="website.pager"/>
+                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
+                        <div class="form-group float-right">
+                            <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        </div>
+                    </form>
                 </div>
                 <div>
                     <p t-if="not partners">No result found</p>
                     <t t-foreach="partners" t-as="partner">
                         <t t-if="last_grade != partner.grade_id.id">
-                            <h3 class="text-center">
+                            <h3 class="text-center mt-4">
                                 <span t-field="partner.grade_id"/> Partners
                                 <t t-call="website.publish_management">
                                     <t t-set="object" t-value="partner.grade_id"/>
@@ -82,10 +80,10 @@
                             </h3>
                             <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
-                        <div class="media">
+                        <div class="media mt-3">
                             <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image_medium"
-                               t-options='{"widget": "image"}'
+                               t-options='{"widget": "image", "class": "mr-3"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
@@ -165,10 +163,10 @@
 <template id="references_block" name="Partner References Block">
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
+        <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
           <t t-if="reference.website_published">
             <a t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
+                <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
             </a>
             <div class="media-body" style="min-height: 64px;">
                 <a t-attf-href="/customers/#{slug(reference)}">
