@@ -10,6 +10,7 @@
     'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing',
     'depends': [
+        'contacts',
         'mail',
         'utm',
         'link_tracker',
