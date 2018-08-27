@@ -175,11 +175,11 @@ class TestExpression(TransactionCase):
     def test_10_equivalent_id(self):
         # equivalent queries
         BaseTestModel = self.env['test_base.model']
-        non_currency_id = max(BaseTestModel.search([]).ids) + 1003
+        non_exist_id = max(BaseTestModel.search([]).ids) + 1003
         res_0 = BaseTestModel.search([])
         res_1 = BaseTestModel.search([('name', 'not like', 'probably_unexisting_name')])
         self.assertEqual(res_0, res_1)
-        res_2 = BaseTestModel.search([('id', 'not in', [non_currency_id])])
+        res_2 = BaseTestModel.search([('id', 'not in', [non_exist_id])])
         self.assertEqual(res_0, res_2)
         res_3 = BaseTestModel.search([('id', 'not in', [])])
         self.assertEqual(res_0, res_3)
@@ -438,44 +438,34 @@ class TestExpression(TransactionCase):
 
     # TODO: RGA strange why browse(1)
     def test_15_equivalent_one2many_2(self):
-        Currency = self.env['res.currency']
-        CurrencyRate = self.env['res.currency.rate']
+        BaseTestModel = self.env['test_base.model']
+        O2mRelationModel = self.env['test_o2m_relational.model']
 
-        # create a currency and a currency rate
-        currency = Currency.create({'name': 'ZZZ', 'symbol': 'ZZZ', 'rounding': 1.0})
-        currency_rate = CurrencyRate.create({'name': '2010-01-01', 'currency_id': currency.id, 'rate': 1.0})
-        non_currency_id = currency_rate.id + 1000
-        default_currency = Currency.browse(1)
+        record = BaseTestModel.create({'name': 'Test'})
+        relational_record = O2mRelationModel.create({'name': 'relational record', 'model_id': record.id})
+        non_exist_record = relational_record.id + 1000
 
-        # search the currency via its rates one2many (the one2many must point back at the currency)
-        currency_rate1 = CurrencyRate.search([('name', 'not like', 'probably_unexisting_name')])
-        currency_rate2 = CurrencyRate.search([('id', 'not in', [non_currency_id])])
-        self.assertEqual(currency_rate1, currency_rate2)
-        currency_rate3 = CurrencyRate.search([('id', 'not in', [])])
-        self.assertEqual(currency_rate1, currency_rate3)
+        # search the records via its rates one2many (the one2many must point back at the record)
+        rec_1 = O2mRelationModel.search([('name', 'not like', 'probably_unexisting_name')])
+        rec_2 = O2mRelationModel.search([('id', 'not in', [non_exist_record])])
+        self.assertEqual(rec_1, rec_2)
+        rec_3 = O2mRelationModel.search([('id', 'not in', [])])
+        self.assertEqual(rec_1, rec_3)
 
         # one2many towards another model
-        res_3 = Currency.search([('rate_ids', 'in', default_currency.rate_ids.ids)]) # currencies having a rate of main currency
-        self.assertEqual(res_3, default_currency)
-        res_4 = Currency.search([('rate_ids', 'in', default_currency.rate_ids[0].ids)]) # currencies having first rate of main currency
-        self.assertEqual(res_4, default_currency)
-        res_5 = Currency.search([('rate_ids', 'in', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
-        self.assertEqual(res_5, default_currency)
-        # res_6 = Currency.search([('rate_ids', 'in', [default_currency.rate_ids[0].name])])
-        # res_7 = Currency.search([('rate_ids', '=', default_currency.rate_ids[0].name)])
-        # res_8 = Currency.search([('rate_ids', 'like', default_currency.rate_ids[0].name)])
-
-        res_9 = Currency.search([('rate_ids', 'like', 'probably_unexisting_name')])
+        res_3 = BaseTestModel.search([('one2many_ids', 'in', record.one2many_ids.ids)])
+        self.assertEqual(res_3, record)
+        res_4 = BaseTestModel.search([('one2many_ids', 'in', record.one2many_ids[0].ids)])
+        self.assertEqual(res_4, record)
+        res_5 = BaseTestModel.search([('one2many_ids', 'in', record.one2many_ids[0].id)])
+        self.assertEqual(res_5, record)
+        res_9 = BaseTestModel.search([('one2many_ids', 'like', 'probably_unexisting_name')])
         self.assertFalse(res_9)
-        # Currency.search([('rate_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
-
-        # get the currencies referenced by some currency rates using a weird negative domain
-        res_10 = Currency.search([('rate_ids', 'not like', 'probably_unexisting_name')])
-        res_11 = Currency.search([('rate_ids', 'not in', [non_currency_id])])
+        # get the records referenced by some one2many records using a weird negative domain
+        res_10 = BaseTestModel.search([('one2many_ids', 'not like', 'probably_unexisting_name')])
+        res_11 = BaseTestModel.search([('one2many_ids', 'not in', [non_exist_record])])
         self.assertEqual(res_10, res_11)
-        res_12 = Currency.search([('rate_ids', '!=', False)])
-        self.assertEqual(res_10, res_12)
-        res_13 = Currency.search([('rate_ids', 'not in', [])])
+        res_13 = BaseTestModel.search([('one2many_ids', 'not in', [])])
         self.assertEqual(res_10, res_13)
 
     def test_20_expression_parse(self):
