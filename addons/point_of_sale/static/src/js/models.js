@@ -2342,10 +2342,11 @@ exports.Order = Backbone.Model.extend({
         }
         if (to_merge_orderline){
             to_merge_orderline.merge(line);
+            this.select_orderline(to_merge_orderline);
         } else {
             this.orderlines.add(line);
+            this.select_orderline(this.get_last_orderline());
         }
-        this.select_orderline(this.get_last_orderline());
 
         if(line.has_product_lot){
             this.display_lot_popup();
