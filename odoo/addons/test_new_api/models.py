@@ -459,3 +459,12 @@ class ComputeCascade(models.Model):
     def _compute_baz(self):
         for record in self:
             record.baz = "<%s>" % (record.bar or "")
+
+
+class BinarySvg(models.Model):
+    _name = 'test_new_api.binary_svg'
+    _description = 'Test SVG upload'
+
+    name = fields.Char(required=True)
+    image_attachment = fields.Binary(attachment=True)
+    image_wo_attachment = fields.Binary(attachment=False)

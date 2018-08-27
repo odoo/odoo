@@ -37,6 +37,7 @@ import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
 from odoo.tools import crop_image, topological_sort, html_escape, pycompat
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
@@ -1218,8 +1219,11 @@ class Binary(http.Controller):
                     if row and row[0]:
                         image_base64 = base64.b64decode(row[0])
                         image_data = io.BytesIO(image_base64)
-                        imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
-                        response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
+                        mimetype = guess_mimetype(image_base64, default='image/png')
+                        imgext = '.' + mimetype.split('/')[1]
+                        if imgext == '.svg+xml':
+                            imgext = '.svg'
+                        response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
                         response = http.send_file(placeholder('nologo.png'))
             except Exception:
