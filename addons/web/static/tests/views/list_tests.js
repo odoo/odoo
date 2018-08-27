@@ -3215,35 +3215,35 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(list.$('tbody tr td').text(), '1234',
+        assert.strictEqual(list.$('tbody tr td.o_list_number').text(), '1234',
             "default should be sorted by id");
         testUtils.dragAndDrop(
             list.$('.ui-sortable-handle').eq(3),
             list.$('tbody tr').eq(2),
             {position: 'top'}
         );
-        assert.strictEqual(list.$('tbody tr td').text(), '1243',
+        assert.strictEqual(list.$('tbody tr td.o_list_number').text(), '1243',
             "the int_field (sequence) should have been correctly updated");
         testUtils.dragAndDrop(
             list.$('.ui-sortable-handle').eq(2),
             list.$('tbody tr').eq(1),
             {position: 'top'}
         );
-        assert.deepEqual(list.$('tbody tr td').text(), '1423',
+        assert.deepEqual(list.$('tbody tr td.o_list_number').text(), '1423',
             "the int_field (sequence) should have been correctly updated");
         testUtils.dragAndDrop(
             list.$('.ui-sortable-handle').eq(1),
             list.$('tbody tr').eq(3),
             {position: 'top'}
         );
-        assert.deepEqual(list.$('tbody tr td').text(), '1243',
+        assert.deepEqual(list.$('tbody tr td.o_list_number').text(), '1243',
             "the int_field (sequence) should have been correctly updated");
         testUtils.dragAndDrop(
             list.$('.ui-sortable-handle').eq(2),
             list.$('tbody tr').eq(1),
             {position: 'top'}
         );
-        assert.deepEqual(list.$('tbody tr td').text(), '1423',
+        assert.deepEqual(list.$('tbody tr td.o_list_number').text(), '1423',
             "the int_field (sequence) should have been correctly updated");
         list.destroy();
     });
