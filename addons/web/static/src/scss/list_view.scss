@@ -18,12 +18,6 @@
         }
     }
 
-    &.table {
-        td, th {
-           vertical-align: middle;
-        }
-    }
-
     thead {
         color: $o-main-text-color;
         border-bottom: 1px solid #cacaca;
@@ -118,18 +112,6 @@
         border-top: none;  // Override bootstrap for grouped list views
     }
 
-    tbody {
-        tr:focus-within {
-            background-color: $o-form-lightsecondary;
-        }
-        tr{
-            .focussed {
-                background-color: $o-form-lightsecondary;
-            }
-        }
-    }
-
-
     // Values styling
     .o_list_number {
         text-align: right;
@@ -150,14 +132,7 @@
     //--------------------------------------------------------------------------
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
         position: relative;
-
-        // The in-edition elements will overflow other elements (the rows below,
-        // the content below the list view, ...). As those might be using
-        // position: relative, the in-edition elements have to define a z-index.
-        // Technically, creating a stacking context for a meaningful parent
-        // (maybe the .o_content) might be required for safety but we should
-        // consider this later if needed.
-        z-index: 1;
+        padding: 0;
 
         // The in-edition elements will overflow other elements (the rows below,
         // the content below the list view, ...). As those might be using
@@ -169,7 +144,6 @@
 
         // Field widgets override
         > .o_field_widget {
-            @include o-position-absolute(0, 0, auto, 0);
             min-height: 100%;
 
             &:not(.o_field_text) {
@@ -181,6 +155,10 @@
                     white-space: normal;
                     max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
                 }
+            }
+
+            &.o_field_many2one {
+                width: 100%;
             }
         }
         > .o_field_translate {
