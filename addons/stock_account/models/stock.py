@@ -321,7 +321,7 @@ class StockMove(models.Model):
                 value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
                 self.write({
                     'value': value if quantity is None else self.value + value,
-                    'price_unit': value / valued_quantity,
+                    'price_unit': value / valued_quantity if valued_quantity else 0,
                 })
         elif self._is_dropshipped():
             curr_rounding = self.company_id.currency_id.rounding
