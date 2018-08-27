@@ -634,6 +634,12 @@ actual arch.
                                 (v for v in values if v not in to_remove),
                                 to_add
                             ))
+                        elif child.get('dict_add') or child.get('dict_remove'):
+                            node_val = node.get(attribute, '{}').strip()[1:][:-1]
+                            elems = node_val.split(',') if node_val else []
+                            to_add = child.get('dict_add', '').split(',')
+                            to_remove = child.get('dict_remove', '').split(',')
+                            value = '{' + ','.join([x for x in elems if x not in to_remove] + to_add) + '}'
                         if value:
                             node.set(attribute, value)
                         elif attribute in node.attrib:
