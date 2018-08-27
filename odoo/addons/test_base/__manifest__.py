@@ -9,6 +9,7 @@
     'version': '0.0.1',
     'data': [
         'data/test_data.xml',
+        'views/test_base_model_view.xml',
         'security/ir.model.access.csv',
     ]
 }

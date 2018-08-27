@@ -26,38 +26,38 @@ class TestACL(TransactionCase):
     def test_field_visibility_restriction(self):
         """Check that model-level ``groups`` parameter effectively restricts access to that
            field for users who do not belong to one of the explicitly allowed groups"""
-        currency = self.env['res.currency'].sudo(self.demo_user)
+        BaseTestModel = self.env['test_base.model'].sudo(self.demo_user)
 
         # Verify the test environment first
-        original_fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        original_fields = BaseTestModel.fields_get([])
+        form_view = BaseTestModel.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
         self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group before the test")
-        self.assertIn('decimal_places', original_fields, "'decimal_places' field must be properly visible before the test")
-        self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
-                             "Field 'decimal_places' must be found in view definition before the test")
+        self.assertIn('email', original_fields, "'email' field must be properly visible before the test")
+        self.assertNotEquals(view_arch.xpath("//field[@name='email']"), [],
+                             "Field 'email' must be found in view definition before the test")
 
         # restrict access to the field and check it's gone
-        self._set_field_groups(currency, 'decimal_places', GROUP_SYSTEM)
+        self._set_field_groups(BaseTestModel, 'email', GROUP_SYSTEM)
 
-        fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        fields = BaseTestModel.fields_get([])
+        form_view = BaseTestModel.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
-        self.assertNotIn('decimal_places', fields, "'decimal_places' field should be gone")
-        self.assertEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
-                          "Field 'decimal_places' must not be found in view definition")
+        self.assertNotIn('email', fields, "'email' field should be gone")
+        self.assertEquals(view_arch.xpath("//field[@name='email']"), [],
+                          "Field 'email' must not be found in view definition")
 
         # Make demo user a member of the restricted group and check that the field is back
         self.erp_system_group.users += self.demo_user
         has_group_system = self.demo_user.has_group(GROUP_SYSTEM)
-        fields = currency.fields_get([])
-        form_view = currency.fields_view_get(False, 'form')
+        fields = BaseTestModel.fields_get([])
+        form_view = BaseTestModel.fields_view_get(False, 'form')
         view_arch = etree.fromstring(form_view.get('arch'))
         self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
-        self.assertIn('decimal_places', fields, "'decimal_places' field must be properly visible again")
-        self.assertNotEquals(view_arch.xpath("//field[@name='decimal_places']"), [],
-                             "Field 'decimal_places' must be found in view definition again")
+        self.assertIn('email', fields, "'email' field must be properly visible again")
+        self.assertNotEquals(view_arch.xpath("//field[@name='email']"), [],
+                             "Field 'email' must be found in view definition again")
 
     @mute_logger('odoo.models')
     def test_field_crud_restriction(self):

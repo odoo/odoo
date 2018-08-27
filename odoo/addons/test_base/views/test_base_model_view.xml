@@ -1,0 +1,20 @@
+<odoo>
+    <record id="test_base_model_view_form" model="ir.ui.view">
+        <field name="name">Base test model form view</field>
+        <field name="model">test_base.model</field>
+        <field name="arch" type="xml">
+            <form string="Base test">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="many2one_id"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                        <field name="email"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
