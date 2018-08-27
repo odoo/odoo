@@ -166,6 +166,12 @@ var KanbanRecord = Widget.extend({
         var colorID = this._getColorID(variable);
         return KANBAN_RECORD_COLORS[colorID];
     },
+    file_type_magic_word: {
+        '/': 'jpg',
+        'R': 'gif',
+        'i': 'png',
+        'P': 'svg+xml',
+    },
     /**
      * @private
      * @param {string} model the name of the model
@@ -179,7 +185,8 @@ var KanbanRecord = Widget.extend({
         options = options || {};
         var url;
         if (this.record[field] && this.record[field].value && !utils.is_bin_size(this.record[field].value)) {
-            url = 'data:image/png;base64,' + this.record[field].value;
+            // Use magic-word technique for detecting image type
+            url = 'data:image/' + this.file_type_magic_word[this.record[field].value[0]] + ';base64,' + this.record[field].value;
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {

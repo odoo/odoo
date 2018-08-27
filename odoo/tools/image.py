@@ -51,7 +51,10 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     """
     if not base64_source:
         return False
-    if size == (None, None):
+    # Return unmodified content if no resize or we etect first 6 bits of '<'
+    # (0x3C) for SVG documents - This will bypass XML files as well, but it's
+    # harmless for these purposes
+    if size == (None, None) or base64_source[:1] == b'P':
         return base64_source
     image_stream = io.BytesIO(codecs.decode(base64_source, encoding))
     image = Image.open(image_stream)

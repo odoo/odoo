@@ -449,7 +449,7 @@ class Users(models.Model):
                     if values['company_id'] not in self.env.user.company_ids.ids:
                         del values['company_id']
                 # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo()
+                self = self.sudo().with_context(binary_field_real_user=self.env.user)
 
         res = super(Users, self).write(values)
         if 'company_id' in values:
