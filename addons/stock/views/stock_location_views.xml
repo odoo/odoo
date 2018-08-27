@@ -90,7 +90,7 @@
         <field name="arch" type="xml">
             <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false">
                 <field name="active" invisible="1"/>
-                <field name="display_name"/>
+                <field name="display_name" string="Location"/>
                 <field name="usage"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>

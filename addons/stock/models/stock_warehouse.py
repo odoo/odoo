@@ -21,7 +21,7 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
-    name = fields.Char('Warehouse Name', index=True, required=True, default=lambda self: self.env['res.company']._company_default_get('stock.inventory').name)
+    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env['res.company']._company_default_get('stock.inventory').name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('stock.inventory'),

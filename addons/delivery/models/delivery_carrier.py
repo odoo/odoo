@@ -34,7 +34,7 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char('Delivery Method', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')

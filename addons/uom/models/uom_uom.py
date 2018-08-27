@@ -9,7 +9,7 @@ class UoMCategory(models.Model):
     _name = 'uom.category'
     _description = 'Product UoM Categories'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Unit of Measure Category', required=True, translate=True)
     measure_type = fields.Selection([
         ('unit', 'Units'),
         ('weight', 'Weight'),
