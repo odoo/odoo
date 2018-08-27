@@ -29,7 +29,8 @@ pyserial==3.1.1
 python-dateutil==2.5.3
 pytz==2016.7
 pyusb==1.0.0
-PyYAML==3.12
+PyYAML==3.12 ; python_version < '3.7'
+PyYAML==3.13 ; python_version >= '3.7'
 qrcode==5.3
 reportlab==3.3.0
 requests==2.11.1
