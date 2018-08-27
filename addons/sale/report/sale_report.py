@@ -15,7 +15,7 @@ class SaleReport(models.Model):
     name = fields.Char('Order Reference', readonly=True)
     date = fields.Datetime('Order Date', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
@@ -28,14 +28,14 @@ class SaleReport(models.Model):
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
     untaxed_amount_to_invoice = fields.Float('Untaxed Amount To Invoice', readonly=True)
     untaxed_amount_invoiced = fields.Float('Untaxed Amount Invoiced', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id')
     country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
         ('sent', 'Quotation Sent'),
@@ -49,7 +49,7 @@ class SaleReport(models.Model):
     discount = fields.Float('Discount %', readonly=True)
     discount_amount = fields.Float('Discount Amount', readonly=True)
 
-    order_id = fields.Many2one('sale.order', 'Order ID', readonly=True)
+    order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
     def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
         with_ = ("WITH %s" % with_clause) if with_clause else ""

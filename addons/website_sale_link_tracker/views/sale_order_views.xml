@@ -20,7 +20,20 @@
         <field name="model">sale.report</field>
         <field name="inherit_id" ref="website_sale.sale_report_view_search_website"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="before">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="medium_id"/>
+                <field name="source_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_product_search_inherit" model="ir.ui.view">
+        <field name="name">sale.report.search.inherit</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
                 <field name="campaign_id"/>
                 <field name="medium_id"/>
                 <field name="source_id"/>

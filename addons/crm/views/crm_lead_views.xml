@@ -377,57 +377,46 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <search string="Search Leads">
-                    <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
-                    <field name="team_id"/>
                     <field name="user_id"/>
+                    <field name="team_id"/>
                     <field name="partner_id" operator="child_of" string="Customer"/>
-                    <field name="create_date"/>
-                    <field name="country_id"/>
                     <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="create_date"/>
                     <field name="lost_reason"/>
-                    <field name="stage_id"/>
+                    <field name="medium_id"/>
+                    <field name="campaign_id"/>
+                    <field name="source_id"/>
                     <separator />
                     <filter string="My Leads"
                             name="assigned_to_me"
-                            domain="[('user_id','=',uid)]"
+                            domain="[('user_id', '=', uid)]"
                             help="Leads that are assigned to me"/>
-                    <filter string="Unassigned" name="unassigned"
-                            domain="[('user_id','=', False)]"
-                            help="No salesperson"/>
                     <separator />
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Leads" name="leads" domain="[('type', '=', 'lead')]"/>
+                    <filter string="Opportunities" name="opportunities" domain="[('type', '=', 'opportunity')]"/>
                     <separator />
-                    <filter string="Current" name="current" domain="[('active', '=', True)]"/>
-                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
-                    <separator />
-                    <filter string="Exclude blacklisted"
-                        name='not_blacklisted' domain="[('is_blacklisted', '=', False)]"
-                        help="Leads that did ask to not receive mass mailing anymore"/>
-                    <separator/>
-                    <filter string="My Activities" name="activities_my"
-                            domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                            help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
-                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                    <filter string="Won" name="won"
+                            domain="[('probability', '=', 100)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" name="groupby_team" domain="[]" context="{'group_by':'team_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter name="city" string="City" context="{'group_by': 'city'}"/>
                         <filter string="Country" name="country" context="{'group_by':'country_id'}" />
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
-                        <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
-                        <filter string="Medium" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
-                        <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
-                        <filter string="Creation Date" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Conversion Date" name="date_conversion" context="{'group_by':'date_conversion'}"/>
+                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
                     </group>
                 </search>
             </field>
@@ -649,7 +638,7 @@
                 <pivot string="Pipeline Analysis" disable_linking="True">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
-                    <field name="expected_revenue" type="measure"/>
+                    <field name="planned_revenue" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -678,11 +667,12 @@
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
-                    <field name="team_id"/>
-                    <field name="user_id"/>
-                    <field name="city"/>
-                    <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="stage_id" domain="[]"/>
+                    <field name="user_id"/>
+                    <field name="team_id"/>
+                    <field name="partner_id" operator="child_of" string="Customer"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
                     <field name="activity_type_id"/>
                     <field name="activity_summary"/>
                     <field name="probability"/>
@@ -731,8 +721,9 @@
                         <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                         <filter string="Conversion Date" name="date_conversion" context="{'group_by': 'date_conversion'}" groups="crm.group_use_lead"/>
+                        <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
+                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                     </group>
                 </search>
             </field>
