@@ -75,13 +75,16 @@ def system(l, chdir=None):
 
 def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
     time.sleep(5)
+    uid = xmlrpclib.ServerProxy('%s:%s/xmlrpc/common' % (addr, port)).authenticate(
+        dbname, 'admin', 'admin', {}
+    )
     modules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/object' % (addr, port)).execute(
-        dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
+        dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
     )
     if modules and len(modules) > 1:
         time.sleep(1)
         toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/object' % (addr, port)).execute(
-            dbname, 1, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
+            dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
         )
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
