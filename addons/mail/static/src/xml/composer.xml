@@ -81,15 +81,11 @@
     </t>
 
     <t t-name="FieldMany2ManyTagsEmail" t-extend="FieldMany2ManyTag">
-        <t t-jquery="button[t-attf-class*=badge]" t-operation="replace">
-            <t t-set="email_error" t-value="''"/>
-            <t t-if="el.email.indexOf('@') &lt; 0">
-                <t t-set="email_error" t-value="'o_tag_error'"/>
-            </t>
-            <button t-attf-class="badge dropdown o_tag_color_0 #{email_error}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
+        <t t-jquery="[t-attf-class*=badge]" t-operation="replace">
+            <div t-attf-class="badge badge-pill dropdown o_tag_color_0 #{el.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
                 <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
-                <span t-if="!readonly" class="fa fa-times o_delete" role="img" aria-label="Delete" title="Delete"/>
-            </button>
+                <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+            </div>
         </t>
     </t>
 </templates>

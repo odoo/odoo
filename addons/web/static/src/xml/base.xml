@@ -833,11 +833,19 @@
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <div class="dropdown">
-            <button t-attf-class="badge badge-pill dropdown-toggle o-no-caret o_tag_color_#{color}" data-toggle="dropdown" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+        <div t-attf-class="badge badge-pill dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+            <t t-set="_badge_text">
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
-                <a t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
-            </button>
+            </t>
+            <t t-if="colorField">
+                <a href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown">
+                    <t t-raw="_badge_text"/>
+                </a>
+            </t>
+            <t t-else="">
+                <t t-raw="_badge_text"/>
+            </t>
+            <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
     </t>
 </t>
