@@ -288,7 +288,7 @@ Common ORM methods
         >>> self.create([{'name': "Jack"}, {'name': "William"}, {'name': "Averell"}])
         res.partner(79, 80, 81)
 
-    See :ref:`how to define method `create` with one API or the other
+    See :ref:`how to define method \`create\` with one API or the other
     <reference/orm/oldapi>`.
 
 :meth:`~odoo.models.Model.write`
