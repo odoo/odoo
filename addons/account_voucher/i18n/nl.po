@@ -3,18 +3,14 @@
 # * account_voucher
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Martin Trigaux, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -455,12 +451,6 @@ msgid "Purchase Receipt"
 msgstr "Inkoopbewijs"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
-msgid "Purchase Receipts"
-msgstr "Inkoopbewijs"
-
-#. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
 msgstr "Inkoopbewijs"
@@ -469,6 +459,14 @@ msgstr "Inkoopbewijs"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "Hoeveelheid"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Receipts"
+msgstr "Ontvangsten"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -488,12 +486,6 @@ msgstr "Verkoop informatie"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr "Betaalbewijs"
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipts"
 msgstr "Betaalbewijs"
 
 #. module: account_voucher
@@ -682,7 +674,7 @@ msgstr ""
 "de klant koppelen aan dit verkoopbewijs."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:456
+#: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
 msgid "You must first select a partner."
 msgstr "U moet eerst een relatie selecteren."

@@ -3,24 +3,22 @@
 # * website_mass_mailing
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Siyuan Gu <siyuancn@hotmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# fausthuang, 2016
-# Martin Trigaux, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Lijie Ma <tony@malijie.cc>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
-# Xu Lei <xulei8@qq.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# Siyuan Gu <siyuancn@hotmail.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Xu Lei <xulei8@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,24 +43,19 @@ msgstr "<strong>时事快讯!</strong> 此时事快讯片段效果被激活这�
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr "添加一个邮件列表订阅按钮"
+msgstr "添加一个通讯订阅按钮"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr "添加一个新闻订阅弹出"
+msgstr "添加一个快讯订阅弹出"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "变更通讯"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "Choose your mailing subscriptions."
-msgstr "选择您的订阅邮件"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
@@ -76,9 +69,24 @@ msgid "Encourage to subscribe to mailing lists with a popup"
 msgstr "鼓励通过弹出窗口订阅邮件列表"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Facebook"
+msgstr "脸书"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Google Plus"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Here To Edit Dialog Content"
 msgstr "在这里编辑对话内容"
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "LinkedIn"
+msgstr "LinkedIn"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
@@ -86,17 +94,11 @@ msgid "Mailing List"
 msgstr "邮件列表"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Mailing Subscriptions"
-msgstr "邮件订阅"
-
-#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
-msgstr "时事通信"
+msgstr "快讯"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
@@ -117,7 +119,7 @@ msgstr "谢谢"
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks for your subscription!"
-msgstr "感谢您的订阅!"
+msgstr "感谢你的订阅!"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
@@ -126,6 +128,11 @@ msgid ""
 "pages. It triggers a popup when visitors land on the page. This popup "
 "prompts them to enter their email address to join a mailing list."
 msgstr ""
+
+#. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Twitter"
+msgstr "Twitter"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -138,7 +145,7 @@ msgstr "在这里输入..."
 #: model:ir.model.fields,field_description:website_mass_mailing.field_res_users__has_group_website_popup_on_exit
 #: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
 msgid "Use subscription pop up on the website"
-msgstr "在网站用弹出订阅"
+msgstr "使用网站的弹出订阅"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_res_users
@@ -158,31 +165,7 @@ msgstr "网站弹出内容"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list__popup_redirect_url
 msgid "Website Popup Redirect URL"
-msgstr "网站弹出重定向网址"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "You are not subscribed to any of our mailing list."
-msgstr "您没有订阅任何东西在我们的邮件列表中。"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr "你已经成功取消订阅！"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
-#, python-format
-msgid "Your changes have been saved."
-msgstr "您的修改已经保存"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
-#, python-format
-msgid "Your changes have not been saved, try again later."
-msgstr "你所做的更改尚未保存，请稍后重试。"
+msgstr "网站弹出重新定向网址"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_res_config_settings
@@ -193,4 +176,4 @@ msgstr "设置-基础设置"
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "your email..."
-msgstr "你的电子邮件..."
+msgstr "您的电子邮件..."

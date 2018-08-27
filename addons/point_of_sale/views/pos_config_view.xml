@@ -419,7 +419,8 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('module_account', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-lg-3 o_light_label"/>
-                                        <field name="invoice_journal_id"/>
+                                        <field name="invoice_journal_id"
+                                               attrs="{'required': [('module_account', '=', True)]}"/>
                                     </div>
                                 </div>
                             </div>

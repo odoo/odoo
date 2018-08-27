@@ -458,7 +458,7 @@ var Domain = collections.Tree.extend({
      * Converts python condition to a JS prefix-array representation of a domain
      *
      * @static
-     * @param {string} domain
+     * @param {string} condition
      * @returns {Array}
      */
     conditionToDomain: function (condition) {

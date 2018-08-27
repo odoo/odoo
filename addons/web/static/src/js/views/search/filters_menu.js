@@ -47,9 +47,7 @@ var FiltersMenu = DropdownMenu.extend({
      *      defaultOptionId: string refers to an optionId (optional)
      *      currentOptionId: string refers to an optionId that is activated if item is active (optional)
      *   }
-     * @param {Object[]} periodOptions determines the options available for filter with date attribute
-     * @param {Object} fields 'field_get' of a model: mapping from field name
-     * to an object with its properties
+     * @param {Object} fields
      */
     init: function (parent, filters, fields) {
         // determines where the filter menu is displayed and its style

@@ -3,37 +3,14 @@
 # * delivery
 # 
 # Translators:
-# Thomas Neu <t.neu@runbox.com>, 2017
-# Martin Trigaux, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
-# Wolfgang Taferner, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Andi, 2017
-# Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2017
-# Marco Broscheit <marco.broscheit@posteo.de>, 2017
-# Renzo Meister, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Niki Waibel, 2017
-# Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2017
-# DE T1 <e2f8846@yahoo.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,39 +33,40 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
 msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>We are glad to inform you that your order has been shipped.</p>\n"
-"<p>\n"
-"%if object.carrier_tracking_ref:\n"
-"  Your tracking reference:\n"
-"  %if object.carrier_tracking_url:\n"
-"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"  %else:\n"
-"    ${object.carrier_tracking_ref}.\n"
-"  %endif\n"
-"%endif\n"
-"</p>\n"
-"<p>Find your delivery order attached for more details.</p>\n"
-"<p>Thank you,</p>\n"
-"      </data>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.partner_id.name},<br/><br/>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        Thank you,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Hallo ${object.partner_id.name},</p>\n"
-"<p>wir freuen uns, Sie darüber informieren zu können, dass Ihre Bestellung versendet wurde.</p>\n"
-"<p>\n"
-"%if object.carrier_tracking_ref:\n"
-"  Ihre Referenz zur Nachverfolgung:\n"
-"  %if object.carrier_tracking_url:\n"
-"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"  %else:\n"
-"    ${object.carrier_tracking_ref}.\n"
-"  %endif\n"
-"%endif\n"
-"</p>\n"
-"<p>Weitere Informationen finden Sie im angehängten Lieferschein.</p>\n"
-"<p>Vielen Dank,</p>\n"
-"      </data>"
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -186,11 +164,6 @@ msgid "Carrier"
 msgstr "Frachtführer"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Check price"
-msgstr "Preis prüfen"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
 msgstr "Unternehmen"
@@ -233,6 +206,11 @@ msgstr "Protokollierung der Fehlerdiagnose"
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr ""
+
+#. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr "Auslieferungen"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -409,12 +387,6 @@ msgstr "Versendung erstellen und Tarife"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
 msgstr "Gruppieren nach"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
-#: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
-msgid "HS Code"
-msgstr "HS-Code"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
@@ -662,11 +634,6 @@ msgid "Pricing Rules"
 msgstr "Preisregeln"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_template
-msgid "Product Template"
-msgstr "Produktvorlage"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -727,11 +694,6 @@ msgid "Sequence"
 msgstr "Reihenfolge"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Set price"
-msgstr "Preis festlegen"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
@@ -764,13 +726,6 @@ msgstr "Liefergewicht"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
 msgstr "Transportgewicht:"
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_product_product__hs_code
-#: model:ir.model.fields,help:delivery.field_product_template__hs_code
-msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
-"Standardisierter Code für internationalen Versand und Warendeklaration"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -854,6 +809,12 @@ msgstr "Mengeneinheit"
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of measurement for Weight"
 msgstr "Gewichtseinheit"
+
+#. module: delivery
+#: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.template,uom_name:delivery.product_product_delivery_product_template
+msgid "Unit(s)"
+msgstr "Einheit(en)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable

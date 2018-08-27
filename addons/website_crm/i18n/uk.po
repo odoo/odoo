@@ -3,17 +3,17 @@
 # * website_crm
 # 
 # Translators:
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
-# Zoriana Zaiats, 2018
+# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,15 +26,6 @@ msgstr ""
 #: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Відправити</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -58,28 +49,25 @@ msgstr "Зв'язатися з нами"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "Канал продажів за замовчуванням"
+msgid "Default Sales Team"
+msgstr "Типова команда продажу"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "Канали продажів за замовчуванням"
+msgid "Default Sales Teams"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "Типовий продавець"
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-"Стандартний канал продажів для нових потенційних клієнтів, створений за "
-"допомогою форми Зв'язатися з нами."
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
@@ -117,13 +105,25 @@ msgstr "Номер телефону"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
-msgstr "Канал продажу"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Команда продажу"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Salesperson"
 msgstr "Продавець"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Надіслати"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

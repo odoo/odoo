@@ -187,7 +187,7 @@ class SaleOrder(models.Model):
     @api.depends('pricelist_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
-            order.currency_rate = order.currency_id._get_rates(order.company_id, order.date_order).get(order.currency_id.id, 1.0)
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.currency_id, order.company_id.currency_id, order.company_id, order.date_order)
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
@@ -333,7 +333,8 @@ class SaleOrder(models.Model):
             return {
                 'warning': {
                     'title': _('Requested date is too soon.'),
-                    'message': _("The date requested by the customer is sooner than the commitment date. You may be unable to honor the customer's request.")
+                    'message': _("The commitment date is sooner than the expected date."
+                                 "You may be unable to honor the commitment date.")
                 }
             }
 

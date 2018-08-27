@@ -214,7 +214,7 @@
         customize_show="True" active="False" inherit_id="website_blog.blog_post_short">
     <xpath expr="//span[@t-field='blog_post.author_id']" position="before">
         <t t-if="blog_post.author_avatar">
-            <div t-field="blog_post.author_avatar" class="o_not_editable" style="display:inline" t-field-options='{"widget": "image", "class": "rounded-circle o_author_avatar_little "}' />
+            <div t-field="blog_post.author_avatar" class="o_not_editable" style="display:inline" t-options='{"widget": "image", "class": "rounded-circle o_author_avatar_little "}' />
         </t>
     </xpath>
 </template>
@@ -311,9 +311,9 @@
                     <h2 t-field="next_post.subtitle" placeholder="Subtitle"/>
                     <div>
                         <t t-if="next_post.author_avatar">
-                            <span t-field="next_post.author_avatar" t-field-options='{"widget": "image", "class": "rounded-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                            <span t-field="next_post.author_avatar" t-options='{"widget": "image", "class": "rounded-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
                         </t>
-                        <span t-field="next_post.author_id" style="display: inline-block;" t-field-options='{
+                        <span t-field="next_post.author_id" style="display: inline-block;" t-options='{
                             "widget": "contact",
                             "fields": ["name"]
                         }'/>
@@ -331,9 +331,9 @@
     <xpath expr="//p[@name='blog_post_data']" position="after">
         <div>
             <t t-if="blog_post.author_avatar">
-                <span t-field="blog_post.author_avatar" class="o_not_editable" t-field-options='{"widget": "image", "class": "rounded-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
+                <span t-field="blog_post.author_avatar" class="o_not_editable" t-options='{"widget": "image", "class": "rounded-circle", "style":"width: 30px; margin-right: 10px; display:inline"}' />
             </t>
-            <span t-field="blog_post.author_id" style="display: inline-block;" t-field-options='{
+            <span t-field="blog_post.author_id" style="display: inline-block;" t-options='{
                 "widget": "contact",
                 "fields": ["name"]
             }'/>

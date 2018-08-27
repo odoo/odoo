@@ -3,13 +3,14 @@
 # * website_partner
 # 
 # Translators:
+# Martin Trigaux, 2018
 # Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -24,19 +25,27 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_partner
 #: model:ir.ui.view,arch_db:website_partner.partner_detail
 msgid "Short Description for List View"
 msgstr "Kort beskrivelse for listevisning"
 
 #. module: website_partner
+#: model:ir.model.fields,help:website_partner.field_res_partner__website_url
 #: model:ir.model.fields,help:website_partner.field_res_users__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Fullstendig URL for å nå dokumentet via nettstedet."
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_published
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_published
-msgid "Visible in Website"
-msgstr "Synlig på nettsted"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
@@ -51,21 +60,31 @@ msgid "Website Partner Short Description"
 msgstr "Kort beskrivelse av partner for nettsted"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_url
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_url
 msgid "Website URL"
 msgstr "Nettsted-URL"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_description
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_description
 msgid "Website meta description"
 msgstr "Metabeskrivelse for nettsted"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_keywords
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Meta-nøkkelord for nettsted"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_title
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_title
 msgid "Website meta title"
 msgstr "Meta-tittel for nettsted"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_og_img
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""

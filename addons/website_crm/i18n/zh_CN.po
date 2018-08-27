@@ -3,24 +3,22 @@
 # * website_crm
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# xiaobin wu <bd5dml@gmail.com>, 2016
-# Wei "oldrev" Li <liwei@sandwych.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Martin Trigaux, 2016
-# Talway <9010446@qq.com>, 2016
-# fausthuang, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
+# mrshelly <mrshelly@hotmail.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# Wei "oldrev" Li <liwei@sandwych.com>, 2018
+# zpq001 <zpq001@live.com>, 2018
+# fausthuang, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,15 +31,6 @@ msgstr ""
 #: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;次数;"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\"/><span "
-"id=\"o_website_form_result\"/>"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -65,13 +54,19 @@ msgstr "联系我们"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "默认销售渠道"
+msgid "Default Sales Team"
+msgstr "默认销售团队"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "默认销售渠道"
+msgid "Default Sales Teams"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
@@ -80,17 +75,10 @@ msgid "Default Salesperson"
 msgstr "默认销售人员"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr "通过联系我们表单创建的新线索的默认销售渠道。"
-
-#. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr "通过联系我们表单创建的新线索的默认销售人员。"
+msgstr "通过“联系我们”表单创建的新线索的默认销售人员。"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -120,13 +108,25 @@ msgstr "电话号码"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
-msgstr "销售渠道"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "销售团队"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Salesperson"
 msgstr "销售员"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "发送"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -143,7 +143,7 @@ msgstr "感谢！"
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
 #: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
-msgstr "我们将很快回复。"
+msgstr "我们将很快给你回复。"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -153,12 +153,12 @@ msgstr "网站"
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
 msgid "Website Contact Form"
-msgstr "网站联系窗体"
+msgstr "网站联系表格"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Company"
-msgstr "您的公司"
+msgstr "你的公司"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

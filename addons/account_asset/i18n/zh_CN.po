@@ -3,21 +3,14 @@
 # * account_asset
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# SHRe Liu <shreliu@outlook.com>, 2016
-# Ted Wang <feiyuwang2012@gmail.com>, 2016
-# 老窦 北京 <2662059195@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:426
+#: code:addons/account_asset/models/account_asset.py:429
 #, python-format
 msgid " (copy)"
 msgstr " (副本)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:561
+#: code:addons/account_asset/models/account_asset.py:571
 #, python-format
 msgid " (grouped)"
 msgstr " (分组)"
@@ -101,7 +94,7 @@ msgid "Additional Options"
 msgstr "额外选项"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:627
+#: code:addons/account_asset/models/account_asset.py:639
 #, python-format
 msgid "Amount"
 msgstr "总额"
@@ -117,9 +110,16 @@ msgid "Amount of Installment Lines"
 msgstr "分期付款数额"
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__account_analytic_id
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category__account_analytic_id
 msgid "Analytic Account"
 msgstr "分析账户"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__analytic_tag_ids
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category__analytic_tag_ids
+msgid "Analytic Tag"
+msgstr "分析标签"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line__asset_id
@@ -195,7 +195,7 @@ msgid "Asset category"
 msgstr "资产类别"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:297
+#: code:addons/account_asset/models/account_asset.py:296
 #, python-format
 msgid "Asset created"
 msgstr "资产创建"
@@ -206,7 +206,7 @@ msgid "Asset depreciation line"
 msgstr "资产折旧行"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:345
+#: code:addons/account_asset/models/account_asset.py:344
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "资产出售或处置.  凭证待确认."
@@ -410,7 +410,7 @@ msgid "Cumulative Depreciation"
 msgstr "累计折旧"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:627
+#: code:addons/account_asset/models/account_asset.py:639
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__currency_id
 #, python-format
 msgid "Currency"
@@ -552,7 +552,7 @@ msgid "Depreciation board modified"
 msgstr "折旧修改"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:630
+#: code:addons/account_asset/models/account_asset.py:642
 #, python-format
 msgid "Depreciation line posted."
 msgstr "折旧行已过账"
@@ -568,19 +568,19 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:300
+#: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
 msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:303
+#: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
 msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:609
+#: code:addons/account_asset/models/account_asset.py:621
 #, python-format
 msgid "Document closed."
 msgstr "文档关闭"
@@ -755,7 +755,7 @@ msgid "Journal"
 msgstr "日记账"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:460
+#: code:addons/account_asset/models/account_asset.py:463
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -915,7 +915,7 @@ msgid "One Entry Every"
 msgstr "一个条目"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:629
+#: code:addons/account_asset/models/account_asset.py:641
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset__partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report__partner_id
 #, python-format
@@ -970,7 +970,7 @@ msgid "Prorata Temporis"
 msgstr "即时按比例分配"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:391
+#: code:addons/account_asset/models/account_asset.py:392
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for the \"number of depreciations\" "
@@ -1091,7 +1091,7 @@ msgid "The number of depreciations needed to depreciate your asset"
 msgstr "被折旧资产的折旧数量"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_invoice.py:63
+#: code:addons/account_asset/models/account_invoice.py:62
 #, python-format
 msgid ""
 "The number of depreciations or the period length of your asset category "
@@ -1115,7 +1115,7 @@ msgid ""
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:503
+#: code:addons/account_asset/models/account_asset.py:506
 #, python-format
 msgid ""
 "This depreciation is already linked to a journal entry. Please post or "
@@ -1204,25 +1204,25 @@ msgid "Year"
 msgstr "年"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:134
+#: code:addons/account_asset/models/account_asset.py:136
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "您不能删除包含已过账分录的文档"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:131
+#: code:addons/account_asset/models/account_asset.py:133
 #, python-format
 msgid "You cannot delete a document that is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:638
+#: code:addons/account_asset/models/account_asset.py:650
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "你不能删除已过账折旧项."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:640
+#: code:addons/account_asset/models/account_asset.py:652
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "你不能删除已过账的分期付款明细."

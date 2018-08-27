@@ -70,15 +70,15 @@ class IrModuleModule(models.Model):
                 'name': view.name,
                 'arch': view.arch,
                 'key': view.key,
-                'arch': view.arch,
                 'arch_fs': view.arch_fs,
                 'priority': view.priority,
-                'mode': view.mode,
                 'active': view.active,
                 'inherit_id': view.inherit_id and view.inherit_id.id,
                 'theme_template_id': view.id,
                 'website_id': website.id,
             }
+            if view.mode:  # if not provided, computed automatically (if inherit_id or not)
+                new_view['mode'] = view.mode
             loaded['views'] += self.env['ir.ui.view'].create(new_view)
 
         for page in self._get_module_data('theme.website.page'):
@@ -126,7 +126,7 @@ class IrModuleModule(models.Model):
             views_todel.unlink()
 
     def _remove_theme_on_website(self, website):
-        installed_deps = website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
+        installed_deps = self + website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
         for mod in installed_deps:
             mod._unload_one_theme_module(website)
 

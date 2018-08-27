@@ -438,7 +438,7 @@ return {
         }
     },
     /**
-     * Cleans what has been done by `initAutoMoreMenu'.
+     * Cleans what has been done by ``initAutoMoreMenu``.
      *
      * @param {jQuery} $el
      */

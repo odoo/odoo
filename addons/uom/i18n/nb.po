@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Viktor Basso <viktor@voit.no>, 2018
 # Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -56,16 +55,6 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:138
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr ""
-"Konvertering fra vareenhet %s til standard enhet %s er ikke mulig ettersom "
-"enhetene tilhører ulike kategorier!"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -208,8 +197,23 @@ msgstr "Konverteringsfaktoren for en måleenhet kan ikke være 0!"
 
 #. module: uom
 #: sql_constraint:uom.uom:0
-msgid "The rounding precision must be greater than 0!"
-msgstr "Avrundingspresisjonen må være høyere enn 0!"
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr ""
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be strictly positive."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:152
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category than the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -284,7 +288,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:86
+#: code:addons/uom/models/uom_uom.py:93
 #, python-format
 msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
@@ -292,7 +296,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:88
+#: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -322,6 +326,20 @@ msgstr "Arbeidstid"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:28
+#, python-format
+msgid "You cannot delete this UoM Category as it is used by the system."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:115
+#, python-format
+msgid ""
+"You cannot delete this UoM as it is used by the system. You should rather "
+"archive it."
 msgstr ""
 
 #. module: uom

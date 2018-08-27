@@ -3,31 +3,16 @@
 # * crm
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# Ted Wang <feiyuwang2012@gmail.com>, 2016
-# zpq001 <zpq001@live.com>, 2017
-# Martin Trigaux, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# mrshelly <mrshelly@hotmail.com>, 2018
-# Maie <m@maie.name>, 2018
+# Martin Trigaux, 2018
+# zpq001 <zpq001@live.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,127 +21,24 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: crm
-#: model:mail.template,body_html:crm.mail_template_data_module_install_crm
-msgid ""
-"\n"
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Try creating a lead by sending an email to </span>\n"
-"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                        </a>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Gain high quality insight from surveys,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>And much more...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
-"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
-"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
-"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
-"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
-"                                </span><span> or with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
-msgstr ""
-
-#. module: crm
-#: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
-msgid ""
-"\n"
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
-"\n"
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
 msgstr "#会议"
+
+#. module: crm
+#: model:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid "% endif"
+msgstr ""
+
+#. module: crm
+#: model:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid ""
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+"    % if email\n"
+"    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -189,8 +71,8 @@ msgstr "<b>通过电子邮件</b>邀请同事。<br/> <i>每行发送一个电�
 #, python-format
 msgid ""
 "<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>\n"
-"    Looks like you are not a member of a sales channel. You should add yourself\n"
-"    as a member of one of the sales channel.\n"
+"    Looks like you are not a member of a Sales Team. You should add yourself\n"
+"    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
 
@@ -377,8 +259,8 @@ msgstr "指派商机给"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
-msgid "Assigned"
-msgstr "已指派"
+msgid "Assignation Date"
+msgstr "分派日期"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -386,7 +268,12 @@ msgid "Avg. of Probability"
 msgstr "平均概率"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:402
+#: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
+msgid "Blacklist"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:400
 #, python-format
 msgid "Boom! Team record for the past 30 days."
 msgstr "哇！过去 30 天的团队记录。"
@@ -398,6 +285,7 @@ msgstr "退回"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
+#: model:ir.ui.view,arch_db:crm.digest_digest_view_form
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "CRM"
 msgstr "CRM"
@@ -424,8 +312,8 @@ msgstr "取消"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
-msgid "Cases by Sales Channel"
-msgstr "按销售漏斗"
+msgid "Cases by Sales Team"
+msgstr "销售团队案子"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
@@ -459,6 +347,8 @@ msgstr "选中此框可管理带有商机的预售流程。"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "City"
 msgstr "城市"
 
@@ -494,6 +384,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
+#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Closed Date"
 msgstr "关闭的日期"
 
@@ -564,6 +456,7 @@ msgstr "转换动作"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_conversion
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Conversion Date"
 msgstr "转换日期"
 
@@ -615,6 +508,7 @@ msgstr "此联系人退回邮件数量计数器"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Country"
 msgstr "国家"
@@ -730,11 +624,12 @@ msgstr "币种"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Current"
 msgstr "当前的"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1156
+#: code:addons/crm/models/crm_lead.py:1160
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
@@ -754,7 +649,7 @@ msgid "Customer Autocomplete"
 msgstr "客户自动填充"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1158
+#: code:addons/crm/models/crm_lead.py:1162
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -776,6 +671,11 @@ msgstr "客户"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Date"
 msgstr "日期"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+msgid "Date Closed"
+msgstr "关闭日期"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -813,6 +713,11 @@ msgid "Describe the lead..."
 msgstr "说明线索..."
 
 #. module: crm
+#: model:ir.model,name:crm.model_digest_digest
+msgid "Digest"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Discard"
 msgstr "舍弃"
@@ -832,11 +737,22 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: crm
+#: code:addons/crm/models/digest.py:18 code:addons/crm/models/digest.py:29
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+
+#. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "不要链接到某个客户"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -861,14 +777,20 @@ msgid "Email address of the contact"
 msgstr "联系人邮箱地址"
 
 #. module: crm
+#: model:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid ""
+"Email sent to <strong>${email}</strong> generate opportunities in your "
+"pipeline.<br>"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
-"Emails received to that address generate new leads not assigned to any sales"
-" channel yet. This can be made when converting them into opportunities. "
-"Incoming emails can be automatically assigned to specific sales channels. To"
-" do so, set an email alias on the sales channel."
+"Emails received to that address generate new leads not assigned to any Sales"
+" Team yet. This can be made when converting them into opportunities. "
+"Incoming emails can be automatically assigned to specific Sales Teams. To do"
+" so, set an email alias on the Sales Team."
 msgstr ""
-"收到发送至该地址的电子邮件会生成尚未分配给任何销售渠道的新销售线索。将其转化为机会时可以做到这一点。收到的电子邮件可以自动分配到特定的销售渠道。为此，请在销售渠道上设置电子邮件别名。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -889,12 +811,13 @@ msgstr "活动"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Exclude Opt Out"
-msgstr "不包括退出者"
+msgid "Exclude blacklisted"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "预期结束"
 
@@ -922,11 +845,6 @@ msgstr "预计截止周"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__planned_revenue
 msgid "Expected Revenue"
 msgstr "预期收益"
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_expected_revenue
-msgid "Expected Revenue by Channel"
-msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -991,31 +909,22 @@ msgid "Format phone numbers based on national conventions"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:600
+#: code:addons/crm/models/crm_lead.py:598
 #, python-format
 msgid "From %s : %s"
 msgstr "来自: %s:%s"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr "未来活动"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Future Activities (7 days)"
-msgstr "未来活动（7 天）"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Future Activities (All)"
-msgstr "未来活动（全部）"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "Generate leads from incoming emails and assign them\n"
-"                                    to a sales channel manually"
+"                                    to a Sales Team manually"
 msgstr ""
 
 #. module: crm
@@ -1034,7 +943,7 @@ msgid "Global CC"
 msgstr "全局抄送"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:400
+#: code:addons/crm/models/crm_lead.py:398
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
 msgstr "快，快，快！祝贺您获得首单交易。"
@@ -1120,19 +1029,18 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__opt_out
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails for mass "
-"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
-"users to filter the leads when performing mass mailing."
-msgstr "如果选中”退出“，则此联系人将不会接收到群发邮件，如市场营销广告等。当进行邮件群发时，可根据此字段筛选出允许接受群发邮件的线索。"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_res_partner__team_id
 msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
-msgstr "如果设置，则此销售渠道将用于与此合作伙伴相关的销售和分配"
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
+msgid ""
+"If the email address is on the blacklist, the contact won't receive mass "
+"mailing anymore, from any list"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1143,6 +1051,12 @@ msgstr "如果不勾选，销售人员会建立重复的商机"
 #: model:ir.ui.menu,name:crm.menu_import_crm
 msgid "Import & Synchronize"
 msgstr "导入并同步"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:1222
+#, python-format
+msgid "Import Template for Leads & Opportunities"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1181,6 +1095,16 @@ msgid "Kanban State"
 msgstr "看板状态"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
+msgid "Kpi Crm Lead Created Value"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
+msgid "Kpi Crm Opportunities Won Value"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
 msgid "Last Action"
 msgstr "最近的行动"
@@ -1198,12 +1122,6 @@ msgstr "最近的行动"
 #: model:ir.model.fields,field_description:crm.field_crm_stage____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "Last Month"
-msgstr "上月"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -1256,11 +1174,6 @@ msgstr "线索"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead / Customer"
 msgstr "线索/客户"
-
-#. module: crm
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead
-msgid "Lead Created"
-msgstr "线索已创建"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
@@ -1325,8 +1238,8 @@ msgstr "分配给我的线索"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Leads that did not ask not to be included in mass mailing campaigns"
-msgstr "未要求的线索不要包括到批量邮件营销活动中"
+msgid "Leads that did ask to not receive mass mailing anymore"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1383,6 +1296,7 @@ msgstr "丢失"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_reason_id
 #: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
 msgstr "失去原因"
@@ -1499,25 +1413,25 @@ msgid "Merge with existing opportunities"
 msgstr "与已存在的商机合并"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:550
+#: code:addons/crm/models/crm_lead.py:548
 #, python-format
 msgid "Merged lead"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:582
+#: code:addons/crm/models/crm_lead.py:580
 #, python-format
 msgid "Merged leads"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:582
+#: code:addons/crm/models/crm_lead.py:580
 #, python-format
 msgid "Merged opportunities"
 msgstr "合并的商机"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:550
+#: code:addons/crm/models/crm_lead.py:548
 #, python-format
 msgid "Merged opportunity"
 msgstr "合并商机"
@@ -1575,6 +1489,11 @@ msgid "New"
 msgstr "新建"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
+msgid "New Leads/Opportunities"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
 msgstr "新商机"
@@ -1611,7 +1530,7 @@ msgid "Next activity late"
 msgstr "下一个活动迟到"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1178
+#: code:addons/crm/models/crm_lead.py:1182
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -1701,6 +1620,7 @@ msgstr "打开商机"
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
@@ -1724,13 +1644,13 @@ msgstr ""
 "机会分析让您立即有机会获取预计收入、计划成本、错过的期限或每次机会的交流次数等信息。此报告主要由销售经理使用，以便对销售漏斗的渠道进行周期性评估。"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
-msgid "Opportunities Cohort"
-msgstr "机会组合"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
+msgid "Opportunities Won"
 msgstr ""
 
 #. module: crm
@@ -1744,7 +1664,7 @@ msgid "Opportunities with a date of Expected Closing which is in the past"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:448
+#: code:addons/crm/models/crm_lead.py:446
 #: code:addons/crm/models/crm_lead.py:880
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
@@ -1761,6 +1681,7 @@ msgstr "商机"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
 msgstr ""
 
@@ -1800,11 +1721,6 @@ msgstr "失去的商机"
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr "获胜的商机"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__opt_out
-msgid "Opt-Out"
-msgstr "退出"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
@@ -1886,7 +1802,7 @@ msgid "Phone Formatting"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:165
+#: code:addons/crm/models/crm_team.py:154
 #: selection:crm.team,dashboard_graph_model:0
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
@@ -1902,6 +1818,7 @@ msgstr "漏斗"
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action_graph
+#: model:ir.ui.view,arch_db:crm.crm_lead_view_pivot
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
@@ -1925,16 +1842,11 @@ msgid ""
 "your opportunities with information such as the expected revenue, planned cost,\n"
 "missed deadlines or the number of interactions per opportunity. This report is\n"
 "mainly used by the sales manager in order to periodically review the pipeline\n"
-"with the the sales channel."
+"with the the Sales Team."
 msgstr ""
-"漏斗分析让您立即有机会 \n"
-" 获取预计收入、计划成本、\n"
-" 错过的期限或每次机会的交流次数等信息。此报告 \n"
-" 主要由销售经理使用，以便对具有销售渠道的漏斗 \n"
-" 进行周期性评估。"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:234
+#: code:addons/crm/models/crm_team.py:223
 #, python-format
 msgid "Pipeline: Expected Revenue"
 msgstr "漏斗：预计收入"
@@ -1945,7 +1857,7 @@ msgid "Planned"
 msgstr "已安排"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:654
+#: code:addons/crm/models/crm_lead.py:652
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
@@ -2033,15 +1945,6 @@ msgid "Related Customer"
 msgstr "相关客户"
 
 #. module: crm
-#: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
-msgid ""
-"Reminder: Lead ${object.name} from ${object.partner_id != False and "
-"object.partner_id.name or object.contact_name}"
-msgstr ""
-"提醒: Lead ${object.name} from ${object.partner_id != False and "
-"object.partner_id.name or object.contact_name}"
-
-#. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
 msgid "Reporting"
 msgstr "报告"
@@ -2080,18 +1983,20 @@ msgstr "销售"
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Sales Channel"
-msgstr "销售渠道"
+msgid "Sales Team"
+msgstr "销售团队"
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
-msgid "Sales Channel Dashboard"
+#: code:addons/crm/models/crm_lead.py:1117
+#, python-format
+msgid "Sales Team Settings"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
-msgid "Sales Channels"
-msgstr "销售渠道"
+#: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
+msgid "Sales Teams"
+msgstr "销售团队"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
@@ -2211,6 +2116,7 @@ msgstr "使用这个阶段的特定团队。其他团队将无法查看或使用
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
+#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Stage"
 msgstr "阶段"
@@ -2395,12 +2301,6 @@ msgid ""
 msgstr "这些邮箱地址将添加到所有接收的发送邮件的抄送字段，用逗号分隔多个邮件地址。"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "This Month"
-msgstr "本月"
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
@@ -2465,11 +2365,6 @@ msgid "Title"
 msgstr "称谓"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "To Close This Month"
-msgstr ""
-
-#. module: crm
 #: selection:crm.lead,activity_state:0
 msgid "Today"
 msgstr "今日"
@@ -2489,6 +2384,11 @@ msgstr "太昂贵"
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
 msgstr "追踪"
+
+#. module: crm
+#: model:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid "Try Now"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2520,7 +2420,7 @@ msgid "Unassigned Leads"
 msgstr "未分派线索"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:211
+#: code:addons/crm/models/crm_team.py:200
 #, python-format
 msgid "Undefined"
 msgstr "未定义"
@@ -2661,9 +2561,8 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__team_id
 msgid ""
-"When sending mails, the default email address is taken from the sales "
-"channel."
-msgstr "发送邮件时，会从销售渠道中获取默认电子邮件地址。"
+"When sending mails, the default email address is taken from the Sales Team."
+msgstr ""
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
@@ -2693,22 +2592,12 @@ msgid "Won"
 msgstr "赢得"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
-msgid "Won by Channel"
-msgstr ""
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_country
-msgid "Won by Country"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won
 msgid "Won in Opportunities Target"
 msgstr "赢得是商机的最终目标"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:404
+#: code:addons/crm/models/crm_lead.py:402
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
 msgstr "耶！团队最近 7 天的交易。"
@@ -2717,18 +2606,18 @@ msgstr "耶！团队最近 7 天的交易。"
 #: code:addons/crm/models/crm_team.py:121
 #, python-format
 msgid ""
-"You have to enable the Pipeline on your sales channel to be able to set it "
-"as a content for the graph"
+"You have to enable the Pipeline on your Sales Team to be able to set it as a"
+" content for the graph"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:406
+#: code:addons/crm/models/crm_lead.py:404
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr "您在过去的 30 天里打破了您的个人记录。"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:408
+#: code:addons/crm/models/crm_lead.py:406
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr "您在过去的 7 天里打破了您的个人记录。"
@@ -2753,11 +2642,6 @@ msgstr ""
 "您将能够计划来自机会的会议和电话，\n"
 "将其转换为报价，附加相关文档，\n"
 "跟踪所有讨论等等。"
-
-#. module: crm
-#: model:mail.template,subject:crm.mail_template_data_module_install_crm
-msgid "Your Odoo CRM application is running smoothly."
-msgstr "您的Odoo CRM应用程序运行顺利。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads

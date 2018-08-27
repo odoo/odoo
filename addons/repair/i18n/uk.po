@@ -3,19 +3,14 @@
 # * repair
 # 
 # Translators:
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
-# Yaroslav Molochko <onorua@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Olga Lugova <trolka.olug@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Olga Lugova <trolka.olug@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,39 +60,36 @@ msgstr ""
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
 msgid ""
 "<?xml version=\"1.0\"?>\n"
-"<data><p>Dear ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>You can reply to this email if you have any questions.</p>\n"
-"                <p>Thank you,</p>\n"
-"            </data>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hello ${object.partner_id.name},<br/>\n"
+"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br/><br/>\n"
+"        Thank you,\n"
+"    </p>\n"
+"</div>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Шановний ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Тут ваше замовлення на ремонт ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>Ви можете відповісти на цю електронку, якщо у вас є запитання.</p>\n"
-"                <p>Дякуємо,</p>\n"
-"            </data>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
 msgstr "<i>(Додати)</i>"
+
+#. module: repair
+#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+msgid ""
+"<span class=\"o_form_label\">This operation will cancel the Repair process, "
+"but will not cancel it's Invoice. Do you want to continue?</span>"
+msgstr ""
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -237,8 +229,8 @@ msgid "Confirmed"
 msgstr "Підтверджено"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:604
-#: code:addons/repair/models/repair.py:662
+#: code:addons/repair/models/repair.py:607
+#: code:addons/repair/models/repair.py:667
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -471,7 +463,7 @@ msgid "Invoice and shipping address:"
 msgstr "Адреса доставки та рахунку-фактури:"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:384
+#: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "Invoice created"
 msgstr "Рахунок створено"
@@ -592,34 +584,34 @@ msgid "No Invoice"
 msgstr "Немає рахунку-фактури"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:307
+#: code:addons/repair/models/repair.py:308
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "Для партнера не визначено жодного рахунку\"%s\"."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:333
-#: code:addons/repair/models/repair.py:361
+#: code:addons/repair/models/repair.py:334
+#: code:addons/repair/models/repair.py:362
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Для партнера не визначено жодного рахунку \"%s\"."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:595
-#: code:addons/repair/models/repair.py:653
+#: code:addons/repair/models/repair.py:598
+#: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:354
+#: code:addons/repair/models/repair.py:355
 #, python-format
 msgid "No product defined on fees."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:602
-#: code:addons/repair/models/repair.py:660
+#: code:addons/repair/models/repair.py:605
+#: code:addons/repair/models/repair.py:665
 #, python-format
 msgid "No valid pricelist line found."
 msgstr ""
@@ -842,19 +834,19 @@ msgid "Repair must be canceled in order to reset it to draft."
 msgstr "Ремонт необхідно скасувати, щоб скинути його до чернетки."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:403
+#: code:addons/repair/models/repair.py:404
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "Ремонт повинен бути підтверджений перед початком виправлення."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:431
+#: code:addons/repair/models/repair.py:432
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "Ремонт повинен бути виконаний для того, щоби перемістити товар."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:414
+#: code:addons/repair/models/repair.py:415
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Ремонт повинен бути під ремонтом у замовленні, щоб закінчити ремонт."
@@ -909,7 +901,7 @@ msgid "Send Quotation"
 msgstr "Надіслати комерційну пропозицію"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:544
+#: code:addons/repair/models/repair.py:545
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Серійний номер необхідний для роботи з товаром'%s'"
@@ -1023,15 +1015,6 @@ msgid "This is the location where the product to repair is located."
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr ""
-"Ця операція скасовує ремонтний процес, але не скасовує його рахунок-фактуру."
-" Ви хочете продовжити?"
-
-#. module: repair
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
 msgstr "Виставлений рахунок"
@@ -1131,8 +1114,8 @@ msgid "Yes"
 msgstr "Так"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:597
-#: code:addons/repair/models/repair.py:655
+#: code:addons/repair/models/repair.py:600
+#: code:addons/repair/models/repair.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1142,7 +1125,7 @@ msgstr ""
 "Будь-ласка, встановіть його перед вибором товару."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:295
+#: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
 msgstr ""

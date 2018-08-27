@@ -3,24 +3,21 @@
 # * website_crm
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
-# Eric Antones <eantones@users.noreply.github.com>, 2016
-# Antonio Trueba, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# maitaoriana <maitaoriana@gmail.com>, 2017
-# Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2017
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2018
+# Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,15 +30,6 @@ msgstr ""
 #: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Enviar</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -65,36 +53,33 @@ msgstr "Contáctenos"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "Canal de ventas predeterminado"
+msgid "Default Sales Team"
+msgstr "Equipo de Ventas Predeterminado"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "Canales de ventas predeterminados"
+msgid "Default Sales Teams"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Vendedor Predeterminado"
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-"Canal de ventas predeterminado para nuevas iniciativas creadas a través del "
-"formulario \"Contacte con nosotros\"."
+msgstr "Comercial predeterminado"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
-"Vendedor predeterminado para nuevas iniciativas creadas a través del "
-"formulario \"Contacte con nosotros\"."
+"Vendedor por defecto para nuevas iniciativas creadas a través del formulario"
+" \"Contacte con nosotros\"."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -122,17 +107,29 @@ msgstr ""
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Phone Number"
-msgstr "Nº teléfono"
+msgstr "Número de teléfono"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
-msgstr "Canal de Ventas"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Equipo de ventas"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Salesperson"
 msgstr "Comercial"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Enviar"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

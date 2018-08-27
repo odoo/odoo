@@ -3,20 +3,20 @@
 # * website_sale_stock
 # 
 # Translators:
-# waveyeung <waveyeung@qq.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,12 @@ msgstr "<strong>警告！</strong>"
 #: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
-msgstr "在网站产品页面添加库存可用性状态"
+msgstr "在网站产品页面添加库存可用性状态。"
+
+#. module: website_sale_stock
+#: model:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "可用性"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -62,9 +67,9 @@ msgstr "默认可用模式"
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
-msgstr "新建可入库产品设置默认可用模式。这可以在产品级别进行更改。"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -79,10 +84,9 @@ msgid "In stock"
 msgstr "有现货"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory"
-msgstr "库存"
+msgstr "盘点"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
@@ -96,7 +100,7 @@ msgstr "库存可用性"
 msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
-msgstr "管理产品的库存, 在网站显示他们的可用性状态"
+msgstr "管理你的产品的库存, 在网站显示他们的可用性状态。"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -158,15 +162,32 @@ msgid "Temporarily out of stock"
 msgstr "暂时缺货"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "调拨"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
 msgstr "网站"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
@@ -179,7 +200,7 @@ msgstr "您已经添加"
 #: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr "您想要 % 的产品但只有 % 可用"
+msgstr "您想要 %s 的产品但只有 %s 可用"
 
 #. module: website_sale_stock
 #. openerp-web

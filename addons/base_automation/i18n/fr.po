@@ -3,33 +3,14 @@
 # * base_automation
 # 
 # Translators:
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Martin Trigaux, 2017
-# Benjamin Delagoutte <ben@ampletus.fr>, 2017
-# Olivier Dony <odo@odoo.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Lionel Sausin <ls@numerigraphe.com>, 2017
-# Florian Hatat, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Agathe Mollé <molleagathe@gmail.com>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# leemannd <denis.leemann@camptocamp.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +53,16 @@ msgstr "Type d'action"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
 msgstr "Actif"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Activity"
+msgstr "Activité"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
+msgid "Activity User Type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -236,6 +227,16 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
+msgid "Due Date In"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
+msgid "Due type"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
 msgstr "Modèle de courriel"
@@ -382,6 +383,11 @@ msgid "New"
 msgstr "Nouveau"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
+msgid "Note"
+msgstr "Note"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
 msgstr "Déclencheur des modifications sur les champs"
@@ -453,6 +459,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr "Retirer l'action contextuelle relative à cette action du serveur"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "Responsable"
@@ -502,6 +509,16 @@ msgid "Subject"
 msgstr "Sujet"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Summary"
+msgstr "Résumé"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
+msgid "Technical name of the user on the record"
+msgstr ""
+
+#. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
 #, python-format
 msgid ""
@@ -545,6 +562,14 @@ msgid "Usage"
 msgstr "Usage"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
 msgstr "Utiliser le calendrier"
@@ -554,20 +579,20 @@ msgstr "Utiliser le calendrier"
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales channel, or an\n"
+"                be automatically set to a specific Sales Team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Utilisez des actions automatisées pour déclencher automatiquement des actions pour\n"
-" différents écrans. Par exemple : une piste créée par un utilisateur spécifique peut\n"
-" être automatiquement affectée à une équipe de vente, ou une\n"
-" opportunité en attente depuis plus de 14 jours peut\n"
-" déclencher un rappel automatique par e-mail."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
 msgid "User"
 msgstr "Utilisateur"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
+msgid "User field name"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -616,11 +641,8 @@ msgstr "Lorsque décoché, la règle est cachée et ne sera pas exécutée."
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
-" for use; help about pyhon expression is given in the help tab."
+" for use; help about python expression is given in the help tab."
 msgstr ""
-"Écrire du code Python que l'action exécutera. Certaines variables sont "
-"disponibles à l'utilisation ; une aide sur l'expression python est donnée "
-"dans l'onglet d'aide."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

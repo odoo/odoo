@@ -111,19 +111,13 @@ action = {
         </xpath>
     </template>
 
-    <!-- Add link to theme install in default customize modal -->
-     <record id="website_settings_payment" model="ir.ui.view">
+    <record id="view_website_form_inherit_view_themes" model="ir.ui.view">
         <field name="name">website.form</field>
         <field name="model">website</field>
         <field name="inherit_id" ref="website.view_website_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='other']" position='before'>
-                <div name="theme">
-                    <separator string="Theme"/>
-                    <group name="Theme">
-                        <button type="object" name="button_view_theme" class="btn btn-primary">View themes</button>
-                    </group>
-                </div>
+            <xpath expr="//button[@name='button_go_website']" position='after'>
+                <button type="object" name="button_view_theme" class="btn btn-primary ml-2" icon="fa-paint-brush">Choose a theme</button>
             </xpath>
         </field>
     </record>

@@ -3,26 +3,14 @@
 # * fleet
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Sergey Vilizhanin, 2017
-# Collex100, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
-# Dmitry sky <d.v.selitsky@gmail.com>, 2017
-# Denis Baranov <baranov@itlibertas.com>, 2018
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,6 +104,11 @@ msgid "Assignation Logs"
 msgstr ""
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,transmission:0
 msgid "Automatic"
 msgstr "Автоматически"
@@ -127,6 +120,11 @@ msgstr "Автоматически"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__auto_generated
 msgid "Automatically Generated"
 msgstr "Сгенерировано автоматически"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+msgid "Brand"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
@@ -1006,10 +1004,12 @@ msgstr "Логотип (маленький)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Make"
 msgstr "Марка"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
 msgid "Make of the vehicle"
 msgstr "Марка транспортного средства"
@@ -1172,7 +1172,7 @@ msgid "No"
 msgstr "Нет"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:84
+#: code:addons/fleet/models/fleet_vehicle.py:85
 #, python-format
 msgid "No Plate"
 msgstr ""
@@ -1313,6 +1313,11 @@ msgstr ""
 "Расходы, как правило, создается из услуг, и договоров и появляются здесь."
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Открыть"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "Другое"
@@ -1396,7 +1401,7 @@ msgid "Refueling Details"
 msgstr "Детали дозаправки"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:201
+#: code:addons/fleet/models/fleet_vehicle_cost.py:209
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1712,6 +1717,7 @@ msgstr "Стоимость купленного транспортного ср�
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
@@ -1832,6 +1838,11 @@ msgstr "Производители"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Дата предупреждения"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0

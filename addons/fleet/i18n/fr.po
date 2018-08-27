@@ -3,47 +3,15 @@
 # * fleet
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Maxime Solinas <msolinas@t2o.ca>, 2016
-# Olivier Dony <odo@odoo.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Hamid Darabi, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# ShevAbam, 2016
-# Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
-# Agathe Mollé <molleagathe@gmail.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Aline Preillon <apr@odoo.com>, 2017
-# bob dupont <tropnul@hotmail.fr>, 2017
-# Lionel Sausin <ls@numerigraphe.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# fr trans <e2ftrans1@yahoo.com>, 2018
+# Martin Trigaux, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
-# fr rev <e2ffr04@hotmail.com>, 2018
-# Hubert TETARD <htetard@apik-conseils.com>, 2018
-# Nancy Bolognesi <nb@microcom.ca>, 2018
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Lucas Deliege <lud@openerp.com>, 2018
-# Bertrand LATOUR <divoir@gmail.com>, 2018
-# LEONARD Jean-Christophe <jeanchristophe.leonard@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: LEONARD Jean-Christophe <jeanchristophe.leonard@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +105,11 @@ msgid "Assignation Logs"
 msgstr ""
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
+msgstr ""
+
+#. module: fleet
 #: selection:fleet.vehicle,transmission:0
 msgid "Automatic"
 msgstr "Automatique"
@@ -148,6 +121,11 @@ msgstr "Automatique"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__auto_generated
 msgid "Automatically Generated"
 msgstr "Créer automatiquement"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+msgid "Brand"
+msgstr "Marque"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
@@ -1027,10 +1005,12 @@ msgstr "Logo (petit)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Make"
 msgstr "Marque"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
 msgid "Make of the vehicle"
 msgstr "Marque du véhicule"
@@ -1196,7 +1176,7 @@ msgid "No"
 msgstr "Non"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:84
+#: code:addons/fleet/models/fleet_vehicle.py:85
 #, python-format
 msgid "No Plate"
 msgstr ""
@@ -1337,6 +1317,11 @@ msgstr ""
 " généralement créés à partir des services et contrats et apparaissent ici."
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Ouvertes"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "Autre"
@@ -1420,7 +1405,7 @@ msgid "Refueling Details"
 msgstr "Détails du ravitaillement en carburant"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:201
+#: code:addons/fleet/models/fleet_vehicle_cost.py:209
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1740,6 +1725,7 @@ msgstr "Valeur d’achat du véhicule"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
@@ -1860,6 +1846,11 @@ msgstr "Fournisseurs"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Date d'alerte"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr ""
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0

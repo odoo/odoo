@@ -3,19 +3,18 @@
 # * website_form
 # 
 # Translators:
-# Liping Wang <lynn.config@gmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Liping Wang <lynn.config@gmail.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +28,7 @@ msgstr ""
 #: code:addons/website_form/static/src/js/website_form.js:230
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' 格式错，不是正确的日期"
+msgstr "'%s' 不是正确的日期"
 
 #. module: website_form
 #. openerp-web
@@ -54,23 +53,23 @@ msgstr "允许使用表单"
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr "错误，表单未被发送。"
+msgstr "出现错误，表单未被发送。"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "在表单中为这个字段设置黑名单"
+msgstr "在网上表单中为此字段设置黑名单"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr "已经在网站的表单黑名单中"
+msgstr "已经在网站表单的黑名单中"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Custom infos"
-msgstr "自定义信息"
+msgstr "自订信息"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -81,12 +80,20 @@ msgstr "激活此模型的表单生成器特性。"
 #: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
 #: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
 msgid "Enable writing metadata on form submit."
-msgstr "允许表单提交中写入元数据"
+msgstr "允许表单提交中写入元数据。"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
+#, python-format
+msgid "Error"
+msgstr "错误"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "表单自定义字段"
+msgstr "表单数据的自定义字段"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -98,7 +105,7 @@ msgstr "字段"
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
-msgstr "表单动作标注。提示：crm.lead 可以是 ‘发送一封邮件’，project.issue 可以是 ‘创建一个问题’。"
+msgstr "来自动作标注。提示：crm.lead 可以是 ‘发送一封邮件’，project.issue 可以是 ‘创建一个问题’。"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -114,7 +121,7 @@ msgstr "元数据"
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
-msgstr "模型"
+msgstr "型号"
 
 #. module: website_form
 #. openerp-web
@@ -128,6 +135,13 @@ msgstr "请正确填写表单。"
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
 msgstr "指定包含元数据和自定义表单字段数据的字段。"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:7
+#, python-format
+msgid "Success"
+msgstr "成功"
 
 #. module: website_form
 #. openerp-web
@@ -155,4 +169,4 @@ msgstr "写入元数据"
 #. module: website_form
 #: model:ir.model,name:website_form.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "设置-基础设置"

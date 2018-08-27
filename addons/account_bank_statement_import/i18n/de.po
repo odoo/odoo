@@ -3,30 +3,14 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Martin Trigaux, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Andi, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Niki Waibel, 2017
-# Mathias Neef <mn@copado.de>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Wolfgang Taferner, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# Pascal Künzli <p.kuenzli@pk-its.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,11 +134,6 @@ msgstr "Datei Bankauszug"
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Kontoauszugszeile"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Bank setup marked as done"
-msgstr "Bank-Konfiguration als erledigt markiert"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
@@ -489,6 +468,11 @@ msgid "OK"
 msgstr "OK"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid "Post At Bank Reconciliation"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "Erlöskonto"
@@ -532,13 +516,6 @@ msgstr "Kurzzeichen"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Show journal on dashboard"
 msgstr "Journal im Dashboard anzeigen"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Technical field used in the special view for the setup bar step."
-msgstr ""
-"Technisches Feld, das für die spezielle Ansicht des Einrichtungsleisten-"
-"Schrittes verwendet wird."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -646,6 +623,14 @@ msgid ""
 msgstr ""
 "Wird verwendet, um einen Gewinn zu buchen, wenn der Saldo einer Kasse vom "
 "errechneten bzw. erwarteten abweicht."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid ""
+"Whether or not the payments made in this journal should be generated in "
+"draft state, so that the related journal entries are only posted when "
+"performing bank reconciliation."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard

@@ -3,24 +3,15 @@
 # * delivery
 # 
 # Translators:
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Martin Trigaux, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Andrey Samorukov <andrey.samorukov@me.com>, 2017
-# Collex100, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Mekan Bash <tmbashimov@gmail.com>, 2017
-# Evgeny <transingularity@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
-# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Martin Trigaux, 2018
+# Dmitry sky <d.v.selitsky@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,22 +33,39 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
 msgid ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>We are glad to inform you that your order has been shipped.</p>\n"
-"<p>\n"
-"%if object.carrier_tracking_ref:\n"
-"  Your tracking reference:\n"
-"  %if object.carrier_tracking_url:\n"
-"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"  %else:\n"
-"    ${object.carrier_tracking_ref}.\n"
-"  %endif\n"
-"%endif\n"
-"</p>\n"
-"<p>Find your delivery order attached for more details.</p>\n"
-"<p>Thank you,</p>\n"
-"      </data>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello ${object.partner_id.name},<br/><br/>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        Thank you,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
 msgstr ""
 
 #. module: delivery
@@ -156,11 +164,6 @@ msgid "Carrier"
 msgstr "Перевозчик"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Check price"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
 msgstr "Компания"
@@ -203,6 +206,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr ""
+
+#. module: delivery
+#: model:product.category,name:delivery.product_category_deliveries
+msgid "Deliveries"
+msgstr "Доставки"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -379,12 +387,6 @@ msgstr "Получить процентную ставку и создать о�
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
 msgstr "Группировать"
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
-#: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
-msgid "HS Code"
-msgstr "HS Code"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
@@ -628,11 +630,6 @@ msgid "Pricing Rules"
 msgstr "Правила Вычисления Цены"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_template
-msgid "Product Template"
-msgstr "Шаблон продукта"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -693,11 +690,6 @@ msgid "Sequence"
 msgstr "Нумерация"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
-msgid "Set price"
-msgstr "Установить цену"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
@@ -728,12 +720,6 @@ msgstr "Вес с упаковкой"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
 msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_product_product__hs_code
-#: model:ir.model.fields,help:delivery.field_product_template__hs_code
-msgid "Standardized code for international shipping and goods declaration"
-msgstr "Стандартный код для международной доставки и декларации товаров"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -817,6 +803,12 @@ msgstr "Единица измерения"
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_uom_id
 msgid "Unit of measurement for Weight"
 msgstr "Единица измерения веса"
+
+#. module: delivery
+#: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.template,uom_name:delivery.product_product_delivery_product_template
+msgid "Unit(s)"
+msgstr "шт."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable

@@ -3,30 +3,14 @@
 # * purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Renzo Meister, 2017
-# Wolfgang Taferner, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Niki Waibel, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Dejan Dinic, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Philipp Hug <philipp@hug.cx>, 2017
-# Andi, 2017
-# DE T1 <e2f8846@yahoo.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# intero_chz <c.zoellner@intero-technologies.de>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +129,11 @@ msgstr "Blankoauftrag"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Blanket order"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:purchase.requisition.type,name:purchase_requisition.type_multi
+msgid "Call for Tender"
 msgstr ""
 
 #. module: purchase_requisition
@@ -473,11 +462,6 @@ msgid "Procurement"
 msgstr "Beschaffung"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Beschaffungsregel"
-
-#. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_id
 msgid "Product"
@@ -575,16 +559,12 @@ msgid "Purchase Requisition Line"
 msgstr "Bestellmeldung Positionen"
 
 #. module: purchase_requisition
-#: model:purchase.requisition.type,name:purchase_requisition.type_multi
-msgid "Purchase Tender"
-msgstr "Kauf-Ausschreibung"
-
-#. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
 msgstr "Bestellungen"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__is_quantity_copy
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__quantity_copy
 msgid "Quantities"
@@ -707,6 +687,11 @@ msgid "Stock Move"
 msgstr "Lagerbuchung"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
 msgstr ""
@@ -807,7 +792,7 @@ msgstr ""
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:122
 #, python-format
-msgid "You cannot confirm agreement because there is no product line."
+msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition

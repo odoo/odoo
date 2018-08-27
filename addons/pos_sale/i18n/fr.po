@@ -3,26 +3,15 @@
 # * pos_sale
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Martin Trigaux, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Félix Desjardins <felixinx@gmail.com>, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# lucasdeliege <deliegelucas@gmail.com>, 2018
-# Melanie Bernard <mbe@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Lucas Deliege <lud@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
+"Last-Translator: Lucas Deliege <lud@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,14 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_report_all_channels_sales
-msgid "All sales orders grouped by sales channels"
-msgstr "Tous les bons de commande regroupés par équipe de vente"
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "Annulé"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
-msgid "Channel Type"
-msgstr "Type de canal"
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
+msgstr "Taux de la devise"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/crm_team.py:107
@@ -50,6 +39,11 @@ msgstr "Tableau de bord"
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Day"
 msgstr "Jour"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Draft Quotation"
+msgstr "Devis brouillon"
 
 #. module: pos_sale
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_view_form_inherit_pos_sale
@@ -64,9 +58,19 @@ msgstr ""
 "résultats."
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Invoiced"
+msgstr "Facturé"
+
+#. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Month"
 msgstr "Mois"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "New"
+msgstr "Nouvelle"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -84,15 +88,35 @@ msgid "POS Grouping"
 msgstr ""
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Paid"
+msgstr "Payé"
+
+#. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 #: model:crm.team,name:pos_sale.pos_sales_team selection:crm.team,team_type:0
 msgid "Point of Sale"
 msgstr "Point de Vente"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Commandes du point de vente"
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
 msgstr "Point de vente"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Posted"
+msgstr "Comptabilisé"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Quotation Sent"
+msgstr "Devis envoyé"
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0
@@ -101,11 +125,26 @@ msgid "Sales"
 msgstr "Ventes"
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Done"
+msgstr "Ventes effectuées"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Statistiques sur les commandes de ventes"
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
-msgid "Sales Channel"
-msgstr "Equipe de vente"
+msgid "Sales Team"
+msgstr "Équipe commerciale"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/crm_team.py:119
@@ -134,6 +173,23 @@ msgid "Sessions Running"
 msgstr "Session en cours"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
+msgstr "État"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
+msgid "Team Type"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
@@ -143,8 +199,8 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
-msgid "This Point of sale's sales will be related to this Sales Channel."
-msgstr "Les ventes de ce point de vente seront liées à ce canal de vente."
+msgid "This Point of sale's sales will be related to this Sales Team."
+msgstr ""
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0

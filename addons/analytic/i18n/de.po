@@ -3,23 +3,14 @@
 # * analytic
 # 
 # Translators:
-# Henry Mineehen <info@mineehen.de>, 2017
-# Wolfgang Taferner, 2017
-# Martin Trigaux, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Niki Waibel, 2017
-# Renzo Meister, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +95,6 @@ msgid "Analytic Distribution"
 msgstr "Kostenstellen Distribution"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -115,6 +105,11 @@ msgstr "Kostenstellenbuchungen"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Kostenstellen-Buchung"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+msgid "Analytic Items"
+msgstr "Kostenstellen Buchungen"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -508,7 +503,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:193
+#: code:addons/analytic/models/analytic_account.py:194
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
@@ -524,6 +519,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Total"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Mengeneinheit"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread

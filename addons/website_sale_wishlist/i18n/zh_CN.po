@@ -3,22 +3,18 @@
 # * website_sale_wishlist
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# Maie <m@maie.name>, 2017
-# 厦门-许舟 <windedge99@gmail.com>, 2017
-# Xu Lei <xulei8@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Maie <m@maie.name>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +29,7 @@ msgid ""
 "                        Wishlist"
 msgstr ""
 "<i class=\"fa fa-heart\"/>\n"
-"                        愿望清单"
+"                        心愿清单"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -47,13 +43,13 @@ msgstr "有效"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"hidden-xs\">to Cart</span>"
-msgstr "加入<span class=\"hidden-xs\">购物车</span>"
+msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr "将产品加入购物车但仍将其保留在我的愿望清单中"
+msgstr "将产品加入购物车但仍保留在我的愿望清单中"
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
@@ -79,22 +75,7 @@ msgstr "创建人"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
 msgid "Currency"
-msgstr "货币"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__current_session
-msgid "Current Session"
-msgstr "当前会话"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price"
-msgstr "当前价格"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price_new
-msgid "Current price of this product, using same pricelist, ..."
-msgstr "此产品的当前价格，使用相同的价位表，..."
+msgstr "币种"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
@@ -157,9 +138,9 @@ msgid "Product"
 msgstr "产品"
 
 #. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__session
-msgid "Session"
-msgstr "会话"
+#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid "Product image"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -175,11 +156,6 @@ msgstr "用户"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
 msgstr "网站"
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__session
-msgid "Website session identifier where this product was wishlisted."
-msgstr "表示产品列入愿望清单的网站会话标识符。"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
