@@ -47,6 +47,8 @@ ActivityMenu.include({
         var noteDateTime = this.noteDateTimeWidget.getValue();
         if (noteDateTime) {
             params = _.extend(params, {'date_deadline': noteDateTime});
+        } else {
+            params = _.extend(params, {'date_deadline': moment()});
         }
         this.$('.o_note_show').removeClass('d-none');
         this.$('.o_note').addClass('d-none');
@@ -91,6 +93,8 @@ ActivityMenu.include({
         }
         this.noteDateTimeWidget.appendTo(this.$('.o_note_datetime'));
         this.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
+        this.noteDateTimeWidget.$input.attr('value', _t(moment().format('L')));
+        this.noteDateTimeWidget.__getterSetterInternalMap.value = moment();
         this.$('.o_note_show, .o_note').toggleClass('d-none');
         this.$('.o_note_input').val('').focus();
     },
