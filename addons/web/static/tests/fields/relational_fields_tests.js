@@ -9832,8 +9832,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('add a line custom control editable', function (assert) {
-        assert.expect(4);
+    QUnit.test('o2m add a line custom control create editable', function (assert) {
+        assert.expect(5);
 
         var form = createView({
             View: FormView,
@@ -9862,8 +9862,10 @@ QUnit.module('relational_fields', {
         });
 
         // new controls correctly added
-        assert.strictEqual($('.o_field_x2many_list_row_add').length, 1);
-        assert.strictEqual($('.o_field_x2many_list_row_add').text(), "Add foodAdd pizzaAdd pasta");
+        var $td = form.$('.o_field_x2many_list_row_add');
+        assert.strictEqual($td.length, 1);
+        assert.strictEqual($td.closest('tr').find('td').length, 1);
+        assert.strictEqual($td.text(), "Add foodAdd pizzaAdd pasta");
 
         // click add food
         // check it's empty
@@ -9882,8 +9884,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('add a line custom control non-editable', function (assert) {
-        assert.expect(5);
+    QUnit.test('o2m add a line custom control create non-editable', function (assert) {
+        assert.expect(6);
 
         var form = createView({
             View: FormView,
@@ -9912,8 +9914,10 @@ QUnit.module('relational_fields', {
         });
 
         // new controls correctly added
-        assert.strictEqual($('.o_field_x2many_list_row_add').length, 1);
-        assert.strictEqual($('.o_field_x2many_list_row_add').text(), "Add foodAdd pizzaAdd pasta");
+        var $td = form.$('.o_field_x2many_list_row_add');
+        assert.strictEqual($td.length, 1);
+        assert.strictEqual($td.closest('tr').find('td').length, 1);
+        assert.strictEqual($td.text(), "Add foodAdd pizzaAdd pasta");
 
         // click add food
         // check it's empty
@@ -9934,6 +9938,32 @@ QUnit.module('relational_fields', {
         form.$('.o_field_x2many_list_row_add a:eq(2)').click();
         $('.modal .modal-footer .btn-primary:first').click();
         assert.strictEqual($('.o_data_cell').text(), "pizzapasta");
+
+        form.destroy();
+    });
+
+    QUnit.test('o2m add a line custom control create align with handle', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="int_field" widget="handle"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        // controls correctly added, at one column offset when handle is present
+        var $tr = form.$('.o_field_x2many_list_row_add').closest('tr');
+        assert.strictEqual($tr.find('td').length, 2);
+        assert.strictEqual($tr.find('td:eq(0)').text(), "");
+        assert.strictEqual($tr.find('td:eq(1)').text(), "Add a line");
 
         form.destroy();
     });
