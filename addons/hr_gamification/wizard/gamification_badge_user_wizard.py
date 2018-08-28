@@ -9,7 +9,8 @@ class GamificationBadgeUserWizard(models.TransientModel):
     _inherit = 'gamification.badge.user.wizard'
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', store=True)
+    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id',
+        store=False, readonly=True)
 
     @api.multi
     def action_grant_badge(self):
