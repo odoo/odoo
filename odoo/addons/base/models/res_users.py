@@ -695,7 +695,7 @@ class Users(models.Model):
         :return: True if the current user is a member of the group with the
            given external ID (XML ID), else False.
         """
-        assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
+        assert group_ext_id and '.' in group_ext_id, "External ID '%s' must be fully qualified" % group_ext_id
         module, ext_id = group_ext_id.split('.')
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
