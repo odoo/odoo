@@ -78,4 +78,5 @@
     'application': True,
     'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': '_create_warehouse',
 }
