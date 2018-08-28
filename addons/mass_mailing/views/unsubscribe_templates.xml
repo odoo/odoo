@@ -15,7 +15,7 @@
                             <div id="info_state" class="alert alert-success" role="status">
                                 <div id="subscription_info"></div>
                                 <div id="div_feedback">
-                                    <p>We would appreciate if you provide feedback about why you unsubscribed</p>
+                                    <p>We would appreciate if you provide feedback about why you updated<br/>your subscriptions</p>
                                     <textarea class="form-control"  name="opt_out_feedback" cols="60" rows="3"></textarea>
                                     <br/>
                                     <div class="btn btn-primary text-left" id="button_feedback">Send</div>
@@ -47,8 +47,7 @@
                             </div>
 
                         </t>
-
-                        <t t-if="contacts == False">
+                        <t t-else="">
                             <div class="alert alert-info text-center" role="status">
                                 <p>You are not subscribed to any of our mailing list.</p>
                             </div>
