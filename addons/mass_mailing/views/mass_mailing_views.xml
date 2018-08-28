@@ -61,11 +61,13 @@
                     <field name="opt_out"/>
                     <field name="list_id"/>
                     <separator/>
+                    <filter string="Valid Recipients" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False), ('contact_id.is_email_valid', '=', True)]"/>
+                    <separator/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
                     <separator/>
                     <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('contact_id.is_blacklisted', '=', False)]"/>
                     <separator/>
-                    <filter string="Valid Recipents" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False)]"/>
+                    <filter string="Exclude Invalid Emails" name="valid_email" domain="[('contact_id.is_email_valid', '=', True)]"/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
