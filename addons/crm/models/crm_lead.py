@@ -111,6 +111,7 @@ class Lead(models.Model):
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
     partner_address_phone = fields.Char('Partner Contact Phone', related='partner_id.phone', readonly=True)
+    partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
