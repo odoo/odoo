@@ -35,7 +35,7 @@ var ProductComparison = Widget.extend({
         self._loadProducts(this.comparelist_product_ids).then(function () {
             self._updateContent(self.comparelist_product_ids, true);
             if (self.comparelist_product_ids.length) {
-                $('.o_product_feature_panel').show();
+                $('.o_product_feature_panel').addClass('d-md-block');
                 self._updateComparelistView();
             }
         });
@@ -136,7 +136,7 @@ var ProductComparison = Widget.extend({
      */
     _addNewProducts: function (product_id) {
         var self = this;
-        $('.o_product_feature_panel').show();
+        $('.o_product_feature_panel').addClass('d-md-block');
         if (!_.contains(self.comparelist_product_ids, product_id)) {
             self.comparelist_product_ids.push(product_id);
             if (_.has(self.product_data, product_id)){
@@ -188,14 +188,14 @@ var ProductComparison = Widget.extend({
      */
     _updateComparelistView: function () {
         this.$('.o_product_circle').text(this.comparelist_product_ids.length);
-        this.$('.o_comparelist_button').hide();
+        this.$('.o_comparelist_button').removeClass('d-md-block');
         if (_.isEmpty(this.comparelist_product_ids)) {
-            $('.o_product_feature_panel').hide();
+            $('.o_product_feature_panel').removeClass('d-md-block');
             this._togglePanel();
         } else {
-            this.$('.o_comparelist_products').show();
+            this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
-                this.$('.o_comparelist_button').show();
+                this.$('.o_comparelist_button').addClass('d-md-block');
                 this.$('.o_comparelist_button a').attr('href', '/shop/compare/?products='+this.comparelist_product_ids.toString());
             }
         }
