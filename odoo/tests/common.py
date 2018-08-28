@@ -16,6 +16,7 @@ import platform
 import re
 import requests
 import shutil
+import signal
 import subprocess
 import tempfile
 import threading
@@ -358,6 +359,16 @@ class ChromeBrowser():
         self._websocket_send('Runtime.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
+        self.sigxcpu_handler = None
+        if os.name == 'posix':
+            self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
+            signal.signal(signal.SIGXCPU, self.signal_handler)
+
+    def signal_handler(self, sig, frame):
+        if sig == signal.SIGXCPU:
+            _logger.info('CPU time limit reached, stopping Chrome and shutting down')
+            self.stop()
+            os._exit(0)
 
     def stop(self):
         if self.chrome_process is not None:
@@ -370,6 +381,9 @@ class ChromeBrowser():
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir)
+        # Restore previous signal handler
+        if self.sigxcpu_handler and os.name == 'posix':
+            signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
 
     @property
     def executable(self):
