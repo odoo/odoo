@@ -406,9 +406,10 @@ class SavepointCase(SingleTransactionCase):
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
-    def __init__(self):
+    def __init__(self, logger):
+        self._logger = logger
         if websocket is None:
-            _logger.warning("websocket-client module is not installed")
+            self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
         self.devtools_port = PORT + 2
         self.ws_url = ''  # WebSocketUrl
@@ -418,23 +419,23 @@ class ChromeBrowser():
         self.chrome_process = None
         self.screencast_frames = []
         self._chrome_start()
-        _logger.info('Websocket url found: %s' % self.ws_url)
+        self._logger.info('Websocket url found: %s', self.ws_url)
         self._open_websocket()
-        _logger.info('Enable chrome headless console log notification')
+        self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
-        _logger.info('Chrome headless enable page notifications')
+        self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
 
     def stop(self):
         if self.chrome_process is not None:
-            _logger.info("Closing chrome headless with pid %s" % self.chrome_process.pid)
+            self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
             self._websocket_send('Browser.close')
             if self.chrome_process.poll() is None:
-                _logger.info("Terminating chrome headless with pid %s" % self.chrome_process.pid)
+                self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
                 self.chrome_process.terminate()
                 self.chrome_process.wait()
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
-            _logger.info('Removing chrome user profile "%s"' % self.user_data_dir)
+            self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
             shutil.rmtree(self.user_data_dir)
 
     @property
@@ -480,17 +481,17 @@ class ChromeBrowser():
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
         cmd.append(url)
-        _logger.info('chrome_run executing %s', ' '.join(cmd))
+        self._logger.info('chrome_run executing %s', ' '.join(cmd))
         try:
             self.chrome_process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
-        _logger.info('Chrome pid: %s' % self.chrome_process.pid)
+        self._logger.info('Chrome pid: %s', self.chrome_process.pid)
         version = self._json_command('version')
-        _logger.info('Browser version: %s' % version['Browser'])
+        self._logger.info('Browser version: %s', version['Browser'])
         infos = self._json_command('')[0]  # Infos about the first tab
         self.ws_url = infos['webSocketDebuggerUrl']
-        _logger.info('Chrome headless temporary user profile dir: %s' % self.user_data_dir)
+        self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
     def _json_command(self, command, timeout=3):
         """
@@ -504,12 +505,12 @@ class ChromeBrowser():
             version : get chrome and dev tools version
             protocol : get the full protocol
         """
-        _logger.info("Issuing json command %s" % command)
+        self._logger.info("Issuing json command %s", command)
         command = os.path.join('json', command).strip('/')
         while timeout > 0:
             try:
                 url = werkzeug.urls.url_join('http://127.0.0.1:%s/' % self.devtools_port, command)
-                _logger.info('Url : %s' % url)
+                self._logger.info('Url : %s', url)
                 r = requests.get(url, timeout=3)
                 if r.ok:
                     return r.json()
@@ -519,7 +520,7 @@ class ChromeBrowser():
                 timeout -= 0.1
             except requests.exceptions.ReadTimeout:
                 break
-        _logger.error('Could not connect to chrome debugger')
+        self._logger.error('Could not connect to chrome debugger')
         raise unittest.SkipTest("Cannot connect to chrome headless")
 
     def _open_websocket(self):
@@ -556,7 +557,7 @@ class ChromeBrowser():
                 res = None
             if res and res.get('id') == awaited_id:
                 return res
-        _logger.info('timeout exceeded while waiting for id : %d' % awaited_id)
+        self._logger.info('timeout exceeded while waiting for id : %d', awaited_id)
         return {}
 
     def _websocket_wait_event(self, method, params=None, timeout=10):
@@ -576,8 +577,8 @@ class ChromeBrowser():
                 else:
                     return res
             elif res:
-                _logger.debug('chrome devtools protocol event: %s' % res)
-        _logger.info('timeout exceeded while waiting for : %s' % method)
+                self._logger.debug('chrome devtools protocol event: %s', res)
+        self._logger.info('timeout exceeded while waiting for : %s', method)
 
     def _get_shotname(self, prefix, ext):
         """ return a unique filename for screenshot or screencast"""
@@ -588,23 +589,23 @@ class ChromeBrowser():
 
     def take_screenshot(self, prefix='failed'):
         if not odoo.tools.config['logfile']:
-            _logger.info('Screenshot disabled !')
+            self._logger.info('Screenshot disabled !')
             return None
         ss_id = self._websocket_send('Page.captureScreenshot')
-        _logger.info('Asked for screenshot (id: %s)' % ss_id)
+        self._logger.info('Asked for screenshot (id: %s)', ss_id)
         res = self._websocket_wait_id(ss_id)
         base_png = res.get('result', {}).get('data')
         decoded = base64.decodebytes(bytes(base_png.encode('utf-8')))
         outfile = self._get_shotname(prefix, 'png')
         with open(outfile, 'wb') as f:
             f.write(decoded)
-        _logger.info('Screenshot in: %s' % outfile)
+        self._logger.info('Screenshot in: %s', outfile)
 
     def _save_screencast(self, prefix='failed'):
         # could be encododed with something like that
         #  ffmpeg -framerate 3 -i frame_%05d.png  output.mp4
         if not odoo.tools.config['logfile']:
-            _logger.info('Screencast disabled !')
+            self._logger.info('Screencast disabled !')
             return None
         sdir = tempfile.mkdtemp(suffix='_chrome_odoo_screencast')
         nb = 0
@@ -618,7 +619,7 @@ class ChromeBrowser():
         r = subprocess.run(['ffmpeg', '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % sdir, outfile])
         shutil.rmtree(sdir)
         if r.returncode == 0:
-            _logger.info('Screencast in: %s' % outfile)
+            self._logger.info('Screencast in: %s', outfile)
 
     def start_screencast(self):
         self._websocket_send('Page.startScreencast', {'params': {'everyNthFrame': 5, 'maxWidth': 683, 'maxHeight': 384}})
@@ -628,7 +629,7 @@ class ChromeBrowser():
         self._websocket_send('Network.setCookie', params=params)
 
     def _wait_ready(self, ready_code, timeout=60):
-        _logger.info('Evaluate ready code "%s"' % ready_code)
+        self._logger.info('Evaluate ready code "%s"', ready_code)
         awaited_result = {'result': {'type': 'boolean', 'value': True}}
         ready_id = self._websocket_send('Runtime.evaluate', params={'expression': ready_code})
         last_bad_res = ''
@@ -649,31 +650,42 @@ class ChromeBrowser():
             tdiff = time.time() - start_time
             if tdiff >= 2 and not has_exceeded:
                 has_exceeded = True
-                _logger.warning('The ready code takes too much time : %s' % tdiff)
+                self._logger.warning('The ready code takes too much time : %s', tdiff)
 
         self.take_screenshot(prefix='failed_ready')
-        _logger.info('Ready code last try result: %s' % last_bad_res or res)
+        self._logger.info('Ready code last try result: %s', last_bad_res or res)
         return False
 
     def _wait_code_ok(self, code, timeout):
-        _logger.info('Evaluate test code "%s"' % code)
+        self._logger.info('Evaluate test code "%s"', code)
         code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
         start_time = time.time()
+        logged_error = False
         while time.time() - start_time < timeout:
             try:
                 res = json.loads(self.ws.recv())
             except websocket.WebSocketTimeoutException:
                 res = None
             if res and res.get('id', -1) == code_id:
-                _logger.info('Code start result: %s' % res)
+                self._logger.info('Code start result: %s', res)
                 if res.get('result', {}).get('result').get('subtype', '') == 'error':
-                    _logger.error("Running code returned an error")
+                    self._logger.error("Running code returned an error")
                     return False
-            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') == 'log':
+            elif res and res.get('method') == 'Runtime.consoleAPICalled' and res.get('params', {}).get('type') in ('log', 'error'):
                 logs = res.get('params', {}).get('args')
+                log_type = res.get('params', {}).get('type')
+                content = " ".join([str(log.get('value', '')) for log in logs])
+                if log_type == 'error':
+                    self._logger.error(content)
+                    logged_error = True
+                else:
+                    self._logger.info('console log: %s', content)
                 for log in logs:
-                    _logger.info('console logs: %s' % log.get('value', ''))
                     if log.get('type', '') == 'string' and log.get('value', '').lower() == 'ok':
+                        # it is possible that some tests returns ok while an error was shown in logs.
+                        # since runbot should always be red in this case, better explicitly fail.
+                        if logged_error:
+                            return False
                         return True
                     elif log.get('type', '') == 'string' and log.get('value', '').lower().startswith('error'):
                         self.take_screenshot()
@@ -682,26 +694,26 @@ class ChromeBrowser():
             elif res and res.get('method') == 'Page.screencastFrame':
                 self.screencast_frames.append(res.get('params'))
             elif res:
-                _logger.debug('chrome devtools protocol event: %s' % res)
-        _logger.error('Script timeout exceeded : %s' % (time.time() - start_time))
+                self._logger.debug('chrome devtools protocol event: %s', res)
+        self._logger.error('Script timeout exceeded : %s', (time.time() - start_time))
         self.take_screenshot()
         return False
 
     def navigate_to(self, url, wait_stop=False):
-        _logger.info('Navigating to: "%s"' % url)
+        self._logger.info('Navigating to: "%s"', url)
         nav_id = self._websocket_send('Page.navigate', params={'url': url})
         nav_result = self._websocket_wait_id(nav_id)
-        _logger.info("Navigation result: %s" % nav_result)
+        self._logger.info("Navigation result: %s", nav_result)
         frame_id = nav_result.get('result', {}).get('frameId', '')
         if wait_stop and frame_id:
-            _logger.info('Waiting for frame "%s" to stop loading' % frame_id)
+            self._logger.info('Waiting for frame "%s" to stop loading', frame_id)
             self._websocket_wait_event('Page.frameStoppedLoading', params={'frameId': frame_id})
 
     def clear(self):
         self._websocket_send('Page.stopScreencast')
         self.screencast_frames = []
         self._websocket_send('Page.stopLoading')
-        _logger.info('Deleting cookies and clearing local storage')
+        self._logger.info('Deleting cookies and clearing local storage')
         dc_id = self._websocket_send('Network.clearBrowserCookies')
         self._websocket_wait_id(dc_id)
         cl_id = self._websocket_send('Runtime.evaluate', params={'expression': 'localStorage.clear()'})
@@ -726,10 +738,10 @@ class HttpCase(TransactionCase):
         self._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     @classmethod
-    def start_browser(cls):
+    def start_browser(cls, logger):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser()
+            cls.browser = ChromeBrowser(logger)
 
     @classmethod
     def tearDownClass(cls):
@@ -771,13 +783,13 @@ class HttpCase(TransactionCase):
                     thread.join(0.05)
                     join_retry_count -= 1
                     if join_retry_count < 0:
-                        _logger.warning("Stop waiting for thread %s handling request for url %s",
+                        self._logger.warning("Stop waiting for thread %s handling request for url %s",
                                         thread.name, getattr(thread, 'url', '<UNKNOWN>'))
                         break
                     time.sleep(0.5)
                     t1 = int(time.time())
                     if t0 != t1:
-                        _logger.info('remaining requests')
+                        self._logger.info('remaining requests')
                         odoo.tools.misc.dumpstacks()
                         t0 = t1
 
@@ -805,7 +817,7 @@ class HttpCase(TransactionCase):
 
         odoo.http.root.session_store.save(session)
         if self.browser:
-            _logger.info('Setting session cookie in browser')
+            self._logger.info('Setting session cookie in browser')
             self.browser.set_cookie('session_id', self.session_id, '/', '127.0.0.1')
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
@@ -823,14 +835,14 @@ class HttpCase(TransactionCase):
 
         If neither are done before timeout test fails.
         """
-        self.start_browser()
+        self.start_browser(self._logger)
 
         try:
             self.authenticate(login, login)
             url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
-            _logger.info('Open "%s" in browser' % url)
+            self._logger.info('Open "%s" in browser', url)
 
-            _logger.info('Starting screen cast')
+            self._logger.info('Starting screen cast')
             self.browser.start_screencast()
             self.browser.navigate_to(url)
 
@@ -838,8 +850,11 @@ class HttpCase(TransactionCase):
             # code = ""
             ready = ready or "document.readyState === 'complete'"
             self.assertTrue(self.browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
-            self.assertTrue(self.browser._wait_code_ok(code, timeout), 'The test code "%s" failed' % code)
-
+            if code:
+                message = 'The test code "%s" failed' % code
+            else:
+                message = "Some js test failed"
+            self.assertTrue(self.browser._wait_code_ok(code, timeout), message)
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
