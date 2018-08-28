@@ -419,6 +419,7 @@ class ChromeBrowser():
         self.chrome_process = None
         self.screencast_frames = []
         self._chrome_start()
+        self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
         self._open_websocket()
         self._logger.info('Enable chrome headless console log notification')
@@ -487,9 +488,16 @@ class ChromeBrowser():
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
         self._logger.info('Chrome pid: %s', self.chrome_process.pid)
+
+    def _find_websocket(self):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
-        infos = self._json_command('')[0]  # Infos about the first tab
+        try:
+            infos = self._json_command('')[0]  # Infos about the first tab
+        except IndexError:
+            self._logger.warning('No tab found in Chrome')
+            self.stop()
+            raise unittest.SkipTest('No tab found in Chrome')
         self.ws_url = infos['webSocketDebuggerUrl']
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
