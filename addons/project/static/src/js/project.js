@@ -110,4 +110,5 @@ KanbanRecord.include({
         }
     },
 });
+return KanbanRecord;
 });
