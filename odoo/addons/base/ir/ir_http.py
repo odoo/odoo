@@ -280,7 +280,20 @@ class IrHttp(models.AbstractModel):
             obj = env.ref(xmlid, False)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
-            if not consteq(obj.access_token, access_token):
+            read_access = False
+            if not obj.access_token:
+                if obj.res_model and obj.res_id and obj.res_model in env:
+                    try:
+                        related = env[obj.res_model].browse(obj.res_id).exists()
+                        if related:
+                            related.create_date
+                            read_access = True
+                    except AccessError:
+                        pass
+                read_access = read_access or obj.public
+            elif obj.access_token and consteq(obj.access_token, access_token):
+                read_access = True
+            if not read_access:
                 return (403, [], None)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
