@@ -7,6 +7,7 @@ helpers and classes to write tests.
 import base64
 import collections
 import importlib
+import inspect
 import itertools
 import json
 import logging
@@ -789,6 +790,9 @@ class HttpCase(TransactionCase):
 
         If neither are done before timeout test fails.
         """
+        # increase timeout if coverage is running
+        if any(f.filename.endswith('/coverage/execfile.py') for f in inspect.stack()  if f.filename):
+            timeout = timeout * 1.5
         self.start_browser(self._logger)
 
         try:
