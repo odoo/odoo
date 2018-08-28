@@ -9491,7 +9491,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many with sequence field, fetch name_get from empty list', function (assert) {
+    QUnit.test('one2many with sequence field, fetch name_get from empty list, field text', function (assert) {
         // There was a bug where a RPC would fail because no route was set.
         // The scenario is:
         // - create a new parent model, which has a one2many
@@ -9501,6 +9501,11 @@ QUnit.module('relational_fields', {
         // - reorder the lines with the handle
         // -> This will call a resequence, which calls a name_get.
         // -> With the bug that would fail, if it's ok the test will pass.
+
+        // This test will also make sure lists with
+        // FieldText (turtle_description) can be reordered with a handle.
+        // More specifically this will trigger a reset on a FieldText
+        // while the field is not in editable mode.
         assert.expect(4);
 
         this.data.turtle.fields.turtle_int.default = 10;
@@ -9521,6 +9526,7 @@ QUnit.module('relational_fields', {
                             '<field name="turtle_int" widget="handle"/>' +
                             '<field name="turtle_foo"/>' +
                             '<field name="not_required_product_id"/>' +
+                            '<field name="turtle_description" widget="text"/>' +
                         '</tree>' +
                     '</field>' +
                 '</form>',
