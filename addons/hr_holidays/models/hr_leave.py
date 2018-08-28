@@ -148,16 +148,20 @@ class HolidaysRequest(models.Model):
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
-    category_id = fields.Many2one(
-        'hr.employee.category', string='Employee Tag', readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
+        ('company', 'By Company'),
         ('department', 'By Department'),
         ('category', 'By Employee Tag')],
         string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
+    category_id = fields.Many2one(
+        'hr.employee.category', string='Employee Tag', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
+    mode_company_id = fields.Many2one(
+        'res.company', string='Company', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     first_approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
@@ -233,8 +237,12 @@ class HolidaysRequest(models.Model):
     request_unit_custom = fields.Boolean('Days-long custom hours')
 
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
-         "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
+        ('type_value',
+         "CHECK((holiday_type='employee' AND employee_id IS NOT NULL) or "
+         "(holiday_type='company' AND mode_company_id IS NOT NULL) or "
+         "(holiday_type='category' AND category_id IS NOT NULL) or "
+         "(holiday_type='department' AND department_id IS NOT NULL) )",
+         "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ((date_from <= date_to))", "The start date must be anterior to the end date."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
@@ -307,20 +315,28 @@ class HolidaysRequest(models.Model):
     @api.onchange('holiday_type')
     def _onchange_type(self):
         if self.holiday_type == 'employee' and not self.employee_id:
-            if self.env.user.employee_ids:
-                self.employee_id = self.env.user.employee_ids[0]
-        elif self.holiday_type == 'department':
-            if self.env.user.employee_ids:
-                self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
-            self.employee_id = None
+            self.employee_id = self.env.user.employee_ids[0].id
+            self.mode_company_id = False
+            self.category_id = False
+        elif self.holiday_type == 'company' and not self.mode_company_id:
+            self.employee_id = False
+            self.mode_company_id = self.env.user.company_id.id
+            self.category_id = False
+        elif self.holiday_type == 'department' and not self.department_id:
+            self.employee_id = False
+            self.mode_company_id = False
+            self.department_id = self.env.user.employee_ids[0].department_id.id
+            self.category_id = False
         elif self.holiday_type == 'category':
-            self.employee_id = None
-            self.department_id = None
+            self.employee_id = False
+            self.mode_company_id = False
+            self.department_id = False
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id.department_id
+        self.manager_id = self.employee_id.parent_id.id
+        if self.employee_id:
+            self.department_id = self.employee_id.department_id
 
     @api.onchange('date_from', 'date_to')
     def _onchange_leave_dates(self):
@@ -614,12 +630,20 @@ class HolidaysRequest(models.Model):
                 holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee':
                 holiday._validate_leave_request()
-            elif holiday.holiday_type in ['category', 'department']:
+            elif holiday.holiday_type in ['company', 'category', 'department']:
                 leaves = self.env['hr.leave']
-                employees = holiday.category_id.employee_ids if holiday.holiday_type == 'category' else holiday.department_id.member_ids
+                if holiday.holiday_type == 'category':
+                    employees = holiday.category_id.employee_ids
+                elif holiday.holiday_type == 'company':
+                    employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
+                else:
+                    holiday.department_id.member_ids
                 for employee in employees:
                     values = holiday._prepare_holiday_values(employee)
-                    leaves += self.with_context(mail_notify_force_send=False).create(values)
+                    leaves += self.with_context(
+                        mail_notify_force_send=False,
+                        mail_activity_automation_skip=True
+                    ).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
                 if leaves and leaves[0].validation_type == 'both':
