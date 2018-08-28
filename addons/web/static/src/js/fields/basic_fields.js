@@ -1079,7 +1079,9 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     reset: function () {
         var self = this;
         return $.when(this._super.apply(this, arguments)).then(function () {
-            self.$input.trigger('change');
+            if (self.mode === 'edit') {
+                self.$input.trigger('change');
+            }
         });
     },
     //--------------------------------------------------------------------------
