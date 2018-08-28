@@ -413,12 +413,10 @@
             <t t-set="action_type" t-value="'clear_selection'"/>
             <t t-set="action_label" t-value="'Clear Selection'"/>
         </t>
-        <p>
-            <t t-esc="action_title"/>
-            <a class="btn btn-link btn-sm o_list_view_select_action" t-att-data-action-type="action_type">
-                <t t-esc="action_label"/> <i class="fa fa-arrow-right"/>
-            </a>
-        </p>
+        <t t-esc="action_title"/>
+        <a href="#" class="btn btn-link btn-sm o_list_view_select_action" t-att-data-action-type="action_type">
+            <t t-esc="action_label"/> <i class="fa fa-arrow-right"/>
+        </a>
     </div>
 </t>
 
