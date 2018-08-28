@@ -584,8 +584,11 @@ class PoFile(object):
                 # end of this next() call), and keep the others to generate
                 # additional entries (returned the next next() calls).
                 trans_type, name, res_id = targets.pop(0)
+                code = False
                 for t, n, r in targets:
-                    if t == trans_type == 'code': continue
+                    if t == 'code' and code: continue
+                    if t == 'code':
+                        code = True
                     self.extra_lines.append((t, n, r, source, trad, comments))
 
         if name is None:
