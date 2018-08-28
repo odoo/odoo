@@ -5,6 +5,7 @@ import hashlib
 import hmac
 import logging
 import random
+import re
 import threading
 from ast import literal_eval
 
@@ -23,6 +24,7 @@ MASS_MAILING_BUSINESS_MODELS = [
     'sale.order',
     'mail.mass_mailing.list',
 ]
+EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
 
 class MassMailingTag(models.Model):
@@ -115,10 +117,10 @@ class MassMailingList(models.Model):
             where
                 COALESCE(r.opt_out,FALSE) = FALSE
                 AND c.email NOT IN (select email from mail_blacklist where active = TRUE)
-                AND substring(c.email, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+                AND substring(c.email, '%s') IS NOT NULL
             group by
                 list_id
-        ''')
+        ''' % EMAIL_PATTERN)
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
@@ -210,6 +212,7 @@ class MassMailingContact(models.Model):
     company_name = fields.Char(string='Company Name')
     title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char(required=True)
+    is_email_valid = fields.Boolean(compute='_compute_is_email_valid', store=True)
     create_date = fields.Datetime(string='Creation Date')
     list_ids = fields.Many2many(
         'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
@@ -219,6 +222,11 @@ class MassMailingContact(models.Model):
     message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
+
+    @api.depends('email')
+    def _compute_is_email_valid(self):
+        for record in self:
+            record.is_email_valid = re.match(EMAIL_PATTERN, record.email)
 
     def get_name_email(self, name):
         name, email = self.env['res.partner']._parse_partner_name(name)
