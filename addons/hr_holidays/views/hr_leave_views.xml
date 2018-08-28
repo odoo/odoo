@@ -197,10 +197,24 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='col_right']" position="replace">
                 <group>
-                    <field name="holiday_type" attrs="{'readonly':[('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
-                    <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}" groups="hr_holidays.group_hr_holidays_user"/>
-                    <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','!=','category')]}"/>
-                    <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|',('state','=', 'validate'),('holiday_type','!=','department')],'invisible':[('holiday_type','=','category')]}"/>
+                    <field name="holiday_type" string="Mode"
+                        groups="hr_holidays.group_hr_holidays_user"/>
+                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'employee')],
+                        'invisible': [('holiday_type', '!=', 'employee')]
+                        }"/>
+                    <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'company')],
+                        'invisible': [('holiday_type', '!=', 'company')]
+                        }"/>
+                    <field name="category_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'category')],
+                        'invisible': [('holiday_type', '!=','category')]
+                        }"/>
+                    <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'department')],
+                        'invisible': [('holiday_type', 'not in', ('employee', 'department'))]
+                        }"/>
                     <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" widget="toggle_button"/>
                 </group>
                 <div groups="hr_holidays.group_hr_holidays_manager">

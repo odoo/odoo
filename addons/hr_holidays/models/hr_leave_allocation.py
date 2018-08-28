@@ -87,15 +87,24 @@ class HolidaysAllocation(models.Model):
     # mode
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
+        ('company', 'By Company'),
         ('department', 'By Department'),
         ('category', 'By Employee Tag')],
         string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help='By Employee: Allocation for individual Employee, By Employee Tag: Allocation for group of employees in category')
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        help="Allow to create requests in batchs:\n- By Employee: for a specific employee"
+             "\n- By Company: all employees of the specified company"
+             "\n- By Department: all employees of the specified department"
+             "\n- By Employee Tag: all employees of the specific employee group category")
+    mode_company_id = fields.Many2one(
+        'res.company', string='Company', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    department_id = fields.Many2one(
+        'hr.department', string='Department', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     category_id = fields.Many2one(
         'hr.employee.category', string='Employee Tag', readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # accrual configuration
     accrual = fields.Boolean(
         "Accrual", readonly=True,
@@ -115,8 +124,12 @@ class HolidaysAllocation(models.Model):
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
 
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
-         "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
+        ('type_value',
+         "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or "
+         "(holiday_type='category' AND category_id IS NOT NULL) or "
+         "(holiday_type='department' AND department_id IS NOT NULL) or "
+         "(holiday_type='company' AND mode_company_id IS NOT NULL))",
+         "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
         ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
         ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
@@ -399,18 +412,31 @@ class HolidaysAllocation(models.Model):
                 holiday.write({'second_approver_id': current_employee.id})
             else:
                 holiday.write({'first_approver_id': current_employee.id})
-            if holiday.holiday_type in ['category', 'department']:
-                leaves = self.env['hr.leave.allocation']
-                employees = holiday.category_id.employee_ids if holiday.holiday_type == 'category' else holiday.department_id.member_ids
-                for employee in employees:
-                    values = holiday._prepare_holiday_values(employee)
-                    leaves += self.with_context(mail_notify_force_send=False).create(values)
-                # TODO is it necessary to interleave the calls?
-                leaves.action_approve()
-                if leaves and leaves[0].validation_type == 'both':
-                    leaves.action_validate()
+
+            holiday._action_validate_create_childs()
         self.activity_update()
         return True
+
+    def _action_validate_create_childs(self):
+        childs = self.env['hr.leave.allocation']
+        if self.state == 'validate' and self.holiday_type in ['category', 'department', 'company']:
+            if self.holiday_type == 'category':
+                employees = self.category_id.employee_ids
+            elif self.holiday_type == 'department':
+                employees = self.department_id.member_ids
+            else:
+                employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
+
+            for employee in employees:
+                childs += self.with_context(
+                    mail_notify_force_send=False,
+                    mail_activity_automation_skip=True
+                ).create(self._prepare_holiday_values(employee))
+            # TODO is it necessary to interleave the calls?
+            childs.action_approve()
+            if childs and self.holiday_status_id.validation_type == 'both':
+                childs.action_validate()
+        return childs
 
     @api.multi
     def action_refuse(self):

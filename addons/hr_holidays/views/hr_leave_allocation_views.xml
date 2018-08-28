@@ -122,14 +122,20 @@
                 <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="replace">
-                <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'employee')], 'invisible': [('holiday_type', '!=', 'employee')]}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="after">
-                <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','!=','category')]}"/>
+                <field name="category_id"
+                    attrs="{'required': [('holiday_type', '=', 'category')], 'invisible': [('holiday_type', '!=', 'category')]}"/>
             </xpath>
             <xpath expr="//field[@name='department_id']" position="replace">
-                <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'department')], 'invisible': [('holiday_type', 'not in', ('department', 'category'))]}"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user"
+                    attrs="{'required': [('holiday_type', '=', 'company')], 'invisible': [('holiday_type', '!=', 'company')]}"/>
             </xpath>
             <xpath expr="//field[@name='accrual']" position="attributes">
                 <attribute name="invisible">0</attribute>
