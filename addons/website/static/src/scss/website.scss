@@ -18,6 +18,12 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+
+    @if ($o-theme-layout == 'boxed') {
+        @include media-breakpoint-up(md) {
+            padding: 0 7.5%;
+        }
+    }
 }
 
 .navbar {
