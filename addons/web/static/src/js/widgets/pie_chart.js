@@ -6,8 +6,11 @@ odoo.define('web.PieChart', function (require) {
  */
 var ajax = require('web.ajax');
 var config = require('web.config');
+var core = require('web.core');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
+
+var _t = core._t;
 
 var GROUPABLE_TYPES = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
 
@@ -93,8 +96,8 @@ var PieChart = Widget.extend({
                             }
 
                             self.data.push({
-                                'label': label,
-                                'value': value,
+                                label: label || _t('Undefined'),
+                                value: value,
                             });
                         }
                     }
@@ -133,7 +136,7 @@ var PieChart = Widget.extend({
         var $label = this._renderLabel(this.title);
         this.$el.empty();
         $label.appendTo(this.$el);
-        $('<svg width=auto height=auto>').appendTo(this.$el);
+        $('<svg width="100%" height="100%">').appendTo(this.$el);
 
         var legend_right = config.device.size_class > config.device.SIZES.XS;
         var legendPosition = legend_right ? 'right' : 'top';
