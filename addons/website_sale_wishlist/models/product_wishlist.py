@@ -29,7 +29,7 @@ class ProductWishlist(models.Model):
             return self
 
         if request.website.is_public_user():
-            wish = self.sudo().browse(request.session.get('wishlist_ids', [])).exists()
+            wish = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         else:
             wish = self.search([("partner_id", "=", self.env.user.partner_id.id)])
 
@@ -50,7 +50,7 @@ class ProductWishlist(models.Model):
     @api.model
     def _check_wishlist_from_session(self):
         """Assign all wishlist withtout partner from this the current session"""
-        session_wishes = self.sudo().browse(request.session.get('wishlist_ids', [])).exists()
+        session_wishes = self.sudo().search([('id', 'in', request.session.get('wishlist_ids', []))])
         partner_wishes = self.sudo().search([("partner_id", "=", self.env.user.partner_id.id)])
         partner_products = partner_wishes.mapped("product_id")
         # Remove session products already present for the user
@@ -64,7 +64,7 @@ class ProductWishlist(models.Model):
     @api.model
     def _garbage_collector(self, *args, **kwargs):
         """Remove wishlists for unexisting sessions."""
-        self.search([
+        self.with_context(active_test=False).search([
             ("create_date", "<", fields.Datetime.to_string(datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5)))),
             ("partner_id", "=", False),
         ]).unlink()
