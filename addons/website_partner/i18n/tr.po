@@ -3,16 +3,17 @@
 # * website_partner
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,13 @@ msgstr ""
 #. module: website_partner
 #: model:ir.model,name:website_partner.model_res_partner
 msgid "Contact"
-msgstr "Kontak"
+msgstr "İletişim"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__is_published
+#: model:ir.model.fields,field_description:website_partner.field_res_users__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_partner
 #: model:ir.ui.view,arch_db:website_partner.partner_detail
@@ -31,14 +38,16 @@ msgid "Short Description for List View"
 msgstr "Liste Görünümü Kısa Açıklama"
 
 #. module: website_partner
+#: model:ir.model.fields,help:website_partner.field_res_partner__website_url
 #: model:ir.model.fields,help:website_partner.field_res_users__website_url
 msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_published
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_published
-msgid "Visible in Website"
-msgstr "Web Sitesinde Görünür"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_partner
 #: model:ir.model.fields,field_description:website_partner.field_res_partner__website_description
@@ -53,21 +62,31 @@ msgid "Website Partner Short Description"
 msgstr "Websitesi İş Ortağı Kısa Açıklaması"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_url
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_url
 msgid "Website URL"
-msgstr "Web sitesi URL'si"
+msgstr "Web Sitesi URL Adresi"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_description
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_description
 msgid "Website meta description"
 msgstr "Web sitesi meta açıklaması"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_keywords
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_keywords
 msgid "Website meta keywords"
 msgstr "Web Sitesi meta anahtar kelimeleri"
 
 #. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_title
 #: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_title
 msgid "Website meta title"
 msgstr "Web sitesi meta başlık"
+
+#. module: website_partner
+#: model:ir.model.fields,field_description:website_partner.field_res_partner__website_meta_og_img
+#: model:ir.model.fields,field_description:website_partner.field_res_users__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""

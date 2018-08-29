@@ -3,20 +3,22 @@
 # * website_crm
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Teija Hölttä <teija.holtta@gmail.com>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
-# Tommi Rintala <tommi.rintala@gmail.com>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Tommi Rintala <tommi.rintala@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
+# Teija Hölttä <teija.holtta@gmail.com>, 2018
+# Kari Lindgren <karisatu@gmail.com>, 2018
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,20 +27,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
 msgstr "&amp;times;"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Lähetä</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -61,31 +53,30 @@ msgid "Contact Us"
 msgstr "Ota yhteyttä"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_team_id
-msgid "Default Sales Channel"
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
+msgid "Default Sales Team"
+msgstr "Oletusmyyntitiimi"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
-msgid "Default Sales Channels"
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Teams"
 msgstr ""
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "Oletusmyyjä"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 
@@ -95,9 +86,8 @@ msgid "Email"
 msgstr "Sähköposti"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "If you have an emergency, do not hesitate to contact us by phone:"
 msgstr ""
 "Jos sinulla on jotakin kiireellistä kysyttävää, ota yhteyttä puhelimitse:"
@@ -119,8 +109,15 @@ msgstr "Puhelinnumero"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
 msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Myyntitiimi"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -129,20 +126,23 @@ msgstr "Myyjä"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Lähetä"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Subject"
 msgstr "Aihe"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "Thanks!"
 msgstr "Kiitos!"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "We will get back to you shortly."
 msgstr "Otamme sinuun yhteyttä mahdollisimman nopeasti."
 
@@ -172,16 +172,15 @@ msgid "Your Question"
 msgstr "Kysymyksesi"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
+#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
+#: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "Your message has been sent successfully."
 msgstr "Viestin lähettäminen onnistui."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
-msgstr ""
+msgstr "sivu"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings

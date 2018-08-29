@@ -3,28 +3,23 @@
 # * hr
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Martin Trigaux, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Yigit Aga <yagabey@gmail.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Esin Kandemir <esaykandemir@gmail.com>, 2017
-# alisan alacam <alisanalacam@gmail.com>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Levent Karakaş <levent@mektup.at>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -52,12 +47,44 @@ msgstr "<span>Raporlama</span>"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr "<span>Onaylama</span>"
+msgstr "<span>Onaylanacak</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
 msgstr "<span>Yapılacak</span>"
+
+#. module: hr
+#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hi,<br/>\n"
+"                        Your document has not been created because your email address is not recognized. Please send emails with the email address recorded on your employee information, or contact your HR manager.\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
@@ -70,7 +97,7 @@ msgstr "Eylem Gerekiyor"
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -102,7 +129,7 @@ msgstr "Rumuz İletişim Güvenliği"
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr "Arşivlenmiş"
+msgstr "Arşivlendi"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -148,19 +175,19 @@ msgstr "Vatandaşlık & Diğer Bilgiler"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
-msgstr "Çalıştırıcı"
+msgstr "Yetiştiren"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 msgid "Color Index"
-msgstr "Renk İndeksi"
+msgstr "Renk"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
@@ -169,7 +196,7 @@ msgstr "Firmalar"
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
@@ -189,7 +216,7 @@ msgstr "Yapılandırma"
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr "Kontak"
+msgstr "İletişim"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -220,7 +247,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 msgid "Created on"
-msgstr "Oluşturulma Tarihi"
+msgstr "Oluşturulma"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -322,7 +349,7 @@ msgstr "Personel Etiketleri"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 msgid "Employee bank salary account"
-msgstr "Personel maaşı banka hesabı"
+msgstr "Personel banka maaş hesabı"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -361,7 +388,8 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
-"Buraya personelin özel adresini giriniz, şirketinizle ilişkili olanı değil."
+"Buraya personelin kişisel adresini giriniz, şirketinizle ilişkili olanı "
+"değil."
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -393,7 +421,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Followers"
 msgstr "Takipçiler"
 
@@ -430,7 +457,7 @@ msgstr "Grupla"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "İK Bölümü"
+msgstr "İK Departmanı"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -440,13 +467,13 @@ msgstr "İK Ayarları"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
 msgid "Hired Employees"
-msgstr "İşe Alınan Çalışanlar"
+msgstr "İşe Alınan Personeller"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__group_hr_user
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "İK"
+msgstr "İnsan Kaynakları"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__id
@@ -492,14 +519,20 @@ msgstr ""
 "sağlayacaktır."
 
 #. module: hr
+#: code:addons/hr/models/hr.py:279
+#, python-format
+msgid "Import Template for Employees"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
-msgstr "Pozisyon"
+msgstr "İşe Alımı Kapalı"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
-msgstr "İşe Alım"
+msgstr "İşe Alımı Devam Eden"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
@@ -542,7 +575,7 @@ msgstr "İş Ünvanı"
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
-msgstr "İnsan Kaynakları"
+msgstr "İş"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
@@ -643,7 +676,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Mesajlar"
 
@@ -675,12 +707,12 @@ msgstr "Sonraki Faaliyet Türü"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr "İş Alınmadı"
+msgstr "İşe Alıma Kapalı"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
 msgid "Note"
-msgstr "Bilgi"
+msgstr "Not"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__notes
@@ -734,7 +766,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "İşe almak için beklediğiniz yeni personel sayısı."
+msgstr "İşe alınacak yeni personel sayısı."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_unread_counter
@@ -752,12 +784,12 @@ msgid ""
 msgstr ""
 "Odoo'nun departman yapısı ilişkili çalışanların bütün\n"
 "                bilgilerini yönetmeniz için kullanılır: giderler, zaman çizelgeleri,\n"
-"                izinler, işe alım, vb."
+"                masraflar, işe alım, vb."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr "İdari"
+msgstr "Yetkili"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_res_users__group_hr_user
@@ -774,7 +806,7 @@ msgstr "Diğer"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr "Diğer Bilgileri ..."
+msgstr "Diğer Bilgiler ..."
 
 #. module: hr
 #: selection:hr.employee,activity_state:0
@@ -794,7 +826,7 @@ msgstr "Pasaport No"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image
 msgid "Photo"
-msgstr "Resim"
+msgstr "Fotoğraf "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -822,17 +854,17 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
-msgstr "Pozisyonu"
+msgstr "Pozisyon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 msgid "Private Address"
-msgstr "Özel Adres"
+msgstr "Kişisel Adres"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr "Özel Bilgi"
+msgstr "Kişisel Bilgiler"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -842,7 +874,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
-msgstr "İşe Alım Süreci"
+msgstr "İşe Alım"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -887,12 +919,12 @@ msgstr "Sorumlu Kullanıcı"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
-msgstr "SGK No"
+msgstr "Bağkur No"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
-msgstr "SGK No"
+msgstr "SGK Sicil No"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
@@ -959,7 +991,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
 msgid "Social Insurance Number"
-msgstr "Sosyal Güvenlik Numarası"
+msgstr "Bağkur Sicil Numarası"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__ssnid
@@ -986,7 +1018,7 @@ msgstr "İşe Alımı Başlat"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
@@ -1030,7 +1062,7 @@ msgstr "Personelin şirket ile ilişkili adresi var"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Firmanın her bölümü için iş poziyonu adı benzersiz olmalı!"
+msgstr "Şirketin her bölümü için iş pozisyonu adı benzersiz olmalı!"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -1079,7 +1111,6 @@ msgstr "Öngörülen Personel Toplamı"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -1101,7 +1132,7 @@ msgid ""
 "                                            It should be different from the work address."
 msgstr ""
 "Burayı personelin ev adresi için kullanın.\n"
-"                                            Bu özel adres gider ödemesi belgelerinde kullanılacaktır..\n"
+"                                            Bu kişisel adres masraf ödemesi belgelerinde kullanılacaktır..\n"
 "                                            İş adresinden farklı olmalıdır."
 
 #. module: hr
@@ -1144,7 +1175,7 @@ msgid ""
 msgstr ""
 "Odoo personel ekranına hızlıca göz atarak, \n"
 "                herkesle ilgili bilgileri kolayca bulabilirsiniz;\n"
-"                kontak bilgisi, iş posizyonu, contact data, job position, müsaitlik, vb."
+"                kontak bilgisi, iş posizyonu, iletişim bilgileri, job position, müsaitlik, vb."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
@@ -1203,7 +1234,7 @@ msgid "You cannot create a recursive hierarchy."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:307
+#: code:addons/hr/models/hr.py:314
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr ""
@@ -1212,17 +1243,6 @@ msgstr ""
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
 msgstr "Belge oluşturulamadı"
-
-#. module: hr
-#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
-msgid ""
-"Your document has not been created because your email address is not "
-"recognized. Please send emails with the email address recorded on your "
-"employee information, or contact your HR manager."
-msgstr ""
-"Belgeniz oluşturulamadı çünkü eposta adresi anlaşılamadı. Lütfen personel "
-"bilgisinde eposta adresi içeren epostalar gönderiniz veya İK yöneticinizle "
-"iletişime geçiniz."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
