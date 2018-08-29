@@ -128,11 +128,18 @@
             <div class="o_portal_my_home">
                 <div class="oe_structure"></div>
                 <h3>Your Documents</h3>
-                <ul class="o_portal_docs list-group">
-                </ul>
+                <div class="o_portal_docs list-group">
+                </div>
             </div>
             <div class="col-lg-12 oe_structure"/>
         </t>
+    </template>
+
+    <template id="portal_docs_entry" name="My Portal Docs Entry">
+        <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+            <t t-esc="title"/>
+            <span class="badge badge-secondary badge-pill" t-esc="count"/>
+        </a>
     </template>
 
     <!--
