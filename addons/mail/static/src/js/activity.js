@@ -163,7 +163,7 @@ var BasicActivity = AbstractField.extend({
         var self = this;
         this._rpc({
             model: 'mail.activity',
-            method: 'action_done_schedule_next',
+            method: 'action_feedback_schedule_next',
             args: [[activityID]],
             kwargs: {feedback: feedback},
             context: this.record.getContext(),
@@ -228,7 +228,7 @@ var BasicActivity = AbstractField.extend({
     _onEditActivity: function (ev) {
         ev.preventDefault();
         var activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID, this._reload.bind(this));
+        return this._openActivityForm(activityID, this._reload.bind(this, { activity: true, thread: true }));
     },
      /**
      * Called when marking an activity as done

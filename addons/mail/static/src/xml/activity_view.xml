@@ -15,14 +15,17 @@
     </th>
 </t>
 
-<t t-name="mail.ActivityViewNoContentHelper">
-    <div class="o_view_nocontent">
+<div t-name="ActivityView.nodata">
+    <div class="o_view_nocontent" role="alert">
         <div class="o_nocontent_help">
             <p class="o_view_nocontent_empty_folder">
-                No scheduled activity yet
+                No data to display
+            </p><p>
+                Try to add some activity on records, or make sure that
+                there is no active filter in the search bar.
             </p>
         </div>
     </div>
-</t>
+</div>
 
 </templates>

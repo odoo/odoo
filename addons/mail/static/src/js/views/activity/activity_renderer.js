@@ -29,7 +29,7 @@ var ActivityRenderer = AbstractRenderer.extend({
             .empty();
 
         if (this.state.data.activity_types.length === 0) {
-            this.$el.append(QWeb.render('mail.ActivityViewNoContentHelper'));
+            this.$el.append(QWeb.render('ActivityView.nodata'));
         } else {
             var $table = $('<table>')
                 .addClass('table-bordered')

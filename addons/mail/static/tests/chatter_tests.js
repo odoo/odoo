@@ -447,7 +447,7 @@ QUnit.test('kanban activity widget popover test', function (assert) {
                     '</t></templates>' +
                 '</kanban>',
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 rpcCount++;
 
                 var current_ids = this.data.partner.records[0].activity_ids;
@@ -1224,8 +1224,8 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
-                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done_schedule_next' for id 1");
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback_schedule_next' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 return $.when('test_result');
@@ -1245,6 +1245,71 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
+
+QUnit.test('form activity widget: edit next activity', function (assert) {
+    assert.expect(3);
+    var self = this;
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        intercepts: {
+            do_action: function (event) {
+                assert.deepEqual(event.data.action, {
+                    context: {
+                      default_res_id: 2,
+                      default_res_model: "partner"
+                    },
+                    res_id: 1,
+                    res_model: "mail.activity",
+                    target: "new",
+                    type: "ir.actions.act_window",
+                    view_mode: "form",
+                    view_type: "form",
+                    views: [
+                      [
+                        false,
+                        "form"
+                      ]
+                    ]
+                  },
+                  "should do a do_action with correct parameters");
+                self.data['mail.activity'].records[0].activity_type_id = 1;
+                event.data.options.on_close();
+            },
+        },
+    });
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 2", 
+        "Initial type should be Type 2");
+    form.$('.o_mail_activity .o_edit_activity[data-activity-id=1]').click();
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 1", 
+        "After edit type should be Type 1");
     form.destroy();
 });
 
