@@ -665,6 +665,43 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('m2o group record created does not use action defaults', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="foo"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.notOk(_.has(args.kwargs.context, 'default_name'),
+                        "default_* should be removed from context");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                context: {
+                    default_name: 'default name partner',
+                },
+            },
+        });
+        kanban.renderButtons();
+
+        kanban.$('.o_column_quick_create input').val('new product');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        kanban.destroy();
+    });
+
+
     QUnit.test('quick create fail in grouped', function (assert) {
         assert.expect(7);
 
