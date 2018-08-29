@@ -146,7 +146,7 @@
     <!-- External layouts styles -->
 
     <template id="address_layout">
-        <t t-set="colclass" t-value="'col-5 offset-7'"/>
+        <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
         <t t-if="address">
             <div class="row">
                 <t t-if="information_block">
@@ -192,7 +192,7 @@
                     <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div t-if="not type_html" class="text-muted">
+                <div t-if="report_type == 'pdf'" class="text-muted">
                     Page:
                     <span class="page"/>
                     of
@@ -232,7 +232,7 @@
                     <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div t-if="not type_html">
+                <div t-if="report_type == 'pdf'">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
@@ -275,7 +275,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
-                    <ul t-if="not type_html" class="list-inline pagenumber float-right text-center">
+                    <ul t-if="report_type != 'html'" class="list-inline pagenumber float-right text-center">
                         <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
@@ -298,9 +298,9 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span t-field="company.partner_id"
+                    <div t-field="company.partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
-                        style="border-bottom: 1px solid black; display:inline-block;"/>
+                    />
                 </div>
             </div>
         </div>
@@ -323,7 +323,7 @@
                     <span t-field="company.report_footer"/>
                 </div>
 
-                <div t-if="not type_html" class="text-muted">
+                <div t-if="report_type == 'pdf'" class="text-muted">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>

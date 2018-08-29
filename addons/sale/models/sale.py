@@ -179,6 +179,8 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from product lead times and from the shipping policy of the order.")
     amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
 
+    type_name = fields.Char('Type Name', compute='_compute_type_name')
+
     transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
@@ -236,6 +238,12 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
         self.amount_undiscounted = total
+
+    @api.multi
+    @api.depends('state')
+    def _compute_type_name(self):
+        for record in self:
+            record.type_name = _('Quotation') if self.state in ('draft', 'sent', 'cancel') else _('Sales Order')
 
     @api.multi
     def unlink(self):
@@ -819,15 +827,6 @@ class SaleOrder(models.Model):
         self.authorized_transaction_ids.s2s_void_transaction()
 
     @api.multi
-    def get_portal_url(self, suffix=None):
-        """
-            Get a portal url for this sale order, including access_token.
-            - suffix: string to append to the url, before the query string
-        """
-        self.ensure_one()
-        return self.access_url + '%s?access_token=%s' % (suffix if suffix else '', self._portal_ensure_token())
-
-    @api.multi
     def get_portal_last_transaction(self):
         self.ensure_one()
         return self.transaction_ids.get_last_transaction()
@@ -835,6 +834,12 @@ class SaleOrder(models.Model):
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
         return False
+
+    @api.multi
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return '%s %s' % (self.type_name, self.name)
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'

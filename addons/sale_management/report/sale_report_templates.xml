@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
+<template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
         <div t-if="doc.sale_order_option_ids and doc.state in ['draft', 'sent']">
-            <h2>
+            <h4>
                 <span>Optional Products</span>
-            </h2>
+            </h4>
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Description</th>
-                        <th groups="sale.group_discount_per_so_line"></th>
+                        <th class="text-left">Description</th>
+                        <th groups="sale.group_discount_per_so_line" class="text-left"></th>
                         <th class="text-right">Unit Price</th>
                     </tr>
                 </thead>
                 <tbody class="sale_tbody">
                     <tr t-foreach="doc.sale_order_option_ids" t-as="option">
-                        <td>
-                            <span t-field="option.product_id.name"/>
-                        </td>
                         <td>
                             <span t-field="option.name"/>
                         </td>

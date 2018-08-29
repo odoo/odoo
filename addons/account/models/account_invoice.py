@@ -479,7 +479,7 @@ class AccountInvoice(models.Model):
             sequence.number_next = int(result.group(2))
 
     @api.multi
-    def _get_printed_report_name(self):
+    def _get_report_base_filename(self):
         self.ensure_one()
         return  self.type == 'out_invoice' and self.state == 'draft' and _('Draft Invoice') or \
                 self.type == 'out_invoice' and self.state in ('open','in_payment','paid') and _('Invoice - %s') % (self.number) or \
@@ -1511,15 +1511,6 @@ class AccountInvoice(models.Model):
                 fmt(r[1]['amount']), fmt(r[1]['base']),
                 len(res),
             ) for r in res]
-
-    @api.multi
-    def get_portal_url(self, suffix=None):
-        """
-            Get a portal url for this invoice, including access_token.
-            - suffix: string to append to the url, before the query string
-        """
-        self.ensure_one()
-        return self.access_url + '%s?access_token=%s' % (suffix if suffix else '', self._portal_ensure_token())
 
     @api.multi
     def preview_invoice(self):

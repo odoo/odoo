@@ -15,10 +15,10 @@ class AccountInvoice(models.Model):
 
     amount_total_words = fields.Char("Total (In Words)", compute="_compute_amount_total_words")
 
-    def _get_printed_report_name(self):
+    def _get_report_base_filename(self):
         self.ensure_one()
         if self.company_id.country_id.code != 'IN':
-            return super(AccountInvoice, self)._get_printed_report_name()
+            return super(AccountInvoice, self)._get_report_base_filename()
         return self.type == 'out_invoice' and self.state == 'draft' and _('Draft %s') % (self.journal_id.name) or \
             self.type == 'out_invoice' and self.state in ('open','in_payment','paid') and '%s - %s' % (self.journal_id.name, self.number) or \
             self.type == 'out_refund' and self.state == 'draft' and _('Credit Note') or \

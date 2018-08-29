@@ -8,7 +8,7 @@
                 <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
                 <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
-                    t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" title="Pay now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
+                    t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
             </td>
@@ -49,8 +49,8 @@
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="partner_id" t-value="invoice.partner_id.id"/>
-                                    <t t-set="success_url" t-value="'/my/invoices/%s?%s' % (invoice.id, keep_query())"/>
-                                    <t t-set="error_url" t-value="'/my/invoices/%s?%s' % (invoice.id, keep_query())"/>
+                                    <t t-set="success_url" t-value="invoice.get_portal_url()"/>
+                                    <t t-set="error_url" t-value="invoice.get_portal_url()"/>
                                     <t t-set="access_token" t-value="access_token or ''"/>
                                     <t t-set="callback_method" t-value="''"/>
                                     <t t-set="form_action" t-value="'/invoice/pay/' + str(invoice.id) + '/s2s_token_tx/'"/>

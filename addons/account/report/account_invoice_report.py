@@ -186,5 +186,5 @@ class ReportInvoiceWithPayment(models.AbstractModel):
             'doc_ids': docids,
             'doc_model': report.model,
             'docs': self.env[report.model].browse(docids),
-            'type_html': data and data.get('report_type') == 'html',
+            'report_type': data.get('report_type') if data else '',
         }
