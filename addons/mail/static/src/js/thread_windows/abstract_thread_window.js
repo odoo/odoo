@@ -384,13 +384,6 @@ var AbstractThreadWindow = Widget.extend({
             this.updateVisualFoldState();
         }
     },
-    /**
-     * Warn other mail components that the unread counter has been updated
-     *
-     * @abstract
-     * @private
-     */
-    _warnUpdatedUnreadCounter: function () {},
 
     //--------------------------------------------------------------------------
     // Handlers

@@ -157,14 +157,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this._passive = false;
     },
     /**
-     * Set the thread window in passive mode, so that new received message will
-     * keep the thread window as unread until there is focus on the thread
-     * window.
-     */
-    setPassive: function () {
-        this._passive = true;
-    },
-    /**
      * Update this thread window
      *
      * @param {Object} options
@@ -177,7 +169,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
     update: function (options) {
         var self = this;
         if (options.passively) {
-            this.setPassive();
+            this._setPassive();
         }
         var bottomVisible = !this.isFolded() &&
                             !this.isHidden() &&
@@ -230,6 +222,16 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     _open: function () {
         this.call('mail_service', 'openThreadWindow', this.getID());
+    },
+    /**
+     * Set the thread window in passive mode, so that new received message will
+     * keep the thread window as unread until there is focus on the thread
+     * window.
+     *
+     * @private
+     */
+    _setPassive: function () {
+        this._passive = true;
     },
     /**
      * @private

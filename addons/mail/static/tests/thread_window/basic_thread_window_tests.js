@@ -196,23 +196,10 @@ QUnit.test('emoji popover should open correctly in thread windows', function (as
 QUnit.test('do not increase unread counter when receiving message with myself as author', function (assert) {
     assert.expect(4);
 
-    var generalChannelID = 1;
-    var myselfPartnerID = 44;
-
-    this.data.initMessaging = {
-        channel_slots: {
-            channel_channel: [{
-                id: generalChannelID,
-                channel_type: 'channel',
-                name: "general",
-            }],
-        },
-    };
-
     var parent = this.createParent({
         data: this.data,
         services: this.services,
-        session: { partner_id: myselfPartnerID }
+        session: { partner_id: 3 }
     });
 
     // get channel instance to link to thread window
@@ -228,14 +215,14 @@ QUnit.test('do not increase unread counter when receiving message with myself as
 
     // simulate receiving message from myself
     var messageData = {
-        author_id: [myselfPartnerID, "Myself"],
+        author_id: [3, "Myself"],
         body: "<p>Test message</p>",
         id: 2,
         model: 'mail.channel',
         res_id: 1,
         channel_ids: [1],
     };
-    var notification = [[false, 'mail.channel', generalChannelID], messageData];
+    var notification = [[false, 'mail.channel', 1], messageData];
     parent.call('bus_service', 'trigger', 'notification', [notification]);
 
     threadWindowHeaderText = $('.o_thread_window_header').text().replace(/\s/g, "");
