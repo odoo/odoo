@@ -200,6 +200,6 @@ class ImDispatch(object):
         return self
 
 dispatch = None
-if not odoo.multi_process or odoo.evented:
+if odoo.multi_process or odoo.evented:
     # We only use the event dispatcher in threaded and gevent mode
     dispatch = ImDispatch()
