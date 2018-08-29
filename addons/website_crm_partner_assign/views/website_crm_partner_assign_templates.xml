@@ -213,15 +213,17 @@
     </template>
 
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
-        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
-            <li t-if="lead_count" class="list-group-item">
-                <span class="badge badge-secondary badge-pill float-right" t-esc="lead_count"/>
-                <a href="/my/leads">My Leads</a>
-            </li>
-            <li class="list-group-item">
-                <span class="badge badge-secondary badge-pill float-right" t-esc="opp_count"/>
-                <a href="/my/opportunities">My Opportunities</a>
-            </li>
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="lead_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">My Leads</t>
+                <t t-set="url" t-value="'/my/leads'"/>
+                <t t-set="count" t-value="lead_count"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">My Opportunities</t>
+                <t t-set="url" t-value="'/my/opportunities'"/>
+                <t t-set="count" t-value="opp_count"/>
+            </t>
         </xpath>
     </template>
 
