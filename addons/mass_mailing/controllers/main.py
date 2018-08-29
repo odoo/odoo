@@ -124,7 +124,9 @@ class MassMailController(http.Controller):
         if mailing._unsubscribe_token(res_id, email) != token:
             return 'unauthorized'
         if email:
-            request.env['mail.blacklist'].sudo()._remove(email)
+            blacklist_rec = request.env['mail.blacklist'].sudo()._remove(email)
+            blacklist_rec._message_log(_("""The %s asked to be removed from the blacklist
+            using the unsubscription page.""" % request.env['ir.model']._get(mailing.mailing_model_real).display_name))
             return True
         return 'error'
 
