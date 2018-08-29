@@ -136,9 +136,10 @@ class MassMailController(http.Controller):
         if mailing.exists() and email:
             model = request.env[mailing.mailing_model_real]
             [email_field] = model._primary_email
-            record = model.sudo().search([(email_field, '=ilike', email)])
-            if record:
-                record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
+            records = model.sudo().search([(email_field, '=ilike', email)])
+            if records:
+                for record in records:
+                    record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
                 return True
             return False
         return 'error'
