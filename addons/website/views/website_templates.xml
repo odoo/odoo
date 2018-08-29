@@ -254,14 +254,16 @@
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
     <xpath expr="//footer" position="inside">
-        <div class="container o_footer_copyright">
-            <div class="row">
-                <div class="col-lg-6 text-muted text-center-xs">
-                    <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
-                    <t t-call="website.language_selector"/>
-                </div>
-                <div class="col-lg-6 text-right o_not_editable" t-if="not editable">
-                    <t t-call="website.brand_promotion"/>
+        <div class="o_footer_copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 text-muted text-center-xs">
+                        <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
+                        <t t-call="website.language_selector"/>
+                    </div>
+                    <div class="col-lg-6 text-right o_not_editable" t-if="not editable">
+                        <t t-call="website.brand_promotion"/>
+                    </div>
                 </div>
             </div>
         </div>
