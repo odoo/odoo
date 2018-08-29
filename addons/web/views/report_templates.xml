@@ -25,6 +25,12 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_background.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
+
+        <script type="text/javascript" src="web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+        <script type="text/javascript" src='/web/static/src/js/report/report.js' />
     </template>
 
     <template id="report_assets_pdf">
@@ -37,7 +43,6 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.editor.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
-        <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src='/web/static/src/js/report/report.editor.js' />
     </template>
 
@@ -65,14 +70,13 @@
                     <t t-call-assets="web_editor.assets_editor" t-js="false"/>
                     <t t-call-assets="web.report_assets_editor" t-js="false"/>
                 </t>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.report_assets_common" t-css="false"/>
                 <t t-if="editable">
-                    <t t-call-assets="web.assets_common" t-css="false"/>
                     <t t-call-assets="web_editor.summernote" t-css="false"/>
                     <t t-call-assets="web_editor.assets_editor" t-css="false"/>
                     <t t-call-assets="web.report_assets_editor" t-css="false"/>
 
-                    <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
-                    <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
                     <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                     <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
@@ -178,7 +182,7 @@
             <div class="clearfix mb8"/>
         </div>
 
-        <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_background">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -218,7 +222,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_boxed">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -257,7 +261,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_clean" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_clean">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -305,7 +309,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article o_report_layout_standard">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -386,16 +390,14 @@
                 </div>
             </div>
         </div>
-        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+        <div class="article">
           <t t-raw="0"/>
         </div>
     </template>
 
     <template id="basic_layout">
-        <t t-if="not o" t-set="o" t-value="doc"/>
-
         <t t-call="web.html_container">
-            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+            <div class="article">
                 <t t-raw="0"/>
             </div>
         </t>
