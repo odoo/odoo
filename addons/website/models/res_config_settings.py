@@ -126,6 +126,6 @@ class ResConfigSettings(models.TransientModel):
             'view_id': self.env.ref('website.view_website_form').id,
             'res_model': 'website',
             'type': 'ir.actions.act_window',
-            'target': 'current',
+            'target': 'new',
             'res_id': False,
         }

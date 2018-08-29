@@ -116,8 +116,11 @@ action = {
         <field name="model">website</field>
         <field name="inherit_id" ref="website.view_website_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='button_go_website']" position='after'>
-                <button type="object" name="button_view_theme" class="btn btn-primary ml-2" icon="fa-paint-brush">Choose a theme</button>
+            <xpath expr="//form" position='inside'>
+                <footer>
+                    <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
             </xpath>
         </field>
     </record>
