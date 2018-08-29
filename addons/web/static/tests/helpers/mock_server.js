@@ -776,7 +776,7 @@ var MockServer = Class.extend({
         var field = args.field ? args.field : 'sequence';
         var records = this.data[args.model].records;
         for (var i in args.ids) {
-            var record = _.findWhere(this.data[args.model].records, {id: args.ids[i]});
+            var record = _.findWhere(records, {id: args.ids[i]});
             record[field] = Number(i) + offset;
         }
     },
