@@ -17,7 +17,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertTrue(hasattr(fc, 'test_tags'))
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base'})
 
     def test_set_tags_not_decorated(self):
         """Test that a TransactionCase has some test_tags by default"""
@@ -28,7 +28,7 @@ class TestSetTags(TransactionCase):
         fc = FakeClass()
 
         self.assertTrue(hasattr(fc, 'test_tags'))
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base'})
 
     def test_set_tags_single_tag(self):
         """Test the set_tags decorator with a single tag"""
@@ -39,7 +39,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'slow'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base', 'slow'})
 
     def test_set_tags_multiple_tags(self):
         """Test the set_tags decorator with multiple tags"""
@@ -50,7 +50,7 @@ class TestSetTags(TransactionCase):
 
         fc = FakeClass()
 
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'slow', 'nightly'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base', 'slow', 'nightly'})
 
     def test_inheritance(self):
         """Test inheritance when using the 'tagged' decorator"""
@@ -64,13 +64,13 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassB()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base', 'nightly'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base', 'nightly'})
 
         class FakeClassC(FakeClassA):
             pass
 
         fc = FakeClassC()
-        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'base'})
+        self.assertEqual(fc.test_tags, {'at_install', 'standard', 'test_base'})
 
     def test_untagging(self):
         """Test that one can remove the 'standard' tag"""
@@ -80,16 +80,16 @@ class TestSetTags(TransactionCase):
             pass
 
         fc = FakeClassA()
-        self.assertEqual(fc.test_tags, {'at_install', 'base'})
+        self.assertEqual(fc.test_tags, {'at_install', 'test_base'})
 
-        @tagged('-standard', '-base', '-at_install')
+        @tagged('-standard', '-test_base', '-at_install')
         class FakeClassB(TransactionCase):
             pass
 
         fc = FakeClassB()
         self.assertEqual(fc.test_tags, set())
 
-        @tagged('-standard', '-base', '-at_install', 'fast')
+        @tagged('-standard', '-test_base', '-at_install', 'fast')
         class FakeClassC(TransactionCase):
             pass
 
