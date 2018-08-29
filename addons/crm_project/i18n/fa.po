@@ -3,22 +3,22 @@
 # * crm_project
 # 
 # Translators:
-# Hamed Mohammadi <hamed@dehongi.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Hamid Darabi <hamid.darabi@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Hamid Darabi, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Hamid Darabi <hamid.darabi@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: crm_project
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
@@ -26,6 +26,8 @@ msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Task</span>"
 msgstr ""
+"<span class=\"o_stat_text\">تبدیل به</span>\n"
+"                            <span class=\"o_stat_text\">تکلیف</span>"
 
 #. module: crm_project
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
@@ -37,59 +39,84 @@ msgstr "لغو"
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_view_form
 msgid "Convert to Task"
-msgstr ""
+msgstr "تبدیل به تکلیف"
 
 #. module: crm_project
 #: model:ir.ui.view,arch_db:crm_project.crm_lead_convert2task_view_form
 msgid "Create Task"
-msgstr ""
+msgstr "ایجاد تکلیف"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_uid
+#: selection:crm.lead.convert2task,action:0
+msgid "Create a new customer"
+msgstr "ایجاد مشتری جدید"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_uid
 msgid "Created by"
 msgstr "ایجاد شده توسط"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_create_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__create_date
 msgid "Created on"
 msgstr "ایجاد شده در"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_display_name
-msgid "Display Name"
-msgstr "نام نشان داده شده"
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__partner_id
+msgid "Customer"
+msgstr "مشتری"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__display_name
+msgid "Display Name"
+msgstr "نام نمایشی"
+
+#. module: crm_project
+#: selection:crm.lead.convert2task,action:0
+msgid "Do not link to a customer"
+msgstr "به مشتری انتساب نشود"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task___last_update
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task____last_update
 msgid "Last Modified on"
-msgstr "آخرین به‌روزرسانی در تاریخ "
+msgstr "آخرین تغییر در"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_uid
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_write_date
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__write_date
 msgid "Last Updated on"
 msgstr "آخرین به روز رسانی در"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_lead_id
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__lead_id
 msgid "Lead"
 msgstr "سرنخ"
 
 #. module: crm_project
-#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task_project_id
+#: selection:crm.lead.convert2task,action:0
+msgid "Link to an existing customer"
+msgstr "انتساب به یک مشتری موجود"
+
+#. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__project_id
 msgid "Project"
 msgstr "پروژه"
 
 #. module: crm_project
+#: model:ir.model.fields,field_description:crm_project.field_crm_lead_convert2task__action
+msgid "Related Customer"
+msgstr "مشتری مرتبط"
+
+#. module: crm_project
 #: model:ir.model,name:crm_project.model_crm_lead_convert2task
 msgid "crm.lead.convert2task"
-msgstr ""
+msgstr "crm.lead.convert2task"

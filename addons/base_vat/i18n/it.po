@@ -3,15 +3,17 @@
 # * base_vat
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Paolo Valier <paolo.valier@hotmail.it>, 2017
+# Martin Trigaux, 2018
+# Marius Marolla <mariusmarolla@entersys.it>, 2018
+# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Paolo Valier <paolo.valier@hotmail.it>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgstr "Aziende"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contatto"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -35,22 +37,28 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Se questa casella è selezionata, non potrai registrare un contatto se il suo"
+" numero di partita IVA non può essere verificato dal servizio europeo VIES."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:134
+#: code:addons/base_vat/models/res_partner.py:154
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"La P.IVA [%s] del partner [%s] non sembra valida. \n"
+"Nota: il formato atteso è %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:133
+#: code:addons/base_vat/models/res_partner.py:153
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"La Partita IVA [%s] del Partner [%s] non ha superato la validazione VIES (il"
+" sistema elettronico di scambio dei dati IVA) oppure non è nel formato %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -59,15 +67,15 @@ msgid "VAT"
 msgstr "IVA"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Verifica numeri di Partita IVA"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Verifica i numeri di Partita IVA con il servizio europeo VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings

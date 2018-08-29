@@ -3,25 +3,23 @@
 # * hr_payroll
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Martin Trigaux, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2017
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Levent Karakaş <levent@mektup.at>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,9 +45,22 @@ msgid ""
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
 "* Bordro oluşturulduğunda durum 'Taslak' dır. \n"
-"* Eğer bordro onaylanmadıysa, durum 'Bekliyor' dur.\n"
-"* Eğer bordro doğrulandıysa, durum 'Yapıldı' olarak ayarlanır.\n"
-"* Kullanıcı bordroyu iptal ederse durum 'İptal Edildi' olur."
+"* Eğer bordro onaylanmadıysa, durum 'Beklemede' dur.\n"
+"* Eğer bordro doğrulandıysa, durum 'Biten' olarak ayarlanır.\n"
+"* Kullanıcı bordroyu iptal ederse durum 'İptal' olur."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+" selected employee(s) based on the dates and credit note specified on "
+"Payslips Run.</span>"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -159,7 +170,7 @@ msgstr "Muhasebe Bilgisi"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__active
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -242,7 +253,7 @@ msgstr "Temel Maaş"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
-msgstr "Belçika Bordrosu"
+msgstr "Belçika Bordro"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -280,7 +291,7 @@ msgstr "Yapılan bordrolar iptal edilemez."
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__category_id
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
-msgstr "Kategorisi"
+msgstr "Kategori"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -338,7 +349,7 @@ msgstr "Kod:"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__company_id
@@ -348,13 +359,13 @@ msgstr "Firmalar"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__company_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
-msgstr "Firma Katkısı"
+msgstr "Şirket Katkısı"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -385,7 +396,7 @@ msgstr "Yapılandırma"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
-msgstr "Onayla"
+msgstr "Doğrula"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__contract_id
@@ -465,7 +476,7 @@ msgstr "Oluşturulma"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__credit_note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__credit_note
 msgid "Credit Note"
-msgstr "Alacak Notu"
+msgstr "İade/Fiyat Farkı"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
@@ -521,7 +532,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Description"
-msgstr "Tanım"
+msgstr "Açıklama"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -558,7 +569,7 @@ msgstr "Görünüm Adı"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr "Biten"
+msgstr "Tamamlandı"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -598,7 +609,7 @@ msgstr "Personel"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Employee Contract"
-msgstr "Çalışan Sözleşmesi"
+msgstr "Personel Sözleşmesi"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
@@ -637,7 +648,7 @@ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:177
+#: code:addons/hr_payroll/models/hr_salary_rule.py:178
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
@@ -692,7 +703,7 @@ msgstr "Bordroları Oluştur"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "Seçilen tüm personeller için maaş bordroları oluşturma"
+msgstr "Seçilen tüm personeller için maaş bordroları oluştur"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -865,7 +876,7 @@ msgstr "Alt Sınır"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__lower_bound
 msgid "Lower bound authorized by the employer for this advantage"
-msgstr "Bu yan hak için işveren tarafından yetki verilen alt sınır."
+msgstr "Bu yan hak için işveren tarafından izin verilen alt sınır."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__paid
@@ -892,7 +903,7 @@ msgstr "Minimum Aralık"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Miscellaneous"
-msgstr "Muhtelif"
+msgstr "Diğer"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -947,7 +958,7 @@ msgstr "Süre (Saat)"
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_user
 msgid "Officer"
-msgstr "Memur"
+msgstr "Yetkili"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1027,12 +1038,7 @@ msgstr "Bordro"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
-msgstr "Ödeme Kayıtları"
-
-#. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
-msgid "Payroll Rules"
-msgstr "Bordro Kuralları"
+msgstr "Bordro Kayıtları"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
@@ -1194,7 +1200,7 @@ msgstr "Python Expression"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__quantity
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__quantity
 msgid "Quantity"
-msgstr "Adet"
+msgstr "Miktar"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -1238,7 +1244,7 @@ msgstr "Referans"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Geri Ödeme"
+msgstr "İade"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:102
@@ -1254,7 +1260,7 @@ msgstr "Kayıt Satırı"
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr "Rejected"
+msgstr "Reddedildi"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__salary_rule_id
@@ -1368,7 +1374,7 @@ msgstr "Sıra"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Set to Draft"
-msgstr "Taslağa  Ayarla"
+msgstr "Taslak olarak ayarla"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
@@ -1379,13 +1385,13 @@ msgstr "Ayarlar"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "States"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__state
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__state
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__struct_id
@@ -1444,15 +1450,6 @@ msgstr ""
 "Bu % alanlarının değerlerini hesaplamak için kullanılacaktır; Genel olarak "
 "bu temel temel, ama küçük Kategoriler kod alanları (hra, ma, lta, vb) bir "
 "değişken adları ve temel değişkeni kullanabilirsiniz."
-
-#. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
-msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
-msgstr ""
-"Bu sihirbaz, tüm seçili employee(s) tarihleri dayalı ve kredi notu maaş "
-"kaçak belirtilen maaş oluşturacaktır."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
@@ -1525,31 +1522,31 @@ msgid "Working Schedule"
 msgstr "Çalışma Saatleri"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:209
+#: code:addons/hr_payroll/models/hr_salary_rule.py:210
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr "Yanlış yüzde bazlı veya ücret adet kuralı %s (%s) için tanımlanan."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:215
+#: code:addons/hr_payroll/models/hr_salary_rule.py:216
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Yanlış python kodu ücret kural %s (%s) için tanımlanan."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:238
+#: code:addons/hr_payroll/models/hr_salary_rule.py:239
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Ücret kuralı için tanımlanan Yanlış python koşulu %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:202
+#: code:addons/hr_payroll/models/hr_salary_rule.py:203
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Yanlış miktar maaş kural %s (%s) için tanımlanan."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:232
+#: code:addons/hr_payroll/models/hr_salary_rule.py:233
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Yanlış aralık koşulu ücret kural %s (%s) için tanımlama."
@@ -1573,7 +1570,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Bu bordroyu üretmek için persone(ler) seçmelisiniz."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:524
+#: code:addons/hr_payroll/models/hr_payslip.py:525
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "Bordro satırı oluşturmak için sözleşme düzenlenmelisiniz."

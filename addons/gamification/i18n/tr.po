@@ -3,24 +3,22 @@
 # * gamification
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Esin Kandemir <esaykandemir@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
 # Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Mehmet Demirel <mdemirell@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +36,7 @@ msgstr "%s yarışmaya katıldı"
 #: code:addons/gamification/models/challenge.py:603
 #, python-format
 msgid "%s has refused the challenge"
-msgstr "%s mücadeleyi reddetti"
+msgstr "%s yarışmayı reddetti"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -135,7 +133,7 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=gamification\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -157,15 +155,14 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
-"<br/>Kimse, tüm hedeflere ulaşmayı başaramadı. Bu zorlu iş için hiç rozet "
-"kazanılmadı."
+"<br/>Kimse tüm hedeflere ulaşmayı başaramadı. Bu yarışma için hiç rozet "
+"kazanılamadı."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:655
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
-"<br/>Ödül (badge %s) her başarılı kullanıcı için şuraya gönderilmiştir %s."
+msgstr "<br/>Ödül (%s rozeti) her başaran kullanıcı için (%s) gönderildi."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:665
@@ -174,8 +171,8 @@ msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
 msgstr ""
-"<br/>Özel ödüller üst rakip kullanıcılar gönderildi. Bu mücadele için "
-"sıralamasıdır:"
+"<br/>Özel ödüller en iyi yarışan kullanıcılara gönderildi. Bu yarışma için "
+"sıralama:"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -198,7 +195,7 @@ msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
-"<span class=\"o_stat_text\">İlgili</span>\n"
+"<span class=\"o_stat_text\">İlişkili</span>\n"
 "                                <span class=\"o_stat_text\">Hedefler</span>"
 
 #. module: gamification
@@ -431,8 +428,8 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Bir hedefe ulaşmak için değeri geçerli değeri karşılaştırıldığında "
-"tamamlandı olarak kabul edilir"
+"Bir hedefin mevcut değeri, hedef değeriyle karşılaştırılarak tamamlandı "
+"olarak kabul edilir."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -441,12 +438,12 @@ msgid ""
 "                Goals can be created automatically by using challenges."
 msgstr ""
 "Bir ödül kullanıcı tarafından bir ödül açıklaması ile tanımlanır.\n"
-"                Hedefler mücadeleleri kullanarak otomatik olarak oluşturulabilir."
+"                Hedefler yarışmaları kullanarak otomatik olarak oluşturulabilir."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr "Listeden seçilen Kullanıcıların"
+msgstr "Seçilmiş kullanıcılar listesi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
@@ -462,32 +459,32 @@ msgstr "Eylem Gerekiyor"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "Advanced Options"
+msgstr "Gelişmiş Seçenekler"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr "Bir Rozet Verme"
+msgstr "Verme Yetkisi"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_domain
 msgid "Alternative to a list of users"
-msgstr "alternatif Kullanıcı listesi"
+msgstr "Kullanıcı listesine alternatif"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__category
 msgid "Appears in"
-msgstr "Görüntüleme"
+msgstr "Görüneceği Yer"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr "Yarışmaya Atama"
+msgstr "Yarışmaya Katılacaklar"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -497,7 +494,7 @@ msgid ""
 "                The goals are created for the specified users or member of the group."
 msgstr ""
 "Seçili kullanıcılara değerlendirmeleri için bir hedef listeyi atayın.\n"
-"                Mücadelelerin otomatik hedef oluşturması için dönem (haftalık, aylık...) kullanılabilir.\n"
+"                Yarışmaların otomatik hedef oluşturması için dönem (haftalık, aylık...) kullanılabilir.\n"
 "                Hedefler belirtilen kullanıcılar veya grup üyeleri için oluşturulacaktır."
 
 #. module: gamification
@@ -518,7 +515,7 @@ msgstr "Otomatik: kayıtların sayısı"
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: sum on a field"
-msgstr "Otomatik: Bir alanda toplama"
+msgstr "Otomatik: Bir alanın toplamı"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__name
@@ -564,9 +561,9 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"Bir meydan okuma tamamlandığında rozetleri verilir. Ya çalışan bir süre "
-"sonunda bu (örneğin: ay için aylık meydan), bitiş tarihi bir meydan okuma "
-"(hiçbir periyodik olarak ayarlanmışsa), ya da ne zaman meydan el ile kapalı."
+"Bir yarışma tamamlandığında rozetler verilir. Bu yarışma süresi sonunda  "
+"(ör: aylık yarışma için ay sonunda), yarışmanın bitiş tarihinde (dönem "
+"belirlenmediyse), ya da yarışma elle kapatıldığında olur."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -576,18 +573,18 @@ msgstr "Toplu iş Modu"
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr "Görkemli"
+msgstr "Muhteşem"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr "Veremezsin"
+msgstr "Verilemez"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:413
 #, python-format
 msgid "Can not modify the configuration of a started goal"
-msgstr "Başlamış bir hedef yapılandırmasını değiştiremezsiniz"
+msgstr "Başlamış bir hedefin yapılandırmasını değiştiremezsiniz"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
@@ -603,7 +600,7 @@ msgstr "İptal Edildi"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr "Kategorisi"
+msgstr "Kategori"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__challenge_id
@@ -629,7 +626,7 @@ msgstr "Yarışma Adı"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
 msgid "Challenge originating"
-msgstr "Yarışma orijinli"
+msgstr "Kaynak yarışma"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
@@ -637,8 +634,8 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
-"Amaç, oluşturulan meydan meydan bu alanda gol değeri oluşturmak için "
-"kullanıcılara atayın."
+"Hedefi oluşturan yarışma, hedefleri oluşturmak için yarışmayı kullanıcılara "
+"atayın."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -650,7 +647,7 @@ msgstr "Yarışmalar"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr "Bu rozeti gönderme kişi başı aylık sınırlandırmak için onay"
+msgstr "Bu rozeti gönderirken kişi başı aylık sınır koymak için seçiniz"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -660,7 +657,7 @@ msgstr "Tıklanabilir Hedefler"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
-msgstr "Gerçekleşen Hedef"
+msgstr "Kapanmış Hedef"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -676,7 +673,7 @@ msgstr "Profilinizi Tamamlayın"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr "Bütünlük"
+msgstr "Tamamlanma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
@@ -725,7 +722,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_date
 msgid "Created"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -757,12 +754,12 @@ msgstr "Oluşturan"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
 msgid "Current"
-msgstr "Geçerli"
+msgstr "Güncel Değer"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr "Güncel Değeri"
+msgstr "Güncel Değer"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -778,12 +775,12 @@ msgstr "Veri"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
 msgid "Date Field"
-msgstr "Tarih Alan"
+msgstr "Tarih Alanı"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__category
 msgid "Define the visibility of the challenge through menus"
-msgstr "Menüler arasında meydan görünürlüğünü tanımlamak"
+msgstr "Yarışmanın menülerde görünürlüğünü tanımlayın"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
@@ -792,36 +789,36 @@ msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
 msgstr ""
-"Tanımlanmış olacak nasıl gol hesaplanır. İşlem sonucu 'Akım' alanında "
-"depolanır."
+"Hedefin nasıl hesaplanacağını tanılayın. İşlem sonucu 'Güncel Değer' "
+"alanında saklanır."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
 msgid "Definition Description"
-msgstr "Tanım Açıklama"
+msgstr "Tanım Açıklaması"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
 msgstr ""
-"Görüntü moduna bağlı olarak rapor-ecek var olmak bireysel veya paylaşılan."
+"Görüntü moduna bağlı olarak raporlar bireysel veya paylaşımlı olacaktır."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr "Tarif Edin: neden önemlidir, ne, kim bu hedefler..."
+msgstr "Yarışmayı açıklayın: ne yapar, kimi hedefler, neden önemlidir...."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Ne yaptıklarını ve neden önemli olduğunu açıkla (public olacak)"
+msgstr "Ne yaptıklarını ve neden önemli olduğunu açıkla (herkes görebilecek)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__description
 msgid "Description"
-msgstr "Tanım"
+msgstr "Açıklama"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__visibility_mode
@@ -849,7 +846,7 @@ msgstr "Olarak görüntülenir"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr "Kendine özgü alan toplu kullanıcı için"
+msgstr "Toplu kullanıcı için ayırdedici alan"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
@@ -858,15 +855,15 @@ msgid ""
 "[('state', '=', 'done')]. The expression can contain reference to 'user' "
 "which is a browse record of the current user if not in batch mode."
 msgstr ""
-"Kayıtlara filtre uygulama etki alanı. Genel kural, örneğin bağlı olarak "
-"kullanıcı değil [('devlet', '' bitti' =')]. Ifade 'kullanıcı' Gözat kaydı "
-"toplu modunda değilse, geçerli kullanıcı için başvurusu içerebilir."
+"Kayıtların filtrelemesi için tanım kümesi. Genel kural, kullanıcı bağımlı "
+"değil [('state', '=', 'done')]. İfade mevcut kullanıcının kaydını içeren "
+"'kullanıcı' ya referans içermelidir."
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Biten"
+msgstr "Tamamlandı"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -885,7 +882,8 @@ msgstr "Bitiş Tarihi"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr "Her kullanıcı için bir kez yerine toplu ifade değerlendir"
+msgstr ""
+"İfadeyi her kullanıcı için tek tek değerlendirmek yerine topluca değerlendir"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
@@ -900,7 +898,7 @@ msgstr "Herkes"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Exclusive (done or not-done)"
-msgstr "Özel (bitmiş veya değil bitmiş)"
+msgstr "Özel (bitmiş veya bitmemiş)"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -910,12 +908,12 @@ msgstr "Başarısız"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
 msgid "Field to Sum"
-msgstr "Toplam alan"
+msgstr "Toplanacak Alan"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__domain
 msgid "Filter Domain"
-msgstr "Filtre Domain"
+msgstr "Süzme Tanım Kümesi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_follower_ids
@@ -943,12 +941,12 @@ msgstr "1. kullanıcı için"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_second_id
 msgid "For 2nd user"
-msgstr "2 kullanıcı için"
+msgstr "2. kullanıcı için"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_third_id
 msgid "For 3rd user"
-msgstr "3 kullanıcı için"
+msgstr "3. kullanıcı için"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_id
@@ -963,7 +961,7 @@ msgstr "Biçimlendirme Seçenekleri"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "Kimden:"
+msgstr "Başlangıç"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
@@ -978,17 +976,17 @@ msgstr "Ödüllendirme Araçları"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "İK Personel Hedefleri"
+msgstr "Ödüllendirme rozeti"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr "Ödüllendirme"
+msgstr "Ödüllendirme yarışması"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr "Ödüllendirme için genel rekabet hedefleri"
+msgstr "Ödüllendirme genel yarış hedefi"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
@@ -998,7 +996,7 @@ msgstr "Ödüllendirme hedef tanımı"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification goal instance"
-msgstr "Ödüllendirme hedef örneği"
+msgstr "Ödüllendirme hedefi"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
@@ -1010,7 +1008,7 @@ msgstr "Ödüllendirme kullanıcı rozeti"
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr "Oyunlaştırma: Hedef Mücadele Kontrolü"
+msgstr "Ödüllendirme: Hedef Yarış Kontrolü"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1042,7 +1040,7 @@ msgstr "Hedef Açıklaması"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr "Başarısız Hedef"
+msgstr "Hedef Başarısız"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_list_view
@@ -1084,29 +1082,29 @@ msgstr "İyi İş"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr "Verme"
+msgstr "Ver"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "Verilen Rozetler"
+msgstr "Rozet Ver"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Verilen Rozetler"
+msgstr "Rozeti Ver"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Bir Rozet Verme"
+msgstr "Bu Rozeti Ver"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr "Tarafından verilen"
+msgstr "Veren"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1123,12 +1121,12 @@ msgstr "Grupla"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr "Kullanıcı ek olarak raporun bir kopyasını alacaksınız grubu"
+msgstr "Kullanıcıya ek olarak raporun bir kopyasını alacak grup"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
-msgstr "HR Yarışları"
+msgstr "İK Yarışmaları"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
@@ -1138,7 +1136,7 @@ msgstr "Gizli"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
-msgstr "Hedef hesaplamak için nasıl?"
+msgstr "Hedef nasıl hesaplanacak?"
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
@@ -1160,7 +1158,7 @@ msgstr "ID"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr "ID Kullanıcı alanı"
+msgstr "Kullanıcının ID alanı"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
@@ -1188,12 +1186,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__challenge_id
 msgid "If this badge was rewarded through a challenge"
-msgstr "Menüler arasında meydan görünürlüğünü tanımlamak"
+msgstr "Eğer bu rozet bir yarışma üzerinden verildiyse"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image
 msgid "Image"
-msgstr "Resim"
+msgstr "Görsel"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
@@ -1207,7 +1205,7 @@ msgid ""
 "keyword 'user' in above filter domain."
 msgstr ""
 "Toplu iş modunda etki alanı genel olarak değerlendirilir. Etkinleştirilirse,"
-" anahtar kelime 'kullanıcı' ın filtre etki alanı kullanın."
+" anahtar kelime 'user' ı yukarıdaki süzme tanım kümesinde kullanmayın."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
@@ -1215,8 +1213,8 @@ msgid ""
 "In batch mode, this indicates which field distinct one user form the other, "
 "e.g. user_id, partner_id..."
 msgstr ""
-"Toplu iş modunda, bu alan farklı bir kullanıcı form diğer örneğin USER_ID, "
-"partner_id gösterir..."
+"Toplu iş modunda, bu kullanıcıyı bir diğerinden nasıl ayırdedeceğini "
+"gösterir. ör: user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
@@ -1225,14 +1223,14 @@ msgid ""
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
 msgstr ""
-"Manüel hedefi halinde anımsatıcıları amaç olarak değil bir süre "
-"güncelleştirilmiş gönderilir (meydan okuma olarak tanımlanır). Manuel hedef "
-"veya hedef için bir meydan okuma bağlı olmayan durumunda göz ardı."
+"Manuel hedef durumunda, hedef belli bir süre güncellenmediğinde (yarışmada "
+"tanımlanır) anımsatıcılar gönderdilir. Manuel olmayan hedef durumunda veya "
+"hedef bir yarışmaya bağlı olmadığı halde gözardı edilir."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "In progress"
-msgstr "Devam etmekte"
+msgstr "Devam Eden"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1243,7 +1241,7 @@ msgstr "Bireysel Hedefler"
 #: model:gamification.challenge.line,name:gamification.line_base_admin3
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr "Yeni Kullanıcı Daveti"
+msgstr "Yeni Kullanıcı Davet Et"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
@@ -1300,12 +1298,12 @@ msgstr "Son Güncelleme"
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
 msgid "Leader Board (Group Ranking)"
-msgstr "Liderler Tablosu"
+msgstr "Lider Tablosu (Grup Sıralaması)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max_number
 msgid "Limitation Number"
-msgstr "Sınırlama Numarası"
+msgstr "Sınırlama Adedi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1320,7 +1318,7 @@ msgstr "Satırlar"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
 msgid "List of goals that will be set"
-msgstr "Belirlenecek hedefleri listesi"
+msgstr "Koyulacak hedefleri listesi"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__user_ids
@@ -1330,7 +1328,12 @@ msgstr "Yarışmaya katılan kullanıcıların listesi"
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
-msgstr "Posta grubu aşağıdaki"
+msgstr "Posta Grubu Takibi"
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+msgid "Member"
+msgstr "Üye"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
@@ -1353,12 +1356,12 @@ msgstr "Model"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
 msgid "Monetary"
-msgstr "Parasal"
+msgstr "Parasal Değeri"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
 msgid "Monetary Value"
-msgstr "Parasal Değerler"
+msgstr "Parasal Değeri"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1379,22 +1382,22 @@ msgstr "Aylık toplam"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr "Benim Hedeflerim"
+msgstr "Hedeflerim"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "My Monthly Sending Total"
-msgstr "Benim Aylık gönderimToplamım"
+msgstr " Aylık Gönderim Toplamım"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_this_month
 msgid "My Monthly Total"
-msgstr "Benim Aylık Toplamım"
+msgstr "Aylık Toplamım"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my
 msgid "My Total"
-msgstr "Benim Toplamım"
+msgstr "Toplamım"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
@@ -1409,7 +1412,9 @@ msgstr "Asla"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr "Herhangi bir değer veya sıfır belirtilirse, hiçbir zaman hatırlattı."
+msgstr ""
+"Hiçbir bir değer belirtilmez veya sıfır belirtilirse hiçbir zaman "
+"hatırlatmaz."
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -1434,18 +1439,18 @@ msgstr "Aylık gönderme sınırı yok"
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr "Kimse mücadelelerin üstesinden senin gibi gelemez."
+msgstr "Kimse yarışmaların üstesinden senin gibi gelemez."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "No one, assigned through challenges"
-msgstr "Hiç kimse, zorluklar atanan"
+msgstr "Hiç kimse, yarışmalar üzerinden atanır"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:672
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr "Hiç kimse özel rozetleri almak için gerekli koşulları ulaştı."
+msgstr "Hiç kimse özel rozetleri almak için gerekli koşullara ulaşamadı."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1455,7 +1460,7 @@ msgstr "Yenilemesiz"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
-msgstr "Güncellenmeyen Manuel Hedefler Şu Kadar Günden Sonra Hatırlatılacak:"
+msgstr "Güncellenmeyen manuel hedefler şu kadar gün sonra hatırlatılacak"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1500,22 +1505,27 @@ msgstr "Kullanıcı sayısı"
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "On change"
-msgstr "(değiştir)"
+msgstr "Değiştiğinde"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr "Sadece bu rozetleri olan insanlar-ebilmek vermek bu rozeti"
+msgstr "Sadece bu rozete sahip olan insanlar bu rozeti verebilir"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr "Sadece bu insanları bu rozeti verebilir"
+msgstr "Sadece bu kişiler bu rozeti verebilir"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr "Optimizasyon"
+msgstr "İyileştirme"
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+msgid "Owner"
+msgstr "Sahibi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
@@ -1537,13 +1547,12 @@ msgstr "Dönem"
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
-msgstr ""
-"Otomatik hedef ödeve dönemi. Hiçbiri seçili değilse, el ile başlatılması."
+msgstr "Otomatik hedef atama dönemi. Seçilmezse manuel başlatılmalı."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
 msgid "Periodicity"
-msgstr "Periyodik Tekrarlanma"
+msgstr "Dönemsellik"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -1553,7 +1562,7 @@ msgstr "Sorun Çözücü"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr "Aşamalı (sayısal değerleri kullanarak)"
+msgstr "İlerleyen (sayısal değerleri kullanarak)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__compute_code
@@ -1566,9 +1575,8 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
-"Her kullanıcı için yürütülecek Python kodu. 'neden' yeni geçerli değerini "
-"içeren. Değerlendirilmiş kullanıcı-ebilmek var olmak object.user_id "
-"aracılığıyla."
+"Her kullanıcı için yürütülecek Python kodu. 'result' yeni güncel değeri "
+"içermeli. Değerlendirilen kullanıcı object.user_id üzerinden ulaşılabilmeli."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1578,7 +1586,7 @@ msgstr "Ulaşıldı"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr "Güncel Değeri"
+msgstr "Mevcut değeri"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -1603,17 +1611,17 @@ msgstr "İlgili Hedefler"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Erişimini yönetmek için kaynak için ilgili kullanıcı adı."
+msgstr "Kaynağın erişimini yönetmek için ilişkilendirilmiş kullanıcı"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr "Kalan izin gönderme"
+msgstr "Kalan Verilebilen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr "Gecikme hatırlatma"
+msgstr "Hatırlatma Süresi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1633,12 +1641,12 @@ msgstr "Rapor Şablonu"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr "Zorunlu Rozetler"
+msgstr "Gerekli Rozetler"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr "Tamamlama Sıfırla"
+msgstr "Sıfırla"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
@@ -1649,8 +1657,7 @@ msgstr "Sorumlu"
 #: code:addons/gamification/models/challenge.py:490
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
-"İlerleme kaydetmek için kullanıcı bilgileri olmadan kişisel sorun alınıyor"
+msgstr "Kullanıcı bilgisi olmadan kişisel yarışma ilerlemesi alınıyor"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1660,22 +1667,22 @@ msgstr "Ödül"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr "Eğer başarılı ödül en uygun?"
+msgstr "Başarılamazsa En İyileri Ödüllendir?"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr "Her hedefe ulaştı olarak ödül"
+msgstr "Her hedefe ulaşıldığında ödüllendir"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr "Yarışma Ödülleri"
+msgstr "Yarışmaların Ödülü"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
 msgid "Rewarded by"
-msgstr "Ödüllendirildi"
+msgstr "Ödüllendiren"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1685,17 +1692,17 @@ msgstr "Yarışma Ödülleri"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr "Aktif"
+msgstr "Devam Eden"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr "Çalışan zorluklar"
+msgstr "Devam Eden Yarışmalar"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Planla"
+msgstr "Planlama"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1729,7 +1736,7 @@ msgstr "Rapor Gönder"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
-msgstr "Bir kopyasını gönder : "
+msgstr "Bir kopyasını gönder"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
@@ -1744,24 +1751,24 @@ msgstr "Sıra"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence number for ordering"
-msgstr "İç Dizi Sayısı"
+msgstr "Dizme için sıra numarası"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr "Bu hedef için ulaştığınız mevcut değeri ayarlayın"
+msgstr "Bu hedef için ulaştığınız güncel değeri ayarlayın"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr "Firma Verilerinizi Ayarlayın"
+msgstr "Şirket Verilerinizi Ayarlayın"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr "Firmanızın Logosunu Ayarlayın"
+msgstr "Şirketinizin Logosunu Ayarlayın"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
@@ -1777,23 +1784,23 @@ msgstr "Ayarlar / Ödüllendirme Araçları"
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr "Firmanızı Ayarlayın"
+msgstr "Şirketinizi Ayarlayın"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr "Yarışı Başlat"
+msgstr "Yarışma Başlat"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__start_date
 msgid "Start Date"
-msgstr "Başlama Tarih"
+msgstr "Başlangıç Tarihi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr "Amacı başlat"
+msgstr "Hedefi Başlat"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
@@ -1801,7 +1808,7 @@ msgstr "Amacı başlat"
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Durumu"
+msgstr "Durum"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1823,7 +1830,7 @@ msgstr "Sonek"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
-msgstr "Kullanıcıyla öner"
+msgstr "Kullanıcılara öner"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
@@ -1856,7 +1863,7 @@ msgstr "Para birimi ve sonek alanı"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr "Tarihi zaman periyodu değerlenesi için kullan"
+msgstr "Dönemin değerlendirilmesi için kullanılacak tarih"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
@@ -1864,8 +1871,8 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
-"O gün, yeni bir meydan okuma otomatik olarak kapatılır. Hiçbir periyodik "
-"olarak ayarlanmışsa, bu tarihi hedef bitiş tarihi kullanır."
+"Yarışmanın otomatik olarak kapatılacağı gün. Dönemsellik belirlenmemişse, bu"
+" tarih hedef bitiş tarihi olarak kullanılacaktır."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -1873,8 +1880,8 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"O gün, yeni bir meydan okuma otomatik olarak başlatılır. Hiçbir periyodik "
-"olarak ayarlanmışsa, bu tarihi hedef başlangıç tarihi olarak kullanır."
+"Yeni bir yarışmanın otomatik olarak başlatılacağı gün. Dönemsellik "
+"belirlenmemişse, bu tarih hedef başlangıç tarihi olarak kullanılacaktır."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:93
@@ -1884,14 +1891,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Etki alanı tanımlı %s için yanlış gibi görünüyor, it.\n"
+" %s tanımlaması için tanım kümesi hatalı görünüyor, lütfen kontrol edin.\n"
 "\n"
-"%s kontrol edin"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_id
 msgid "The field containing the value to evaluate"
-msgstr "Değerlendirmek için değer içeren alanı"
+msgstr "Değerlendirilecek değeri içeren alan"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
@@ -1899,7 +1906,8 @@ msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
-"Eylem için res_id değeri içeren kullanıcı profili (res.users) alan adına."
+"Eylem için res_id değerini içeren, kullanıcı profili (res.users) üzerindeki "
+"alanın adı."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1909,12 +1917,12 @@ msgstr "Yüksek daha iyi"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr "Kullanıcılara verilen bu rozeti örneklerini listesi"
+msgstr " Bu rozetin verildiği kullanıcıların listesi"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr "Bu rozeti eşsiz kullanıcılar tarafından alındığı zaman sayısı."
+msgstr "Bu rozeti alan eşsiz kullanıcıların listesi."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1925,7 +1933,7 @@ msgstr "Düşük daha iyi"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
-msgstr "Bu rozeti kişi başı aylık Gönderme saati sayısının üst sınırı."
+msgstr "Bu rozetin bir kişiye bir ayda en fazla kaç defa gönderilebileceği."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:110
@@ -1935,7 +1943,7 @@ msgid ""
 "\n"
 "%s not found"
 msgstr ""
-" %s tanımı için model yapılandırması hatalı görünüyor, lütfen kontrol edin.\n"
+"%s tanımı için model yapılandırması hatalı görünüyor, lütfen kontrol edin.\n"
 "\n"
 "%s bulunamadı"
 
@@ -1954,7 +1962,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_id
 msgid "The model object for the field to evaluate"
-msgstr "Alan değerlendirmek için modeli nesnesi"
+msgstr "Alanı değerlendirmek için model nesnesi"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
@@ -1962,45 +1970,45 @@ msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
 msgstr ""
-"Gün sonra-ecek var olmak hatırlatmak için el ile bir hedefe atanmış "
-"kullanıcı sayısı. Bir değer belirtilirse, hiçbir zaman hatırlattı."
+"Manuel hedef atanmış bir kullanıcıya kaç gün sonra hatırlatma yapılacağı. "
+"Bir değer girilmezse hiç hatırlatılmaz."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr "Geçerli kullanıcının bu rozeti bu ay aldığı zaman sayısı."
+msgstr "Mevcut kullanıcının bu rozeti bu ay aldığı zaman sayısı."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr "Bu rozeti bu ay alındığı zaman sayısı."
+msgstr "Mevcut kullanıcının bu rozeti bu ay kaç kere aldığı."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr "Geçerli kullanıcının bu ay bu rozeti gönderim zaman sayısı."
+msgstr "Mevcut kullanıcının bu ay bu rozeti kaç kere gönderdiği."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count_distinct
 msgid "The number of time this badge has been received by unique users."
-msgstr "Bu rozeti eşsiz kullanıcılar tarafından alındığı zaman sayısı."
+msgstr "Bu rozetin eşsiz kullanıcılar tarafından kaç kere alındığı."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr "Bu rozeti bu ay alındığı zaman sayısı."
+msgstr "Bu rozetin bu ay kaç kere alındığı."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_count
 msgid "The number of time this badge has been received."
-msgstr "Bu rozeti alındığı zaman sayısı."
+msgstr "Bu rozetin kaç kere alındığı."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__monetary
 msgid "The target and current value are defined in the company currency."
-msgstr "Hedef ve mevcut değer firma Para birimi ile tanımlanır."
+msgstr "Hedef ve güncel değer şirket para birimi ile tanımlanır."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
@@ -2011,19 +2019,19 @@ msgstr "Hedef ve güncel değerlerin birimi"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__manager_id
 msgid "The user responsible for the challenge."
-msgstr "Yarışma sorumlu kullanıcısı."
+msgstr "Yarışmadan sorumlu kullanıcı"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__sender_id
 msgid "The user who has send the badge"
-msgstr "Kullanıcıya rozeti kim gönderdi"
+msgstr "Rozeti gönderen kullanıcı"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr "Tezler gol başarılı kullanıcı-ecek automatically almak rozeti."
+msgstr "Bu hedefleri başaran kullanıcılar otomatik olarak rozeri alacaklar."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
@@ -2032,9 +2040,9 @@ msgid ""
 "reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
 msgstr ""
-"Kendine özgü alan ile karşılaştırmak için değer. Ifade Gözat kaydı geçerli "
-"kullanıcının, örneğin user.id, user.partner_id.id 'kullanıcı' başvuru "
-"içerebilir..."
+"Ayırdedici alan ile karşılaştırmak için değer. Ifade mevcut kullanıcının "
+"kaydını içeren 'kullanıcı' ya referans içerebilir. ör: user.id, "
+"user.partner_id.id..."
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2052,7 +2060,7 @@ msgstr "Bu hedefler yeniden hesaplanmayacak"
 #: code:addons/gamification/models/badge.py:210
 #, python-format
 msgid "This badge can not be sent by users."
-msgstr "Bu rozeti kullanıcıları tarafından gönderilen değil."
+msgstr "Bu rozet kullanıcılar tarafından gönderilemez."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__image
@@ -2062,17 +2070,17 @@ msgstr "Bu alan rozet resmi içindir  256 x 256 ile sınırlıdır"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr "Alıcı"
+msgstr "Bitiş"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
 msgid "To Reach"
-msgstr "Hedeflenen"
+msgstr "Ulaşılacak Hedef"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__to_update
 msgid "To update"
-msgstr "Güncelleme"
+msgstr "Güncellenecek"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_count
@@ -2104,13 +2112,13 @@ msgstr "Okunmamış Mesaj Sayacı"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr "Güncelleştirme"
+msgstr "Güncelle"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:448
 #, python-format
 msgid "Update %s"
-msgstr "Güncelleme %s"
+msgstr "Güncelle %s"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
@@ -2123,7 +2131,7 @@ msgstr "Kullanıcı"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
-msgstr "Kullanıcı domain"
+msgstr "Kullanıcı tanım kümesi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
@@ -2133,7 +2141,7 @@ msgstr "Kullanıcılar"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr "Websitesi / Forum"
+msgstr "Web Sitesi / Forum"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -2144,12 +2152,12 @@ msgstr "Haftalık"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr "Kim bu rozeti verebi"
+msgstr "Bu rozeti kimler verebilir"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "Kimi ödüllendirmek istiyoruz?"
+msgstr "Kimi ödüllendirmek istiyorsunuz?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
@@ -2157,8 +2165,8 @@ msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
-"Bu seçenek etkinleştirildiğinde, kullanıcı sadece bir kez bir rozet "
-"alabilir. Top 3 rozetleri hala sadece meydan sonunda ödüllendirilir."
+"Bu seçenek etkinleştirildiğinde, kullanıcı rozeti sadece bir kez bir "
+"alabilir. En üst 3 rozet her durumda yarışma sonunda verilir."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
@@ -2175,7 +2183,7 @@ msgstr "Yıllık"
 #: code:addons/gamification/models/badge.py:212
 #, python-format
 msgid "You are not in the user allowed list."
-msgstr "İzin verilen listesine kullanıcı içinde değilsin."
+msgstr "İzin verilen kullanıcı listesinde değilsiniz."
 
 #. module: gamification
 #: code:addons/gamification/wizard/grant_badge.py:24
@@ -2187,12 +2195,12 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:196
 #, python-format
 msgid "You can not reset a challenge with unfinished goals."
-msgstr "Tamamlanmamış hedefleri olan bir mücadeleyi sıfırlayamazsınız."
+msgstr "Tamamlanmamış hedefleri olan bir yarışmayı sıfırlayamazsınız."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr "Hala verebilirsiniz"
+msgstr "Bu ay hala"
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_good_job
@@ -2203,13 +2211,13 @@ msgstr "Harika iş çıkardın."
 #: code:addons/gamification/models/badge.py:214
 #, python-format
 msgid "You do not have the required badges."
-msgstr "Gerekli eşyaya sahip değilsin"
+msgstr "Gerekli rozetiniz yok."
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:216
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "Zaten çok fazla zaman bu ay bu rozeti gönderdik."
+msgstr "Bu ay bu rozeti çok defa gönderdiniz."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
@@ -2219,7 +2227,7 @@ msgstr "Gizli rozeti buldun"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr "Bu ayın rozetleri"
+msgstr "rozet verebilirsiniz"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2254,12 +2262,12 @@ msgstr "örn. user.partner_id.id"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "gamification.badge.user.wizard"
-msgstr "oyunlaştırma.rozet.kullanıcı.sihirbaz"
+msgstr "gamification.badge.user.wizard"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "gamification.goal.wizard"
-msgstr "oyunlaştırma.hedef.sihirbaz"
+msgstr "gamification.goal.wizard"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -2274,12 +2282,12 @@ msgstr "yenile"
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
-msgstr "hedef."
+msgstr "olduğunda ulaşır."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "the"
-msgstr "şu"
+msgstr "tarihi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view

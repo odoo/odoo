@@ -3,17 +3,17 @@
 # * pos_sale
 # 
 # Translators:
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Martin Trigaux, 2017
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -23,14 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_report_all_channels_sales
-msgid "All sales orders grouped by sales channels"
-msgstr "Tüm satış siparişleri satış kanalları tarafından gruplandırıldı"
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "İptal Edildi"
 
 #. module: pos_sale
-#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
-msgid "Channel Type"
-msgstr "Ekip Türü"
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
+msgstr "Para Birimi Çevrim Oranı"
 
 #. module: pos_sale
 #: code:addons/pos_sale/models/crm_team.py:107
@@ -44,6 +44,11 @@ msgid "Day"
 msgstr "Gün"
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Draft Quotation"
+msgstr "Taslak Teklif"
+
+#. module: pos_sale
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_view_form_inherit_pos_sale
 msgid "Group by"
 msgstr "Grupla"
@@ -54,9 +59,19 @@ msgid "How this channel's dashboard graph will group the results."
 msgstr "Bu kanalın panel grafiğinin sonuçları nasıl gruplansın."
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Invoiced"
+msgstr "Faturalanan"
+
+#. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Month"
 msgstr "Ay"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "New"
+msgstr "Yeni"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -74,15 +89,35 @@ msgid "POS Grouping"
 msgstr ""
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Paid"
+msgstr "Ödendi"
+
+#. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 #: model:crm.team,name:pos_sale.pos_sales_team selection:crm.team,team_type:0
 msgid "Point of Sale"
 msgstr "Satış Noktası"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Satış Noktası Siparişi"
+
+#. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
 msgstr "Satış Noktası"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Posted"
+msgstr "İşlendi"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Quotation Sent"
+msgstr "Teklif Gönderildi"
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0
@@ -91,10 +126,25 @@ msgid "Sales"
 msgstr "Satış"
 
 #. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Done"
+msgstr "Satış Tamamlandı"
+
+#. module: pos_sale
+#: selection:sale.report,state:0
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Satış Siparişi İstatistikleri"
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
-msgid "Sales Channel"
+msgid "Sales Team"
 msgstr "Satış Ekibi"
 
 #. module: pos_sale
@@ -106,7 +156,7 @@ msgstr "Satış: Vergi Hariç Tutar"
 #. module: pos_sale
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Salesperson"
-msgstr "Satış Personeli"
+msgstr "Satış Temsilcisi"
 
 #. module: pos_sale
 #: model:ir.ui.view,arch_db:pos_sale.crm_team_salesteams_view_kanban_inherit_pos_sale
@@ -124,6 +174,23 @@ msgid "Sessions Running"
 msgstr "Devam Eden Oturumlar"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
+msgstr "Durumu"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__team_type
+msgid "Team Type"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_crm_team__team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
@@ -132,9 +199,8 @@ msgstr "Bu kanalın türü, kanalın kullandığı kaynakları tanımlayacaktır
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
-msgid "This Point of sale's sales will be related to this Sales Channel."
+msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-"Bu Satış Noktasının satışları, bu Satış Kanalı ile ilişkilendirilecektir."
 
 #. module: pos_sale
 #: selection:crm.team,team_type:0

@@ -3,22 +3,22 @@
 # * pos_restaurant
 # 
 # Translators:
-# Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Martin Trigaux, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# dhkabayel <dhkabayel@gmail.com>, 2018
+# Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
+"POT-Creation-Date: 2018-08-24 09:03+0000\n"
+"PO-Revision-Date: 2018-08-24 09:03+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -53,19 +53,25 @@ msgid ""
 "                define and position the tables."
 msgstr ""
 "Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası "
-"tabloları tanımlayıp konumlandırabileceğiniz yerdir."
+"masaları tanımlayıp konumlandırabileceğiniz yerdir."
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
-"Müşteri bahşişlerini kabul edin ya da değişikleri bir bahşiş olarak "
-"değiştirin"
+"Müşteri ipuçlarını kabul edin veya değişikliklerini bir ipucuna dönüştürün"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:113
+#, python-format
+msgid "Add"
+msgstr "Ekle"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -82,6 +88,13 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:107
+#, python-format
+msgid "Add button"
 msgstr ""
 
 #. module: pos_restaurant
@@ -140,6 +153,13 @@ msgid "Back"
 msgstr "Geri"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:82
+#, python-format
+msgid "Back to floor"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
 msgid "Background Color"
 msgstr "Arkaplan Rengi"
@@ -174,6 +194,14 @@ msgstr "Fiş Bölme"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:136
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:150
+#, python-format
+msgid "Blue"
+msgstr "Mavi"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:39
 #, python-format
 msgid "CANCELLED"
@@ -187,6 +215,14 @@ msgstr "İPTAL"
 #, python-format
 msgid "Changes could not be saved"
 msgstr "Değişiklikler kaydedimedi"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:131
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:145
+#, python-format
+msgid "Close"
+msgstr "Kapat"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -206,6 +242,13 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:160
+#, python-format
+msgid "Delete"
+msgstr "Sil"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -229,6 +272,13 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:116
+#, python-format
+msgid "Duplicate"
+msgstr "Kopyala"
+
+#. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
 "Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
@@ -239,7 +289,14 @@ msgstr ""
 "Her Sipariş Yazıcısı, yazıcının ve bir ürün kategori listesinin "
 "bulunabileceği, PosBox/Donanım Proxy si tarafından tanımlanan bir IP "
 "adresine sahiptir. Bir Sipariş Yazıcısı ait olduğu kategorilerinden "
-"birindeki güncellemeler için çıktı alacaktır"
+"birindeki güncellemeler için çıktı alacaktır."
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:110
+#, python-format
+msgid "Edit"
+msgstr "Düzenle"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -266,6 +323,22 @@ msgstr "Kat Planı"
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
 msgstr "Katlar"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:135
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:149
+#, python-format
+msgid "Green"
+msgstr "Yeşil"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:140
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:154
+#, python-format
+msgid "Grey"
+msgstr "Gri"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -343,6 +416,21 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:141
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:155
+#, python-format
+msgid "Light grey"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:39
+#, python-format
+msgid "Logo"
+msgstr "Logo"
+
+#. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "Masa Siparişlerini Yönet"
@@ -364,10 +452,11 @@ msgstr "Not"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/notes.xml:8
 #: code:addons/pos_restaurant/static/src/xml/notes.xml:16
 #, python-format
 msgid "Note"
-msgstr "Bilgi"
+msgstr "Not"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -382,6 +471,14 @@ msgstr "Sandalye Sayısı"
 #, python-format
 msgid "Ok"
 msgstr "Tamam"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:137
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:151
+#, python-format
+msgid "Orange"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -472,10 +569,33 @@ msgstr "Proxy IP Adresi"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:139
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:153
+#, python-format
+msgid "Purple"
+msgstr "Mor"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:134
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:148
+#, python-format
+msgid "Red"
+msgstr "Kırmızı"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:563
 #, python-format
 msgid "Removing a table cannot be undone"
 msgstr "Masayı silmek istiyor musunuz? Bu işlem geri alınamaz."
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:119
+#, python-format
+msgid "Rename"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
@@ -504,7 +624,17 @@ msgid "Round"
 msgstr "Yuvarlak"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:126
+#, python-format
+msgid "Round Shape"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:122
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
+#, python-format
 msgid "Seats"
 msgstr "Sandalye "
 
@@ -518,7 +648,7 @@ msgstr "Sıra"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
 #, python-format
 msgid "Served by"
-msgstr "Tarafından sunulan"
+msgstr "Tarafından hizmet verilmiştir"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -541,6 +671,13 @@ msgstr "Bölünmüş toplam ya da sipariş satırları"
 #: selection:restaurant.table,shape:0
 msgid "Square"
 msgstr "Kare"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:125
+#, python-format
+msgid "Square Shape"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -646,14 +783,13 @@ msgstr "Masanın piksel olarak yüksekliği"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
-"Masanın piksel olarak yatay pozisyonda sol tarafından merkezine konumu."
+msgstr "Masanın piksel olarak yatay olarak sol tarafından merkezine konumu."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr "Masanın piksel olarak dikey olarak "
+msgstr "Masanın piksel olarak dikey olarak  en yukarıdan merkezine konumu"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
@@ -673,6 +809,13 @@ msgid "This product is used as reference on customer receipts."
 msgstr "Bu ürün müşteri makbuzu üzerinde referans olarak kullanılır."
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:129
+#, python-format
+msgid "Tint"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Tip Product"
 msgstr "Bahşiş Ürünü"
@@ -688,6 +831,14 @@ msgstr "Bahşişler"
 #, python-format
 msgid "Transfer"
 msgstr "Transfer"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:142
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:156
+#, python-format
+msgid "Turquoise"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
@@ -709,7 +860,15 @@ msgstr "Genişlik"
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
 #, python-format
 msgid "With a"
-msgstr "bir ile"
+msgstr "ile"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:138
+#: code:addons/pos_restaurant/static/src/xml/floors.xml:152
+#, python-format
+msgid "Yellow"
+msgstr "Sarı"
 
 #. module: pos_restaurant
 #. openerp-web
