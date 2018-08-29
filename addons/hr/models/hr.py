@@ -249,7 +249,12 @@ class Employee(models.Model):
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
-        return super(Employee, self).create(vals)
+        employee = super(Employee, self).create(vals)
+        if employee.department_id:
+            self.env['mail.channel'].sudo().search([
+                ('subscription_department_ids', 'in', employee.department_id.id)
+            ])._subscribe_users()
+        return employee
 
     @api.multi
     def write(self, vals):
@@ -260,7 +265,14 @@ class Employee(models.Model):
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
-        return super(Employee, self).write(vals)
+        res = super(Employee, self).write(vals)
+        if vals.get('department_id') or vals.get('user_id'):
+            department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
+            # When added to a department or changing user, subscribe to the channels auto-subscribed by department
+            self.env['mail.channel'].sudo().search([
+                ('subscription_department_ids', 'in', department_id)
+            ])._subscribe_users()
+        return res
 
     @api.multi
     def unlink(self):
