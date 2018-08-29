@@ -364,8 +364,13 @@ class MailActivity(models.Model):
         self.unlink()
         return message.ids and message.ids[0] or False
 
+    def action_done_schedule_next(self):
+        """ Wrapper without feedback because web button add context as
+        parameter, therefore setting context to feedback """
+        return self.action_feedback_schedule_next()
+
     @api.multi
-    def action_done_schedule_next(self, feedback=False):
+    def action_feedback_schedule_next(self, feedback=False):
         wizard_ctx = dict(
             self.env.context,
             default_previous_activity_type_id=self.activity_type_id.id,
