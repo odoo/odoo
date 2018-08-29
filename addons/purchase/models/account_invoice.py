@@ -92,6 +92,11 @@ class AccountInvoice(models.Model):
         self.purchase_id = False
         return {}
 
+    @api.onchange('journal_id')
+    def _onchange_journal_id(self):
+        if not (self._context.get('default_currency_id') and self.journal_id.type == 'purchase'):
+            return super(AccountInvoice, self)._onchange_journal_id()
+
     @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
