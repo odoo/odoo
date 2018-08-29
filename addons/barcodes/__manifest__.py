@@ -9,7 +9,9 @@
         'views/barcodes_view.xml',
         'security/ir.model.access.csv',
         'views/barcodes_templates.xml',
+        'views/res_company.xml',
     ],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': '_assign_default_nomeclature_id',
 }
