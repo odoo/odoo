@@ -36,7 +36,7 @@
 
     .nav {
         padding: 0;
-        
+
         .nav-item {
             text-align: center;
             background-color: $o-brand-lightsecondary;
@@ -112,48 +112,36 @@
         }
 
         .o_theme_customize_color {
-            > span {
+            > .o_color_preview {
                 display: inline-block;
                 width: 48px;
                 height: 27px;
                 border: 1px solid black;
             }
 
-            $i: 1;
-            @each $palette in $o-theme-color-palettes {
-                @each $name, $value in map-merge($theme-colors, $palette) {
-                    &.o_theme_customize_color_#{if($i == length($o-theme-color-palettes), 'user', $i)}_#{$name} > span {
-                        background-color: $value;
-                    }
-                }
-                $i: $i + 1;
-            }
-            $i: 1;
-            @each $palette in $o-color-palettes {
-                $-text-color: if(map-get($palette, 'text'), map-get($palette, 'text'), $body-color);
-                $-h1-color: if(map-get($palette, 'h1'), map-get($palette, 'h1'), $-text-color);
-                $-h2-color: if(map-get($palette, 'h2'), map-get($palette, 'h2'), $-h1-color);
-                $-h3-color: if(map-get($palette, 'h3'), map-get($palette, 'h3'), $-h2-color);
-                $-h4-color: if(map-get($palette, 'h4'), map-get($palette, 'h4'), $-h3-color);
-                $-h5-color: if(map-get($palette, 'h5'), map-get($palette, 'h5'), $-h4-color);
-                $-h6-color: if(map-get($palette, 'h6'), map-get($palette, 'h6'), $-h5-color);
-                $-defaults: (
-                    'body': $body-bg,
-                    'text': $-text-color,
-                    'h1': $-h1-color,
-                    'h2': $-h2-color,
-                    'h3': $-h3-color,
-                    'h4': $-h4-color,
-                    'h5': $-h5-color,
-                    'h6': $-h6-color,
-                );
+            $palette: nth($o-color-palettes, $o-color-palette-number);
+            $-text-color: if(map-get($palette, 'text'), map-get($palette, 'text'), #212529); // BS default as fallback (TODO find real value)
+            $-h1-color: if(map-get($palette, 'h1'), map-get($palette, 'h1'), $-text-color);
+            $-h2-color: if(map-get($palette, 'h2'), map-get($palette, 'h2'), $-h1-color);
+            $-h3-color: if(map-get($palette, 'h3'), map-get($palette, 'h3'), $-h2-color);
+            $-h4-color: if(map-get($palette, 'h4'), map-get($palette, 'h4'), $-h3-color);
+            $-h5-color: if(map-get($palette, 'h5'), map-get($palette, 'h5'), $-h4-color);
+            $-h6-color: if(map-get($palette, 'h6'), map-get($palette, 'h6'), $-h5-color);
+            $-defaults: (
+                'body': white, // BS default as fallback (TODO find real value)
+                'text': $-text-color,
+                'h1': $-h1-color,
+                'h2': $-h2-color,
+                'h3': $-h3-color,
+                'h4': $-h4-color,
+                'h5': $-h5-color,
+                'h6': $-h6-color,
+            );
 
-                @each $name, $value in $palette {
-                    &.o_theme_customize_color_#{if($i == length($o-color-palettes), 'user', $i)}_#{$name} > span {
-                        background-color: if($value, $value, map-get($-defaults, $name));
-                    }
+            @each $name, $value in $palette {
+                &.o_theme_customize_color_#{$name} > .o_color_preview {
+                    background-color: if($value, $value, map-get($-defaults, $name));
                 }
-                $i: $i + 1;
             }
         }
     }
