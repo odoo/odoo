@@ -338,6 +338,8 @@ class MailActivity(models.Model):
                 subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
                 record_name=activity.res_name,
                 model_description=model_description,
+                model=self.res_model,
+                res_id=self.res_id,
                 notif_layout='mail.mail_notification_light'
             )
 

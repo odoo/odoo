@@ -134,15 +134,14 @@ class TestMailActivity(BaseFunctionalTest):
 
             # Setting activities as done should delete them and post messages
             self.assertEqual(self.test_record.activity_ids, act2)
-            self.assertEqual(len(self.test_record.message_ids), 2)
-            self.assertEqual(self.test_record.message_ids.mapped('subtype_id'), self.env.ref('mail.mt_activities'))
+            self.assertEqual(len(self.test_record.message_ids), 3)
 
             # Perform meeting activities
             self.test_record.activity_unlink(['test_mail.mail_act_test_meeting'])
 
             # Canceling activities should simply remove them
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
-            self.assertEqual(len(self.test_record.message_ids), 2)
+            self.assertEqual(len(self.test_record.message_ids), 3)
 
     def test_activity_mixin_archive(self):
         rec = self.test_record.sudo(self.user_employee)
