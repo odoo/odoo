@@ -131,7 +131,7 @@
                                             <div class="row mt16">
                                                 <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
                                                 <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
-                                                    attrs="{'required': [('google_management_client_id', '!=', False)]}"/>
+                                                    attrs="{'required': [('has_google_analytics', '=', True)]}"/>
                                             </div>
                                         </div>
                                         <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
@@ -156,11 +156,11 @@
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
                                             <div class="row mt16">
                                                 <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
-                                                <field name="google_management_client_id"/>
+                                                <field name="google_management_client_id" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
                                             </div>
                                             <div class="row">
                                                 <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
-                                                <field name="google_management_client_secret"/>
+                                                <field name="google_management_client_secret" attrs="{'required': [('has_google_analytics_dashboard', '=', True)]}"/>
                                             </div>
                                         </div>
                                         <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
@@ -180,12 +180,12 @@
                                         <label for="has_google_maps"/>
                                         <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                         <div class="text-muted">
-                                            Show your address on a map in the <a href="/contactus">Contact Us</a> page
+                                            Use Google Map on your website (<a href="/contactus">Contact Us</a> page, snippets, ...)
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                             <div class="row mt16">
                                                 <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
-                                                <field name="google_maps_api_key"/>
+                                                <field name="google_maps_api_key" attrs="{'required': [('has_google_maps', '=', True)]}" />
                                             </div>
                                         </div>
                                         <div attrs="{'invisible': [('has_google_maps', '=', False)]}">
