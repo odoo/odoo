@@ -235,6 +235,124 @@ QUnit.test('do not increase unread counter when receiving message with myself as
     parent.destroy();
 });
 
+QUnit.test('do not increment unread counter with focus on thread window', function (assert) {
+    // 'hard' focus means that the user has clicked on the thread window in
+    // order to set the focus on it.
+    assert.expect(2);
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 }
+    });
+
+    // get channel instance to link to thread window
+    var channel = parent.call('mail_service', 'getChannel', 1);
+    channel.detach();
+
+    assert.strictEqual(channel.getUnreadCounter(), 0,
+        "thread should have unread counter to 0 initially");
+
+    // hard focus on thread window composer
+    $('.o_composer_text_field').click();
+
+    // simulate receiving message from someone else
+    var messageData = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 2,
+        model: 'mail.channel',
+        res_id: 1,
+        channel_ids: [1],
+    };
+    var notification = [[false, 'mail.channel', 1], messageData];
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    assert.strictEqual(channel.getUnreadCounter(), 0,
+        "thread should not have incremented its unread counter after receiving the message");
+
+    parent.destroy();
+});
+
+QUnit.test('do not mark as read the newly open thread window from received message', function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'] = {
+        fields: {
+            name: {
+                string: "Name",
+                type: "char",
+                required: true,
+            },
+            channel_type: {
+                string: "Channel Type",
+                type: "selection",
+            },
+            channel_message_ids: {
+                string: "Messages",
+                type: "many2many",
+                relation: 'mail.message'
+            },
+            message_unread_counter: {
+                string: "Amount of Unread Messages",
+                type: "integer"
+            },
+        },
+        records: [{
+            id: 2,
+            name: "DM",
+            channel_type: "chat",
+            message_unread_counter: 0,
+        }],
+    };
+
+    var parent = this.createParent({
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_join_and_get_info') {
+                this.data['mail.channel'].records[0].state = 'open';
+                this.data['mail.channel'].records[0].is_minimized = true;
+                return $.when(this.data['mail.channel'].records[0]);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual($('.o_thread_window').length, 0,
+        "no thread window should be open initially");
+
+    // simulate receiving message from someone else in DM
+    var messageData = {
+        author_id: [5, "Someone else"],
+        body: "<p>Test message</p>",
+        id: 2,
+        model: 'mail.channel',
+        res_id: 1,
+        channel_ids: [2],
+    };
+    var notification = [[false, 'mail.channel', 1], messageData];
+    // Unread counter is obtained from fetched channel data, because this is
+    // a new message from a new channel.
+    this.data['mail.channel'].records[0].message_unread_counter++;
+    parent.call('bus_service', 'trigger', 'notification', [notification]);
+
+    var $threadWindow = $('.o_thread_window');
+    assert.strictEqual($threadWindow.length, 1,
+        "a thread window should be open after receiving a new message on a new DM chat");
+    assert.strictEqual($threadWindow.data('thread-id'), 2,
+        "open thread window should be related to DM chat");
+    assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM(1)',
+        "open DM chat window should have one unread message");
+
+    $threadWindow.find('.o_thread_composer').click();
+    assert.strictEqual($threadWindow.find('.o_thread_window_title').text().replace(/\s/g, ''), '#DM',
+        "open DM chat window should have message marked as read on composer focus");
+
+    parent.destroy();
+});
+
 });
 });
 });
