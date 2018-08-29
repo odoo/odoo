@@ -436,7 +436,6 @@ class TestExpression(TransactionCase):
         self.assertEqual(set(all_ids) - set([p1]), set(BaseTestModel.search([('one2many_ids', '!=', 'dbo')]).ids), "o2m NOT IN matches none on the right side")
         self.assertEqual(set(all_ids) - set([p1, p2]), set(BaseTestModel.search([('one2many_ids', 'not in', [u1b, u2])]).ids), "o2m NOT IN matches none on the right side")
 
-    # TODO: RGA strange why browse(1)
     def test_15_equivalent_one2many_2(self):
         BaseTestModel = self.env['test_base.model']
         O2mRelationModel = self.env['test_o2m_relational.model']
@@ -598,7 +597,6 @@ class TestExpression(TransactionCase):
         record = BaseTestModel.search([('child_ids.many2one_id', '=', 'Many2one Record-1'), ('active', '=', False)])
         self.assertTrue(record, "Record Found with record and active False.")
 
-    # TODO: RGA: miscellaneous test, where to move it ?
     def test_lp1071710(self):
         """ Check that we can exclude translated fields (bug lp:1071710) """
         translationModel = self.env['test_translation.model']
