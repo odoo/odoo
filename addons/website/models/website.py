@@ -71,7 +71,7 @@ class Website(models.Model):
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
-    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id, required=True)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
@@ -111,10 +111,6 @@ class Website(models.Model):
         Menu = self.env['website.menu']
         for website in self:
             website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
-
-    # cf. Wizard hack in website_views.xml
-    def noop(self, *args, **kwargs):
-        pass
 
     @api.model
     def create(self, vals):
@@ -157,10 +153,10 @@ class Website(models.Model):
             return
 
         new_homepage_view = '''<t name="Homepage" t-name="website.homepage%s">
-    <t t-call="website.layout">
-%s
-    </t>
-</t>''' % (self.id, self.env['ir.ui.view'].render_template('website.default_homepage', values={'website': self}).decode())
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty"/>
+            </t>
+        </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
