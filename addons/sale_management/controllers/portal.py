@@ -54,7 +54,7 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         if order_sudo.state != 'sent':
-            return request.redirect(order_sudo.get_portal_url() + "&message=4")
+            return request.redirect(order_sudo.get_portal_url(query_string="&message=4"))
         order_sudo.action_cancel()
         message = post.get('decline_message')
         if message:
@@ -95,7 +95,7 @@ class CustomerPortal(CustomerPortal):
 
         option_sudo.add_option_to_order()
 
-        return request.redirect(option_sudo.order_id.get_portal_url() + "#details")
+        return request.redirect(option_sudo.order_id.get_portal_url(anchor='details'))
 
     # note dbo: website_sale code
     @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)

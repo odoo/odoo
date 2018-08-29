@@ -2,17 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+import re
 
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
-from odoo.exceptions import ValidationError, AccessError, MissingError
-from odoo.http import Controller, request, route
+from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
+from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
+
 
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
     """ Generate a dict with required value to render `website.pager` template. This method compute
@@ -264,3 +266,23 @@ class CustomerPortal(Controller):
         values.update(get_records_pager(history, document))
 
         return values
+
+    def _show_report(self, model, report_type, report_ref, download=False):
+        if report_type not in ('html', 'pdf', 'text'):
+            raise UserError("Invalid report type: %s" % report_type)
+
+        report_sudo = request.env.ref(report_ref).sudo()
+
+        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
+            raise UserError("%s is not the reference of a report" % report_ref)
+
+        method_name = 'render_qweb_%s' % (report_type)
+        report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
+            ('Content-Length', len(report)),
+        ]
+        if report_type == 'pdf' and download:
+            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
+        return request.make_response(report, headers=reporthttpheaders)

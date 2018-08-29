@@ -490,8 +490,8 @@
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="uom.group_uom"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount" groups="base.group_no_one"/>
+                                    <field name="price_unit" string="Price"/>
+                                    <field name="discount" groups="base.group_no_one" string="Disc (%)"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>

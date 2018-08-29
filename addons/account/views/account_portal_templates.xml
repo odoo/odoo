@@ -6,7 +6,8 @@
                 <t t-else="">Invoices</t>
             </li>
             <li t-if="invoice" class="breadcrumb-item">
-                <t t-esc="invoice.number"/>
+                <t t-esc="invoice.number" t-if="invoice.number"/>
+                <t t-else="">Draft Invoice</t>
             </li>
         </xpath>
     </template>
@@ -42,7 +43,10 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td>
-                            <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.number">
+                                <t t-esc="invoice.number" t-if="invoice.number"/>
+                                <t t-else="">Draft Invoice</t>
+                            </a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.date_due"/></td>
@@ -85,34 +89,47 @@
                         </div>
                         <div class="o_payment_button">
                             <div class="text-center mb8 ml16 mr16 o_download_pdf">
-                                <a class="btn btn-secondary btn-block o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
-                                <a class="btn btn-secondary btn-block d-none d-lg-inline-block o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
+                                <a class="btn btn-secondary btn-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                                <a class="btn btn-secondary btn-block d-none d-lg-inline-block o_print_btn o_portal_invoice_print" t-att-href="invoice.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
                             </div>
                         </div>
                         <hr t-if="invoice.user_id" class="mt0 mb0"/>
                         <div class="pb8 ml16 mr16 container">
                             <t t-if="invoice.user_id">
                                 <div><strong>Your Contact:</strong></div>
-                                <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>
-                                <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not invoice.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
-                                <span t-field="invoice.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
-                                <a data-toggle="modal" href="#" data-target="#invoice_chatter">Contact us</a>
+                                <div class="d-flex h-100">
+                                    <div class="align-self-center">
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not invoice.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <span t-field="invoice.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        <a data-toggle="modal" href="#" data-target="#invoice_chatter"><i class="fa fa-comment"></i> Contact us</a>
+                                    </div>
+                                </div>
                             </t>
                             <div t-if="not invoice.user_id" class="text-center mr16">
-                                <a data-toggle="modal" href="#" data-target="#invoice_chatter">Contact us</a>
+                                <a data-toggle="modal" href="#" data-target="#invoice_chatter"><i class="fa fa-comment"></i> Contact us</a>
                             </div>
                         </div>
-                        <div class="text-center d-none d-md-block mt4 o_portal_brand">
-                            Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
-                        </div>
+                    </div>
+                    <div class="text-center d-none d-md-block o_portal_brand">
+                        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>
                     </div>
                 </div>
                 <!-- Page Content -->
                 <div id="invoice_content" class="col-lg-9 o_portal_page_content d-print-none">
+                    <div t-ignore="true" class="float-md-right css_editable_mode_hidden d-print-none">
+                        <ul class="list-inline">
+                            <li groups="sales_team.group_sale_salesman" class="list-inline-item">
+                                <a role="button" class="btn btn-info mt16 mr16" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (invoice._name, invoice.id, invoice.env.ref('account.action_invoice_tree1').id)"><t t-if="invoice.state == 'draft'">Edit Invoice</t><t t-else="">Leave Portal</t></a>
+                            </li>
+                        </ul>
+                    </div>
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                     <div class="o_portal_html_view">
-                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-attf-src="/my/invoices/html/#{invoice.id}/#{invoice.access_token}?report_type=html"/>
+                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                 </div>
             </div>
