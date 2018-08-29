@@ -164,11 +164,11 @@ var ThreadWindow = AbstractThreadWindow.extend({
      *   should scroll to the bottom if it was at the bottom before update
      * @param {boolean} [options.passively=false] if set, this thread window
      *   becomes passive, so that it is marked as read only when the focus is
-     *   on it.
+     *   on it. Ignore this option if the focus is already on the thread window.
      */
     update: function (options) {
         var self = this;
-        if (options.passively) {
+        if (options.passively && !this._hasFocus()) {
             this._setPassive();
         }
         var bottomVisible = !this.isFolded() &&

@@ -350,6 +350,16 @@ var AbstractThreadWindow = Widget.extend({
         return this._thread.getID();
     },
     /**
+     * Tells whether there is focus on this thread. Note that a thread that has
+     * the focus means the input has focus.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasFocus: function () {
+        return this.$input.is(':focus');
+    },
+    /**
      * Post a message on this thread window, and auto-scroll to the bottom of
      * the thread.
      *

@@ -641,7 +641,7 @@ MailManager.include({
      */
     _onNewChannel: function (channel) {
         if (channel.isDetached()) {
-            this.openThreadWindow(channel.getID(), { keepFoldState: true });
+            this.openThreadWindow(channel.getID(), { keepFoldState: true, passively: true });
         } else {
             this._closeThreadWindow(channel.getID());
         }
