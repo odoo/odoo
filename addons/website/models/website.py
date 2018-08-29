@@ -86,7 +86,7 @@ class Website(models.Model):
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
-    social_instagram = fields.Char('Instagram Account', default=default_social_instagram)
+    social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
