@@ -159,6 +159,7 @@ class SaleOrder(models.Model):
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
+    pricelist_id_id = fields.Integer(string="Pricelist ID", related='pricelist_id.id', readonly=True)
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False, oldname='project_id')
 
@@ -928,6 +929,16 @@ class SaleOrderLine(models.Model):
             else:
                 line.invoice_status = 'no'
 
+    @api.model
+    def default_get(self, fields):
+        res = super(SaleOrderLine, self).default_get(fields)
+        if self._context.get('product_id'):
+            res['product_id'] = int(self._context.get('product_id'))
+        if self._context.get('quantity'):
+            res['product_uom_qty'] = float(self._context.get('quantity'))
+
+        return res
+
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
         """
@@ -1384,7 +1395,7 @@ class SaleOrderLine(models.Model):
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = 1.0
+            vals['product_uom_qty'] = self.product_uom_qty or 1.0
 
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,

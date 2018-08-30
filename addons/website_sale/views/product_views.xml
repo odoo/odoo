@@ -28,35 +28,6 @@
         </field>
     </record>
 
-    <record id="product_attribute_line_form" model="ir.ui.view">
-        <field name="name">product.attribute.line.form.inherit</field>
-        <field name="model">product.attribute.line</field>
-        <field name="inherit_id" ref="product.product_attribute_line_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="product_attribute_view_form" model="ir.ui.view">
-        <field name="name">product.attribute.form.inherit</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.product_attribute_view_form"/>
-        <field name="priority" eval="8"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='main_fields']" position="after">
-                <group>
-                    <field name="type"/>
-                </group>
-            </xpath>
-            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
-                <field name="html_color"/>
-            </xpath>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
@@ -151,39 +122,6 @@
                     </group>
                 </page>
             </xpath>
-        </field>
-    </record>
-
-    <!-- Product attribute -->
-
-    <record id="product_attribute_value_view_tree_inherit_website_sale" model="ir.ui.view">
-        <field name="name">product.attribute.value.view.tree.inherit.website.sale</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
-        <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_tree_view"/>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="html_color"/>
-            </field>
-        </field>
-    </record>
-    <record id="attribute_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.tree.type</field>
-        <field name="model">product.attribute</field>
-        <field name="inherit_id" ref="product.attribute_tree_view"></field>
-        <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="type"/>
-            </field>
         </field>
     </record>
 

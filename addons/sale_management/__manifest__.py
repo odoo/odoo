@@ -39,6 +39,8 @@ The Dashboard for the Sales Manager will include
     'depends': ['sale', 'digest'],
     'data': [
         'security/sale_management_security.xml',
+        'views/assets.xml',
+        'data/sale_order_template_data.xml',
         'views/sale_portal_templates.xml',
         'views/sale_order_template_views.xml',
         'security/ir.model.access.csv',

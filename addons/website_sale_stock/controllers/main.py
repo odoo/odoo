@@ -8,8 +8,8 @@ from odoo.tools.pycompat import izip
 
 class WebsiteSale(WebsiteSale):
 
-    def get_attribute_value_ids(self, product):
-        res = super(WebsiteSale, self).get_attribute_value_ids(product)
+    def _get_attribute_value_ids(self, product, reference_product=None, pricelist=None):
+        res = super(WebsiteSale, self)._get_attribute_value_ids(product, reference_product, pricelist)
         variant_ids = [r[0] for r in res]
         # recordsets conserve the order
         for r, variant in izip(res, request.env['product.product'].sudo().browse(variant_ids)):

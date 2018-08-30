@@ -1461,7 +1461,7 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
-        if (this.editable) {
+        if (this.editable || data.forceEditable) {
             if (!this.activeActions.create) {
                 if (data.onFail) {
                     data.onFail();
@@ -1471,10 +1471,16 @@ var FieldOne2Many = FieldX2Many.extend({
                 this.trigger_up('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
-                    position: this.editable,
+                    position: this.editable || data.forceEditable,
                     context: data.context,
+                }, {
+                    allowWarning: data.allowWarning
                 }).always(function () {
                     self.creatingRecord = false;
+                }).done(function(){
+                    if(data.onSuccess){
+                        data.onSuccess();
+                    }
                 });
             }
         } else {

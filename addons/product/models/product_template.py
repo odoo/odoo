@@ -479,6 +479,59 @@ class ProductTemplate(models.Model):
 
         return True
 
+    @api.multi
+    def get_filtered_variants(self, reference_product=None):
+        """
+        Will filter availability (excluded) for the product
+        combinations (ex: color: white excludes size: large).
+
+        Will also filter availability (excluded) for the parent
+        product if specified (meaning that this product is a an optionnal or
+        accessory product of the reference_product).
+        Args:
+            reference_product (product.product): The reference product that has
+            the current product as an option or accessory product.
+        Returns:
+            The filtered list of product variants
+        """
+        self.ensure_one()
+        product_product_attribute_values = self.env['product.product.attribute.value'].search([('product_tmpl_id', '=', self.id)])
+        if reference_product:
+            # append the reference_product if provided
+            product_product_attribute_values |= reference_product.product_attribute_value_ids
+        product_variants = self.product_variant_ids
+
+        for product_product_attribute_value in product_product_attribute_values:
+            # CASE 1: The whole product is excluded when no attribute values are selected in the parent product
+            # returns empty recordset of product.product if so. What is checked is:
+            # If the product_attribute value doesn't belong to self (i.e. belongs to the reference product)
+            # and self is the excluded product template on the exclusion lines 
+            # and the exclusions is on the product without specified product attribute values (i.e. the whole product is excluded)
+            if product_product_attribute_value.product_tmpl_id != self \
+                    and self in product_product_attribute_value.exclude_for.mapped('product_tmpl_id') \
+                    and not product_product_attribute_value.exclude_for.filtered(
+                        lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self).value_ids:
+                return self.env['product.product']
+
+            # CASE 2: Check if some of the product.product.attribute.value of the product are excluded
+            # for this prodcut. A variant could be excluded:
+            # - Either by itself (eg: The office chair with iron legs excludes the color white)
+            # - Or by the reference product (eg: The customizable desk with iron legs excludes the office chair with aluminium legs)
+            for excluded in product_product_attribute_value.exclude_for.filtered(
+                    lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self):
+                product_variants -= product_variants.filtered(
+                    lambda variant:
+                    # 1/ Check the applicability of the exlusion
+                    # i.e: the restiction comes from the parent
+                    # OR the restriction is on a product_attribute_value that this variant has, eg:
+                    # if the office chair with iron legs excludes the color white, we must check 
+                    # that this variant has iron legs to check the exclusion
+                    (product_product_attribute_value.product_tmpl_id != self or product_product_attribute_value in variant.product_attribute_value_ids) and
+                    # 2/ Check the variant has one of the exluded attribute values
+                    any(attribute_value in excluded.value_ids for attribute_value in variant.product_attribute_value_ids))
+
+        return product_variants
+
     @api.model
     def get_empty_list_help(self, help):
         self = self.with_context(

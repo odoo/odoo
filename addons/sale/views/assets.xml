@@ -3,10 +3,15 @@
     <template id="assets_backend_inherit_sale" inherit_id="web.assets_backend" name="Sale backend assets">
         <xpath expr="link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_onboarding.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/product_configurator.scss"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
             <script type="text/javascript" src="/sale/static/src/js/tour.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator_list_editable_renderer.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator_utils.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator_modal.js"></script>
         </xpath>
     </template>
     <template id="assets_frontend_inherit_sale" inherit_id="web.assets_frontend" name="Sale frontend assets">
@@ -15,6 +20,11 @@
         </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/sale/static/src/js/sale_portal_sidebar.js"></script>
+        </xpath>
+    </template>
+    <template id="qunit_suite" name="product_configurator_tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/sale/static/tests/product_configurator.test.js"></script>
         </xpath>
     </template>
 </odoo>

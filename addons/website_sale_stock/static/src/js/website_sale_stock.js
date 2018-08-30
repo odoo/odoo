@@ -17,8 +17,8 @@ $('.oe_website_sale').each(function() {
     var oe_website_sale = this;
 
     // For options products
-    $(oe_website_sale).on('change', 'input[name="add_qty"]', function() {
-        $(oe_website_sale).find('ul[data-attribute_value_ids]').trigger('change');
+    $(oe_website_sale).on('change', 'input[name="add_qty"]', function(ev, no_stock_check) {
+        $(oe_website_sale).find('ul[data-attribute_value_ids]').trigger('change', [no_stock_check]);
     });
 
     $(oe_website_sale).find('input[name="add_qty"]').trigger('change');
@@ -36,7 +36,11 @@ $('.oe_website_sale').each(function() {
     /* Renders a specific message concerning the stock of the product
         and its variants on the product website page.
     */
-    $(oe_website_sale).on('change', 'ul[data-attribute_value_ids]', function(event) {
+    $(oe_website_sale).on('change', 'ul[data-attribute_value_ids]', function(event, no_stock_check) {
+        if(no_stock_check){
+            return;
+        }
+
         var $ul = $(event.target).closest('.js_add_cart_variants');
         var $parent = $ul.closest('.js_product');
         var variant_ids = $ul.data("attribute_value_ids");
@@ -44,13 +48,14 @@ $('.oe_website_sale').each(function() {
         $parent.find('input.js_variant_change:checked, select.js_variant_change').each(function() {
             values.push(+$(this).val());
         });
+        $parent.find('#add_to_cart').removeClass('disabled out_of_stock');
         var list_variant_id = parseInt($parent.find('input.js_product_change:checked').val());
         var qty = $parent.find('input[name="add_qty"]').val();
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values)) ||
                 variant_ids[k][0] === list_variant_id) {
                 // clone so permanent object is not modified
-                var info = _.clone(variant_ids[k][4]);
+                var info = _.clone(variant_ids[k][6]);
                 if(_.contains(['always', 'threshold'], info['inventory_availability'])) {
                     info['virtual_available'] -= parseInt(info['cart_qty']);
                     if (info['virtual_available'] < 0) {
@@ -58,10 +63,14 @@ $('.oe_website_sale').each(function() {
                     }
                     // Handle case when manually write in input
                     if(qty > info['virtual_available']) {
-                        $parent.find('input[name="add_qty"]').val(info['virtual_available'] || 1);
+                        var $input_add_qty = $parent.find('input[name="add_qty"]');
+                        $input_add_qty.val(info['virtual_available'] || 1);
+                        // trigger change to update the price but add context to avoid coming back here
+                        // and start infinite loop
+                        $input_add_qty.trigger('change', [true, "", true]);
                     }
                     if(qty > info['virtual_available'] || info['virtual_available'] < 1 || qty < 1) {
-                        $parent.find('#add_to_cart').addClass('disabled');
+                        $parent.find('#add_to_cart').addClass('disabled out_of_stock');
                     }
                     // For options products: if qty not available disable add to cart on change variant
                     $parent.find('.js_add').toggleClass('disabled btn', info['virtual_available'] < 1);
