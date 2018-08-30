@@ -55,15 +55,14 @@ def start_bootstrap(dbname, config_path):
     # Get the most important things: DB cursor and registry (pooler) !!
     db, pool = openerp.pooler.get_db_and_pool(dbname)
     cr = db.cursor()
+    cr.autocommit(True)
 
     return cr, pool
 
 
 def end_bootstrap(cr):
-    cr.commit()
     cr.close()
     logging.shutdown()
-    # openerp.modules.registry.RegistryManager.delete_all()
 
 
 if __name__ == "__main__":
@@ -87,10 +86,6 @@ Example usage:
 >>> user_obj = pool.get('res.users')
 >>> user_obj.write(cr, uid, 1, {'name': 'Jean Jass'})
 >>> user_obj.browse(cr, uid, 1).name == 'Jean Jass'
-
-**NOTE** : To quit the program, you MUST send a KeyboardInterrupt signal
-in order to commit the implicit DB transaction. In other word, enter ctrl+C to
-save changes in database ;-)
                 """ % ('\n- ' + '\n- '.join(locals.keys()))
 
         code.interact(banner=banner, local=locals)
