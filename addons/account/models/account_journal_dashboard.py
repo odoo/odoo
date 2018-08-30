@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 
-from babel.dates import format_datetime, format_date
+from babel.dates import format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
@@ -93,7 +93,7 @@ class account_journal(models.Model):
         data = []
         today = fields.Date.context_today(self)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
-        day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
+        day_of_week = int(format_date(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
             if i==0:
