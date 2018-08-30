@@ -181,17 +181,16 @@ class PaymentAcquirer(models.Model):
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
     @api.multi
-    def _check_required_if_provider(self):
+    def _check_required_if_provider(self, vals):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
+        empty_field = []
         for acquirer in self:
-            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
-                return False
-        return True
-
-    _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', []),
-    ]
+            for k, f in acquirer._fields.items():
+                if getattr(f, 'required_if_provider', None) == acquirer.provider and k in vals.keys() and not vals.get(k):
+                    empty_field.append(self.env['ir.model.fields'].search([('name', '=', k), ('model', '=', acquirer._name)]).field_description)
+        if empty_field:
+            raise ValidationError(_("Required fields not filled (" + (' ,').join(empty_field) + ")"))
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -260,11 +259,13 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def create(self, vals):
+        self._check_required_if_provider(vals)
         image_resize_images(vals)
         return super(PaymentAcquirer, self).create(vals)
 
     @api.multi
     def write(self, vals):
+        self._check_required_if_provider(vals)
         image_resize_images(vals)
         return super(PaymentAcquirer, self).write(vals)
 
