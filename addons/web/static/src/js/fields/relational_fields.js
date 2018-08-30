@@ -137,6 +137,12 @@ var FieldMany2One = AbstractField.extend({
         // coming by an onchange on another field)
         this.isDirty = false;
         this.lastChangeEvent = undefined;
+
+        // use a DropPrevious to properly handle related record quick creations,
+        // and store a createDef to be able to notify the environment that there
+        // is pending quick create operation
+        this.dp = new concurrency.DropPrevious();
+        this.createDef = undefined;
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -154,6 +160,18 @@ var FieldMany2One = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Override to make the caller wait for potential ongoing record creation.
+     * This ensures that the correct many2one value is set when the main record
+     * is saved.
+     *
+     * @override
+     * @returns {Deferred} resolved as soon as there is no longer record being
+     *   (quick) created
+     */
+    commitChanges: function () {
+        return $.when(this.createDef);
+    },
+    /**
      * @override
      * @returns {jQuery}
      */
@@ -166,7 +184,7 @@ var FieldMany2One = AbstractField.extend({
     reinitialize: function (value) {
         this.isDirty = false;
         this.floating = false;
-        this._setValue(value);
+        return this._setValue(value);
     },
     /**
      * Re-renders the widget if it isn't dirty. The widget is dirty if the user
@@ -291,29 +309,40 @@ var FieldMany2One = AbstractField.extend({
     _quickCreate: function (name) {
         var self = this;
         var def = $.Deferred();
+        this.createDef = this.createDef || $.Deferred();
+        // called when the record has been quick created, or when the dialog has
+        // been closed (in the case of a 'slow' create), meaning that the job is
+        // done
+        var createDone = function () {
+            def.resolve();
+            self.createDef.resolve();
+            self.createDef = undefined;
+        };
+        // called if the quick create is disabled on this many2one, or if the
+        // quick creation failed (probably because there are mandatory fields on
+        // the model)
         var slowCreate = function () {
             var dialog = self._searchCreatePopup("form", false, self._createContext(name));
-            dialog.on('closed', self, def.resolve.bind(def));
+            dialog.on('closed', self, createDone);
         };
         if (this.nodeOptions.quick_create) {
-            this.trigger_up('mutexify', {
-                action: function () {
-                    return self._rpc({
-                        model: self.field.relation,
-                        method: 'name_create',
-                        args: [name],
-                        context: self.record.getContext(self.recordParams),
-                    }).then(function (result) {
-                        if (self.mode === "edit") {
-                            self.reinitialize({id: result[0], display_name: result[1]});
-                        }
-                        def.resolve();
-                    }).fail(function (error, event) {
-                        event.preventDefault();
-                        slowCreate();
-                    });
-                },
+            var nameCreateDef = this._rpc({
+                model: this.field.relation,
+                method: 'name_create',
+                args: [name],
+                context: this.record.getContext(this.recordParams),
+            }).fail(function (error, ev) {
+                ev.preventDefault();
+                slowCreate();
             });
+            this.dp.add(nameCreateDef)
+                .then(function (result) {
+                    if (self.mode === "edit") {
+                        self.reinitialize({id: result[0], display_name: result[1]});
+                    }
+                    createDone();
+                })
+                .fail(def.reject.bind(def));
         } else {
             slowCreate();
         }
