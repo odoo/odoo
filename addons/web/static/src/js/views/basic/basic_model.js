@@ -1344,6 +1344,7 @@ var BasicModel = AbstractModel.extend({
             parentID: list.id,
             position: position,
             viewType: list.viewType,
+            allowWarning: options && options.allowWarning
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
             list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
@@ -1395,7 +1396,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
             } else if (field.type === 'many2one' || field.type === 'reference') {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -1724,7 +1725,7 @@ var BasicModel = AbstractModel.extend({
      *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyX2ManyChange: function (record, fieldName, command, viewType) {
+    _applyX2ManyChange: function (record, fieldName, command, viewType, allowWarning) {
         if (command.operation === 'TRIGGER_ONCHANGE') {
             // the purpose of this operation is to trigger an onchange RPC, so
             // there is no need to apply any change on the record (the changes
@@ -1819,6 +1820,7 @@ var BasicModel = AbstractModel.extend({
                 var options = {
                     context: command.context,
                     position: command.position,
+                    allowWarning: allowWarning
                 };
                 def = this._addX2ManyDefaultRecord(list, options).then(function (id) {
                     if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {

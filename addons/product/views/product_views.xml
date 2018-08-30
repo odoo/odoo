@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <form string="Product">
                 <header>
-                    <button string="Variant Prices" type="action"
+                    <button string="Configure Variants" type="action"
                         name="%(product_attribute_value_action)d"
                         attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}"
                         groups="product.group_product_variant"/>

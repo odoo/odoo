@@ -72,6 +72,24 @@
             </field>
         </record>
 
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.product.website.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='sale']" position="after">
+                    <group name="options" groups="product.group_product_variant">
+                        <group string="Options">
+                            <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <menuitem id="product_menu_catalog" name="Products" action="product_template_action" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
         <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/>
         <menuitem action="product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
@@ -272,6 +290,7 @@
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
                             <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="pricelist_id_id" invisible="1" class="js_sale_order_pricelist_id" />
                             <field name="currency_id" invisible="1"/>
                             <field name="payment_term_id" options="{'no_create': True}"/>
                         </group>
@@ -377,6 +396,7 @@
                                 >
                                     <control>
                                         <create string="Add a product"/>
+                                        <create string="Configure a product" context="{'open_product_configurator': 'true'}" groups="product.group_product_variant"/>
                                         <create string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                         <create string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
@@ -1001,7 +1021,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='email_template_and_project']" position="before">
-                    <group string="Invoicing" name="invoicing">
+                    <group string="Invoicing" name="invoicing" invisible="1">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
                         <field name="hide_expense_policy" invisible="1"/>

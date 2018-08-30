@@ -61,7 +61,7 @@ ListRenderer.include({
                 }
 
                 _.each(child.children, function (child) {
-                    if (child.tag !== 'create') {
+                    if (child.tag !== 'create' || child.attrs.invisible) {
                         return;
                     }
 

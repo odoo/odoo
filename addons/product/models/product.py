@@ -93,7 +93,7 @@ class ProductProduct(models.Model):
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
-        help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
+        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -110,6 +110,8 @@ class ProductProduct(models.Model):
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Attributes', ondelete='restrict')
+    product_attribute_value_ids = fields.Many2many(
+        'product.product.attribute.value', string='Attribute Values', compute="_compute_product_attribute_value_ids")
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
         "Variant Image", attachment=True,
@@ -193,15 +195,10 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('attribute_value_ids.price_ids.price_extra', 'attribute_value_ids.price_ids.product_tmpl_id')
+    @api.depends('product_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
-        # TDE FIXME: do a real multi and optimize a bit ?
         for product in self:
-            price_extra = 0.0
-            for attribute_price in product.mapped('attribute_value_ids.price_ids'):
-                if attribute_price.product_tmpl_id == product.product_tmpl_id:
-                    price_extra += attribute_price.price_extra
-            product.price_extra = price_extra
+            product.price_extra = sum(product.mapped('product_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
@@ -275,6 +272,12 @@ class ProductProduct(models.Model):
             self.image_variant = image
         else:
             self.product_tmpl_id.image = image
+
+    def _compute_product_attribute_value_ids(self):
+        for product in self:
+            product.product_attribute_value_ids = self.env['product.product.attribute.value']._search([
+                ('product_tmpl_id', '=', product.product_tmpl_id.id),
+                ('product_attribute_value_id', 'in', product.attribute_value_ids.ids)])
 
     @api.one
     def _get_pricelist_items(self):

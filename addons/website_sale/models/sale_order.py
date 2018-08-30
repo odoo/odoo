@@ -72,7 +72,22 @@ class SaleOrder(models.Model):
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
-        return self.env['sale.order.line'].sudo().search(domain)
+
+        lines = self.env['sale.order.line'].sudo().search(domain)
+
+        if line_id:
+            return lines
+        linked_line_id = kwargs.get('linked_line_id', False)
+        optional_product_ids = set(kwargs.get('optional_product_ids', []))
+
+        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
+        if optional_product_ids:
+            # only match the lines with the same chosen optional products on the existing lines
+            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
+        else:
+            lines = lines.filtered(lambda line: not line.option_line_ids)
+
+        return lines
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
@@ -116,7 +131,7 @@ class SaleOrder(models.Model):
         untracked_attributes = []
         for k, v in attributes.items():
             # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
-            attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
+            attribute_value = self.env['product.product.attribute.value'].sudo().browse(int(v))
             if attribute_value and not attribute_value.attribute_id.create_variant:
                 untracked_attributes.append(attribute_value.name)
         if untracked_attributes:
@@ -198,13 +213,34 @@ class SaleOrder(models.Model):
 
             order_line.write(values)
 
-        return {'line_id': order_line.id, 'quantity': quantity}
+        # link a product to the sales order
+        if kwargs.get('linked_line_id'):
+            linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
+            order_line.write({
+                'linked_line_id': linked_line.id,
+                'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
+            })
+            linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+
+        option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
+        for option_line_id in option_lines:
+            self._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
+
+        return {'line_id': order_line.id, 'quantity': quantity, 'option_ids': list(set(option_lines.ids))}
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         for order in self:
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
-            accessory_products -= order.website_order_line.mapped('product_id')
+            products = order.website_order_line.mapped('product_id')
+            accessory_products -= products
+
+            for product in products:
+                for product_template in accessory_products.mapped('product_tmpl_id'):
+                    template_accessory_products = accessory_products.filtered(lambda accessory_product: accessory_product.product_tmpl_id == product_template)
+                    # remove from the accessories the ones that are not available for the selected product
+                    accessory_products -= template_accessory_products - product_template.get_filtered_variants(product)
+
             return random.sample(accessory_products, len(accessory_products))
 
     @api.multi
@@ -239,6 +275,9 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     name_short = fields.Char(compute="_compute_name_short")
+
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
+    option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
     @api.multi
     @api.depends('product_id.display_name')

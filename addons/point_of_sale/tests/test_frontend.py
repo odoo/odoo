@@ -31,15 +31,14 @@ class TestUi(odoo.tests.HttpCase):
         pear = env.ref('point_of_sale.whiteboard')
         attribute_value = env['product.attribute.value'].create({
             'name': 'add 2',
-            'product_ids': [(6, 0, [pear.id])],
             'attribute_id': env['product.attribute'].create({
                 'name': 'add 2',
             }).id,
         })
-        env['product.attribute.price'].create({
+        env['product.product.attribute.value'].create({
             'product_tmpl_id': pear.product_tmpl_id.id,
             'price_extra': 2,
-            'value_id': attribute_value.id,
+            'product_attribute_value_id': attribute_value.id,
         })
 
         fixed_pricelist = env['product.pricelist'].create({

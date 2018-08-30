@@ -14,14 +14,21 @@
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale.scss" />
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_mail.scss" />
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_frontend.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/sale_portal.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/sale/static/src/scss/product_configurator.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_options.scss"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator_utils.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/product_configurator_modal.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_utils.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop_customize.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_options.js"></script>
         </xpath>
     </template>
 
@@ -148,6 +155,12 @@
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
+        </xpath>
+        <xpath expr="//div[hasclass('product_price')]/t[1]" position="attributes">
+            <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('product_price')]/t[2]" position="attributes">
+            <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
         </xpath>
     </template>
 
@@ -470,10 +483,10 @@
                             <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
                             <form action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                <div class="js_product" t-if="product.product_variant_ids">
+                                <div class="js_product js_main_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'" />
-                                        <t t-call="website_sale.variants">
+                                        <t t-call="sale.variants">
                                             <t t-set="ul_class" t-value="'flex-column'" />
                                         </t>
                                     </t>
@@ -602,13 +615,13 @@
                    "display_currency": product.currency_id,
                }'/>
           </h4>
-          <h4 class="d-none oe_not_available bg-warning">Product not available</h4>
+          <h4 class="d-none oe_not_available bg-warning">Option not available</h4>
       </div>
     </template>
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
       <xpath expr="//t[@t-placeholder='select']" position="replace">
-        <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+        <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product, reference_product, pricelist)"/>
         <ul class="d-none js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)"/>
         <input type="hidden" t-if="len(product.product_variant_ids) == 1" class="product_id" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-if="len(product.product_variant_ids) &gt; 1">
@@ -624,75 +637,6 @@
             </div>
         </t>
       </xpath>
-    </template>
-
-    <template id="variants">
-      <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
-      <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)">
-        <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
-          <li t-if="len(variant_id.value_ids) > 1">
-
-            <strong t-field="variant_id.attribute_id.name"/>
-
-            <t t-if="variant_id.attribute_id.type == 'select'">
-              <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
-                <t t-foreach="variant_id.value_ids" t-as="value_id">
-                  <option t-att-value="value_id.id">
-                      <span t-field="value_id.name"/>
-                      <span t-if="value_id.price_extra">
-                          <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
-                                   "widget": "monetary",
-                                    "from_currency": product.currency_id,
-                                   "display_currency": website.currency_id
-                               }'/>
-                      </span>
-                  </option>
-                </t>
-              </select>
-            </t>
-
-            <t t-if="variant_id.attribute_id.type == 'radio'">
-              <ul class="list-unstyled">
-                  <t t-set="inc" t-value="0"/>
-                  <t t-foreach="variant_id.value_ids" t-as="value_id">
-                      <li class="form-group js_attribute_value" style="margin: 0;">
-                          <label class="col-form-label" style="margin: 0 20px;">
-                              <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
-                              <span t-field="value_id.name"/>
-                              <span class="badge badge-pill" t-if="value_id.price_extra">
-                                  <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
-                                          "widget": "monetary",
-                                          "from_currency": product.currency_id,
-                                          "display_currency": website.currency_id
-                                       }'/>
-                              </span>
-                          </label>
-                      </li>
-                      <t t-set="inc" t-value="inc+1"/>
-                  </t>
-              </ul>
-            </t>
-
-            <t t-if="variant_id.attribute_id.type == 'color'">
-              <ul class="list-inline">
-                  <t t-set="inc" t-value="0"/>
-                  <li t-foreach="variant_id.value_ids" t-as="value_id" class="list-inline-item">
-                      <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
-                          t-attf-class="css_attribute_color #{'active' if not inc else ''}">
-                        <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"
-                          t-att-checked="'checked' if not inc else None"
-                          t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
-                          t-att-value="value_id.id"
-                          t-att-title="value_id.name"/>
-                      </label>
-                      <t t-set="inc" t-value="inc+1"/>
-                  </li>
-              </ul>
-            </t>
-
-          </li>
-        </t>
-      </ul>
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
@@ -840,7 +784,7 @@
             </thead>
             <tbody>
                 <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                    <tr>
+                    <tr t-att-class="'optional_product info' if line.linked_line_id else None">
                         <td colspan="2" t-if="not line.product_id.product_tmpl_id" class='td-img'></td>
                         <td align="center" t-if="line.product_id.product_tmpl_id" class='td-img'>
                             <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'rounded'}" />
@@ -856,7 +800,7 @@
                             </t>
                         </td>
                         <td class="text-center td-qty">
-                            <div class="css_quantity input-group oe_website_spinner">
+                            <div t-if="not line.linked_line_id" class="css_quantity input-group oe_website_spinner">
                                 <div class="input-group-prepend">
                                     <a t-attf-href="#" class="btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                         <i class="fa fa-minus"></i>
@@ -869,6 +813,9 @@
                                     </a>
                                 </div>
                             </div>
+                            <t t-if="line.linked_line_id">
+                              <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
+                            </t>
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-if="(compute_currency(line.product_id.lst_price) - line.price_reduce ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">

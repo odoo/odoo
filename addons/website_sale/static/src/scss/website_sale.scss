@@ -29,65 +29,9 @@
         margin-left: 1.5em;
     }
 
-    .td-product_name,
     h1[itemprop="name"],
     .oe_product_cart form h5 {
         word-wrap: break-word;
-    }
-
-    .td-product_name {
-        min-width: 140px;
-    }
-
-    .td-img {
-        width: 100px;
-    }
-
-    .td-qty {
-        width: 130px;
-        a.input-group-addon {
-            background-color: transparent;
-            border: 0px;
-        }
-    }
-    .td-action {
-        width: 30px;
-    }
-
-    .td-price,
-    .td-price-total {
-        width: 100px;
-    }
-
-    @include media-breakpoint-down(sm) {
-        .td-img,
-        .td-price-total {
-            display: none;
-        }
-
-        .td-qty {
-            width: 60px;
-        }
-
-        .td-price {
-            width: 80px;
-        }
-    }
-
-    @media (max-width: 476px) {
-        .td-qty {
-            width: 60px;
-        }
-
-        #modal_optional_products table thead,
-        .oe_cart table thead {
-            display: none;
-        }
-
-        #modal_optional_products table td.td-img,
-        .oe_cart table td.td-img {
-            display: none;
-        }
     }
 }
 /* ---- Default Styles ---- */
@@ -483,80 +427,11 @@ div#payment_method {
 }
 /* product detail */
 
-.css_attribute_color {
-    display: inline-block;
-    border: 1px solid #999999;
-    text-align: center;
-
-    input {
-        margin: 8px;
-        height: 13px;
-        opacity: 0;
-    }
-
-    &.active {
-        border: 3px ridge #66ee66;
-    }
-
-    &.active input {
-        margin: 6px;
-    }
-}
-
-.css_not_available_msg {
-    display: none;
-}
-
-.css_not_available.js_product {
-    > *:nth-child(4) > * {
-        display: none;
-    }
-
-    .css_quantity,
-    .product_price {
-        display: none;
-    }
-
-    .css_not_available_msg {
-        display: block;
-    }
-}
-
-.css_quantity {
-    max-width: 125px;
-
-    input[name="add_qty"] {
-        text-align: center;
-    }
-}
-
-option.css_not_available {
-    color: #ccc;
-}
-
-label.css_not_available {
-    opacity: 0.6;
-}
-
-label.css_attribute_color.css_not_available {
-    opacity: 1;
-    background-image: url("/website_sale/static/src/img/redcross.png");
-    background-size: cover;
-}
-
 .product_detail_img {
     margin-left: auto;
     margin-right: auto;
     display: block;
     max-height: 500px;
-}
-
-.oe_default_price {
-    display: none;
-}
-
-.discount .oe_default_price {
-    display: block;
 }
 
 .oe_website_sale input.js_quantity {
