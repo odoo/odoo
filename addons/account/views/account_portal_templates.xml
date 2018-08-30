@@ -32,46 +32,43 @@
         <t t-if="not invoices">
             <p>There are currently no invoices and payments for your account.</p>
         </t>
-        <div t-if="invoices" class="card">
-            <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
-                <thead>
-                  <tr class="active">
-                    <th>Invoice #</th>
-                    <th>Invoice Date</th>
-                    <th class='d-none d-md-table-cell'>Due Date</th>
-                    <th></th>
-                    <th>Amount Due</th>
-                  </tr>
-                </thead>
+        <t t-if="invoices" t-call="portal.portal_table">
+            <thead>
+				<tr class="active">
+					<th>Invoice #</th>
+					<th>Invoice Date</th>
+					<th class='d-none d-md-table-cell'>Due Date</th>
+					<th/>
+					<th class="text-right">Amount Due</th>
+				</tr>
+			</thead>
+			<tbody>
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td>
                             <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.number">
                                 <t t-esc="invoice.number" t-if="invoice.number"/>
-                                <t t-else="">Draft Invoice</t>
+                                <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.date_due"/></td>
                         <td class="tx_status">
                             <t t-if="invoice.state == 'open'">
-                                <span class="badge badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                                <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
                             <t t-if="invoice.state == 'paid'">
-                                <span class="badge badge-secondary"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
+                                <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
                             <t t-if="invoice.state == 'cancel'">
-                                <span class="badge badge-secondary"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                                <span class="badge badge-pill badge-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                             </t>
                         </td>
-                        <td><span t-esc="-invoice.residual if invoice.type == 'out_refund' else invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
+                        <td class="text-right"><span t-esc="-invoice.residual if invoice.type == 'out_refund' else invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
-            </table></div>
-            <div t-if="pager" class="o_portal_pager text-center">
-                <t t-call="portal.pager"/>
-            </div>
-        </div>
+			</tbody>
+        </t>
       </t>
     </template>
 
