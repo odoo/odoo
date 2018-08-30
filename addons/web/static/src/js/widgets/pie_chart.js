@@ -7,6 +7,7 @@ odoo.define('web.PieChart', function (require) {
 var ajax = require('web.ajax');
 var config = require('web.config');
 var core = require('web.core');
+var Domain = require('web.Domain');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 
@@ -38,6 +39,7 @@ var PieChart = Widget.extend({
         this.model = record.model;
         this.domain = record.domain;
         if (node.attrs.modifiers) {
+            this.domain = this.domain.concat(Domain.prototype.stringToArray(node.attrs.modifiers.domain || '[]'));
             this.measure = node.attrs.modifiers.measure || '';
             this.title = node.attrs.modifiers.title || this.measure || '';
             this.interval = node.attrs.modifiers.groupby.split(':')[1];
