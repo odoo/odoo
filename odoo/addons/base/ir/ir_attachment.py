@@ -350,6 +350,11 @@ class IrAttachment(models.Model):
             if res_model not in self.env:
                 require_employee = True
                 continue
+            elif res_model == 'res.users' and len(res_ids) == 1 and self._uid == list(res_ids)[0]:
+                # by default a user cannot write on itself, despite the list of writeable fields
+                # e.g. in the case of a user inserting an image into his image signature
+                # we need to bypass this check which would needlessly throw us away
+                continue
             records = self.env[res_model].browse(res_ids).exists()
             if len(records) < len(res_ids):
                 require_employee = True
