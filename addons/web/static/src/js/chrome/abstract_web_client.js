@@ -88,6 +88,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         set_title_part: '_onSetTitlePart',
     },
     init: function (parent) {
+        // a flag to determine that odoo is fully loaded
+        odoo.isReady = false;
         this.client_options = {};
         this._super(parent);
         ServiceProviderMixin.init.call(this);
@@ -129,6 +131,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 // Listen to 'scroll' event and propagate it on main bus
                 self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
                 core.bus.trigger('web_client_ready');
+                odoo.isReady = true;
             });
     },
 
