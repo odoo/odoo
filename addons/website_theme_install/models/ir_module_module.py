@@ -48,6 +48,7 @@ class IrModuleModule(models.Model):
         for attach in self._get_module_data('theme.ir.attachment'):
             already_create = loaded['attachments'].filtered(lambda x: x.key == attach.key)
             new_attach = {
+                'key': attach.key,
                 'public': True,
                 'res_model': 'ir.ui.view',
                 'type': 'url',
