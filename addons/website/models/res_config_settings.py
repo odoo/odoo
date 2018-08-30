@@ -42,6 +42,21 @@ class ResConfigSettings(models.TransientModel):
     module_website_links = fields.Boolean("Link Trackers")
     auth_signup_uninvited = fields.Selection("Customer Account", related='website_id.auth_signup_uninvited')
 
+    social_twitter = fields.Char(related='website_id.social_twitter')
+    social_facebook = fields.Char(related='website_id.social_facebook')
+    social_github = fields.Char(related='website_id.social_github')
+    social_linkedin = fields.Char(related='website_id.social_linkedin')
+    social_youtube = fields.Char(related='website_id.social_youtube')
+    social_googleplus = fields.Char(related='website_id.social_googleplus')
+    social_instagram = fields.Char(related='website_id.social_instagram')
+
+    @api.depends('website_id')
+    def has_social_network(self):
+        self.has_social_network = self.social_twitter or self.social_facebook or self.social_github \
+            or self.social_linkedin or self.social_youtube or self.social_googleplus or self.social_instagram
+
+    has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=lambda x: x)
+
     favicon = fields.Binary('Favicon', related='website_id.favicon')
 
     google_maps_api_key = fields.Char(related='website_id.google_maps_api_key')
@@ -65,8 +80,8 @@ class ResConfigSettings(models.TransientModel):
             self.google_analytics_key = False
 
     def inverse_has_google_maps(self):
-        if not self.inverse_has_google_maps:
-            self._has_google_maps = False
+        if not self.has_google_maps:
+            self.google_maps_api_key = False
 
     def inverse_has_google_analytics_dashboard(self):
         if not self.has_google_analytics_dashboard:
@@ -107,16 +122,6 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_url',
             'url': '/',
             'target': 'self',
-        }
-
-    def company_go_to(self):
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'res.company',
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-            'res_id': self.website_id.company_id.id,
         }
 
     def action_website_create_new(self):
