@@ -361,12 +361,18 @@ var FormController = BasicController.extend({
     },
     /**
      * Calls unfreezeOrder when changing the mode.
+     * Also, when there is a change of mode, the tracking of last activated
+     * field is reset, so that the following field activation process starts
+     * with the 1st field.
      *
      * @override
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) === this.handle) {
             this.model.unfreezeOrder(this.handle);
+        }
+        if (this.mode !== mode) {
+            this.renderer.resetLastActivatedField();
         }
         return this._super.apply(this, arguments);
     },
