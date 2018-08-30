@@ -11,6 +11,13 @@ $o-portal-mobile-toolbar: true; // Enable/Disable custom design
 $o-portal-mobile-toolbar-border: $border-color;
 $o-portal-mobile-toolbar-bg: $gray-200;
 
+// Portal Tables
+$o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
+$o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
+$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
+$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
+
+
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
     height: round($-navbar-height * $ratio * 100) / 100;
@@ -349,11 +356,19 @@ img.o_we_custom_image {
     }
 
     .o_portal_my_doc_table {
-        td, th {
-            text-align: right;
+        th {
+            padding-top: $o-portal-table-th-pt;
+            padding-bottom: $o-portal-table-th-pb;
         }
-        tr > :first-child {
-            text-align: left;
+
+        td {
+            padding-top: $o-portal-table-td-pt;
+            padding-bottom: $o-portal-table-td-pb;
+        }
+
+        td, th {
+            vertical-align: middle;
+            white-space: nowrap;
         }
     }
 

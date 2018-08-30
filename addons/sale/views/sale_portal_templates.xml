@@ -43,42 +43,37 @@
             <t t-if="not quotations">
                 <p>There are currently no quotations for your account.</p>
             </t>
-            <div t-if="quotations" class="card">
-                <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
-                    <thead>
-                        <tr class="active">
-                            <th>Quotation #</th>
-                            <th>Order Date</th>
-                            <th>Valid Until</th>
-                            <th></th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <t t-foreach="quotations" t-as="quotation">
-                        <tr>
-                            <td>
-                                <a t-att-href="quotation.get_portal_url()"><t t-esc="quotation.name"/></a>
-                            </td>
-                            <td><span t-field="quotation.date_order"/></td>
-                            <td><span t-field="quotation.validity_date"/></td>
-                            <td>
-                                <t t-if="quotation.state == 'cancel'">
-                                    <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
-                                </t>
-                                <t t-if="quotation.is_expired">
-                                    <span class="badge badge-secondary"><i class="fa fa-fw fa-clock-o"/> Expired</span>
-                                </t>
-                            </td>
-                            <td>
-                                <span t-field="quotation.amount_total"/>
-                            </td>
-                        </tr>
-                    </t>
-                </table></div>
-                <div t-if="pager" class="o_portal_pager text-center">
-                    <t t-call="portal.pager"/>
-                </div>
-            </div>
+            <t t-if="quotations" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Quotation #</th>
+                        <th>Order Date</th>
+                        <th>Valid Until</th>
+                        <th></th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <t t-foreach="quotations" t-as="quotation">
+                    <tr>
+                        <td>
+                            <a t-att-href="quotation.get_portal_url()"><t t-esc="quotation.name"/></a>
+                        </td>
+                        <td><span t-field="quotation.date_order"/></td>
+                        <td><span t-field="quotation.validity_date"/></td>
+                        <td>
+                            <t t-if="quotation.state == 'cancel'">
+                                <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                            </t>
+                            <t t-if="quotation.is_expired">
+                                <span class="badge badge-secondary"><i class="fa fa-fw fa-clock-o"/> Expired</span>
+                            </t>
+                        </td>
+                        <td>
+                            <span t-field="quotation.amount_total"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
         </t>
     </template>
 
@@ -90,41 +85,36 @@
             <t t-if="not orders">
                 <p>There are currently no orders for your account.</p>
             </t>
-            <div t-if="orders" class="card">
-                <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
-                    <thead>
-                        <tr class="active">
-                            <th>
-                                <span class='d-none d-md-inline'>Sales Order #</span>
-                                <span class='d-block d-md-none'>Ref.</span>
-                            </th>
-                            <th>Order Date</th>
-                            <th ></th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <t t-foreach="orders" t-as="order">
-                        <tr>
-                            <td>
-                                <a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a>
-                            </td>
-                            <td>
-                                <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                                <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
-                            </td>
-                            <td>
-                                <t t-if="order.state == 'done'">
-                                    <span class="badge badge-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
-                                </t>
-                            </td>
-                            <td><span t-field="order.amount_total"/></td>
-                        </tr>
-                    </t>
-                </table></div>
-                <div t-if="pager" class="o_portal_pager text-center">
-                    <t t-call="portal.pager"/>
-                </div>
-            </div>
+            <t t-if="orders" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            <span class='d-none d-md-inline'>Sales Order #</span>
+                            <span class='d-block d-md-none'>Ref.</span>
+                        </th>
+                        <th>Order Date</th>
+                        <th ></th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <t t-foreach="orders" t-as="order">
+                    <tr>
+                        <td>
+                            <a t-att-href="order.get_portal_url()"><t t-esc="order.name"/></a>
+                        </td>
+                        <td>
+                            <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
+                            <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
+                        </td>
+                        <td>
+                            <t t-if="order.state == 'done'">
+                                <span class="badge badge-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
+                            </t>
+                        </td>
+                        <td><span t-field="order.amount_total"/></td>
+                    </tr>
+                </t>
+            </t>
         </t>
     </template>
 
