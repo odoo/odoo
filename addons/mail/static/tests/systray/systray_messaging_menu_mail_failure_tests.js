@@ -58,11 +58,8 @@ QUnit.module('MessagingMenu (Mail Failures)', {
         };
 
         this.services = mailTestUtils.getMailServices();
-        this.MailService = this.services.mail_service;
-        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = false;
     },
     afterEach: function () {
-        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = true;
         // unpatch _.debounce and _.throttle
         _.debounce = this.underscoreDebounce;
         _.throttle = this.underscoreThrottle;
