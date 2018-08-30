@@ -612,6 +612,14 @@ class SaleOrder(models.Model):
         return True
 
     @api.multi
+    def send_order_confirmation_mail(self, transaction=False):
+        # send order confirmation mail when payment done through the portal
+        confirmation_template = self.env['ir.config_parameter'].sudo().get_param('sale.sale_confirmation_template', False)
+        for order in self.filtered(lambda so: so.team_id.team_type != 'website'):
+            if confirmation_template and order.has_to_be_paid():
+                order.with_context(transaction=transaction, has_carrier=hasattr(order, 'carrier_id')).message_post_with_template(int(confirmation_template), notif_layout='mail.mail_notification_light')
+
+    @api.multi
     def action_done(self):
         return self.write({'state': 'done'})
 

@@ -69,6 +69,7 @@ class PaymentTransaction(models.Model):
             if record.acquirer_id.provider == 'transfer':
                 for so in sales_orders:
                     so.reference = record._compute_sale_order_reference(so)
+            sales_orders.with_context(mark_so_as_sent=True).send_order_confirmation_mail(transaction=record)
 
     @api.multi
     def _set_transaction_authorized(self):
@@ -81,6 +82,8 @@ class PaymentTransaction(models.Model):
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.action_confirm()
+        for transaction in self:
+            sales_orders.send_order_confirmation_mail(transaction=transaction)
 
     @api.multi
     def _set_transaction_done(self):
@@ -102,6 +105,8 @@ class PaymentTransaction(models.Model):
             if default_template:
                 for invoice in trans.invoice_ids:
                     invoice.with_context(mark_invoice_as_sent=True).message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+        for transaction in self:
+            sales_orders.send_order_confirmation_mail(transaction=transaction)
         return res
 
     @api.model

@@ -107,5 +107,107 @@
             <field name="user_signature" eval="False"/>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="order_confirmation_mail_template" model="mail.template">
+            <field name="name">Order confirmation e-mail</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="email_to">${(object.partner_id.email or '')|safe}</field>
+            <field name="subject">Your order ${object.name}</field>
+            <field name="body_html" type="xml">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        % set transaction = ctx['transaction']
+        Hello,<br/><br/>
+        Your order ${object.name} amounting in ${object.currency_id.symbol}${object.amount_total}
+        % if transaction.state != 'pending':
+            has been confirmed.
+        % else:
+            will be validated when the payment is received.
+        % endif
+    </p><br/>
+    % if transaction.state == 'pending':
+        <strong>PAYMENT INSTRUCTIONS</strong><br/>
+        ${transaction.acquirer_id.post_msg | safe}<br/>
+        Communication: ${object.reference}<br/><br/>
+    % endif
+    <a href="/my/orders/${object.id}" target="_blank" style="background-color: #44a19e; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View Your Order</a>
+    <br/><br/>
+    % if transaction.state != 'pending':
+        <h5><strong>Order Summary:</strong></h5>
+        <table width="100%" style="padding: 10px; color: #454748; font-size: 11px;">
+            <thead>
+                <tr>
+                    <th width="18%">Products</th>
+                    <th></th>
+                    <th align="left">Quantity</th>
+                    <th align="left">Unit Price</th>
+                    <th align="left">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                % for line in object.order_line:
+                    <tr>
+                        <td style="width: 150px;">
+                             <img src="/web/image/product.product/${line.product_id.id}/image_small" width="64" alt="Product image"></img>
+                        </td>
+                        <td align="left">${line.product_id.name}</td>
+                        <td>${line.product_uom_qty}</td>
+                        <td>${line.price_unit}</td>
+                        <td>${object.currency_id.symbol} ${line.price_subtotal}</td>
+                    </tr>
+                % endfor
+            </tbody>
+        </table>
+        <table width="100%" style="padding: 10px; color: #454748;">
+            <tr>
+                <td>
+                    <strong>Ship to:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 13px;">
+                    ${object.partner_shipping_id.street}<br/>
+                    ${object.partner_shipping_id.city}
+                    ${object.partner_shipping_id.state_id.name}
+                    ${object.partner_shipping_id.zip}<br/>
+                    ${object.partner_shipping_id.country_id.name}
+                </td>
+            </tr>
+            % if ctx['has_carrier']:
+                <tr>
+                    <td style="font-size: 13px;">
+                        <strong>Shipping Method:</strong>
+                        ${object.carrier_id.name} (${object.currency_id.symbol}${object.delivery_price})
+                    </td>
+                </tr>
+            % endif
+            <tr>
+                <td style="padding-top: 10px;">
+                    <strong>Bill to:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 13px;">
+                    ${object.partner_invoice_id.street}<br/>
+                    ${object.partner_invoice_id.city}
+                    ${object.partner_invoice_id.state_id.name}
+                    ${object.partner_invoice_id.zip}<br/>
+                    ${object.partner_invoice_id.country_id.name}
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 13px;">
+                    <strong>Payment Method:</strong>
+                    ${transaction.acquirer_id.name} (${transaction.currency_id.symbol}${transaction.amount})
+                </td>
+            </tr>
+        </table>
+    % endif
+</div></field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
     </data>
 </odoo>

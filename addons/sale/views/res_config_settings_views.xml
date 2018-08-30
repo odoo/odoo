@@ -162,7 +162,13 @@
                                     Request an electronic payment to confirm orders
                                 </div>
                                 <div attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
-                                    <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
+                                    <div class="mt16">
+                                        <label for="sale_confirmation_template_id" string="Confirmation Email" class="o_light_label"/>
+                                        <field name="sale_confirmation_template_id" class="oe_inline"/>
+                                    </div>
+                                    <div>
+                                        <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

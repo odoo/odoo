@@ -42,6 +42,12 @@
             <field name="selectable" eval="False" />
             <field name="website_id" ref="website.default_website" />
         </record>
+
+        <!-- set default e-commerce order confirmation template -->
+        <record id="default_ecommerce_confirmation_template" model="ir.config_parameter">
+            <field name="key">website_sale.ecommerce_confirmation_template</field>
+            <field name="value" ref="sale.order_confirmation_mail_template"/>
+        </record>
     </data>
     <data>
         <record id="sale.model_sale_order" model="ir.model">
