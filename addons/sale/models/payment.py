@@ -63,9 +63,7 @@ class PaymentTransaction(models.Model):
         super(PaymentTransaction, self)._set_transaction_pending()
 
         for record in self:
-            sales_orders = record.sale_order_ids.filtered(lambda so: so.state == 'draft')
-            sales_orders.force_quotation_send()
-
+            sales_orders = record.sale_order_ids.filtered(lambda so: so.state in ['draft', 'sent'])
             if record.acquirer_id.provider == 'transfer':
                 for so in sales_orders:
                     so.reference = record._compute_sale_order_reference(so)
@@ -76,9 +74,7 @@ class PaymentTransaction(models.Model):
         # Override of '_set_transaction_authorized' in the 'payment' module
         # to confirm the quotations automatically.
         super(PaymentTransaction, self)._set_transaction_authorized()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ['draft', 'sent'])
         for so in sales_orders:
             # For loop because some override of action_confirm are ensure_one.
             so.action_confirm()
@@ -89,9 +85,7 @@ class PaymentTransaction(models.Model):
     def _set_transaction_done(self):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ['draft', 'sent'])
         sales_orders.action_confirm()
         automatic_invoice = self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
         if automatic_invoice:
