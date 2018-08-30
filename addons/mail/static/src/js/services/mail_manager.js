@@ -46,7 +46,6 @@ var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 var MailManager =  AbstractService.extend({
     dependencies: ['ajax', 'bus_service', 'local_storage'],
     _ODOOBOT_ID: "ODOOBOT", // default authorID for transient messages
-    IS_STATIC_PREVIEW_ENABLED: true,
 
     /**
      * @override
@@ -232,17 +231,13 @@ var MailManager =  AbstractService.extend({
         var inboxDef = this._getSystrayInboxPreviews(filter);
         var failureDef = this._getSystrayMailFailurePreviews(filter);
         defs = defs.concat([channelDef, inboxDef, failureDef]);
-        if (this.IS_STATIC_PREVIEW_ENABLED) {
-            var staticDef = this._getSystrayStaticPreviews(filter);
-            defs.push(staticDef);
-        }
         return $.when.apply($, defs)
-            .then(function (previewsChannel, previewsInbox, previewsFailure, previewsStatic) {
+            .then(function (previewsChannel, previewsInbox, previewsFailure) {
                 // order: failures > inbox > channel, each group must be sorted
                 previewsChannel = self._sortPreviews(previewsChannel);
                 previewsInbox = self._sortPreviews(previewsInbox);
                 previewsFailure = self._sortPreviews(previewsFailure);
-                return _.union(previewsStatic, previewsFailure, previewsInbox, previewsChannel);
+                return _.union(previewsFailure, previewsInbox, previewsChannel);
             });
     },
     /**
@@ -815,30 +810,6 @@ var MailManager =  AbstractService.extend({
         } else {
             return $.when([]);
         }
-    },
-    /**
-     * Get the previews of static systray elements, adding notification request
-     *
-     * @private
-     * @param {string|undefined} [filter]
-     * @returns {$.Promise<Object[]>} resolved with list of object that are
-     *     compatible with preview template of mail systray menu
-     */
-    _getSystrayStaticPreviews: function (filter) {
-        var elems = [];
-        if (
-            window.Notification && window.Notification.permission === "default" &&
-            (filter === 'mailbox_inbox' || !filter)
-        ) {
-            elems.push({
-                title: _t("OdooBot has a request"),
-                imageSRC: "/mail/static/src/img/odoobot.png",
-                status: 'bot',
-                body:  _t("Enable desktop notifications to chat"),
-                id: 'request_notification',
-            });
-        }
-        return $.when(elems);
     },
     /**
      * Initialize the internal state of the mail service. Ensure that all
