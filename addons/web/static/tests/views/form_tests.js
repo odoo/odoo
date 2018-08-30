@@ -7036,6 +7036,36 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('asynchronous rendering of a widget tag', function (assert) {
+        assert.expect(1);
+
+        var def1 = $.Deferred();
+
+        var MyWidget = Widget.extend({
+            willStart: function() {
+                return def1;
+            },
+        });
+
+        widgetRegistry.add('test', MyWidget);
+
+        createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<widget name="test"/>' +
+                    '</form>',
+        }).then(function(form) {
+            assert.strictEqual(form.$('div.o_widget').length, 1,
+                "there should be a div with widget class");
+            form.destroy();
+            delete widgetRegistry.map.test;
+        });
+
+        def1.resolve();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
@@ -7394,36 +7424,6 @@ QUnit.module('Views', {
         so writing a test that will always succeed is not useful.
          */
         assert.ok("Behavior can't be tested");
-    });
-
-    QUnit.test('asynchronous rendering of a widget tag', function (assert) {
-        assert.expect(1);
-
-        var def1 = $.Deferred();
-
-        var MyWidget = Widget.extend({
-            willStart: function() {
-                return def1;
-            },
-        });
-
-        widgetRegistry.add('test', MyWidget);
-
-        createAsyncView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                        '<widget name="test"/>' +
-                    '</form>',
-        }).then(function(form) {
-            assert.strictEqual(form.$('div.o_widget').length, 1,
-                "there should be a div with widget class");
-            form.destroy();
-            delete widgetRegistry.map.test;
-        });
-
-        def1.resolve();
     });
 });
 
