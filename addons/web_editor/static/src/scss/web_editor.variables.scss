@@ -230,8 +230,8 @@ $o-color-palette-number: 1;
 // Theme colors
 $o-theme-color-palettes: (
     (
-        primary: $o-enterprise-primary-color,
-        secondary: $o-enterprise-color,
+        alpha: $o-enterprise-primary-color,
+        beta: $o-enterprise-color,
         gamma: #5C5B80,
         delta: #5B899E,
         epsilon: #E46F78,
@@ -248,7 +248,13 @@ $o-transparent-grays: (
     white-50: rgba(white, 0.5),
     white-75: rgba(white, 0.75),
 ) !default;
-
+$o-gray-color-palettes: (
+    (
+        'white': #FFFFFF, // Those two will enforce the creation of bg-white
+        'black': #000000, // and bg-black classes.
+    ),
+) !default;
+$o-gray-color-palette-number: 1;
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;

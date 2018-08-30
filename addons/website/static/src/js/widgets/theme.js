@@ -62,6 +62,27 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $tabs = this.$('[data-toggle="tab"]');
         this.opened().then(function () {
             $tabs.eq(self.defaultTab).tab('show');
+
+            var $colorPreview = self.$('.o_theme_customize_color_previews:visible');
+            var $primary = $colorPreview.find('.o_theme_customize_color[data-color="primary"]');
+            var $alpha = $colorPreview.find('.o_theme_customize_color[data-color="alpha"]');
+            var $secondary = $colorPreview.find('.o_theme_customize_color[data-color="secondary"]');
+            var $beta = $colorPreview.find('.o_theme_customize_color[data-color="beta"]');
+            var sameAlphaPrimary = $primary.find('.o_color_preview').css('background-color') === $alpha.find('.o_color_preview').css('background-color');
+            var sameBetaSecondary = $secondary.find('.o_color_preview').css('background-color') === $beta.find('.o_color_preview').css('background-color');
+            if (!sameAlphaPrimary) {
+                $alpha.find('.o_color_name').text(_t("Extra Color"));
+                $primary.removeClass('d-none').addClass('d-flex');
+            }
+            if (!sameBetaSecondary) {
+                $beta.find('.o_color_name').text(_t("Extra Color"));
+                $secondary.removeClass('d-none').addClass('d-flex');
+            }
+            if (!sameAlphaPrimary && sameBetaSecondary) {
+                $beta.insertBefore($alpha);
+            } else if (sameAlphaPrimary && !sameBetaSecondary) {
+                $secondary.insertAfter($alpha);
+            }
         });
 
         // Hide the tab navigation if only one tab
@@ -153,6 +174,9 @@ var ThemeCustomizeDialog = Dialog.extend({
                             reload: $item.data('reload'),
                         }));
 
+                        $multiChoiceLabel.find('.o_theme_customize_color[data-color="primary"]').addClass('d-none').removeClass('d-flex');
+                        $multiChoiceLabel.find('.o_theme_customize_color[data-color="secondary"]').addClass('d-none').removeClass('d-flex');
+
                         if ($container.hasClass('form-row')) {
                             var $col = $('<div/>', {class: (icon ? 'col-4' : (colorPalette ? 'col-12' : 'col-6'))});
                             $col.append($multiChoiceLabel);
@@ -214,8 +238,8 @@ var ThemeCustomizeDialog = Dialog.extend({
             params: {
                 xml_ids: this._getXMLIDs(this.$inputs),
             },
-        }).done(function (data) {      
-            self.$inputs.prop('checked', false);      
+        }).done(function (data) {
+            self.$inputs.prop('checked', false);
             _.each(self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])'), function (input) {
                 var $input = $(input);
                 if (!_.difference(self._getXMLIDs($input), data[0]).length) {
@@ -454,7 +478,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var colorType = $color.data('colorType');
 
         var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: $color.find('span').css('background-color'),
+            defaultColor: $color.find('.o_color_preview').css('background-color'),
         });
         colorpicker.on('colorpicker:saved', this, function (ev) {
             ev.stopPropagation();
