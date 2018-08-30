@@ -235,40 +235,41 @@
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
             </div>
-            <div t-if="leads" class="card">
-                <table class="table table-hover">
-                    <thead>
-                        <tr class="active">
-                            <th class="col-2">Date</th>
-                            <th class="col-5">Name</th>
-                            <th>Contact Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="leads" t-as="lead">
-                            <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
-                            <td>
-                                <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
-                            </td>
-                            <td><span t-field="lead.contact_name" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div t-if="pager" class="o_portal_pager text-center">
-                <t t-call="website.pager"/>
-            </div>
+            <t t-if="leads" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="w-75">Name</th>
+                        <th>Contact Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="leads" t-as="lead">
+                        <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
+                        <td>
+                            <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
+                        </td>
+                        <td><span t-field="lead.contact_name" /></td>
+                    </tr>
+                </tbody>
+            </t>
         </t>
     </template>
 
     <template id="portal_my_opportunities" name="My Opportunities">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
-    
+
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">My Opportunities</t>
-                <li class="float-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-secondary navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
+
+                <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
+                    <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
+                        <i class="fa fa-plus"/> Create New
+                    </button>
+                </div>
             </t>
+
             <div class="modal fade modal_new_opp" role="form">
                 <div class="modal-dialog">
                     <form method="POST" class="modal-content js_website_submit_form new_opp_form">
@@ -303,37 +304,32 @@
                     There are no opportunities.
                 </div>
             </t>
-            <div class="card" t-if="opportunities">
-                <table class="table table-hover">
-                    <thead>
-                        <tr class="active">
-                            <th class="col-2">Date</th>
-                            <th class="col-lg-4">Name</th>
-                            <th class="col-lg-2">Expected</th>
-                            <th>Contact Name</th>
-                            <th>Stage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr t-foreach="opportunities" t-as="opp">
-                            <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
-                            <td>
-                                <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
-                            </td>
-                            <td>
-                                <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
-                            </td>
-                            <td><span t-field="opp.contact_name" /></td>
-                            <td>
-                                <span class="badge badge-primary" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div t-if="pager" class="o_portal_pager text-center">
-                <t t-call="website.pager"/>
-            </div>
+            <t t-if="opportunities" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Date</th>
+                        <th class="w-50">Name</th>
+                        <th>Contact</th>
+                        <th>Expected</th>
+                        <th>Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="opportunities" t-as="opp">
+                        <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
+                        <td>
+                            <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
+                        </td>
+                        <td><span t-field="opp.contact_name" /></td>
+                        <td>
+                            <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                        </td>
+                        <td>
+                            <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
         </t>
     </template>
 

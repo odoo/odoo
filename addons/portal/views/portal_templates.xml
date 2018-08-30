@@ -146,6 +146,17 @@
         </a>
     </template>
 
+    <template id="portal_table" name="My Portal Table">
+        <div t-attf-class="table-responsive border border-top-0 #{classes if classes else ''}">
+            <table class="table mb-0 o_portal_my_doc_table">
+                <t t-raw="0"/>
+            </table>
+        </div>
+        <div t-if="pager" class="o_portal_pager text-center">
+            <t t-call="portal.pager"/>
+        </div>
+    </template>
+
     <!--
         The search bar is composed of 2 buttons : a "filter by" and a "sort by". Changing the 'sortby'
         criteria will keep the number of page, query params, ... Changing the 'filterby' param will
