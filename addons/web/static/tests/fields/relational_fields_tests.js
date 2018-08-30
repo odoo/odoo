@@ -13404,8 +13404,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.module('TabNavigation');
-
-    QUnit.test('when Navigating to a many to one with tabs, it receives the focus on the add new line link', function (assert) {
+    QUnit.test('when Navigating to a many2one with tabs, it receives the focus and adds a new line', function (assert) {
          assert.expect(3);
 
         var form = createView({
@@ -13441,9 +13440,9 @@ QUnit.module('relational_fields', {
             which: $.ui.keyCode.TAB,
             keyCode: $.ui.keyCode.TAB,
         }));
-        assert.strictEqual(assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add>a')[0],
+        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
                             document.activeElement,
-                            "after tab, the focus should be on the many2one on the add new line"));
+                            "after tab, the focus should be on the many2one on the first input of the newly added line"));
 
         form.destroy();
     });
@@ -13551,7 +13550,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('when Navigating to a many to one with tabs, editing in a popup, the popup should receive the focus then give it back', function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         this.data.partner.records[0].turtles = [];
 
@@ -13596,18 +13595,9 @@ QUnit.module('relational_fields', {
             keyCode: $.ui.keyCode.TAB,
         }));
 
-        assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add a')[0],
-            document.activeElement,
-            "after tab, the focus should be on the add new line link");
-
-        form.$el.find('.o_field_x2many_list_row_add a').trigger($.Event('keydown', {
-            which: $.ui.keyCode.ENTER,
-            keyCode: $.ui.keyCode.ENTER,
-        }));
-
         assert.strictEqual($.find('input[name="turtle_foo"]')[0],
             document.activeElement,
-            "after enter, the focus should be in the popup, in the first input field");
+            "when the one2many received the focus, the popup should open because it automatically adds a new line");
 
         $('input[name="turtle_foo"]').trigger($.Event('keydown', {
             which: $.ui.keyCode.ESCAPE,
@@ -13618,7 +13608,7 @@ QUnit.module('relational_fields', {
             document.activeElement,
             "after escape, the focus should be back on the add new line link");
 
-        form.destroy();
+       form.destroy();
     });
 
     QUnit.test('navigating through an editable list with custom controls [REQUIRE FOCUS]', function (assert) {

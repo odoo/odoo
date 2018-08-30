@@ -906,8 +906,10 @@ var FieldX2Many = AbstractField.extend({
 
     /**
      * @override
+     * @param {Object|undefined} [options={}]
+     * @param {boolean} [options.noAutomaticCreate=false]
      */
-    activate: function () {
+    activate: function (options) {
         if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
             return false;
         }
@@ -915,7 +917,11 @@ var FieldX2Many = AbstractField.extend({
             this.$buttons.find(".o-kanban-button-new").focus();
         }
         if (this.view.arch.tag === 'tree') {
-            this.renderer.$('.o_field_x2many_list_row_add a:first').focus();
+            if (options && options.noAutomaticCreate) {
+                this.renderer.$('.o_field_x2many_list_row_add a:first').focus();
+            } else {
+                this.renderer.$('.o_field_x2many_list_row_add a:first').click();
+            }
         }
         return true;
     },
