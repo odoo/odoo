@@ -50,6 +50,8 @@ var PieChart = Widget.extend({
 
             this.groupByField = this.record.fields[this.groupBy];
             this.groupByType = this.groupByField.type;
+
+            this.labels = node.attrs.modifiers.labels ? _.map(node.attrs.modifiers.labels.split(','), _t) : [];
         }
     },
     /**
@@ -83,7 +85,11 @@ var PieChart = Widget.extend({
 
                             switch (self.groupByType) {
                                 case 'boolean':
-                                    label = ['False', 'True'][i];
+                                    var labels = ['False', 'True'];
+                                    if (!_.isEmpty(self.labels)) {
+                                        labels = self.labels;
+                                    }
+                                    label = labels[i];
                                     break;
                                 case 'many2one':
                                     label =  result[i][groupby][1];
