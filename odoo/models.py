@@ -5251,7 +5251,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
-                if result.get('warning'):
+                if result.get('warning') and \
+                        (result['warning'].get('title') != res['warning'].get('title') or \
+                         result['warning'].get('message') != res['warning'].get('message')):
                     # Concatenate multiple warnings
                     warning = result['warning']
                     warning['message'] = '\n\n'.join(s for s in [
