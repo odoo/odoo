@@ -427,7 +427,19 @@ class HolidaysRequest(models.Model):
             if self.env.context.get('short_name'):
                 res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
             else:
-                res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days)))
+                if leave.holiday_type == 'company':
+                    target = leave.mode_company_id.name
+                elif leave.holiday_type == 'department':
+                    target = leave.department_id.name
+                elif leave.holiday_type == 'category':
+                    target = leave.category_id.name
+                else:
+                    target = leave.employee_id.name
+                res.append(
+                    (leave.id,
+                     _("%s on %s :%.2f day(s)") %
+                     (target, leave.holiday_status_id.name, leave.number_of_days))
+                )
         return res
 
     @api.multi
