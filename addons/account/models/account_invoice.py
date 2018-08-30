@@ -1608,6 +1608,10 @@ class AccountInvoiceLine(models.Model):
         if not self.uom_id:
             self.price_unit = 0.0
         if self.product_id and self.uom_id:
+            # Update unit price based on UoM
+            if self.uom_id != self.product_id.uom_id:
+                self.price_unit = self.product_id.uom_id._compute_price(self.price_unit, self.uom_id)
+
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
                     'title': _('Warning!'),
