@@ -1,1 +1,1 @@
-# from . import test_shop_sale_coupon
+from . import test_shop_sale_coupon
