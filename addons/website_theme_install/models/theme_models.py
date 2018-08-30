@@ -63,11 +63,12 @@ class Theme(models.AbstractModel):
     _auto = False
 
     def _post_copy(self, mod):
+        website = self.env['website'].get_current_website()
         theme_post_copy = '_%s_post_copy' % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self, theme_post_copy)
-            return method()
+            method = getattr(self.with_context(website_id=website.id), theme_post_copy)
+            return method(mod)
 
 
 class IrUiView(models.Model):
