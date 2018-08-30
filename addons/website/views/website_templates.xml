@@ -1136,9 +1136,11 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
       <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
       <tr t-att-style='not final_page and "color:#999"'>
           <td>
+            <t groups="website.group_multi_website">
               <t t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id'><i class="fa fa-level-up fa-rotate-90 ml32 mr4"></i></t>
-              <i t-else="1" class="fa fa-globe mr4" t-att-style='specific_page and "visibility:hidden;"' />
-              <i t-if="page.is_homepage" class="fa fa-home" title="Home"></i> <span t-esc="page.name"/>
+              <i t-else="1" class="fa fa-globe mr4" t-att-style='specific_page and "visibility:hidden;"'/>
+            </t>
+            <i t-if="page.is_homepage" class="fa fa-home" title="Home"></i> <span t-esc="page.name"/>
           </td>
           <td><a t-if='final_page' t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
           <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>

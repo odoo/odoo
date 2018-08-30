@@ -213,7 +213,7 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
-    def pages_management(self, page=1, sortby='name', search='', **kw):
+    def pages_management(self, page=1, sortby='url', search='', **kw):
         # only website_designer should access the page Management
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
@@ -224,14 +224,14 @@ class Website(Home):
             'name': {'label': _('Sort by Name'), 'order': 'name'},
         }
         # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'name')['order'] + ', website_id desc'
+        sort_order = searchbar_sortings.get(sortby, 'url')['order'] + ', website_id desc, id'
 
         domain = request.website.website_domain()
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
         pages = Page.search(domain, order=sort_order)
-        if sortby != 'url':
+        if sortby != 'url' or not request.env.user.has_group('website.group_multi_website'):
             pages = pages.filtered(pages._is_most_specific_page)
         pages_count = len(pages)
 
