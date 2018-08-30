@@ -223,6 +223,20 @@ class PurchaseOrder(models.Model):
             return 'purchase.mt_rfq_done'
         return super(PurchaseOrder, self)._track_subtype(init_values)
 
+    @api.multi
+    @api.onchange('date_order')
+    def _onchange_date_order(self):
+        for order in self.filtered(
+                lambda o: o.state == 'draft'):
+            for line in order.order_line.filtered(
+                    lambda l: not l.procurement_ids):
+                seller = line.product_id._select_seller(
+                    partner_id=line.partner_id, quantity=line.product_qty,
+                    date=line.order_id.date_order and line.order_id.date_order[
+                                                      :10],
+                    uom_id=line.product_uom)
+                line.date_planned = line._get_date_planned(seller)
+
     @api.onchange('partner_id', 'company_id')
     def onchange_partner_id(self):
         if not self.partner_id:
