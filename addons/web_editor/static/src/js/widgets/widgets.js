@@ -1164,7 +1164,7 @@ var MediaDialog = Dialog.extend({
                 self.$media = self.$media.parent();
                 self.media = self.$media[0];
                 tabToShow = 'video';
-            } 
+            }
             self.$('[href="#editor-media-' + tabToShow + '"]').tab('show');
         });
 
@@ -1456,6 +1456,21 @@ var LinkDialog = Dialog.extend({
             var match = /mailto:(.+)/.exec(this.data.url);
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
         }
+
+        // Hide the duplicate color buttons (most of the times, primary = alpha
+        // and secondary = beta for example but this may depend on the theme)
+        this.opened().then(function () {
+            var colors = [];
+            _.each(self.$('.o_btn_preview'), function (btn) {
+                var $btn = $(btn);
+                var color = $btn.css('background-color');
+                if (_.contains(colors, color)) {
+                    $btn.remove();
+                } else {
+                    colors.push(color);
+                }
+            });
+        });
 
         this._adaptPreview();
 

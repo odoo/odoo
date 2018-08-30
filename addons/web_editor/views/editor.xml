@@ -69,7 +69,6 @@
 <template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden_backend.scss"/>
     </xpath>
 </template>
 
@@ -154,8 +153,8 @@
 <template id="web_editor.colorpicker" name="Color-Picker">
     <colorpicker>
         <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
-            <button data-color="primary"></button>
-            <button data-color="secondary"></button>
+            <button data-color="alpha"></button>
+            <button data-color="beta"></button>
             <button data-color="gamma"></button>
             <button data-color="delta"></button>
             <button data-color="epsilon"></button>

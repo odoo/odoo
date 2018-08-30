@@ -8,14 +8,14 @@
 $-palette-1: nth($o-color-palettes, 1);
 $o-color-palettes: append($o-color-palettes, map-merge($-palette-1, o-map-omit($o-user-color-palette)));
 
-// Generate default theme color scheme if primary is set
-$-primary: map-get($o-user-theme-color-palette, 'primary');
-@if ($-primary) {
+// Generate default theme color scheme if alpha is set
+$-alpha: map-get($o-user-theme-color-palette, 'alpha');
+@if ($-alpha) {
     $o-user-theme-color-palette: map-merge($o-user-theme-color-palette, map-merge((
-        secondary: lighten(desaturate($-primary, 60%), 30%),
-        gamma: desaturate(adjust-hue($-primary, -45deg), 10%),
-        delta: desaturate(adjust-hue($-primary, 45deg), 10%),
-        epsilon: desaturate(adjust-hue($-primary, 180deg), 10%),
+        beta: lighten(desaturate($-alpha, 60%), 30%),
+        gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
+        delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
     ), o-map-omit($o-user-theme-color-palette)));
 }
 

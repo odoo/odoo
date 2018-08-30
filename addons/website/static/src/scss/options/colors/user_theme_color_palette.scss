@@ -1,15 +1,20 @@
 
 $o-user-theme-color-palette: map-merge((
     // Theme colors
-    primary: null,
-    secondary: null,
+    alpha: null,
+    beta: null,
     gamma: null,
     epsilon: null,
     delta: null,
+
+    // Depending on the theme, alpha and beta may not be equal to
+    // primary and secondary
+    primary: null,
+    secondary: null,
 
     // BS state colors
     success: null,
     info: null,
     warning: null,
-    danger: null,    
+    danger: null,
 ), o-map-omit($o-user-theme-color-palette));

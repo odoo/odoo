@@ -29,7 +29,7 @@
             <div t-if="colorPalette" class="o_theme_customize_color_previews" t-att-data-depends="id">
                 <div>
                     <h6>Main colors</h6>
-                    <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'gamma': _t('Extra Color 1'), 'delta': _t('Extra Color 2'), 'epsilon': _t('Extra Color 3')}" t-as="color">
+                    <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'alpha': _t('Primary'), 'beta': _t('Secondary'), 'gamma': _t('Extra Color'), 'delta': _t('Extra Color'), 'epsilon': _t('Extra Color')}" t-as="color">
                         <t t-call="website.theme_customize_color_palette_button">
                             <t t-set="color_type" t-value="'theme'"/>
                         </t>
@@ -66,7 +66,7 @@
             t-attf-class="btn btn-sm btn-secondary d-flex align-items-center w-100 mt-2 justify-content-between o_theme_customize_color o_theme_customize_color_#{color}"
             t-att-data-color="color"
             t-att-data-color-type="color_type">
-            <t t-esc="color_value"/>
+            <span class="o_color_name"><t t-esc="color_value"/></span>
             <span t-attf-class="o_color_preview bg-#{color}"/>
         </button>
     </t>
