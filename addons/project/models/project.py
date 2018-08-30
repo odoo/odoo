@@ -472,9 +472,10 @@ class Task(models.Model):
 
     def _compute_attachment_ids(self):
         for task in self:
-            attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
-            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
-            task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
+            message_attachments = task.message_ids.mapped('attachment_ids')  # from mail_thread
+            task.attachment_ids = self.env['ir.attachment'].search([
+                ('res_id', '=', task.id), ('res_model', '=', 'project.task'),
+                ('id', 'not in', message_attachments.ids)])
 
     @api.multi
     @api.depends('create_date', 'date_end', 'date_assign')
