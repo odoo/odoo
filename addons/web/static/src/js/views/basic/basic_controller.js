@@ -180,11 +180,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
         var self = this;
-        return this.mutex
-            .exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle))
-            .then(function () {
-                return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
-            });
+        return this.renderer.commitChanges(recordID || this.handle).then(function () {
+            return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
+        });
     },
     /**
      * @override
