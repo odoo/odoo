@@ -1855,7 +1855,7 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     systems without *explicitly* going through XML-RPC or JSON-RPC, such as:
 
     * https://github.com/akretion/ooor
-    * https://github.com/syleam/openobject-library
+    * https://github.com/OCA/odoorpc
     * https://github.com/nicolas-van/openerp-client-lib
     * http://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib

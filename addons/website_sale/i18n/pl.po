@@ -17,13 +17,15 @@
 # Bartłomiej Maliński <bartlomiej.malinski@gmail.com>, 2017
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Paweł Wodyński <pw@myodoo.pl>, 2018
+# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 14:34+0000\n"
 "PO-Revision-Date: 2017-11-30 14:34+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"Last-Translator: Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -576,6 +578,8 @@ msgid ""
 "<strong>Key features, emotional and commercial content</strong><br/>\n"
 "                            Recommended for at least your top products, because it may have a big impact on your sales and conversion rates."
 msgstr ""
+"<strong>Najważniejsze cechy, treści emocjonalne i komercyjne</strong><br/>\n"
+"                            Zalecane przynajmniej dla najlepszych produktów, ponieważ może to mieć duży wpływ na sprzedaż i współczynnik konwersji."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -683,6 +687,8 @@ msgid ""
 "<strong>Value proposition:</strong> what’s the end-benefit of this product "
 "and who is it for?"
 msgstr ""
+"<strong>Propozycja wartości:</strong> jaka jest końcowa korzyść tego "
+"produktu i dla kogo jest przeznaczona?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -696,6 +702,10 @@ msgid ""
 "This should the country in which your company is headquartered or the "
 "country from which you operate your web site and mobile app."
 msgstr ""
+"<b>Obowiązujące prawo</b> poinformuje użytkowników o tym, które przepisy "
+"regulują umowę. Powinien to być kraj, w którym znajduje się siedziba Twojej "
+"firmy, lub kraj, w którym prowadzisz swoją witrynę internetową i aplikację "
+"mobilną."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -705,6 +715,11 @@ msgid ""
 "be part of a very long and thorough list in your Terms and Conditions "
 "agreements so as to encompass the most amount of negative uses."
 msgstr ""
+"<b>Ograniczenie, co użytkownicy mogą zrobić</b>, może poinformować "
+"użytkowników, że zgadzając się na korzystanie z usługi, zgadzają się również"
+" nie robić pewnych rzeczy. Może to być częścią bardzo długiej i szczegółowej"
+" listy w umowach warunków, aby objąć największą liczbę negatywnych "
+"zastosowań."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -715,6 +730,11 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
+"Klauzula <b>Linki do innych witryn internetowych</b> informuje użytkowników,"
+" że nie odpowiadasz za witryny internetowe stron trzecich, do których "
+"prowadzą linki. Tego rodzaju klauzula zazwyczaj informuje użytkowników, że "
+"są oni odpowiedzialni za przeczytanie i wyrażenie zgody (lub nie zgadzając "
+"się) z Warunkami i Politykami prywatności tych stron trzecich."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -724,6 +744,10 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
+"Klauzula <b>wypowiedzenia</b> poinformuje, że konta użytkowników w Twojej "
+"witrynie i aplikacji mobilnej lub dostęp użytkowników do Twojej witryny i "
+"telefonu komórkowego (jeśli użytkownicy nie mogą mieć konta) mogą zostać "
+"usunięte w przypadku nadużyć lub według własnego uznania."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -742,7 +766,7 @@ msgstr ""
 #. module: website_sale
 #: selection:website.config.settings,sale_pricelist_setting_split_1:0
 msgid "A single sales price per product"
-msgstr ""
+msgstr "Pojedyncza cena sprzedaży za produkt"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandonned_orders
@@ -848,6 +872,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
+"Pozwala ustalać różne ceny na podstawie reguł dla poszczególnych kategorii klientów.\n"
+"Przykład: 10% dla kupców detalicznych, promocja 5 EUR na ten produkt, etc."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_alternative_product_ids
@@ -1480,6 +1506,18 @@ msgid ""
 "will respond to any DMCA take down notices received and you will take down "
 "the content."
 msgstr ""
+"Jeśli Twoja witryna lub aplikacje mobilne pozwalają użytkownikom tworzyć "
+"treści i udostępniać je publicznie innym użytkownikom, sekcja <b>Treść</b> "
+"poinformuje użytkowników o tym, że są właścicielami praw do utworzonych "
+"przez siebie treści.<br/>Klauzula \"Treść\" zwykle wspomina, że użytkownicy "
+"muszą Ci podać (programista strony internetowej lub aplikacji mobilnych) "
+"licencję, dzięki czemu możesz udostępniać te treści w swojej witrynie / "
+"aplikacji mobilnej i udostępniać ją innym użytkownikom. <br/>Ponieważ treści"
+" tworzone przez użytkowników są publicznie dostępne dla innych użytkowników,"
+" klauzula o naruszeniu DMCA (lub Naruszenie praw autorskich) jest pomocna w "
+"informowaniu użytkowników i autorów praw autorskich, że jeśli jakakolwiek "
+"treść zostanie uznana za naruszenie praw autorskich, odpowiesz na wszelkie "
+"otrzymane powiadomienia o naruszeniu DMCA, a Ty usuniesz te treści."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_image
@@ -2192,7 +2230,7 @@ msgstr "Zamówienie sprzedaży"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_pricelist_setting_split_2
 msgid "Sales Price"
-msgstr ""
+msgstr "Cena sprzedaży"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2642,6 +2680,9 @@ msgid ""
 "contents, logo and other visual media you created is your property and is "
 "protected by copyright laws."
 msgstr ""
+"Ujawnienie <b>własności intelektualnej</b> poinformuje użytkowników, że "
+"zawartość, logo i inne wizualne media, które stworzyłeś, są twoją własnością"
+" i są chronione prawem autorskim."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3051,17 +3092,17 @@ msgstr "dostępność produktu (w magazynie, niedostępne itp.)"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
 msgid "product.image"
-msgstr ""
+msgstr "product.image"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
 msgid "product.style"
-msgstr ""
+msgstr "product.style"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3076,7 +3117,7 @@ msgstr "Regulamin"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "use Odoo API to import through scripts"
-msgstr ""
+msgstr "Użyj API Odoo do importowania za pośrednictwem skryptów"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id

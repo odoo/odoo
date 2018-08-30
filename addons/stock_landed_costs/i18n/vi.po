@@ -4,17 +4,18 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # son dang <son.dang@doda100.com>, 2016
 # Phạm Lân <phamquanglan@gmail.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>, 2016\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "Landed Cost Thêm"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Theo Giá vốn Hiện tại (tính đến lúc phân bổ landed cost)"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -83,12 +84,12 @@ msgstr "Đã hủy"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Bấm để tạo mới một landed cost."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Bấm để định nghĩa một loại landed cost mới."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -118,6 +119,7 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Chi phí và các dòng phân bổ không khớp. Bạn nên tính toán lại landed cost."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -186,6 +188,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Bằng: Chi phí sẽ được chia đều.\n"
+"Theo Số lượng: Chi phí sẽ được chia theo số lượng sản phẩm.\n"
+"Theo chi phí hiện hành: Chi phí sẽ được chia theo chi phí sản phẩm tính đến hiện tại.\n"
+"Theo Khối lượng: Chi phí sẽ được chia phụ thuộc vào khối lượng hàng hoá.\n"
+"Theo Dung tích: Chi phí sẽ được chia theo dùng tích hàng hoá."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -238,7 +245,7 @@ msgstr "Landed Cost"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Tên Landed Cost"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -259,7 +266,7 @@ msgstr "Landed Costs"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Landed cost được tính toán dựa trên đơn vị đo lường mua hàng."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -304,12 +311,14 @@ msgstr "Tên"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Không thấy dòng điều chỉnh/phân bổ giá trị nào cả. Bạn nên tính toán lại "
+"landed cost."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Chỉ có các landed cost dự thảo mới có thể được xác nhận"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -399,6 +408,10 @@ msgid ""
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
+"Lô hàng nhận không chứa bất kỳ dịch chuyển nào mà có thể bị tác động bởi chi"
+" phí nhập kho. Chi phí nhập kho chỉ khả thi đối với sản phẩm được cấu hình "
+"để định giá theo thời gian thực với phương pháp giá vốn thực tế. Hãy xem xem"
+" có đúng trường hợp này không, hoặc bạn đã chọn đúng lô hàng chưa"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -417,6 +430,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Các chi phí nhập kho đã xác nhận không thể bị huy, nhưng bạn có thể tạo chi "
+"phí nhập kho khác với giá trị âm để đảo ngược chúng"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

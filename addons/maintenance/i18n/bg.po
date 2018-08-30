@@ -3,11 +3,12 @@
 # * maintenance
 # 
 # Translators:
-# kalatchev <kalatchev@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# kalatchev, 2016
+# Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2016
-# Anton Vassilev <anton.vasilev@gmail.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# Anton Vassilev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
@@ -67,6 +68,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Речник Python, който ще бъде оценен, за да предоставя стойности по "
+"подразбиране при създаването на нови записи за този alias."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -87,7 +90,7 @@ msgstr "Синоним"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Защита на контакт-синоним"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_name
@@ -133,18 +136,18 @@ msgstr "Категория активи"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Assign To User"
-msgstr "Присвояване на потребител"
+msgstr "Разпределете към потребител"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Assigned"
-msgstr "Присвоено"
+msgstr "Разпределен/определен"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_assign_date
 msgid "Assigned Date"
-msgstr "Дата на присвояване"
+msgstr "Дата на разпределение"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -390,7 +393,7 @@ msgstr "Оборудване"
 #: model:mail.message.subtype,name:maintenance.mt_cat_mat_assign
 #: model:mail.message.subtype,name:maintenance.mt_mat_assign
 msgid "Equipment Assigned"
-msgstr "Присвоено оборудване "
+msgstr "Разпределено оборудване"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_category_action
@@ -757,6 +760,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Политика за публикуване на съобщение в документа чрез пощенската кутия.\n"
+"- всеки: всеки може да публикува\n"
+"- контрагенти: само удостоверени контрагенти\n"
+"- последователи: само последователи на свързан документ или членове на следващите канали\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -929,12 +936,12 @@ msgstr ""
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
-msgstr ""
+msgstr "Етапът променен"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_partner_id
 msgid "Subcontracting Partner"
-msgstr ""
+msgstr "Контрагент за подизпълнение"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1056,7 +1063,7 @@ msgstr "Най-важни приоритети"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Unassigned"
-msgstr "Незаето"
+msgstr "Неразпределен"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1089,7 +1096,7 @@ msgstr "Доставчик"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_partner_ref
 msgid "Vendor Reference"
-msgstr ""
+msgstr "Референция за доставчик"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0

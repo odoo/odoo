@@ -282,6 +282,19 @@ class Users(models.Model):
         if any(user.company_ids and user.company_id not in user.company_ids for user in self):
             raise ValidationError(_('The chosen company is not in the allowed companies for this user'))
 
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        super(Users, self)._read_from_database(field_names, inherited_field_names)
+        canwrite = self.check_access_rights('write', raise_exception=False)
+        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(field_names):
+            for record in self:
+                for f in USER_PRIVATE_FIELDS:
+                    try:
+                        record._cache[f]
+                        record._cache[f] = '********'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass
+
     @api.multi
     @api.constrains('action_id')
     def _check_action_id(self):
@@ -299,19 +312,7 @@ class Users(models.Model):
                 # safe fields only, so we read as super-user to bypass access rights
                 self = self.sudo()
 
-        result = super(Users, self).read(fields=fields, load=load)
-
-        canwrite = self.env['ir.model.access'].check('res.users', 'write', False)
-        if not canwrite:
-            def override_password(vals):
-                if (vals['id'] != self._uid):
-                    for key in USER_PRIVATE_FIELDS:
-                        if key in vals:
-                            vals[key] = '********'
-                return vals
-            result = map(override_password, result)
-
-        return result
+        return super(Users, self).read(fields=fields, load=load)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -679,7 +680,7 @@ class UsersImplied(models.Model):
             for user in self.with_context({}):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
-                super(UsersImplied, self).write(vals)
+                super(UsersImplied, user).write(vals)
         return res
 
 #

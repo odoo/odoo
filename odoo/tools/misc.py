@@ -19,6 +19,7 @@ import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
 from cStringIO import StringIO
@@ -1176,10 +1177,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_objs = env['res.lang'].search([('code', '=', lang)])
-    if not lang_objs:
-        lang_objs = env['res.lang'].search([], limit=1)
-    lang_obj = lang_objs[0]
+    lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1217,3 +1215,23 @@ class Pickle(object):
     dump = cPickle.dump
 
 pickle = Pickle
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

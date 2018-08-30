@@ -3,10 +3,11 @@
 # * marketing_campaign
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
-# kalatchev <kalatchev@gmail.com>, 2016
+# kalatchev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -69,6 +70,10 @@ msgid ""
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
+"Дадена кампания може да притежава множество дейности като изпращане на имейл, принтиране\n"
+"            на писмо, определяне на екип и т.н. Тези дейности се отключват в специфични ситуации\n"
+"            в специфични ситуации; форма на контакт, 10 дни след първия\n"
+"            контакт, ако лийдът все още не е затворен и т.н."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -255,12 +260,12 @@ msgstr "Условие"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Честито! Сега вече сте сребърен контрагент!"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Честито! Сега вече сте един от нашите златни контрагенти!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:385
@@ -366,7 +371,7 @@ msgstr "Готов"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:127
@@ -464,6 +469,11 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Филтрирайте, за да изберете съвпадащите записи на ресурси, принадлежащи на "
+"този сегмент. Новите филтри могат да се създават и запазват посредством "
+"разширено търсене в изгледа със списъка на ресурсите. Ако не е зададен "
+"никакъв филтър, всички записи са избрани без филтриране. Режимът на "
+"синхронизиране също може да добави критерий към филтъра."
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -534,6 +544,15 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Ако е зададено, това поле ще помогне на сегментите, работещи в режим \"без "
+"дубликати\" да избягват избора на подобни записи два пъти. Сходните записи "
+"представляват записи, които имат еднаква стойност за това уникално поле. "
+"Например, като изберете полето \"email_from\" за CRM лийдове, ще "
+"предотвратите повторното изпращане на същата кампания на същия имейл адрес. "
+"Ако не е зададено, сегментите \"без дубликати\" само ще избягват да избират "
+"повторно същия запис, ако са били въведени в кампанията предварително. Могат"
+" да се използват само лесно съпоставимите полета като текстови полета, цели "
+"числа, селекции или единични връзки."
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -616,7 +635,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
-msgstr ""
+msgstr "Автоматизация на лийдове"
 
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
@@ -762,6 +781,9 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Маркетинг компанията на Odoo Ви позволява да автоматизирате комуникацията\n"
+"            към изгледите Ви. Можете да определите сегмент (набор от условия) на\n"
+"            лийдовете и контрагентите си, за да осъществите кампанията си."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -782,17 +804,17 @@ msgstr "Изходящи преходи"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
-msgstr ""
+msgstr "Поле на контрагент"
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr "Партньори"
+msgstr "Контрагенти"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -842,7 +864,7 @@ msgstr "Справки"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Reset"
-msgstr "Изчистване"
+msgstr "Пренастройване"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_res_id
@@ -932,7 +954,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Set to Draft"
-msgstr "Пращане в проект"
+msgstr "Върнете в чернова"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_signal
@@ -1056,6 +1078,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Създадените работни редове ще бъдат съединени към контрагент, свързан със "
+"записа. Ако записът е самият контрагент, оставете това поле празно. Това е "
+"полезно за за целите на отчитането чрез изгледите 'Анализ на кампания' или "
+"'Последваща кампания'."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1122,7 +1148,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "Добре дошли в канала за контрагенти на Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1132,7 +1158,7 @@ msgstr "С ръчно потвърждение"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Workitems"
-msgstr "Задачи"
+msgstr "Работни редове"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0

@@ -187,8 +187,8 @@
                         </button> 
                     </div>
                     <div class="oe_title">
-                        <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent','bid'))]}"/>
-                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent','bid'))]}"/>
+                        <label string="Request for Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
@@ -405,7 +405,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="context">{'search_default_todo':1}</field>
-            <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
+            <field name="domain">[('state','in',('draft','sent','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
@@ -431,7 +431,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
-            <field name="domain">[('state','not in',('draft','sent','bid', 'confirmed'))]</field>
+            <field name="domain">[('state','not in',('draft','sent', 'confirmed'))]</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2016
 # kalatchev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Anton Vassilev, 2016
@@ -109,6 +110,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Речник Python, който ще бъде оценен, за да предоставя стойности по "
+"подразбиране при създаването на нови записи за този alias."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
@@ -138,7 +141,7 @@ msgstr "Синоним"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Защита на контакт-синоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
@@ -277,7 +280,7 @@ msgstr "Архивирани"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
 msgid "Assigned"
-msgstr "Присвоено"
+msgstr "Разпределен/определен"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
@@ -381,7 +384,7 @@ msgstr "Индекс на Цветовете."
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_company_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -524,6 +527,9 @@ msgid ""
 "            qualification call, first interview, second interview, refused,\n"
 "            hired."
 msgstr ""
+"Определете тук етапите си от процеса по набиране на персонал, например:\n"
+"            разговор за квалификацията, първо интервю, второ интервю, отхвърлен,\n"
+"            нает."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1016,7 +1022,7 @@ msgstr "Следващо действие"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_action
 msgid "Next Action Date"
-msgstr ""
+msgstr "Дата на следващо действие"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1123,7 +1129,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1138,6 +1144,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Политика за публикуване на съобщение в документа чрез пощенската кутия.\n"
+"- всеки: всеки може да публикува\n"
+"- контрагенти: само удостоверени контрагенти\n"
+"- последователи: само последователи на свързан документ или членове на следващите канали\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
@@ -1516,7 +1526,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Unassigned"
-msgstr "Незаето"
+msgstr "Неразпределен"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1597,7 +1607,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "e.g. Call for interview"
-msgstr ""
+msgstr "напр. разговор за интервю"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

@@ -12,13 +12,14 @@
 # Anna Maglia <angiolettachit92@gmail.com>, 2016
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2017
 # Alberto Carollo <baba75@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Alberto Carollo <baba75@gmail.com>, 2018\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,12 +43,12 @@ msgstr "Regola Azione"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Test di Linea di Regola d'Azione"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Test di Regola d'Azione"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -84,7 +85,7 @@ msgstr "Azioni automatiche"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Basato su una Modifica nel Modulo"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -94,7 +95,7 @@ msgstr "Basato su condizione temporale"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Dominio Prima dell'Aggiornamento"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -124,7 +125,7 @@ msgstr "Chiuso"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Lista di campi, separati da virgole, che attivano l'evento onchange."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -167,6 +168,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Termine dopo la data di attivazione.\n"
+"                                    Puoi anche mettere un numero negativo se hai bisogno di un termine prima\n"
+"                                    della data di attivazione: ad esempio, inviare una promemoria 15 minuti prima di una riunione."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_range
@@ -304,7 +308,7 @@ msgstr "Ultima modifica il"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_last_run
 msgid "Last run"
-msgstr ""
+msgstr "Ultima esecuzione"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
@@ -344,7 +348,7 @@ msgstr "Nuovo"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Attivatore delle Modifiche sui Campi"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -359,7 +363,7 @@ msgstr "Su creazione e aggiornamento"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "All'Eliminazione"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -507,6 +511,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Attivazione della condizione\n"
+"                                  Se il campo è compilato, il valore sarà controllato dal pianificatore. Se il campo è vuoto, il valore sarà controllato durante la creazione e l'aggiornamento. "
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_kind

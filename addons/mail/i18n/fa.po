@@ -9,7 +9,7 @@
 # elaheh pourrezaie <elaheh.pourrezaie@hotmail.com>, 2016
 # Sepehr Khoshnood <sepehr.kho@gmail.com>, 2016
 # Morovat Guivi <tarjomac@gmail.com>, 2016
-# ifaraz ir <ifarazir@gmail.com>, 2016
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2016
 # arya sadeghy <aryasadeghy@gmail.com>, 2016
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
 # mohammad azarbara <mohammadazarbara98@gmail.com>, 2017
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: mail
 #: model:mail.template,body_html:mail.mail_template_data_notification_email_default
@@ -120,7 +120,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr ""
+msgstr "این کانال مخفی است. افراد باید دعوت شوند تا به گفتگو بپیوندند."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -136,7 +136,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:66
 #, python-format
 msgid "%d Messages"
-msgstr ""
+msgstr "%d پیامها"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:226
@@ -161,7 +161,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:94
 #, python-format
 msgid "(from"
-msgstr ""
+msgstr "(از"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_shortcode_type
@@ -204,6 +204,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">ایجاد شده <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:473
@@ -213,6 +215,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">پیوسته است <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:168
@@ -221,6 +225,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">ترک کرد <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -320,6 +326,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"یک دیکشنری پایتون که برای فراهم کردن مقادیر پیشفرض هنگام ایجاد رکوردهای جدید"
+" برای این نام مستعار مورد  ارزیابی قرار می‌گیرد."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -331,7 +339,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "گروه‌های حق دسترسی"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_needaction
@@ -411,7 +419,7 @@ msgstr "فعال"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_active_domain
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "دامنه فعال"
 
 #. module: mail
 #. openerp-web
@@ -425,7 +433,7 @@ msgstr "افزودن"
 #: code:addons/mail/static/src/xml/followers.xml:65
 #, python-format
 msgid "Add Channels"
-msgstr ""
+msgstr "افزودن کانالها"
 
 #. module: mail
 #. openerp-web
@@ -433,13 +441,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr ""
+msgstr "اضافه کردن فالوور"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
 #: model:ir.model.fields,field_description:mail.field_mail_template_user_signature
 msgid "Add Signature"
-msgstr ""
+msgstr "افزودن امضادء"
 
 #. module: mail
 #. openerp-web
@@ -447,7 +455,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:56
 #, python-format
 msgid "Add a channel"
-msgstr ""
+msgstr "افزودن یک کانال"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -463,7 +471,7 @@ msgstr "افزودن تماس ها برای درجریان قرار دادن..."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_partner_ids
 msgid "Additional Contacts"
-msgstr ""
+msgstr "مخاطبان اضافی"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -483,7 +491,7 @@ msgstr "تنظیمات پیشرفته"
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_form
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Alias"
-msgstr ""
+msgstr "نام مستعار"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_contact
@@ -491,39 +499,39 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_contact
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "مستعار تماس امنیتی"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "نام مستعار دامنه"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "نام مستعار"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "دامین مستعار"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "مدل استعاری"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
 #: model:ir.ui.menu,name:mail.mail_alias_menu
 msgid "Aliases"
-msgstr ""
+msgstr "مستعارها"
 
 #. module: mail
 #. openerp-web
@@ -542,7 +550,7 @@ msgstr "همه پیام ها"
 #: code:addons/mail/static/src/js/chat_manager.js:195
 #, python-format
 msgid "Anonymous"
-msgstr ""
+msgstr "گمنام"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_no_auto_thread
@@ -558,7 +566,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_model_id
 msgid "Applies to"
-msgstr ""
+msgstr "اعمال می‌شود به"
 
 #. module: mail
 #. openerp-web
@@ -631,7 +639,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "آواتار نویسنده"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -710,7 +718,7 @@ msgstr "لغو شد"
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Canned Response"
-msgstr ""
+msgstr "جواب از پیش آماده"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
@@ -755,7 +763,7 @@ msgstr "کانال"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "نوع کانال"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
@@ -792,12 +800,12 @@ msgstr ""
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "چت"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "بحث چت"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -1169,12 +1177,12 @@ msgstr "پیغام مستقیم"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_menu_root_chat
 msgid "Discuss"
-msgstr ""
+msgstr "بحث"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "کانال بحث"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1254,7 +1262,7 @@ msgstr "پست الکترونیک"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr ""
+msgstr "مستعار ایمیل"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -1290,7 +1298,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "قالب ایمیل"
 
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
@@ -1464,7 +1472,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Folded"
-msgstr ""
+msgstr "باز شده"
 
 #. module: mail
 #. openerp-web
@@ -2160,7 +2168,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "پیوستن"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2309,7 +2317,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "ترک"
 
 #. module: mail
 #. openerp-web
@@ -2441,7 +2449,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:115
 #, python-format
 msgid "Mark as Todo"
-msgstr ""
+msgstr "علامت به عنوان در دست اقدام"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
@@ -3083,7 +3091,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:113
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "آفلاین"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_char
@@ -3136,7 +3144,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:111
 #, python-format
 msgid "Online"
-msgstr ""
+msgstr "آنلاین"
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -3267,7 +3275,7 @@ msgstr "پیام مادر"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "مدل والد"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_parent_thread_id
@@ -3467,7 +3475,7 @@ msgstr "دریافت شد"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_partner_id
 msgid "Recipient"
-msgstr ""
+msgstr "دریافت کننده"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_partner_ids
@@ -3796,7 +3804,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
 msgid "Small-sized photo"
-msgstr ""
+msgstr "عکس اندازه کوچک"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
@@ -3916,7 +3924,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.email_template_tree
 #: model:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Templates"
-msgstr ""
+msgstr "قالبها"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test
@@ -4083,7 +4091,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr ""
+msgstr "ره گیری"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4330,7 +4338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_template_id
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_template_id
 msgid "Use template"
-msgstr ""
+msgstr "استفاده از قالب"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
@@ -4430,13 +4438,13 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr ""
+msgstr "شما در حال صحبت خصوصی با <b>@%s</b>هستید."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "شما در کانال <b>#%s</b>هستید."
 
 #. module: mail
 #. openerp-web
@@ -4592,12 +4600,12 @@ msgstr "ir.actions.server"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form

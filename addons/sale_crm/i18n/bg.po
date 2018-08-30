@@ -4,11 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2016
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
-# Vihren Kanev <vihren.kanev@gmail.com>, 2016
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Ivan Ivanov, 2017
-# Boris Stefanov <borkata@gmail.com>, 2018
 # Daria Stefanova <daria@clearlypro.eu>, 2018
 msgid ""
 msgstr ""
@@ -32,12 +31,12 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "брой Поръчки"
+msgstr "# от поръчка за продажби"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Поръчки</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -124,18 +123,25 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Посочва етапа на членство.\n"
+"-Нечленуващ: контрагент, който не е кандидатствал за никакво членство.\n"
+"-Анулиран член: член, който е прекъснал членството си.\n"
+"-Стар член: член, чието членство е изтекло.\n"
+"-Изчакващ член: член, кандидатствал за членство, на който му предстои изготвяне на фактура.\n"
+"-Фактуриран член: член, чиято фактура е създадена.\n"
+"-Плащащ член: член, заплатил членската си такса."
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Следа/Възможност"
+msgstr "Лийд/Възможност"
 
 #. module: sale_crm
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Нека хвърлим поглед към офертите на този търговски отдел."
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
@@ -165,12 +171,12 @@ msgstr "Начална Дата на Абонамента"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr "Съобщения за поръчка за продажба"
+msgstr "Съобщение за поръчка за продажба"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Съобщение за вдигане от склад"
+msgstr "Съобщение за складов пикинг"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -235,7 +241,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
 msgid "Stock Picking"
-msgstr "Вдигане от склад"
+msgstr "Складов пикинг"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -250,7 +256,7 @@ msgstr "Етикети"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Цената, договорена от контрагента"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_customer
@@ -259,7 +265,7 @@ msgid ""
 "destination location for goods you send to this partner"
 msgstr ""
 "Това местонахождение ще се използва вместо това по подрабиране като крайно "
-"местонахождение за стоките които пращате на този партньор"
+"местонахождение за стоките които пращате на този контрагент"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_property_stock_supplier
@@ -267,8 +273,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Когато получавате стоки от текущия партньор като източник ще бъде използвано"
-" това местонахождение вместо това по подразбиране"
+"Това стоково местонахождение ще бъде използвано вместо местоположението по "
+"подразбиране в качеството му на източник на стоки, които получавате от "
+"текущия контрагент"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
@@ -278,4 +285,4 @@ msgstr "Потребители"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
-msgstr ""
+msgstr "Местоположение на доставчик"

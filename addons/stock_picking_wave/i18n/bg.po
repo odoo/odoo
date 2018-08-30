@@ -6,6 +6,7 @@
 # kalatchev, 2016
 # Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
@@ -24,12 +25,12 @@ msgstr ""
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
 msgid "Add pickings to a picking wave"
-msgstr ""
+msgstr "Добавете пикинги към пикинг вълна"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
 msgid "Add pickings to wave"
-msgstr ""
+msgstr "Добавете пикинги към вълна"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
@@ -47,7 +48,7 @@ msgstr "Отказ"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
 msgid "Cancel picking"
-msgstr ""
+msgstr "Отменете пикинги"
 
 #. module: stock_picking_wave
 #: selection:stock.picking.wave,state:0
@@ -57,7 +58,7 @@ msgstr "Отменено"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid "Click to create a Picking Wave."
-msgstr ""
+msgstr "Натиснете бутона, за да създадете пикинг вълна."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -67,7 +68,7 @@ msgstr "Потвърждаване"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
 msgid "Confirm picking"
-msgstr ""
+msgstr "Потвърдете пикинг"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_uid
@@ -96,7 +97,7 @@ msgstr "Готов"
 #. module: stock_picking_wave
 #: selection:stock.picking.wave,state:0
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -160,12 +161,12 @@ msgstr "Последно обновено на"
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_picking_ids
 msgid "List of picking associated to this wave"
-msgstr ""
+msgstr "Списъкът с пикинг, свързан с тази вълна"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_name
 msgid "Name of the picking wave"
-msgstr ""
+msgstr "Име на пикинг вълната"
 
 #. module: stock_picking_wave
 #: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
@@ -186,34 +187,34 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
-msgstr ""
+msgstr "Пикинг вълна"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_name
 msgid "Picking Wave Name"
-msgstr ""
+msgstr "Име на пикинг вълна"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
 #: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
 msgid "Picking Waves"
-msgstr ""
+msgstr "Пикинг вълни"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Waves not finished"
-msgstr ""
+msgstr "Неприключени пикинг вълни"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9894
 msgid "Picking wave associated to this picking"
-msgstr ""
+msgstr "Пикинг вълна, свързана с този пикинг"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_picking_ids
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
 msgid "Pickings"
-msgstr ""
+msgstr "Пикинги"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -233,7 +234,7 @@ msgstr "Изпълнява се"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "Search Picking Waves"
-msgstr ""
+msgstr "Потърсете пикинг вълни"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
@@ -247,6 +248,8 @@ msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
 msgstr ""
+"Някои пикинги все още очакват стоки. Моля проверете или форсирайте тяхната "
+"наличност преди да настроите тази вълна за приключване."
 
 #. module: stock_picking_wave
 #: model:product.product,name:stock_picking_wave.product_product_dry_specu
@@ -276,7 +279,7 @@ msgstr "Щат/Провинция"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_tree
 msgid "Stock Picking Waves"
-msgstr ""
+msgstr "Складови пикинг вълни"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
@@ -286,6 +289,10 @@ msgid ""
 "                It may also be useful to assign jobs (one person = one wave) or\n"
 "                help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"Целта на пикинг вълните е да се групират операции, които могат\n"
+"                (нуждаят се) да бъдат осъществени заедно с оглед повишаване на тяхната ефективност.\n"
+"                Също така може да е полезно да определите задачите (едно лице = една вълна) или\n"
+"                да облекчите синхронизиращото управление на операции (задачи, които трябва да се пизвършат в 1 часа следобяд)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking

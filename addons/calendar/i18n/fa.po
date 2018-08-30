@@ -3,9 +3,9 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # ifaraz ir <ifarazir@gmail.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # mehdi samadi <mehsamadi@gmail.com>, 2016
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -287,22 +287,22 @@ msgstr ""
 #: code:addons/calendar/static/src/js/base_calendar.js:95
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [من]"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - یادآور"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} دعوت"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: تاریخ بروز شده"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -311,30 +311,32 @@ msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s در %s تا\n"
+" %s در %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:637
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s در (%s تا %s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:191
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s دعوت را پذیرفته است"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:199
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s دعوت را رد کرده است"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> ساعت</span>"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -439,12 +441,12 @@ msgstr "دعوت تقویم"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "اینجا کلیک کنید تا فقط این نمونه را بروز کنید و نه همه تکرارها را."
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr ""
+msgstr "برای برنامه‌ریزی یک جلسه کلیک کنید."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
@@ -614,13 +616,13 @@ msgstr "پایان در"
 #: code:addons/calendar/models/calendar.py:821
 #, python-format
 msgid "Ending date cannot be set before starting date."
-msgstr ""
+msgstr "تاریخ انتها نمی‌تواند قبل از تاریخ شروع باشد."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "تاریخ زمان نمی‌تواند قبل از تاریخ زمان شروع باشد."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -648,7 +650,7 @@ msgstr "بازه انجام رویداد نمی تواند منفی باشد."
 #: code:addons/calendar/static/src/js/base_calendar.js:96
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "گاه‌شمار همه"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
@@ -735,6 +737,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"اگر فیلد فعال روی نادرست تعیین شود، به شما اجازه می‌دهد هشدار رویداد را "
+"پنهان کنید بودن اینکه آن را حذف کنید."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -744,7 +748,7 @@ msgstr "دعوت‌نامه"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "توکن دعوت"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -754,7 +758,7 @@ msgstr "جزئیات دعوت"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "دعوت برای"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -802,12 +806,12 @@ msgstr "آخرین به روز رسانی در"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "آخرین اعلان به عنوان خوانده شده در تقویم اصلی علامت زده شده است."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "اجازه بدهید رویداد به صورت خودکار در این فاصله تکرار شود."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
@@ -818,7 +822,7 @@ msgstr "مکان"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_location
 msgid "Location of Event"
-msgstr ""
+msgstr "مکان رویداد"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_user_id
@@ -855,7 +859,7 @@ msgstr "انواع ملاقات"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_event_id
 msgid "Meeting linked"
-msgstr ""
+msgstr "جلسه لینک شده"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -875,7 +879,7 @@ msgstr "پیام"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "دقیقه (ها)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -922,7 +926,7 @@ msgstr "نیاز به اقدام دارد"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr ""
+msgstr "نه من نمی‌روم."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -932,7 +936,7 @@ msgstr "اعلان"
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "تعداد تکرار"
 
 #. module: calendar
 #. openerp-web
@@ -944,12 +948,12 @@ msgstr "تایید"
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only internal users"
-msgstr ""
+msgstr "فقط کاربران داخلی"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only me"
-msgstr ""
+msgstr "فقط من"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
@@ -969,7 +973,7 @@ msgstr "مالک‌"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 msgid "Participant"
-msgstr ""
+msgstr "شرکت کننده"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -980,7 +984,7 @@ msgstr "همکار"
 #: code:addons/calendar/models/calendar.py:1072
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr ""
+msgstr "لطفا یک روز مناسب از ماه را انتخاب کنید."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
@@ -991,7 +995,7 @@ msgstr "حریم‌خصوصی"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "پایان تکرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
@@ -1001,27 +1005,27 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
 msgid "Recurrent"
-msgstr ""
+msgstr "مکرر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id
 msgid "Recurrent ID"
-msgstr ""
+msgstr "شناسه مکرر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id_date
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "تاریخ شناسه مکرر"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "جلسه مکرر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "قانون تکرار"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
@@ -1033,7 +1037,7 @@ msgstr "یادآورها"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:26
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "این محبوب از لیست حذف کن"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
@@ -1043,22 +1047,22 @@ msgstr "تکرار"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "تکرار هر"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
 msgid "Repeat Until"
-msgstr ""
+msgstr "یادآوری تا"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "تکرار هر (روز/هفته/ماه/سال)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_count
 msgid "Repeat x times"
-msgstr ""
+msgstr "xبار یادآوری"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
@@ -1089,17 +1093,17 @@ msgstr "ثانیه"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "انتخاب حاضرین..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "ارسال نامه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_show_as
 msgid "Show Time as"
-msgstr ""
+msgstr "نمایش زمان به صورت"
 
 #. module: calendar
 #. openerp-web
@@ -1122,12 +1126,12 @@ msgstr "تاریخ آغاز"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
 msgid "Start DateTime"
-msgstr ""
+msgstr "تاریخ و زمان شروع"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
+msgstr "تاریخ شروع یک رویداد، بدون زمان برای رویدادهای تمام روز"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1144,7 +1148,7 @@ msgstr "وضعیت"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_state
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "وضعیت شرکت حاضرین"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop
@@ -1154,7 +1158,7 @@ msgstr "توقف"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
+msgstr "تاریخ پایان برای یک رویداد، بدون زمان برای ریدادهای روز کامل"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1174,7 +1178,7 @@ msgstr "یکشنبه"
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "برچسب نام از قبل وجود دارد!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
@@ -1184,7 +1188,7 @@ msgstr "برچسب‌ها"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr "این"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1202,7 +1206,7 @@ msgstr "سومین"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "این رویدا به یک تکرار لینک شده است...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th
@@ -1234,7 +1238,7 @@ msgstr "نوع"
 #: selection:calendar.event,attendee_status:0
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
-msgstr ""
+msgstr "نا مشخص"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -1259,7 +1263,7 @@ msgstr "تا"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "فقط بروزرسانی این نمونه"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_we
@@ -1289,34 +1293,34 @@ msgstr "سال"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr ""
+msgstr "بله من دارم می‌روم."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:124
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "نمی‌توانید دوبار یک نفر از حضار وارد کنید."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "برای مثال نهار کاری"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "برای مثال نهار کاری"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:1057
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "بازه نمی تواند منفی باشد."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment

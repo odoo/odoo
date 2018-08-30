@@ -34,8 +34,8 @@ msgstr ""
 "\n"
 "<p>Tisztelt ${object.partner_name or 'applicant'},</p>\n"
 "<p>Köszönjük érdeklődését.<br />\n"
-"Sajnos, az életrajza nem egyezik az igényeinkkel</p>\n"
-"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
+"Sajnos az önéletrajza nem egyezik az igényeinkkel</p>\n"
+"<p>Ha kérdése merülne fel, kérjük keressen fel bennünket.</p>\n"
 "<p>Legjobbakat,</p>"
 
 #. module: hr_recruitment
@@ -52,10 +52,9 @@ msgstr ""
 "\n"
 "<p>Tisztelt ${object.partner_name or 'applicant'},</p>\n"
 "<p>Köszönjük érdeklődését.<br />\n"
-"Önéletrajza felkeltette érdeklődésünket. Amint lehet felkeressük Önt a toborzási folyamat\n"
-" következő lépéseinek megtervezéséhezs.</p>\n"
-"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
-"<p>Legjobbakat,</p>"
+"Önéletrajza felkeltette érdeklődésünket. Amint lehet megkeressük Önt a következő lépések megtervezéséhez.</p>\n"
+"<p>Ha kérdése merül fel, kérjük keressen bennünket.</p>\n"
+"<p>Üdvözlettel,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -71,14 +70,14 @@ msgid ""
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
 "\n"
-"<p>Tisztelt mindenki,</p>\n"
-"<p> Nagyon örömömre szolgál, hogy bejelenthetem <strong> ${object.name} </strong> aki \n"
-"catlakozik hozzánk mint ${object.job_id.name}\n"
+"<p>Kedves mindenki!</p>\n"
+"<p> Nagyon örömünkre szolgál, hogy <strong> ${object.name} </strong> \n"
+"csatlakozik hozzánk, mint ${object.job_id.name}\n"
 "%if object.department_id:\n"
-"    in ${object.department_id.name}.\n"
+"    ${object.department_id.name}.\n"
 "%endif\n"
 ".</p>\n"
-"<p>Kérem fogadjátok Őt és segítsétek megtalálni a céljait.</p>"
+"<p>Kérem fogadjátok szeretettel és segítsétek munkáját.</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -93,7 +92,7 @@ msgstr "<b>Végzettség:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr "<b>Osztály:</b>"
+msgstr "Részleg:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -113,7 +112,7 @@ msgstr "<span>Új</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>Reports</span>"
-msgstr "<span>Kimutatások</span>"
+msgstr "<span>Riportok</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -126,8 +125,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Egy Python szótár aminek a kiértékelésével alapértékeket biztosít, ha ehhez "
-"az álnévhez új feljegyzéseket hoz létre."
+"Egy Python szótár aminek a kiértékelésével alapértékeket biztosít ehhez az "
+"álnévhez új feljegyzések létrehozásánál."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
@@ -144,7 +143,7 @@ msgid ""
 "Qualified &gt; First Interview &gt; Recruited</i>"
 msgstr ""
 "Adjon oszlopokat az <b>interjú szakaszainak</b> meghatározásához.<br/><i>pl."
-" Új &gt; Minősített &gt; Első interjú &gt; Toborzott</i>"
+" Új &gt; Minősített &gt; Első interjú &gt; Toborzás kész</i>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -164,7 +163,7 @@ msgstr "Álnév kapcsolat biztonság"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr "Álnév azonosító ID"
+msgstr "Álnév ID"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
@@ -174,17 +173,17 @@ msgstr "Álnév elnevezése"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
 msgid "Alias domain"
-msgstr "Álénév domain"
+msgstr "Álnév domain"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
 msgid "Aliased Model"
-msgstr "Minta álnév"
+msgstr "Álnevesített modell"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
 msgid "Applicant"
-msgstr "Pályázó"
+msgstr "Jelentkező"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
@@ -195,12 +194,12 @@ msgstr "Felvett jelentkező"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr "Pályázó szintje megváltozottt"
+msgstr "Jelentkező szintje megváltozott"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr "Pályázó létrehozva"
+msgstr "Jelentkező létrehozva"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -210,7 +209,7 @@ msgstr "Jelentkező felvéve"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
 msgid "Applicant's Name"
-msgstr "Kérelmező neve"
+msgstr "Jelentkező neve"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:92
@@ -218,7 +217,7 @@ msgstr "Kérelmező neve"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #, python-format
 msgid "Applicants"
-msgstr "Pályázók"
+msgstr "Jelentkezők"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -227,8 +226,8 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-" A jelentkezők és a csatolt CV önéletrajzaik egy email kiküldésekkor automatikusan létrejönnek. \n"
-"Ha telepíti a dokumentum kezelő modulokat, az összes életrajz  automatikusan sorszámozásra kerül, \n"
+" A jelentkezők és a csatolt önéletrajzaik egy e-mail kiküldésekor automatikusan létrejönnek. \n"
+"Ha telepíti a dokumentum kezelő modulokat, akkor az összes önéletrajz automatikusan sorszámozásra kerül, \n"
 "így könnyen kereshet a tartalmaik között."
 
 #. module: hr_recruitment
@@ -238,8 +237,8 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically, \n"
 "            so that you can easily search through their content."
 msgstr ""
-" A jelentkezők és a csatolt CV önéletrajzaik egy email kiküldésekkor automatikusan létrejönnek. \n"
-"Ha telepíti a dokumentum kezelő modulokat, az összes életrajz  automatikusan sorszámozásra kerül, \n"
+"A jelentkezők és a csatolt önéletrajzaik egy e-mail kiküldésekor automatikusan létrejönnek. \n"
+"Ha telepíti a dokumentum kezelő modulokat, akkor az összes önéletrajz automatikusan sorszámozásra kerül, \n"
 "így könnyen kereshet a tartalmaik között."
 
 #. module: hr_recruitment
@@ -250,17 +249,17 @@ msgstr "Jelentkezés"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
-msgstr "Jelentkezések összefoglalása"
+msgstr "Jelentkezés összefoglalása"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Application approved"
-msgstr "Jelentkező elfogadva"
+msgstr "Jelentkezés elfogadva"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Application refused"
-msgstr "Jelentkező elutasítva"
+msgstr "Jelentkezés elutasítva"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -283,7 +282,7 @@ msgstr "Jelentkezések"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_job_id
 msgid "Applied Job"
-msgstr "Alkalmazott állás"
+msgstr "Megpályázott pozíció"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
@@ -320,27 +319,27 @@ msgstr "Elérhetőség"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_delay_close
 msgid "Avg. Delay to Close"
-msgstr "Átl. bezárási idő"
+msgstr "Átlagos lezárási késés"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp_avg
 msgid "Avg. Expected Salary"
-msgstr "Kívánt kereset átl."
+msgstr "Átlagos elvárt fizetés"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop_avg
 msgid "Avg. Proposed Salary"
-msgstr "Ajánlott  kereset átlaga"
+msgstr "Átlagos ajánlott fizetés"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr "Tudományos fokozat"
+msgstr "Főiskolai végzettség"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
 msgid "By Department"
-msgstr "Osztály részlegenként"
+msgstr "Részlegenként"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
@@ -350,7 +349,7 @@ msgstr "Munkákként"
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
 msgid "By Recruiter"
-msgstr "Toborzásonként"
+msgstr "Toborzóként"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
@@ -361,7 +360,7 @@ msgstr "Mégsem"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Cases By Stage and Estimates"
-msgstr "Szakasz és lehetőségenkénti esetek"
+msgstr "Esetek szakaszonként és becslésenként"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
@@ -372,18 +371,18 @@ msgstr "Jelentkező kategóriája"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Click here to create a new job position."
-msgstr "Kattintson az új munkahely létrehozásához."
+msgstr "Kattintson új pozíció létrehozásához."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Click to add a new employee."
-msgstr "Kattintson egy új alkalmazott hozzáadásához."
+msgstr "Kattintson új alkalmazott hozzáadásához."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Click to add a new stage in the recruitment process."
-msgstr "Kattintson egy új állapot létrehozásához a toborzási művelethez."
+msgstr "Kattintson új toborzási státusz létrehozásához."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
@@ -569,7 +568,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
-msgstr "Diploma"
+msgstr "Végzettség"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
@@ -579,7 +578,7 @@ msgstr "Toborzás mértéke"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
-msgstr "Fokozat"
+msgstr "Végzettségek"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -633,7 +632,7 @@ msgstr "Ne használjon interjú űrlapot"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr "Doktorátusi fokozat"
+msgstr "Doktori fokozat"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -966,7 +965,7 @@ msgstr "Igazgató"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
-msgstr "Mester fokozat"
+msgstr "Egyetemi végzettség"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id

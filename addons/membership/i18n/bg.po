@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
+# Martin Trigaux, 2016
 # Ivan Ivanov, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Daria Stefanova <daria@clearlypro.eu>, 2018
@@ -80,7 +81,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "Асоцииран партньор"
+msgstr "Асоцииран контрагент"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -129,7 +130,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_report_membership_company_id
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -325,6 +326,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Посочва етапа на членство.\n"
+"-Нечленуващ: Контрагент, който не е кандидатствал за никакво членство.\n"
+"-Анулиран член: член, който е прекъснал членството си.\n"
+"-Стар член: член, чието членство е изтекло.\n"
+"-Изчакващ член: член, кандидатствал за членство, на който му предстои изготвяне на фактура.\n"
+"-Фактуриран член: член, чиято фактура е създадена.\n"
+"-Плащащ член: член, заплатил членската си такса."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -434,7 +442,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership Partners"
-msgstr ""
+msgstr "Контрагенти с членство"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_id
@@ -499,6 +507,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo Ви помага лесно да проследявате всички дейности, свързани с даден член: \n"
+"                 текущ статус на членство, дискусии и история на членството и т.н."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -518,19 +528,19 @@ msgstr ""
 #: model:ir.model,name:membership.model_res_partner
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
 msgid "Partner"
-msgstr "Партньор"
+msgstr "Контрагент"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Контрагентът не притежава адрес, за да създаде фактурата."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "Контрагентът е свободен член"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_pending
@@ -592,7 +602,7 @@ msgstr "Данъци"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Цената, договорена от контрагента"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form

@@ -60,7 +60,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
-onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
+onchange_v7 = re.compile(r"^([a-zA-Z]\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -3397,11 +3397,10 @@ class BaseModel(object):
 
         # Delete the records' properties.
         with self.env.norecompute():
-            self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
-
             self.delete_workflow()
 
             self.check_access_rule('unlink')
+            self.env['ir.property'].search([('res_id', 'in', refs)]).sudo().unlink()
 
             cr = self._cr
             Data = self.env['ir.model.data'].sudo().with_context({})
@@ -4088,6 +4087,15 @@ class BaseModel(object):
                     if table not in query.tables:
                         query.tables.append(table)
 
+        if self._transient:
+            # One single implicit access rule for transient models: owner only!
+            # This is ok because we assert that TransientModels always have
+            # log_access enabled, so that 'create_uid' is always there.
+            domain = [('create_uid', '=', self._uid)]
+            tquery = self._where_calc(domain, active_test=False)
+            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
+            return
+
         # apply main rules on the object
         Rule = self.env['ir.rule']
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
@@ -4234,10 +4242,6 @@ class BaseModel(object):
         :return: a list of record ids or an integer (if count is True)
         """
         self.sudo(access_rights_uid or self._uid).check_access_rights('read')
-
-        # For transient models, restrict access to the current user, except for the super-user
-        if self.is_transient() and self._log_access and self._uid != SUPERUSER_ID:
-            args = expression.AND(([('create_uid', '=', self._uid)], args or []))
 
         query = self._where_calc(args)
         self._apply_ir_rules(query, 'read')

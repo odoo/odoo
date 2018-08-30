@@ -7,7 +7,7 @@
 # Martin Trigaux, 2016
 # Zahed Alfak <tamass4116@gmail.com>, 2016
 # Abel Miri <miri1888@gmail.com>, 2016
-# ifaraz ir <ifarazir@gmail.com>, 2016
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2016
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
 # arya sadeghy <aryasadeghy@gmail.com>, 2016
 # Morovat Guivi <tarjomac@gmail.com>, 2016
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:230
@@ -202,7 +202,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">پیش بینی شده</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -210,6 +210,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min :</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">کمترین :</span>\n"
+"                                <span class=\"o_stat_text\">بیشترین:</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -217,6 +219,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">کمترین:</span>\n"
+"                                <span class=\"o_stat_text\">Max:</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -275,6 +279,9 @@ msgid ""
 "                                        <strong>From the Inventory application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>از برنامه انبارداری</strong>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -283,6 +290,9 @@ msgid ""
 "                                        <strong>From the Purchase application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>از برنامه خرید</strong>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -291,6 +301,9 @@ msgid ""
 "                                        <strong>From the Sales application</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>از برنامه فروش</strong>\n"
+"                                    </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -301,12 +314,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>نشانی مشتری:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>نشانی تحویل:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -316,7 +329,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>نشانی انبار:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -401,12 +414,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered Quantity</strong>"
-msgstr ""
+msgstr "<strong>تعداد تحویل شده</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -421,17 +434,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Import data</strong>"
-msgstr ""
+msgstr "<strong>ورود داده از فایل</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Inventory</strong>"
-msgstr ""
+msgstr "<strong>انبارداری</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
-msgstr ""
+msgstr "<strong>مکان</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -508,19 +521,19 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered Quantity</strong>"
-msgstr ""
+msgstr "<strong>تعداد سفارش داده</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
-msgstr ""
+msgstr "<strong>بسته</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>محصول</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -531,12 +544,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_inventory
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>تعداد</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date</strong>"
-msgstr ""
+msgstr "<strong>تاریخ برنامه ریزی شده</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -553,7 +566,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>State</strong>"
-msgstr ""
+msgstr "<strong>حالت</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -565,12 +578,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Total Quantity</strong>"
-msgstr ""
+msgstr "<strong>تعداد کل</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Warehouse Locations</strong>"
-msgstr ""
+msgstr "<strong>مکانهای انبار</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -584,7 +597,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:102
 #, python-format
 msgid "A Pack"
-msgstr ""
+msgstr "یک بسته"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -809,7 +822,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form_stock_inherit
 msgid "Applied On"
-msgstr ""
+msgstr "اعمال شده روی"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -842,7 +855,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr ""
+msgstr "تخصیص مالک"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -969,12 +982,12 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Big Vendors"
-msgstr ""
+msgstr "فروشندگان بزرگ"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "پیام مسدود کننده"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
@@ -1178,7 +1191,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
 msgid "Click to add a location."
-msgstr ""
+msgstr "برای افزودن مکان کلیک کنید."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -1213,7 +1226,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Click to define a new product."
-msgstr ""
+msgstr "برای ایجاد محصول جدید کلیک کنید."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1223,7 +1236,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid "Click to define a new warehouse."
-msgstr ""
+msgstr "برای تعریف انبار جدید کلیک کنید."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
@@ -1243,7 +1256,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Click to start an inventory."
-msgstr ""
+msgstr "برای شروع یک انبارداری کلیک کنید."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_code
@@ -1322,7 +1335,7 @@ msgstr "جابجایی های تایید شده"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Congratulations!"
-msgstr ""
+msgstr "تبریک!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_lines_date_search
@@ -1422,12 +1435,12 @@ msgstr "ایجاد تامین کننده"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create a Quotation"
-msgstr ""
+msgstr "یک پیش فاکتور ایجاد کنید"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create a RFQ"
-msgstr ""
+msgstr "یک RFQ ایجاد کنید"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1445,7 +1458,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create your products"
-msgstr ""
+msgstr "ایجاد محصولات شما"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_move_ids
@@ -1759,7 +1772,7 @@ msgstr "مکان مبدا پیش فرض"
 #: model:ir.model.fields,help:stock.field_stock_quant_product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "واحد اندازه‌گیری پیشفرض برای تمام عملیات موجودی."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1885,7 +1898,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Deployment"
-msgstr ""
+msgstr "توزیع"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
@@ -1942,7 +1955,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_result_package_id
 msgid "Destination Package"
-msgstr ""
+msgstr "بسته مقصد :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -2120,12 +2133,12 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "همه چیز درون یک بسته باید در یک مکان باشد"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Excel template"
-msgstr ""
+msgstr "قالب اکسل"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -2142,12 +2155,12 @@ msgstr "تاریخ قابل توقع"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_product_expiry
 msgid "Expiration Dates"
-msgstr ""
+msgstr "تاریخهای انقضا"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "External note..."
-msgstr ""
+msgstr "یادداشت خارجی..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -2206,6 +2219,8 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"برای تیم اودو,<br/>\n"
+"                            فابین پینکائرس، بنیانگذار"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -2220,7 +2235,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_virtual_available
 msgid "Forecast Quantity"
-msgstr ""
+msgstr "پیش بینی تعداد"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_virtual_available
@@ -2237,7 +2252,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
 msgid "Forecasted Quantity"
-msgstr ""
+msgstr "تعداد پیش بینی شده"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_from_loc
@@ -2247,7 +2262,7 @@ msgstr "از"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
 msgid "Full Location Name"
-msgstr ""
+msgstr "نام کامل مکان"
 
 #. module: stock
 #: code:addons/stock/models/product.py:346
@@ -2271,28 +2286,28 @@ msgstr "تولیدات آینده"
 #: code:addons/stock/models/product.py:356
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "تعداد آینده"
 
 #. module: stock
 #: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future Receipts"
-msgstr ""
+msgstr "رسیدهای آینده"
 
 #. module: stock
 #: model:stock.location,name:stock.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "گیت A"
 
 #. module: stock
 #: model:stock.location,name:stock.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "گیت B"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Vendors"
-msgstr ""
+msgstr "فروشندگان عمومی IT"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2329,7 +2344,7 @@ msgstr "نمودار"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_1
 msgid "Graphics Card"
-msgstr ""
+msgstr "کارتهای گرافیک"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -2356,12 +2371,12 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_9
 msgid "HDD SH-1"
-msgstr ""
+msgstr "HDD SH-1"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
 msgid "Has Pack Operations"
-msgstr ""
+msgstr "عملیات بسته بندی دارد"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
@@ -2477,7 +2492,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
 msgid "IT Vendors"
-msgstr ""
+msgstr "فروشندگان IT"
 
 #. module: stock
 #: model:product.product,name:stock.product_icecream
@@ -2634,23 +2649,23 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "If you want to do it yourself:"
-msgstr ""
+msgstr "اگر خودتان می‌خواهید این کار را انجام دهید:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
 msgid "Immediate Transfer"
-msgstr ""
+msgstr "انتقال فوری"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:792
 #, python-format
 msgid "Immediate Transfer?"
-msgstr ""
+msgstr "انتقال فوری؟"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Immediate transfer?"
-msgstr ""
+msgstr "انتقال فوری؟"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2673,7 +2688,7 @@ msgstr "در حال پیشرفت"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_in_type_id
 msgid "In Type"
-msgstr ""
+msgstr "در نوع"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_order_partner_dest_id
@@ -2706,12 +2721,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
 #: model:ir.model.fields,field_description:stock.field_product_template_incoming_qty
 msgid "Incoming"
-msgstr ""
+msgstr "پیش رو"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "محصولات آینده"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_in_date
@@ -2752,12 +2767,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
-msgstr ""
+msgstr "تقاضای اولیه"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Initial Inventory"
-msgstr ""
+msgstr "انبارداری اولیه"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:93
@@ -2781,7 +2796,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr ""
+msgstr "ترانزیت درون شرکتی"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
@@ -2820,7 +2835,7 @@ msgstr "انتقالات داخلی"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "مکان ترانزیت داخلی"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
@@ -2965,7 +2980,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
 msgid "Inventory Move"
-msgstr ""
+msgstr "انتقال انبارداری"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -2981,7 +2996,7 @@ msgstr "مسیرهای موجودی"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Inventory Settings"
-msgstr ""
+msgstr "تنظیمات انبارداری"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
@@ -3060,7 +3075,7 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
 msgid "Laptop Customized"
-msgstr ""
+msgstr "لب تاب سفارشی شده"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_14
@@ -3179,7 +3194,7 @@ msgstr "آخرین به روز رسانی در"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Late"
-msgstr ""
+msgstr "دیر"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -3205,7 +3220,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_type
 msgid "Lead Type"
-msgstr ""
+msgstr "نوع سرنخ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
@@ -3216,7 +3231,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_left
 msgid "Left Parent"
-msgstr ""
+msgstr "گره پدر سمت چپ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_company_id
@@ -3332,7 +3347,7 @@ msgstr "مکان‌ها"
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Logistics"
-msgstr ""
+msgstr "لجستیک"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:13
@@ -3545,7 +3560,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_stock_multi_warehouses
 msgid "Manage several warehouses"
-msgstr ""
+msgstr "مدیریت چندین انبار"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3560,12 +3575,12 @@ msgstr "عملیات دستی"
 #. module: stock
 #: selection:stock.picking.type,code:0
 msgid "Manufacturing Operation"
-msgstr ""
+msgstr "عملیات تولید"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
-msgstr ""
+msgstr "علامت به عنوان در دست اقدام"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_max_date
@@ -3575,7 +3590,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_max_qty
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "تعداد بیشینه"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
@@ -3598,7 +3613,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "قاعده حداقل انبارداری"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -3614,7 +3629,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_orderpoint_ids
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_calendar
 msgid "Minimum Stock Rules"
-msgstr ""
+msgstr "قوانین موجودی کمینه"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_propagation_minimum_delta
@@ -3630,7 +3645,7 @@ msgstr "متفرقه"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Modify"
-msgstr ""
+msgstr "تغییر"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -3653,12 +3668,12 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_5
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "موس، نوری"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_11
 msgid "Mouse, Wireless"
-msgstr ""
+msgstr "موس، وایرلس"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
@@ -3769,7 +3784,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Negative Stock"
-msgstr ""
+msgstr "موجودی منفی"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:19
@@ -3787,7 +3802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
-msgstr ""
+msgstr "انتقال جدید"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_fresh_record
@@ -3817,7 +3832,7 @@ msgstr ""
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "بدون رهگیری"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
@@ -3920,7 +3935,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Odoo has preconfigured <strong>one Warehouse</strong> for you."
-msgstr ""
+msgstr "اودو <strong>یک انبار</strong> را برای شما از پیش پیکربندی کرده است."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3949,12 +3964,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "On Hand"
-msgstr ""
+msgstr "موجودی"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "On Hand / Available Quantities"
-msgstr ""
+msgstr "موجودی / تعداد در دسترس"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -3979,13 +3994,13 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:98
 #, python-format
 msgid "One owner only"
-msgstr ""
+msgstr "تنها یک مالک"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:91
 #, python-format
 msgid "One product category"
-msgstr ""
+msgstr "یک طبقه بندی محصول"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:98
@@ -4021,7 +4036,7 @@ msgstr "نام عملیات"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr ""
+msgstr "انواع عملیات"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_operation_id
@@ -4037,7 +4052,7 @@ msgstr "عملیات ها"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr ""
+msgstr "انواع عملیات"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_linked_move_operation_ids
@@ -4171,7 +4186,7 @@ msgstr "مالک‌ "
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_partner_id
 msgid "Owner of the location if not internal"
-msgstr ""
+msgstr "مالک مکان اگر داخلی نیست"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_owner_id
@@ -4190,7 +4205,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_pack_ids
 #, python-format
 msgid "Pack"
-msgstr ""
+msgstr "بسته بندی"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.pack_details
@@ -4205,7 +4220,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
 msgid "Pack Type"
-msgstr ""
+msgstr "نوع بسته بندی"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:14
@@ -4248,12 +4263,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr ""
+msgstr "انتقالهای بسته"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr ""
+msgstr "نوع بسته‌بندی"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_packagings
@@ -4292,19 +4307,19 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_pack_stock_loc_id
 msgid "Packing Location"
-msgstr ""
+msgstr "مکان بسته بندی"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "عملیات بسته بندی"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:96
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
-msgstr ""
+msgstr "حوضه بسته"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4335,7 +4350,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "جزئی"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_partially_available
@@ -4373,7 +4388,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Periodical Tasks"
-msgstr ""
+msgstr "تکالیف دوره‌ای"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -4383,12 +4398,12 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
-msgstr ""
+msgstr "مکانهای فیزیکی"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "بسته‌های فیزیکی"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:221
@@ -4406,7 +4421,7 @@ msgstr "برداشت + بسته بندی + حمل"
 #: code:addons/stock/models/stock_warehouse.py:402
 #, python-format
 msgid "Pick + Ship"
-msgstr ""
+msgstr "برداشتن + ارسال"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
@@ -4423,7 +4438,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_picking_id
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr ""
+msgstr "برداشتن"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4433,7 +4448,7 @@ msgstr "لیست برداشت"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr ""
+msgstr "لیست برداشتنها"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
@@ -4500,7 +4515,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 msgid "Pivot"
-msgstr ""
+msgstr "پیوت"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_date_planned
@@ -4545,7 +4560,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
 msgid "Preferred Packaging"
-msgstr ""
+msgstr "بسته بندی ترجیح داده شده"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_route_ids
@@ -4630,7 +4645,7 @@ msgstr "درخواست تدارک"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "تقاضای تدارکات"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -4733,7 +4748,7 @@ msgstr "قالب محصول"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Product Types"
-msgstr ""
+msgstr "انواع محصول"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
@@ -4757,7 +4772,7 @@ msgstr "تولید"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_production
 msgid "Production Location"
-msgstr ""
+msgstr "مکان تولید"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:141
@@ -4810,7 +4825,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Purchase Flow"
-msgstr ""
+msgstr "جریان خرید"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_push_rule_id
@@ -4858,7 +4873,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_quality
 msgid "Quality"
-msgstr ""
+msgstr "کیفیت"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:94
@@ -4895,7 +4910,7 @@ msgstr "تعداد"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_qty_done_uom_ordered
 msgid "Quantity Done"
-msgstr ""
+msgstr "تعداد انجام شد"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -4911,7 +4926,7 @@ msgstr "تعداد موجود"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_availability
 msgid "Quantity Reserved"
-msgstr ""
+msgstr "تعداد رزرو شد"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:78
@@ -4923,7 +4938,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:394
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "تعداد کاهش یافت!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_qty_done_uom_ordered
@@ -5224,7 +5239,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "Reserved"
-msgstr ""
+msgstr "رزرو شده"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_reserved_quant_id
@@ -5297,7 +5312,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_parent_right
 msgid "Right Parent"
-msgstr ""
+msgstr "والد راست"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_route_id
@@ -5370,7 +5385,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Sales Flow"
-msgstr ""
+msgstr "جریان فروش"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -5441,7 +5456,7 @@ msgstr "اوراق شد"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr ""
+msgstr "قراضه‌ها"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5671,7 +5686,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_package_id
 msgid "Source Package"
-msgstr ""
+msgstr "بسته منبع"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
@@ -5774,7 +5789,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "انتقال موجودی"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5787,7 +5802,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Stock Moves"
-msgstr ""
+msgstr "انتقالهای موجودی"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_graph
@@ -6387,7 +6402,7 @@ msgstr "به"
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "To Do"
-msgstr ""
+msgstr "در دست اقدام"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6479,7 +6494,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template_tracking
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_tracking
 msgid "Tracking"
-msgstr ""
+msgstr "ره گیری"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:958
@@ -6744,7 +6759,7 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_suppliers
 #: selection:stock.picking.type,code:0
 msgid "Vendors"
-msgstr ""
+msgstr "فروشندگاه"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6779,7 +6794,7 @@ msgstr "حجم"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Waiting"
-msgstr ""
+msgstr "منتظر"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -7379,7 +7394,7 @@ msgstr "ماه"
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_lot_form
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "of"
-msgstr ""
+msgstr "از"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -7421,7 +7436,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

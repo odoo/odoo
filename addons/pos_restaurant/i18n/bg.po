@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
@@ -29,8 +30,8 @@ msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
 msgstr ""
-"Фоновото изображение се изполва за визуализация на плана на етажа в PoS "
-"интерфейса"
+"Фоново изображение, използвано за визуализация на плана на етажа в "
+"интерфейса 'Център за продажби'."
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -56,12 +57,12 @@ msgstr "Добави Забележка"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Allow custom notes on Orderlines"
-msgstr "Добави собствени бележки в Редовете на поръчката"
+msgstr "Позволете персонализирани бележки в редовете на поръчката"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_printbill
 msgid "Allows to print the Bill before payment"
-msgstr "Разрешете отпечатване на сметката преди плащането"
+msgstr "Позволява отпечатване на фактура за покупка преди плащането."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
@@ -118,7 +119,7 @@ msgstr "Бар и Ресторант"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:31
 #, python-format
 msgid "Bill"
-msgstr "Сметка"
+msgstr "Фактура за покупка"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -126,7 +127,7 @@ msgstr "Сметка"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Отпечатване на сметка"
+msgstr "Отпечатване на фактура за покупка"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -134,7 +135,7 @@ msgstr "Отпечатване на сметка"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_splitbill
 #, python-format
 msgid "Bill Splitting"
-msgstr "Разделяне на Сметка"
+msgstr "Разделяне на фактура за покупка"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -160,7 +161,7 @@ msgstr "Добавете Етаж на Ресторант"
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Click to add a Restaurant Order Printer."
-msgstr "Добавете Кухненски Принтер за Поръчки."
+msgstr "Натиснете бутона, за да добавите принтер за поръчки в заведения."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_color
@@ -214,7 +215,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale"
-msgstr "Разреши Разделянето на Сметка"
+msgstr "Позволява разделянето на фактури за покупка в Центъра за продажба"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -278,7 +279,8 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
 msgstr ""
-"Ако е НЕ, масата е деактивирана и няма да може да се избере в софтуера"
+"Ако е грешна, таблицата е деактивирана и няма да бъде налична в Центъра за "
+"продажби"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -342,14 +344,14 @@ msgstr "Ok"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
 #, python-format
 msgid "Order"
-msgstr "Ред"
+msgstr "Поръчка"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_printer_ids
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 msgid "Order Printers"
-msgstr "Кухненски Принтер"
+msgstr "Принтери за поръчки"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -357,13 +359,13 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
-"Кухненски Принтери се използват от ресторанти и барове за печат на\n"
-"марки за кухня/бар, когато сервитьорът актуализира поръчката."
+"Принтери за поръчки се използват от ресторанти и барове за разпечатване на\n"
+"актуализиранитеи поръчки в кухнята/бара, когато сервитьорът актуализира поръчката."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Orderline Notes"
-msgstr "Бележки за Ред от Поръчка"
+msgstr "Бележки към реда на поръчка"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
@@ -385,7 +387,7 @@ msgstr "Център за продажби"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Поръчки на пункта за продажби"
+msgstr "Поръчки на Центъра за продажба"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -511,7 +513,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_table_ids
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr ""
+msgstr "Таблици"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -550,7 +552,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
-msgstr ""
+msgstr "Етажи от ресторанта, обслужвани от този Център за продажби"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id

@@ -3,24 +3,25 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # ifaraz ir <ifarazir@gmail.com>, 2016
 # Morovat Guivi <tarjomac@gmail.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -41,6 +42,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>سلام,</p>\n"
+"<p>\n"
+"    ${user.name} با شما ${object.slide_type} <strong>${object.name}</strong>  به اشتراک گذاشته است!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        ببینید <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -61,26 +77,41 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>سلام,</p>\n"
+"<p>\n"
+"    یک ${object.slide_type} <strong>${object.name}</strong>  منتشر شده ${object.channel_id.name} در ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        ببینید <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
 msgid "# Views"
-msgstr ""
+msgstr "تعداد نمایش"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
 msgid "# of Embedded Views"
-msgstr ""
+msgstr "تعداد نماهای تعبیه شده"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
 msgid "# of Website Views"
-msgstr ""
+msgstr "تعداد نماهای وبسایت"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
-msgstr ""
+msgstr "${user.name} یک ${object.slide_type} با شما به اشتراک گذاشته است!"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -100,6 +131,8 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> ایمیل</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -107,6 +140,8 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> تعبیه</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -114,11 +149,13 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> اشتراک</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<b>Share:</b>"
-msgstr ""
+msgstr "<b>اشتراک:</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -128,33 +165,33 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "<i class=\"fa fa-arrow-right\"/> See all"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> دیدن همه"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart\"/> آمار"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-circle-o\"/> Website Views"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o\"/> بازدیدهای وبسایت"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
-msgstr ""
+msgstr "<i class=\"fa fa-cloud-upload\"/> بارگذاری"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-code\"/> Embeded Views"
-msgstr ""
+msgstr "<i class=\"fa fa-code\"/> نماهای تعبیه شده"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-comments-o\"/> Comments"
-msgstr ""
+msgstr "<i class=\"fa fa-comments-o\"/> کامنتها"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -162,23 +199,25 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                        Send Email"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                        ارسال ایمیل"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
-msgstr ""
+msgstr "<i class=\"fa fa-exclamation-triangle\"/> این"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-home\"/> About"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/> درباره"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<i class=\"fa fa-home\"/> Home"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/> خانه"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -190,27 +229,27 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-play\"/> Total Views"
-msgstr ""
+msgstr "<i class=\"fa fa-play\"/> بازدید کل"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr ""
+msgstr "<i class=\"fa fa-share-alt\"/> اشتراک"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
-msgstr ""
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> در حال بارگذاری ..."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
-msgstr ""
+msgstr "نپسندیده‌ها"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
-msgstr ""
+msgstr "پسندها"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -218,6 +257,8 @@ msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> فیسبوک"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -225,6 +266,8 @@ msgid ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> گوگل+"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -232,6 +275,8 @@ msgid ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> لینکداین"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -239,6 +284,8 @@ msgid ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> اشتراک مجازی"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -246,11 +293,13 @@ msgid ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> تویتر"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"help-block\">ارسال ارائه با ایمیل</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -262,17 +311,17 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<span class=\"text-muted small\">views</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">یازدیدها</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<span class=\"text-muted\">Sort by:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">مرتب سازی بر اساس:</span>"
 
 #. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
-msgstr ""
+msgstr "یک برچسب باید یکتا باشد!"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -493,7 +542,7 @@ msgstr "نام نمایشی"
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
 #: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
 msgid "Display order"
-msgstr ""
+msgstr "ترتیب نمایش"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -504,12 +553,12 @@ msgstr "سند"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
 msgid "Document ID"
-msgstr ""
+msgstr "آیدی سند"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
 msgid "Document URL"
-msgstr ""
+msgstr "آدرس سند"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -673,12 +722,12 @@ msgstr "تصویر"
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Infographic"
-msgstr ""
+msgstr "اینفوگرافیک"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Infographics"
-msgstr ""
+msgstr "اینفوگرافیکها"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:322
@@ -725,13 +774,13 @@ msgstr "آخرین به روز رسانی در"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr ""
+msgstr "آخرین منتشر شده‌ها"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
-msgstr ""
+msgstr "پسندها"
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag2
@@ -741,7 +790,7 @@ msgstr "بازاریابی"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
-msgstr ""
+msgstr "متوسط"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
@@ -758,7 +807,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr ""
+msgstr "بیشترین بازدید"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -783,7 +832,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
-msgstr ""
+msgstr "جدیدترین"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -793,7 +842,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "No One"
-msgstr ""
+msgstr "هیچکدام"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channel_not_found
@@ -803,7 +852,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "No presentation available."
-msgstr ""
+msgstr "هیچ ارائه‌ای موجود نیست."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -814,7 +863,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
-msgstr ""
+msgstr "عدا سندها"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
@@ -832,7 +881,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
 msgid "Number of Videos"
-msgstr ""
+msgstr "تعداد ویدئوها"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
@@ -843,7 +892,7 @@ msgstr ""
 #: model:slide.category,name:website_slides.category_2
 #: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
-msgstr ""
+msgstr "روزهای اودو"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
@@ -922,7 +971,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
-msgstr ""
+msgstr "لطفا"
 
 #. module: website_slides
 #. openerp-web
@@ -960,7 +1009,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
 #: selection:slide.slide,slide_type:0
 msgid "Presentation"
-msgstr ""
+msgstr "ارائه"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
@@ -973,7 +1022,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: model:website.menu,name:website_slides.website_menu_slides
 msgid "Presentations"
-msgstr ""
+msgstr "ارائه‌ها"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -983,7 +1032,7 @@ msgstr "خصوصی"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Private channel"
-msgstr ""
+msgstr "کانال خصوصی"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -993,32 +1042,32 @@ msgstr "همگانی"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr ""
+msgstr "کانال عمومی"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
 msgid "Publish Date"
-msgstr ""
+msgstr "تاریخ انتشار"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
-msgstr ""
+msgstr "منتشر شده"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
 msgid "Published Template"
-msgstr ""
+msgstr "قالب منتشر شده"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Related"
-msgstr ""
+msgstr "مربوطه"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "Results for"
-msgstr ""
+msgstr "نتیجه برای "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1040,19 +1089,19 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:70
 #, python-format
 msgid "Save and Publish"
-msgstr ""
+msgstr "ذخیره و انتشار"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:69
 #, python-format
 msgid "Save as Draft"
-msgstr ""
+msgstr "ذخیره به صورت پیشنویس"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Search Slides"
-msgstr ""
+msgstr "جستجوی اسلایدها"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1062,7 +1111,7 @@ msgstr "امنیت"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.channels
 msgid "Select a Channel"
-msgstr ""
+msgstr "انتخاب یک کانال"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_embed
@@ -1078,7 +1127,7 @@ msgstr "دنباله"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share Link"
-msgstr ""
+msgstr "اشتراک لینک"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1093,7 +1142,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Share with a friend"
-msgstr ""
+msgstr "اشتراک با دوست"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
@@ -1108,17 +1157,17 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Slide"
-msgstr ""
+msgstr "اسلاید"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
-msgstr ""
+msgstr "برچسب اسلاید"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
 msgid "Slide to Promote"
-msgstr ""
+msgstr "اسلاید برای ترویج"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slides_slides
@@ -1129,17 +1178,17 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Slides"
-msgstr ""
+msgstr "اسلایدها"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
 msgid "Slides Category"
-msgstr ""
+msgstr "طبقه‌بندی اسلاید"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid "Sorry, but nothing matches your search criteria"
-msgstr ""
+msgstr "متاسفیم، ولی هیچ چیزی با شرط جستجوی شما تطابق ندارد"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_3
@@ -1174,7 +1223,7 @@ msgstr "برچسب ها..."
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "The"
-msgstr ""
+msgstr "این"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
@@ -1231,7 +1280,7 @@ msgstr "جمع کل:"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
 msgid "Total # Views"
-msgstr ""
+msgstr "تعداد کل بازدیدها"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
@@ -1264,7 +1313,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Unpublished"
-msgstr ""
+msgstr "منتشر نشده"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1306,12 +1355,12 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Video"
-msgstr ""
+msgstr "ویدئو"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr ""
+msgstr "ویدئوها"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1322,7 +1371,7 @@ msgstr "نماها"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.related_slides
 msgid "Views ."
-msgstr ""
+msgstr "نمایشها"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
@@ -1332,7 +1381,7 @@ msgstr "وضعیت نمایش"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "منتظر تایید اعتبار"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1405,29 +1454,29 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "by email!"
-msgstr ""
+msgstr "با ایمیل!"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid "is empty."
-msgstr ""
+msgstr "خالیست."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "is private"
-msgstr ""
+msgstr "خصوصی است"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 #: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
 msgid "is private."
-msgstr ""
+msgstr "خصوصی است."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
-msgstr ""
+msgstr "ورود"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -1459,7 +1508,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
-msgstr ""
+msgstr "برای ارسال این"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website_config_settings

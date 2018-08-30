@@ -766,13 +766,13 @@ msgstr "Įrašytas atsakymas / Trumpas kodas"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_email_cc
 msgid "Carbon copy message recipients"
-msgstr ""
+msgstr "Žinutės kopijos gavėjai"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_cc
 #: model:ir.model.fields,help:mail.field_mail_template_email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr ""
+msgstr "Žinutės kopijos gavėjai (čia gali būti panaudotos vietos žymos)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_cc
@@ -895,7 +895,7 @@ msgstr "Uždaryta"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr ""
+msgstr "Kableliu atskirti žinutės kopijos gavėjų adresai"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -909,6 +909,8 @@ msgstr "Kableliu atskirtos gavėjų partnerių ids."
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
+"Kableliu atskirti gavėjų partnerių ID (čia gali būti panaudotos vietos "
+"žymos)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1456,7 +1458,7 @@ msgstr "Išplėstiniai filtrai..."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
 msgid "Fail Mail"
-msgstr ""
+msgstr "Nepavykę laiškai"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2479,7 +2481,7 @@ msgstr "Laiško pristatymas nesėkmingas"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Laiško sekimo reikšmė"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2490,7 +2492,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_emails_partner_info_form
 msgid "Mailing Opt-Out"
-msgstr ""
+msgstr "Laiškų atsisakymas"
 
 #. module: mail
 #. openerp-web
@@ -2788,7 +2790,7 @@ msgstr "Pavadinimas"
 #: model:ir.model.fields,help:mail.field_mail_message_record_name
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_record_name
 msgid "Name get of the related document."
-msgstr ""
+msgstr "Susijusio dokumento pavadinimo gavimas."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_report_name
@@ -3398,6 +3400,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
+"Tėvinis potipis, naudojamas automatiniam prenumeravimui. Šis laukas "
+"neteisingai pavadintas. Pavyzdžiui, projekte projekto potipių parent_id "
+"nurodo su užduotimi susijusius potipius."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -3500,6 +3505,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Žinutės paskelbimo prie dokumento naudojant pašto serverį politika.\n"
+"- visi: visi gali paskelbti\n"
+"- partneriai: tik patvirtinti partneriai\n"
+"- sekėjai: tik susijusio dokumento sekėjai arba sekančių kanalų nariai\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner_notify_email
@@ -3668,6 +3677,8 @@ msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
 msgstr ""
+"Atsakymo el. pašto adresas. reply_to nustatymas apeina automatinį temos "
+"sukūrimą."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_reply_to
@@ -4050,7 +4061,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "HTML kodas, pakeičiantis trumpąją nuorodą"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4061,6 +4072,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modelis (Odoo dokumento rūšis), su kuriuo susijęs šis pseudonimas. Visi "
+"gaunami laiškai, kurie neatsako į egzistuojantį įrašą, sukurs naują šio "
+"modelio įrašą (pvz. projekto užduotį)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_name
@@ -4276,7 +4290,7 @@ msgstr "Atsisakyti"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
+msgstr "Deja, bet šis pseudonimas jau yra naudojamas, tad pasirinkite kitą"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread
@@ -4522,12 +4536,14 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Kai sąryšio laukas yra pasirinktas kaip pirmas laukas, šis laukas nurodo to "
+"sąryšio dokumento modelį."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_is_log
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Ar žinutė yra vidinis pranešimas (tik komentarų režimas)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form

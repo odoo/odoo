@@ -4,18 +4,19 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 # son dang <son.dang@doda100.com>, 2016
 # Phạm Lân <phamquanglan@gmail.com>, 2016
-# Thanh Nguyễn <thanhnguyen.icsc@gmail.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2017
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Thanh Nguyễn <thanhnguyen.icsc@gmail.com>, 2017\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +64,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Không tìm thấy tài khoản kế toán để hạch toán nhập kho đối với sản phẩm %s. "
+"Bạn phải xác định một tài khoản ở Nhóm sản phẩm, hoặc ở Địa điểm kho trước "
+"khi xử lý hoạt động này."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -72,6 +76,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Không tìm thấy tài khoản kế toán để hạch toán xuất kho đối với sản phẩm %s. "
+"Ban phải xác định một tài khoản ở Nhóm sản phẩm, hoặc ở địa điểm kho, trước "
+"khi xử lý hoạt động này."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -96,6 +103,8 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
+"Chọn ngày kế toán mà bạn muốn giá trị xuất/nhập kho được hạch toán vào khi "
+"kiểm kho, thay vì ngày mặc định (ngày kết thúc kiểm kho)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -115,6 +124,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Lỗi cấu hình! Vui lòng cấu hình tài khoản chênh lệch giá trên sản phẩm hoặc "
+"nhóm tương ứng của nó để xử lý hoạt động này."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -137,7 +148,7 @@ msgstr "Phương pháp giá vốn"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Tài khoản đối ứng"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -166,7 +177,7 @@ msgstr "Tên hiển thị"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Cưỡng bức Ngày Kế toán"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -255,7 +266,7 @@ msgstr "Giá trị tồn kho"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr ""
+msgstr "Tồn kho tại ngày"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -301,7 +312,7 @@ msgstr "Địa điểm"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Lô/Số sê-ri"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
@@ -328,7 +339,7 @@ msgstr "Operation Date"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Định kỳ (thủ công)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -339,7 +350,7 @@ msgstr ""
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Thời gian thực (tự động)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
@@ -556,7 +567,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Định giá"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -654,6 +665,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
 msgstr ""
+"Bạn chưa khai báo bất kỳ một sổ nhật ký kế toán kho nào cho nhóm sản phẩm "
+"tương ứng. Hãy kiểm tra xem bạn đã cài đặt hệ thống tài khoản kế toán chưa."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
@@ -663,6 +676,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Bạn chưa xác định Tài khoản định giá tồn kho đối với nhóm sản phẩm. Bạn phải"
+" xác định tài khoản này trước khi xử lý hoạt động này."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

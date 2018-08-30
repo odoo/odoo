@@ -6,8 +6,8 @@
 # Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # kalatchev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
-# kirily <kiril@teracomp.eu>, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Референция за покана за участие в търг:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -76,7 +76,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
-msgstr ""
+msgstr "<strong>Доставчик </strong>"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
@@ -86,7 +86,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Agreement Reference"
-msgstr ""
+msgstr "Референция за споразумение"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
@@ -120,12 +120,12 @@ msgstr ""
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Покана за участия в търг"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr ""
+msgstr "Прекратете разговора"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -147,7 +147,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_company_id
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -163,7 +163,7 @@ msgstr "Потвърден"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr ""
+msgstr "Създайте чернова поръчка за покупка"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_uid
@@ -217,7 +217,7 @@ msgstr "Готов"
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr "Проект"
+msgstr "Чернова"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -229,6 +229,8 @@ msgstr ""
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
+"Примерът за споразумения относно покупка включва покана за участие в търгове"
+" и поръчки за одеала."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -258,6 +260,10 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"В покана за участие в търг можете да регистрирате продуктите, които трябва да купите\n"
+"            и да създадете заявки за оферти към доставчиците. След като офертите\n"
+"            са регистрирани, можете да ги прегледате и сравните, както и\n"
+"            да валидирате някои от тях и да анулирате други."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -329,7 +335,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
 msgid "Picking Type"
-msgstr ""
+msgstr "Вид пикинг"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
@@ -367,7 +373,7 @@ msgstr ""
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Отправете покана за участия в търгове"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
@@ -415,7 +421,7 @@ msgstr "Поръчки за покупки"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Поръчки за покупки със заявка"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -441,7 +447,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr ""
+msgstr "Поръчки за покупки"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
@@ -481,7 +487,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
-msgstr "Пращане в проект"
+msgstr "Пренастройте за чернова"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_user_id
@@ -546,7 +552,7 @@ msgstr "Състояние"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
-msgstr "Правила и условия"
+msgstr "Срокове и условия"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
@@ -557,12 +563,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned"
-msgstr "Незаето"
+msgstr "Неразпределен"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Неразпределена заявка"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
@@ -598,7 +604,7 @@ msgstr "Склад"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
 msgid "You cannot confirm call because there is no product line."
-msgstr ""
+msgstr "Не можете да потвърдите разговор, тъй като липсва продуктова линия."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:99

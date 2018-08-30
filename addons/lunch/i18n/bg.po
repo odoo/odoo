@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# kalatchev <kalatchev@gmail.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# Martin Trigaux, 2016
+# kalatchev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Anton Vassilev <anton.vasilev@gmail.com>, 2016
+# Anton Vassilev, 2016
 # Antoan Georgiev <expocarbg@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "<span class=\"o_stat_text\">Balance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Салдо</span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
@@ -61,6 +62,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
 msgstr ""
+"Даден продукт е дефиниран според неговото име, категория, цена или "
+"доставчик."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
@@ -119,7 +122,7 @@ msgstr "Архивирани"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
 msgid "Balance visible"
-msgstr ""
+msgstr "Видимо салдо"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
@@ -144,12 +147,12 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr ""
+msgstr "От доставчик"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
 msgid "Can be an order or a payment"
-msgstr ""
+msgstr "Може да е поръчка или плащане"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
@@ -183,7 +186,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash move balance"
-msgstr ""
+msgstr "Парични движения"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -220,7 +223,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_company_id
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компания"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
@@ -236,7 +239,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "Контролирайте доставчици"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_create_uid
@@ -376,7 +379,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "Тук можете да видите днешните поръчки, групирани по доставчици."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
@@ -575,12 +578,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #: selection:lunch.cashmove,state:0
 msgid "Order"
-msgstr "Ред"
+msgstr "Поръчка"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Order Month"
-msgstr "Месец на Поръчка"
+msgstr "Месец на поръчка"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
@@ -611,7 +614,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
 msgid "Orders by Vendor"
-msgstr ""
+msgstr "Поръчки от доставчик"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -750,7 +753,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Select your vendor"
-msgstr ""
+msgstr "Изберете доставчика си"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
@@ -767,6 +770,7 @@ msgstr "Състояние"
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
 msgstr ""
+"Обобщение на всички поръчки за обяд, групирани по доставчик и по дата."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_sunday
@@ -776,7 +780,7 @@ msgstr "Неделя"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_company_id
 msgid "The company this user is currently working for."
-msgstr "Фирмата, за която този потребител работи понастоящем."
+msgstr "Компанията, за която този потребител работи понастоящем."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:99
@@ -811,7 +815,7 @@ msgstr "Днес"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_by_supplier
 msgid "Today's Orders"
-msgstr ""
+msgstr "Днешни поръчки"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_total
@@ -851,7 +855,7 @@ msgstr "Доставчик"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Month"
-msgstr ""
+msgstr "Поръчки на доставчик по месеци"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_wednesday
@@ -876,7 +880,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action
 msgid "Your Orders"
-msgstr "Вашите Поръчки"
+msgstr "Вашите поръчки"
 
 #. module: lunch
 #. openerp-web
@@ -884,6 +888,7 @@ msgstr "Вашите Поръчки"
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
 msgstr ""
+"Вашите любими ястия ще бъдат саздадени на базата на воследните Ви поръчки."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
@@ -910,7 +915,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "lunch order line"
-msgstr ""
+msgstr "Ред на поръчка за обяд"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product

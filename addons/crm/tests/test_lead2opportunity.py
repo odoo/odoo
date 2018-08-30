@@ -38,7 +38,7 @@ class TestLead2opportunity2win(TestCrmCases):
         crm_case_3.message_post(subject='Test note', body='Détails envoyés par le client sur ​​le FAX pour la qualité')
 
         # I convert mass lead into opportunity customer.
-        mass = CrmLead2OpportunityPartnerMass.with_context({'active_model': 'crm.lead', 'active_ids': [crm_case_13.id, crm_case_2.id], 'active_id': crm_case_13.id}).create({
+        mass = CrmLead2OpportunityPartnerMass.sudo(self.crm_salemanager.id).with_context({'active_model': 'crm.lead', 'active_ids': [crm_case_13.id, crm_case_2.id], 'active_id': crm_case_13.id}).create({
             'user_ids': [(6, 0, self.env.ref('base.user_root').ids)],
             'team_id': self.env.ref("sales_team.team_sales_department").id
         })
