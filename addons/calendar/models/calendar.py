@@ -790,6 +790,9 @@ class Meeting(models.Model):
     res_model = fields.Char('Document Model Name', related='res_model_id.model', readonly=True, store=True)
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
 
+    #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
+    message_ids = fields.One2many(auto_join=False)
+
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     rrule_type = fields.Selection([
