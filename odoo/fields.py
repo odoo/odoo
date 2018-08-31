@@ -858,7 +858,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the record format to the export format. """
         if not value:
             return ''
-        return value if record._context.get('export_raw_data') else ustr(value)
+        return value
 
     def convert_to_display_name(self, value, record):
         """ Convert ``value`` from the record format to a suitable display name. """
@@ -1214,9 +1214,7 @@ class Boolean(Field):
         return bool(value)
 
     def convert_to_export(self, value, record):
-        if record._context.get('export_raw_data'):
-            return value
-        return ustr(value)
+        return value
 
 
 class Integer(Field):
@@ -1250,7 +1248,7 @@ class Integer(Field):
 
     def convert_to_export(self, value, record):
         if value or value == 0:
-            return value if record._context.get('export_raw_data') else ustr(value)
+            return value
         return ''
 
 
@@ -1310,7 +1308,7 @@ class Float(Field):
 
     def convert_to_export(self, value, record):
         if value or value == 0.0:
-            return value if record._context.get('export_raw_data') else ustr(value)
+            return value
         return ''
 
 
@@ -1671,7 +1669,7 @@ class Date(Field):
     def convert_to_export(self, value, record):
         if not value:
             return ''
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.from_string(value)
 
 
 class Datetime(Field):
@@ -1782,7 +1780,7 @@ class Datetime(Field):
         if not value:
             return ''
         value = self.convert_to_display_name(value, record)
-        return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
+        return self.from_string(value)
 
     def convert_to_display_name(self, value, record):
         assert record, 'Record expected'
@@ -2007,7 +2005,7 @@ class Selection(Field):
         for item in self._description_selection(record.env):
             if item[0] == value:
                 return item[1]
-        return False
+        return ''
 
 
 class Reference(Selection):
