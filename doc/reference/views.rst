@@ -1275,7 +1275,7 @@ Possible children of the diagram view are:
     note's content. Each ``label`` is output as a paragraph in the diagram
     header, easily visible but without any special emphasis.
 
-.. _reference/views/search:
+.. _reference/views/dashboard:
 
 Dashboard
 =========
@@ -1460,6 +1460,8 @@ There are 5 possible type of tags in a dashboard view:
         The number of columns spanned by this tag (only makes sense inside a
         group). By default, 1.
 
+.. _reference/views/cohort:
+
 Cohort
 =========
 
@@ -1519,6 +1521,35 @@ attributes:
 - ``measure`` (optional)
     A field that can be aggregated.  This field will be used to compute the values
     for each cell.  If not set, the cohort view will count the number of occurrences.
+
+.. _reference/views/activity:
+
+Activity
+========
+
+The Activity view is used to display the activities linked to the records. The
+data are displayed in a chart with the records forming the rows and the activity
+types the columns. When clicking on a cell, a detailed description of all
+activities of the same type for the record is displayed.
+
+.. warning::
+
+   The Activity view is only available when the ``mail`` module is installed,
+   and for the models that inherit from the ``mail.activity.mixin``.
+
+For example, here is a very simple Activity view:
+
+.. code-block:: xml
+
+    <activity string="Activities"/>
+
+The root element of the Activity view is <activity>, it accepts the following
+attributes:
+
+- ``string`` (mandatory)
+    A title, which should describe the view
+
+.. _reference/views/search:
 
 Search
 ======
