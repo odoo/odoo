@@ -84,16 +84,17 @@
             <div id="wrap" class='o_portal_wrap'>
                 <div class="container mb64">
                     <t t-if="my_details">
-                        <div class="row">
-                            <div t-attf-class="col-lg-9 col-xl-8">
+                        <div class="row justify-content-between mt-4">
+                            <div t-attf-class="col-12 col-md col-lg-6">
                                 <t t-raw="0"/>
                             </div>
-                            <div id="o_my_sidebar" class="col-lg-3 offset-xl-1 o_my_sidebar">
+                            <div id="o_my_sidebar" class="col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="o_page_header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h3>
+                                    <h4>Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h4>
+                                    <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">
@@ -126,7 +127,7 @@
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure"></div>
-                <h3 class="o_page_header">Your Documents</h3>
+                <h3>Your Documents</h3>
                 <ul class="o_portal_docs list-group">
                 </ul>
             </div>
