@@ -923,24 +923,26 @@ class UsersView(models.Model):
             if kind == 'selection':
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
-                res[name_selection_groups(gs.ids)] = {
-                    'type': 'selection',
-                    'string': app.name or _('Other'),
-                    'selection': [(False, '')] + [(g.id, g.name) for g in gs],
-                    'help': '\n'.join(tips),
-                    'exportable': False,
-                    'selectable': False,
-                }
-            else:
-                # boolean group fields
-                for g in gs:
-                    res[name_boolean_group(g.id)] = {
-                        'type': 'boolean',
-                        'string': g.name,
-                        'help': g.comment,
+                if not allfields or name_selection_groups(gs.ids) in allfields:
+                    res[name_selection_groups(gs.ids)] = {
+                        'type': 'selection',
+                        'string': app.name or _('Other'),
+                        'selection': [(False, '')] + [(g.id, g.name) for g in gs],
+                        'help': '\n'.join(tips),
                         'exportable': False,
                         'selectable': False,
                     }
+            else:
+                # boolean group fields
+                for g in gs:
+                    if not allfields or name_boolean_group(g.id) in allfields:
+                        res[name_boolean_group(g.id)] = {
+                            'type': 'boolean',
+                            'string': g.name,
+                            'help': g.comment,
+                            'exportable': False,
+                            'selectable': False,
+                        }
         return res
 
 #----------------------------------------------------------
