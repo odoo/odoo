@@ -41,6 +41,7 @@ var WebsiteRoot = BodyManager.extend({
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
         'click .js_multi_website_switch': '_multiWebsiteSwitch',
+        'click .js_multi_company_switch': '_multiCompanySwitch',
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
@@ -308,6 +309,16 @@ var WebsiteRoot = BodyManager.extend({
             params: {
                 website_id: website_id_to_switch_to || false,
             },
+        }).then(function () {
+            window.location.reload(true);
+        });
+    },
+
+    _multiCompanySwitch: function (ev) {
+        var company_id_to_switch_to = ev.currentTarget.getAttribute('company-id');
+        this._rpc({model: 'res.users',
+            method: 'write',
+            args: [odoo.session_info.user_id, {'company_id': parseInt(company_id_to_switch_to, 10)}],
         }).then(function () {
             window.location.reload(true);
         });
