@@ -519,7 +519,7 @@
                             <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
                             <t t-foreach="tickets" t-as="ticket">
-                                <h4 class="page-header mt16">
+                                <h4 class="o_page_header mt16">
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/>
                                         <t t-if="ticket['price'] == 0">(Free)</t>
