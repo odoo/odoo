@@ -30,3 +30,21 @@ class TestTermCount(common.TransactionCase):
         menu.refresh()
         self.assertEqual(menu.name, "New Name")
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
+
+    def test_no_duplicate(self):
+        """
+        Just make sure we do not create duplicated translation with 'code' type
+        """
+        odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False)
+        ids = self.env['ir.translation'].search(
+            [('src', '=', 'Test translation with two code lines')])
+        self.assertEqual(len(ids), 1)
+
+        ids = self.env['ir.translation'].search(
+            [('src', '=', 'Test translation with a code type but different line number in pot')])
+        self.assertEqual(len(ids), 1)
+
+        ids = self.env['ir.translation'].search(
+            [('src', '=', 'Test translation with two code type and model')])
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(len(ids.filtered(lambda t: t.type == 'code')), 1)
