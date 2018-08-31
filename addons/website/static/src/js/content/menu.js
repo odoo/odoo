@@ -1,7 +1,6 @@
 odoo.define('website.content.menu', function (require) {
 'use strict';
 
-var config = require('web.config');
 var dom = require('web.dom');
 var sAnimation = require('website.content.snippets.animation');
 
@@ -76,18 +75,19 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
  *
  * Note: this works well with the affixMenu... by chance (autohideMenu is called
  * after alphabetically).
- *
- * @todo We may want to avoid some code duplication by sharing what is done in
- * the backend in enterprise...
  */
 sAnimation.registry.autohideMenu = sAnimation.Class.extend({
-    selector: 'header:not(.o_no_autohide_menu) #top_menu',
+    selector: 'header #top_menu',
 
     /**
      * @override
      */
     start: function () {
-        dom.initAutoMoreMenu(this.$el, {unfoldable: '.divider, .divider ~ li'});
+        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
+        if (!this.noAutohide) {
+            dom.initAutoMoreMenu(this.$el, {unfoldable: '.divider, .divider ~ li'});
+        }
+        this.$el.removeClass('o_menu_loading');
         return this._super.apply(this, arguments);
     },
     /**
@@ -95,7 +95,9 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        dom.destroyAutoMoreMenu(this.$el);
+        if (!this.noAutohide) {
+            dom.destroyAutoMoreMenu(this.$el);
+        }
     },
 });
 
