@@ -409,7 +409,7 @@ return {
             }, 0);
 
             if (maxWidth - menuItemsWidth >= -0.001) {
-                return
+                return;
             }
 
             var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
@@ -422,7 +422,7 @@ return {
             menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
             do {
                 menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
-            } while (menuItemsWidth > maxWidth);
+            } while (!(maxWidth - menuItemsWidth >= -0.001));
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');

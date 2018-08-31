@@ -3,10 +3,12 @@
 /// rules.
 ///
 
+$-navbar-height: $nav-link-height !default;
+
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
-    height: round($nav-link-height * $ratio * 100) / 100;
-    margin-top: round($nav-link-height * (1 - $ratio) / 2 * 100) / 100;
+    height: round($-navbar-height * $ratio * 100) / 100;
+    margin-top: round($-navbar-height * (1 - $ratio) / 2 * 100) / 100;
 }
 
 // Frontend general
@@ -26,14 +28,23 @@
 }
 
 header {
-    .navbar-brand.logo {
-        padding-top: 0;
-        padding-bottom: 0;
+    .navbar-brand {
+        flex: 0 0 auto;
 
-        img {
-            @include o-w-fill-navbar;
-            width: auto;
-            max-width: none;
+        &.logo {
+            // Width and height are fixed to prevent navbar flickering due to
+            // image loading
+            width: 4 * $-navbar-height;
+            height: $-navbar-height;
+
+            padding-top: 0;
+            padding-bottom: 0;
+
+            img {
+                @include o-w-fill-navbar;
+                width: auto;
+                max-width: none;
+            }
         }
     }
     .nav-link {

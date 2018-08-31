@@ -28,6 +28,15 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
 
 .navbar {
     @include o-bg-color(color('menu'));
+
+    .nav-item {
+        transition: opacity 1000ms ease 0s;
+    }
+    .o_menu_loading .nav-item {
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+    }
 }
 .o_footer {
     @include o-bg-color(color('footer'));
