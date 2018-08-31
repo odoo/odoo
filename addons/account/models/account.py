@@ -374,6 +374,14 @@ class AccountGroup(models.Model):
         return self.browse(group_ids).name_get()
 
 
+class AccountJournalGroup(models.Model):
+    _name = 'account.journal.group'
+
+    name = fields.Char(required=True, translate=True)
+    company_id = fields.Many2one('res.company')
+    account_journal_ids = fields.Many2many('account.journal', string="Journals")
+
+
 class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
@@ -466,6 +474,8 @@ class AccountJournal(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Alias')
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.")
+
+    journal_group_ids = fields.Many2many('account.journal.group', string="Journal Groups")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
