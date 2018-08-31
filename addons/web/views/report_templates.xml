@@ -75,6 +75,18 @@
                     <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
                     <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                     <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
+                    <script type="text/javascript">
+                        if (window.odoo.define) {
+                            odoo.define('web.csrf', function (require) {
+                                var token = "<t t-if="request" t-esc="request.csrf_token(None)"/>";
+                                if (token) {
+                                    var core = require('web.core');
+                                    core.csrf_token = token;
+                                    core.qweb.default_dict.csrf_token = token;
+                                }
+                            });
+                        }
+                    </script>
                 </t>
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'">

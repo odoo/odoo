@@ -280,7 +280,40 @@ var EditorMenuBar = Widget.extend({
     },
 });
 
+var EditorMenuBarEdit = Widget.extend({
+    template: 'web_editor.editbtn',
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    events: {
+        'click button[data-action=edit]': '_onEditClick',
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        $('body').addClass('editor_enable');
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the "Edit" button is clicked ->  load editor on edit mode.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onEditClick: function (ev) {
+        ev.preventDefault;
+        var editorInstance = new EditorMenuBar(this);
+        editorInstance.replace(this.$el);
+    },
+});
+
 return {
     Class: EditorMenuBar,
+    EditorMenuBarEdit: EditorMenuBarEdit,
 };
 });

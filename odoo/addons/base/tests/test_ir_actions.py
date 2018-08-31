@@ -227,6 +227,34 @@ class TestActionBindings(common.TransactionCase):
             "Wrong action bindings",
         )
 
+        # no_one group on an action, and check that it is only returned in debug mode
+        group = self.env.ref('base.group_no_one')
+        action3.groups_id += group
+
+        bindings = Actions.get_bindings('res.partner')
+        self.assertItemsEqual(
+            bindings['action'],
+            action1.read(),
+            "Wrong action bindings"
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            [],
+            "Wrong action bindings",
+        )
+
+        bindings = Actions.get_bindings('res.partner', debug=True)
+        self.assertItemsEqual(
+            bindings['action'],
+            action1.read(),
+            "Wrong action bindings",
+        )
+        self.assertItemsEqual(
+            bindings['report'],
+            action3.read(),
+            "Wrong action bindings",
+        )
+
 
 class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'

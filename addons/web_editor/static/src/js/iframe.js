@@ -30,7 +30,6 @@ window.top.odoo[callback + '_updown'] = function (value, fields_values, field_na
 editor.Class.include({
     start: function () {
         this.on('rte:start', this, function () {
-            this.$('form').hide();
 
             if (window.top.odoo[callback + '_editor']) {
                 window.top.odoo[callback + '_editor'](this);
@@ -120,6 +119,10 @@ var IframeRoot = BodyManager.extend({
         if (ctx.editable && window.location.search.indexOf('enable_editor') >= 0) {
             var editorInstance = new (editor.Class)(this);
             defs.push(editorInstance.prependTo(this.$el));
+        }
+        if (ctx.editable && window.location.search.indexOf('enable_editor') <= 0) {
+            var editorEditBtn = new (editor.EditorMenuBarEdit)(this);
+            defs.push(editorEditBtn.prependTo(this.$el));
         }
 
         if (ctx.edit_translations) {

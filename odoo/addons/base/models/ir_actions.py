@@ -92,14 +92,15 @@ class IrActions(models.Model):
         }
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name')
-    def get_bindings(self, model_name):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'debug')
+    def get_bindings(self, model_name, debug=False):
         """ Retrieve the list of actions bound to the given model.
 
            :return: a dict mapping binding types to a list of dict describing
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
+        group_no_one = self.env.ref('base.group_no_one')
         cr = self.env.cr
         query = """ SELECT a.id, a.type, a.binding_type
                     FROM ir_actions a, ir_model m
@@ -114,6 +115,8 @@ class IrActions(models.Model):
             try:
                 action = self.env[action_model].browse(action_id)
                 action_groups = getattr(action, 'groups_id', ())
+                if not debug and group_no_one in action_groups:
+                    continue
                 if action_groups and not action_groups & user_groups:
                     # the user may not perform this action
                     continue

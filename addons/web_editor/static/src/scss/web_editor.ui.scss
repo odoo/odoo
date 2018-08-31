@@ -993,6 +993,11 @@ body.editor_enable {
 #web_editor_inside_iframe {
     background-color: $o-brand-secondary;
 
+    #web_editor-top-edit {
+        > form.navbar-form {
+            display: none !important;
+        }
+    }
     #wrapwrap {
         position: relative;
         display: table;

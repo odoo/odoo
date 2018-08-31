@@ -1451,7 +1451,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Add related action information if aksed
         if toolbar:
-            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
+            debug = self.user_has_groups('base.group_no_one')
+            bindings = self.env['ir.actions.actions'].get_bindings(self._name, debug=debug)
             resreport = [action
                          for action in bindings['report']
                          if view_type == 'tree' or not action.get('multi')]

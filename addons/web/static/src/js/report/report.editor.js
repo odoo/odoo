@@ -14,11 +14,21 @@ var trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
 
 // Patch the editor's behavior when it is launched inside an iframe.
 if (window.self !== window.top) {
-    $(document.body).addClass('o_in_iframe'); //  in order to apply css rules
-
+    editor.EditorMenuBarEdit.include({
+        start: function () {
+            return this._super.apply(this, arguments).then(function () {
+                this.$('body').addClass('o_in_iframe'); //  in order to apply css rules
+            });
+        },
+    });
     // And now we chain some deferred to `save` and `cancel` in order to inform
     // the report's client action that the actions are done.
     editor.Class.include({
+        start: function () {
+            return this._super.apply(this, arguments).then(function () {
+                $(document.body).addClass('o_in_iframe'); //  in order to apply css rules
+            });
+        },
         save: function () {
             // Force to not reload
             return this._super(false).then(function () {
