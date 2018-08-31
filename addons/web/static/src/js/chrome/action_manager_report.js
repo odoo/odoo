@@ -80,8 +80,16 @@ ActionManager.include({
      * @returns {Deferred} resolved when the action has been executed
      */
     _triggerDownload: function (action, options, type){
+        var self = this;
         var reportUrls = this._makeReportUrls(action);
-        return this._downloadReport(reportUrls[type]).then(options.on_close);
+        return this._downloadReport(reportUrls[type]).then(function () {
+            if (action.close_on_report_download) {
+                var closeAction = { type: 'ir.actions.act_window_close' };
+                return self.doAction(closeAction, _.pick(options, 'on_close'));
+            } else {
+                return options.on_close();
+            }
+        });
     },
     /**
      * Executes actions of type 'ir.actions.report'.
