@@ -80,17 +80,8 @@ ActionManager.include({
      * @returns {Deferred} resolved when the action has been executed
      */
     _triggerDownload: function (action, options, type){
-        var self = this;
-        var processedActions = [];
-        var currentAction = action;
-        var defs = [];
-        do {
-            var reportUrls = self._makeReportUrls(currentAction);
-            defs.push(self._downloadReport(reportUrls[type]));
-            processedActions.push(currentAction);
-            currentAction = currentAction.next_report_to_generate;
-        } while (currentAction && !_.contains(processedActions, currentAction));
-        return $.when.apply($, defs).done(options.on_close);
+        var reportUrls = this._makeReportUrls(action);
+        return this._downloadReport(reportUrls[type]).then(options.on_close);
     },
     /**
      * Executes actions of type 'ir.actions.report'.
