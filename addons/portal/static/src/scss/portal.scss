@@ -3,7 +3,13 @@
 /// rules.
 ///
 
+// ======  Variables =========
 $-navbar-height: $nav-link-height !default;
+
+// Portal toolbar (filters, search bar)
+$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+$o-portal-mobile-toolbar-border: $border-color;
+$o-portal-mobile-toolbar-bg: $gray-200;
 
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
@@ -299,12 +305,11 @@ img.o_we_custom_image {
 // Portal specific
 .o_portal {
     .breadcrumb {
-        background-color: rgba(0, 0, 0, 0);
-        margin-bottom: 0px;
-    }
+        background-color: transparent;
 
-    .record_pager {
-        padding: 8px 0px;
+        .breadcrumb-item {
+            display: inline-flex;
+        }
     }
 
     > tbody.o_portal_report_tbody {
@@ -357,68 +362,13 @@ img.o_we_custom_image {
         margin-top: 0.5em;
     }
 
-    .o_portal_navbar {
-        .navbar-brand {
-            margin: 0;
-
-            @include media-breakpoint-up(md) {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
-            }
-        }
-
-        // ===== Default portal navbar design =====
-        &.o_portal_navbar_default {
-            margin-bottom: 8px;
-
-            .navbar-brand {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
-            }
-
-            .navbar-header .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
-
-            .navbar-toggle {
-                margin-right: 0;
-                margin-bottom: 0;
-                background-color: $table-active-bg;
-                padding: 6px 10px $navbar-padding-y;
-                border-width: 1px 1px 0 1px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                z-index: 1;
-
-                &.collapsed {
-                    padding:6px 10px;
-                    border-width: 1px;
-                    border-radius: $btn-border-radius;
-                    background-color: transparent;
-                }
-            }
-
-            @include media-breakpoint-down(sm) {
-                .navbar-collapse {
-                    z-index: 0;
-                    background-color: $table-active-bg;
-                    border-radius: $btn-border-radius;
-                    border-top-right-radius: 0;
-                    transform: translateY(-2px);
-
-                    &.in {
-                        overflow: visible;
-                    }
-                }
-            }
-
-            @include media-breakpoint-up(md) {
-                > .container-fluid {
-                    padding: 0;
-
-                    .navbar-form {
-                        padding-right: 0;
-                    }
-                }
+    @if ($o-portal-mobile-toolbar) {
+        #o_portal_navbar_content {
+            @include media-breakpoint-down(md) {
+                margin: $navbar-padding-y (-$navbar-padding-x) 0;
+                padding: $navbar-padding-y $navbar-padding-x ;
+                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                background-color: $o-portal-mobile-toolbar-bg;
             }
         }
     }
