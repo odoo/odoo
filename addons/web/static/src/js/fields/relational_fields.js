@@ -1453,6 +1453,15 @@ var FieldOne2Many = FieldX2Many.extend({
      * @param {OdooEvent|MouseEvent} ev this event comes either from the 'Add
      *   record' link in the list editable renderer, or from the 'Create' button
      *   in the kanban view
+     * @param {Array} ev.data.context additional context for the added records,
+     *   if several contexts are provided, multiple records will be added
+     *   (form dialog will only use the context at index 0 if provided)
+     * @param {boolean} ev.data.forceEditable this is used to bypass the dialog opening
+     *   in case you want to add record(s) to a list
+     * @param {function} ev.data.onSuccess called when the records are correctly created
+     *   (not supported by form dialog)
+     * @param {boolean} ev.data.allowWarning defines if the records can be added
+     *   to the list even if warnings are triggered (e.g: stock warning for product availability)
      */
     _onAddRecord: function (ev) {
         var self = this;
@@ -1485,7 +1494,7 @@ var FieldOne2Many = FieldX2Many.extend({
             }
         } else {
             this._openFormDialog({
-                context: data.context,
+                context: data.context && data.context[0],
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },
