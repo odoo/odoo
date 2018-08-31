@@ -138,6 +138,8 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfiles")
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
+        etree.SubElement(billTo, "firstName").text = (partner.name.split(' ')[0] or None)
+        etree.SubElement(billTo, "lastName").text = (' '.join(partner.name.split(' ')[1:]) or None)
         etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
         
         missing_fields = [partner._fields[field].string for field in ['city', 'country_id'] if not partner[field]]
