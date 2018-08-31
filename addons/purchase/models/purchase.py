@@ -670,7 +670,7 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel'):
-            qty += move.product_qty
+            qty += move.product_uom_qty
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
