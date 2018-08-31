@@ -138,9 +138,9 @@
                 'h6': $-h6-color,
             );
 
-            @each $name, $value in $palette {
+            @each $name, $value in map-merge($-defaults, o-map-omit($palette)) {
                 &.o_theme_customize_color_#{$name} > .o_color_preview {
-                    background-color: if($value, $value, map-get($-defaults, $name));
+                    background-color: $value;
                 }
             }
         }
