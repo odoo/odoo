@@ -3331,6 +3331,28 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('history back calls on_close handler of dialog action', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        // open a new dialog form
+        actionManager.doAction(this.actions[4], {
+            on_close: function () {
+                assert.step('on_close');
+            },
+        });
+
+        actionManager.trigger_up('history_back');
+        assert.verifySteps(['on_close'], "should have called the on_close handler");
+
+        actionManager.destroy();
+    });
+
     QUnit.test('properly drop client actions after new action is initiated', function (assert) {
         assert.expect(1);
 
