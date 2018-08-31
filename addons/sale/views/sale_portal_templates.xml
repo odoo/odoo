@@ -297,7 +297,7 @@
                                 </p>
                             </main>
                             <footer class="modal-footer">
-                                <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left">
+                                <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left w-100">
                                     <h3 class="mb24">Pay with</h3>
                                     <t t-call="payment.payment_tokens_list">
                                         <t t-set="mode" t-value="'payment'"/>
