@@ -52,6 +52,7 @@ QUnit.module('DebugManager', {}, function () {
                     view_id: 1,
                 },
                 type: "list",
+                display_name: "List",
             }],
         };
         var view = {
