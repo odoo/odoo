@@ -239,6 +239,9 @@ class View(models.Model):
             qcontext['multi_website_websites'] = [{'website_id': website.id, 'name': website.name} for website in Website.search([])]
             qcontext['multi_website_websites'] += [domain_based_info]
 
+            qcontext['multi_website_companies'] = [{'company_id': comp.id, 'name': comp.name} for comp in self.env.user.company_ids]
+            qcontext['multi_website_current_company'] = {'company_id': self.env.user.company_id.id, 'name': self.env.user.company_id.name}
+
             qcontext.update(dict(
                 self._context.copy(),
                 website=request.website,
