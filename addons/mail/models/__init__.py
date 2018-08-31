@@ -19,6 +19,8 @@ from . import res_users
 from . import res_company
 from . import res_config_settings
 from . import update
+from . import ir_action_act_window
 from . import ir_actions
 from . import ir_autovacuum
 from . import ir_model
+from . import ir_ui_view
