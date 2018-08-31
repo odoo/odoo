@@ -391,7 +391,9 @@ class MailThread(models.AbstractModel):
                 tracked_fields.append(name)
 
         if tracked_fields:
-            return self.fields_get(tracked_fields)
+            res = self.fields_get(tracked_fields)
+            # filter out fields not asked for up to saas-11.3
+            return {key: res[key] for key in res if key in tracked_fields}
         return {}
 
     @api.multi
