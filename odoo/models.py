@@ -825,7 +825,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     # backward compatibility
     __export_rows = _export_rows
 
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         """ Export fields for selected objects
 
             :param fields_to_export: list of fields
@@ -835,8 +835,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             This method is used when exporting data via client menu
         """
         fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
-        if raw_data:
-            self = self.with_context(export_raw_data=True)
         return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
