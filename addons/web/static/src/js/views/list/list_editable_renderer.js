@@ -778,7 +778,7 @@ ListRenderer.include({
         // but we do want to unselect current row
         var self = this;
         this.unselectRow().then(function () {
-            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context}); // TODO write a test, the deferred was not considered
+            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
         });
     },
     /**
