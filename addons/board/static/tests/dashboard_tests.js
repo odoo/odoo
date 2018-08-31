@@ -188,6 +188,57 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     form.destroy();
 });
 
+QUnit.test('can render an action without view_mode attribute', function (assert) {
+    // The view_mode attribute is automatically set to the 'action' nodes when
+    // the action is added to the dashboard using the 'Add to dashboard' button
+    // in the searchview. However, other dashboard views can be written by hand
+    // (see openacademy tutorial), and in this case, we don't want hardcode
+    // action's params (like context or domain), as the dashboard can directly
+    // retrieve them from the action. Same applies for the view_type, as the
+    // first view of the action can be used, by default.
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView, // replace by BoardView when forwarported to saas-11.3
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action string="ABC" name="51" context="{\'a\': 1}"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        archs: {
+            'partner,4,list':
+                '<tree string="Partner"><field name="foo"/></tree>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    context: '{"b": 2}',
+                    domain: '[["foo", "=", "yop"]]',
+                    res_model: 'partner',
+                    views: [[4, 'list'], [false, 'form']],
+                });
+            }
+            if (route === '/web/dataset/search_read') {
+                assert.deepEqual(args.domain, [['foo', '=', 'yop']],
+                    "should use the domain of the action");
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_action:contains(ABC) .o_list_view').length, 1,
+        "the list view (first view of action) should have been rendered correctly");
+
+    form.destroy();
+});
+
 QUnit.test('can sort a sub list', function (assert) {
     assert.expect(2);
 
