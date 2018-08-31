@@ -101,6 +101,13 @@ QUnit.module('ActionManager', {
         }, {
             id: 10,
             type: 'ir.actions.act_window_close',
+        }, {
+            id: 11,
+            name: "Another Report",
+            report_name: 'another_report',
+            report_type: 'qweb-pdf',
+            type: 'ir.actions.report',
+            close_on_report_download: true,
         }];
 
         this.archs = {
@@ -1851,6 +1858,66 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             '/web/static/src/img/spin.png', // block UI image
+            '/report/download',
+            'on_close',
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('report actions can close modals and reload views', function (assert) {
+        assert.expect(8);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                report: ReportService,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/report/check_wkhtmltopdf') {
+                    return $.when('ok');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.success();
+                    params.complete();
+                    return true;
+                },
+            },
+        });
+
+        // load modal
+        actionManager.doAction(5, {
+            on_close: function () {
+                assert.step('on_close');
+            },
+        });
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+        "should have rendered a form view in a modal");
+
+        actionManager.doAction(7, {
+            on_close: function () {
+                assert.step('on_printed');
+            },
+        });
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+        "The modal should still exist");
+
+        actionManager.doAction(11);
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 0,
+        "the modal should have been closed after the action report");
+
+        assert.verifySteps([
+            '/report/download',
+            'on_printed',
             '/report/download',
             'on_close',
         ]);
