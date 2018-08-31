@@ -104,6 +104,23 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot rendering with widget', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners">' +
+                        '<field name="foo" type="measure" widget="float_time"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32:00)').length, 1,
+                    "should contain a pivot cell with the sum of all records");
+        pivot.destroy();
+    });
+
     QUnit.test('pivot view without "string" attribute', function (assert) {
         assert.expect(1);
 
