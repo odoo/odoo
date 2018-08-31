@@ -25,7 +25,7 @@ parser.add_argument('-d', dest='dbname', required=True, help="REQUIRED: The data
 parser.add_argument('-c', dest='config_path', help="The config file to use.")
 
 
-def start_bootstrap(dbname, config_path):
+def start_bootstrap(dbname, config_path=None):
     os.environ["TZ"] = "UTC"
 
     conf_args = ['--debug']  # Maybe useless?
