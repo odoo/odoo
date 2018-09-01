@@ -67,6 +67,9 @@ class Website(models.Model):
     def _default_social_googleplus(self):
         return self.env.ref('base.main_company').social_googleplus
 
+    def _default_social_instagram(self):
+        return self.env.ref('base.main_company').social_instagram
+
     name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
@@ -83,6 +86,7 @@ class Website(models.Model):
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
+    social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -147,6 +151,7 @@ class Website(models.Model):
         self.social_linkedin = self.company_id.social_linkedin
         self.social_youtube = self.company_id.social_youtube
         self.social_googleplus = self.company_id.social_googleplus
+        self.social_instagram = self.company_id.social_instagram
 
     # ----------------------------------------------------------
     # Page Management
