@@ -9,9 +9,12 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2015
 # Liliana Stronciu <liliana.stronciu@aeromnia.aero>, 2016
 # Luca Tralli, 2015
+# Luca Tralli, 2015
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2016
 # Monica Parvanova <monicaparvanova@gmail.com>, 2015
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2016
+# Tiziano Zambelli <zstiziano@gmail.com>, 2016
 # tom becca <tombecc@hotmail.com>, 2016
 # Tiziano Zambelli <zstiziano@gmail.com>, 2016
 msgid ""
@@ -19,8 +22,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-07-25 11:29+0000\n"
-"Last-Translator: David Minneci <david@numeko.it>\n"
+"PO-Revision-Date: 2018-08-27 22:23+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1508,7 +1511,7 @@ msgstr "Valuta"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_tree
 msgid "Amount due"
-msgstr ""
+msgstr "Importo a saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
@@ -5845,7 +5848,7 @@ msgstr "Ottobre"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "La contabilità in Odoo ha diverse funzionalità extra:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -8104,7 +8107,7 @@ msgstr "Il tipo di calcolo dell'ultima riga dovrebbe essere \"Saldo\" per assicu
 #: code:addons/account/models/company.py:81
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "La data di chiusura per i consulenti è irreversibile e non può essere cancellata."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -8129,7 +8132,7 @@ msgstr "Il nome che sarà utilizzato su questa registrazione."
 #, python-format
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
-msgstr ""
+msgstr "La nuova data di chiusura per i consulenti deve essere impostata dopo la data di chiusura precedente. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -8225,20 +8228,20 @@ msgstr "La sequenza del sezionale %s è disattivata."
 msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
-msgstr ""
+msgstr "Ci sono ancora registrazioni non inserite nel periodo che desideri bloccare. Dovresti pubblicarle o cancellarle. "
 
 #. module: account
 #: code:addons/account/models/company.py:81
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "La data di chiusura per i consulenti è irreversibile e non può essere cancellata."
 
 #. module: account
 #: code:addons/account/models/company.py:85
 #, python-format
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
-msgstr ""
+msgstr "La nuova data di chiusura per i consulenti deve essere impostata dopo la data di chiusura precedente. "
 
 #. module: account
 #: code:addons/account/models/company.py:96
@@ -8246,7 +8249,7 @@ msgstr ""
 msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
-msgstr ""
+msgstr "Non è possibile bloccare un periodo che non è ancora terminato. Assicurati che la data blocco per i consulenti non sia stata fissata dopo l'ultimo giorno del mese precedente. "
 
 #. module: account
 #: code:addons/account/models/company.py:107
@@ -8254,7 +8257,7 @@ msgstr ""
 msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
-msgstr ""
+msgstr "Non è possibile definire condizioni più severe per i consulenti che per gli utenti. Assicurati che la data blocco per il consulente sia impostata prima della data blocco per gli utenti. "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:170
@@ -9307,7 +9310,7 @@ msgstr "Non è possibile eliminare una fattura che è parzialmente pagata. E' ne
 msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
-msgstr ""
+msgstr "Non è possibile cambiare la divisa dell'azienda perchè esistono già delle registrazioni contabili."
 
 #. module: account
 #: code:addons/account/models/account.py:162

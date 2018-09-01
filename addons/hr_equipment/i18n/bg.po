@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:18+0000\n"
-"PO-Revision-Date: 2018-07-23 04:49+0000\n"
+"PO-Revision-Date: 2018-08-27 09:12+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "<b>Сериен номер:</b>"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "Речник Python, който ще бъде оценен, за да предоставя стойности по подразбиране при създаването на нови записи за този alias."
 
 #. module: hr_equipment
 #: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
@@ -70,12 +70,12 @@ msgstr "Синоним"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Защита на контакт-синоним"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "Домейн на синоним"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_name
@@ -689,7 +689,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "Недадължителна идентификация на поредица (запис), към която ще се прикачват всички постъпващи съобщения, дори и да не ѝ отговарят. Ако е настроено, това напълно ще прекрати създаването на нови записи."
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -699,12 +699,12 @@ msgstr "Собственик"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Основен модел"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Основна поредица записи - идентификационен номер"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
@@ -712,7 +712,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference is not"
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
-msgstr ""
+msgstr "Основен модел, съдържащ the alias. Моделът, съдържаш референцията за the alias не е непременно моделът, зададен от alias_model_id (например: проект (parent_model) и задача (модел))"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
@@ -726,7 +726,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
-msgstr ""
+msgstr "Политика за публикуване на съобщение в документа чрез пощенската кутия.\n- всеки: всеки може да публикува\n- контрагенти: само удостоверени контрагенти\n- последователи: само последователи на свързан документ или членове на следващите канали\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -751,7 +751,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Идентификационен номер на поредица записи"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
@@ -896,14 +896,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "Моделът (Odoo вид документ), към който се съотнася този псевдоним. Всеки един входящ имейл, който не отговаря на съществуващ запис, ще предизвика създаването на нов запис на въпросния модел (напр. проектна задача)"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "Името на имейла-псевдоним, напр. 'позиции', в случай че желаете да прихващате имейли <jobs@example.odoo.com>"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
@@ -912,7 +912,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "Собственикът на записите, създадени според получаването на имейли на този псевдоним. Ако това поле не е настроено, системата ще се опита да открие правилния собственик въз основа адреса на подателя (От) или ще използва профила на администратора, в случай че на този адрес не е открит никакъв системен потребител."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
@@ -921,7 +921,7 @@ msgid ""
 "                Create some laptop, printer or phone and link each equipment to\n"
 "                an employee or departement. You will manage allocations, issues\n"
 "                and maintenance of equipment."
-msgstr ""
+msgstr "Това приложение Ви помага да проследявате оборудването, използвано от служителите.\n                Регистрирайте някакъв лаптоп, printer or phone and link each equipment to\n                an employee or departement. Така ще управлявате разпределенията, грешките\n                и поддръжката на оборудването."
 
 #. module: hr_equipment
 #: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
