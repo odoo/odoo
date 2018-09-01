@@ -6,16 +6,16 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # kalatchev, 2016
 # Martin Trigaux, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,8 @@ msgid ""
 "<br/> You can now click on <b>'Create Client ID'</b>\n"
 "                                    <br/><br/>"
 msgstr ""
+"<br/> Сега можете да натиснете бутона <b>'Създайте клиентски ИН'</b>\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -37,6 +39,9 @@ msgid ""
 "                                    and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):\n"
 "                                    <br/>==&gt;"
 msgstr ""
+"<br/> Сега трябва да конфигурирате позволените страници, към които ще бъдете пренасочени. За да го направите, трябва да попълните полето <b>\"Упълномощено пренасочване на URI адрес\"</b>\n"
+"                                    и да го настроите като стойност (Вашият домейн, последван от <i>'/google_account/authentication'</i>):\n"
+"                                    <br/>==&gt;"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -99,7 +104,7 @@ msgstr "Календар"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "ИД на календар"
+msgstr "ИН на календар"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -115,6 +120,8 @@ msgid ""
 "Click on <b>'Create a project...'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services\n"
 "                                    <br/><br/>"
 msgstr ""
+"Натиснете върху <b>'Създайте проект...'</b> и въведете име на проект и променете Вашия ИН, ако желаете. Не забравяйте да приемете сроковете на услугите\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
@@ -173,12 +180,12 @@ msgstr "Успешно прекъсване на събитието"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr "ID на събитието в Google Календар"
+msgstr "ИН на събитие в Google календар"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client ID"
-msgstr ""
+msgstr "ИН на Google клиент"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -188,7 +195,7 @@ msgstr ""
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr "Google ID-то трябва да е уникален!"
+msgstr "Google ИН трябва да е уникален!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:673
@@ -205,7 +212,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: google_calendar
 #. openerp-web
@@ -224,6 +231,8 @@ msgid ""
 "In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
 "                                    <br/><br/>"
 msgstr ""
+"Изберете подменю в менюто от лявата страна <b>'Акредитиви'</b> (от меню Приложни програмни интерфейси - API и auth) и натиснете бутона <b>'Създайте ИН на нов клиент'</b>\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
@@ -240,6 +249,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"ИН на последния синхронизиран календар. В случай че е променен, отстраняваме"
+" всички линкове между GoogleID и вътрешния ИН на Google в Odoo."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -267,6 +278,8 @@ msgid ""
 "Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
 "                                    <br/><br/>"
 msgstr ""
+"Веднъж извършен, ще притежавате и двете информации (<b>ИН на клиент</b> и <b>Клиентска тайна</b>), които са Ви нужни, за да поълните долните 2 полета!\n"
+"                                    <br/><br/>"
 
 #. module: google_calendar
 #. openerp-web

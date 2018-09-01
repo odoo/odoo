@@ -6931,6 +6931,11 @@ msgid ""
 "would make a gap in the numbering. You should book an entry and make a "
 "regular revert of it in case you want to cancel it."
 msgstr ""
+"Operazione non consentita. Poiché la riga di estratto conto ha già ricevuto "
+"un riferimento, non è possibile riconciliarla completamente con le "
+"registrazioni del sezionale, ciò creerebbe una discontinuità nella "
+"numerazione. È necessario creare una registrazione e cancellarla per "
+"cancellare la riga."
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:66
@@ -8348,35 +8353,35 @@ msgstr "Secondo conto"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount
 msgid "Second Amount"
-msgstr ""
+msgstr "Secondo Importo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_amount_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_amount_type
 msgid "Second Amount type"
-msgstr ""
+msgstr "Secondo tipo di Importo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_analytic_account_id
 msgid "Second Analytic Account"
-msgstr ""
+msgstr "Secondo Conto Analitico"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_journal_id
 msgid "Second Journal"
-msgstr ""
+msgstr "Secondo Sezionale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_label
 msgid "Second Journal Item Label"
-msgstr ""
+msgstr "Seconda Etichetta Voce Sezionale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_tax_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_tax_id
 msgid "Second Tax"
-msgstr ""
+msgstr "Seconda Imposta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_type
@@ -8386,6 +8391,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Seleziona 'Vendita' per i sezionali fatture cliente. \n"
+"Selezionare 'Acquisto' per i sezionali fatture fornitore. \n"
+"Seleziona 'Cassa' o 'Banca' per i sezionali che sono utilizzati nei pagamenti dei clienti o dei fornitori. \n"
+"Selezionare 'Generale' per i sezionali con operazioni di natura varia."
 
 #. module: account
 #. openerp-web
@@ -8514,6 +8523,9 @@ msgid ""
 "Set this field to true if this tax can be used in the tax adjustment wizard,"
 " used to manually fill some data in the tax declaration"
 msgstr ""
+"Imposta questo campo su VERO se questa imposta può essere utilizzata nella "
+"procedura guidata di adeguamento fiscale, utilizzato per completare "
+"manualmente certi dati della dichiarazione fiscale"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_visible
@@ -8978,6 +8990,10 @@ msgid ""
 " set when the statement line is reconciled then stored to set the same "
 "number again if the line is cancelled, set to draft and re-processed again."
 msgstr ""
+"Campo tecnico che include il numero dato alla registrazione del sezionale, "
+"definita automaticamente quando la riga di registrazione è riconciliata e "
+"gestita, da definire se si vuole avere lo stesso numero di riga se questa è "
+"annullata. Impostare in stato bozza e ri-validarla."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_refund_only
@@ -9250,6 +9266,9 @@ msgid ""
 "The first step is to set up your company's information. This is mostly used "
 "in printed business documents like orders and invoices."
 msgstr ""
+"Il primo passo è quello di configurare le informazioni della tua azienda. "
+"Queste informazioni saranno usate principalmente nei documenti aziendali "
+"stampati, come gli ordini e le fatture. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_property_account_position_id
@@ -9397,6 +9416,8 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Il conto selezionato nella registrazione contabile necessita una valuta "
+"secondaria. Occorre rimuovere la valuta secondaria dal conto. "
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1325
@@ -9431,6 +9452,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"Ci sono ancora registrazioni non inserite nel periodo che desideri bloccare."
+" Dovresti pubblicarle o cancellarle. "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:172
@@ -9484,6 +9507,8 @@ msgid ""
 "This %s has been created from: <a href=# data-oe-model=account.invoice data-"
 "oe-id=%d>%s</a>"
 msgstr ""
+"Questo/a %s è stato/a creato/a da: <a href=# data-oe-model=account.invoice "
+"data-oe-id=%d>%s</a>"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:101
@@ -9841,6 +9866,8 @@ msgstr ""
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
 msgstr ""
+"Suggerimento: Premi CTRL-invio per riconciliare tutti i saldi in questo "
+"foglio."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10267,6 +10294,9 @@ msgid ""
 "Used to hold the reference of the external mean that created this statement "
 "(name of imported file, reference of online synchronization...)"
 msgstr ""
+"Usato per memorizzare la sorgente esterna che ha creato questo estratto "
+"conto (nome del file di importazione, riferimento della "
+"sincronizzazione,...)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
@@ -10635,7 +10665,7 @@ msgstr "Non si può eliminare un pagamento che è già stato pubblicato."
 #: code:addons/account/models/account_invoice.py:1360
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
-msgstr ""
+msgstr "Puoi eliminare una riga di fattura solo se è in stato di bozza."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -10824,6 +10854,8 @@ msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
 msgstr ""
+"Non è possibile pagare una fattura che è parzialmente pagata. È necessario "
+"prima riconciliare i pagamenti."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -10870,7 +10902,7 @@ msgstr "Ci sono"
 #: code:addons/account/models/account_payment.py:360
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "È necessario definire una sequenza di %s nella tua azienda."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21

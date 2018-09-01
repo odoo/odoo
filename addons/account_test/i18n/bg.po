@@ -140,12 +140,12 @@ msgstr ""
 "\n"
 "Ако имате нужда от тях, можете да използвате и следните вариации в кода си:\n"
 "    * cr: курсор към базата данни\n"
-"    * uid: идентификация за текущия потребител\n"
+"    * uid: ИН на настоящия потребител\n"
 "\n"
 "Във всички случаи, кодът трябва да представлява правни твърдения на python с правилна идентификация (ако е нужно).\n"
 "\n"
 "Пример: \n"
-"    sql = '''ИЗБЕРЕТЕ идентификация, име, референция, дата\n"
+"    sql = '''ИЗБЕРЕТЕ ИН, име, референция, дата\n"
 "             ОТ account_move_line \n"
 "             КЪДЕТО account_id В (ИЗБЕРИ идентификация ОТ account_account КЪДЕТО вид = 'изглед')\n"
 "          '''\n"
@@ -182,7 +182,7 @@ msgstr "Израз"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
 msgid "ID"
-msgstr "Идентификация"
+msgstr "ИН"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update

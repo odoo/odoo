@@ -124,6 +124,10 @@ msgid ""
 "                                </span>\n"
 "                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 msgstr ""
+"<span class=\"btn btn-primary pull-right btn-lg o_website_form_send o_default_snippet_text\">\n"
+"                                    <span>Следващ </span><span class=\"fa fa-long-arrow-right\"/>\n"
+"                                </span>\n"
+"                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.total
@@ -187,6 +191,8 @@ msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
 "                                Offering free delivery with a minimum amount or minimum number of items should drive up your average order value and help to compensate for the delivery costs."
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
+"                                Предлагането на безплатна доставка с минимално количество или минимален брой артикули трябва да повиши средната стойност на поръчката Ви и да спомогне за компенсиране разходите по доставката."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -309,6 +315,9 @@ msgid ""
 "                                        <strong>Several Prices</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Няколко цени</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -317,6 +326,9 @@ msgid ""
 "                                        <strong>Unique Price</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Уникална цена</strong>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -361,6 +373,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                    <span class=\"fa fa-check-square-o\"/>\n"
+"                                    <strong>Включен срещу изключен в продуктови цени</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -389,6 +406,9 @@ msgid ""
 "                                    <span class=\"small\">Recommended for Starters</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-cc-paypal\"/><strong> Paypal</strong>\n"
+"                                    <span class=\"small\">Препоръчителен за начинаещи</span>\n"
+"                                    </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -411,6 +431,9 @@ msgid ""
 "                            <span class=\"small\">Advised if your packs vary in size/weight and/or if you ship worldwide</span>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-shopping-cart\"/><strong> При цена на придобиване</strong> (клиентът плаща заплатеното от Вас)<br/>\n"
+"                            <span class=\"small\">Препоръчва се, ако опаковките Ви се различават по размер/тегло и/или ако превозвате стоки по целия свят</span>\n"
+"                            </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -469,6 +492,8 @@ msgid ""
 "<strong>Cons:</strong> customers have to check out to find out the delivery "
 "price."
 msgstr ""
+"<strong>Недостатъци:</strong> налага се клиентите да проверяват, за да "
+"открият доставната цена."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -481,8 +506,8 @@ msgid ""
 "<strong>Cons:</strong> will require you to either absorb the cost or "
 "slightly increase your prices to cover it."
 msgstr ""
-"<strong>Cons:</strong> will require you to either absorb the cost or "
-"slightly increase your prices to cover it."
+"<strong>Недостатъци:</strong> ще изисква или да поемете разходите, или леко "
+"да повишите цените си, за да го покриете."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -622,8 +647,8 @@ msgid ""
 "<strong>Value proposition:</strong> what’s the end-benefit of this product "
 "and who is it for?"
 msgstr ""
-"<strong>Value proposition:</strong> what’s the end-benefit of this product "
-"and who is it for?"
+"<strong>Предложение за стойност:</strong> каква е крайната полза от този "
+"продукт и за какво е предназначен той?"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -878,12 +903,12 @@ msgstr "Каталог"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: decreasing order"
-msgstr ""
+msgstr "Каталожна цена: низходящ ред"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Catalog price: increasing order"
-msgstr ""
+msgstr "Каталожна цена: възходящ ред"
 
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1387,7 +1412,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1440,9 +1465,9 @@ msgid ""
 "competitive."
 msgstr ""
 "Представете си, че нов клиент добавя продукт в количката и напуска уебсайта "
-"Ви, заради цените за шипинга... Дефинирането на добра стратегия за доставки "
-"е трудно нещо. Вие не желаете да орязвате маржовете си, но същевременно "
-"искате да запазите конкурентоспособността си."
+"Ви, заради разходите по шипинга... Определянето на адекватна стратегия за "
+"доставяне е трудно нещо. Вие не желаете да орязвате маржовете си, но "
+"същевременно искате да запазите конкурентоспособността си."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2070,7 +2095,7 @@ msgstr "Рейтинг"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_last_value
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Оценка последна стойност"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_count
@@ -2211,7 +2236,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Select your pricing preference and allow discounts"
-msgstr ""
+msgstr "Изберете предпочитанията си за ценообразуване и разрешете отстъпки"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2531,7 +2556,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Tax ID"
-msgstr "ID на данък"
+msgstr "ИН на данък"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2697,6 +2722,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Use our import templates to get your catalog ready in no time!"
 msgstr ""
+"Използвайте нашите шаблони за въвеждане, за да изготвите каталога си за нула"
+" време!"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_sale_pricelist
@@ -2802,14 +2829,14 @@ msgstr "Мета заглавие на уебсайт"
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
-msgstr ""
+msgstr "Цена на уебсайт"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
 msgid "Website public price"
-msgstr ""
+msgstr "Публична цена на уебсайт"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_website_ids
@@ -2995,6 +3022,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "use Odoo API to import through scripts"
 msgstr ""
+"използвайте Програмния приложен интерфейс - API на Odoo, за да въвеждате "
+"през скриптове"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_website_id
