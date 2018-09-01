@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-07-28 09:51+0000\n"
+"PO-Revision-Date: 2018-08-27 21:26+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "Описание на продукта, който искате да предоставите на клиентите си. Това описание ще бъде копирано на всяка поръчка за продажба, поръчка за доставка и клиентска фактура/кредитно известие"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -100,7 +100,7 @@ msgstr "Описание на продукта, който желаете да �
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "Точно описание на продукт, използван единствено за целите на вътрешната информация."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -177,7 +177,7 @@ msgstr "Баркод"
 msgid ""
 "Base price to compute the customer price. Sometimes called the catalog "
 "price."
-msgstr ""
+msgstr "Базова цена за изчисляване на клиентската цена. Понякога наричана каталожна цена."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -304,7 +304,7 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "Цена на продуктов шаблон, използван за стандартно оценяване на стоката в счетоводството и използвана като базова цена за поръчки за покупки. Изразена в единица мярка по подразбиране за продукта."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -341,12 +341,12 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Текущо количество продукти.\nВ контекст на единичната стокова локация, това включва стоки, складирани в тази локация, или в някоя от нейните подлокации.\nВ контекста на единичния склад, това включва стоки, складирани в стоковата локация на въпросния склад, или в някоя от неговите подлокации.\nскладирани в стоковата локация на склада на този магазин или в някоя от неговите подлокации.\nВ противен случай това включва стоки, складирани във всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Време на клиентския лийд"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -430,7 +430,7 @@ msgstr "Доставка на продукт"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "В зависимост от инсталираните модули, това ще Ви позволи да определите маршрута на продукта: дали ще бъде закупен, произведен, MTO/MTS,..."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description
@@ -566,7 +566,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Прогнозно количество (изчислено като 'количество под ръка' - изходящо + входящо)\nВ контекста на единичната стокова локация това включва стоки, складирани в тази локация или в някоя от нейните подлокации.\nВ контекста на единичния склад това включва стоки, складирани в стоковата локация на този склад или в някоя от неговите подлокации.\nВ противен случай това вклучва стоки, складирани в която и да е стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -589,7 +589,7 @@ msgstr "Предоставя различни начини за пакетира
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr ""
+msgstr "Задава реда на последователност при изчисляване превоза на доставката."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
@@ -626,20 +626,20 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Ако е активирано непрекъснатото оценяване на за даден продукт, системата автоматично ще създаде записи в журнал, съответстващи на стоковите движения, с продуктовата цена както е уточнена според 'Ценовия метод'. Сметката преоценка на стоки, настроена за продуктовата категория, ще представлява текущата стойност на инвентара, а сметката вписване на стоки и сметката изписване на стоки ще съдържат движенията на кореспондентската сметка за входящи и изходящи продукти."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
 msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
-msgstr ""
+msgstr "Ако поръчката надвишава определена сума, клиентът може да се възползва от безплатен шипинг"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "Ако не е отметнато, ще Ви позволи да скриете продукта без да го отстранявате."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_expense_policy
@@ -655,21 +655,21 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr ""
+msgstr "Изображение на продуктовия вариант (изображение с голям размер на продуктов шаблон, ако е 'грешно'). Автоматично се преоразмерява като изображение 1024x1024 пиксела, със запазено съотношение."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Изображение на продуктов вариант (изображение със среден размер на продуктов шаблон, ако е 'грешно')."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "Изображение на продуктовия вариант (изображение с малък размер на продуктов шаблон, ако е 'грешно')."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
@@ -695,7 +695,7 @@ msgstr "Вътрешно означение"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "Международен номер на артикула, използван за идентификация на продукта."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_inventory
@@ -741,7 +741,7 @@ msgstr "Продуктов Вариант"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr ""
+msgstr "Поддържайте празно мястото, ако ценообразуването зависи от разширеното ценообразуване по местоназначение"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_last_post
@@ -1047,7 +1047,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Количество продукти, планирани да пристигнат.\nВ контекста на единичната стокова локация, това включва стоки, пристигащи в тази локация или в някоя от нейните подлокации.\nВ контекста на единичния склад това включва стоки, пристигащи в стоковата локация на този склад или в някой от неговите подлокации.\nВ противен случай това включва стоки, пристигащи до всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1056,7 +1056,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
-msgstr ""
+msgstr "Количество продукти, планирани да напускат.\nВ контекста на единичната стокова локация това включва стоки, напускащи тази локация или някоя от нейните подлокации.\nВ контекста на единичния склад това включва стоки, напускащи стоковата локация на този склад или някоя от неговите подлокации.\nВ противен случай това включва стоки, напескащи всяка стокова локация от 'вътрешен' тип."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1130,7 +1130,7 @@ msgstr "Изберете тип на събитието, така че като 
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "carrier(s) criteria."
-msgstr ""
+msgstr "Избраният продукт по метода за доставка не отговаря на нито един от критериите на превозвача(ите) на доставката."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1180,12 +1180,12 @@ msgstr "Посочете мерна единица тук ако фактури�
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_sale_ok
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_ok
 msgid "Specify if the product can be selected in a sales order line."
-msgstr ""
+msgstr "Уточнете, ако продуктът може да бъде избран в ред на поръчка за продажба."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Уточнете дали продуктът може да бъде избран в разходи за човешки ресурси."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1270,7 +1270,7 @@ msgid ""
 "The average delay in days between the confirmation of the customer order and"
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
-msgstr ""
+msgstr "Средно закъснение в дни между потвърждението на клиентската поръчка и доставката на завършените продукти - времето, което обещавате на клиентите си."
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:53
@@ -1332,7 +1332,7 @@ msgstr "Този метод на доставка ще бъде използва
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "Това поле съдържа изображението, изпълзване като изображение на продуктов вариант, ограничено до 1024x1024 пиксела."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
@@ -1344,21 +1344,21 @@ msgstr "Сума на допълнителните цени на всички а
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
-msgstr ""
+msgstr "Тази стокова локация ще бъде използвана вместо локацията по подразбиране като локацията на източника за стокови движения, създадени от производствени поръчки."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_procurement
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by procurements."
-msgstr ""
+msgstr "Тази стокова локация ще бъде използвана вместо локацията по подразбиране като локацията на източника за стокови движения, създадени от доставки."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr ""
+msgstr "Тази стокова локация ще бъде използвана вместо локацията по подразбиране като локацията на източника за стокови движения, създадени когато извършвате инвентаризация."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1560,7 +1560,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Когато се извършва оценка на инвентара в реално време, редовете в журнал на кореспондентската сметка за всички входящи стокови движения ще бъдат публикувани в тази сметка, освен ако няма конкретна сметка за остойностяване, настроена за локацията на източника. Когато не е настроена за продукта, се използва сметката от продуктовата категория."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1569,7 +1569,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Когато се извършва оценка на инвентара в реално време, редовете в журнал на кореспондентската сметка за всички изходящи стокови движения ще бъдат публикувани в тази сметка, освен ако няма конкретна сметка за остойностяване, настроена за локацията на местоназначението. Когато не е настроена за продукта, се използва сметката от продуктовата категория."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
