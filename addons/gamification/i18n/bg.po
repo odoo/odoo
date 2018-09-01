@@ -40,6 +40,17 @@ msgid ""
 "        % endif\n"
 "        "
 msgstr ""
+"\n"
+"        <p>Поздравления, получили сте значката <strong>${object.badge_id.name}</strong> !\n"
+"            % if object.sender_id\n"
+"                Тази значка беше дадена от <strong>${object.sender_id.name}</strong>.\n"
+"            % endif\n"
+"        </p>\n"
+"\n"
+"        % if object.comment\n"
+"            <p><em>${object.comment}</em></p>\n"
+"        % endif\n"
+"        "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -189,6 +200,8 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Определението за цел е технически модел на цел, определяща условие, което трябва да се изпълни.\n"
+"                Датите, стойностите за постигане или потребителите се опрделят в примера за цел."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
@@ -198,6 +211,8 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
+"Дадена цел се счита за постигната, когато настоящата стойност е изчислена "
+"според стойността, която трябва да се постигне"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -253,7 +268,7 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
-"Определете целеви списък на избрани потребители, за да ги оцените.\n"
+"Определете целеви списък към избрани потребители, за да ги остайностявате.\n"
 "                Предизвикателството може да използва период (седмичен, месечен...) за автоматично създаване на цели.\n"
 "                Целите са създадени за специфични потребители или членове на групата."
 
@@ -518,7 +533,7 @@ msgstr "Текущ"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_current
 msgid "Current Value"
-msgstr ""
+msgstr "Настояща стойност"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -635,12 +650,12 @@ msgstr "Крайна дата"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr ""
+msgstr "Оценявайте израза в партида вместо веднъж за всеки потребител"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr ""
+msgstr "Оценен израз за партиден режим"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -720,7 +735,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr ""
+msgstr "Универсална цел на игровизацията за предизвикателство"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
@@ -880,12 +895,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
 msgid "ID Field of user"
-msgstr ""
+msgstr "Поле за ИН на потребител"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
@@ -913,6 +928,8 @@ msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
 msgstr ""
+"В партиден режим домейнът се оценява глобално. Ако е активиран, не "
+"използвайте ключовата дума \"потребител\" в домейна на филтъра по-горе."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_distinctive_field
@@ -1042,7 +1059,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_monetary
 msgid "Monetary Value"
-msgstr ""
+msgstr "Парична стойност"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1093,7 +1110,7 @@ msgstr "Никога"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr ""
+msgstr "Никога не напомня ако не е посочена стойност или ако е нула."
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -1201,7 +1218,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr ""
+msgstr "Прогресивно (използващо цифрови стойности)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
@@ -1214,6 +1231,9 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
+"Код Python, който да се прилага за всеки потребител. 'Резултат' трябва да "
+"съдържа новата настояща стойност. Оценяваният потребител може да има достъп "
+"чрез object.user_id."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1223,7 +1243,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr ""
+msgstr "Достигнат, когато настоящата стойност е"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -1391,7 +1411,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr ""
+msgstr "Настройте настоящата стойност, която сте достигнали по тази цел"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
@@ -1470,7 +1490,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_target_goal
 msgid "Target Value to Reach"
-msgstr ""
+msgstr "Целева стойност за достигане"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -1499,7 +1519,7 @@ msgstr "Валутата и полето за суфикса"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr ""
+msgstr "Датата, която да се използва за оценявания период от време"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_end_date
@@ -1527,7 +1547,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_field_id
 msgid "The field containing the value to evaluate"
-msgstr ""
+msgstr "Полето, съдържащо стойността за оценяване"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_res_id_field
@@ -1535,6 +1555,8 @@ msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
 msgstr ""
+"Името на полето в потребителския профил (res.users), съдържащо стойността на"
+" res_id за действие."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1583,7 +1605,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id
 msgid "The model object for the field to evaluate"
-msgstr ""
+msgstr "Обектът на модела за полето, което трябва да се остойности"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_remind_update_delay
@@ -1591,8 +1613,9 @@ msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
 msgstr ""
-"Броят на дните, след който на потребителя, определен за ръчна цел, ще му "
-"бъде напомнено. Няма да му се напомня, ако не е зададена стойност."
+"Броят на дните, след който на потребителя, разпределен към механична цел, ще"
+" му бъде напомнено. Ако не е уточнена стойнос, няма да му се напомня под "
+"никаква форма."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_stat_my_this_month
@@ -1630,12 +1653,13 @@ msgstr ""
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_monetary
 msgid "The target and current value are defined in the company currency."
 msgstr ""
+"Целевата и настоящата стойност са определени във валутата на компанията."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_suffix
 msgid "The unit of the target and current values"
-msgstr ""
+msgstr "Единицата на целевите и настоящите стойности"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_manager_id

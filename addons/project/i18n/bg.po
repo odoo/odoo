@@ -264,6 +264,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Към задачите и грешките на проекта Ви са прикачени документи.</p><p>\n"
+"                        Изпращайте съобщения или регистрирайте вътрешни бележки с прикрепени файлове, за да свързвате\n"
+"                        документи към проекта си.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
@@ -600,6 +605,8 @@ msgid ""
 "<strong>Create tasks and issues by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>Регистрирайте задачи и грешки по имейл</strong><br/>\n"
+"                                В Odoo всеки проект притежава имейл-псевдоним. Ако изпращате имейл до този псевдоним, той автоматично ще регистрира задача или грешка в първия етап на проекта, с всичките получатели на имейли като негови последователи по подразбиране."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -626,6 +633,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Issues."
 msgstr ""
+"<strong>Упражнение:</strong> Опитайте се да създадете графика с месечното "
+"развитие на 'Средно забавяне за приключване' на грешките."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -846,8 +855,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Речник Python, който ще бъде оценен, за да предоставя стойности по "
-"подразбиране при създаването на нови записи за този alias."
+"Речник Python, който ще бъде остойностен, така че да предоставя стойности по"
+" подразбиране при създаването на нови записи за този псевдоним."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -856,6 +865,9 @@ msgid ""
 "automatically created into a 'Support level 1' project based on the original"
 " email from the customer."
 msgstr ""
+"Клиент изпраща жалба до support@yourcompany.com: автоматично се регистрира "
+"грешка в проекта 'Поддръжка ниво 1' въз основа на първоначалния имейл, "
+"получен от клиента."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -930,7 +942,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Add/remove from favorite"
-msgstr ""
+msgstr "Добавете/отстранете от фаворити"
 
 #. module: project
 #. openerp-web
@@ -947,27 +959,27 @@ msgstr "Разширен"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_id
 msgid "Alias"
-msgstr "Синоним"
+msgstr "Псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr "Защита на контакт-синоним"
+msgstr "Защита на контакт-псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
 msgid "Alias Model"
-msgstr ""
+msgstr "Модел-псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr "Псевдоним"
+msgstr "Име-псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr "Псевдоним - домейн"
+msgstr "Домейн-псевдоним "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
@@ -1019,9 +1031,9 @@ msgid ""
 "notified for its other events too."
 msgstr ""
 "Друг добър начин да ограничите броя на известията, които получавате, е "
-"просто да последвате проектните си събития 'Определени задачи'.  Тогава ще "
-"бъдете известени при създаването на задача или издание и ще можете да решите"
-" дали желаете да бъдете известявани и за други последващи събития."
+"просто да последвате проектните си събития 'Разпределени задачи'.  Тогава ще"
+" получавате известия при регистрирането на задача или грешка и ще можете "
+"механично да решите дали желаете да бъдете известявани и за други събития."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1093,7 +1105,7 @@ msgstr "Прикачени файлове"
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
-msgstr ""
+msgstr "Генерирайте автоматично имейл-псевдоним при създаването на проекта"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1384,6 +1396,8 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
+"Създайте задача, като изпратите имейл на проектен псевдоним с един от "
+"колегите си в копието"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1626,7 +1640,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Do not create an email alias automatically"
-msgstr ""
+msgstr "Не създавайте автоматично имейл-псевдоним"
 
 #. module: project
 #. openerp-web
@@ -1697,7 +1711,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "Псевдоним за имейл"
+msgstr "Имейл-псевдоним "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
@@ -1976,7 +1990,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
@@ -1984,8 +1998,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Идентификатор на родителския запис, съдържащ псевдонима (пример: проект, "
-"който държи псевдонима за създаване на задачи)"
+"ИН на основния запис, съдържащ псевдонима (пример: проект, съдържащ "
+"псевдонима за създаване на задачи)"
 
 #. module: project
 #. openerp-web
@@ -2375,7 +2389,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Моите фаворити"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2500,6 +2514,8 @@ msgstr ""
 msgid ""
 "Odoo will generate an email alias at the project creation from project name."
 msgstr ""
+"Odoo ще създаде имейл-псевдоним от проектното има при създаването на "
+"проекта."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -2530,6 +2546,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Незадължителен ИН на поредица (на запис), към която ще се прикачват всички "
+"постъпващи съобщения, дори и да не са ѝ отговорили. Ако е настроено, това "
+"напълно ще прекрати създаването на нови записи."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2573,6 +2592,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за блокираното състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2581,6 +2602,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за готовото състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2589,6 +2612,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за нормалното състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -2603,12 +2628,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Основен модел"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ИН на основна поредица записи"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2617,6 +2642,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Основен модел, съдържащ псевдонима. Моделът, съдържащ референцията за "
+"псевдонима не е непременно моделът, зададен от alias_model_id (например: "
+"проект (parent_model) и задача (модел))"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -2668,7 +2696,7 @@ msgstr "Важност"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "Обяснение за приоритетно управление"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2696,7 +2724,7 @@ msgstr "Проект"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
 msgid "Project Alias"
-msgstr ""
+msgstr "Проект-псевдоним"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_count
@@ -2837,7 +2865,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ИН на поредица записи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3052,7 +3080,7 @@ msgstr "Етап"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3067,7 +3095,7 @@ msgstr "Име на Етапа"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -3302,6 +3330,8 @@ msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
 msgstr ""
+"Видът документ, създаден при получаването на даден имейл на този проектен "
+"имейл-псевдоним"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -3310,6 +3340,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Моделът (Odoo вид документ), към който се съотнася този псевдоним. Всеки "
+"един входящ имейл, който не отговаря на съществуващ запис, ще предизвика "
+"създаването на нов запис на въпросния модел (напр. проектна задача)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3317,6 +3350,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Името на имейла-псевдоним, напр. 'позиции', в случай че желаете да "
+"прихващате имейли <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3326,6 +3361,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Собственикът на записите, създадени според получаването на имейли на този "
+"псевдоним. Ако това поле не е настроено, системата ще се опита да открие "
+"правилния собственик въз основа адреса на подателя (От) или ще използва "
+"профила на администратора, в случай че на този адрес не е открит никакъв "
+"системен потребител."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3369,6 +3409,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Този етап е сгънат в канбан изгледа, когато няма записи за показване в този "
+"етап."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3524,6 +3566,7 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
+"Използвайте навигацията, за да <b>се върнете към фунията си за задачи</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3538,7 +3581,7 @@ msgstr "Потребител"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr ""
+msgstr "Потребителски имейлл"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

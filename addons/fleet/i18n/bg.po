@@ -6,9 +6,9 @@
 # Martin Trigaux, 2016
 # Anton Vassilev, 2016
 # kalatchev, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Radina <radis.choice@gmail.com>, 2016
 # Vladimir Petrov <vladimir.petrov@gmail.com>, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
@@ -31,7 +31,7 @@ msgstr ""
 #: code:addons/fleet/models/fleet.py:307
 #, python-format
 msgid "%s %s has been added to the fleet!"
-msgstr ""
+msgstr "%s %s е бил добвен към автопарка!"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet.py:652
@@ -216,7 +216,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
 msgid "Car value"
-msgstr ""
+msgstr "Стойност на автомобил"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_15
@@ -645,6 +645,8 @@ msgstr ""
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr ""
+"Изпразването стройността на километража на превозното средство не е "
+"позволено."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -823,6 +825,9 @@ msgid ""
 "                You can also show odometer value for a particular vehicle using\n"
 "                the search field."
 msgstr ""
+"Тук можете да добавяте различни вписвания в километражите на всички превозни средства.\n"
+"                Освен това можете да покажете стойността на километража на конкретно превозно средство, като използвате\n"
+"                полето за търсене."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
@@ -852,7 +857,7 @@ msgstr "Хибридна"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1224,12 +1229,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_value
 msgid "Odometer Value"
-msgstr ""
+msgstr "Стойност на километраж"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "Стойност на километраж - на превозно средство"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1373,7 +1378,7 @@ msgstr "Цена"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price per liter"
-msgstr ""
+msgstr "Цена за литър"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
@@ -1447,12 +1452,12 @@ msgstr "Справки"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Residual value (Excluding VAT)"
-msgstr ""
+msgstr "Остатъчна стойност (без ДДС)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_19
 msgid "Residual value in %"
-msgstr ""
+msgstr "Остатъчна стойност в %"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
@@ -1782,7 +1787,7 @@ msgstr "Потребител"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_car_value
 msgid "Value of the bought vehicle"
-msgstr ""
+msgstr "Стойност на закупеното превозно средство"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_vehicle_id

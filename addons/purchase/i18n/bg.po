@@ -201,7 +201,7 @@ msgstr "<strong>Очаквана дата</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Net Price</strong>"
-msgstr ""
+msgstr "<strong>Нетна цена</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -243,7 +243,7 @@ msgstr "<strong>Общо</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Единична Цена</strong>"
+msgstr "<strong>Единична цена</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -294,6 +294,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
 msgid "Allows you to compute product cost price based on average cost."
 msgstr ""
+"Позволява Ви да изчислите цената на придобиване на продукта въз основа на "
+"средната цена."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_uom
@@ -463,7 +465,7 @@ msgstr ""
 #: code:addons/purchase/models/stock.py:84
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Не се открива никакъв универсален маршрут 'Купете'"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -763,7 +765,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:197
@@ -1148,7 +1150,7 @@ msgstr "Продукти"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
 msgid "Products Value"
-msgstr ""
+msgstr "Продуктова стойност"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
@@ -1314,7 +1316,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Стандартна цена за покупка"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1524,7 +1526,7 @@ msgstr "Последователност"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Set a fixed cost price on each product"
-msgstr ""
+msgstr "Настройте фиксирана себестойност за всеки продукт"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1675,6 +1677,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Тази сметка ще бъде използвана, за да остойности ценовата разлика между "
+"покупната цена и счетоводните разходи."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1683,8 +1687,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
-"Тази сметка ще бъде използвана за пресмятане на разликата между покупната "
-"цена и цената на себестойност."
+"Тази сметка ще бъде използвана, за да остойности ценовата разлика между "
+"покупната цена и цената на придобиване."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1713,6 +1717,8 @@ msgid ""
 "This purchase order has been created from: <a href=# data-oe-"
 "model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Тази поръчка за покупка е създадена от: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:986
@@ -1721,6 +1727,8 @@ msgid ""
 "This purchase order has been modified from: <a href=# data-oe-"
 "model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Тази поръчка за покупка е коригирана от: <a href=# data-oe-"
+"model=procurement.order data-oe-id=%d>%s</a>"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:184
@@ -1836,6 +1844,7 @@ msgstr "Необложена сума"
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
 msgstr ""
+"Използвайте 'Фиксиран', 'Действителен' или 'Среден' метод на ценообразуване"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending

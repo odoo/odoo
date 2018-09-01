@@ -18,13 +18,14 @@
 # Chudomir Monevski <cm@plana.solutions>, 2018
 # Boyan Rabchev <boyan.rabchev@plana.solutions>, 2018
 # Boris Stefanov <borkata@gmail.com>, 2018
+# Igor Sheludko <igor.sheludko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-08 13:18+0000\n"
 "PO-Revision-Date: 2018-03-08 13:18+0000\n"
-"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
+"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,6 +188,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Канете търговци или мениджъри</b> по имейл.<br/><i>Въвеждайте по един "
+"имейл за ред.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -333,7 +336,7 @@ msgstr "<strong>Вашата референция:</strong>"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "A single sale price per product"
-msgstr "Една продажна цена за продукт"
+msgstr "Единична продажна цена за продукт"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -464,12 +467,12 @@ msgstr ""
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "При продажна цена"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
 msgid "Attribute Values"
-msgstr "Стойности на Атрибута"
+msgstr "Атрибутивни стойности"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
@@ -777,7 +780,7 @@ msgstr "Отстъпка (%)"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Discount included in the price"
-msgstr ""
+msgstr "Отстъпка, включена в цената"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -934,7 +937,7 @@ msgstr "Групирай по Име"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1214,6 +1217,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"Механично настроени количества по поръчка: фактура въз основа на механично въведено количество, без да се създава аналитична сметка.\n"
+"Графици на договор: фактура въз основа на проследените часове в съответния график.\n"
+"Създайте задача и проследете часовете: Създайте задача за потвърждаване поръчката за продажба и проследете работните часове."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1373,7 +1379,7 @@ msgstr "Онлайн оферти"
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "Валидни са единствено стойности на цели числа"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -1523,6 +1529,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
+"Моля, определете приходна сметка за този продукт: \"%s\" (ИН:%d) - или за "
+"нейната категория: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1538,19 +1546,19 @@ msgstr "Намаляне на Цената"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Понижение на цена при изключен данък"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Намалена цена с включени такси"
+msgstr "Понижение на цена при включен данък"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_pricelist_id
 msgid "Pricelist"
-msgstr "Ценоразпис"
+msgstr "Ценова листа "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_pricelist_id
@@ -1756,7 +1764,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Префактурирайте разходи"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -2165,11 +2173,28 @@ msgid "Terms and conditions"
 msgstr "Срокове и условия"
 
 #. module: sale
-#: code:addons/sale/models/sale_analytic.py:84
+#: code:addons/sale/models/sale_analytic.py:117
 #, python-format
 msgid ""
-"The Sale Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:112
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:115
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
 msgstr ""
 
 #. module: sale
@@ -2220,6 +2245,7 @@ msgstr ""
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr ""
+"Стойността на размера на авансовото плащане трябва да бъде положителна."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2399,6 +2425,7 @@ msgstr "Използвайте ценовите листи, за да адапт
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
+"Използвайте навигацията, за да <b>се върнете към предшестващите екрани</b>."
 
 #. module: sale
 #. openerp-web
@@ -2466,7 +2493,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/sale.js:26
 #, python-format
 msgid "Wrong value entered!"
-msgstr ""
+msgstr "Въведохте грешна стойност!"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:165

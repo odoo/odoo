@@ -43,6 +43,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Kiểm tra</span>\n"
+"<span class=\"o_stat_text\">Môi trường</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -137,22 +139,22 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr ""
+msgstr "Tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Tài khoản tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Tham chiếu Tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Tham chiếu Tổ chức thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -174,7 +176,7 @@ msgstr "Địa chỉ"
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
 #: selection:payment.acquirer,provider:0
 msgid "Adyen"
-msgstr ""
+msgstr "Adyen"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -211,18 +213,18 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 #: selection:payment.acquirer,provider:0
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Cơ chế ủy quyền"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 #: selection:payment.acquirer,provider:0
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
@@ -237,7 +239,7 @@ msgstr "Đã huỷ"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Ghi giao dịch"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -248,7 +250,7 @@ msgstr "Thành phố"
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Click to create a payment acquirer."
-msgstr ""
+msgstr "Bấm để tạo một thanh toán từ nhà cung cấp"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -273,7 +275,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Mô-đun tương ứng"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
@@ -308,7 +310,7 @@ msgstr "Ngày tạo"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Xác thực"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -426,12 +428,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Cố định phí trong nước"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Cố định phí quốc tế"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -441,7 +443,7 @@ msgstr "Mẫu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "Mẫu nút bấm"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -773,7 +775,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Các trường bắt buộc không được điền"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
@@ -799,7 +801,7 @@ msgstr "Token thanh toán đã lưu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "Hỗ trợ lưu trữ thông tin card"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -854,7 +856,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "Mẫu phương thức đăng ký"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -918,7 +920,7 @@ msgstr "Ngày Thẩm định"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Phí nội địa thay đổi (tính bằng phần trăm)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
@@ -928,7 +930,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Hiện Cổng thông tin/Website"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -952,6 +954,8 @@ msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Adyen sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -959,6 +963,8 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Ủy quyền sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
@@ -966,6 +972,8 @@ msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Buckaroo sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -973,6 +981,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Ingenico sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -980,6 +990,8 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web PayUmoney sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
@@ -987,12 +999,15 @@ msgid ""
 "You will be redirected to the Paypal website after clicking on the payment "
 "button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Paypal sau khi nhấp vào nút thanh "
+"toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_sips
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
 msgstr ""
+"Bạn sẽ được chuyển hướng đến trang web Sips sau khi nhấp vào nút thanh toán."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form

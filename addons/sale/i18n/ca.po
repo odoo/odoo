@@ -2179,14 +2179,29 @@ msgid "Terms and conditions"
 msgstr "Termes i condicions "
 
 #. module: sale
-#: code:addons/sale/models/sale_analytic.py:84
+#: code:addons/sale/models/sale_analytic.py:117
 #, python-format
 msgid ""
-"The Sale Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"La comanda de venda %s enllaçada amb la Comptabilitat Analítica ha de ser "
-"validada abans de registrar les despeses."
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:112
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:115
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount

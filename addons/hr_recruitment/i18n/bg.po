@@ -37,6 +37,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаеми/а ${object.partner_name or 'applicant'},</p>\n"
+"<p>Благодарим за Вашето запитване.<br />\n"
+"За съжаление профилът Ви не съвпада с нашите нужди</p>\n"
+"<p>Ако имате някакви въпроси, молим да ги споделите с нас.</p>\n"
+"<p>С най-добри пожелания,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -110,8 +116,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Речник Python, който ще бъде оценен, за да предоставя стойности по "
-"подразбиране при създаването на нови записи за този alias."
+"Речник Python, който ще бъде остойностен, така че да предоставя стойности по"
+" подразбиране при създаването на нови записи за този псевдоним."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
@@ -136,27 +142,27 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
 msgid "Alias"
-msgstr "Синоним"
+msgstr "Псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
 msgid "Alias Contact Security"
-msgstr "Защита на контакт-синоним"
+msgstr "Защита на контакт-псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "ИН на псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
 msgid "Alias Name"
-msgstr "Псевдоним"
+msgstr "Име-псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
 msgid "Alias domain"
-msgstr "Псевдоним - домейн"
+msgstr "Домейн-псевдоним "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
@@ -458,13 +464,15 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
-msgstr ""
+msgstr "Създайте псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Създайте някои псевдоними, които ще Ви дадат възможност да проследявате "
+"откъде произхождат кандидатите."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -638,7 +646,7 @@ msgstr "Имейл"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Псевдоним за имейл"
+msgstr "Имейл-псевдоним"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -646,6 +654,8 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
+"Имейл-псевдоним за тази работна позиция. Новите имейли автоматично ще "
+"създават нови кандидати за тази работна позиция."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -767,7 +777,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
@@ -775,8 +785,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"Идентификатор на родителския запис, съдържащ псевдонима (пример: проект, "
-"който държи псевдонима за създаване на задачи)"
+"ИН на основния запис, съдържащ псевдонима (пример: проект, съдържащ "
+"псевдонима за създаване на задачи)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -821,7 +831,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "ИН на работна позиция"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
@@ -1033,7 +1043,7 @@ msgstr "Следващи действия"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:384
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Без тема"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -1102,6 +1112,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Незадължителен ИН на поредица (на запис), към която ще се прикачват всички "
+"постъпващи съобщения, дори и да не са ѝ отговорили. Ако е настроено, това "
+"напълно ще прекрати създаването на нови записи."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1111,12 +1124,12 @@ msgstr "Собственик"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Основен модел"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ИН на основна поредица записи"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
@@ -1125,6 +1138,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Основен модел, съдържащ псевдонима. Моделът, съдържащ референцията за "
+"псевдонима не е непременно моделът, зададен от alias_model_id (например: "
+"проект (parent_model) и задача (модел))"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
@@ -1167,7 +1183,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ИН на поредица записи"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -1214,7 +1230,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
-msgstr ""
+msgstr "Препоръчано от"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1362,7 +1378,7 @@ msgstr "Етап"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
 msgid "Stage Changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -1372,7 +1388,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
 msgid "Stage changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
@@ -1438,6 +1454,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Моделът (Odoo вид документ), към който се съотнася този псевдоним. Всеки "
+"един входящ имейл, който не отговаря на съществуващ запис, ще предизвика "
+"създаването на нов запис на въпросния модел (напр. проектна задача)"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1450,6 +1469,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Името на имейла-псевдоним, напр. 'позиции', в случай че желаете да "
+"прихващате имейли <jobs@example.odoo.com>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
@@ -1459,6 +1480,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Собственикът на записите, създадени според получаването на имейли на този "
+"псевдоним. Ако това поле не е настроено, системата ще се опита да открие "
+"правилния собственик въз основа адреса на подателя (От) или ще използва "
+"профила на администратора, в случай че на този адрес не е открит никакъв "
+"системен потребител."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -1466,6 +1492,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Тези псевдоними могат да са имейли или url файлове за всеки източник. При "
+"пристигането на кандидата тук, Вие ще знаете откъде точно идва той именно "
+"чрез някой от тези имейли или url файлове."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1474,6 +1503,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Тези имейл адреси ще бъдат добавени към CC полето на всички входящи и "
+"изходящи имейли за този запис преди да бъде изпратен. Разделяйте имейл "
+"адресите със запетая"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
@@ -1512,6 +1544,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Този етап е сгънат в канбан изгледа, когато няма записи за показване в този "
+"етап."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1556,6 +1590,7 @@ msgstr "Използвай шаблон"
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
 msgstr ""
+"Използвайте навигацията, за да <b>се върнете към таблото за управление</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
@@ -1565,7 +1600,7 @@ msgstr "Потребител"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
 msgid "User Email"
-msgstr ""
+msgstr "Потребителски имейлл"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1612,7 +1647,7 @@ msgstr "напр. разговор за интервю"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr ""
+msgstr "напр. Мениджър продажби"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
