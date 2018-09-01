@@ -8,7 +8,7 @@
 # Morovat Guivi <tarjomac@gmail.com>, 2016
 # Zahed Alfak <tamass4116@gmail.com>, 2016
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
-# ifaraz ir <ifarazir@gmail.com>, 2016
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2016
 # Sia Rezazadeh <siavash.rezazadeh@gmail.com>, 2017
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
 msgid ""
@@ -2097,11 +2097,28 @@ msgid "Terms and conditions"
 msgstr "شرایط و ضوابط"
 
 #. module: sale
-#: code:addons/sale/models/sale_analytic.py:84
+#: code:addons/sale/models/sale_analytic.py:117
 #, python-format
 msgid ""
-"The Sale Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:112
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale_analytic.py:115
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
 msgstr ""
 
 #. module: sale

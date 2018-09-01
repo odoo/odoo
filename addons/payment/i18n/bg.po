@@ -31,6 +31,8 @@ msgid ""
 "        Will be safe_eval with `self` being the current transaction. i.e.:\n"
 "            self.env['my.model'].payment_validated(self)"
 msgstr ""
+"       Ще бъде safe_eval, като `self` ще бъде настоящата транзакция. т.е.:\n"
+"            self.env['my.model'].payment_validated(self)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -460,7 +462,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -884,8 +886,8 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
 msgstr ""
-"Този шаблон конвертира бутона на обработчика с всички необходими стойности.\n"
-"                                            Той е конвертиран с qWeb със следния контекст на оценяване:"
+"Този шаблон предоставя бутона на обработчика с всички необходими стойности.\n"
+"                                            Предоставен и с qWeb със следния контекст за остойностяване:"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:160
@@ -1054,7 +1056,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: стойности на транзакции"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

@@ -61,11 +61,11 @@ msgstr ""
 "<p>Привет,</p>\n"
 "\n"
 "\n"
-"<p>Свързали сме се посредством тези изгледи от Вашия регион. По този начин следните лийдове са разпределени на ${ctx['partner_id'].name}:</p>\n"
+"<p>С нас се свързаха тези евентуални кандидати от Вашия регион. По тази причина са разпределени следните лийдове към ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name или 'Неопределен предмет'}</a>, ${lead.lead_id.partner_name или lead.lead_id.contact_name или 'Неопределено име за контакт'}, ${lead.lead_id.country_id и lead.lead_id.country_id.name или 'Неопределена държава' }, ${lead.lead_id.email_from или 'Неопределен имейл'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name или 'Неопределена тема'}</a>, ${lead.lead_id.partner_name или lead.lead_id.contact_name или 'Неопределено име на контакт'}, ${lead.lead_id.country_id и lead.lead_id.country_id.name или 'Неопределена държава' }, ${lead.lead_id.email_from или 'Неопределен имейл'}, ${lead.lead_id.phone or ''} </li></br>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
@@ -74,7 +74,7 @@ msgstr ""
 "% else:\n"
 "<p>\n"
 "    Все още нямате достъп до портала в базата си данни. Моля, свържете се с \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email и 'мениджъра на сметката Ви %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) или 'с нас'}.\n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email и 'Вашия мениджър клиенти %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) или 'с нас'}.\n"
 "</p>\n"
 "% endif\n"
 "<p>Ако не се свържете с лийда за период от 20 дни, той ще бъде изпратен на друг партньор.</p>\n"
@@ -84,14 +84,14 @@ msgstr ""
 "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature или '' | safe}\n"
 "\n"
 "% if not ctx['partner_id'].user_id:\n"
-"PS: Изглежда, че не Ви е разпределен акаунт мениджър, така че моля свържете се с нас.\n"
+"PS: Изглежда, че не Ви е разпределен мениджър клиенти, така че моля свържете се с нас.\n"
 "% endif\n"
 "            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
 msgid "# of Cases"
-msgstr ""
+msgstr "# на случаи"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_nbr_opportunities
@@ -573,7 +573,7 @@ msgstr "Не ме интересува този лийд. Не съм се св�
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id
 msgid "ID"
-msgstr "ID"
+msgstr "ИН"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
@@ -742,7 +742,7 @@ msgstr "Моите лийдове"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "My Opportunities"
-msgstr ""
+msgstr "Моите възможности"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:49
@@ -769,7 +769,7 @@ msgstr "Следваща дейност"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity Date"
-msgstr ""
+msgstr "Дата на следваща активност"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
@@ -795,7 +795,7 @@ msgstr "Нормален"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
 msgid "Number of Days to close the case"
-msgstr ""
+msgstr "Брой дни до приключване на случая"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
@@ -842,7 +842,7 @@ msgstr "Нашите контрагенти"
 #: code:addons/website_crm_partner_assign/controllers/main.py:98
 #, python-format
 msgid "Overdue Activities"
-msgstr ""
+msgstr "Просрочени дейности"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
@@ -1015,7 +1015,7 @@ msgstr "Изпрати"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Send Email"
-msgstr ""
+msgstr "Изпратете имейл"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1108,7 +1108,7 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/controllers/main.py:96
 #, python-format
 msgid "This Week Activities"
-msgstr ""
+msgstr "Дейностите за тази седмица"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1145,7 +1145,7 @@ msgstr "Потребител"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "Много висок"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
@@ -1166,7 +1166,7 @@ msgstr "Защо не Ви интересува този лийд?"
 #: code:addons/website_crm_partner_assign/controllers/main.py:99
 #, python-format
 msgid "Won"
-msgstr ""
+msgstr "Спечелен"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
