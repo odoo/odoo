@@ -30,7 +30,7 @@
 # Régis GEROMEGNACE <regis.geromegnace@gmail.com>, 2016
 # Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Guilhaume Bordiau <github@guilhaume.fr>, 2016
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Laura Piraux <lap@odoo.com>, 2017
@@ -424,17 +424,17 @@ msgstr "Status de l'Activité"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Add a lot/serial number"
-msgstr ""
+msgstr "Ajouter un numéro de lot/série"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
 msgid "Add a new location"
-msgstr ""
+msgstr "Ajouter un nouvel emplacement"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
 msgid "Add a new route"
-msgstr ""
+msgstr "Ajouter une nouvelle route"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -534,6 +534,8 @@ msgid ""
 "All products could not be reserved. Click on the \"Check Availability\" "
 "button to try to reserve products"
 msgstr ""
+"Tous les produits n'ont pas pu être réservés. Cliquez sur le bouton "
+"\"Vérifier la disponibilité\"  pour essayer de réserver les produits."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -545,6 +547,7 @@ msgstr "Tous les mouvements de retour"
 msgid ""
 "Allows to suggest the exact location (shelf) where to store the product."
 msgstr ""
+"Permet de suggérer l'emplacement de stockage exact où stocker le produit."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -863,7 +866,7 @@ msgstr "Annulé"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Cancelled Moves"
-msgstr ""
+msgstr "Mouvements annulés. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:279
@@ -1006,7 +1009,7 @@ msgstr "Société"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Completion Date"
-msgstr ""
+msgstr "Date d'exécution"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__compute_at_date
@@ -1021,7 +1024,7 @@ msgstr "Calculer les frais de port et expédier avec DHL"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Calculer les frais de port et expédier avec Easypost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1200,17 +1203,17 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Create a new inventory adjustment"
-msgstr ""
+msgstr "Créer un nouvel ajustement de stock"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Create a new operation type"
-msgstr ""
+msgstr "Créer un nouveau type d'opération"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr ""
+msgstr "Créer un nouveau paquet"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
@@ -1220,12 +1223,12 @@ msgstr "Créer un nouvel article"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
 msgid "Create a new stock movement"
-msgstr ""
+msgstr "Créer un nouveau mouvement de stock"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Create a new stock operation"
-msgstr ""
+msgstr "Créer une nouvelle opération de stock"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -1447,7 +1450,7 @@ msgstr "RENDU EX SHIP"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
-msgstr ""
+msgstr "Connecteur DHL"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
@@ -1880,7 +1883,7 @@ msgstr "DÉPART USINE"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Connecteur Easypost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -1917,7 +1920,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s):"
-msgstr ""
+msgstr "Exception(s):"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -1964,7 +1967,7 @@ msgstr "FRANCO À BORD"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "Connecteur FedEx"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -1979,7 +1982,7 @@ msgstr "Fixé"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__product_location_ids
 msgid "Fixed Locations Per Product"
-msgstr ""
+msgstr "Emplacements de stockage fixes par produit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
@@ -2157,7 +2160,7 @@ msgstr "Regrouper par..."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_move_lines
 msgid "Has Move Lines"
-msgstr ""
+msgstr "A des lignes de mouvements"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
@@ -2177,12 +2180,12 @@ msgstr "Comporte des mises au rebut"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "Est tracké"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 msgid "Has variants"
-msgstr ""
+msgstr "A des variantes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
