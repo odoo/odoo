@@ -7,7 +7,6 @@
 # e2f <projects@e2f.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# SHOM <shanmuxin@yeah.net>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # Eddie Lim <bhweelim@yahoo.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
@@ -16,13 +15,14 @@
 # Talway <9010446@qq.com>, 2018
 # zpq001 <zpq001@live.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"POT-Creation-Date: 2018-08-30 07:56+0000\n"
+"PO-Revision-Date: 2018-08-30 07:56+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr "# 明细行"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# 销售订单"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -78,18 +78,6 @@ msgstr "&amp;nbsp;<span>基于</span>&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "&amp;times;"
 msgstr "&amp;次数;"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
-msgid ""
-",\n"
-"                an awesome"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "/sale/static/src/img/sale_quotation_onboarding_bg.jpg"
-msgstr ""
 
 #. module: sale
 #. openerp-web
@@ -210,7 +198,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 
 #. module: sale
@@ -255,14 +243,15 @@ msgid "<span>Pro-Forma Invoice # </span>"
 msgstr "<span>形式发票＃</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<span>Taxes</span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>with payment terms: </span>"
 msgstr "<SPAN>付款条款：</SPAN>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -326,12 +315,6 @@ msgstr "<strong>送货地址:</strong>"
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Signature</strong>"
 msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong>Subtotal:</strong>"
-msgstr "<STRONG>小计：</STRONG>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -480,12 +463,12 @@ msgstr "活动类型"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "增加备注"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr ""
+msgstr "添加产品"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -608,11 +591,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
 msgstr "自动开票"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Back to Sales Order"
-msgstr "返回销售订单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -1049,6 +1027,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "定金"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
 msgstr "押金产品"
@@ -1083,7 +1067,7 @@ msgstr "折扣(%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr ""
+msgstr "折扣金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist__discount_policy
@@ -1184,6 +1168,11 @@ msgid "Edit Quotation"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Edit Sales Order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 msgid "Electronic Payment"
@@ -1256,6 +1245,11 @@ msgstr "关注者(业务伙伴)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
+msgstr ""
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up"
 msgstr ""
 
 #. module: sale
@@ -1484,12 +1478,11 @@ msgstr "可开具发票明细 ( 扣除预付定金 )"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
-#: selection:sale.report,state:0
 msgid "Invoiced"
 msgstr "已开票"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1000
+#: code:addons/sale/models/sale.py:1008
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1575,7 +1568,7 @@ msgstr "是首付款吗？"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "可报销"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
@@ -1902,9 +1895,14 @@ msgid "Number of unread messages"
 msgstr "未读消息的数量"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Odoo"
 msgstr "Odoo"
+
+#. module: sale
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1945,12 +1943,6 @@ msgid "Only Integer Value should be valid."
 msgstr "仅整型数值是合法的。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
-msgid "Open Source CRM"
-msgstr "开源客户关系管理软件"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
 msgstr "订单"
@@ -1980,7 +1972,7 @@ msgstr "单据日期"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_id
 msgid "Order ID"
-msgstr ""
+msgstr "订单 ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2089,11 +2081,6 @@ msgstr "逾期"
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
 msgstr "样本发票"
-
-#. module: sale
-#: selection:sale.report,state:0
-msgid "Paid"
-msgstr "已支付"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -2222,12 +2209,7 @@ msgid "Portal Access URL"
 msgstr "门户访问网址"
 
 #. module: sale
-#: selection:sale.report,state:0
-msgid "Posted"
-msgstr "已过账"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Powered by"
 msgstr "官方技术支持"
 
@@ -2415,12 +2397,12 @@ msgid "Quantity:"
 msgstr "数量："
 
 #. module: sale
+#: code:addons/sale/models/sale.py:246
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
+#, python-format
 msgid "Quotation"
 msgstr "报价单"
 
@@ -2585,7 +2567,7 @@ msgstr "销售订单个数"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_users__has_group_sale_order_dates
 msgid "Sale Order Dates"
-msgstr ""
+msgstr "销售订单日期"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -2638,12 +2620,13 @@ msgid "Sales Information"
 msgstr "销售信息"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:246
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
+#, python-format
 msgid "Sales Order"
 msgstr "销售订单"
 
@@ -2683,7 +2666,7 @@ msgstr "销售订单明细与我的销售订单"
 #: model:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "销售订单"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:102
@@ -2833,6 +2816,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "在不同的度量单位产品中采购和销售"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr "销售数字产品 - 在你的客户门户网站提供可下载的内容"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3056,11 +3045,6 @@ msgstr ""
 " 计划：未来的活动。"
 
 #. module: sale
-#: selection:sale.order.line,qty_delivered_method:0
-msgid "Stock Moves"
-msgstr "库存移动"
-
-#. module: sale
 #: selection:res.company,sale_onboarding_payment_method:0
 msgid "Stripe"
 msgstr "条带"
@@ -3096,6 +3080,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Taxes"
 msgstr "税金"
 
@@ -3157,12 +3142,12 @@ msgid "The analytic account related to a sales order."
 msgstr "销售订单相关的分析会计账户。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:336
+#: code:addons/sale/models/sale.py:344
 #, python-format
 msgid ""
-"The date requested by the customer is sooner than the commitment date. You "
-"may be unable to honor the customer's request."
-msgstr "客户要求的日期早于承诺日期。你可能不能满足客户要求。"
+"The commitment date is sooner than the expected date.You may be unable to "
+"honor the commitment date."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__dashboard_graph_model
@@ -3332,16 +3317,6 @@ msgstr ""
 " 如果你想分析你的营业额，你应该用会计模块里的发票分析报表。"
 
 #. module: sale
-#: selection:sale.order.line,qty_delivered_method:0
-msgid "Timesheets"
-msgstr "工时表"
-
-#. module: sale
-#: selection:product.template,service_type:0
-msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "时间表项目（一个票价每/项目）"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -3381,7 +3356,7 @@ msgstr "总价"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "税额总计"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -3399,6 +3374,11 @@ msgstr "跟踪服务"
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "交易"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__type_name
+msgid "Type Name"
+msgstr "类型名称"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -3441,6 +3421,12 @@ msgid "Unit of Measure Categories"
 msgstr "计量单位类别"
 
 #. module: sale
+#: model:product.product,uom_name:sale.advance_product_0
+#: model:product.template,uom_name:sale.advance_product_0_product_template
+msgid "Unit(s)"
+msgstr "件"
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3471,13 +3457,13 @@ msgstr "未含税金额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "不含税已开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "不含税待开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
@@ -3682,11 +3668,6 @@ msgid "Your message has been successfully sent!"
 msgstr "你的留言已成功发送！"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "action_close_sale_quotation_onboarding"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
 msgstr ""
@@ -3730,7 +3711,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "has already been cancelled!"
-msgstr ""
+msgstr "已经被取消!"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3743,19 +3724,15 @@ msgid "has not yet been sent!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "o_onboarding_violet"
-msgstr ""
+#: model:product.product,weight_uom_name:sale.advance_product_0
+#: model:product.template,weight_uom_name:sale.advance_product_0_product_template
+msgid "kg"
+msgstr "kg"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "report.sale.report_saleproforma"
 msgstr "report.sale.report_saleproforma"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "res.company"
-msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -3766,7 +3743,7 @@ msgstr "设置-基础设置"
 #: code:addons/sale/models/sale.py:98
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "销售订单"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
