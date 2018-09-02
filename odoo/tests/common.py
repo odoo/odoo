@@ -16,6 +16,7 @@ import os
 import platform
 import re
 import requests
+import select
 import shutil
 import subprocess
 import tempfile
@@ -429,7 +430,8 @@ class ChromeBrowser():
     def stop(self):
         if self.chrome_process is not None:
             self._logger.info("Closing chrome headless with pid %s", self.chrome_process.pid)
-            self._websocket_send('Browser.close')
+            if self.ws:
+                self._websocket_send('Browser.close')
             if self.chrome_process.poll() is None:
                 self._logger.info("Terminating chrome headless with pid %s", self.chrome_process.pid)
                 self.chrome_process.terminate()
@@ -483,15 +485,36 @@ class ChromeBrowser():
         cmd.append(url)
         self._logger.info('chrome_run executing %s', ' '.join(cmd))
         try:
-            self.chrome_process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.chrome_process = subprocess.Popen(cmd, bufsize=0, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         except OSError:
             raise unittest.SkipTest("%s not found" % cmd[0])
         self._logger.info('Chrome pid: %s', self.chrome_process.pid)
+        self._wait_chrome_listen()
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
         infos = self._json_command('')[0]  # Infos about the first tab
         self.ws_url = infos['webSocketDebuggerUrl']
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
+
+    def _wait_chrome_listen(self):
+        """ Wait chrome to listen on debugging port """
+        t0 = time.time()
+        while True:
+            if time.time() - t0 > 20:
+                msg = 'Chrome took more than 20 sec to start listening on port %s' % self.devtools_port
+                self._logger.error()
+                self.stop()
+                raise unittest.SkipTest(msg)
+            ready_out,ready_in,ready_error = select.select([self.chrome_process.stderr],[],[],0)
+            if self.chrome_process.stderr in ready_out:
+                l = self.chrome_process.stderr.readline()
+                if b'errno=98' in l:
+                    msg = 'port %s already in use' % self.devtools_port
+                    self._logger.error(msg)
+                    self.stop()
+                    raise unittest.SkipTest(msg)
+                if b'DevTools listening on' in l:
+                    break
 
     def _json_command(self, command, timeout=3):
         """
