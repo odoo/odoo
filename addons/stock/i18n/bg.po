@@ -700,6 +700,9 @@ msgid ""
 "                        you may find yourself out of stock) and not too high (your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
+"Адекватното управление на инвентара има за цел да оптимизира стоковите нива: не твърде ниско (или\n"
+"                        можете да се окажете с изчерпани количества) и не твърде високо (продуктите Ви заемат\n"
+"                        пространство и могат да изгубат стойността си)."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:76
@@ -715,6 +718,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Складируем продукт ще рече продукт, чиято наличност управлявате Вие. Необходимо е да се инсталира пролжението \"Инвентар\".\n"
+"От друга страна, консумативът е продукт, чиято наличност не може да бъде управлявана.\n"
+"Услугата представлява нематериален продукт, който предоставяте.\n"
+"Цифрово съдържание представлява нематериален продукт, който продавате онлайн. Прикрепените към продуктите файлове са тези, които биват продавани в електронната търговия като електронни книги, музика, картини,... За целта трябва да се инсталира модулът  \"Дигитален продукт\"."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1098,6 +1105,8 @@ msgid ""
 "By default, Odoo measures products by 'units', which are generic and "
 "represent just about anything"
 msgstr ""
+"Odoo измерва по подразбиране продуктите в 'мерни единици', които са "
+"универсални и представляват почти всичко"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
@@ -2007,6 +2016,8 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
+"В зависимост от инсталираните модули, това ще Ви позволи да определите "
+"маршрута на продукта: дали ще бъде закупен, произведен, MTO/MTS,..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5552,6 +5563,9 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Насрочено време за първата част на доставката, която трябва да се обработи. "
+"Механичната настройка на дадена стойност тук би го задала като очакваната "
+"дата за всички движения в склада."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:836
@@ -6037,7 +6051,7 @@ msgstr "Складови движения"
 #: model:ir.ui.view,arch_db:stock.view_move_graph
 #: model:ir.ui.view,arch_db:stock.view_move_pivot
 msgid "Stock Moves Analysis"
-msgstr ""
+msgstr "Анализ на движенията в склада"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.product_open_quants
@@ -6076,17 +6090,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Движения в склада, които са налични (готови за обработване)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that are Confirmed, Available or Waiting"
-msgstr ""
+msgstr "Движения в склада, които са потвърдени, налични или чакащи"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "Движения в склада, които са обработени"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -6207,7 +6221,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,help:stock.field_product_product_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Технически: използва се за изчисляване на количества."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_product_tmpl_id
@@ -6235,6 +6249,9 @@ msgid ""
 " the delivery of the finished products. It's the time you promise to your "
 "customers."
 msgstr ""
+"Средно закъснение в дни между потвърждението на клиентската поръчка и "
+"доставката на завършените продукти - времето, което обещавате на клиентите "
+"си."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1065
@@ -6408,6 +6425,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
 msgstr ""
+"Този анализ Ви предоставя бърз преглед на настоящото ниво на продуктите Ви и"
+" настоящата им инвентарна стойност."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_packaging_id
@@ -6580,6 +6599,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"Тази стокова локация ще бъде използвана вместо локацията по подразбиране "
+"като локацията на източника за стокови движения, създадени от производствени"
+" поръчки."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_property_stock_inventory
@@ -6588,6 +6610,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
+"Тази стокова локация ще бъде използвана вместо локацията по подразбиране "
+"като локацията на източника за стокови движения, създадени когато извършвате"
+" инвентаризация."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_detail_ids

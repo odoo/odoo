@@ -1321,7 +1321,7 @@ msgstr "Sąskaita"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 msgid "Account Accountant"
-msgstr "Apskaitininkas"
+msgstr "Sąskaitos apskaitininkas"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2255,12 +2255,12 @@ msgstr "Pritaikomumas"
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on credit journal item"
-msgstr ""
+msgstr "Pritaikyta kredito žurnalo įrašui"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Applied on debit journal item"
-msgstr ""
+msgstr "Pritaikyta debeto žurnalo įrašui"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_auto_apply
@@ -3954,7 +3954,7 @@ msgstr "Valiutos kursų skirtumas"
 #: model:account.account.type,name:account.data_account_type_current_assets
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
-msgstr "Naudojamos sąskaitos"
+msgstr "Esamas turtas"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_liabilities
@@ -4245,7 +4245,7 @@ msgstr "Atidėtų pajamų vadovas"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash."
 msgstr ""
-"Apibrėžkite mažiausią monetos nominlą valiutai, naudojamai atsiskaitymuose "
+"Apibrėžkite mažiausią monetos nominalą valiutai, naudojamai atsiskaitymuose "
 "grynais."
 
 #. module: account
@@ -4254,8 +4254,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Apibrėžia mažiausią valiutos monetų nominlą, galimą naudoti atsiskaitymuose "
-"grynais."
+"Apibrėžia mažiausią valiutos monetų nominalą, kurį galimą naudoti "
+"atsiskaitymuose grynais."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -7331,7 +7331,7 @@ msgstr "Skaičius"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Number (Move)"
-msgstr "Skaičius (įrašas)"
+msgstr "Skaičius (perkėlimas)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_number
@@ -7368,7 +7368,7 @@ msgstr "Spalio"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Odoo Accounting has many extra-features:"
-msgstr ""
+msgstr "\"Odoo\" apskaita turi daug papildomų funkcijų:"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -10253,7 +10253,7 @@ msgstr ""
 #: code:addons/account/models/company.py:94
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "Užrakinimo data patarėjams yra negrąžintina ir negali būti pašalinta."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -10282,6 +10282,8 @@ msgstr "Pavadinimas, kuris bus naudojamas žurnalo įrašo eilutėse"
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Nauja užrakinimo data patarėjams turi būti nustatyta po ankstesnės "
+"užrakinimo datos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
@@ -10705,9 +10707,9 @@ msgid ""
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
 msgstr ""
-"Šis pasirinkimas leidžia gauti daugiau duomenų apie tai, kaip buvo "
-"paskaičiuotas balansas. Kadangi tai užima vietą, šis pasirinkimas "
-"neleidžiamas atliekant palyginimą."
+"Šis pasirinkimas leidžia gauti daugiau duomenų apie tai, kaip skaičiuojami "
+"jūsų balansai. Kadangi tai užima daug vietos, šis pasirinkimas neleidžiamas "
+"atliekant palyginimą."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_chart_template_id
@@ -10721,8 +10723,8 @@ msgstr ""
 "Šis papildomas laukas leidžia susieti sąskaitos šabloną su tam tikru "
 "sąskaitų plano šablonu, kuris gali skirtis nuo tėvinio sąskaitų plano. Tai "
 "leidžia apibrėžti sąskaitų plano šabloną, kuris papildo kitą naujomis "
-"sąskaitomis (dėl to nereikia kelis kartus apibrėžti pilnos struktūros, "
-"kuomet tai tinka keliems šablonams)."
+"sąskaitomis (dėl to nereikia kelis kartus apibrėžti pilnos struktūros, kai "
+"tai tinka keliems šablonams)."
 
 #. module: account
 #. openerp-web
@@ -10732,7 +10734,7 @@ msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
 msgstr ""
-"Šis puslapis parodo visas banko operacijas, kurios gali būti apdengtos ir "
+"Šis puslapis parodo visas banko operacijas, kurios gali būti sudengtos ir "
 "pateikiamos patogiu būdu jas apdengti."
 
 #. module: account
@@ -10830,7 +10832,7 @@ msgstr "Neužpajamuota"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "To Pay"
-msgstr "Reikia apmokėti"
+msgstr "Apmokėti"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10846,7 +10848,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "To pay"
-msgstr "Mokėti"
+msgstr "Apmokėti"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1017
@@ -11291,7 +11293,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr " "
+msgstr " Naudojama žurnalų rikiavimui skydelio vaizde"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -11319,7 +11321,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_currency_id
 #: model:ir.model.fields,help:account.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Pagalbinis laukas išreiškiantis sumą valiuta"
+msgstr "Pagalbinis laukas, išreiškiantis sumą valiuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_vat_required
@@ -11539,13 +11541,13 @@ msgid ""
 "When inviting users, you will need to define which access rights they are allowed to have. \n"
 "                        This is done by assigning a role to each user."
 msgstr ""
-"Kviečiant vartotojus, Jums reikės apibrėžti naudojimo teises.\n"
+"Kviečiant vartotojus jums reikės apibrėžti prieigos teises.\n"
 "Tai padaroma priskiriant rolę kiekvienam vartotojui."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Ar šis žurnalas turi būti vaizduojamas valdymo skyde ar ne"
+msgstr "Ar šis žurnalas turi būti vaizduojamas valdymo skyde, ar ne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report_amount_currency
@@ -11559,7 +11561,7 @@ msgstr "Su valiuta"
 #: selection:account.common.account.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
-msgstr "Kurių balansas nelygus nuliui"
+msgstr "Su balansu nelygiu 0"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -11611,7 +11613,7 @@ msgstr "Nurašymų sąskaita"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff
 msgid "Write-Off amount"
-msgstr "Nurašymo suma"
+msgstr "Nurašymo kiekis"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -11639,7 +11641,7 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "                what you purchased or received."
 msgstr ""
-"Jūs galite kontroliuoti sąskaitą iš Jūsų tiekėjo pagal tai\n"
+"Jūs galite kontroliuoti sąskaitą iš savo tiekėjo pagal tai,\n"
 "ką pirkote arba gavote."
 
 #. module: account
@@ -11750,6 +11752,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Negalite nustatyti griežtesnių sąlygų patarėjams nei vartotojams. "
+"Įsitikinkite, kad užrakinimo data patarėjams yra ankstesnė nei užrakinimo "
+"data vartotojams."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:613
@@ -11834,6 +11839,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Negalite užrakinti laikotarpio, kuris dar nebaigtas. Įsitikinkite, kad "
+"užrakinimo data patarėjams nėra nustatyta po paskutinės praeito mėnesio "
+"dienos."
 
 #. module: account
 #. openerp-web
