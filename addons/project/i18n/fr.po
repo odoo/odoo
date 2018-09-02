@@ -24,7 +24,7 @@
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Fabri Yohann <psn@fabri.pw>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2017
 # Foo Bar <mat+test@odoo.com>, 2017
@@ -183,7 +183,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% Sur"
 
 #. module: project
 #: code:addons/project/models/project.py:288
@@ -198,6 +198,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
+"(Dés)archiver un projet (dés)archivera automatiquement ses tâches. Voulez-"
+"vous continuer? "
 
 #. module: project
 #. openerp-web
@@ -310,6 +312,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Cher(e) ${object.partner_id.name or 'customer'},<br/>\n"
+"    Merci de votre demande.<br/>\n"
+"    N'hésitez pas à nous contacter pour toute question.\n"
+"    <br/><br/>\n"
+"    Cordialement,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.rating_index
@@ -349,13 +360,15 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Créer un nouveau projet</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:53
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Une fois votre tâche prête, vous pouvez la sauvegarder.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -475,7 +488,7 @@ msgstr "Avancé"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:34
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Agile"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
