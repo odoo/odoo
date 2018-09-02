@@ -259,6 +259,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Документи са прикрепени към задачите и грешките на проекта Ви.</p><p>\n"
+"                        Изпращайте съобщения или регистрирайте вътрешни бележки с прикрепени файлове, за да свързвате\n"
+"                        документи към проекта си.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:144
@@ -1400,6 +1405,8 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
+"Създайте задача, като изпратите имейл на проектен псевдоним с един от "
+"колегите си в копието"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2639,6 +2646,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"Недадължителна идентификация на поредица (запис), към която ще се прикачват "
+"всички постъпващи съобщения, дори и да не ѝ отговарят. Ако е настроено, това"
+" напълно ще прекрати създаването на нови записи."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -2675,6 +2685,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за блокираното състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2683,6 +2695,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за готовото състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2691,6 +2705,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Отменете стойността по подразбиране, показана за нормалното състояние на "
+"канбан подбора, когато задачата или грешката са в този етап."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -2700,12 +2716,12 @@ msgstr "Собственик"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "Основен модел"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Основна поредица записи - идентификационен номер"
 
 #. module: project
 #: code:addons/project/models/project.py:861
@@ -2722,6 +2738,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Основен модел, съдържащ the alias. Моделът, съдържаш референцията за the "
+"alias не е непременно моделът, зададен от alias_model_id (например: проект "
+"(parent_model) и задача (модел))"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2973,7 +2992,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "Идентификационен номер на поредица записи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -3242,7 +3261,7 @@ msgstr "Стадий"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3257,7 +3276,7 @@ msgstr "Име на стадия"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Променен етап"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -3548,6 +3567,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Моделът (Odoo вид документ), към който се съотнася този псевдоним. Всеки "
+"един входящ имейл, който не отговаря на съществуващ запис, ще предизвика "
+"създаването на нов запис на въпросния модел (напр. проектна задача)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3555,6 +3577,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Името на имейла-псевдоним, напр. 'позиции', в случай че желаете да "
+"прихващате имейли <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3564,6 +3588,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Собственикът на записите, създадени според получаването на имейли на този "
+"псевдоним. Ако това поле не е настроено, системата ще се опита да открие "
+"правилния собственик въз основа адреса на подателя (От) или ще използва "
+"профила на администратора, в случай че на този адрес не е открит никакъв "
+"системен потребител."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3595,6 +3624,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Тези имейл адреси ще бъдат добавени към CC полето на всички входящи\n"
+"        и изходящи имейли за този запис придш до бъде изпратен. Разделяйте имейл адресите със запетая"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
@@ -3631,6 +3662,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Този етап е сгънат в канбан изгледа, когато няма записи за показване в този "
+"етап."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
@@ -3804,6 +3837,7 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
+"Използвайте навигацията, за да <b>се върнете към фунията си за задачи</b>."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3818,7 +3852,7 @@ msgstr "Потребител"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
 msgid "User Email"
-msgstr ""
+msgstr "Потребителски имейлл"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
