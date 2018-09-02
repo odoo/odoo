@@ -79,6 +79,51 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Gửi đối tác ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set pay_sign_name = object.get_portal_confirmation_action()\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Xác nhận %s trực tuyến' % pay_sign_name or 'Xem %s' % doc_name\n"
+"% set access_url = is_online and object.get_mail_url() or ''\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+" (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Đây là\n"
+"% if ctx.get('proforma')\n"
+"đính kèm theo, hóa đơn dự thảo của bạn\n"
+"% else\n"
+"the ${doc_name} <strong>${object.name}</strong>\n"
+"% endif\n"
+"% if object.origin:\n"
+"(tham khảo: ${object.origin} )\n"
+"% endif\n"
+"Với số tiền là <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"từ ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online and not ctx.get('proforma'):\n"
+"<br/><br/>\n"
+"<center>\n"
+"<a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"<br/><br/><br/>\n"
+"<span style=\"color:#888888\">(hoặc xem file PDF đính kèm)</span>\n"
+"</center>\n"
+"<br/>\n"
+"% endif\n"
+"\n"
+"<p>Bạn hãy phản hồi lại mail này nếu có bất kỳ thắc mắc nào.</p>\n"
+"<p>Xin chân thành cảm ơn,</p>\n"
+"\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -145,7 +190,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;<span>vào</span>&amp;nbsp;"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -586,6 +631,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Tăng doanh số bán hàng của bạn với hai loại chương trình giảm giá: khuyến "
+"mãi và mã giảm giá. Điều kiện cụ thể có thể được thiết lập (sản phẩm, khách "
+"hàng, số tiền mua tối thiểu, thời gian). Phần thưởng có thể là giảm giá (% "
+"số tiền) hoặc các sản phẩm miễn phí."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -640,6 +689,9 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Chọn hộp này nếu bạn gửi báo giá cho khách hàng của mình thay vì xác nhận "
+"đơn đặt hàng ngay lập tức. Thao tác này sẽ thêm các nút tác vụ cụ thể vào "
+"trang tổng quan của bạn."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
@@ -987,6 +1039,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Down payments được thực hiện khi tạo hóa đơn từ đơn đặt hàng. Chúng không "
+"được sao chép khi sao chép một đơn đặt hàng."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1181,6 +1235,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Doanh thu hóa đơn cho tháng hiện tại. Đây là số tiền mà kênh bán hàng đã lập"
+" hoá đơn trong tháng này. Nó được sử dụng để tính toán tỷ lệ tiến triển của "
+"doanh thu hiện tại và mục tiêu trên chế độ xem kanban."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1271,7 +1328,7 @@ msgstr "Chính sách Xuất Hoá đơn"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Mục tiêu hóa đơn"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1300,6 +1357,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Không được sửa đổi các trường sau theo thứ tự bị khóa:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1387,6 +1446,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Đặt số lượng thứ tự theo cách thủ công: Hoá đơn dựa trên số lượng được nhập theo cách thủ công, mà không cần tạo tài khoản phân tích.\n"
+"Hợp đồng chấm công: Hóa đơn dựa trên số giờ được theo dõi trên bảng chấm công có liên quan.\n"
+"Tạo một nhiệm vụ và theo dõi giờ: Tạo một nhiệm vụ trên xác nhận đơn đặt hàng bán hàng và theo dõi giờ làm việc."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1489,6 +1551,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Lưu ý rằng khi Báo giá trở thành Đơn hàng, nó sẽ được chuyển\n"
+"từ danh sách Báo giá vào danh sách Đơn hàng."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1533,9 +1597,9 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
-"Một khi báo giá được xác nhận, nó trở thành một đơn hàng bán.\n"
-"                    Bạn sẽ có thể xuất hoá đơn từ nó và thu các khoản\n"
-"                    thanh toán từ khách hàng. For trình đơn <i>Đơn Bán</i>,\n"
+"Một khi báo giá được xác nhận, nó trở thành một Đơn bán hàng.\n"
+"                    Bạn sẽ có thể xuất hoá đơn và thu các khoản thanh \n"
+"                    toán từ khách hàng. Tại trình đơn <i>Đơn Bán</i>,\n"
 "                    bạn có thể theo dõi và truy vết việc cung cấp, bàn giao\n"
 "                    các sản phẩm/dịch vụ của bạn."
 
@@ -1636,7 +1700,7 @@ msgstr "Đơn đặt hàng được ký bởi %s"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "Đơn hàng chờ hóa đơn"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2292,6 +2356,9 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Gửi email nếu bạn cần chia sẻ thông tin hoặc nội dung cụ thể về sản phẩm "
+"(hướng dẫn, quy tắc, liên kết, phương tiện, v.v.). Tạo và đặt mẫu email từ "
+"biểu mẫu chi tiết sản phẩm (trong tab Bán hàng)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2307,7 +2374,7 @@ msgstr "Dịch vụ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr ""
+msgstr "Đặt mục tiêu hóa đơn"
 
 #. module: sale
 #. openerp-web

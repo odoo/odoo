@@ -45,7 +45,7 @@ msgstr ": bir kural yalnızca bir çift parantez içerebilir."
 #: code:addons/barcodes/models/barcodes.py:196
 #, python-format
 msgid ": braces can only contain N's followed by D's."
-msgstr ""
+msgstr ": Süslü parantezler sadece N'leri takip eden D'lerden oluşabilir."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:198
@@ -61,6 +61,9 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>Barkod Kural Setleri</i> Barkodların nasıl tanınacağını ve kategorize edileceğini belirlemeye yarar..\n"
+"                                Bir barkod okutulduğunda  <i>önce</i> kural setinde bir kalıpla eşleştirilir. Barkod kalıbının eşleştirmesinde düzenli ifadeler kullanılır.\n"
+"                                "
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -285,6 +288,9 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
+"Kurallar fiyat, ağırlık ve miktar gibi sayısal değerlerin barkoda nasıl kaydedileceğinide belirleyebilir.\n"
+" Bu tip kurallar süslü parantez içinde <code>{NNN}</code> N' ler sayısal basamakların nasıl kullanılacağını belirler.\n"
+"Virgülden sonraki ondalıklı sayıları tanımlamak için D'ler kullanılabilir. Mesela <code>{NNNDD}</code>. Bu durumlarda ilgili kayıtlardaki barkodlarda NNNDD olan basamaklar sıfırlar ile doldurulmalıdır."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
