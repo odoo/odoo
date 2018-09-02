@@ -10,10 +10,10 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 # Ediz Duman <neps1192@gmail.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Mehmet Demirel <mdemirell@gmail.com>, 2018
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
 # gezgin biri <gezginbiri@hotmail.com>, 2018
 # Kaya Zeren <kayazeren@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2018
@@ -46,7 +46,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
-msgstr "Basamak Sayısı"
+msgstr "Basamak #"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -63,8 +63,7 @@ msgstr "${object.company_id.name} Fatura (Ref ${object.number or 'n/a'})"
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Tahsilat/Ödeme Makbuzu (Ref ${object.name or 'n/a'"
-" })"
+"${object.company_id.name} Tahsilat Makbuzu (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account.py:926
@@ -96,7 +95,7 @@ msgstr "&amp;nbsp;<span>zaman</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_chatter
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "&amp;kere;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -373,7 +372,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr "<span role=\"separator\">Görünüm</span>"
+msgstr "<span role=\"separator\">Göster</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -484,7 +483,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Partners</span>"
-msgstr "<span>İş Ortağı</span>"
+msgstr "<span>İş Ortakları</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -575,7 +574,7 @@ msgstr "<strong>Bu tarihten:</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date to :</strong>"
-msgstr "<strong>Bu tarihe kadar:</strong>"
+msgstr "<strong>Date to :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -600,7 +599,7 @@ msgstr "<strong>Bitiş Tarihi:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>Girişleri Sırala:</strong>"
+msgstr "<strong>Sıralama:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
@@ -775,7 +774,7 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"Bir banka hesap özeti, belirli bir süre boyunca bir banka hesabında meydana gelen tüm finansal işlemlerin ekstresidir.\n"
+"Bir banka hesap özeti, belirli bir süre boyunca bir banka hesabında meydana gelen tüm finansal işlemlerin özetidir.\n"
 "Bunu düzenli olarak bankanızdan almalısınız."
 
 #. module: account
@@ -789,8 +788,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Bir yevmiye kaydı, her biri bir borç veya bir alacak işlemi olan birkaç yevmiye\n"
-"öğesinden oluşur."
+"Bir yevmiye kaydı, her biri borç veya alacak işlemi olan birkaç yevmiye "
+"kaleminin birleşmesinden oluşur."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -798,7 +797,7 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"Bir yevmiye, günlük işle ilgili tüm muhasebe verilerinin işlemlerini "
+"Bir yevmiye, şirketin günlük işleyişle ilgili tüm muhasebe olaylarını "
 "kaydetmek için kullanılır."
 
 #. module: account
@@ -831,7 +830,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:530
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Seçilen hareket satırı zaten uzlaştı."
+msgstr "Seçilen hareket satırı zaten uzlaştırılmış."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:538
@@ -855,7 +854,7 @@ msgstr "Bir ortak üzerinde bir uyarı yapılabilir (Hesap)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Erişim uyarısı"
 
 #. module: account
 #. openerp-web

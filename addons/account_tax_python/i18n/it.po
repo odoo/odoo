@@ -7,13 +7,14 @@
 # Francesco <francesco.bianchi.88@gmail.com>, 2018
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: David Minneci <david@numeko.it>, 2018\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
+"\n"
+":param base_amount: effettivo, importo effettivo a cui si applica l'imposta\n"
+":param price_unit: effettivo\n"
+":param quantity: effettivo\n"
+":param company: registrazione di res.company\n"
+":param product: registrazione di product.product o None\n"
+":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -51,6 +60,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Calcola l'importo dell'imposta impostando la variabile \"result\".\n"
+"\n"
+":param base_amount: effettivo, importo attuale a cui si applica l'imposta\n"
+":param price_unit: effettivo\n"
+":param quantity: effettivo\n"
+":param product: registrazione di product.product o None\n"
+":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -63,6 +79,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Calcola l'importo dell'imposta impostando la variabile \"risultato\".\n"
+"\n"
+":param price_unit: effettivo\n"
+":param quantity: effettivo\n"
+":param company: registrazione di res.company\n"
+":param product: registrazione di product.product o None\n"
+":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -74,6 +97,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Determina se l'imposta sarà applicata impostando la variabile \"risultato\" su Vero o Falso.\n"
+"\n"
+":param price_unit: effettivo\n"
+":param quantity: effettivo\n"
+":param product: registrazione di product.product o None\n"
+":param partner: registrazione di res.partner o None"
 
 #. module: account_tax_python
 #: selection:account.tax,amount_type:0
