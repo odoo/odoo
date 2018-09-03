@@ -76,11 +76,11 @@ var SalePortalSidebar = PortalSidebar.extend({
             lastUL = null,
             $bsSidenav = this.$el.find('.bs-sidenav');
 
-        $("[id^=quote_header_], [id^=quote_]", this.spyWatched).attr("id", "");
-        _.each(this.spyWatched.find("h1, h2"), function (el) {
+        $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
+        _.each(this.spyWatched.find("#quote_content h2, #quote_content h3"), function (el) {
             var id, text;
             switch (el.tagName.toLowerCase()) {
-                case "h1":
+                case "h2":
                     id = self._setElementId('quote_header_', el);
                     text = self._extractText($(el));
                     if (!text) {
@@ -89,7 +89,7 @@ var SalePortalSidebar = PortalSidebar.extend({
                     lastLI = $("<li class='nav-item'>").append($('<a class="nav-link" href="#' + id + '"/>').text(text)).appendTo($bsSidenav);
                     lastUL = false;
                     break;
-                case "h2":
+                case "h3":
                     id = self._setElementId('quote_', el);
                     text = self._extractText($(el));
                     if (!text) {
