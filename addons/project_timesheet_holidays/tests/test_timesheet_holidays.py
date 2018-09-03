@@ -62,14 +62,14 @@ class TestTimesheetHolidays(TestTimesheet):
             'name': 'Days for limited category with timesheet',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
-            'number_of_days_temp': 10,
+            'number_of_days': 10,
         })
         self.hr_leave_allocation_with_ts.action_approve()
         self.hr_leave_allocation_no_ts = self.Allocations.sudo().create({
             'name': 'Days for limited category without timesheet',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_no_ts.id,
-            'number_of_days_temp': 10,
+            'number_of_days': 10,
         })
         self.hr_leave_allocation_no_ts.action_approve()
 
@@ -82,7 +82,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'holiday_status_id': self.hr_leave_type_with_ts.id,
             'date_from': self.leave_start_datetime,
             'date_to': self.leave_end_datetime,
-            'number_of_days_temp': number_of_days,
+            'number_of_days': number_of_days,
         })
         holiday.sudo().action_validate()
         self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
@@ -100,7 +100,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'holiday_status_id': self.hr_leave_type_no_ts.id,
             'date_from': self.leave_start_datetime,
             'date_to': self.leave_end_datetime,
-            'number_of_days_temp': number_of_days,
+            'number_of_days': number_of_days,
         })
         holiday.sudo().action_validate()
         self.assertEquals(len(holiday.timesheet_ids), 0, 'Number of generated timesheets should be zero since the leave type does not generate timesheet')

@@ -70,17 +70,17 @@
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"
                                 domain="[('valid', '=', True), ('allocation_type', 'in', ['fixed_allocation', 'no'])]"/>
 
-                            <label for="number_of_days_temp" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
-                            <div name="number_of_days_temp" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}">
-                                <field name="number_of_days_temp" class="oe_inline" nolabel="1" string="Duration"/>
-                                <span class="ml8">Days</span>
+                            <field name="number_of_days" invisible="1"/>
+                            <label for="number_of_days" string="Duration"/>
+                            <div>
+                                <field name="number_of_days_display" class="oe_inline" nolabel="1"
+                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
+                                <field name="number_of_hours_display" class="oe_inline" nolabel="1"
+                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
+                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
+                                <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
                             </div>
 
-                            <label for="number_of_hours" string="Duration" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
-                            <div name="number_of_hours" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}">
-                                <field name="number_of_hours" class="oe_inline" nolabel="1" string="Duration"/>
-                                <span class="ml8">Hours</span>
-                            </div>
                             <field name="accrual" invisible="1"/>
                         </group>
                         <group name="alloc_right_col">

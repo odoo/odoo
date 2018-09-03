@@ -101,14 +101,15 @@
                         <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                         <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
 
-                        <label for="number_of_days_temp" string="Duration"/>
+                        <field name="number_of_days" invisible="1"/>
+                        <label for="number_of_days_display" string="Duration"/>
                         <div>
                             <div attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}">
-                                <field name="number_of_days_temp" nolabel="1" class="oe_inline"/>
+                                <field name="number_of_days_display" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Days</span>
                             </div>
                             <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}">
-                                <field name="number_of_hours" nolabel="1" class="oe_inline"/>
+                                <field name="number_of_hours_display" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Hours</span>
                             </div>
                             <field name="request_unit" widget="radio" attrs="{'readonly': [('state', '=', 'validate')]}"/>
@@ -181,7 +182,7 @@
                 <field name="name"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="number_of_days_temp" string="Number of Days" sum="Total leaves"/>
+                <field name="number_of_days" string="Number of Days" sum="Total leaves"/>
                 <field name="state"/>
                 <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="category_id" invisible="1"/>
