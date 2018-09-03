@@ -21,7 +21,7 @@ $-palette: map-merge((
     // very dark version of a desaturate version of the primary color
     light: lighten(desaturate($-main-color, 40%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
     dark: darken(desaturate($-main-color, 40%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
-), $-palette);
+), o-map-omit($-palette));
 @if $-is-backend {
     $-palette: map-remove($-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
 }

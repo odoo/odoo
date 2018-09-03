@@ -461,8 +461,19 @@
     <div>
         <!-- Color options -->
         <content string="Colors" title="Choose the theme colors">
-            <opt data-xmlid="website.option_color_user_variables" data-color-palette="user" string="Choose your colors"/>
-            <opt data-xmlid="" data-color-palette="1" string="Default theme colors"/>
+            <more data-depends="theme_color_suggestions">
+                <opt data-xmlid="website.option_colors_01_variables" data-color-palette="1"/>
+                <opt data-xmlid="website.option_colors_02_variables" data-color-palette="2"/>
+                <opt data-xmlid="website.option_colors_03_variables" data-color-palette="3"/>
+                <opt data-xmlid="website.option_colors_04_variables" data-color-palette="4"/>
+                <opt data-xmlid="website.option_colors_05_variables" data-color-palette="5"/>
+                <opt data-xmlid="website.option_colors_06_variables" data-color-palette="6"/>
+                <opt data-xmlid="website.option_colors_07_variables" data-color-palette="7"/>
+                <opt data-xmlid="website.option_colors_08_variables" data-color-palette="8"/>
+                <opt data-xmlid="website.option_colors_09_variables" data-color-palette="9"/>
+            </more>
+
+            <opt data-xmlid="" data-color-palette="user" string="Choose your colors"/>
 
             <list string="Menu text">
                 <opt string="Dark" data-xmlid="" data-reload="/"/>
@@ -511,10 +522,50 @@
     </div>
 </template>
 
-<!-- Color options -->
-<template id="option_color_user_variables" inherit_id="website._assets_secondary_variables" active="True">
+<!-- Those are independant from the user palette and act as default for it -->
+<template id="option_colors_01_variables" inherit_id="website._assets_primary_variables" active="True">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_color_user_variables.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_01_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_02_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_02_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_03_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_03_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_04_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_04_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_05_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_05_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_06_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_06_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_07_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_07_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_08_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_08_variables.scss"/>
+    </xpath>
+</template>
+<template id="option_colors_09_variables" inherit_id="website._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/option_colors_09_variables.scss"/>
     </xpath>
 </template>
 
