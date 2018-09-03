@@ -87,6 +87,58 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(p3.state(), "resolved");
     });
 
+    QUnit.test('mutex: getUnlockedDef checks', function (assert) {
+        assert.expect(5);
+
+        var m = new concurrency.Mutex();
+
+        var def1 = $.Deferred();
+        var def2 = $.Deferred();
+
+        assert.strictEqual(m.getUnlockedDef().state(), "resolved");
+
+        m.exec(function() { return def1; });
+
+        var unlockedDef = m.getUnlockedDef();
+
+        assert.strictEqual(unlockedDef.state(), "pending");
+
+        m.exec(function() { return def2; });
+
+        assert.strictEqual(unlockedDef.state(), "pending");
+
+        def1.resolve();
+
+        assert.strictEqual(unlockedDef.state(), "pending");
+
+        def2.resolve();
+
+        assert.strictEqual(unlockedDef.state(), "resolved");
+    });
+
+    QUnit.test('DropPrevious: basic usecase', function (assert) {
+        assert.expect(5);
+
+        var dp = new concurrency.DropPrevious();
+
+        var def1 = $.Deferred();
+        var def2 = $.Deferred();
+
+        var r1 = dp.add(def1);
+
+        assert.strictEqual(r1.state(), "pending");
+
+        var r2 = dp.add(def2);
+
+        assert.strictEqual(r1.state(), "rejected");
+        assert.strictEqual(r2.state(), "pending");
+
+        def2.resolve();
+
+        assert.strictEqual(r1.state(), "rejected");
+        assert.strictEqual(r2.state(), "resolved");
+    });
+
     QUnit.test('DropMisordered: resolve all correctly ordered, sync', function (assert) {
         assert.expect(1);
 

@@ -201,6 +201,7 @@ return {
     Mutex: Class.extend({
         init: function () {
             this.def = $.Deferred().resolve();
+            this.unlockedDef = undefined;
         },
         /**
          * Add a computation to the queue, it will be executed as soon as the
@@ -210,14 +211,27 @@ return {
          * @returns {Deferred}
          */
         exec: function (action) {
+            var self = this;
             var current = this.def;
             var next = this.def = $.Deferred();
+            this.unlockedDef = this.unlockedDef || $.Deferred();
             return current.then(function() {
-                return $.when(action()).always(function() {
+                return $.when(action()).always(function () {
                     next.resolve();
+                    if (self.def.state() === 'resolved' && self.unlockedDef) {
+                        self.unlockedDef.resolve();
+                        self.unlockedDef = undefined;
+                    }
                 });
             });
-        }
+        },
+        /**
+         * @returns {Promise} resolved as soon as the Mutex is unlocked
+         *   (directly if it is currently idle)
+         */
+        getUnlockedDef: function () {
+            return $.when(this.unlockedDef);
+        },
     }),
     /**
      * A MutexedDropPrevious is a primitive for serializing computations while
