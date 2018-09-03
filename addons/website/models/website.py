@@ -67,7 +67,7 @@ class Website(models.Model):
     def _default_social_googleplus(self):
         return self.env.ref('base.main_company').social_googleplus
 
-    name = fields.Char('Website Name')
+    name = fields.Char('Website Name', required=True)
     domain = fields.Char('Website Domain')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
@@ -89,9 +89,6 @@ class Website(models.Model):
     google_management_client_secret = fields.Char('Google Client Secret')
 
     google_maps_api_key = fields.Char('Google Maps API Key')
-    has_google_analytics = fields.Boolean("Google Analytics")
-    has_google_analytics_dashboard = fields.Boolean("Embedded Google Analytics")
-    has_google_maps = fields.Boolean("Google Maps")
 
     user_id = fields.Many2one('res.users', string='Public User', required=True)
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
@@ -103,6 +100,7 @@ class Website(models.Model):
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
+    specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
@@ -467,8 +465,6 @@ class Website(models.Model):
             country_id = request.env['res.country'].search([('code', '=', country)], limit=1).id
 
         website_id = self._get_current_website_id(domain_name, country_id)
-        if request:
-            request.context = dict(request.context, website_id=website_id)
         return self.browse(website_id)
 
     @tools.cache('domain_name', 'country_id')
@@ -684,6 +680,14 @@ class Website(models.Model):
             return self.env.ref('website.backend_dashboard').read()[0]
         return self.env.ref('website.action_website').read()[0]
 
+    def button_go_website(self):
+        self._force()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/',
+            'target': 'self',
+        }
+
 
 class SeoMetadata(models.AbstractModel):
 
@@ -693,6 +697,71 @@ class SeoMetadata(models.AbstractModel):
     website_meta_title = fields.Char("Website meta title", translate=True)
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
+    website_meta_og_img = fields.Char("Website opengraph image")
+
+    def _default_website_meta(self):
+        """ This method will return default meta information. It return the dict
+            contains meta property as a key and meta content as a value.
+            e.g. 'og:type': 'website'.
+
+            Override this method in case you want to change default value
+            from any model. e.g. change value of og:image to product specific
+            images instead of default images
+        """
+        self.ensure_one()
+        company = request.website.company_id.sudo()
+        title = (request.website or company).name
+        if 'name' in self:
+            title = '%s | %s' % (self.name, title)
+        # Default meta for OpenGraph
+        default_opengraph = {
+            'og:type': 'website',
+            'og:title': title,
+            'og:site_name': company.name,
+            'og:url': request.httprequest.url,
+            'og:image': '/web/image/res.company/%s/logo' % company.id,
+        }
+        # Default meta for Twitter
+        default_twitter = {
+            'twitter:card': 'summary_large_image',
+            'twitter:title': title,
+            'twitter:image': '/web/image/res.company/%s/logo' % company.id,
+        }
+        if company.social_twitter:
+            default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
+
+        return {
+            'default_opengraph': default_opengraph,
+            'default_twitter': default_twitter
+        }
+
+    def get_website_meta(self):
+        """ This method will return final meta information. It will replace
+            default values with user's custom value (if user modified it from
+            the seo popup of fronted)
+
+            This method is not meant for overridden. To customize meta values
+            override `_default_website_meta` method instead of this method. This
+            method only replaces user custom values in defaults.
+        """
+        root_url = request.httprequest.url_root.strip('/')
+        default_meta = self._default_website_meta()
+        opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
+        if self.website_meta_title:
+            opengraph_meta['og:title'] = self.website_meta_title
+            twitter_meta['twitter:title'] = self.website_meta_title
+        if self.website_meta_description:
+            opengraph_meta['og:description'] = self.website_meta_description
+            twitter_meta['twitter:description'] = self.website_meta_description
+        meta_image = self.website_meta_og_img or opengraph_meta['og:image']
+        if meta_image.startswith('/'):
+            meta_image = "%s%s" % (root_url, meta_image)
+        opengraph_meta['og:image'] = meta_image
+        twitter_meta['twitter:image'] = meta_image
+        return {
+            'opengraph_meta': opengraph_meta,
+            'twitter_meta': twitter_meta
+        }
 
 
 class WebsiteMultiMixin(models.AbstractModel):
@@ -922,7 +991,6 @@ class Page(models.Model):
                 new_view = view.copy({'website_id': default.get('website_id')})
                 default['view_id'] = new_view.id
 
-            default['name'] = default.get('name', '%s %s' % (self.name, _('(copy)')))
             default['url'] = default.get('url', self.env['website'].get_unique_path(self.url))
         return super(Page, self).copy(default=default)
 
@@ -932,15 +1000,14 @@ class Page(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        new_page = page.copy(dict(website_id=self.env['website'].get_current_website().id))
+        new_page = page.copy(dict(name=page.name, website_id=self.env['website'].get_current_website().id))
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
             menu = self.env['website.menu'].search([('page_id', '=', page_id)], limit=1)
             if menu:
                 # If the page being cloned has a menu, clone it too
-                new_menu = menu.copy()
-                new_menu.write({'url': new_page.url, 'name': '%s %s' % (menu.name, _('(copy)')), 'page_id': new_page.id})
+                menu.copy({'url': new_page.url, 'name': menu.name, 'page_id': new_page.id})
 
         return new_page.url + '?enable_editor=1'
 
@@ -964,6 +1031,10 @@ class Page(models.Model):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
         return super(Page, self).write(vals)
+
+    def get_website_meta(self):
+        self.ensure_one()
+        return self.view_id.get_website_meta()
 
 
 class Menu(models.Model):

@@ -5,62 +5,19 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jorunn D. Newth, 2018
-# Viktor Basso <viktor@voit.no>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Viktor Basso <viktor@voit.no>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_forum
-#: model:mail.template,body_html:website_forum.validation_email
-msgid ""
-"\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
-"                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
-"                </div>\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
-"                <p>Dear ${object.name},</p>\n"
-"                <p>You have been invited to validate your email in order to get access to\n"
-"                \"${object.company_id.name}\" Q/A Forums.</p>\n"
-"                <p>To validate your email, please click on the following link:</p>\n"
-"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
-"                    Validate my account for \"${object.company_id.name}\" Q/A Forums\n"
-"                </a>\n"
-"                <p>Thanks for your participation!</p>\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>"
-msgstr ""
 
 #. module: website_forum
 #. openerp-web
@@ -80,8 +37,10 @@ msgstr "${object.company_id.name} forum-godkjenning"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
-msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
+msgid ""
+"&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\" title=\"Close\" role=\"img\" "
+"aria-label=\"Close\"/>&amp;nbsp;&amp;nbsp;"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -279,6 +238,21 @@ msgid "<b>[Answer]</b>"
 msgstr "<b>[Svar]</b>"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "<i class=\"fa fa-arrow-right\"/> Back to"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "<i class=\"fa fa-arrow-right\"/> Read Guidelines"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "<i class=\"fa fa-arrow-right\"/>Edit Your Profile"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
 msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> tildelte brukere</i>"
@@ -306,23 +280,8 @@ msgstr "<small>profil</small>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"<span class=\"caret\"/>\n"
-"                                <span class=\"sr-only\">Select Post</span>"
+msgid "<span class=\"sr-only\">Select Post</span>"
 msgstr ""
-"<span class=\"caret\"/>\n"
-"                                <span class=\"sr-only\">Velg artikkel</span>"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"<span class=\"sr-only\">Toggle navigation</span>\n"
-"                        <span class=\"icon-bar\"/>\n"
-"                        <span class=\"icon-bar\"/>"
-msgstr ""
-"<span class=\"sr-only\">Navigasjon av/på</span>\n"
-"                        <span class=\"icon-bar\"/>\n"
-"                        <span class=\"icon-bar\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -364,6 +323,102 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
 msgstr "<span>Av </span>"
+
+#. module: website_forum
+#: model:mail.template,body_html:website_forum.validation_email
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size: 10px;\">Your Forum</span><br/>\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                            ${object.company_id.name} Forum validation\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                            Hello ${object.name},<br/><br/>\n"
+"                            You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
+"                            To validate your email, please click on the following link:\n"
+"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                    Validate my account\n"
+"                                </a>\n"
+"                            </div>\n"
+"                            Thanks for your participation!\n"
+"                        </p>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\">\n"
+"                         ${user.company_id.name}\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
+"                        ${user.company_id.phone}\n"
+"                        % if user.company_id.email:\n"
+"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                                ${user.company_id.email}\n"
+"                            </a>\n"
+"                        % endif\n"
+"                        % if user.company_id.website:\n"
+"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                                ${user.company_id.website}\n"
+"                            </a>\n"
+"                        % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -453,7 +508,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:196
+#: code:addons/website_forum/controllers/main.py:201
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -465,7 +520,12 @@ msgid "Allow Bump"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:511
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Answer"
+msgstr "Svar"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:520
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -544,6 +604,7 @@ msgstr "Besvarte eget spørsmål med minst 4 stemmer opp"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -644,19 +705,23 @@ msgid "Autobiographer"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+#: model:ir.ui.view,arch_db:website_forum.forum_user_tooltip
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model:ir.ui.view,arch_db:website_forum.users
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
 msgstr "Unngå unødvendige introduksjoner (\"Hei\", \"Vær så snill\", \"Takk\"),"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.header
-msgid "Back to"
-msgstr "Tilbake til"
-
-#. module: website_forum
-#: code:addons/website_forum/controllers/main.py:336
-#: code:addons/website_forum/controllers/main.py:338
-#: code:addons/website_forum/controllers/main.py:407
+#: code:addons/website_forum/controllers/main.py:341
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:412
 #, python-format
 msgid "Bad Request"
 msgstr ""
@@ -681,6 +746,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
 msgstr "Biografi"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+msgid "Bronwe badge"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "Bronze badge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
@@ -799,6 +875,11 @@ msgid "City"
 msgstr "By"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Clear"
+msgstr "Tøm"
+
+#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:24
 #, python-format
@@ -807,7 +888,7 @@ msgstr "Klikk <em>Fortsett</em> for å opprette forumet."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:71
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:73
 #, python-format
 msgid "Click here to accept this answer."
 msgstr "Klikk her for å godta dette svaret."
@@ -833,7 +914,7 @@ msgstr "Klikk for å få gode titler på spørsmål"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:64
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:65
 #, python-format
 msgid "Click to post your answer."
 msgstr "Klikk for å poste svaret ditt."
@@ -846,11 +927,8 @@ msgid "Click to post your question."
 msgstr "Klikk for å poste spørsmålet ditt"
 
 #. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
-#: selection:forum.post,state:0
+#: selection:forum.post,state:0 model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
-#, python-format
 msgid "Close"
 msgstr "Lukk"
 
@@ -1073,6 +1151,7 @@ msgstr "Definer hvor synlig utfordringen skal være via menyer"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Delete"
 msgstr "Slett"
@@ -1117,6 +1196,8 @@ msgstr "Disiplinert"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Discussion"
 msgstr "Diskusjon"
 
@@ -1146,6 +1227,7 @@ msgstr "Stem ned"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
@@ -1160,11 +1242,6 @@ msgstr "Rediger profil"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
 msgstr "Rediger tidligere svar"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Edit Your Profile"
-msgstr "Rediger profilen din"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_edit_all
@@ -1225,6 +1302,11 @@ msgid "Enter a name for your new forum."
 msgstr "Gi det nye forumet ditt et navn."
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "External link"
+msgstr ""
+
+#. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
 #: model:gamification.challenge,name:website_forum.challenge_famous_question
 msgid "Famous Question"
@@ -1268,6 +1350,11 @@ msgstr "Favorittspørsmål (5)"
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Favourite Questions"
 msgstr "Favorittspørsmål"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.tag
+msgid "Filter"
+msgstr "Filter"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
@@ -1368,6 +1455,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:ir.ui.menu,name:website_forum.menu_website_forum_global
+#: model:ir.ui.view,arch_db:website_forum.forum_all
 #: model:ir.ui.view,arch_db:website_forum.forum_view_search
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -1415,7 +1504,7 @@ msgstr "Forum-tag"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum_global
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 #: model:website.menu,name:website_forum.menu_website_forums
 msgid "Forums"
@@ -1442,6 +1531,12 @@ msgstr "Gamifiseringsmedalje for bruker"
 #, python-format
 msgid "Give your question title."
 msgstr "Gi spørsmålet en tittel."
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "Gold badge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__gold_badge
@@ -1650,8 +1745,8 @@ msgid "It appears your email has not been verified."
 msgstr "Epostadressen din er ikke verifisert."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:882
-#: code:addons/website_forum/models/forum.py:902
+#: code:addons/website_forum/models/forum.py:889
+#: code:addons/website_forum/models/forum.py:909
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -1749,6 +1844,8 @@ msgstr "Ga 10 svar med en score på 10 eller mer"
 
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Link"
 msgstr "Link"
 
@@ -1760,6 +1857,7 @@ msgstr "Linker"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
 msgstr "Marker som støtende"
 
@@ -1809,7 +1907,7 @@ msgstr "Mest stemt på"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:48
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:47
 #, python-format
 msgid ""
 "Move this question to the top of the list by sharing it on social networks."
@@ -1827,6 +1925,12 @@ msgstr "Stemmen min"
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Name"
 msgstr "Navn"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_votes
+#: model:ir.ui.view,arch_db:website_forum.vote
+msgid "Negative vote"
+msgstr ""
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
@@ -1896,7 +2000,7 @@ msgid "Nofollow links"
 msgstr "Nofollow-linker"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:501
+#: code:addons/website_forum/models/forum.py:510
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Ikke nok karma til retagging."
@@ -2067,6 +2171,12 @@ msgid "Popular Question (500)"
 msgstr "Populært spørsmål (500)"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_votes
+#: model:ir.ui.view,arch_db:website_forum.vote
+msgid "Positive vote"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model:ir.ui.view,arch_db:website_forum.new_link
 #: model:ir.ui.view,arch_db:website_forum.post_comment
@@ -2127,7 +2237,7 @@ msgid "Posted 100 comments"
 msgstr "La inn 100 kommentarer"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:438
+#: code:addons/website_forum/models/forum.py:447
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2159,7 +2269,7 @@ msgstr "Synser"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_tour_forum.js:58
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:59
 #, python-format
 msgid "Put your answer here."
 msgstr "Legg svaret ditt her."
@@ -2174,11 +2284,13 @@ msgstr "Legg spørsmålet ditt her"
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__parent_id
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Question"
 msgstr "Spørsmål"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:514
+#: code:addons/website_forum/models/forum.py:523
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2216,7 +2328,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "Spørsmål satt som favoritt av 5 brukere"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:338
+#: code:addons/website_forum/controllers/main.py:343
 #, python-format
 msgid "Question should not be empty."
 msgstr "Spørsmålet kan ikke være tomt."
@@ -2255,7 +2367,7 @@ msgid "Questions"
 msgstr "Spørsmål"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:532
+#: code:addons/website_forum/models/forum.py:541
 #, python-format
 msgid "Re: %s"
 msgstr "Re: %s"
@@ -2264,11 +2376,6 @@ msgstr "Re: %s"
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reactivate"
 msgstr "Gjenaktiver"
-
-#. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.header
-msgid "Read Guidelines"
-msgstr "Les retningslinjer"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2299,6 +2406,11 @@ msgstr "Mottok mins 3 stemmer opp for et svar for første gang"
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
 msgstr "Omdiriger til ekstern link"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Refuse"
+msgstr "Avvis"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2332,6 +2444,12 @@ msgstr "Svar"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
 msgid "Reply to own question"
 msgstr "Svar på eget spørsmål"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
+#: model:ir.model.fields,help:website_forum.field_forum_post__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
@@ -2398,6 +2516,11 @@ msgid "Self-Learner"
 msgstr "Autodidakt"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Send answer"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "Set a clear, explicit and concise question title\n"
@@ -2437,6 +2560,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
 msgid "Sharing Options"
 msgstr "Delingsmuligheter"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "Silver badge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
@@ -2526,7 +2655,7 @@ msgstr "Støttespiller"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
-#: model:ir.ui.menu,name:website_forum.menu_forum_tag
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag_global
 #: model:ir.ui.view,arch_db:website_forum.forum_tag_view_form
 #: model:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -2576,7 +2705,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:9
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:6
 #, python-format
 msgid "Thanks for posting!"
 msgstr "Takk for at du bidrar!"
@@ -2647,7 +2776,7 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:409
+#: code:addons/website_forum/models/forum.py:410
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Dette forumet tillater ikke %s"
@@ -2702,8 +2831,8 @@ msgid "Title must not be empty"
 msgstr "Tittel kan ikke være tom"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:336
-#: code:addons/website_forum/controllers/main.py:407
+#: code:addons/website_forum/controllers/main.py:341
+#: code:addons/website_forum/controllers/main.py:412
 #, python-format
 msgid "Title should not be empty."
 msgstr "Tittel må ikke være tom"
@@ -2718,6 +2847,11 @@ msgstr "Til"
 msgid ""
 "To prevent your question from being flagged and possibly removed, avoid asking\n"
 "    subjective questions where …"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Toggle favorite status"
 msgstr ""
 
 #. module: website_forum
@@ -2843,6 +2977,11 @@ msgstr ""
 "og markere de som er riktige."
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Validate"
+msgstr "Valider"
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
 msgstr "Valider spørsmål"
@@ -2897,6 +3036,8 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_id
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
 msgstr "Nettsted"
@@ -2940,6 +3081,13 @@ msgstr "Meta-nøkkelord for nettsted"
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_title
 msgid "Website meta title"
 msgstr "Meta-tittel for nettsted"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_og_img
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
+msgid "Website opengraph image"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -2998,7 +3146,7 @@ msgstr ""
 "Du kan ikke velge %s som standardartikkel fordi forumet ikke tillater det."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:428
+#: code:addons/website_forum/models/forum.py:437
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3009,7 +3157,7 @@ msgid "You cannot post an empty answer"
 msgstr "Du kan ikke legge ut et tomt svar"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:946
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""

@@ -1,11 +1,11 @@
 <odoo>
 	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'invoice'" class="active">
+            <li t-if="page_name == 'invoice'" class="breadcrumb-item active">
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
                 <t t-else="">Invoices</t>
             </li>
-            <li t-if="invoice">
+            <li t-if="invoice" class="breadcrumb-item">
                 <t t-esc="invoice.number"/>
             </li>
         </xpath>
@@ -14,7 +14,7 @@
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="invoice_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="invoice_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="invoice_count"/>
                 <a href="/my/invoices">Invoices</a>
             </li>
         </xpath>
@@ -95,7 +95,7 @@
                                 <div><strong>Your Contact:</strong></div>
                                 <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>
                                 <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not invoice.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
-                                <span t-field="invoice.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                <span t-field="invoice.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
                                 <a data-toggle="modal" href="#" data-target="#invoice_chatter">Contact us</a>
                             </t>
                             <div t-if="not invoice.user_id" class="text-center mr16">

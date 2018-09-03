@@ -55,7 +55,7 @@
                                                         <t t-set="acc" t-value="acc+1"/>
                                                         <td t-att-colspan="acc" class="o_report_stock_rule_rule_cell">
                                                             <t t-set="padding" t-value="50.0/acc"/>
-                                                            <div class="o_report_stock_rule_rule_main" t-att-res-id="rule[0].id" t-att-res-model="rule[0]._name" view-type="form" t-attf-title="#{rule[0].route_id.display_name}">
+                                                            <div class="o_report_stock_rule_rule_main" t-att-res-id="rule[0].id" t-att-res-model="rule[0]._name" view-type="form" t-att-title="rule[0].route_id.display_name">
                                                                 <div class="o_report_stock_rule_rule"  t-attf-style="padding-left: #{padding}%; padding-right: #{padding}%;">
                                                                     <t t-if="rule[1] == 'destination'">
                                                                         <t t-if="rule[0].procure_method == 'make_to_order'">

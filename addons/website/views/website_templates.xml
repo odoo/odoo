@@ -154,15 +154,22 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
             <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
-
-            <!-- OpenGraph tags for Facebook sharing -->
-            <meta property="og:title" t-att-content="additional_title" />
-            <meta property="og:site_name" t-att-content="res_company.name" />
-            <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
-                <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
-                <meta property="og:description" t-att-content="og_description" />
-                <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
-                <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
+            <t t-if="main_object">
+                <t t-set="website_meta" t-value="main_object.get_website_meta()"/>
+                <!-- OpenGraph tags for Facebook sharing -->
+                <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
+                <t t-if="opengraph_meta">
+                    <t t-foreach="opengraph_meta" t-as="og_meta">
+                        <meta t-att-property="og_meta" t-att-content="opengraph_meta[og_meta]"/>
+                    </t>
+                </t>
+                <!-- Twitter tags for sharing -->
+                <t t-set="twitter_meta" t-value="website_meta.get('twitter_meta')"/>
+                <t t-if="opengraph_meta">
+                    <t t-foreach="twitter_meta" t-as="t_meta">
+                        <meta t-att-name="t_meta" t-att-content="twitter_meta[t_meta]"/>
+                    </t>
+                </t>
             </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
@@ -173,10 +180,6 @@
             </t>
 
             <script type="text/javascript">
-                <t groups="website.group_website_publisher">
-                    odoo.snippetsURL = '/website/snippets';
-                </t>
-
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
@@ -185,6 +188,11 @@
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
                     user_id: <t t-esc="json.dumps(request.env.user.id)" />
                 };
+                <t groups="website.group_website_publisher">
+                    odoo.snippetsURL = '/website/snippets';
+                    odoo.session_info.website_id = <t t-esc="json.dumps(request.website.id)" />;
+                    odoo.session_info.website_company_id = <t t-esc="json.dumps(request.website.company_id.id)" />;
+                </t>
             </script>
 
             <t t-call-assets="web.assets_common" t-js="false"/>
@@ -302,18 +310,18 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure" t-ignore="true" t-if="not no_footer">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt16 pb8">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-4">
-                            <h4>Our Products &amp; Services</h4>
+                            <h5>Our Products &amp; Services</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/">Home</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-4" id="connect">
-                            <h4>Connect with us</h4>
+                            <h5>Connect with us</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
                                 <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
@@ -329,10 +337,10 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <h4>
+                            <h5>
                                 <span t-field="res_company.name"/>
                                 <small> - <a href="/aboutus">About us</a></small>
-                            </h4>
+                            </h5>
                             <p>
                                 We are a team of passionate people whose goal is to improve everyone's
                                 life through disruptive products. We build great products to solve your
@@ -354,7 +362,7 @@
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li class="list-inline-item">
             <div class="dropup">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>

@@ -247,8 +247,16 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        categs = request.env['product.public.category'].search([('parent_id', '=', False)] + request.website.website_domain())
         Product = request.env['product.template']
+
+        Category = request.env['product.public.category']
+        search_categories = False
+        if search:
+            categories = Product.search(domain).mapped('public_categ_ids')
+            search_categories = Category.search([('id', 'parent_of', categories.ids)] + request.website.website_domain())
+            categs = search_categories.filtered(lambda c: not c.parent_id)
+        else:
+            categs = Category.search([('parent_id', '=', False)] + request.website.website_domain())
 
         parent_category_ids = []
         if category:
@@ -287,6 +295,7 @@ class WebsiteSale(http.Controller):
             'compute_currency': compute_currency,
             'keep': keep,
             'parent_category_ids': parent_category_ids,
+            'search_categories_ids': search_categories and search_categories.ids,
         }
         if category:
             values['main_object'] = category
@@ -785,6 +794,7 @@ class WebsiteSale(http.Controller):
 
         domain = expression.AND([
             ['&', ('website_published', '=', True), ('company_id', '=', order.company_id.id)],
+            ['|', ('website_id', '=', False), ('website_id', '=', request.website.id)],
             ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
         ])
         acquirers = request.env['payment.acquirer'].search(domain)

@@ -16,7 +16,7 @@ from lxml import etree
 from lxml.builder import E
 import passlib.context
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, ADMINUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
@@ -306,8 +306,9 @@ class Users(models.Model):
         instead.
         """
         """ Override this method to plug additional authentication methods"""
+        assert password
         self.env.cr.execute(
-            'SELECT password FROM res_users WHERE id=%s',
+            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
             [self.env.user.id]
         )
         [hashed] = self.env.cr.fetchone()
@@ -559,10 +560,11 @@ class Users(models.Model):
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
                     user = self.search(self._get_login_domain(login))
-                    if user:
-                        user = user.sudo(user.id)
-                        user._check_credentials(password)
-                        user._update_last_login()
+                    if not user:
+                        raise AccessDenied()
+                    user = user.sudo(user.id)
+                    user._check_credentials(password)
+                    user._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
             raise
@@ -583,7 +585,7 @@ class Users(models.Model):
                relevant environment attributes
         """
         uid = cls._login(db, login, password)
-        if uid == SUPERUSER_ID:
+        if uid == ADMINUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
             if user_agent_env and user_agent_env.get('base_location'):
@@ -693,7 +695,7 @@ class Users(models.Model):
         :return: True if the current user is a member of the group with the
            given external ID (XML ID), else False.
         """
-        assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
+        assert group_ext_id and '.' in group_ext_id, "External ID '%s' must be fully qualified" % group_ext_id
         module, ext_id = group_ext_id.split('.')
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",

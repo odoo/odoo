@@ -152,6 +152,29 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('displaying line chart data with multiple groupbys', function (assert) {
+        // this test makes sure the line chart shows all data labels (X axis) when
+        // it is grouped by several fields
+        assert.expect(3);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph type="line"><field name="foo" /></graph>',
+            groupBy: ['product_id', 'bar'],
+        });
+
+        assert.strictEqual(graph.$('.nv-x text:contains(xphone)').length, 1,
+            "should contain a text element with product xphone on X axis");
+        assert.strictEqual(graph.$('.nv-x text:contains(xpad)').length, 1,
+            "should contain a text element with product xpad on X axis");
+        assert.strictEqual(graph.$('text:contains(true)').length, 1,
+            "should have an entry for each value of field 'bar' in the legend");
+
+        graph.destroy();
+    });
+
     QUnit.test('switching measures', function (assert) {
         var done = assert.async();
         assert.expect(4);
@@ -188,6 +211,25 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper', function (assert) {
+        assert.expect(2);
+        this.data.foo.records = [];
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Gloups">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 0,
+                    "should not contain a div with a svg element");
+        assert.strictEqual(graph.$('div.o_view_nocontent').length, 1,
+            "should display the no content helper");
+        graph.destroy();
+    });
+
+    QUnit.test('no content helper after update', function (assert) {
         var done = assert.async();
         assert.expect(4);
 

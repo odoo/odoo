@@ -161,3 +161,86 @@ class TestBoM(TestMrpCommon):
         })
         with self.assertRaises(exceptions.UserError):
             test_bom_3.explode(self.product_9, 1)
+
+    def test_multi_level_variants2(self):
+        """Test skip bom line with same attribute values in bom lines."""
+
+        Product = self.env['product.product']
+        ProductAttribute = self.env['product.attribute']
+        ProductAttributeValue = self.env['product.attribute.value']
+        MrpProduction = self.env['mrp.production']
+
+        # Product Attribute
+        att_color = ProductAttribute.create({'name': 'Color'})
+        att_size = ProductAttribute.create({'name': 'size'})
+
+        # Product Attribute color Value
+        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id})
+        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id})
+        # Product Attribute size Value
+        att_size_big = ProductAttributeValue.create({'name': 'big', 'attribute_id': att_size.id})
+        att_size_medium = ProductAttributeValue.create({'name': 'medium', 'attribute_id': att_size.id})
+
+        # Create Template Product
+        product_template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'attribute_line_ids': [(0, 0, {
+                    'attribute_id': att_color.id,
+                    'value_ids': [(6, 0, [att_color_red.id, att_color_blue.id])]
+                }), (0, 0, {
+                    'attribute_id': att_size.id,
+                    'value_ids': [(6, 0, [att_size_big.id, att_size_medium.id])]
+                })]
+        })
+
+        # Create components Of BOM
+        product_A = Product.create({
+            'name': 'Wood'})
+        product_B = Product.create({
+            'name': 'Clothes'})
+
+        # Create BOM
+        test_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                    'product_id': product_A.id,
+                    'product_qty': 1,
+                    'attribute_value_ids': [(4, att_color_red.id), (4, att_color_blue.id), (4, att_size_big.id)],
+                }), (0, 0, {
+                    'product_id': product_B.id,
+                    'product_qty': 1,
+                    'attribute_value_ids': [(4, att_color_red.id), (4, att_color_blue.id)]
+                })]
+        })
+
+        combination = {(att_color_red, att_size_big): [product_A.id, product_B.id] , (att_color_red, att_size_medium): [product_B.id] , (att_color_blue, att_size_big):[product_A.id, product_B.id], (att_color_blue, att_size_medium): [product_B.id]}
+
+        # Create production order for all variants.
+        for comb in combination.keys():
+            consu_product_ids = combination[comb]
+            product = product_template.product_variant_ids.filtered(lambda x:  all(value in comb for value in x.attribute_value_ids))
+            mrp_order = MrpProduction.create({
+                    'product_uom_id': product.uom_id.id,
+                    'product_id': product.id,
+                    'bom_id': test_bom.id,
+                })
+            # Check consumed materials in production order.
+            self.assertEqual(mrp_order.move_raw_ids.mapped('product_id').ids, consu_product_ids)
+
+    def test_update_bom(self):
+        """Update a BoM used in open production should raise an error"""
+        mo = self.env['mrp.production'].create({
+            'name': 'MO 1',
+            'product_id': self.product_1.id,
+            'product_uom_id': self.product_1.uom_id.id,
+            'product_qty': 2,
+            'bom_id': self.bom_1.id,
+        })
+        mo.button_plan()
+        # update an authorized field
+        self.bom_1.write({'code': 'Hello'})
+        # update a not authorized field
+        with self.assertRaises(exceptions.ValidationError):
+            self.bom_1.write({'product_id': self.product_2.id})

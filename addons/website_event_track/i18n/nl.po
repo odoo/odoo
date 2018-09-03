@@ -3,18 +3,18 @@
 # * website_event_track
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,12 +65,12 @@ msgstr "<b>Datum</b><br/>"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>Mail</b>:"
+msgstr "<b>E-Mail</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
-msgstr "<b>Telefoon</b>:"
+msgstr "<b>Bel</b>:"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -141,10 +141,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"De kanban status van een track geeft speciale situaties aan die van invloed zijn:\n"
+"De kanban status van een parallelsessie geeft speciale situaties aan die van invloed zijn:\n"
 "* Grijs is de standaard situatie\n"
-"* Rood geeft aan dat iets de voortgang van deze track belemmert\n"
-"* Groen geeft aan dat de track gereed is om naar de volgende fase te worden getrokken"
+"* Rood geeft aan dat iets de voortgang van deze parallelsessie belemmert\n"
+"* Groen geeft aan dat de parallelsessie gereed is om naar de volgende fase te worden gezet"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -164,7 +164,7 @@ msgstr "Vereist actie"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
 msgid "Active"
-msgstr "Actief"
+msgstr "Actie"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
@@ -215,7 +215,7 @@ msgstr "Aangekondigd"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Application"
-msgstr "Toepassing"
+msgstr "Sollicitatie"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -318,12 +318,17 @@ msgstr "Verwijder"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "Documents"
 msgstr "Documenten"
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
@@ -347,7 +352,7 @@ msgstr "E-mailsjabloon"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
-msgstr "Gebeurtenis"
+msgstr "Afspraak"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
@@ -546,6 +551,11 @@ msgid "Is Follower"
 msgstr "Is een volger"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
 msgstr "Kanban Status"
@@ -606,7 +616,7 @@ msgstr "Laag"
 #. module: website_event_track
 #: selection:event.track,priority:0
 msgid "Medium"
-msgstr "Kanaal"
+msgstr "Gemiddeld"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
@@ -797,7 +807,7 @@ msgstr "Zaal"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
 msgid "Sequence"
-msgstr "Reeks"
+msgstr "Volgorde"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -970,7 +980,8 @@ msgstr "Bedankt voor uw voorstel."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om het document te kunnen raadplegen via de website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1140,8 +1151,8 @@ msgstr "Bekijk parallelsessie"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
-msgid "Visible in Website"
-msgstr "Zichtbaar in website"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1203,6 +1214,11 @@ msgstr "Website meta keywords"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
 msgstr "Website meta titel"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Website opengraph afbeelding"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal

@@ -25,7 +25,7 @@ class StockQuantityHistory(models.TransientModel):
                 'name': _('Inventory Valuation'),
                 'res_model': 'product.product',
                 'domain': "[('type', '=', 'product'), ('qty_available', '!=', 0)]",
-                'context': dict(self.env.context, to_date=self.date, company_owned=True),
+                'context': dict(self.env.context, to_date=self.date, company_owned=True, create=False, edit=False),
                 'search_view_id': search_view_id
             }
             return action

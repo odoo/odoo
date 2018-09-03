@@ -3,14 +3,14 @@
     <template id="unsubscribe">
         <div class="container o_unsubscribe_form">
             <div class="row">
-                <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form">
+                <form action="/mail/mailing/unsubscribe" method="POST" id="unsubscribe_form" class="col-lg-6 offset-lg-3 mt-4">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="email" t-att-value="email"/>
                     <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
                     <input type="hidden" name="res_id" t-att-value="res_id"/>
                     <input type="hidden" name="unsubscribed_list" t-att-value="unsubscribed_list"/>
 
-                    <div class="col-lg-6 offset-lg-3 mt32">
+                    <div>
                         <t t-if="contacts">
                             <div id="info_state" class="alert alert-success" role="status">
                                 <div id="subscription_info"></div>

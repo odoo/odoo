@@ -208,7 +208,7 @@ class Partner(models.Model):
         compute='_compute_company_type', inverse='_write_company_type')
     company_id = fields.Many2one('res.company', 'Company', index=True, default=_default_company)
     color = fields.Integer(string='Color Index', default=0)
-    user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
+    user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True, context={'active_test': False})
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
@@ -239,13 +239,6 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
-
-    @api.multi
-    def toggle_active(self):
-        for partner in self:
-            if partner.active and partner.user_ids:
-                raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
-        super(Partner, self).toggle_active()
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -506,7 +499,7 @@ class Partner(models.Model):
     def write(self, vals):
         if vals.get('active') is False:
             for partner in self:
-                if partner.active and partner.user_ids:
+                if partner.active and any(partner.user_ids.mapped('active')):
                     raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner

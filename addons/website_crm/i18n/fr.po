@@ -3,29 +3,23 @@
 # * website_crm
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Stephane DAGUET <stephane@darbtech.net>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Florian Hatat, 2016
-# Martin Trigaux, 2016
-# Lucas Deliege <lud@odoo.com>, 2017
-# lucasdeliege <deliegelucas@gmail.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# fr trans <e2ftrans1@yahoo.com>, 2017
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
+# Richard Mathot <rim@odoo.com>, 2018
+# Florian Hatat, 2018
+# Clo <clo@odoo.com>, 2018
+# Stephane DAGUET <stephane@darbtech.net>, 2018
+# Lucas Deliege <lud@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Bertrand LATOUR <divoir@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Bertrand LATOUR <divoir@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,16 +31,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
 #: model:website.page,arch_db:website_crm.contactus_thanks
 msgid "&amp;times;"
-msgstr "&times;"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Envoyer</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
+msgstr "&amp;times;"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -70,28 +55,25 @@ msgstr "Contactez-nous"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "Canal de vente par défaut"
+msgid "Default Sales Team"
+msgstr "Equipe de vente par défaut"
+
+#. module: website_crm
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "Canaux de vente par défaut"
+msgid "Default Sales Teams"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "Commercial par défaut"
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-"Canal de vente par défaut pour les nouveaux leads créés via le formulaire de"
-" contact."
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
@@ -121,8 +103,8 @@ msgstr "Piste/opportunité"
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
-"Les nouveaux messages sont gérés comme des leads et opportunités dans votre "
-"application CRM."
+"Les nouveaux messages sont gérés comme des leads et des opportunités dans "
+"votre application CRM."
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -131,13 +113,25 @@ msgstr "Numéro de téléphone"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "Sales Channel"
-msgstr "Equipe de vente"
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Équipe commerciale"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Salesperson"
 msgstr "Vendeur"
+
+#. module: website_crm
+#: model:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Envoyer"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
@@ -174,7 +168,7 @@ msgstr "Votre société"
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form
 msgid "Your Name"
-msgstr "Votre nom"
+msgstr "Votre Nom"
 
 #. module: website_crm
 #: model:ir.ui.view,arch_db:website_crm.contactus_form

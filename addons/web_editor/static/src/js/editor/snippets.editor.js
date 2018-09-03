@@ -288,6 +288,7 @@ var SnippetEditor = Widget.extend({
             option.__order = i++;
             return option.attachTo($el);
         });
+        $ul.append($('<div/>', {class: 'dropdown-divider mt-2'}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
@@ -667,7 +668,10 @@ var SnippetsMenu = Widget.extend({
             $selectorChildren.each(function () {
                 var $zone = $(this);
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
                 var $drop = zone_template.clone();
 
                 $zone.append($drop);
@@ -679,7 +683,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block',
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
                 }
 
@@ -694,7 +698,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block'
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
                 }
                 if (test) {
@@ -711,18 +715,21 @@ var SnippetsMenu = Widget.extend({
                 var $zone = $(this);
                 var $drop;
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
                     }
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
                     }
                     $zone.after($drop);
@@ -1216,8 +1223,10 @@ var SnippetsMenu = Widget.extend({
 
                 $('.oe_drop_zone').droppable({
                     over: function () {
-                        dropped = true;
-                        $(this).first().after($toInsert).addClass('d-none');
+                        if (!dropped) {
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('d-none');
+                        }
                     },
                     out: function () {
                         var prev = $toInsert.prev();
@@ -1232,10 +1241,10 @@ var SnippetsMenu = Widget.extend({
             stop: function (ev, ui) {
                 $toInsert.removeClass('oe_snippet_body');
 
-                if (! dropped && self.$editable.find('.oe_drop_zone') && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
-                    var el = self.$editable.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
-                    if (el.length) {
-                        el.after($toInsert);
+                if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
+                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+                    if ($el.length) {
+                        $el.after($toInsert);
                         dropped = true;
                     }
                 }

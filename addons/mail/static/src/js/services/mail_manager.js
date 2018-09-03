@@ -254,7 +254,7 @@ var MailManager =  AbstractService.extend({
         return this._moderatedChannelIDs || [];
     },
     /**
-     * Get the Odoobot ID, which is the default authorID for transient messages
+     * Get the OdooBot ID, which is the default authorID for transient messages
      *
      * @returns {string}
      */
@@ -831,7 +831,7 @@ var MailManager =  AbstractService.extend({
             (filter === 'mailbox_inbox' || !filter)
         ) {
             elems.push({
-                title: _t("Odoobot has a request for you"),
+                title: _t("OdooBot has a request"),
                 imageSRC: "/mail/static/src/img/odoobot.png",
                 status: 'bot',
                 body:  _t("Enable desktop notifications to chat"),

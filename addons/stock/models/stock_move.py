@@ -46,7 +46,6 @@ class StockMove(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], index=True, required=True,
         states={'done': [('readonly', True)]})
-    ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     product_qty = fields.Float(
         'Real Quantity', compute='_compute_product_qty', inverse='_set_product_qty',
         digits=0, store=True,
@@ -381,7 +380,6 @@ class StockMove(models.Model):
         # TDE CLEANME: why doing this tracking on picking here ? seems weird
         tracking = []
         for vals in vals_list:
-            vals['ordered_qty'] = vals.get('product_uom_qty')
             if not self.env.context.get('mail_notrack') and vals.get('picking_id'):
                 picking = self.env['stock.picking'].browse(vals['picking_id'])
                 initial_values = {picking.id: {'state': picking.state}}
@@ -707,7 +705,7 @@ class StockMove(models.Model):
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
             move.write({'picking_id': picking.id})
-
+            move._assign_picking_post_process(new=recompute)
             # If this method is called in batch by a write on a one2many and
             # at some point had to create a picking, some next iterations could
             # try to find back the created picking. As we look for it by searching
@@ -716,6 +714,9 @@ class StockMove(models.Model):
             if recompute:
                 move.recompute()
         return True
+
+    def _assign_picking_post_process(self, new=False):
+        pass
 
     def _get_new_picking_values(self):
         """ Prepares a new picking for this move as it could not be assigned to
@@ -890,11 +891,13 @@ class StockMove(models.Model):
         assigned_moves = self.env['stock.move']
         partially_available_moves = self.env['stock.move']
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
+            missing_reserved_uom_quantity = move.product_uom_qty - move.reserved_availability
+            missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             if move.location_id.should_bypass_reservation()\
                     or move.product_id.type == 'consu':
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                    for i in range(0, int(move.product_qty - move.reserved_availability)):
+                    for i in range(0, int(missing_reserved_quantity)):
                         self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
                 else:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
@@ -905,16 +908,16 @@ class StockMove(models.Model):
                                                             not ml.package_id and
                                                             not ml.owner_id)
                     if to_update:
-                        to_update[0].product_uom_qty += move.product_qty - move.reserved_availability
+                        to_update[0].product_uom_qty += missing_reserved_uom_quantity
                     else:
-                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=move.product_qty - move.reserved_availability))
+                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=missing_reserved_quantity))
                 assigned_moves |= move
             else:
                 if not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
                     # If we don't need any quantity, consider the move assigned.
-                    need = move.product_qty - move.reserved_availability
+                    need = missing_reserved_quantity
                     if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
                         assigned_moves |= move
                         continue

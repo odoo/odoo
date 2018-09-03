@@ -383,9 +383,12 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id)
+        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function () {
+            // necessary to trigger resize on fieldtexts
+            core.bus.trigger('DOM_updated');
+        });
     },
     /**
      * This method is called whenever we click/move outside of a row that was
@@ -487,22 +490,24 @@ ListRenderer.include({
      * @private
      */
     _moveToNextLine: function () {
+        var self = this;
         var record = this.state.data[this.currentRow];
-        var fieldNames = this.canBeSaved(record.id);
-        if (fieldNames.length) {
-            return;
-        }
+        this.commitChanges(record.id).then(function () {
+            var fieldNames = self.canBeSaved(record.id);
+            if (fieldNames.length) {
+                return;
+            }
 
-        if (this.currentRow < this.state.data.length - 1) {
-            this._selectCell(this.currentRow + 1, 0);
-        } else {
-            var self = this;
-            this.unselectRow().then(function () {
-                self.trigger_up('add_record', {
-                    onFail: self._selectCell.bind(self, 0, 0, {}),
+            if (self.currentRow < self.state.data.length - 1) {
+                self._selectCell(self.currentRow + 1, 0);
+            } else {
+                self.unselectRow().then(function () {
+                    self.trigger_up('add_record', {
+                        onFail: self._selectCell.bind(self, 0, 0, {}),
+                    });
                 });
-            });
-        }
+            }
+        });
     },
     /**
      * @override

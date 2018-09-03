@@ -31,8 +31,8 @@ class BaseFunctionalTest(common.SavepointCase):
             'notification_type': 'email',
             'groups_id': [(6, 0, [user_group_employee.id])]})
         cls.partner_employee = cls.user_employee.partner_id
-        cls.user_admin = cls.env.user
-        cls.partner_admin = cls.user_admin.partner_id
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.partner_admin = cls.env.ref('base.partner_admin')
 
         cls.channel_listen = cls.env['mail.channel'].with_context(cls._quick_create_ctx).create({'name': 'Listener'})
 
@@ -50,7 +50,7 @@ class BaseFunctionalTest(common.SavepointCase):
             for partner in partners:
                 if partner.user_ids:
                     init[partner] = {
-                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner]),
+                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
             yield
         finally:

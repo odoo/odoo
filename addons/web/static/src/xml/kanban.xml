@@ -57,7 +57,7 @@
                     </span>
                 </div>
                 <t t-if="widget.examples">
-                    <a href="#" role="button" class="btn-link o_kanban_examples">Examples</a>
+                    <button type="button" class="btn btn-link o_kanban_examples">Examples</button>
                 </t>
                 <span class="o_discard_msg text-muted float-right">Esc to discard</span>
             </div>
@@ -135,7 +135,7 @@
     <div class="o_kanban_examples_dialog_content">
         <div class="tab-content">
             <t t-foreach="examples" t-as="example">
-                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
+                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane #{example_index == 0 and 'active in' or ''}">
                     <div t-if="example.description" class="o_kanban_examples_description">
                         <t t-raw="example.description"/> <!-- description is supposed to be properly escaped -->
                     </div>

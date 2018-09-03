@@ -4,6 +4,7 @@ odoo.define('website_sale.test', function (require) {
 require("website_sale.tour");
 var tour = require("web_tour.tour");
 var base = require("web_editor.base");
+var ajax = require('web.ajax');
 
 var steps = tour.tours.shop_buy_product.steps;
 for (var k=0; k<steps.length; k++) {
@@ -47,39 +48,8 @@ tour.register('shop_customize', {
         },
         {
             content: "open customize menu",
-            trigger: '#customize-menu',
-            extra_trigger: "#product_detail",
-            run: function() {
-                // ENABLE VARIANT GROUP
-                $('body').addClass('notReady');
-                var ajax = odoo.__DEBUG__.services['web.ajax'];
-                var get_group_payload = {
-                    model: 'ir.model.data',
-                    method: 'xmlid_to_res_id',
-                    args: ['product.group_product_variant', false],
-                    kwargs: {}
-                };
-                ajax.jsonpRpc('/web/dataset/call_kw', 'call', get_group_payload).then(function(group_id) {
-                    ajax.jsonpRpc('/web/dataset/call_kw', 'call', {
-                        model: 'res.groups',
-                        method: 'write',
-                        args: [group_id, {'users': [[4, 1]]}],
-                        kwargs: {}
-                    }).then(function() {
-                        location.reload(true);
-                    });
-                });
-            },
-        },
-        {
-            content: "open customize menu",
             trigger: '#customize-menu > a',
-            extra_trigger: 'body:not(.notReady)',
-        },
-        {
-            content: "check page loaded after enable  variant group",
-            trigger: '#customize-menu a:contains(List View of Variants)',
-            run: function () {}, // it's a check
+            extra_trigger: "#product_detail",
         },
         {
             content: "click on 'List View of Variants'",

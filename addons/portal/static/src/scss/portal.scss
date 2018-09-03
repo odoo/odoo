@@ -143,6 +143,9 @@ hr {
 .input-group {
     flex-flow: row nowrap;
 }
+.list-group-item:not([class*="list-group-item-"]) {
+    color: color-yiq($list-group-bg);
+}
 
 // Force table to their minimum width for fitting their col-*-auto parent
 .table.o_table_column_fit {

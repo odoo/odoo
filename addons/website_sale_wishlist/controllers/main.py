@@ -14,20 +14,26 @@ class WebsiteSaleWishlist(WebsiteSale):
             p = request.env['product.product'].with_context(pricelist_context, display_default_code=False).browse(product_id)
             price = p.website_price
 
-        partner_id = session = False
-        if not request.website.is_public_user():
-            partner_id = request.env.user.partner_id.id
+        Wishlist = request.env['product.wishlist']
+        if request.website.is_public_user():
+            Wishlist = Wishlist.sudo()
+            partner_id = False
         else:
-            session = request.session.sid
-        return request.env['product.wishlist']._add_to_wishlist(
+            partner_id = request.env.user.partner_id.id
+
+        wish_id = Wishlist._add_to_wishlist(
             pl.id,
             pl.currency_id.id,
             request.website.id,
             price,
             product_id,
-            partner_id,
-            session
+            partner_id
         )
+
+        if not partner_id:
+            request.session['wishlist_ids'] = request.session.get('wishlist_ids', []) + [wish_id.id]
+
+        return wish_id
 
     @http.route(['/shop/wishlist'], type='http', auth="public", website=True)
     def get_wishlist(self, count=False, **kw):

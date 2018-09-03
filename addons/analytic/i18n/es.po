@@ -3,32 +3,14 @@
 # * analytic
 # 
 # Translators:
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Antonio Trueba, 2018
-# e2f_es_ t6 <e2f_es_t6@outlook.com>, 2018
-# Javier Ramirez <elbomba887@gmail.com>, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,7 +95,6 @@ msgid "Analytic Distribution"
 msgstr "Distribución analítica"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -124,6 +105,11 @@ msgstr "Entradas analíticas"
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Asiento analítico"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+msgid "Analytic Items"
+msgstr "Apuntes analíticos"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -516,7 +502,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:193
+#: code:addons/analytic/models/analytic_account.py:194
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
@@ -532,6 +518,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Total"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Unidad de medida"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread

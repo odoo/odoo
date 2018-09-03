@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.website</field>
             <field name="model">res.config.settings</field>
@@ -21,11 +19,18 @@
                                         <div class="mt16">
                                             <field name="website_id" options="{'no_open': True, 'no_create_edit': True}"/>
                                         </div>
+                                        <div>
+                                            <button name="action_website_create_new" type="object" string="Create a New Website" class="btn-secondary" icon="fa-arrow-right"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <h2>Website</h2>
                             <div class="row mt16 o_settings_container" id="webmaster_settings">
+                                <div class="col-12  o_setting_box" id="website_action_setting">
+                                    <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fa-globe"/>
+                                    <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fa-plus"/>
+                                </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
                                     <div class="o_setting_right_pane">
                                         <label for="website_name" string="Website Title"/>
@@ -55,33 +60,6 @@
                                         <field name="website_company_id"/>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="domain_settings" groups="website.group_multi_website">
-                                    <div class="o_setting_right_pane">
-                                        <label string="Domain" for="website_domain"/>
-                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                        <div class="text-muted">
-                                            Display this website when users visit this domain
-                                        </div>
-                                        <div class="mt16">
-                                            <field name="website_domain"/>
-                                        </div>
-                                        <div>
-                                            <button name="website_go_to" type="object" string="Go to website" class="btn-link" icon="fa-arrow-right"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="website_geoip_settings" groups="website.group_multi_website">
-                                    <div class="o_setting_right_pane">
-                                        <label string="Country Groups" for="website_country_group_ids"/>
-                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                        <div class="text-muted">
-                                            Display this website for users from these country groups
-                                        </div>
-                                        <div class="mt16">
-                                            <field name="website_country_group_ids" widget="many2many_tags"/>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="languages_setting">
                                     <div class="o_setting_right_pane">
                                         <label for="language_ids"/>
@@ -104,14 +82,38 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="multi_website" class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box" id="domain_settings" groups="website.group_multi_website">
+                                    <div class="o_setting_right_pane">
+                                        <label string="Domain" for="website_domain"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                        <div class="text-muted">
+                                            Display this website when users visit this domain
+                                        </div>
+                                        <div class="mt8">
+                                            <field name="website_domain"/>
+                                        </div>
+                                        <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
+                                            Once the selection of available website by domain is done, you can filter by country group.
+                                        </div>
+                                        <div class="mt8">
+                                            <field name="website_country_group_ids" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box"  id="auth_signup_uninvited_setting">
                                     <div class="o_setting_left_pane">
-                                        <field name="group_multi_website"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="Multi-Websites" for="group_multi_website"/>
+                                        <label for="auth_signup_uninvited"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                         <div class="text-muted">
-                                            Manage multiple websites
+                                            Let your customers log in to see their documents
+                                        </div>
+                                        <div class="mt8">
+                                            <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
+                                        </div>
+                                        <div class="content-group">
+                                            <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -195,78 +197,29 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="utm_tracker_settings" title="Analyze the efficiency of your marketing campaigns by using trackable UTM trackers (campaigns, medium, sources). Create trackers and follow clicks from the Promote menu of your website. Those trackers can be used in Google Analytics or in Odoo reports where you can see the opportunities and sales revenue generated thanks to your links.">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_links"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_links"/>
-                                        <div class="text-muted">
-                                            Track clicks on UTM links
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-12 col-lg-6 o_setting_box" groups="website.group_multi_website">
                                     <div class="o_setting_left_pane">
                                         <field name="specific_user_account"/>
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label for="specific_user_account"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
                                         <div class="text-muted">
                                             Force your user to create an account per website
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6 o_setting_box"  id="auth_signup_uninvited_setting">
-                                    <div class="o_setting_left_pane">
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="auth_signup_uninvited"/>
-                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                                        <div class="text-muted">
-                                            Let your customers log in to see their documents
-                                        </div>
-                                        <div class="mt8">
-                                            <field name="auth_signup_uninvited" class="o_light_label" widget="radio" required="True"/>
-                                        </div>
-                                        <div class="content-group">
-                                            <button type="object" name="open_template_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_left_pane"/>
                                     <div class="o_setting_right_pane">
                                         <label string="Social Media" for="social_twitter"/>
-                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                                        <span class="fa fa-lg fa-building" title="Values set here are company specific." groups="website.group_multi_website"/>
                                         <div class="text-muted">
                                             Add links to social media on your website
                                         </div>
                                         <div class="content-group">
-                                            <div class="row mt16">
-                                                <label for="social_twitter" class="col-md-4 o_light_label"/>
-                                                <field name="social_twitter"/>
-                                            </div>
-                                            <div class="row">
-                                                <label for="social_facebook" class="col-md-4 o_light_label"/>
-                                                <field name="social_facebook"/>
-                                            </div>
-                                            <div class="row">
-                                                <label for="social_github" class="col-md-4 o_light_label"/>
-                                                <field name="social_github"/>
-                                            </div>
-                                            <div class="row">
-                                                <label for="social_linkedin" class="col-md-4 o_light_label"/>
-                                                <field name="social_linkedin"/>
-                                            </div>
-                                            <div class="row">
-                                                <label for="social_youtube" class="col-md-4 o_light_label"/>
-                                                <field name="social_youtube"/>
-                                            </div>
-                                            <div class="row">
-                                                <label for="social_googleplus" class="col-md-4 o_light_label"/>
-                                                <field name="social_googleplus"/>
-                                            </div>
+                                            <button type="object" name="company_go_to" string="Configure social media links" icon="fa-arrow-right" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -296,18 +249,32 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="utm_tracker_settings" title="Analyze the efficiency of your marketing campaigns by using trackable UTM trackers (campaigns, medium, sources). Create trackers and follow clicks from the Promote menu of your website. Those trackers can be used in Google Analytics or in Odoo reports where you can see the opportunities and sales revenue generated thanks to your links.">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_website_links"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="module_website_links"/>
+                                        <div class="text-muted">
+                                            Track clicks on UTM links
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="multi_website" class="col-xs-12 col-md-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="group_multi_website"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Multi-Websites" for="group_multi_website"/>
+                                        <div class="text-muted">
+                                            Manage multiple websites
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                     </div>
                 </xpath>
             </field>
-        </record>
-
-        <record id="action_website_add_features" model="ir.actions.act_window">
-            <field name="name">Apps</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.module.module</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
         <record id="action_website_configuration" model="ir.actions.act_window">

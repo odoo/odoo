@@ -38,12 +38,12 @@
                     </t>
                     <t t-if="l.reference == c">
                         <span t-if="c" t-att-class="spanclass">
-                            <a t-att-data-active-id="l.res_id" t-att-data-res-model="l.res_model" class="o_stock_reports_web_action"><t t-raw="c" /></a>
+                            <a t-att-data-active-id="l.res_id" t-att-data-res-model="l.res_model" class="o_stock_reports_web_action" href="#"><t t-raw="c" /></a>
                         </span>
                     </t>
                     <t t-elif="l.lot_name == c and l.lot_name != false">
                             <span>
-                                <a class="o_stock_report_lot_action"><t t-raw="c"/></a>
+                                <a class="o_stock_report_lot_action" href="#"><t t-raw="c"/></a>
                             </span>
                         </t>
                     <t t-if="l.reference != c and l.lot_name != c">

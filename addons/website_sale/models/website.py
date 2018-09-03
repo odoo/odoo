@@ -20,6 +20,15 @@ class Website(models.Model):
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
 
+    def _default_recovery_mail_template(self):
+        try:
+            return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
+        except ValueError:
+            return False
+
+    cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
+    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+
     @api.one
     def _compute_pricelist_ids(self):
         self.pricelist_ids = self.env["product.pricelist"].search([("website_id", "=", self.id)])

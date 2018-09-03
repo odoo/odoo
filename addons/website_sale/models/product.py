@@ -53,7 +53,7 @@ class ProductPricelist(models.Model):
 
 class ProductPublicCategory(models.Model):
     _name = "product.public.category"
-    _inherit = ["website.seo.metadata", "website.published.multi.mixin"]
+    _inherit = ["website.seo.metadata", "website.multi.mixin"]
     _description = "Website Product Category"
     _order = "sequence, name"
 
@@ -169,6 +169,13 @@ class ProductTemplate(models.Model):
             next_prodcut_tmpl.website_sequence, self.website_sequence = self.website_sequence, next_prodcut_tmpl.website_sequence
         else:
             return self.set_sequence_bottom()
+
+    def _default_website_meta(self):
+        res = super(ProductTemplate, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description_sale
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/web/image/product.template/%s/image" % (self.id)
+        return res
 
     @api.multi
     def _compute_website_url(self):

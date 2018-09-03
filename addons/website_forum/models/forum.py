@@ -423,6 +423,14 @@ class Post(models.Model):
                 raise KarmaError('User karma not sufficient to post an image or link.')
         return content
 
+    def _default_website_meta(self):
+        res = super(Post, self)._default_website_meta()
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/forum/user/%s/avatar" % (self.create_uid.id)
+        res['default_twitter']['twitter:card'] = 'summary'
+        return res
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
@@ -810,7 +818,7 @@ class Post(models.Model):
         return groups
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma

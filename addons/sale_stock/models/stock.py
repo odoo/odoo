@@ -36,6 +36,15 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('refund_invoice_ids')
         return rslt
 
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        if new and self.sale_line_id and self.sale_line_id.order_id:
+            self.picking_id.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
@@ -103,6 +112,7 @@ class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
     sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
+    sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
@@ -113,3 +123,10 @@ class ProductionLot(models.Model):
             ]).mapped('move_id').filtered(
                 lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
             lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_count = len(stock_moves)
+
+    def action_view_so(self):
+        self.ensure_one()
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        return action

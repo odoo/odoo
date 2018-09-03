@@ -28,15 +28,17 @@ class MrpStockReport(models.TransientModel):
             # if MTO
             if move_line.move_id.move_orig_ids:
                 lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id == move_line.lot_id
+                    lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                 ) - lines_seen
             # if MTS
-            elif move_line:
+            elif move_line.location_id.usage == 'internal':
                 lines = self.env['stock.move.line'].search([
                     ('product_id', '=', move_line.product_id.id),
                     ('lot_id', '=', move_line.lot_id.id),
+                    ('location_dest_id', '=', move_line.location_id.id),
                     ('id', 'not in', lines_seen.ids),
-                    ('date', '<', move_line.date),
+                    ('date', '<=', move_line.date),
+                    ('state', '=', 'done')
                 ])
             else:
                 continue
@@ -50,25 +52,24 @@ class MrpStockReport(models.TransientModel):
         model = kw and kw['model_name'] or context.get('model')
         rec_id = kw and kw['model_id'] or context.get('active_id')
         level = kw and kw['level'] or 1
-        lines = []
+        lines = self.env['stock.move.line']
         move_line = self.env['stock.move.line']
-        if rec_id and model in ('stock.production.lot', 'stock.move.line'):
+        if rec_id and model == 'stock.production.lot':
             lines = move_line.search([
                 ('lot_id', '=', context.get('lot_name') or rec_id),
                 ('state', '=', 'done'),
             ])
-            if model == 'stock.move.line':
-                for line in lines:
-                    dummy, is_used = self._get_linked_move_lines(line)
-                    if is_used:
-                        move_line |= is_used
-                lines = move_line
+        elif  rec_id and model == 'stock.move.line' and context.get('lot_name'):
+            record = self.env[model].browse(rec_id)
+            dummy, is_used = self._get_linked_move_lines(record)
+            if is_used:
+                lines = is_used
         elif rec_id and model in ('stock.picking', 'mrp.production'):
             record = self.env[model].browse(rec_id)
             if model == 'stock.picking':
                 lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
             else:
-                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.state == 'done')
         move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
         final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
         lines = self._final_vals_to_lines(final_vals, level)
@@ -112,7 +113,6 @@ class MrpStockReport(models.TransientModel):
     def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
-        unfoldable = False if not move_line.lot_id else unfoldable
         data = [{
             'level': level,
             'unfoldable': unfoldable,
@@ -126,8 +126,8 @@ class MrpStockReport(models.TransientModel):
             'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
-            'location_source': move_line.location_id.name if not unfoldable or level == 1 else False,
-            'location_destination': move_line.location_dest_id.name if not unfoldable or level == 1 else False,
+            'location_source': move_line.location_id.name,
+            'location_destination': move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
@@ -175,13 +175,12 @@ class MrpStockReport(models.TransientModel):
             if move_lines:
                 lines = move_lines
             else:
-                if is_used:
-                    # Traceability in case of consumed in.
-                    move_line |= self._get_move_lines(move_line)
-                for line in move_line:
-                    final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line)
+                # Traceability in case of consumed in.
+                lines = self._get_move_lines(move_line)
         for line in lines:
-            unfoldable = bool(line.produce_line_ids or line.consume_line_ids)
+            unfoldable = False
+            if line.consume_line_ids or ( line.lot_id and self._get_move_lines(line) and model != "stock.production.lot"):
+                unfoldable = True
             final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line, unfoldable=unfoldable)
         return final_vals
 

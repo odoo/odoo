@@ -175,7 +175,6 @@
             flex-flow: row-reverse wrap-reverse;
             align-self: stretch;
             align-items: stretch;
-            overflow-x: hidden; // to prevent horizontal scroll due to last arrow
 
             > .o_arrow_button {
                 min-height: $o-statusbar-height;
@@ -190,6 +189,7 @@
 
                 &:first-child {
                     padding-right: $o-horizontal-padding; // Compensate container padding
+                    overflow-x: hidden; // to prevent horizontal scroll due to last arrow
                 }
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
@@ -207,7 +207,7 @@
                     border-left: 1px solid gray('300');
                 }
 
-                &:before, &:after {
+                &:before, &:not(:first-child):after {
                     content: " ";
                     display: block;
                     @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
@@ -246,20 +246,8 @@
                         border-left-color: gray('200');
                     }
                 }
-
-                .caret {
-                    margin-top: -2px;
-                }
             }
 
-            .o-status-more {
-                @include o-position-absolute(100%, 0);
-                min-width: 100px;
-                > li > button {
-                    width: 100%;
-                    text-align: left;
-                }
-            }
         }
 
         // Touch device mode

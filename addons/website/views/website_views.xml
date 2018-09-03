@@ -8,6 +8,15 @@
             groups="base.group_user"
             web_icon="website,static/description/icon.png"/>
 
+        <record id="action_website_add_features" model="ir.actions.act_window">
+            <field name="name">Apps</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website')}"/>
+        </record>
+
+
         <!-- website views -->
         <record id="view_website_form" model="ir.ui.view">
             <field name="name">website.form</field>
@@ -15,21 +24,26 @@
             <field name="arch" type="xml">
                 <form string="Website Settings">
                     <div name="domain">
-                        <separator name="domain" string="Domain"/>
                         <group name="domain">
-                            <field name="name"/>
-                            <field name="domain"/>
-                            <field name="country_group_ids" widget="many2many_tags"/>
-                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                            <group>
+                                <field name="name"/>
+                                <field name="domain"/>
+                                <field name="country_group_ids" widget="many2many_tags"/>
+                            </group>
                         </group>
                     </div>
                     <div name="other">
-                        <separator string="Other Info"/>
                         <group name="other">
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="language_ids" widget="many2many_checkboxes"/>
-                            <field name="default_lang_id" widget="selection"/>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="language_ids" widget="many2many_tags"/>
+                                <field name="default_lang_id" widget="selection"/>
+                            </group>
                         </group>
+                    </div>
+                    <div name="buttons">
+                        <button type="object" name="button_go_website" class="btn btn-primary" icon="fa-globe">Go to website</button>
+                        <button name="%(website.action_website_add_features)d" type="action"  class="btn btn-secondary ml-2" icon="fa-plus">Add Features</button>
                     </div>
                 </form>
             </field>
@@ -89,7 +103,7 @@
                                 <field name="url_to"/>
                             </group>
                             <group>
-                                <field name="website_id" groups="website.group_multi_website"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="active"/>
                             </group>
                         </group>
@@ -106,7 +120,7 @@
                     <field name="type"/>
                     <field name="url_from"/>
                     <field name="url_to"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="active"/>
                     <field name="sequence" widget="handle" />
                 </tree>
@@ -135,8 +149,8 @@
                                 <field name="name"/>
                                 <field name="url"/>
                                 <field name="view_id"/>
-                                <field groups="base.group_no_one" name="is_published"/>
-                                <field groups="website.group_multi_website" name="website_id"/>
+                                <field name="is_published" groups="base.group_no_one"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             </group>
                             <group>
                                 <field name="website_indexed"/>
@@ -193,7 +207,7 @@
                             <group>
                                 <field name="new_window"/>
                                 <field name="sequence"/>
-                                <field name="website_id" groups="website.group_multi_website"/>
+                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                             </group>
                             <group>
                                 <field name="parent_id"/>
@@ -235,8 +249,7 @@
                 <search string="Search Menus">
                     <field name="name"/>
                     <field name="url"/>
-                    <field name="website_id"/>
-
+                    <field name="website_id" groups="website.group_multi_website"/>
                     <group string="Group By">
                         <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
@@ -263,7 +276,7 @@
             <field name="inherit_id" ref="base.view_view_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="website_id" groups="website.group_multi_website"/>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="key" readonly="1"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
@@ -309,5 +322,6 @@
         <menuitem id="menu_website_google_analytics" parent="menu_dashboard"
             sequence="20" name="Analytics"
             action="website.ir_actions_server_website_google_analytics"/>
+
     </data>
 </odoo>

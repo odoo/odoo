@@ -39,9 +39,9 @@ var ListRenderer = BasicRenderer.extend({
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
-        'keypress thead tr td' : '_onKeyPress',
-        'keydown tr' : '_onKeyDown',
-        'keydown thead tr' : '_onKeyDown',
+        'keypress thead tr td': '_onKeyPress',
+        'keydown tr': '_onKeyDown',
+        'keydown thead tr': '_onKeyDown',
     },
     /**
      * @constructor
@@ -63,9 +63,10 @@ var ListRenderer = BasicRenderer.extend({
                 return py.parse(py.tokenize(value));
             }).value();
         this.hasSelectors = params.hasSelectors;
-        this.selection = [];
+        this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
+        this.isGrouped = this.state.groupedBy.length > 0;
     },
 
     //--------------------------------------------------------------------------
@@ -76,15 +77,18 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      * @public
      */
-    giveFocus:function() {
+    giveFocus: function () {
         this.$('tbody .o_list_record_selector input:first()').focus();
     },
     /**
      * @override
      */
     updateState: function (state, params) {
+        this.isGrouped = state.groupedBy.length > 0;
         this._processColumns(params.columnInvisibleFields || {});
-        this.selection = [];
+        if (params.selectedRecords) {
+            this.selection = params.selectedRecords;
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -138,7 +142,7 @@ var ListRenderer = BasicRenderer.extend({
             return;
         }
         var func = (attrs.sum && 'sum') || (attrs.avg && 'avg') ||
-                    (attrs.max && 'max') || (attrs.min && 'min');
+            (attrs.max && 'max') || (attrs.min && 'min');
         if (func) {
             var count = 0;
             var aggregateValue = (func === 'max') ? -Infinity : (func === 'min') ? Infinity : 0;
@@ -175,7 +179,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _getNumberOfCols: function () {
         var n = this.columns.length;
-        return this.hasSelectors ? n+1 : n;
+        return this.hasSelectors ? n + 1 : n;
     },
     /**
      * Removes the columns which should be invisible.
@@ -214,11 +218,13 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
 
         return _.map(this.columns, function (column, index) {
-            if (isHeader && index < HEADING_COLUMNS_TO_SKIP_IN_GROUPS-1 &&
-                self.columns.length > HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
+            if (isHeader  && index === 0) {
                 return;
             }
             var $cell = $('<td>');
+            if (config.debug) {
+                $cell.addClass(column.attrs.name);
+            }
             if (column.attrs.name in aggregateValues) {
                 var field = self.state.fields[column.attrs.name];
                 var value = aggregateValues[column.attrs.name].value;
@@ -227,7 +233,7 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, {escape: true});
+                var formattedValue = formatFunc(value, field, { escape: true });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -280,7 +286,7 @@ var ListRenderer = BasicRenderer.extend({
                 tdClassName += (' o_' + node.attrs.widget + '_cell');
             }
         }
-        var $td = $('<td>', {class: tdClassName});
+        var $td = $('<td>', { class: tdClassName });
 
         // We register modifiers on the <td> element so that it gets the correct
         // modifiers classes (for styling)
@@ -322,6 +328,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderButton: function (record, node) {
+        var self = this;
         var $button = this._renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
@@ -331,7 +338,6 @@ var ListRenderer = BasicRenderer.extend({
 
         if (record.res_id) {
             // TODO this should be moved to a handler
-            var self = this;
             $button.on("click", function (e) {
                 e.stopPropagation();
                 self.trigger_up('button_clicked', {
@@ -341,7 +347,6 @@ var ListRenderer = BasicRenderer.extend({
             });
         } else {
             if (node.attrs.options.warn) {
-                var self = this;
                 $button.on("click", function (e) {
                     e.stopPropagation();
                     self.do_warn(_t("Warning"), _t('Please click on the "save" button first.'));
@@ -433,32 +438,32 @@ var ListRenderer = BasicRenderer.extend({
             name = name || _t('Undefined');
         }
         var $th = $('<th>')
-                    .addClass('o_group_name')
-                    .text(name + ' (' + group.count + ')');
-        if (this.columns.length >= HEADING_COLUMNS_TO_SKIP_IN_GROUPS) {
-            $th.attr('colspan',HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
+            .addClass('o_group_name')
+            .text(name + ' (' + group.count + ')');
+        if (this.hasSelectors) {
+            $th.attr('colspan', HEADING_COLUMNS_TO_SKIP_IN_GROUPS);
         }
         var $arrow = $('<span>')
-                            .css('padding-left', (groupLevel * 20) + 'px')
-                            .css('padding-right', '5px')
-                            .addClass('fa');
+            .css('padding-left', (groupLevel * 20) + 'px')
+            .css('padding-right', '5px')
+            .addClass('fa');
         if (group.count > 0) {
             $arrow.toggleClass('fa-caret-right', !group.isOpen)
-                    .toggleClass('fa-caret-down', group.isOpen);
+                .toggleClass('fa-caret-down', group.isOpen);
         }
         $th.prepend($arrow);
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
             var $pager = this._renderGroupPager(group);
-            var $lastCell = $cells[$cells.length-1];
+            var $lastCell = $cells[$cells.length - 1] || $th;
             $lastCell.addClass('o_group_pager').append($pager);
         }
         return $('<tr>')
-                    .addClass('o_group_header')
-                    .toggleClass('o_group_open', group.isOpen)
-                    .toggleClass('o_group_has_content', group.count > 0)
-                    .data('group', group)
-                    .append($th)
-                    .append($cells);
+            .addClass('o_group_header')
+            .toggleClass('o_group_open', group.isOpen)
+            .toggleClass('o_group_has_content', group.count > 0)
+            .data('group', group)
+            .append($th)
+            .append($cells);
     },
     /**
      * Render all groups in the view.  We assume that the view is in grouped
@@ -513,7 +518,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderHeader: function (isGrouped) {
         var $tr = $('<tr>')
-                .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
+            .append(_.map(this.columns, this._renderHeaderCell.bind(this)));
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('th'));
         }
@@ -544,19 +549,18 @@ var ListRenderer = BasicRenderer.extend({
         if (description === undefined) {
             description = node.attrs.string || field.string;
         }
-        $th
-            .text(description)
+        $th.text(description)
             .data('name', name)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
             .addClass(field.sortable && 'o_column_sortable');
 
         if (isNodeSorted) {
-            $th.attr('aria-sort', order[0].asc ? 'ascending': 'descending');
+            $th.attr('aria-sort', order[0].asc ? 'ascending' : 'descending');
         }
 
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
-            $th.css({textAlign: 'right'});
+            $th.css({ textAlign: 'right' });
         }
 
         if (config.debug) {
@@ -582,13 +586,13 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         this.defs = []; // TODO maybe wait for those somewhere ?
         var $cells = _.map(this.columns, function (node, index) {
-            return self._renderBodyCell(record, node, index, {mode: 'readonly'});
+            return self._renderBodyCell(record, node, index, { mode: 'readonly' });
         });
         delete this.defs;
 
-        var $tr = $('<tr/>', {class: 'o_data_row'})
-                    .data('id', record.id)
-                    .append($cells);
+        var $tr = $('<tr/>', { class: 'o_data_row' })
+            .data('id', record.id)
+            .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
@@ -624,8 +628,8 @@ var ListRenderer = BasicRenderer.extend({
             $content.find("input[type='checkbox']").prop('disabled', disableInput);
         }
         return $('<' + tag + ' width="1">')
-                    .addClass('o_list_record_selector')
-                    .append($content);
+            .addClass('o_list_record_selector')
+            .append($content);
     },
     /**
      * Main render function for the list.  It is rendered as a table. For now,
@@ -654,14 +658,12 @@ var ListRenderer = BasicRenderer.extend({
         }
 
         var $table = $('<table>').addClass('o_list_view table table-sm table-hover table-striped');
-        this.$el
-            .addClass('table-responsive')
+        this.$el.addClass('table-responsive')
             .append($table);
-        var is_grouped = !!this.state.groupedBy.length;
         this._computeAggregates();
-        $table.toggleClass('o_list_view_grouped', is_grouped);
-        $table.toggleClass('o_list_view_ungrouped', !is_grouped);
-        if (is_grouped) {
+        $table.toggleClass('o_list_view_grouped', this.isGrouped);
+        $table.toggleClass('o_list_view_ungrouped', !this.isGrouped);
+        if (this.isGrouped) {
             $table
                 .append(this._renderHeader(true))
                 .append(this._renderGroups(this.state.data))
@@ -718,7 +720,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _updateSelection: function () {
         var $selectedRows = this.$('tbody .o_list_record_selector input:checked')
-                                .closest('tr');
+            .closest('tr');
         this.selection = _.map($selectedRows, function (row) {
             return $(row).data('id');
         });
@@ -737,9 +739,9 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      * @param {KeyboardEvent} e
      */
-    _onKeyDown : function(e) {
+    _onKeyDown: function (e) {
         if (!this.editable) {
-            switch(e.which) {
+            switch (e.which) {
                 case $.ui.keyCode.DOWN:
                     $(e.currentTarget).next().find('input').focus();
                     e.preventDefault();
@@ -752,7 +754,7 @@ var ListRenderer = BasicRenderer.extend({
                     e.preventDefault();
                     var id = $(e.currentTarget).data('id');
                     if (id) {
-                        this.trigger_up('open_record', {id:id, target: e.target});
+                        this.trigger_up('open_record', { id: id, target: e.target });
                     }
                     break;
             }
@@ -768,7 +770,7 @@ var ListRenderer = BasicRenderer.extend({
         if (!$(event.target).prop('special_click')) {
             var id = $(event.currentTarget).data('id');
             if (id) {
-                this.trigger_up('open_record', {id:id, target: event.target});
+                this.trigger_up('open_record', { id: id, target: event.target });
             }
         }
     },
@@ -789,7 +791,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSortColumn: function (event) {
         var name = $(event.currentTarget).data('name');
-        this.trigger_up('toggle_column_order', {id: this.state.id, name: name});
+        this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
     },
     /**
      * @private
@@ -798,7 +800,7 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleGroup: function (event) {
         var group = $(event.currentTarget).data('group');
         if (group.count) {
-            this.trigger_up('toggle_group', {group: group});
+            this.trigger_up('toggle_group', { group: group });
         }
     },
     /**

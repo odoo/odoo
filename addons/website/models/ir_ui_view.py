@@ -23,7 +23,6 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
-    # theme_id = fields.Many2one('ir.module.module')
 
     @api.multi
     def _compute_first_page_id(self):
@@ -205,6 +204,9 @@ class View(models.Model):
                     new_context = dict(self._context, inherit_branding=True)
                 elif request.env.user.has_group('website.group_website_publisher'):
                     new_context = dict(self._context, inherit_branding_auto=True)
+            # Fallback incase main_object dont't inherit 'website.seo.metadata'
+            if values and 'main_object' in values and not hasattr(values['main_object'], 'get_website_meta'):
+                values['main_object'].get_website_meta = lambda: {}
 
         if self._context != new_context:
             self = self.with_context(new_context)

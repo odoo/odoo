@@ -72,8 +72,7 @@ var QuickCreateFormController = FormController.extend({
      * @return {Deferred}
      */
     commitChanges: function () {
-        return this.mutex
-            .exec(this.renderer.commitChanges.bind(this.renderer, this.handle));
+        return this.renderer.commitChanges(this.handle);
     },
     /**
      * @returns {Object} the changes done on the current record

@@ -3,7 +3,7 @@
         text-align: center;
     }
 
-    .o_mail_thread_content_asc, .o_mail_thread_content_desc {
+    .o_mail_thread_content {
         display: flex;
         flex-direction: column;
         min-height: 100%;
@@ -19,11 +19,18 @@
 
     .o_thread_typing_notification_bar {
         flex: 0, 0, 20px;
-        @include o-position-sticky($bottom: 0px);
         @include o-transparent-background-color(0.75, white);
         padding: 5px;
         text-align: center;
         color: gray('600');
+
+        &.o_thread_order_asc {
+            @include o-position-sticky($bottom: 0px);
+        }
+
+        &.o_thread_order_desc {
+            @include o-position-sticky($top: 0px);
+        }
     }
 
     .o_thread_tooltip_container {

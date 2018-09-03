@@ -6,7 +6,7 @@ from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
@@ -1550,7 +1550,7 @@ class AccountPartialReconcile(models.Model):
                                 'partner_id': line.partner_id.id,
                             })
         if newly_created_move:
-            if move_date > (self.company_id.period_lock_date or '0000-00-00') and newly_created_move.date != move_date:
+            if move_date > (self.company_id.period_lock_date or date.min) and newly_created_move.date != move_date:
                 # The move date should be the maximum date between payment and invoice (in case
                 # of payment in advance). However, we should make sure the move date is not
                 # recorded before the period lock date as the tax statement for this period is

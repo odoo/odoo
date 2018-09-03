@@ -327,7 +327,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="name" string="Work Center Name"/>
+                                <field name="name" string="Work Center Name" required="True"/>
                             </group>
                             <group>
                                 <field name="code"/>
@@ -451,9 +451,7 @@
                 <group>
                     <group>
                         <field name="name"/>
-                        <field name="loss_type"/>
-                    </group><group>
-                        <field name="manual"/>
+                        <field name="loss_id" widget="selection"/>
                     </group>
                 </group>
             </form>
@@ -466,9 +464,8 @@
         <field name="arch" type="xml">
             <tree string="Workcenter Productivity Loss">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="loss_type"/>
-                <field name="manual"/>
+                <field name="name" string="Blocking Reasons"/>
+                <field name="loss_type" string="Category"/>
             </tree>
         </field>
     </record>
@@ -519,7 +516,7 @@
         <field name="res_model">mrp.workcenter.productivity.loss</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
-        <field name="domain">[]</field>
+        <field name="domain">[('manual', '=', 'True')]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             No productivity loss defined

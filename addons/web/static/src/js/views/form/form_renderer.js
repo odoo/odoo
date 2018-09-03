@@ -86,7 +86,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {string} recordID
      * @returns {string[]}
      */
-    canBeSaved: function (recordID) {
+    canBeSaved: function () {
         var self = this;
         var fieldNames = this._super.apply(this, arguments);
 
@@ -130,7 +130,7 @@ var FormRenderer = BasicRenderer.extend({
      *
      * @override
      */
-    confirmChange: function (state, id, fields, e) {
+    confirmChange: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function (resetWidgets) {
             _.each(resetWidgets, function (widget) {
@@ -286,6 +286,30 @@ var FormRenderer = BasicRenderer.extend({
                 attrs: node.attrs,
                 record: self.state,
             });
+        });
+    },
+    /**
+     * Enable swipe event to allow navigating through records
+     *
+     * @private
+     */
+    _enableSwipe: function () {
+        var self = this;
+        this.$('.o_form_sheet').swipe({
+            swipeLeft: function () {
+                this.css({
+                    transform: 'translateX(-100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_left');
+            },
+            swipeRight: function () {
+                this.css({
+                    transform: 'translateX(100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_right');
+            },
         });
     },
     /**
@@ -894,6 +918,11 @@ var FormRenderer = BasicRenderer.extend({
         }
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
+
+        // Enable swipe for mobile when formview is in readonly mode and there are multiple records
+        if (config.device.isMobile && this.mode === 'readonly' && this.state.count > 1) {
+            this._enableSwipe();
+        }
 
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {

@@ -17,4 +17,7 @@
     'data': [
         'views/res_company_views.xml',
     ],
+    'demo': [
+        'demo/res_company_demo.xml',
+    ]
 }

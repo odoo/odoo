@@ -833,10 +833,12 @@
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
-        <button t-attf-class="badge badge-pill dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
-            <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
-            <a t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
-        </button>
+        <div class="dropdown">
+            <button t-attf-class="badge badge-pill dropdown-toggle o-no-caret o_tag_color_#{color}" data-toggle="dropdown" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
+                <a t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -886,9 +888,11 @@
 <t t-name="FieldStatus.content">
     <t t-if="selection_folded.length">
         <button type="button" class="btn o_arrow_button btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More</button>
-        <div class="dropdown-menu o-status-more" role="menu">
+        <div class="dropdown-menu" role="menu">
             <t t-foreach="selection_folded" t-as="i">
-                <t t-call="FieldStatus.content.button"/>
+                <t t-call="FieldStatus.content.button">
+                    <t t-set="is_dropdown" t-value="true"/>
+                </t>
             </t>
         </div>
     </t>
@@ -899,15 +903,15 @@
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable"/>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
-        class="btn o_arrow_button btn-primary disabled" t-if="i.selected" aria-current="step">
+        t-attf-class="btn o_arrow_button btn-primary disabled #{is_dropdown ? 'dropdown-item bg-primary text-white': ''}" t-if="i.selected" aria-current="step">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
-        class="btn o_arrow_button btn-secondary disabled" t-if="!i.selected and disabled">
+        t-attf-class="btn o_arrow_button btn-secondary disabled #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
-        class="btn o_arrow_button btn-secondary" t-if="!i.selected and !disabled">
+        t-attf-class="btn o_arrow_button btn-secondary #{is_dropdown ? 'dropdown-item': ''}" t-if="!i.selected and !disabled">
         <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
     </button>
 </t>

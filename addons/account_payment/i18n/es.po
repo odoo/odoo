@@ -3,25 +3,32 @@
 # * account_payment
 # 
 # Translators:
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Antonio Trueba, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Diego deCos <diegodecos@hotmail.com>, 2018
+# Manuel De los Reyes <manuel9410z@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Manuel De los Reyes <manuel9410z@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "Comunicación:"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -31,11 +38,9 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Pagar Ahora"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
-"Now</span>"
-msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pagar "
-"Ahora</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
+msgstr "Paga Ahora"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -53,29 +58,51 @@ msgid ""
 "<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
 "to be able to use them."
 msgstr ""
+"Tiene tarjetas de crédito registrada, puede Ingresar para poder usarlas"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> Waiting</span>"
-msgstr ""
-"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/>Esperando</span>"
+"<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
+msgstr "Esperando pago"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Done</span>"
-msgstr ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Realizado</span>"
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"d-none d-md-inline\"> Paid</span></span>"
+msgstr "Pagado"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
-msgid "<strong>Transactions</strong>"
-msgstr "<strong>Transacciones</strong>"
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-remove\"/><span"
+" class=\"d-none d-md-inline\"> Cancelled</span></span>"
+msgstr "Cancelado"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-success\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"d-none d-md-inline\"> Authorized</span></span>"
+msgstr "Autorizado"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-warning\"><span class=\"d-none d-md-inline\"> "
+"Pending</span></span>"
+msgstr "Pendiente"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr ""
+"<i>Hecho,</i>Su pago en línea ha sido procesado con éxito. Gracias por su "
+"orden."
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:47
@@ -95,13 +122,17 @@ msgstr "Pagar y confirmar"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:22
-#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar ahora"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "Pagar ahora"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
 msgstr "Pagar con"
 

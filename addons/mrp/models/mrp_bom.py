@@ -6,6 +6,8 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
+from itertools import groupby
+
 
 class MrpBom(models.Model):
     """ Defines bills of material for a product or a product template """
@@ -65,6 +67,17 @@ class MrpBom(models.Model):
         if self.product_id:
             for line in self.bom_line_ids:
                 line.attribute_value_ids = False
+
+    @api.multi
+    def write(self, values):
+        mos = self.env['mrp.production'].search_count([
+            ('bom_id', 'in', self.ids),
+            ('state', 'not in', ['done', 'cancel'])
+        ])
+        if mos and any(k not in ['code', 'sequence', 'pick_type_id', 'ready_to_produce'] for k in values.keys()):
+            raise ValidationError(_('This BoM is used in some Manufacturing Orders that are still open. You should rather archive this BoM and create a new one.'))
+        return super(MrpBom, self).write(values)
+
 
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_product_recursion(self):
@@ -292,8 +305,10 @@ class MrpBomLine(models.Model):
         custom control. It currently checks that all variant values are in the
         product. """
         if self.attribute_value_ids:
-            if not product or self.attribute_value_ids - product.attribute_value_ids:
-                return True
+            for att, att_values in groupby(self.attribute_value_ids, lambda l: l.attribute_id):
+                values = self.env['product.attribute.value'].concat(*list(att_values))
+                if not (product.attribute_value_ids & values):
+                    return True
         return False
 
     @api.multi

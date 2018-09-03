@@ -451,7 +451,7 @@ class TestOnChange(common.TransactionCase):
 
         onchange_result = {
             'message_name': 'Hey dude!',
-            'message_currency': (1, 'Mitchell Stephens')
+            'message_currency': self.env.user.name_get()[0],
         }
 
         self.env.cache.invalidate()

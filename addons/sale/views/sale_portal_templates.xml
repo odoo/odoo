@@ -22,11 +22,11 @@
     <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="quotation_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="quotation_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="quotation_count"/>
                 <a href="/my/quotes">Quotations</a>
             </li>
             <li t-if="order_count" class="list-group-item">
-                <span class="badge badge-pill" t-esc="order_count"/>
+                <span class="badge badge-secondary badge-pill float-right" t-esc="order_count"/>
                 <a href="/my/orders">Sales Orders</a>
             </li>
         </xpath>

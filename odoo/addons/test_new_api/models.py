@@ -71,7 +71,7 @@ class Discussion(models.Model):
     moderator = fields.Many2one('res.users')
     categories = fields.Many2many('test_new_api.category',
         'test_new_api_discussion_category', 'discussion', 'category')
-    participants = fields.Many2many('res.users')
+    participants = fields.Many2many('res.users', context={'active_test': False})
     messages = fields.One2many('test_new_api.message', 'discussion')
     message_concat = fields.Text(string='Message concatenate')
     important_messages = fields.One2many('test_new_api.message', 'discussion',

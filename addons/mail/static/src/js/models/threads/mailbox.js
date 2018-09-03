@@ -20,10 +20,8 @@ var Mailbox = SearchableThread.extend({
      * @override
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} params.data.id the ID of the mailbox, without the
-     *   'mailbox_' prefix.
-     * @param {integer} [params.data.mailboxCounter=0] the initial mailbox
-     *   counter of this mailbox.
+     * @param {string} params.data.id the ID of the mailbox, without the ``mailbox_`` prefix.
+     * @param {integer} [params.data.mailboxCounter=0] the initial mailbox counter of this mailbox.
      */
     init: function (params) {
         var data = params.data;

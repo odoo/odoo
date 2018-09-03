@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:249
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid "\n"
 "There are %s %s available across all warehouses.\n"
@@ -31,23 +31,33 @@ msgid ".\n"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
-msgid "<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-times\"/> Cancelled</span>"
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-times\"/> Cancelled</span>"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
-msgid "<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Preparation</span>"
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Preparation</span>"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
-msgid "<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-truck\"/> Shipped</span>"
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-truck\"/> Shipped</span>"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
-msgid "<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Partially Available</span>"
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> Partially Available</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sale Orders</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr ""
 
 #. module: sale_stock
@@ -56,7 +66,7 @@ msgid "<strong>Customer Reference:</strong>"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
 msgstr ""
 
@@ -92,8 +102,23 @@ msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific rotues"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
 msgstr ""
 
 #. module: sale_stock
@@ -112,11 +137,6 @@ msgid "Delivery"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__module_sale_order_dates
-msgid "Delivery Date"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr ""
@@ -130,6 +150,11 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
 msgstr ""
 
 #. module: sale_stock
@@ -203,8 +228,8 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Manage delivery dates from sales orders"
+#: model:ir.model,name:sale_stock.model_stock_production_lot
+msgid "Lot/Serial"
 msgstr ""
 
 #. module: sale_stock
@@ -240,7 +265,7 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:256
+#: code:addons/sale_stock/models/sale_order.py:276
 #, python-format
 msgid "Not enough inventory!"
 msgstr ""
@@ -251,7 +276,7 @@ msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:270
+#: code:addons/sale_stock/models/sale_order.py:290
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -279,11 +304,6 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_rule
-msgid "Procurement Rule"
 msgstr ""
 
 #. module: sale_stock
@@ -322,8 +342,13 @@ msgid "Sale Order"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "Sales"
+#: model:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
+msgid "Sale order count"
 msgstr ""
 
 #. module: sale_stock
@@ -339,6 +364,11 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
+msgid "Sales Orders"
 msgstr ""
 
 #. module: sale_stock
@@ -382,13 +412,13 @@ msgid "Ship products as soon as available, with back orders"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Shipping Information"
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
+msgid "Shipping Policy"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
-msgid "Shipping Policy"
+#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sold in the last 365 days"
 msgstr ""
 
 #. module: sale_stock
@@ -403,17 +433,17 @@ msgid "Stock Moves"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "This allows to apply a special route on sales order lines (e.g. dropshipping, make-to-order) in case of unusual order scenario. To be available in sales orders, routes must have 'Sales Order Line' option checked in their setup form."
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "This option introduces extra fields in the sales order to easily schedule product deliveries on your own: expected date, commitment date, effective date."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:363
+#: code:addons/sale_stock/models/sale_order.py:388
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
@@ -440,7 +470,7 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:362
+#: code:addons/sale_stock/models/sale_order.py:387
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -456,20 +486,20 @@ msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:271
+#: code:addons/sale_stock/models/sale_order.py:291
 #, python-format
 msgid "You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:403
+#: code:addons/sale_stock/models/sale_order.py:428
 #, python-format
 msgid "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:245
+#: code:addons/sale_stock/models/sale_order.py:265
 #, python-format
 msgid "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
@@ -501,7 +531,17 @@ msgid "processed instead of"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "report.stock.report_stock_rule"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "res.config.settings"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "stock.rules.report"
 msgstr ""
 

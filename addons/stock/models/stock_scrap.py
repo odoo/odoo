@@ -26,7 +26,7 @@ class StockScrap(models.Model):
         states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -121,6 +121,8 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if self.product_id.type != 'product':
+            return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty = sum(self.env['stock.quant']._gather(self.product_id,
                                                             self.location_id,

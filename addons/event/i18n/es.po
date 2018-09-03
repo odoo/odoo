@@ -3,37 +3,15 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Antonio Trueba, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Maria Sánchez <maritxusg110@gmail.com>, 2016
-# Jose Manuel <admin@jaboweb.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# David Perez <david@closemarketing.es>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
-# Javier Ramirez <elbomba887@gmail.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Diego deCos <diegodecos@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Diego deCos <diegodecos@hotmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +31,13 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        To</b>"
+msgstr ""
+
+#. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
 msgid ""
 "<div>\n"
@@ -69,15 +54,6 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
-msgid ""
-"<i class=\"fa fa-clock-o\"/>\n"
-"                                        <b>To</b>"
-msgstr ""
-"<i class=\"fa fa-clock-o\"/>\n"
-"<b>A</b>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
@@ -87,12 +63,16 @@ msgstr "<i>a</i>"
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
-"                                        to \n"
+"                                        to\n"
 "                                    </span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
-"                                        para \n"
-"                                    </span>"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_confirm
+msgid ""
+"<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
+" Registration Limit. Are you sure you want to confirm it?</span>"
+msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -166,7 +146,7 @@ msgid ""
 "                    <table style=\"width:100%;\">\n"
 "                        <tr>\n"
 "                            <td style=\"vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
 "                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
@@ -175,7 +155,7 @@ msgid ""
 "                            </td>\n"
 "                            % if object.event_id.address_id.country_id.name:\n"
 "                                <td style=\"vertical-align:top;\">\n"
-"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\"/>\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
 "                                </td>\n"
 "                                <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
 "                                    % set location = ''\n"
@@ -238,10 +218,10 @@ msgid ""
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
 "                                <strong>Add this event to your calendar</strong>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Outlook</a>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
-"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Yahoo</a>\n"
+"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -254,7 +234,7 @@ msgid ""
 "                    <table style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
 "                            <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\"/>\n"
+"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                    </td></tr></table>\n"
@@ -354,7 +334,7 @@ msgid ""
 "                    <table style=\"width:100%;\">\n"
 "                        <tr>\n"
 "                            <td style=\"vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
 "                            </td>\n"
 "                            <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
 "                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
@@ -363,7 +343,7 @@ msgid ""
 "                            </td>\n"
 "                            % if object.event_id.address_id.country_id.name:\n"
 "                                <td style=\"vertical-align:top;\">\n"
-"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\"/>\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\" alt=\"\"/>\n"
 "                                </td>\n"
 "                                <td style=\"padding: 0px 10px 0px 10px;width:50%;vertical-align:top;\">\n"
 "                                    % set location = ''\n"
@@ -426,10 +406,9 @@ msgid ""
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
 "                                <strong>Add this event to your calendar</strong>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&amp;summary=${object.event_id.name}&amp;dtstart=${date_begin}&amp;dtend=${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Outlook</a>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&amp;et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
-"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"/> Yahoo</a>\n"
+"                                    <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Yahoo</a>\n"
 "                            </td>\n"
 "                        </tr>\n"
 "                    </table>\n"
@@ -442,7 +421,7 @@ msgid ""
 "                    <table style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
 "                            <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\"/>\n"
+"                                <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                            </a>\n"
 "                        </div>\n"
 "                    </td></tr></table>\n"
@@ -534,11 +513,13 @@ msgstr "Servicio"
 #. module: event
 #: selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
 msgstr "Asistido"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended Date"
 msgstr "Fecha de asistencia"
 
@@ -659,7 +640,7 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: event
-#: code:addons/event/models/event.py:493
+#: code:addons/event/models/event.py:504
 #, python-format
 msgid "Compose Email"
 msgstr "Componer correo electrónico"
@@ -692,6 +673,7 @@ msgstr "Confirmación registro"
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Confirmed"
 msgstr "Confirmado"
 
@@ -786,6 +768,11 @@ msgstr "Orden de visualización"
 #: selection:event.event,state:0
 msgid "Done"
 msgstr "Hecho"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.view_event_kanban
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -914,9 +901,22 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"Programador de Tareas para:\n"
+"                    - Evento:%s (%s)\n"
+"                    - Programado %s\n"
+"                    - Plantilla %s (%s)\n"
+"\n"
+"                    Fallo con error:\n"
+"                      - %s\n"
+"\n"
+"                     Usted recibe este correo porque es:\n"
+"                       - el organizador del evento\n"
+"                       - o el responsable del evento\n"
+"                       - o el último editor de la plantilla"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
 msgstr "Fecha inicio evento"
 
@@ -1174,6 +1174,12 @@ msgstr "Asientos limitados"
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
 msgstr "Ubicación"
+
+#. module: event
+#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+msgid "Logo"
+msgstr "Logo"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -1559,11 +1565,6 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: event
-#: model:ir.actions.act_window,name:event.act_register_event_partner
-msgid "Subscribe"
-msgstr "Suscribir"
-
-#. module: event
 #: code:addons/event/models/event.py:269
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
@@ -1622,6 +1623,7 @@ msgstr "Hashtag de Twitter"
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
+#: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
 msgstr "No confirmado"
 
@@ -1694,16 +1696,7 @@ msgstr "Visibilidad"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
-
-#. module: event
-#: model:ir.ui.view,arch_db:event.view_event_confirm
-msgid ""
-"Warning: This Event has not reached its Minimum Registration Limit. Are you "
-"sure you want to confirm it?"
-msgstr ""
-"Aviso: Este evento no ha llegado a su límite de registros mínimo. ¿Está "
-"seguro que desea confirmarlo?"
+msgstr "ADVERTENCIA: Error del Programador de Eventos para el evento: %s"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1746,25 +1739,25 @@ msgid "event.confirm"
 msgstr "event.confirm"
 
 #. module: event
-#: code:addons/event/models/event.py:515
+#: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
 msgstr "en %d días"
 
 #. module: event
-#: code:addons/event/models/event.py:519
+#: code:addons/event/models/event.py:530
 #, python-format
 msgid "next month"
 msgstr "siguiente mes"
 
 #. module: event
-#: code:addons/event/models/event.py:517
+#: code:addons/event/models/event.py:528
 #, python-format
 msgid "next week"
 msgstr "siguiente semana"
 
 #. module: event
-#: code:addons/event/models/event.py:521
+#: code:addons/event/models/event.py:532
 #, python-format
 msgid "on "
 msgstr "en"
@@ -1775,13 +1768,13 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: event
-#: code:addons/event/models/event.py:511
+#: code:addons/event/models/event.py:522
 #, python-format
 msgid "today"
 msgstr "hoy"
 
 #. module: event
-#: code:addons/event/models/event.py:513
+#: code:addons/event/models/event.py:524
 #, python-format
 msgid "tomorrow"
 msgstr "mañana"

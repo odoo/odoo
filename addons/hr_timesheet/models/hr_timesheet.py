@@ -124,10 +124,10 @@ class AccountAnalyticLine(models.Model):
                 partner_id = self.env['project.project'].browse(vals['project_id']).partner_id.id
             if partner_id:
                 vals['partner_id'] = partner_id
-        # set timesheet UoM from the employee company (employee implies uom)
-        if 'product_uom_id' not in vals and all([v in vals for v in ['employee_id', 'project_id']]):  # project_id required to check this is timesheet flow
-            employee = self.env['hr.employee'].sudo().browse(vals['employee_id'])
-            vals['product_uom_id'] = employee.company_id.project_time_mode_id.id
+        # set timesheet UoM from the AA company (AA implies uom)
+        if 'product_uom_id' not in vals and all([v in vals for v in ['account_id', 'project_id']]):  # project_id required to check this is timesheet flow
+            analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
+            vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
 
     @api.multi

@@ -3,23 +3,29 @@
 # * website_livechat
 # 
 # Translators:
-# ТАрас <tratatuta@i.ua>, 2018
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Live Chat</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -37,9 +43,14 @@ msgid "Description of the channel displayed on the website page"
 msgstr "Опис каналу відображається на сайті"
 
 #. module: website_livechat
-#: model:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live Chat"
-msgstr "Живий чат"
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_livechat
 #: model:website.menu,name:website_livechat.menu_livechat
@@ -60,6 +71,16 @@ msgstr "Канал живого чату"
 #: model:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
 msgstr "Канали підтримки чату"
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Neutral face"
+msgstr ""
+
+#. module: website_livechat
+#: model:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Sad face"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.ui.view,arch_db:website_livechat.channel_page
@@ -93,8 +114,8 @@ msgstr "Наразі немає рейтингу для цього чату."
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
-msgid "Visible in Website"
-msgstr "Видимий на сайті"
+msgid "Visible on current website"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website

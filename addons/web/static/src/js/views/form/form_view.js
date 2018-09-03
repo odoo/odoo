@@ -2,6 +2,7 @@ odoo.define('web.FormView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
+var config = require('web.config');
 var Context = require('web.Context');
 var core = require('web.core');
 var FormController = require('web.FormController');
@@ -18,6 +19,7 @@ var FormView = BasicView.extend({
     icon: 'fa-edit',
     multi_record: false,
     searchable: false,
+    jsLibs: [],
     viewType: 'form',
     /**
      * @override
@@ -41,6 +43,9 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
+        if (config.device.isMobile) {
+            this.jsLibs.push('/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js');
+        }
     },
 
     //--------------------------------------------------------------------------

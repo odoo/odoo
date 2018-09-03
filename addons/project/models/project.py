@@ -785,15 +785,20 @@ class Task(models.Model):
         groups = super(Task, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
+
+        project_user_group_id = self.env.ref('project.group_project_user').id
+        new_group = (
+            'group_project_user',
+            lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'],
+            {},
+        )
+
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
-            project_user_group_id = self.env.ref('project.group_project_user').id
-            new_group = (
-                'group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {
-                    'actions': project_actions,
-                })
-            groups = [new_group] + groups
+            new_group[2]['actions'] = project_actions
+
+        groups = [new_group] + groups
 
         for group_name, group_method, group_data in groups:
             if group_name == 'customer':

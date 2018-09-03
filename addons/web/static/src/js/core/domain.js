@@ -244,18 +244,16 @@ var Domain = collections.Tree.extend({
         function makeInterval () {
             switch (comparisonPeriod) {
                 case 'previous_period':
-                    _.map(offsetPeriodParams, function (value, key) {
-                        if (_.isNumber(value)) {
+                    _.each(offsetPeriodParams, function (value, key) {
+                        if (!leftBoundaryParams[key] ||_.isNumber(leftBoundaryParams[key])) {
                             leftBoundaryParams[key] = value + (leftBoundaryParams[key] || 0);
                         } else {
-                            leftBoundaryParams[key] = value + ' + ' + (leftBoundaryParams[key] || 0);
+                            leftBoundaryParams[key] = value + ' + ' + leftBoundaryParams[key];
                         }
-                    });
-                    _.map(offsetPeriodParams, function (value, key) {
-                        if (_.isNumber(value)) {
+                        if (!rightBoundaryParams[key] || _.isNumber(rightBoundaryParams[key])) {
                             rightBoundaryParams[key] = value + (rightBoundaryParams[key] || 0);
                         } else {
-                            rightBoundaryParams[key] = value + ' + ' + (rightBoundaryParams[key] || 0);
+                            rightBoundaryParams[key] = value + ' + ' + rightBoundaryParams[key];
                         }
                     });
                     break;
@@ -458,7 +456,7 @@ var Domain = collections.Tree.extend({
      * Converts python condition to a JS prefix-array representation of a domain
      *
      * @static
-     * @param {string} domain
+     * @param {string} condition
      * @returns {Array}
      */
     conditionToDomain: function (condition) {

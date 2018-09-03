@@ -8,6 +8,7 @@ var mixins = require('web.mixins');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
+var weWidgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -273,6 +274,14 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
             return $(this).text();
         });
     },
+    getOgMeta: function () {
+        var ogImageUrl = $('meta[property="og:image"]').attr('content');
+        var title = $('meta[property="og:title"]').attr('content');
+        return {
+            ogImageUrl: ogImageUrl && ogImageUrl.replace(window.location.origin, ''),
+            metaTitle: title,
+        };
+    },
     images: function () {
         return $('#wrap img').map(function () {
             var $img = $(this);
@@ -312,6 +321,81 @@ var Tip = Widget.extend({
         // success, info, warning or danger
         this.type = options.type || 'info';
         this._super(parent);
+    },
+});
+
+var metaImageSelector = Widget.extend({
+    template: 'website.seo_meta_image_selector',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+    events: {
+        'click .o_meta_img_upload': '_onClickUploadImg',
+        'click .o_meta_img': '_onClickSelectImg',
+    },
+    /**
+     * @override
+     * @param {widget} parent
+     * @param {Object} data
+     */
+    init: function (parent, data) {
+        this.metaTitle = data.title;
+        this.activeMetaImg = data.metaImg;
+        this.serverUrl = window.location.origin;
+        data.pageImages.unshift(_.str.sprintf('/web/image/res.company/%s/logo', odoo.session_info.website_company_id));
+        this.images = _.uniq(data.pageImages);
+        this.customImgUrl = _.contains(data.pageImages, data.metaImg) ? false : data.metaImg;
+        this._super(parent);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Update template.
+     *
+     * @private
+    */
+    _updateTemplateBody: function () {
+        this.$el.empty();
+        this.images = _.uniq(this.images);
+        this.$el.append(core.qweb.render('website.og_image_body', {widget: this}));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when a select image from list -> change the preview accordingly.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickSelectImg: function (ev) {
+        var $img = $(ev.currentTarget);
+        this.activeMetaImg = $img.find('img').attr('src');
+        this._updateTemplateBody();
+    },
+    /**
+     * Open a mediaDialog to select/upload image.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickUploadImg: function (ev) {
+        var self = this;
+        var $image = $('<img/>');
+        var mediaDialog = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            res_model: 'ir.ui.view',
+        }, null, $image);
+        mediaDialog.open();
+        mediaDialog.on('save', this, function (image) {
+            var src = image.attr('src');
+            self.activeMetaImg = src;
+            self.customImgUrl = src;
+            self._updateTemplateBody();
+        });
     },
 });
 
@@ -377,6 +461,12 @@ var SeoConfigurator = Dialog.extend({
         this.keywordList.insertAfter(this.$('.table thead'));
         this.disableUnsavableFields().then(function(){
             self.renderPreview();
+            self.metaImageSelector = new metaImageSelector(self, {
+                title: self.htmlPage.getOgMeta().metaTitle,
+                metaImg : self.metaImg || self.htmlPage.getOgMeta().ogImageUrl,
+                pageImages : _.pluck(self.htmlPage.images().get(), 'src'),
+            });
+            self.metaImageSelector.appendTo(self.$('.js_seo_keywords_list'));
         });
 
         this.getLanguages();
@@ -404,6 +494,7 @@ var SeoConfigurator = Dialog.extend({
             self.canEditTitle = data && ('website_meta_title' in data);
             self.canEditDescription = data && ('website_meta_description' in data);
             self.canEditKeywords = data && ('website_meta_keywords' in data);
+            self.metaImg = data.website_meta_og_img;
             if (!self.canEditTitle) {
                 self.$('input[name=seo_page_title]').attr('disabled', true);
             }
@@ -454,6 +545,7 @@ var SeoConfigurator = Dialog.extend({
         if (this.canEditKeywords) {
             data.website_meta_keywords = this.keywordList.keywords().join(', ');
         }
+        data.website_meta_og_img = this.metaImageSelector.activeMetaImg;
         this.saveMetaData(data).then(function () {
            self.htmlPage.changeKeywords(self.keywordList.keywords());
            self.close();
@@ -478,7 +570,8 @@ var SeoConfigurator = Dialog.extend({
             // return $.Deferred().reject(new Error("No main_object was found."));
             def.resolve(null);
         } else {
-            var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
+            var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'
+                            ,'website_meta_og_img'];
             if (obj.model == 'website.page'){
                 fields.push('website_indexed');
             }

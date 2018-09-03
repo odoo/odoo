@@ -110,7 +110,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                             </group>
                         </page>
                     </notebook>
@@ -256,7 +256,7 @@
                         <group name="packaging" string="Packaging"
                             colspan="4"
                             groups="product.group_stock_packaging">
-                            <field name="packaging_ids" nolabel="1" context="{'default_product_id': id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
+                            <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                         </group>
                     </sheet>
                 </form>
@@ -480,6 +480,17 @@
             </field>
         </record>
 
+        <record id="product_packaging_tree_view2" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view2</field>
+            <field name="model">product.packaging</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="replace"/>
+                <xpath expr="//field[@name='sequence']" position="replace"/>
+            </field>
+        </record>
+
         <record id="product_packaging_form_view" model="ir.ui.view">
             <field name="name">product.packaging.form.view</field>
             <field name="model">product.packaging</field>
@@ -492,7 +503,7 @@
                         </h1>
                         <group>
                             <field name="id" invisible='1'/>
-                            <group>
+                            <group name="group_product">
                                 <field name="product_id"  required='True' attrs="{'readonly': [('id', '!=', False)]}"/>
                             </group>
                             <group name="qty">
@@ -502,6 +513,17 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record id="product_packaging_form_view2" model="ir.ui.view">
+            <field name="name">product.packaging.form.view2</field>
+            <field name="model">product.packaging</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_product']" position="replace"/>
+                <xpath expr="//field[@name='id']" position="replace"/>
             </field>
         </record>
 
@@ -614,7 +636,9 @@
                     <field name="product_id" invisible="context.get('product_template_invisible_variant', False)" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="min_qty"/>
+                    <field name="product_uom" groups="uom.group_uom"/>
                     <field name="price" string="Price"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                 </tree>

@@ -414,7 +414,9 @@
     <template id="web.menu">
         <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
             <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link"/>
+                <t t-call="web.menu_link">
+                    <t t-set="_classes" t-value="'nav-link'"/>
+                </t>
             </li>
         </ul>
 
@@ -446,7 +448,9 @@
     <template id="web.menu_secondary_submenu">
         <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
             <li t-foreach="menu['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link"/>
+                <t t-call="web.menu_link">
+                    <t t-set="_classes" t-value="'nav-link'"/>
+                </t>
                 <t t-call="web.menu_secondary_submenu"/>
             </li>
         </ul>
@@ -455,7 +459,7 @@
         <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
         <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
             role="menuitem"
-            t-attf-class="nav-link #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
+            t-attf-class="#{_classes} #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
             t-att-data-menu="menu['id']"
             t-att-data-menu-xmlid="menu.get('xmlid')"
             t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
@@ -488,12 +492,28 @@
         <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
 
         <script type="text/javascript">
+            odoo.define('web.WebClientWithoutServices', function (require) {
+                var ServiceProviderMixin = require('web.ServiceProviderMixin');
+                var WebClient = require('web.WebClient');
+                var WebClientWithoutServices = WebClient.extend({
+                    /**
+                     * Patch web client so that it is no longer a service provider.
+                     *
+                     * @override
+                     */
+                    init: function () {
+                        var originalServiceProviderMixinInit = ServiceProviderMixin.init;
+                        ServiceProviderMixin.init = function () {};
+                        this._super.apply(this, arguments);
+                        ServiceProviderMixin.init = originalServiceProviderMixinInit;
+                    },
+                });
+                return WebClientWithoutServices;
+            });
             // define the 'web.web_client' module because some other modules require it
             odoo.define('web.web_client', function (require) {
-                var WebClient = require('web.WebClient');
+                var WebClient = require('web.WebClientWithoutServices');
                 var web_client = new WebClient();
-                // override _call_service to prevent the web_client from doing RPCs
-                web_client._call_service = function () {};
                 return web_client;
             });
         </script>
@@ -622,6 +642,9 @@
                 <script type="text/javascript" src="/web/static/tests/chrome/search_view_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/calendar_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_mobile_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/form_mobile_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
             </t>
 
             <div id="qunit"/>
@@ -648,12 +671,28 @@
                 <script type="text/javascript">
                     QUnit.config.hidepassed = false;
 
+                    odoo.define('web.WebClientWithoutServices', function (require) {
+                        var ServiceProviderMixin = require('web.ServiceProviderMixin');
+                        var WebClient = require('web.WebClient');
+                        var WebClientWithoutServices = WebClient.extend({
+                            /**
+                             * Patch web client so that it is no longer a service provider.
+                             *
+                             * @override
+                             */
+                            init: function () {
+                                var originalServiceProviderMixinInit = ServiceProviderMixin.init;
+                                ServiceProviderMixin.init = function () {};
+                                this._super.apply(this, arguments);
+                                ServiceProviderMixin.init = originalServiceProviderMixinInit;
+                            },
+                        });
+                        return WebClientWithoutServices;
+                    });
                     // define the 'web.web_client' module because some other modules require it
                     odoo.define('web.web_client', function (require) {
-                        var WebClient = require('web.WebClient');
+                        var WebClient = require('web.WebClientWithoutServices');
                         var web_client = new WebClient();
-                        // override _call_service to prevent the web_client from doing RPCs
-                        web_client._call_service = function () {};
                         return web_client;
                     });
                 </script>

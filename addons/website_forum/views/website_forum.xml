@@ -248,8 +248,8 @@
 
                 <t t-esc="question.child_count"/>
                 <t t-if="question.post_type == 'question'">
-                    <t t-if="question.child_count&lt;=1">View</t>
-                    <t t-else="">Views</t>
+                    <t t-if="question.child_count&lt;=1">Answer</t>
+                    <t t-else="">Answers</t>
                 </t>
                 <t t-if="question.post_type != 'question'">
                     <t t-if="question.child_count&lt;=1">Comment</t>
@@ -724,13 +724,6 @@
 
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
-    <t t-set="head">
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
-        <meta name="twitter:title" t-att-content="question.name" />
-        <meta name="twitter:description" t-att-content="question.content" />
-        <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>
-    </t>
     <t t-call="website_forum.header">
         <div class="alert alert-info text-center" role="status" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <p class='text-muted mb16'>This post is currently awaiting moderation and not yet published... Do you want <i>Accept</i> or <i>Reject</i> this post ?</p>

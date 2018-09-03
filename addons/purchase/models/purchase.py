@@ -277,7 +277,7 @@ class PurchaseOrder(models.Model):
         }
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
@@ -348,7 +348,7 @@ class PurchaseOrder(models.Model):
                     'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
                     'min_qty': 0.0,
-                    'price': self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today()),
+                    'price': self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False),
                     'currency_id': currency.id,
                     'delay': 0,
                 }

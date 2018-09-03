@@ -36,7 +36,6 @@ class ProfitabilityAnalysis(models.Model):
         tools.drop_view_if_exists(self._cr, self._table)
         query = """
             CREATE VIEW %s AS (
-                WITH currency_rate as (%s)
                 SELECT
                     ROW_NUMBER() OVER (ORDER BY P.id, SOL.id) AS id,
                     P.id AS project_id,
@@ -51,7 +50,7 @@ class ProfitabilityAnalysis(models.Model):
                     SOL.product_id AS product_id,
                     SOL.qty_delivered_method AS sale_qty_delivered_method,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'analytic' THEN (SOL.untaxed_amount_to_invoice / COALESCE(CR.rate, 1.0))
+                       WHEN SOL.qty_delivered_method = 'analytic' THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS expense_amount_untaxed_to_invoice,
                     CASE
@@ -59,17 +58,17 @@ class ProfitabilityAnalysis(models.Model):
                        THEN
                             CASE
                                 WHEN T.expense_policy = 'sales_price'
-                                THEN (SOL.price_reduce / COALESCE(CR.rate, 1.0)) * SOL.qty_invoiced
+                                THEN (SOL.price_reduce / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END) * SOL.qty_invoiced
                                 ELSE -COST_SUMMARY.expense_cost
                             END
                        ELSE 0.0
                     END AS expense_amount_untaxed_invoiced,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_to_invoice / COALESCE(CR.rate, 1.0))
+                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_invoiced / COALESCE(CR.rate, 1.0))
+                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
@@ -145,12 +144,7 @@ class ProfitabilityAnalysis(models.Model):
                     LEFT JOIN sale_order S ON SOL.order_id = S.id
                     LEFT JOIN product_product PP on (SOL.product_id=PP.id)
                     LEFT JOIN product_template T on (PP.product_tmpl_id=T.id)
-                    LEFT JOIN currency_rate CR ON (CR.currency_id = SOL.currency_id
-                        AND CR.currency_id != C.currency_id
-                        AND CR.company_id = SOL.company_id
-                        AND CR.date_start <= COALESCE(S.date_order, now())
-                        AND (CR.date_end IS NULL OR cr.date_end > COALESCE(S.date_order, now())))
                     WHERE P.active = 't' AND P.analytic_account_id IS NOT NULL
             )
-        """ % (self._table, self.env['res.currency']._select_companies_rates())
+        """ % self._table
         self._cr.execute(query)

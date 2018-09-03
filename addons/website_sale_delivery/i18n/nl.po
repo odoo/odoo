@@ -3,18 +3,16 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +22,15 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid "<b>Shipping Method: </b>"
+msgstr "<b>Verzendwijze:</b>"
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid ""
-"<span class=\"badge pull-right o_delivery_compute\">Select to compute "
-"delivery rate</span>"
+"<span class=\"float-right badge badge-secondary o_delivery_compute\">Select "
+"to compute delivery rate</span>"
 msgstr ""
-"<span class=\"badge pull-right o_delivery_compute\"> Selecteer om de "
-"geleverde hoeveelheid te berekenen </span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
@@ -109,7 +110,7 @@ msgid "FedEx Delivery Methods"
 msgstr "FedEx leveringsmethodes"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Free"
 msgstr "Gratis"
 
@@ -122,6 +123,11 @@ msgstr "Heeft een orderregel gezet voor levering"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
 msgstr "Heeft levering"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
@@ -158,6 +164,11 @@ msgid "Quotation"
 msgstr "Offerte"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr "Publiceren op deze website beperken."
+
+#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
@@ -171,10 +182,11 @@ msgstr "Het bedrag zonder BTW."
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
 msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om het document te kunnen raadplegen via de website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
+#: model:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "Volgen:"
 
@@ -185,8 +197,13 @@ msgstr "USPS verzendwijzes"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible in Website"
-msgstr "Zichtbaar in website"
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "Website"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url

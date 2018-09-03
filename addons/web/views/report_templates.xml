@@ -212,7 +212,7 @@
                     <h4 class="mt0" t-field="company.report_header"/>
                     <div name="company_address" class="mb4">
                         <span class="company_address" t-field="company.partner_id"
-                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
                 </div>
             </div>
@@ -269,7 +269,7 @@
                 </div>
                 <div class="col-4 text-right">
                     <span class="company_address" t-field="company.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                        t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                 </div>
                 <div class="col-4">
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
@@ -299,7 +299,7 @@
             <div class="row">
                 <div class="col-6" name="company_address">
                     <span t-field="company.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                         style="border-bottom: 1px solid black; display:inline-block;"/>
                 </div>
             </div>

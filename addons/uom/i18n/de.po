@@ -3,26 +3,16 @@
 # * uom
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
 # Martin Trigaux, 2018
-# Wolfgang Taferner, 2018
 # Mathias Neef <mn@copado.de>, 2018
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
-# Renzo Meister, 2018
-# JackTheHunter <Maximilian.N98@gmail.com>, 2018
-# Henry Mineehen <info@mineehen.de>, 2018
-# Tina Rittmüller <tr@ife.de>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
-# Niki Waibel, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Niki Waibel, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,16 +59,6 @@ msgstr ""
 "Eine Umrechnung zwischen Mengeneinheit ist nur möglich, wenn beide Einheiten"
 " einer Kategorie angehören. Die Umrechnung erfolgt dann auf der Basis der "
 "definierten Relationen."
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:138
-#, python-format
-msgid ""
-"Conversion from Product UoM %s to Default UoM %s is not possible as they "
-"both belong to different Category!."
-msgstr ""
-"Konvertierung von Produkt-Mengeneinheit %s zu Standard-Mengeneinheit %s ist "
-"nicht möglich, da diese zu verschiedenen Kategorien gehören."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -191,7 +171,7 @@ msgstr "Produkteinheit"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Kategorien für ME von Produkten"
+msgstr "Kategorien für Maßeinheiten von Produkten"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -229,8 +209,23 @@ msgstr "Der Umrechnungsfaktor einer Mengeneinheit kann nicht 0 sein!"
 
 #. module: uom
 #: sql_constraint:uom.uom:0
-msgid "The rounding precision must be greater than 0!"
-msgstr "Die Rundungsgenauigkeit muss größer als 0 sein!"
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr ""
+
+#. module: uom
+#: sql_constraint:uom.uom:0
+msgid "The rounding precision must be strictly positive."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:152
+#, python-format
+msgid ""
+"The unit of measure %s defined on the order line doesn't belong to the same "
+"category than the unit of measure %s defined on the product. Please correct "
+"the unit of measure defined on the order line or on the product, they should"
+" belong to the same category."
+msgstr ""
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -309,7 +304,7 @@ msgstr ""
 "Stunden, Tage."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:86
+#: code:addons/uom/models/uom_uom.py:93
 #, python-format
 msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
@@ -317,7 +312,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:88
+#: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -347,6 +342,20 @@ msgstr "Arbeitszeit"
 #. module: uom
 #: sql_constraint:uom.category:0
 msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:28
+#, python-format
+msgid "You cannot delete this UoM Category as it is used by the system."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:115
+#, python-format
+msgid ""
+"You cannot delete this UoM as it is used by the system. You should rather "
+"archive it."
 msgstr ""
 
 #. module: uom

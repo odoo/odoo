@@ -77,10 +77,13 @@ class Message(models.Model):
         ondelete='set null', default=_get_default_author,
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
     author_avatar = fields.Binary("Author's avatar", related='author_id.image_small')
-    # recipients
-    partner_ids = fields.Many2many('res.partner', string='Recipients')
+    # recipients: include inactive partners (they may have been archived after
+    # the message was sent, but they should remain visible in the relation)
+    partner_ids = fields.Many2many('res.partner', string='Recipients',
+        context={'active_test': False})
     needaction_partner_ids = fields.Many2many(
-        'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action')
+        'res.partner', 'mail_message_res_partner_needaction_rel', string='Partners with Need Action',
+        context={'active_test': False})
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
@@ -171,7 +174,7 @@ class Message(models.Model):
     @api.multi
     def _compute_need_moderation(self):
         for message in self:
-            self.need_moderation = False
+            message.need_moderation = False
 
     @api.model
     def _search_need_moderation(self, operator, operand):

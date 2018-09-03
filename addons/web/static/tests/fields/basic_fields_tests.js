@@ -359,7 +359,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         var form = createView({
             View: FormView,
@@ -370,7 +370,6 @@ QUnit.module('basic_fields', {
         });
 
         assert.strictEqual(form.$(".custom-checkbox.o_boolean_toggle").length, 1, "Boolean toggle widget applied to boolean field");
-        assert.strictEqual(form.$(".custom-checkbox.o_boolean_toggle").find(".slider").length, 1, "Boolean toggle contains slider to toggle");
         form.destroy();
     });
 
@@ -1454,6 +1453,97 @@ QUnit.module('basic_fields', {
         // the difference is to take small calculation errors into account
         assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
             "textarea should not have a scroll bar");
+        form.destroy();
+    });
+
+    QUnit.test('text fields in edit mode, no vertical resize', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="txt"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        var $textarea = form.$('textarea:first');
+
+        assert.strictEqual($textarea.css('resize'), 'none',
+            "should not have vertical resize");
+
+        form.destroy();
+    });
+
+    QUnit.test('text fields in editable list have correct height', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<list editable="top">' +
+                    '<field name="foo"/>' +
+                    '<field name="txt"/>' +
+                '</list>',
+        });
+
+        // Click to enter edit: in this test we specifically do not set
+        // the focus on the textarea by clicking on another column.
+        // The main goal is to test the resize is actually triggered in this
+        // particular case.
+        list.$('.o_data_cell:first').click();
+        var $textarea = list.$('textarea:first');
+
+        // make sure the correct data is there
+        assert.strictEqual($textarea.val(), this.data.partner.records[0].txt);
+
+        // make sure there is no scroll bar
+        assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
+            "textarea should not have a scroll bar");
+
+        list.destroy();
+    });
+
+    QUnit.test('text fields in edit mode should resize on reset', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo.type = 'text';
+
+        this.data.partner.onchanges = {
+            bar: function (obj) {
+                obj.foo = 'a\nb\nc\nd\ne\nf';
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="bar"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // edit the form
+        // trigger a textarea reset (through onchange) by clicking the box
+        // then check there is no scroll bar
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('div[name="bar"] input').click();
+
+        var $textarea = form.$('textarea:first');
+        assert.strictEqual($textarea.innerHeight(), $textarea[0].scrollHeight,
+            "textarea should not have a scroll bar");
+
         form.destroy();
     });
 
@@ -3269,7 +3359,6 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
-
     QUnit.module('FieldFloatTime');
 
     QUnit.test('float_time field in form view', function (assert) {
@@ -3400,106 +3489,6 @@ QUnit.module('basic_fields', {
 
     QUnit.module('PhoneWidget');
 
-    QUnit.test('phone field in form view on extra small screens', function (assert) {
-        assert.expect(7);
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:'<form string="Partners">' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="foo" widget="phone"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
-            res_id: 1,
-            config: {
-                device: {
-                    size_class: config.device.SIZES.VSM,
-                },
-            },
-        });
-
-        var $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 1,
-            "should have a anchor with correct classes");
-        assert.strictEqual($phoneLink.text(), 'yop',
-            "value should be displayed properly");
-        assert.strictEqual($phoneLink.attr('href'), 'tel:yop',
-            "should have proper tel prefix");
-
-        // switch to edit mode and check the result
-        form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').length, 1,
-            "should have an input for the phone field");
-        assert.strictEqual(form.$('input[type="text"].o_field_widget').val(), 'yop',
-            "input should contain field value in edit mode");
-
-        // change value in edit mode
-        form.$('input[type="text"].o_field_widget').val('new').trigger('input');
-
-        // save
-        form.$buttons.find('.o_form_button_save').click();
-        $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.text(), 'new',
-            "new value should be displayed properly");
-        assert.strictEqual($phoneLink.attr('href'), 'tel:new',
-            "should still have proper tel prefix");
-
-        form.destroy();
-    });
-
-    QUnit.test('phone field in editable list view on extra small screens', function (assert) {
-        assert.expect(10);
-
-        var list = createView({
-            View: ListView,
-            model: 'partner',
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
-            config: {
-                device: {
-                    size_class: config.device.SIZES.VSM,
-                },
-            },
-        });
-
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
-            "should have 5 cells");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
-            "value should be displayed properly");
-
-        var $phoneLink = list.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 5,
-            "should have anchors with correct classes");
-        assert.strictEqual($phoneLink.first().attr('href'), 'tel:yop',
-            "should have proper tel prefix");
-
-        // Edit a line and check the result
-        var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        $cell.click();
-        assert.ok($cell.parent().hasClass('o_selected_row'), 'should be set as edit mode');
-        assert.strictEqual($cell.find('input').val(), 'yop',
-            'should have the corect value in internal input');
-        $cell.find('input').val('new').trigger('input');
-
-        // save
-        list.$buttons.find('.o_list_button_save').click();
-        $cell = list.$('tbody td:not(.o_list_record_selector)').first();
-        assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
-            "value should be properly updated");
-        $phoneLink = list.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.length, 5,
-            "should still have anchors with correct classes");
-        assert.strictEqual($phoneLink.first().attr('href'), 'tel:new',
-            "should still have proper tel prefix");
-
-        list.destroy();
-    });
-
     QUnit.test('phone field in form view on normal screens', function (assert) {
         assert.expect(5);
 
@@ -3517,7 +3506,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: config.device.SIZES.MD,
+                    size_class: config.device.SIZES.LG,
                 },
             },
         });
@@ -3556,7 +3545,7 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: config.device.SIZES.MD,
+                    size_class: config.device.SIZES.LG,
                 },
             },
         });
@@ -3587,42 +3576,6 @@ QUnit.module('basic_fields', {
             "should still have links with correct classes");
 
         list.destroy();
-    });
-
-    QUnit.test('phone field does not allow html injections', function (assert) {
-        assert.expect(1);
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:'<form string="Partners">' +
-                    '<sheet>' +
-                        '<group>' +
-                            '<field name="foo" widget="phone"/>' +
-                        '</group>' +
-                    '</sheet>' +
-                '</form>',
-            res_id: 1,
-            viewOptions: {
-                mode: 'edit',
-            },
-            config: {
-                device: {
-                    size_class: config.device.SIZES.VSM,
-                },
-            },
-        });
-
-        var val = '<script>throw Error();</script><script>throw Error();</script>';
-        form.$('input').val(val).trigger('input');
-
-        // save
-        form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_field_widget').text(), val,
-            "value should have been correctly escaped");
-
-        form.destroy();
     });
 
     QUnit.test('use TAB to navigate to a phone field', function (assert) {
