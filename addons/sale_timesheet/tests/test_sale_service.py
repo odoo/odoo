@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestSaleService(TestCommonSaleTimesheetNoChart):
@@ -89,6 +89,10 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         })
 
         self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
+
+        # not possible to delete a task linked to a SOL
+        with self.assertRaises(ValidationError):
+            task.unlink()
 
     def test_timesheet_uom(self):
         """ Test timesheet invoicing and uom conversion """
