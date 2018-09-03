@@ -67,22 +67,20 @@
     </template>
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
-        <xpath expr="//div[@id='sidebar_content']//div[hasclass('o_download_pdf')]" position="before">
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
-            <div class="mb8 ml16 mr16">
-                <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
-                    class="btn btn-primary btn-block" data-toggle="modal" data-target="#pay_with">
-                    <i class="fa fa-arrow-circle-right"/> Pay Now
+            <div>
+                <a href="#" t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
+                    class="btn btn-success btn-block mb-2" data-toggle="modal" data-target="#pay_with">
+                    <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
-                <a t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'"
-                    class="btn btn-warning btn-block" disabled="disabled">
-                    <i class="fa fa-check-circle"/> Pending
-                </a>
-                <a t-if="invoice.state == 'paid'"
-                    class="btn btn-success btn-block" disabled="disabled">
-                    <i class="fa fa-check-circle"/> Paid
-                </a>
+                <div t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'" class="alert alert-info py-1 mb-2" >
+                    <i class="fa fa-fw fa-check-circle"/> Pending
+                </div>
+                <div t-if="invoice.state == 'paid'" class="alert alert-success py-1 mb-2" >
+                    <i class="fa fa-fw fa-check-circle"/> Paid
+                </div>
             </div>
         </xpath>
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="before">
