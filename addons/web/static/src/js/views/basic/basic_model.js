@@ -594,6 +594,7 @@ var BasicModel = AbstractModel.extend({
                 getDomain: element.getDomain,
                 getFieldNames: element.getFieldNames,
                 id: element.id,
+                isDirty: element.isDirty,
                 limit: element.limit,
                 model: element.model,
                 offset: element.offset,
@@ -648,6 +649,7 @@ var BasicModel = AbstractModel.extend({
             getFieldNames: element.getFieldNames,
             groupedBy: element.groupedBy,
             id: element.id,
+            isDirty: element.isDirty,
             isOpen: element.isOpen,
             limit: element.limit,
             model: element.model,
@@ -3490,6 +3492,7 @@ var BasicModel = AbstractModel.extend({
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
         dataPoint.getDomain = this._getDomain.bind(this, dataPoint);
         dataPoint.getFieldNames = this._getFieldNames.bind(this, dataPoint);
+        dataPoint.isDirty = this.isDirty.bind(this, dataPoint.id);
 
         this.localData[dataPoint.id] = dataPoint;
 

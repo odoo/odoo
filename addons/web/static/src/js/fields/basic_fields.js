@@ -334,7 +334,8 @@ var InputField = DebouncedField.extend({
             }
             if (ev.data.direction ==='next' &&
                 this.attrs.modifiersValue &&
-                this.attrs.modifiersValue.required) {
+                this.attrs.modifiersValue.required &&
+                this.viewType !== 'list') {
                 if (!this.$input.val()){
                     this.setInvalidClass();
                     ev.stopPropagation();
@@ -388,7 +389,7 @@ var NumericField = InputField.extend({
      *
      * Note: We have to overwrite this method to set the input's type to number if
      * option setted into the field.
-     * 
+     *
      * @override
      * @private
      */

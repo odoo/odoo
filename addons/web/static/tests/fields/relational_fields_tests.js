@@ -13493,7 +13493,8 @@ QUnit.module('relational_fields', {
        form.destroy();
     });
 
-    QUnit.test('when Navigating to a many to one with tabs, not filling in the first field and hitting tab, we should not add a first line but navigate to the next control', function (assert) {
+    QUnit.test('when Navigating to a many2one with tabs, not filling any field and hitting tab,' +
+            ' we should not add a first line but navigate to the next control', function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].turtles = [];
@@ -13536,6 +13537,10 @@ QUnit.module('relational_fields', {
             keyCode: $.ui.keyCode.TAB,
         }));
 
+        // skips the first field of the one2many
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+
+        // skips the second (and last) field of the one2many
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
 
         assert.strictEqual(assert.strictEqual(form.$el.find('input[name="foo"]')[0],
