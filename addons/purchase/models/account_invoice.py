@@ -101,8 +101,9 @@ class AccountInvoice(models.Model):
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):
         purchase_ids = self.invoice_line_ids.mapped('purchase_id')
-        self.origin = ', '.join(purchase_ids.mapped('name'))
-        self.reference = ', '.join(purchase_ids.filtered('partner_ref').mapped('partner_ref'))
+        if purchase_ids:
+            self.origin = ', '.join(purchase_ids.mapped('name'))
+            self.reference = ', '.join(purchase_ids.filtered('partner_ref').mapped('partner_ref')) or self.reference
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):

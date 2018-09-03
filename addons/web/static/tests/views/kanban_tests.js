@@ -2557,6 +2557,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars are working with load more', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                '<kanban limit="1">' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="id"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        // we have 1 record shown, load 2 more and check it worked
+        kanban.$('.o_kanban_group').find('.o_kanban_load_more').click();
+        kanban.$('.o_kanban_group').find('.o_kanban_load_more').click();
+        var shownIDs = _.map(kanban.$('.o_kanban_record'), function(record) {
+            return parseInt(record.innerText);
+        });
+        assert.deepEqual(shownIDs, [1, 2, 3], "intended records are loaded");
+
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars on archiving records update counter', function (assert) {
         assert.expect(4);
 
