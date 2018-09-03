@@ -813,6 +813,10 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
+   /**
+    * @param {KeyDownEvent} e
+    * @private
+    */
     _onKeyDownAddRecord: function(e) {
         switch(e.keyCode) {
             case $.ui.keyCode.ENTER:
@@ -823,25 +827,25 @@ ListRenderer.include({
         }
     },
     /**
-     * It will returns the first visible widget that is editable
+     * It will returns the last visible widget that is editable
      *
      * @private
-     * @returns {Class} Widget returns first widget
+     * @returns {Class} Widget returns last widget
      */
-    _getFirstWidget: function () {
+    _getLastWidget: function () {
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
-        var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst =
+        var lastWidget = _.chain(recordWidgets).filter(function (widget) {
+            var isLast =
                 widget.$el.is(':visible') &&
                 (
                     widget.$('input').length > 0 || widget.tagName === 'input' ||
                     widget.$('textarea').length > 0 || widget.tagName === 'textarea'
                 ) &&
                 !widget.$el.hasClass('o_readonly_modifier');
-            return isFirst;
-        });
-        return firstWidget;
+            return isLast;
+        }).last().value();
+        return lastWidget;
     },
 
     /**
@@ -872,11 +876,22 @@ ListRenderer.include({
                 break;
             case 'next':
                 // When navigating with the keyboard, we want to get out of the list editable if the
-                // first field is left empty.
+                // entire line is left unmodified and we are on the next line.
                 var column = this.columns[this.currentFieldIndex];
-                var firstWidget = this._getFirstWidget();
-                if (column.attrs.name === firstWidget.name && !firstWidget.$input.val()) {
-                    this.trigger_up('activate_next_widget');
+                var lastWidget = this._getLastWidget();
+                if (column.attrs.name === lastWidget.name) {
+                    if (this.currentRow + 1 < this.state.data.length) {
+                        this._selectCell(this.currentRow+1, 0, {wrap:false})
+                            .fail(this._moveToNextLine.bind(this));
+                    } else {
+                        var currentRowData = this.state.data[this.currentRow];
+                        if (currentRowData.isDirty(currentRowData.id)) {
+                            this._moveToNextLine();
+                        }
+                        else {
+                            this.trigger_up('activate_next_widget');
+                        }
+                    }
                 } else {
                     if (this.currentFieldIndex + 1 < this.columns.length) {
                         this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
