@@ -110,6 +110,7 @@ class MailThread(models.AbstractModel):
     message_has_error_counter = fields.Integer(
         'Number of error', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
+    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment')
 
     @api.one
     @api.depends('message_follower_ids')
@@ -859,8 +860,8 @@ class MailThread(models.AbstractModel):
         """ Generic wrapper on ``_notify_get_reply_to`` checking mail.thread inheritance
         and allowing to call model-specific implementation in a one liner. This
         method should not be overridden. """
-        if records and hasattr(records, '_notify_get_reply_to'):   
-            return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)    
+        if records and hasattr(records, '_notify_get_reply_to'):
+            return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)
         return self._notify_get_reply_to(default=default, records=records, company=company, doc_names=doc_names)
 
     @api.multi
@@ -1947,7 +1948,6 @@ class MailThread(models.AbstractModel):
                     to the related document. Should only be set by Chatter.
             :return int: ID of newly created mail.message
         """
-
         if attachments is None:
             attachments = {}
         if self.ids and not self.ensure_one():
@@ -2045,6 +2045,12 @@ class MailThread(models.AbstractModel):
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
         values['attachment_ids'] = attachment_ids
+        if attachment_ids and self.ids and not self.message_main_attachment_id:
+            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
+            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
+                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
+                                     or all_attachments
+            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
