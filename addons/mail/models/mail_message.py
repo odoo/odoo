@@ -687,9 +687,9 @@ class Message(models.Model):
 
         if operation == 'read':
             self._cr.execute("""
-                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, m.moderation_status,
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
                                 COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
-                                channel_partner.channel_id as channel_id
+                                channel_partner.channel_id as channel_id, m.moderation_status
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
