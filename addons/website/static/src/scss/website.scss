@@ -6,8 +6,14 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
 @if $-theme-font {
     @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
 }
-@if $o-theme-font-number != $o-theme-headings-font-number {
+@if $o-theme-headings-font-number != $o-theme-font-number {
     $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
+    @if $-theme-font {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+    }
+}
+@if $o-theme-buttons-font-number != $o-theme-font-number and $o-theme-buttons-font-number != $o-theme-headings-font-number {
+    $-theme-font: nth($o-theme-font-urls, $o-theme-buttons-font-number);
     @if $-theme-font {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
     }
@@ -61,6 +67,11 @@ h5, h6 {
 }
 h6 {
     color: color('h6');
+}
+.btn {
+    @if ($o-theme-buttons-font-number != $o-theme-font-number) {
+        font-family: nth($o-theme-fonts, $o-theme-buttons-font-number);
+    }
 }
 
 // Texts
