@@ -2499,30 +2499,6 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('inputs are disabled when unselecting rows', function (assert) {
-        assert.expect(1);
-
-        var list = createView({
-            View: ListView,
-            model: 'foo',
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="foo"/></tree>',
-            mockRPC: function (route, args) {
-                if (args.method === 'write') {
-                    assert.strictEqual($input.prop('disabled'), true,
-                        "input should be disabled");
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        list.$('td:contains(gnap)').click();
-        var $input = list.$('tr.o_selected_row input[name="foo"]');
-        $input.val('lemon').trigger('input');
-        $input.trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        list.destroy();
-    });
-
     QUnit.test('navigation with tab and readonly field', function (assert) {
         // This test makes sure that if we have 2 cells in a row, the first in
         // edit mode, and the second one readonly, then if we press TAB when the
@@ -2737,7 +2713,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('navigation: moving down with keydown', function (assert) {
+    QUnit.test('navigation: not moving down with keydown', function (assert) {
         assert.expect(2);
 
         var list = createView({
@@ -2751,12 +2727,12 @@ QUnit.module('Views', {
         assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
             "1st row should be selected");
         list.$('tr.o_selected_row input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
-        assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
-            "2nd row should be selected");
+        assert.ok(list.$('tr.o_data_row:eq(0)').hasClass('o_selected_row'),
+            "1st row should still be selected");
         list.destroy();
     });
 
-    QUnit.test('navigation: moving right with keydown from text field', function (assert) {
+    QUnit.test('navigation: moving right with keydown from text field does not move the focus', function (assert) {
         assert.expect(6);
 
         this.data.foo.fields.foo.type = 'text';
@@ -2785,7 +2761,7 @@ QUnit.module('Views', {
         assert.ok(textarea.selectionStart === 3 && textarea.selectionEnd === 3,
             "textarea value ('yop') should not be selected and cursor should be at the end");
         $(textarea).trigger({type: 'keydown', which: $.ui.keyCode.RIGHT});
-        assert.strictEqual(document.activeElement, list.$('[name="bar"] input')[0],
+        assert.strictEqual(document.activeElement, list.$('textarea[name="foo"]')[0],
             "next field (checkbox) should now be focused");
         list.destroy();
     });
