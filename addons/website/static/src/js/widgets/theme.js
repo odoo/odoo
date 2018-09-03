@@ -150,10 +150,11 @@ var ThemeCustomizeDialog = Dialog.extend({
 
             _.each($items, function (item) {
                 var $item = $(item);
+                var $col;
 
                 switch (item.tagName) {
                     case 'OPT':
-                        var colorPalette = $item.data('colorPalette');
+                        var colorPalette = $item.data('colorPalette') === 'user';
                         var icon = $item.data('icon');
 
                         // Build the options template
@@ -178,7 +179,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         $multiChoiceLabel.find('.o_theme_customize_color[data-color="secondary"]').addClass('d-none').removeClass('d-flex');
 
                         if ($container.hasClass('form-row')) {
-                            var $col = $('<div/>', {class: (icon ? 'col-4' : (colorPalette ? 'col-12' : 'col-6'))});
+                            $col = $('<div/>', {class: (icon ? 'col-4' : (colorPalette ? 'col-12' : 'col-6'))});
                             $col.append($multiChoiceLabel);
                             $container.append($col);
                         } else {
@@ -189,7 +190,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     case 'MORE':
                         var collapseID = _.uniqueId('collapse-');
 
-                        var $col = $('<div/>', {
+                        $col = $('<div/>', {
                             class: 'col-12',
                         }).appendTo($container);
 
@@ -217,7 +218,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                     case 'LIST':
                         var $listContainer = $('<div/>', {class: 'py-1 px-2 o_theme_customize_option_list'});
-                        var $col = $('<div/>', {
+                        $col = $('<div/>', {
                             class: 'col-6 mt-2',
                             'data-depends': $item.data('depends'),
                         }).append($('<h6/>', {text: $item.attr('string')}), $listContainer);
@@ -254,7 +255,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             });
             self._setActive();
         }).fail(function (d, error) {
-            Dialog.alert(this, error.data.message)
+            Dialog.alert(this, error.data.message);
         });
     },
     /**
@@ -334,7 +335,6 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Look at all options to see if they are enabled or disabled
         var $enable = this.$inputs.filter('[data-xmlid]:checked');
-        var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
 
         // Mark the labels as checked accordingly
         this.$('label').removeClass('checked');
@@ -358,9 +358,10 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $collapsedElements = this.$('[data-depends]');
         _.each($collapsedElements, function (collapsed) {
             var $collapsed = $(collapsed);
-            var enabled = true;
-            if (self._getInputs($collapsed.data('depends')).not(':checked').length) {
-                enabled = false;
+            var enabled = false;
+            var nbDependencies = $collapsed.data('depends') ? $collapsed.data('depends').split(',').length : 0;
+            if (self._getInputs($collapsed.data('depends')).filter(':checked').length === nbDependencies) {
+                enabled = true;
             }
 
             if ($collapsed.is('.collapse')) {
