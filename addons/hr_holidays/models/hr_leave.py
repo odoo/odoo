@@ -88,12 +88,6 @@ class HolidaysRequest(models.Model):
     payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime(
-        'Start Date', readonly=True, index=True, copy=False, required=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    date_to = fields.Datetime(
-        'End Date', readonly=True, copy=False, required=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     # leave type configuration
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Leave Type", required=True, readonly=True,
@@ -110,15 +104,24 @@ class HolidaysRequest(models.Model):
         'hr.department', string='Department', readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    # details
-    number_of_days_temp = fields.Float(
-        'Duration (Days)', copy=False, readonly=True,
+    # duration
+    date_from = fields.Datetime(
+        'Start Date', readonly=True, index=True, copy=False, required=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    date_to = fields.Datetime(
+        'End Date', readonly=True, copy=False, required=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    number_of_days = fields.Float(
+        'Duration (Days)', copy=False, readonly=True, track_visibility='onchange',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
-    number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
-    number_of_hours = fields.Float(
-        'Duration (Hours)', copy=False, readonly=True, compute='_compute_number_of_hours',
-        help='Number of hours of the leave request according to your working schedule.')
+    number_of_days_display = fields.Float(
+        'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
+        help='Number of days of the leave request. Used for interface.')
+    number_of_hours_display = fields.Float(
+        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True, 
+        help='Number of hours of the leave request according to your working schedule. Used for interface.')
+    # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
@@ -158,7 +161,7 @@ class HolidaysRequest(models.Model):
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
          "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ((date_from <= date_to))", "The start date must be anterior to the end date."),
-        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
+        ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
     @api.onchange('request_unit', 'request_date_from_period', 'request_date_to_period',
@@ -187,7 +190,7 @@ class HolidaysRequest(models.Model):
                 self.date_from = date_from
             if date_to:
                 self.date_to = date_to
-            self.number_of_days_temp = 0
+            self.number_of_days = 0
             return
 
         domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id)]
@@ -213,8 +216,8 @@ class HolidaysRequest(models.Model):
             date_to = fields.Datetime.from_string(date_to)
         else:
             tz = self.env.user.tz or 'UTC'
-            date_from = timezone(tz).localize(datetime.combine(first_day, hour_from)).astimezone(UTC)
-            date_to = timezone(tz).localize(datetime.combine(last_day, hour_to)).astimezone(UTC)
+            date_from = timezone(tz).localize(datetime.combine(first_day, hour_from)).astimezone(UTC).replace(tzinfo=None)
+            date_to = timezone(tz).localize(datetime.combine(last_day, hour_to)).astimezone(UTC).replace(tzinfo=None)
 
         self.date_from = date_from
         self.date_to = date_to
@@ -223,7 +226,7 @@ class HolidaysRequest(models.Model):
             date_from = date_from
             date_to = date_to
 
-        self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+        self.number_of_days = self._get_number_of_days(date_from, date_to, self.employee_id.id)
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
@@ -259,9 +262,9 @@ class HolidaysRequest(models.Model):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+            self.number_of_days = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
-            self.number_of_days_temp = 0
+            self.number_of_days = 0
 
     @api.onchange('date_to')
     def _onchange_date_to(self):
@@ -277,9 +280,9 @@ class HolidaysRequest(models.Model):
 
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
+            self.number_of_days = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
-            self.number_of_days_temp = 0
+            self.number_of_days = 0
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -287,16 +290,16 @@ class HolidaysRequest(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.multi
-    @api.depends('number_of_days_temp')
-    def _compute_number_of_days(self):
+    @api.depends('number_of_days')
+    def _compute_number_of_days_display(self):
         for holiday in self:
-            holiday.number_of_days = -holiday.number_of_days_temp
+            holiday.number_of_days_display = holiday.number_of_days
 
     @api.multi
-    @api.depends('number_of_days_temp')
-    def _compute_number_of_hours(self):
+    @api.depends('number_of_days')
+    def _compute_number_of_hours_display(self):
         for holiday in self:
-            holiday.number_of_hours = holiday.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day
+            holiday.number_of_hours_display = holiday.number_of_days * self.employee_id.resource_calendar_id.hours_per_day
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -336,7 +339,7 @@ class HolidaysRequest(models.Model):
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
-    @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
+    @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.allocation_type == 'no':
@@ -365,9 +368,9 @@ class HolidaysRequest(models.Model):
         res = []
         for leave in self:
             if self.env.context.get('short_name'):
-                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days_temp)))
+                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
             else:
-                res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+                res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days)))
         return res
 
     @api.multi
@@ -486,7 +489,7 @@ class HolidaysRequest(models.Model):
             'name': self.display_name,
             'categ_ids': [(6, 0, [
                 self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
-            'duration': self.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day,
+            'duration': self.number_of_days * self.employee_id.resource_calendar_id.hours_per_day,
             'description': self.notes,
             'user_id': self.user_id.id,
             'start': self.date_from,
@@ -511,7 +514,7 @@ class HolidaysRequest(models.Model):
             'date_from': self.date_from,
             'date_to': self.date_to,
             'notes': self.notes,
-            'number_of_days_temp': self.number_of_days_temp,
+            'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id
         }

@@ -133,10 +133,10 @@ class HolidaysType(models.Model):
 
         for request in requests:
             status_dict = result[request.holiday_status_id.id]
-            status_dict['virtual_remaining_leaves'] -= request.number_of_days_temp
+            status_dict['virtual_remaining_leaves'] -= request.number_of_days
             if request.state == 'validate':
-                status_dict['leaves_taken'] += request.number_of_days_temp
-                status_dict['remaining_leaves'] -= request.number_of_days_temp
+                status_dict['leaves_taken'] += request.number_of_days
+                status_dict['remaining_leaves'] -= request.number_of_days
 
         for allocation in allocations:
             status_dict = result[allocation.holiday_status_id.id]
@@ -144,9 +144,9 @@ class HolidaysType(models.Model):
                 # note: add only validated allocation even for the virtual
                 # count; otherwise pending then refused allocation allow
                 # the employee to create more leaves than possible
-                status_dict['virtual_remaining_leaves'] += allocation.number_of_days_temp
-                status_dict['max_leaves'] += allocation.number_of_days_temp
-                status_dict['remaining_leaves'] += allocation.number_of_days_temp
+                status_dict['virtual_remaining_leaves'] += allocation.number_of_days
+                status_dict['max_leaves'] += allocation.number_of_days
+                status_dict['remaining_leaves'] += allocation.number_of_days
 
         return result
 
@@ -173,10 +173,10 @@ class HolidaysType(models.Model):
         grouped_res = self.env['hr.leave.allocation'].read_group(
             [('holiday_status_id', 'in', self.ids), ('holiday_type', '!=', 'employee'), ('state', '=', 'validate'),
              ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
-            ['holiday_status_id', 'number_of_days_temp'],
+            ['holiday_status_id', 'number_of_days'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['number_of_days_temp']) for data in grouped_res)
+        grouped_dict = dict((data['holiday_status_id'][0], data['number_of_days']) for data in grouped_res)
         for allocation in self:
             allocation.group_days_allocation = grouped_dict.get(allocation.id, 0)
 

@@ -22,7 +22,7 @@ class TestHrLeaveType(TestHrHolidaysBase):
             'holiday_status_id': leave_type.id,
             'date_from': (datetime.today() - relativedelta(days=1)),
             'date_to': datetime.today(),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         leave_1.action_approve()
 

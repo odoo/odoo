@@ -81,7 +81,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_1.id,
             'date_from': (datetime.today() - relativedelta(days=1)),
             'date_to': datetime.today(),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         hol1_user_group = hol1_employee_group.sudo(self.user_hruser_id)
         hol1_manager_group = hol1_employee_group.sudo(self.user_hrmanager_id)
@@ -101,7 +101,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_3.id,
             'date_from': (datetime.today() + relativedelta(days=12)),
             'date_to': (datetime.today() + relativedelta(days=13)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         hol12_user_group = hol12_employee_group.sudo(self.user_hruser_id)
         hol12_manager_group = hol12_employee_group.sudo(self.user_hrmanager_id)
@@ -126,7 +126,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'holiday_status_id': self.holidays_status_1.id,
                 'date_from': (datetime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
                 'date_to': datetime.today(),
-                'number_of_days_temp': 1,
+                'number_of_days': 1,
             })
 
         # Employee creates a leave request in a limited category -> crash, not enough days left
@@ -137,7 +137,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'holiday_status_id': self.holidays_status_2.id,
                 'date_from': (datetime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
                 'date_to': (datetime.today() + relativedelta(days=2)),
-                'number_of_days_temp': 1,
+                'number_of_days': 1,
             })
 
         # Clean transaction
@@ -148,7 +148,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Days for limited category',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_2.id,
-            'number_of_days_temp': 2,
+            'number_of_days': 2,
         })
         # HrUser validates the first step
         aloc1_user_group.action_approve()
@@ -166,7 +166,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_2.id,
             'date_from': (datetime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=3)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         hol2_user_group = hol2.sudo(self.user_hruser_id)
         # Check left days: - 1 virtual remaining day
@@ -205,7 +205,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         hol2_manager_group.write({
             'date_from': (datetime.today() + relativedelta(days=4)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=7)),
-            'number_of_days_temp': 4,
+            'number_of_days': 4,
         })
         with self.assertRaises(ValidationError):
             hol2_manager_group.action_confirm()
@@ -220,7 +220,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
             'employee_id': employee_id,
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
         hol3.action_refuse()
@@ -242,7 +242,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'date_from': fields.Datetime.from_string('2017-03-03 06:00:00'),
             'date_to': fields.Datetime.from_string('2017-03-11 19:00:00'),
             'employee_id': employee_id,
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         }).unlink()
 
         with self.assertRaises(ValidationError):
@@ -252,7 +252,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'date_from': fields.Datetime.from_string('2017-07-03 06:00:00'),
                 'date_to': fields.Datetime.from_string('2017-07-11 19:00:00'),
                 'employee_id': employee_id,
-                'number_of_days_temp': 1,
+                'number_of_days': 1,
             })
 
         hol41 = HolidaysEmployeeGroup.create({
@@ -261,7 +261,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_1.id,
             'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=10)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
         # A simple user should be able to reset it's own leave
@@ -274,7 +274,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_1.id,
             'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=10)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
         # A manager should be able to reset someone else's leave
@@ -288,7 +288,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_1.id,
             'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=16)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
         hol51.action_approve()
@@ -300,7 +300,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'holiday_status_id': self.holidays_status_1.id,
             'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
             'date_to': (datetime.today() + relativedelta(days=16)),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
         hol52.action_approve()
