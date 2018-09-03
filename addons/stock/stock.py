@@ -2342,7 +2342,11 @@ class stock_move(osv.osv):
                 if move.id in main_domain:
                     domain = main_domain[move.id] + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
                     qty = record.qty
-                    if qty:
+                    quant = record.reserved_quant_id
+                    if quant.reservation_id == move:
+                        qty -= quant.qty
+
+                    if float_compare(qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                         quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, qty, domain=domain, prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                         quant_obj.quants_reserve(cr, uid, quants, move, record, context=context)
 
