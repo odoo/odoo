@@ -7,10 +7,15 @@ class ImportInvoiceImportWizard(models.TransientModel):
     _name = 'account.invoice.import.wizard'
     _description = 'Import Your Vendor Bills from Files.'
 
+    def _get_default_journal_id(self):
+        return self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
+
     attachment_ids = fields.Many2many('ir.attachment', string='Files')
+    journal_id = fields.Many2one(string="Journal", comodel_name="account.journal", required=True, domain="[('type', '=', 'purchase')]", default=_get_default_journal_id, help="Journal where to generate the bills")
 
     @api.multi
     def _create_invoice_from_file(self, attachment):
+        self = self.with_context(default_journal_id= self.journal_id.id)
         invoice_form = Form(self.env['account.invoice'], view='account.invoice_supplier_form')
         invoice = invoice_form.save()
         attachment.write({'res_model': 'account.invoice', 'res_id': invoice.id})
