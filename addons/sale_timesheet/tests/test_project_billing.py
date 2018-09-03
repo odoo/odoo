@@ -259,6 +259,38 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         self.assertEqual(task.billable_type, 'task_rate', "Subtask should keep the billable type from its parent, even when they are moved into another project")
         self.assertEqual(task.sale_line_id, self.project_task_rate.sale_line_id, "Subtask should keep the same sale order line than their mother, even when they are moved into another project")
 
+        # create a second task in employee rate project
+        task2 = Task.with_context(default_project_id=self.project_employee_rate.id).create({
+            'name': 'first task',
+            'partner_id': self.partner_customer_usd.id,
+            'sale_line_id': False
+        })
+
+        # log timesheet on task in 'employee rate' project without any fallback (no map, no SOL on task, no SOL on project)
+        timesheet3 = Timesheet.create({
+            'name': 'Test Line',
+            'project_id': task2.project_id.id,
+            'task_id': task2.id,
+            'unit_amount': 3,
+            'employee_id': self.employee_tde.id,
+        })
+
+        self.assertFalse(timesheet3.so_line, "The timesheet should not be linked to SOL as there is no fallback at all (no map, no SOL on task, no SOL on project)")
+
+        # add a SOL on the project as fallback
+        self.project_employee_rate.write({'sale_line_id': self.so1_line_deliver_no_task.id})
+
+        # log timesheet on task in 'employee rate' project wit the project fallback only (no map, no SOL on task, but SOL on project)
+        timesheet4 = Timesheet.create({
+            'name': 'Test Line ',
+            'project_id': task2.project_id.id,
+            'task_id': task2.id,
+            'unit_amount': 4,
+            'employee_id': self.employee_tde.id,
+        })
+
+        self.assertEquals(timesheet4.so_line, self.so1_line_deliver_no_task, "The timesheet should be linked to SOL on the project, as no entry for TDE in project map and no SOL on task")
+
     def test_billing_task_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'task rate'. Then move the task into a 'employee rate' project then, 'non billable'. """
         Task = self.env['project.task'].with_context(tracking_disable=True)
