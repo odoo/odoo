@@ -847,12 +847,6 @@ ListRenderer.include({
     /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
-     * - up/down: move to the cell above/below if any, or the first activable
-     *          one on the row above/below if any on the right of this cell
-     *          above/below (if none on the right, wrap to the beginning of the
-     *          line).
-     * - left/right: move to the first activable cell on the left/right if any
-     *          (wrap to the end/beginning of the line if necessary).
      * - previous: move to the first activable cell on the left if any, if not
      *          move to the rightmost activable cell on the row above.
      * - next: move to the first activable cell on the right if any, if not move
@@ -868,26 +862,6 @@ ListRenderer.include({
     _onNavigationMove: function (ev) {
         ev.stopPropagation(); // stop the event, the action is done by this renderer
         switch (ev.data.direction) {
-            case 'up':
-                if (this.currentRow > 0) {
-                    this._selectCell(this.currentRow - 1, this.currentFieldIndex);
-                }
-                break;
-            case 'right':
-                if (this.currentFieldIndex + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex + 1);
-                }
-                break;
-            case 'down':
-                if (this.currentRow < this.state.data.length - 1) {
-                    this._selectCell(this.currentRow + 1, this.currentFieldIndex);
-                }
-                break;
-            case 'left':
-                if (this.currentFieldIndex > 0) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex - 1);
-                }
-                break;
             case 'previous':
                 if (this.currentFieldIndex > 0) {
                     this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
