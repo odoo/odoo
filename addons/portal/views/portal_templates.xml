@@ -23,7 +23,7 @@
             <t t-set="head" t-value="head_website + (head or '')"/>
 
             <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''}">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{wrapwrap_classes or ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
@@ -157,6 +157,20 @@
         </div>
     </template>
 
+    <template id="portal_record_sidebar" name="My Portal Record Sidebar">
+        <div t-attf-class="col-12 col-lg flex-lg-grow-0 #{classes}">
+            <div class="card bg-white mb-4" id="sidebar_content">
+                <div t-if="title" class="card-body text-center pb-2 pt-3">
+                    <t t-raw="title"/>
+                </div>
+                <t t-if="entries" t-raw="entries"/>
+                <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
+                    Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/src/img/logo.png" alt="Odoo Logo" height="15"/></a>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <!--
         The search bar is composed of 2 buttons : a "filter by" and a "sort by". Changing the 'sortby'
         criteria will keep the number of page, query params, ... Changing the 'filterby' param will
@@ -267,6 +281,17 @@
                 </form>
             </div>
         </nav>
+    </template>
+
+    <template id="portal_record_layout" name="Portal single record layout">
+        <div t-attf-class="card mt-0 border-top-0 rounded-0 rounded-bottom #{classes if classes else ''}">
+            <div t-if="card_header" t-attf-class="card-header #{header_classes if header_classes else ''}">
+                <t t-raw="card_header"/>
+            </div>
+            <div t-if="card_body" t-attf-class="card-body #{body_classes if body_classes else ''}">
+                <t t-raw="card_body"/>
+            </div>
+        </div>
     </template>
 
     <template id="portal_contact" name="Contact">
