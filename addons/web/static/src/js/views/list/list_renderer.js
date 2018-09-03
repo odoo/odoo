@@ -184,7 +184,6 @@ var ListRenderer = BasicRenderer.extend({
                 reject = columnInvisibleFields[c.attrs.name];
             }
             if (!reject && c.attrs.widget === 'handle') {
-                self.hasHandle = true;
                 self.handleField = c.attrs.name;
             }
             return reject;
@@ -649,6 +648,8 @@ var ListRenderer = BasicRenderer.extend({
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', is_grouped);
         $table.toggleClass('o_list_view_ungrouped', !is_grouped);
+        this.hasHandle = this.state.orderedBy.length === 0 ||
+            this.state.orderedBy[0].name === this.handleField;
         if (is_grouped) {
             $table
                 .append(this._renderHeader(true))
