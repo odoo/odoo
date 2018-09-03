@@ -374,7 +374,9 @@ class Message(models.Model):
                                 if partner.id in partner_tree]
 
             customer_email_data = []
-            for notification in message.notification_ids.filtered(lambda notif: notif.email_status in ('bounce', 'exception', 'canceled') or (notif.res_partner_id.partner_share and notif.res_partner_id.active)):
+            filter_notification = lambda notif: (notif.email_status in ('bounce', 'exception', 'canceled') and (notif.res_partner_id.partner_share and notif.res_partner_id.active)) or\
+                                                    (notif.res_partner_id.partner_share and notif.res_partner_id.active)
+            for notification in message.notification_ids.filtered(filter_notification):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
             attachment_ids = []
