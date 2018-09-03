@@ -272,7 +272,7 @@
         <a role="menuitem" href="#" data-action="fvg" class="dropdown-item">Fields View Get</a>
         <t t-if="can_edit">
             <a role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id" class="dropdown-item">
-                Edit View: <t t-esc="view.display_name"/>
+                Edit View: <t t-esc="controller.viewName"/>
             </a>
             <a t-if="searchview and searchview.$el.is(':visible')" role="menuitem" href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id" class="dropdown-item">Edit SearchView</a>
         </t>
