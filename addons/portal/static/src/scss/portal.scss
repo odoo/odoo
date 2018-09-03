@@ -17,6 +17,10 @@ $o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
 $o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
 $o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
 
+// Page custom bg (eg. 'Invoice')
+$o-portal-bg: true; // Enable/Disable page custom bg.
+$o-portal-bg-color: desaturate($gray-200, 100%);
+$o-portal-bg-text-color: $body-color;
 
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
@@ -186,6 +190,7 @@ hr {
     border-bottom-width: $border-width;
     border-bottom-style: solid;
     border-bottom-color: $border-color;
+    line-height: 2.1rem;
 }
 .o_page_header {
     @extend %o-page-header;
@@ -318,6 +323,18 @@ img.o_we_custom_image {
 }
 
 // Portal specific
+
+// ===  Page custom bg (eg. 'Invoice') ===
+// This could have been achieved easily using a class (eg. bg-200), but we
+// don't want to force the design because of themes.
+@if ($o-portal-bg) {
+    #wrapwrap.o_portal_bg_dark {
+        background-color: $o-portal-bg-color;
+        color: $o-portal-bg-text-color;
+    }
+}
+
+
 .o_portal {
     .breadcrumb {
         @extend %o-portal-breadcrumbs;
@@ -466,19 +483,31 @@ img.o_we_custom_image {
     font-weight: normal;
 }
 
+.o_portal_contact_img {
+    width: 2.3em;
+    height: 2.3em;
+}
+
 .o_portal_sidebar {
-    .bs-sidebar {
-        width: 100%;
-        border-radius: 5px;
-        background-color: $light;
+    .o_portal_contact_block {
+        @include media-breakpoint-down(md) {
+            border-left: $border-width solid $border-color;
+            border-bottom: 0;
+        }
     }
-    .o_portal_contact_img {
-        width: 3.7em;
-        height: 3.7em;
-    }
+
     .o_portal_html_view {
-        border: 1px solid gray('300');
-        border-radius: 5px;
-        padding-right: 1px;
+        overflow: hidden;
+        width: 100%;
+        max-width: 210mm; // A4 page's width
+        background: white;
+
+        .o_portal_html_loader {
+            @include o-position-absolute(45%, 0, auto, 0);
+        }
+
+        iframe {
+            position: relative;
+        }
     }
 }
