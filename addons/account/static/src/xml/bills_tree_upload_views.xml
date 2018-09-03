@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="BillsListView.upload_button">
+        <button type="button" class="btn btn-secondary o_button_upload_bill">
+            Upload
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="BillsListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-call="ImportView.import_button"/>
+            <t t-call="BillsListView.upload_button"/>
+        </t>
+    </t>
+</templates>
