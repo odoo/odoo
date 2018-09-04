@@ -321,7 +321,7 @@ class Registry(Mapping):
         Verify that all tables are present and try to initialize those that are missing.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
-        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        table2model = {model._table: name for name, model in env.items() if model._auto}
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 
         if missing_tables:
