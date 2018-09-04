@@ -280,19 +280,6 @@
                                     <div class="text-muted">
                                         Add a payment QR code to your invoices
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('qr_code', '=', False)]}">
-                                        <div class="row">
-                                            <label for="qr_code_payment_journal_id" class="col-md-3 o_light_label"/>
-                                            <field name="qr_code_payment_journal_id" class="oe_inline"/>
-                                        </div>
-                                    </div>
-                                    <div class="badge-danger" attrs="{'invisible': ['|',('qr_code_payment_journal_id', '!=', False), ('qr_code', '=', False)]}">
-                                        A bank journal must be set to use the SEPA QR code
-                                    </div>
-                                    <field name="qr_code_valid" invisible='1'/>
-                                    <div class="badge-danger" attrs="{'invisible': ['|','|',('qr_code_payment_journal_id', '=', False), ('qr_code', '=', False), ('qr_code_valid','!=',False)]}">
-                                        Please check that following information are set on the journal: bank account, BIC, EUR as currency.
-                                    </div>
                                 </div>
                             </div>
                         </div>
