@@ -48,6 +48,7 @@ QUnit.module('DebugManager', {}, function () {
         // Simulate update debug manager from web client
         var action = {
             views: [{
+                displayName: "List",
                 fieldsView: {
                     view_id: 1,
                 },
@@ -55,7 +56,6 @@ QUnit.module('DebugManager', {}, function () {
             }],
         };
         var view = {
-            viewName: "List",
             viewType: "list",
         };
         debugManager.update('action', action, view);

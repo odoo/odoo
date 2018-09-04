@@ -429,6 +429,7 @@ ActionManager.include({
             if (View) {
                 views.push({
                     accessKey: View.prototype.accessKey || View.prototype.accesskey,
+                    displayName: View.prototype.display_name,
                     fieldsView: fieldsView,
                     icon: View.prototype.icon,
                     isMobileFriendly: View.prototype.mobile_friendly,

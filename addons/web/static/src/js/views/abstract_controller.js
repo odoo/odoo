@@ -43,8 +43,6 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * @param {any} params.initialState the initialState
      * @param {boolean} params.isMultiRecord
      * @param {Object[]} params.actionViews
-     * @param {string|Object} params.viewName name of the view (e.g "List").
-     *   This is an object with `core._lt`.
      * @param {string} params.viewType
      * @param {boolean} params.withControlPanel set to false to hide the
      *   ControlPanel
@@ -71,7 +69,6 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.groupable = params.groupable;
         this.enableTimeRangeMenu = params.enableTimeRangeMenu;
         this.actionViews = params.actionViews;
-        this.viewName = params.viewName;
         this.viewType = params.viewType;
         this.withControlPanel = params.withControlPanel !== false;
         // override this.need_control_panel so that the ActionManager doesn't
