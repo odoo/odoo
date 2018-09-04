@@ -5,6 +5,7 @@ var core = require('web.core');
 var framework = require('web.framework');
 var PlannerCommon = require('web.planner.common');
 var PlannerDialog = PlannerCommon.PlannerDialog;
+var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -179,6 +180,7 @@ var DashboardPlanner = Widget.extend({
         return this._rpc({
                 model: 'web.planner',
                 method: 'search_read',
+                context: session.user_context,
             })
             .then(function(res) {
                 self.planners = res;
