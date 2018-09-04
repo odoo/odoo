@@ -185,9 +185,9 @@ class Channel(models.Model):
 
     @api.onchange('moderator_ids')
     def _onchange_moderator_ids(self):
-        missing_partners = self.mapped('moderator_ids.partner_id') - self.channel_partner_ids
-        if missing_partners:
-            self.channel_partner_ids |= missing_partners
+        missing_partners = self.mapped('moderator_ids.partner_id') - self.mapped('channel_last_seen_partner_ids.partner_id')
+        for partner in missing_partners:
+            self.channel_last_seen_partner_ids += self.env['mail.channel.partner'].new({'partner_id': partner.id})
 
     @api.onchange('email_send')
     def _onchange_email_send(self):
