@@ -55,20 +55,31 @@ def create_model_table(cr, tablename, comment=None):
 
 def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
-        a dict with the data from the table ``information_schema.columns``.
+        a dict with the needed data from ``pg_catalog``.
+        It is used this catalog because `information_schema.columns` does not
+        search for materialized views.
     """
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
-               FROM information_schema.columns WHERE table_name=%s'''
+    query = '''SELECT a.attname::varchar as column_name, RIGHT(t.typname, -1)::varchar as udt_name,
+                  CASE WHEN a.attlen=-1 THEN (
+                    CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END
+                  ) ELSE a.attlen END::integer as character_maximum_length,
+                  CASE WHEN a.attnotnull = FALSE THEN 'YES' ELSE 'NO' END::varchar(3) as is_nullable
+                FROM pg_attribute a
+                  JOIN pg_class c on a.attrelid = c.oid
+                  LEFT JOIN pg_type t on a.atttypid = t.typelem
+                WHERE a.attnum > 0
+                  AND NOT a.attisdropped
+                  AND c.relname=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
-    query = """ SELECT 1 FROM information_schema.columns
-                WHERE table_name=%s AND column_name=%s """
+    query = """ SELECT 1 FROM pg_class c, pg_attribute a
+                WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid """
     cr.execute(query, (tablename, columnname))
     return cr.rowcount
 
