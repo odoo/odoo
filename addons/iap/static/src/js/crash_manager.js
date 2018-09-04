@@ -24,6 +24,7 @@ CrashManager.include({
                     base_url: error_data.base_url,
                     service_name: error_data.service_name,
                     credit: error_data.credit,
+                    trial: error_data.trial
                 }
             }).then(function (url) {
                 var content = $(QWeb.render('iap.redirect_to_odoo_credit', {
@@ -37,7 +38,7 @@ CrashManager.include({
                     title: error_data.title || _t("Insufficient Balance"),
                     $content: content,
                     buttons: [
-                        {text: _t('Buy credits at Odoo'), classes : "btn-primary", click: function() {
+                        {text: error_data.trial ? _t('Start a Trial at Odoo'):_t('Buy credits at Odoo'), classes : "btn-primary", click: function() {
                             window.open(url, '_blank');
                         }, close:true},
                         {text: _t("Cancel"), close: true}
