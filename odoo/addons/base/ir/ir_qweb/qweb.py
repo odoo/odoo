@@ -5,6 +5,7 @@ from lxml import etree, html
 import re
 import traceback
 from itertools import count
+from psycopg2.extensions import TransactionRollbackError
 from textwrap import dedent
 import werkzeug
 from werkzeug.utils import escape as _escape
@@ -313,7 +314,7 @@ class QWeb(object):
             values = dict(self.default_values(), **values)
             try:
                 return compiled(self, append, values, options, log)
-            except QWebException, e:
+            except (QWebException, TransactionRollbackError) as e:
                 raise e
             except Exception, e:
                 path = log['last_path_node']
