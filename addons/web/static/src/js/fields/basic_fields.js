@@ -346,6 +346,64 @@ var InputField = DebouncedField.extend({
     },
 });
 
+var NumericField = InputField.extend({
+    tagName: 'span',
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * For numeric fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Format numerical value (integer or float)
+     *
+     * Note: We have to overwrite this method to skip the format if we are into
+     * edit mode on a input type number.
+     *
+     * @override
+     * @private
+     */
+    _formatValue: function (value) {
+        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+            return value;
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
+     * Formats an input element for edit mode. This is in a separate function so
+     * extending widgets can use it on their input without having input as tagName.
+     *
+     * Note: We have to overwrite this method to set the input's type to number if
+     * option setted into the field.
+     * 
+     * @override
+     * @private
+     */
+    _prepareInput: function ($input) {
+        var result = this._super.apply(this, arguments);
+        if (this.nodeOptions.type === 'number') {
+            this.$input.attr({type: 'number'});
+        }
+        if (this.nodeOptions.step) {
+            this.$input.attr({step: this.nodeOptions.step});
+        }
+        return result;
+    }
+});
+
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_char',
     tagName: 'span',
@@ -811,23 +869,9 @@ var FieldBoolean = AbstractField.extend({
     },
 });
 
-var FieldInteger = InputField.extend({
+var FieldInteger = NumericField.extend({
     className: 'o_field_integer o_field_number',
-    tagName: 'span',
     supportedFieldTypes: ['integer'],
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * For integer fields, 0 is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return this.value === 0 || this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -858,9 +902,8 @@ var FieldInteger = InputField.extend({
     },
 });
 
-var FieldFloat = InputField.extend({
+var FieldFloat = NumericField.extend({
     className: 'o_field_float o_field_number',
-    tagName: 'span',
     supportedFieldTypes: ['float'],
 
     /**
@@ -874,19 +917,6 @@ var FieldFloat = InputField.extend({
         if (this.attrs.digits) {
             this.nodeOptions.digits = JSON.parse(this.attrs.digits);
         }
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * For float fields, 0 is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return this.value === 0 || this._super.apply(this, arguments);
     },
 });
 
@@ -2884,6 +2914,7 @@ return {
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,
+    NumericField: NumericField,
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
