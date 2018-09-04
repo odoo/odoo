@@ -32,6 +32,7 @@
                             <field name="name"/>
                             <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="ignore_database" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="state" readonly="1" groups="base.group_no_one"/>
@@ -205,6 +206,7 @@
                     <field name="name"/>
                     <field name="state"/>
                     <field name="transient"/>
+                    <field name="ignore_database"/>
                 </tree>
             </field>
         </record>
