@@ -126,7 +126,7 @@ class MailMail(models.Model):
         return res
 
     @api.multi
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type='NONE'):
+    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -144,7 +144,7 @@ class MailMail(models.Model):
             if notifications:
                 #find all notification linked to a failure
                 failed = self.env['mail.notification']
-                if failure_type != 'NONE':
+                if failure_type:
                     failed = notifications.filtered(lambda notif: notif.res_partner_id not in success_pids)
                     failed.write({
                         'email_status': 'exception',
@@ -156,7 +156,7 @@ class MailMail(models.Model):
                 (notifications - failed).write({
                     'email_status': 'sent',
                 })
-        if failure_type in ('NONE', 'RECIPIENT'):  # if we have another error, we want to keep the mail.
+        if not failure_type or failure_type == 'RECIPIENT':  # if we have another error, we want to keep the mail.
             mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
             self.browse(mail_to_delete_ids).sudo().unlink()
         return True
@@ -257,7 +257,7 @@ class MailMail(models.Model):
         IrMailServer = self.env['ir.mail_server']
         for mail_id in self.ids:
             success_pids = []
-            failure_type = 'NONE'
+            failure_type = None
             processing_pid = None
             mail = None
             try:
