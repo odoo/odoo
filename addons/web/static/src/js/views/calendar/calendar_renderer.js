@@ -346,7 +346,8 @@ return AbstractRenderer.extend({
                 if (!event.allDay) {
                     var start = event.r_start || event.start;
                     var end = event.r_end || event.end;
-                    display_hour = start.format('HH:mm') + ' - ' + end.format('HH:mm');
+                    var timeFormat = _t.database.parameters.time_format.search("%H") != -1 ? 'HH:mm': 'h:mma';
+                    display_hour = start.format(timeFormat) + ' - ' + end.format(timeFormat);
                     if (display_hour === '00:00 - 00:00') {
                         display_hour = _t('All day');
                     }
