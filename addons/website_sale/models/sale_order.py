@@ -235,12 +235,6 @@ class SaleOrder(models.Model):
             },
         }
 
-    def _set_demo_create_date(self, create_date):
-        self.env.cr.execute("""UPDATE sale_order SET create_date=%s WHERE id IN %s """, (create_date, tuple(self.ids)))
-        self.modified(['create_date'])
-        if self.env.recompute and self.env.context.get('recompute', True):
-            self.recompute()
-
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

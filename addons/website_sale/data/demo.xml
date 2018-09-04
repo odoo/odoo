@@ -296,6 +296,7 @@
         <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
 
         <record id="website_sale_order_1" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -317,6 +318,7 @@
         </record>
 
         <record id="website_sale_order_2" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -338,6 +340,7 @@
         </record>
 
         <record id="website_sale_order_3" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -359,6 +362,7 @@
         </record>
 
         <record id="website_sale_order_4" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -380,6 +384,7 @@
         </record>
 
         <record id="website_sale_order_5" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -401,6 +406,7 @@
         </record>
 
         <record id="website_sale_order_6" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -422,6 +428,7 @@
         </record>
 
         <record id="website_sale_order_7" model="sale.order">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
@@ -574,11 +581,5 @@
 
         <!-- action_confirm for confirmation date -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
-
-        <function model="sale.order" name="_set_demo_create_date">
-            <value eval="[ref('website_sale_order_1'), ref('website_sale_order_2'), ref('website_sale_order_3'), ref('website_sale_order_4'),
-                ref('website_sale_order_5'), ref('website_sale_order_6'), ref('website_sale_order_7')]"/>
-            <value eval="(datetime.now()-timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </function>
 
 </odoo>
