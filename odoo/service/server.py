@@ -82,8 +82,6 @@ class PerfWSGIRequestHandler(werkzeug.serving.WSGIRequestHandler):
         super(PerfWSGIRequestHandler, self).log(type, message, *args)
 
 
-werkzeug.serving.WSGIRequestHandler = PerfWSGIRequestHandler
-
 
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
@@ -107,7 +105,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
     use this class, sets the socket and calls the process_request() manually
     """
     def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app)
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app, handler=PerfWSGIRequestHandler)
         # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
         if self.socket:
             self.socket.close()
@@ -117,7 +115,7 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
         pass
 
 
-class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+class RequestHandler(PerfWSGIRequestHandler):
 
     def setup(self):
         # flag the current thread as handling a http request
