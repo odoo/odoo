@@ -33,6 +33,17 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(msg.reply_to, 'test.reply@example.com')
         self.assertEqual(msg.email_from, 'test.from@example.com')
 
+    def test_mail_message_values_unicode(self):
+        self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
+
+        msg = self.Message.create({
+            'reply_to': 'test.😊@example.com',
+            'email_from': 'test.❤️from@example.com',
+        })
+        self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, 'test.😊@example.com')
+        self.assertEqual(msg.email_from, 'test.❤️from@example.com')
+
     def test_mail_message_values_default(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
