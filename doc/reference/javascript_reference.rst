@@ -1397,6 +1397,23 @@ order.
 
     - Supported field types: *integer*
 
+    Options:
+
+    - type: setting the input type (*text* by default, can be set on *number*)
+    On edit mode, the field is rendered as an input with the HTML attribute type 
+    setted on *number* (so user can benefit the native support, especially on 
+    mobile). In this case, the default formatting is disabled to avoid incompability.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number"}'/>
+
+    - step: set the step to the value up and down when the user click on buttons 
+    (only for input of type number, 1 by default)
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number", "step": 100}'/>
 
 - float (FieldFloat)
     This is the default field type for fields of type *float*.
@@ -1410,6 +1427,24 @@ order.
     .. code-block:: xml
 
         <field name="factor" digits="[42,5]"/>
+
+    Options:
+
+    - type: setting the input type (*text* by default, can be set on *number*)
+    On edit mode, the field is rendered as an input with the HTML attribute type 
+    setted on *number* (so user can benefit the native support, especially on 
+    mobile). In this case, the default formatting is disabled to avoid incompability.
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number"}'/>
+
+    - step: set the step to the value up and down when the user click on buttons 
+    (only for input of type number, 1 by default)
+
+    .. code-block:: xml
+
+        <field name="int_value" options='{"type": "number", "step": 0.1}'/>
 
 - float_time (FieldFloatTime)
     The goal of this widget is to display properly a float value that represents
