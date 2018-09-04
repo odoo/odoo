@@ -29,8 +29,13 @@ class PaymentWizard(models.TransientModel):
 
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
-        self.manual_post_msg = _('Please make a payment to <ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
-                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.user.company_id.name)
+        self.manual_post_msg = self.env.ref('payment.payment_acquirer_transfer_post_msg_template').render({
+            'accounts': [{
+                'bank': self.journal_name or _("Bank"),
+                'account_number': self.acc_number or _("Account"),
+                'company_name': self.env.user.company_id.name,
+            }]
+        })
 
     _payment_acquirer_onboarding_cache = {}
     _data_fetched = False

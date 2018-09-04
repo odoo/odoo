@@ -163,4 +163,18 @@
             </div>
         </form>
     </template>
+    <template id="payment_acquirer_transfer_post_msg_template">
+        <div>
+            <h4>Please make a payment to:</h4>
+            <t t-foreach="accounts" t-as="account">
+                <ul>
+                    <li>Bank: <t t-esc="account.get('bank')"></t></li>
+                    <li>Account Number: <t t-esc="account.get('account_number')"></t></li>
+                    <li>Account Holder: <t t-esc="account.get('company_name')"></t></li>
+                </ul>
+            </t>
+            <h4>Communication</h4>
+            <p>Please use the order name as communication reference.</p>
+        </div>
+    </template>
 </odoo>

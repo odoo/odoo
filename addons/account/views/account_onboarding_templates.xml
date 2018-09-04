@@ -166,14 +166,20 @@
             <form>
                 <div class="mb16">Choose a default sales tax for your products.</div>
                 <label for="account_sale_tax_id" string="Sales Tax"/>
-                <field name="account_sale_tax_id" />
+                <field name="account_sale_tax_id" domain="[('type_tax_use','=','sale')]" options="{'no_open': 1}"
+                       context="{'default_type_tax_use': 'sale', 'form_view_ref': 'account.template_view_tax_form_type_tax_hidden'}"/>
                 <footer>
-                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" />
+                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax"/>
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
+    <template id="template_view_tax_form_type_tax_hidden" inherit_id="view_tax_form" primary="True">
+         <field name="type_tax_use" position="attributes">
+             <attribute name="invisible">1</attribute>
+         </field>
+    </template>
     <record id="action_open_account_onboarding_sale_tax" model="ir.actions.act_window">
         <field name="name">Sales tax</field>
         <field name="type">ir.actions.act_window</field>

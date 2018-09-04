@@ -32,23 +32,19 @@ class TransferPaymentAcquirer(models.Model):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self):
-        company_id = self.env.user.company_id.id
+        company = self.env.user.company_id
         # filter only bank accounts marked as visible
-        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company_id)])
-        accounts = journals.mapped('bank_account_id').name_get()
-        bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
-        bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
-        post_msg = _('''<div>
-<h3>Please use the following transfer details</h3>
-<h4>%(bank_title)s</h4>
-%(bank_accounts)s
-<h4>Communication</h4>
-<p>Please use the order name as communication reference.</p>
-</div>''') % {
-            'bank_title': bank_title,
-            'bank_accounts': bank_accounts,
-        }
-        return post_msg
+        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company.id)])
+        accounts = []
+        for journal in journals:
+            accounts.append({
+                'bank': journal.name or _("Bank"),
+                'account_number': journal.bank_acc_number or _("Account"),
+                'company_name': company.name,
+            })
+        return self.env.ref('payment.payment_acquirer_transfer_post_msg_template').render({
+            'accounts': accounts
+        })
 
     @api.model
     def create(self, values):
