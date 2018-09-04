@@ -92,7 +92,8 @@ class PaymentTransaction(models.Model):
         sales_orders.action_confirm()
         automatic_invoice = self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
         if automatic_invoice:
-            for trans in self.filtered(lambda t: t.sale_order_ids):
+            transactions = self.filtered(lambda t: t.sale_order_ids)
+            for trans in transactions:
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids.action_invoice_create()
                 trans.invoice_ids = [(6, 0, invoices)]
@@ -100,8 +101,9 @@ class PaymentTransaction(models.Model):
         if automatic_invoice:
             default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
             if default_template:
-                for invoice in trans.invoice_ids:
-                    invoice.with_context(mark_invoice_as_sent=True).message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+                for trans in transactions:
+                    for invoice in trans.invoice_ids:
+                        invoice.with_context(mark_invoice_as_sent=True).message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
         return res
 
     @api.model
