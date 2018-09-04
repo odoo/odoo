@@ -119,7 +119,7 @@ class AccountInvoiceReport(models.Model):
                     ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
                     count(*) * invoice_type.sign AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
-                    partner.country_id
+                    coalesce(partner.country_id, partner_ai.country_id) AS country_id
         """
         return select_str
 
@@ -128,6 +128,7 @@ class AccountInvoiceReport(models.Model):
                 FROM account_invoice_line ail
                 JOIN account_invoice ai ON ai.id = ail.invoice_id
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
+                JOIN res_partner partner_ai ON ai.partner_id = partner_ai.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uom_id
@@ -154,7 +155,7 @@ class AccountInvoiceReport(models.Model):
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, invoice_type.sign, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
-                    ai.amount_total_company_signed, ai.commercial_partner_id, partner.country_id
+                    ai.amount_total_company_signed, ai.commercial_partner_id, coalesce(partner.country_id, partner_ai.country_id)
         """
         return group_by_str
 
