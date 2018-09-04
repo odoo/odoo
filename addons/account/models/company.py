@@ -67,8 +67,6 @@ Best Regards,'''))
                                               default='invoice_number', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
 
     qr_code = fields.Boolean(string='Display SEPA QR code')
-    qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')
-    qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
