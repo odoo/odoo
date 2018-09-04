@@ -73,6 +73,7 @@
                         </div>
                         <div class="text-muted">
                             <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
+                            <!-- TODO SEB it should not use meta keywords here but categories or something like that -->
                             <span t-field="post.website_meta_keywords"/>
                             <span t-if="editable and not post.website_meta_keywords" class="badge badge-danger">
                                 No keywords defined!

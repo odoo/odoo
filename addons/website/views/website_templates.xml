@@ -72,12 +72,12 @@
     <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
 
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
-    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
     <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
@@ -132,13 +132,13 @@
             'data-oe-company-name': res_company.name
         }"/>
         <t t-if="not title">
-            <t t-if="not additional_title and main_object and 'name' in main_object">
-                <t t-set="additional_title" t-value="main_object.name"/>
-            </t>
             <t t-if="main_object and 'website_meta_title' in main_object and main_object.website_meta_title">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
             <t t-else="">
+                <t t-if="not additional_title and main_object and 'name' in main_object">
+                    <t t-set="additional_title" t-value="main_object.name"/>
+                </t>
                 <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/></t>
             </t>
         </t>
@@ -1205,7 +1205,8 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                       <th class="text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
                       <th class="text-center"><i title="Is the page published?" class="fa fa-eye"></i></th>
                       <th class="text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
-                      <th style='width:140px;'></th>
+                      <th class="text-center"><i title="Is the page SEO optimized?" class="fa fa-search"></i></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <t t-set='prev_page' t-value='False' />
@@ -1229,31 +1230,44 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
 <template id="one_page_line">
-      <t t-set='specific_page' t-value="page.website_id" />
-      <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
-      <tr t-att-style='not final_page and "color:#999"'>
-          <td>
+    <t t-set='specific_page' t-value="page.website_id"/>
+    <t t-set='final_page' t-value="(next_page and page.url != next_page.url) or not next_page or specific_page"/>
+    <tr t-att-style='not final_page and "color:#999"'>
+        <td>
             <t groups="website.group_multi_website">
-              <t t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id'><i class="fa fa-level-up fa-rotate-90 ml32 mr4"></i></t>
-              <i t-else="1" class="fa fa-globe mr4" t-att-style='specific_page and "visibility:hidden;"'/>
+                <i t-if='specific_page and prev_page and prev_page.url == page.url and not prev_page.website_id' class="fa fa-level-up fa-rotate-90 ml32 mr4"/>
+                <i t-else="1" class="fa fa-globe mr4" t-att-style="'visibility:hidden;' if specific_page else ''"/>
             </t>
-            <i t-if="page.is_homepage" class="fa fa-home" title="Home"></i> <span t-esc="page.name"/>
-          </td>
-          <td><a t-if='final_page' t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
-          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-          <td class="text-center">
-              <i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted"
-                 t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i>
-          </td>
-          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
-          <td class="text-right" style="white-space:nowrap;">
-              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
-              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
-          </td>
-      </tr>
+            <i t-if="page.is_homepage" class="fa fa-home" title="Home"/> <span t-esc="page.name"/>
+        </td>
+        <td>
+            <a t-if='final_page' t-att-href="page.url"><t t-esc="page.url"/></a>
+        </td>
+        <td class="text-center">
+            <i t-if="page.menu_ids" class="fa fa-check" title="In main menu"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not in main menu"/>
+        </td>
+        <td class="text-center">
+            <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+            <i t-if="page.is_visible" class="fa fa-check" title="Visible"/>
+            <i t-elif="page.website_published" class="fa fa-eye-slash" t-attf-title="This page will be visible on {{ date_formatted }}"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not visible"/>
+        </td>
+        <td class="text-center">
+            <i t-if="page.website_indexed" class="fa fa-check" title="Indexed"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not indexed"/>
+        </td>
+        <td class="text-center">
+            <i t-if="page.is_seo_optimized" class="fa fa-check" title="SEO optimized"/>
+            <i t-else="" class="fa fa-times text-muted" title="Not SEO optimized"/>
+        </td>
+        <td class="text-right" style="white-space:nowrap;">
+            <a class="mr4 fa fa-cog js_page_properties" href="#" t-att-data-id="page.id" title="Manage this page"></a>
+            <a groups="base.group_no_one" class="mr4 fa fa-bug" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
+            <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+            <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+        </td>
+    </tr>
 </template>
 
 </odoo>

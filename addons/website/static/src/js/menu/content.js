@@ -4,6 +4,8 @@ odoo.define('website.contentMenu', function (require) {
 var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var HtmlPage = require('website.seo').HtmlPage;
+var MetaTitleDescription = require('website.seo').MetaTitleDescription;
 var time = require('web.time');
 var weContext = require('web_editor.context');
 var weWidgets = require('web_editor.widget');
@@ -20,10 +22,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         ['/website/static/src/xml/website.pageProperties.xml']
     ),
     events: _.extend({}, weWidgets.Dialog.prototype.events, {
-        'keyup input#page_name': '_onNameChanged',
-        'keyup input#page_url': '_onUrlChanged',
+        'input input#page_name': '_onNameChanged',
+        'input input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
     }),
+
+    fromPageManagement: false,
 
     /**
      * @constructor
@@ -47,6 +51,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             {text: _t("Discard"), close: true},
         ];
         if (options.fromPageManagement) {
+            this.fromPageManagement = true;
             buttons.push({
                 text: _t("Go To Page"),
                 icon: 'fa-globe',
@@ -56,17 +61,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                 },
             });
         }
-        buttons.push({
-            text: _t("Delete Page"),
-            icon: 'fa-trash',
-            classes: 'btn-link float-right',
-            click: function (e) {
-                _deletePage.call(this, self.page_id, options.fromPageManagement);
-            },
-        });
         this._super(parent, _.extend({}, {
             title: _t("Page Properties"),
-            size: 'medium',
+            size: 'large',
             buttons: buttons,
         }, options || {}));
     },
@@ -106,11 +103,20 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
 
         var defs = [this._super.apply(this, arguments)];
 
+        this.htmlPage = new HtmlPage();
+
+        this.$inputPageUrl = this.$('input#page_url');
+        this.$askForRedirect = this.$('.ask_for_redirect');
+        this.$inputPageName = this.$('input#page_name');
+        this.$warnAboutCall = this.$('.warn_about_call')
+
+        this.$modal.addClass('oe_page_properties');
+
         this.$('.ask_for_redirect').addClass('d-none');
         this.$('.redirect_type').addClass('d-none');
         this.$('.warn_about_call').addClass('d-none');
 
-        defs.push(this._getPageDependencies(this.page_id, context)
+        defs.push(_getPageDependencies.call(this, this.page_id, context)
         .then(function (dependencies) {
             var dep_text = [];
             _.each(dependencies, function (value, index) {
@@ -178,7 +184,33 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         if (this.page.date_publish) {
             datepickersOptions.defaultDate = time.str_to_datetime(this.page.date_publish);
         }
+
         this.$('#date_publish_container').datetimepicker(datepickersOptions);
+
+        var title = this.page.website_meta_title;
+        var description = this.page.website_meta_description;
+        var keywords = this.page.website_meta_keywords;
+        var url = this.serverUrl + this.page.url;
+
+        if (!this.fromPageManagement) {
+            title = this.htmlPage.title();
+            description = this.htmlPage.description();
+            url = this.htmlPage.url();
+            keywords = this.htmlPage.keywords().join(', ');
+        }
+
+        this.metaTitleDescription = new MetaTitleDescription(this, {
+            canEditTitle: true,
+            canEditDescription: true,
+            isIndexed: this.page.website_indexed,
+            showKeywords: true,
+            title: title,
+            description: description,
+            keywords: keywords,
+            url: url,
+        });
+
+        this.metaTitleDescription.appendTo(this.$('.js_seo_meta_title_description'));
 
         return $.when.apply($, defs);
     },
@@ -225,7 +257,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             date_publish: date_publish,
+            website_meta_title: this.metaTitleDescription.getTitle(),
+            website_meta_description: this.metaTitleDescription.getDescription(),
         };
+        if (this.metaTitleDescription.showKeywords) {
+            params.website_meta_keywords = this.metaTitleDescription.getKeywords();
+        }
         this._rpc({
             model: 'website.page',
             method: 'save_page_info',
@@ -252,22 +289,6 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Retrieves the page URL dependencies for the given object id.
-     *
-     * @private
-     * @param {integer} moID
-     * @param {Object} context
-     * @returns {Deferred<Array>}
-     */
-    _getPageDependencies: function (moID, context) {
-        return this._rpc({
-            model: 'website',
-            method: 'page_search_dependencies',
-            args: [moID],
-            context: context,
-        });
-    },
     /**
      * Retrieves the page's key dependencies for the given object id.
      *
@@ -343,20 +364,21 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      * @private
      */
     _onUrlChanged: function () {
-        var url = this.$('input#page_url').val();
-        this.$('.ask_for_redirect').toggleClass('d-none', url === this.page.url);
+        var url = this.$inputPageUrl.val();
+        this.metaTitleDescription.setUrl(this.serverUrl + url);
+        this.$askForRedirect.toggleClass('d-none', url === this.page.url);
     },
     /**
      * @private
      */
     _onNameChanged: function () {
-        var name = this.$('input#page_name').val();
+        var name = this.$inputPageName.val();
         // If the file type is a supported mimetype, check if it is t-called.
         // If so, warn user. Note: different from page_search_dependencies which
         // check only for url and not key
         var ext = '.' + this.page.name.split('.').pop();
         if (ext in this.supportedMimetype && ext !== '.html') {
-            this.$('.warn_about_call').toggleClass('d-none', name === this.page.name);
+            this.$warnAboutCall.toggleClass('d-none', name === this.page.name);
         }
     },
     /**
@@ -688,6 +710,8 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         get_page_option: '_getPageOption',
         on_save: '_onSave',
         page_properties: '_pageProperties',
+        page_clone: '_pageClone',
+        page_delete: '_pageDelete',
         toggle_page_option: '_togglePageOption',
     }),
     pageOptionsSetValueCallbacks: {
@@ -804,6 +828,24 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         return $.when.apply($, defs);
     },
+    _pageClone: function () {
+        var mo;
+        this.trigger_up('main_object_request', {
+            callback: function (value) {
+                mo = value;
+            },
+        });
+        _clonePage.call(this, mo.id);
+    },
+    _pageDelete: function () {
+        var mo;
+        this.trigger_up('main_object_request', {
+            callback: function (value) {
+                mo = value;
+            },
+        });
+        _deletePage.call(this, mo.id, false);
+    },
     /**
      * Opens the page properties dialog.
      *
@@ -885,27 +927,6 @@ var PageManagement = Widget.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Retrieves the page dependencies for the given object id.
-     *
-     * @private
-     * @param {integer} moID
-     * @param {Object} context
-     * @returns {Deferred<Array>}
-     */
-    _getPageDependencies: function (moID, context) {
-        return this._rpc({
-            model: 'website',
-            method: 'page_search_dependencies',
-            args: [moID],
-            context: context,
-        });
-    },
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -916,23 +937,44 @@ var PageManagement = Widget.extend({
     },
     _onClonePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
-        var context = weContext.get();
-        this._rpc({
-            model: 'website.page',
-            method: 'clone_page',
-            args: [pageId],
-            kwargs: {
-                context: context,
-            },
-        }).then(function (path) {
-            window.location.href = path;
-        });
+        _clonePage.call(this, pageId);
     },
     _onDeletePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
         _deletePage.call(this, pageId, true);
     },
 });
+
+function _clonePage(pageId) {
+    var context = weContext.get();
+    this._rpc({
+        model: 'website.page',
+        method: 'clone_page',
+        args: [pageId],
+        kwargs: {
+            context: context,
+        },
+    }).then(function (path) {
+        window.location.href = path;
+    });
+}
+
+/**
+ * Retrieves the page URL dependencies for the given object id.
+ *
+ * @private
+ * @param {integer} moID
+ * @param {Object} context
+ * @returns {Deferred<Array>}
+ */
+function _getPageDependencies(moID, context) {
+    return this._rpc({
+        model: 'website',
+        method: 'page_search_dependencies',
+        args: [moID],
+        context: context,
+    });
+}
 
 /**
  * Deletes the page after showing a dependencies warning for the given page id.
@@ -950,7 +992,7 @@ function _deletePage(pageId, fromPageManagement) {
     var def = $.Deferred();
 
     // Search the page dependencies
-    this._getPageDependencies(pageId, context)
+    _getPageDependencies.call(this, pageId, context)
     .then(function (dependencies) {
     // Inform the user about those dependencies and ask him confirmation
         var confirmDef = $.Deferred();

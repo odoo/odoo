@@ -188,7 +188,8 @@ body .modal {
     }
 
     // SEO CONFIGURATION
-    &.oe_seo_configuration {
+    &.oe_seo_configuration,
+    &.oe_page_properties {
         #language-box {
             padding-right: 25px;
             background-color: white;
@@ -372,7 +373,7 @@ body .modal {
             }
         }
 
-        li.oe_seo_preview_g {
+        div.oe_seo_preview_g {
             list-style: none;
             font-family: arial, sans-serif;
 
@@ -394,9 +395,6 @@ body .modal {
                     color: #006621;
                     font-size: 14px;
                     line-height: 18px;
-                }
-                .st {
-                    height: 50px;
                 }
             }
         }
