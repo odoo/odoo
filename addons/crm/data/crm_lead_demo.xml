@@ -878,5 +878,42 @@ Andrew</p>]]></field>
             <field name="summary">Send Catalog by Email</field>
         </record>
 
+        <!-- We set the create_date via an sql query in order to bypass the orm -->
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_13'), ref('crm_case_14'), ref('crm_case_15'), ref('crm_case_21'), ref('crm_case_25')
+                , ref('crm_case_26'), ref('crm_case_27')]"/>
+            <value eval="(datetime.now()-timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_4'), ref('crm_case_3'), ref('crm_case_10'), ref('crm_case_16')]"/>
+            <value eval="(datetime.now()-timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_5'), ref('crm_case_9')]"/>
+            <value eval="(datetime.now()-timedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_6'), ref('crm_case_7'), ref('crm_case_11')]"/>
+            <value eval="(datetime.now()-timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_26')]"/>
+            <value eval="(datetime.now()-timedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_18'), ref('crm_case_19'), ref('crm_case_23'), ref('crm_case_24'), ref('crm_case_20')]"/>
+            <value eval="(datetime.now()-timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
+        <function model="crm.lead" name="_set_demo_create_date">
+            <value eval="[ref('crm_case_1'), ref('crm_case_2'), ref('crm_case_22'), ref('crm_case_12'), ref('crm_case_8')]"/>
+            <value eval="(datetime.now()-timedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </function>
+
     </data>
 </odoo>
