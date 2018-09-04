@@ -1115,7 +1115,14 @@ $.summernote.pluginEvents.untab = function (event, editor, layoutInfo) {
 $.summernote.pluginEvents.up = function (event, editor, layoutInfo) {
     var r = range.create();
     var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
-    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentBefore(node) && (!dom.isBR(dom.hasContentBefore(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentBefore(dom.hasContentBefore(node))))) {
+    if (!r.isOnCell()) {
+        return;
+    }
+    // check if an ancestor between node and cell has content before
+    var ancestor = dom.ancestor(node, function (ancestorNode) {
+        return dom.hasContentBefore(ancestorNode) || dom.isCell(ancestorNode);
+    });
+    if (!dom.isCell(ancestor) && (!dom.isBR(dom.hasContentBefore(ancestor)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentBefore(dom.hasContentBefore(ancestor)))) {
         return;
     }
     event.preventDefault();
@@ -1132,7 +1139,14 @@ $.summernote.pluginEvents.up = function (event, editor, layoutInfo) {
 $.summernote.pluginEvents.down = function (event, editor, layoutInfo) {
     var r = range.create();
     var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
-    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentAfter(node) && (!dom.isBR(dom.hasContentAfter(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentAfter(dom.hasContentAfter(node))))) {
+    if (!r.isOnCell()) {
+        return;
+    }
+    // check if an ancestor between node and cell has content after
+    var ancestor = dom.ancestor(node, function (ancestorNode) {
+        return dom.hasContentAfter(ancestorNode) || dom.isCell(ancestorNode);
+    });
+    if (!dom.isCell(ancestor) && (!dom.isBR(dom.hasContentAfter(ancestor)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentAfter(dom.hasContentAfter(ancestor)))) {
         return;
     }
     event.preventDefault();

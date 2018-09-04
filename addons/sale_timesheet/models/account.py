@@ -41,7 +41,7 @@ class AccountAnalyticLine(models.Model):
             emp = self.env['hr.employee'].search([('user_id', '=', user_id)], limit=1)
             account = values.get('account_id') and self.env['account.analytic.account'].browse([values['account_id']]) or self.account_id or emp.account_id
             cost = emp and emp.timesheet_cost or 0.0
-            uom = account.company_id.sudo().project_time_mode_id
+            uom = account.sudo().company_id.project_time_mode_id
             # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
             return {
                 'amount': -unit_amount * cost,
