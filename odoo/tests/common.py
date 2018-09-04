@@ -842,8 +842,9 @@ class HttpCase(TransactionCase):
             url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
-            self._logger.info('Starting screen cast')
-            self.browser.start_screencast()
+            if odoo.tools.config['logfile']:
+                self._logger.info('Starting screen cast')
+                self.browser.start_screencast()
             self.browser.navigate_to(url)
 
             # Needed because tests like test01.js (qunit tests) are passing a ready
