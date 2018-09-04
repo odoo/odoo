@@ -4,7 +4,8 @@ import base64
 
 import babel.dates
 import collections
-from datetime import datetime, timedelta, MAXYEAR
+import datetime
+from datetime import timedelta, MAXYEAR
 from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -41,7 +42,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
             real_id = res[0]
             if with_date:
                 real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], VIRTUALID_DATETIME_FORMAT))
-                start = datetime.strptime(real_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                start = datetime.datetime.strptime(real_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 end = start + timedelta(hours=with_date)
                 return (int(real_id), real_date, end.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
             return int(real_id)
@@ -336,10 +337,10 @@ class AlarmManager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
+        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
                 if alarm.type == alarm_type and \
-                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                         alert = {
                             'alarm_id': alarm.id,
@@ -447,7 +448,7 @@ class AlarmManager(models.AbstractModel):
         if alarm.type == 'notification':
             message = meeting.display_time
 
-            delta = alert['notify_at'] - datetime.now()
+            delta = alert['notify_at'] - datetime.datetime.now()
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
@@ -609,7 +610,7 @@ class Meeting(models.Model):
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
         event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
         if not event_date:
-            event_date = datetime.now()
+            event_date = datetime.datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
         if use_naive_datetime:
@@ -950,17 +951,17 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration)
+            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
         if self.start_date:
-            self.start = self.start_date
+            self.start = datetime.datetime.combine(self.start_date, datetime.time.min)
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
         if self.stop_date:
-            self.stop = self.stop_date
+            self.stop = datetime.datetime.combine(self.stop_date, datetime.time.max)
 
     ####################################################
     # Calendar Business, Reccurency, ...
