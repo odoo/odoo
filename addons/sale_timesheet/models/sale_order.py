@@ -325,4 +325,5 @@ class SaleOrderLine(models.Model):
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                so_line._timesheet_create_task(project=project)
+                if not so_line.task_id:
+                    so_line._timesheet_create_task(project=project)

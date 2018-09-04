@@ -221,6 +221,55 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         timesheet2.unlink()
         self.assertEqual(so_line_deliver_new_task_project.qty_delivered, timesheet3.unit_amount, 'Delivered quantity should be reset to the sum of remaining timesheets unit amounts.')
 
+    def test_sale_create_task(self):
+        """ Check that confirming SO create correctly a task, and reconfirming it does not create a second one. Also check changing
+            the ordered quantity of a SO line that have created a task should update the planned hours of this task.
+        """
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 7,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+
+        # confirm SO
+        self.sale_order.action_confirm()
+
+        self.assertTrue(so_line1.task_id, "SO confirmation should create a task and link it to SOL")
+        self.assertTrue(so_line1.project_id, "SO confirmation should create a project and link it to SOL")
+        self.assertEqual(self.sale_order.tasks_count, 1, "The SO should have only one task")
+        self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
+        self.assertFalse(so_line1.task_id.user_id, "The created task should be unassigned")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
+
+        so_line1.write({'product_uom_qty': 20})
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
+
+        # cancel SO
+        self.sale_order.action_cancel()
+
+        self.assertTrue(so_line1.task_id, "SO cancellation should keep the task")
+        self.assertTrue(so_line1.project_id, "SO cancellation should create a project")
+        self.assertEqual(self.sale_order.tasks_count, 1, "The SO should still have only one task")
+        self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
+
+        so_line1.write({'product_uom_qty': 30})
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
+
+        # reconfirm SO
+        self.sale_order.action_confirm()
+
+        self.assertTrue(so_line1.task_id, "SO reconfirmation should not have create another task")
+        self.assertTrue(so_line1.project_id, "SO reconfirmation should bit have create another project")
+        self.assertEqual(self.sale_order.tasks_count, 1, "The SO should still have only one task")
+        self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
+
+        self.sale_order.action_done()
+        with self.assertRaises(UserError):
+            so_line1.write({'product_uom_qty': 20})
+
     def test_sale_create_project(self):
         """ A SO with multiple product that should create project (with and without template) like ;
                 Line 1 : Service 1 create project with Template A ===> project created with template A
