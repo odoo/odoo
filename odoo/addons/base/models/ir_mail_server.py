@@ -159,7 +159,7 @@ class IrMailServer(models.Model):
             try:
                 smtp = self.connect(mail_server_id=server.id)
                 # simulate sending an email from current user's address - without sending it!
-                email_from, email_to = self.env.user.email, 'noreply@odoo.com'
+                email_from, email_to = format_address(self.env.user.email), 'noreply@odoo.com'
                 if not email_from:
                     raise UserError(_('Please configure an email on the current user to simulate '
                                       'sending an email message via this outgoing server'))
