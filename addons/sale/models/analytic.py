@@ -14,7 +14,7 @@ class AccountAnalyticLine(models.Model):
         """
         return [('qty_delivered_method', '=', 'analytic')]
 
-    so_line = fields.Many2one('sale.order.line', string='Sales Order Line', domain=lambda self: self._default_sale_line_domain())
+    so_line = fields.Many2one('sale.order.line', string='Sales Order Item', domain=lambda self: self._default_sale_line_domain())
 
     @api.model
     def create(self, values):
