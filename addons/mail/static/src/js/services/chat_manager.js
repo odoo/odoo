@@ -95,7 +95,8 @@ var emojiUnicodes={
     ":football":"🏈",
     ":8ball":"🎱",
     ":clapper":"🎬",
-    ":microphone":"🎤"
+    ":microphone":"🎤",
+    ":cheese": "🧀",
     };
 
 /**
