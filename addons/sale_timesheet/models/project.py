@@ -181,7 +181,7 @@ class ProjectTask(models.Model):
         result = result or {}
         domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', '=', self.partner_id.id), ('state', 'in', ['sale', 'done'])]
         if self.project_id.sale_order_id:
-            domain += [('sale_order_id', '=', self.project_id.sale_order_id.id)]
+            domain += [('order_id', '=', self.project_id.sale_order_id.id)]
         result.setdefault('domain', {})['sale_line_id'] = domain
         return result
 
