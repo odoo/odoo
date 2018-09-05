@@ -45,6 +45,7 @@ var Thread = Widget.extend({
             this.trigger("toggle_star_status", messageId);
         },
         "click .o_thread_message_email_exception": "_onClickMailException",
+        "click .o_thread_message_email_bounce": "_onClickMailException",
         "click .o_thread_message_reply": function (event) {
             this.selected_id = $(event.currentTarget).data('message-id');
             this.$('.o_thread_message').removeClass('o_thread_selected_message');
