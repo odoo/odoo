@@ -921,6 +921,10 @@ table.colorpicker {
                 height: 23px;
                 margin: 2px;
                 border-radius: 50%;
+
+                + :not(.o_small) {
+                    clear: both;
+                }
             }
 
             &:hover, &.selected {
