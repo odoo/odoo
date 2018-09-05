@@ -3211,7 +3211,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
-            bad_names.update(LOG_ACCESS_COLUMNS)
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.update(LOG_ACCESS_COLUMNS)
 
         # distribute fields into sets for various purposes
         store_vals = {}
@@ -3329,10 +3331,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 other_fields.append(field)
 
         if self._log_access:
-            columns.append(('write_uid', '%s', self._uid))
-            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
-            updated.append('write_uid')
-            updated.append('write_date')
+            if 'write_uid' not in vals:
+                columns.append(('write_uid', '%s', self._uid))
+                updated.append('write_uid')
+            if 'write_date' not in vals:
+                columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+                updated.append('write_date')
 
         # mark fields to recompute (the ones that depend on old values)
         self.modified(vals)
@@ -3428,7 +3432,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
-            bad_names.update(LOG_ACCESS_COLUMNS)
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.update(LOG_ACCESS_COLUMNS)
         unknown_names = set()
 
         # classify fields for each record
@@ -3565,13 +3571,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for data in data_list:
             # determine column values
-            columns = list(columns0)
-            for name, val in sorted(data['stored'].items()):
+            stored = data['stored']
+            columns = [column for column in columns0 if column[0] not in stored]
+            for name, val in sorted(stored.items()):
                 field = self._fields[name]
                 assert field.store
 
                 if field.column_type:
-                    col_val = field.convert_to_column(val, self, data['stored'])
+                    col_val = field.convert_to_column(val, self, stored)
                     columns.append((name, field.column_format, col_val))
                     if field.translate is True:
                         translated_fields.add(field)
