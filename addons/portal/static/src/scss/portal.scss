@@ -164,6 +164,14 @@ hr {
     color: color-yiq($list-group-bg);
 }
 
+%o-portal-breadcrumbs {
+    background-color: transparent;
+
+    .breadcrumb-item {
+        display: inline-flex;
+    }
+}
+
 // Replaces old BS3 page-header class
 %o-page-header {
     margin-bottom: $headings-margin-bottom * 2;
@@ -305,11 +313,7 @@ img.o_we_custom_image {
 // Portal specific
 .o_portal {
     .breadcrumb {
-        background-color: transparent;
-
-        .breadcrumb-item {
-            display: inline-flex;
-        }
+        @extend %o-portal-breadcrumbs;
     }
 
     > tbody.o_portal_report_tbody {
@@ -320,6 +324,28 @@ img.o_we_custom_image {
 .o_portal_wrap {
     .o_portal_my_home > .o_page_header > a:hover {
         text-decoration: none;
+    }
+
+    .o_portal_navbar {
+        .breadcrumb {
+            padding-left: 0;
+            padding-right: 0;
+            @extend %o-portal-breadcrumbs;
+
+            .breadcrumb-item.active {
+                // In this context, active breadcrumb act as title
+                color:  $headings-color;
+                line-height: $h5-font-size/$font-size-base;
+                font: {size: $h5-font-size; weight: $headings-font-weight};
+
+                &:before {
+                    // Restore breadcrumb divider to default
+                    color: $breadcrumb-divider-color;
+                    line-height: $line-height-base;
+                    font: {size: $font-size-base; weight: $font-weight-base};
+                }
+            }
+        }
     }
 
     .o_portal_my_doc_table {

@@ -66,15 +66,19 @@
         </t>
     </template>
 
+    <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
+        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
+            <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
+        </ol>
+    </template>
+
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
-            <div t-if="not no_breadcrumbs and not my_details" class="o_portal container mt-3">
+            <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="row align-items-center bg-white no-gutters border rounded-top">
                     <div class="col">
-                        <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
-                            <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-                            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
-                        </ol>
+                        <t t-call="portal.portal_breadcrumbs"></t>
                     </div>
                     <div t-if="prev_record or next_record" class="col flex-grow-0">
                         <t t-call='portal.record_pager'/>
@@ -157,15 +161,19 @@
             {'open': {'label': _('In Progress'), 'domain': [('state', '=', 'open')]}}
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
+        :param boolean breadcrumbs_searchbar : set to True to show breadcrumbs rather than the title
         :param boolean o_portal_search_panel : set to True to active the input search
         :param html $0 : content of the t-call
         :param title : bavbar title
         :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <nav t-attf-class="navbar navbar-light navbar-expand-lg border border-top-0 mb-2 py-0 o_portal_navbar {{classes if classes else ''}}">
-            <!--  Navbar title  -->
-            <span class="navbar-brand navbar-brand mb-0 h1 mr-auto" t-esc="title or 'No title'"/>
+        <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 o_portal_navbar {{classes if classes else ''}} {{'mt-4 rounded-top border-bottom-0' if breadcrumbs_searchbar else 'border-top-0 mb-2'}}">
+            <!--  Navbar breadcrumb or title  -->
+            <t t-if="breadcrumbs_searchbar">
+                <t t-call="portal.portal_breadcrumbs"/>
+            </t>
+            <span t-else="" class="navbar-brand mb-0 h1 mr-auto" t-esc="title or 'No title'"/>
 
             <!--  Collapse button -->
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#o_portal_navbar_content" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle filters">
