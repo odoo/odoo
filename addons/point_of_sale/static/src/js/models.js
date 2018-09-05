@@ -1238,6 +1238,15 @@ exports.Product = Backbone.Model.extend({
         var self = this;
         var date = moment().startOf('day');
 
+        // In case of nested pricelists, it is necessary that all pricelists are made available in
+        // the POS. Display a basic alert to the user in this case.
+        if (pricelist === undefined) {
+            alert(_t(
+                'An error occurred when loading product prices. ' +
+                'Make sure all pricelists are available in the POS.'
+            ));
+        }
+
         var category_ids = [];
         var category = this.categ;
         while (category) {

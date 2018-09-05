@@ -507,7 +507,7 @@ var ImageWidget = MediaWidget.extend({
             self.$('.well > span').remove();
             self.$('.well > div').show();
             _.each(attachments, function (record) {
-                record.src = record.url || '/web/image/' + record.id;
+                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name)); // Name is added for SEO purposes
                 record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
             });
             if (error || !attachments.length) {

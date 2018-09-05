@@ -104,7 +104,16 @@ class CustomerPortal(CustomerPortal):
         }
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
+        partner = request.env.user.partner_id
+        domain_projects = [
+            '&',
+            ('privacy_visibility', '=', 'portal'),
+            '|',
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('task_ids.message_partner_ids', 'child_of', [partner.commercial_partner_id.id])
+        ]
+
+        projects = request.env['project.project'].sudo().search(domain_projects)
         domain = [('project_id', 'in', projects.ids)]
         for proj in projects:
             searchbar_filters.update({

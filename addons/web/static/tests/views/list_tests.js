@@ -3178,6 +3178,76 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list, handle widget locks and unlocks on sort', function (assert) {
+        assert.expect(6);
+
+        // we need another sortable field to lock/unlock the handle
+        this.data.foo.fields.amount.sortable = true;
+        // resequence makes sense on a sequence field, not on arbitrary fields
+        this.data.foo.records[0].int_field = 0;
+        this.data.foo.records[1].int_field = 1;
+        this.data.foo.records[2].int_field = 2;
+        this.data.foo.records[3].int_field = 3;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top" default_order="int_field">' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="amount" widget="float"/>' +
+                  '</tree>',
+        });
+
+        assert.strictEqual(list.$('tbody').text(), '1200.00500.00300.000.00',
+            "default should be sorted by int_field");
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        // Handle should be unlocked at this point
+        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+            "drag and drop should have succeeded, as the handle is unlocked");
+
+        // Sorting by a field different for int_field should lock the handle
+        list.$('.o_column_sortable').eq(1).click();
+
+        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+            "should have been sorted by amount");
+
+        // Drag and drop the fourth line in second position (not)
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+            "drag and drop should have failed as the handle is locked");
+
+        // Sorting by int_field should unlock the handle
+        list.$('.o_column_sortable').eq(0).click();
+
+        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+            "records should be ordered as per the previous resequence");
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        assert.strictEqual(list.$('tbody').text(), '1200.00300.000.00500.00',
+            "drag and drop should have worked as the handle is unlocked");
+
+        list.destroy();
+    });
+
     QUnit.test('editable list with handle widget with slow network', function (assert) {
         assert.expect(15);
 
