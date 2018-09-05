@@ -29,7 +29,7 @@ var ActivityRenderer = AbstractRenderer.extend({
             .empty();
 
         if (this.state.data.activity_types.length === 0) {
-            this.$el.append($("<div>").text(_t("No schedulded activity")));
+            this.$el.append(QWeb.render('mail.ActivityViewNoContentHelper'));
         } else {
             var $table = $('<table>')
                 .addClass('table-bordered')

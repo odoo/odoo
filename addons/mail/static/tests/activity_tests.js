@@ -187,6 +187,30 @@ QUnit.test('activity view: simple activity rendering', function (assert) {
     activity.destroy();
 });
 
+QUnit.test('activity view: no content rendering', function (assert) {
+    assert.expect(2);
+    var activity = createView({
+        View: ActivityView,
+        model: 'task',
+        data: this.data,
+        arch: '<activity string="Task"/>',
+        mockRPC: function (route, args) {
+            if (args.method === 'get_activity_data') {
+                return $.when({ activity_types: [] });
+            }
+            return this._super(route, args);
+        },
+    });
+
+    assert.strictEqual(activity.$('.o_view_nocontent').length, 1,
+        "should display the no content helper");
+    assert.strictEqual(activity.$('.o_view_nocontent').text().trim(),
+        "No scheduled activity yet",
+        "should display the no content helper text");
+
+    activity.destroy();
+});
+
 QUnit.test('activity view: batch send mail on activity', function (assert) {
     assert.expect(6);
     var activity = createView({
