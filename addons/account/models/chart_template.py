@@ -443,17 +443,23 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account'),
-            ('property_account_payable_id', 'res.partner', 'account.account'),
-            ('property_account_expense_categ_id', 'product.category', 'account.account'),
-            ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
+            ('property_account_receivable_id', 'res.partner', 'account.account', 'account_sale_tax_id'),
+            ('property_account_payable_id', 'res.partner', 'account.account', 'account_purchase_tax_id'),
+            ('property_account_expense_categ_id', 'product.category', 'account.account', 'account_purchase_tax_id'),
+            ('property_account_income_categ_id', 'product.category', 'account.account', 'account_sale_tax_id'),
+            ('property_account_expense_id', 'product.template', 'account.account', 'account_purchase_tax_id'),
+            ('property_account_income_id', 'product.template', 'account.account', 'account_sale_tax_id'),
         ]
         for record in todo_list:
-            account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
-            if value:
+            account_template = getattr(self, record[0])
+
+            if account_template:
+                account = acc_template_ref[account_template.id]
+
+                # Write the default tax on the account
+                account.write({'tax_ids': [(4, getattr(company, record[3]))]})
+
+                value = 'account.account,' + str(account.id)
                 field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
                     'name': record[0],
