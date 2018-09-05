@@ -15,6 +15,7 @@ var ActivityMenu = Widget.extend({
     name: 'activity_menu',
     template:'mail.systray.ActivityMenu',
     events: {
+        'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
     },
@@ -97,6 +98,17 @@ var ActivityMenu = Widget.extend({
     //------------------------------------------------------------
     // Handlers
     //------------------------------------------------------------
+
+    /**
+     * Redirect to specific action given its xml id
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onActivityActionClick: function (ev) {
+        ev.stopPropagation();
+        var actionXmlid = $(ev.currentTarget).data('action_xmlid');
+        this.do_action(actionXmlid);
+    },
 
     /**
      * Redirect to particular model view
