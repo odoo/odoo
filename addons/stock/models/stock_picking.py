@@ -910,12 +910,23 @@ class Picking(models.Model):
 
             picking._create_backorder()
         return True
-
+    
+    #Siguiente metodo fue agregado por Trescloud
+    def _get_values_create_lotes(self, pack_op_lot):
+        '''
+        Hook sera utilizado en un metodo superior.
+        '''
+        return {
+            'name': pack_op_lot.lot_name,
+            'product_id': pack_op_lot.operation_id.product_id.id
+        }
+        
     def _create_lots_for_picking(self):
         Lot = self.env['stock.production.lot']
         for pack_op_lot in self.mapped('pack_operation_ids').mapped('pack_lot_ids'):
             if not pack_op_lot.lot_id:
-                lot = Lot.create({'name': pack_op_lot.lot_name, 'product_id': pack_op_lot.operation_id.product_id.id})
+                #Siguiente line fue modificado por Trescloud
+                lot = Lot.create(self._get_values_create_lotes(pack_op_lot))
                 pack_op_lot.write({'lot_id': lot.id})
         # TDE FIXME: this should not be done here
         self.mapped('pack_operation_ids').mapped('pack_lot_ids').filtered(lambda op_lot: op_lot.qty == 0.0).unlink()
