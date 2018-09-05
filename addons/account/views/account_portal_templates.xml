@@ -1,13 +1,13 @@
 <odoo>
-	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
+	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'invoice'" class="breadcrumb-item active">
+            <li t-if="page_name == 'invoice'" t-attf-class="breadcrumb-item #{'active ' if not invoice else ''}">
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
                 <t t-else="">Invoices</t>
             </li>
-            <li t-if="invoice" class="breadcrumb-item">
+            <li t-if="invoice" class="breadcrumb-item active">
                 <t t-esc="invoice.number" t-if="invoice.number"/>
-                <t t-else="">Draft Invoice</t>
+                <t t-else=""><em>Draft Invoice</em></t>
             </li>
         </xpath>
     </template>
@@ -24,6 +24,8 @@
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="portal.portal_layout">
+		<t t-set="breadcrumbs_searchbar" t-value="True"/>
+
         <t t-call="portal.portal_searchbar">
             <t t-set="title">Invoices</t>
         </t>

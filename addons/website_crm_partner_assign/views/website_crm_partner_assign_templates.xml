@@ -185,9 +185,9 @@
             <script type="text/javascript" src="/website_crm_partner_assign/static/src/js/crm_partner_assign.js" />
         </xpath>
     </template>
-    <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_layout" priority="15">
+    <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_breadcrumbs" priority="15">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'lead' or lead" class="breadcrumb-item">
+            <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
                     My Leads
                 </a>
@@ -195,10 +195,10 @@
                     My Leads
                 </t>
             </li>
-            <li t-if="lead" class="breadcrumb-item">
+            <li t-if="lead" class="breadcrumb-item active">
                 <span t-field="lead.name"/>
             </li>
-            <li t-if="page_name == 'opportunity' or opportunity" class="breadcrumb-item">
+            <li t-if="page_name == 'opportunity' or opportunity" t-attf-class="breadcrumb-item #{'active ' if not opportunity else ''}">
                 <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
                     My Opportunities
                 </a>
@@ -206,7 +206,7 @@
                     My Opportunities
                 </t>
             </li>
-            <li t-if="opportunity" class="breadcrumb-item">
+            <li t-if="opportunity" class="breadcrumb-item active">
                 <span t-field="opportunity.name"/>
             </li>
         </xpath>
@@ -263,6 +263,8 @@
 
     <template id="portal_my_opportunities" name="My Opportunities">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+    
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">My Opportunities</t>
                 <li class="float-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-secondary navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>

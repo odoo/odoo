@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_layout" priority="40">
+    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'project' or project" class="breadcrumb-item">
+            <li t-if="page_name == 'project' or project" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
                 <t t-else="">Projects</t>
             </li>
-            <li t-if="project" class="breadcrumb-item">
+            <li t-if="project" class="breadcrumb-item active">
                 <t t-esc="project.name"/>
             </li>
-            <li t-if="page_name == 'task' or task" class="breadcrumb-item">
+            <li t-if="page_name == 'task' or task" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
                 <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
                 <t t-else="">Tasks</t>
             </li>
-            <li t-if="task" class="breadcrumb-item">
+            <li t-if="task" class="breadcrumb-item active">
                 <span t-field="task.name"/>
             </li>
         </xpath>
@@ -36,6 +36,8 @@
 
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Projects</t>
             </t>
@@ -118,6 +120,8 @@
 
     <template id="portal_my_tasks" name="My Tasks">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Tasks</t>
             </t>
