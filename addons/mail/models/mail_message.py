@@ -151,8 +151,8 @@ class Message(models.Model):
     @api.multi
     def _search_has_error(self, operator, operand):
         if operator == '=' and operand:
-            return [('notification_ids.email_status', 'in', ('bounce', 'exception'))]
-        return ['!', ('notification_ids.email_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
+            return ['&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]
+        return ['!', '&', ('notification_ids.email_status', 'in', ('bounce', 'exception')), ('author_id', '=', self.env.user.partner_id.id)]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
