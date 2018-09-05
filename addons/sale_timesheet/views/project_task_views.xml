@@ -14,7 +14,7 @@
                     <group>
                         <field name="billable_type" invisible="1"/>
                         <field name="sale_order_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
-                        <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')]}"/>
+                        <field name="sale_line_id" attrs="{'invisible': [('billable_type', '=', 'no')]}" context="{'create': False, 'edit': False, 'delete': False}"/>
                     </group>
                     <field name="sale_line_employee_ids">
                         <tree editable="top">
@@ -69,7 +69,7 @@
                     <field name="sale_order_id" invisible="1"/>
                 </xpath>
                 <field name="user_id" position="after">
-                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': ['|', ('partner_id', '=', False)]}" options='{"no_open": True, "no_create": True}'/>
+                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': ['|', ('partner_id', '=', False)]}" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}"/>
                     <field name="billable_type" invisible="1"/>
                 </field>
             </field>
