@@ -973,7 +973,6 @@ ListRenderer.include({
      * @param {MouseEvent} event
      */
     _onWindowClicked: function (event) {
-
         // ignore clicks if this renderer is not in the dom.
         if (!document.contains(this.el)) {
             return;

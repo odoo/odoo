@@ -230,7 +230,8 @@ MailManager.include({
      * Handles poll notifications from the Support server.
      *
      * @private
-     * @param {Object[]} notifications
+     * @param {OdooEvent} event
+     * @param {Object[]} ev.data (notifications)
      */
     _onSupportNotification: function (ev) {
         var notifications = ev.data;

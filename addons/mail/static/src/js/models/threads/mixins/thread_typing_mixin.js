@@ -319,7 +319,8 @@ var ThreadTypingMixin = {
      * from typing partners (otherwise, it will still display it until timeout).
      *
      * @private
-     * @param {mail.model.AbstractMessage} message
+     * @param {OdooEvent} event
+     * @param {mail.model.AbstractMessage} ev.data (message)
      */
     _onTypingMessageAdded: function (ev) {
         var message = ev.data;

@@ -303,8 +303,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * Note: this callback function is only called for 'res.partner'
      *
      * @private
-     * @param {string} resModel
-     * @param {integer} resID
+     * @param {OdooEvent} event
+     * @param {string} ev.data.resModel
+     * @param {integer} ev.data.resID
      */
     _onRedirect: function (ev) {
         var callback = this._open.bind(this);
@@ -312,7 +313,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     /**
      * @private
-     * @param {integer} channelID
+     * @param {OdooEvent} event
+     * @param {integer} ev.data.channelID
      */
     _onRedirectToChannel: function (ev) {
         var channelID = ev.data.channelID;

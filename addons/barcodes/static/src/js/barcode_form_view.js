@@ -294,8 +294,9 @@ FormController.include({
      * widget options then update the renderer
      *
      * @private
-     * @param {string} barcode sent by the scanner (string generate from keypress series)
-     * @param {DOM Object} target
+     * @param {OdooEvent} event
+     * @param {string} ev.data.barcode (barcode sent by the scanner (string generate from keypress series)
+     * @param {DOM Object} ev.data.target
      * @returns {Deferred}
      */
     _barcodeScanned: function (ev) {

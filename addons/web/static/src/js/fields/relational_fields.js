@@ -1365,7 +1365,7 @@ var FieldX2Many = AbstractField.extend({
     _onActiveNextWidget: function (e) {
         e.stopPropagation();
         this.renderer.unselectRow();
-        this.trigger('navigation_move',{direction:'next'});
+        this.trigger('navigation_move', {direction: 'next'});
     },
 });
 

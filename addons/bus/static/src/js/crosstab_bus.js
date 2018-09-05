@@ -291,8 +291,8 @@ var CrossTabBus = Longpolling.extend({
      *
      * @private
      * @param {OdooEvent} event
-     * @param {string} event.key
-     * @param {string} event.newValue
+     * @param {string} event.data.key
+     * @param {string} event.data.newValue
      */
     _onStorage: function (e) {
         var value = JSON.parse(e.data.newValue);

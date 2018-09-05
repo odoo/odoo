@@ -118,6 +118,7 @@ var ControlPanel = Widget.extend({
     },
     /**
      * Updates the content and displays the ControlPanel
+     * @param {OdooEvent} event
      * @param {Object} [status.active_view] the current active view
      * @param {Array} [status.breadcrumbs] the breadcrumbs to display (see _render_breadcrumbs() for
      * precise description)

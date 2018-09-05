@@ -552,7 +552,7 @@ MailManager.include({
      * extra notification to prevent that situation to occur.
      *
      * @private
-     * @param {Array} notifs
+     * @param {OdooEvent} event
      */
     _onNotification: function (ev) {
         var self = this;

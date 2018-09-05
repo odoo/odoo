@@ -82,8 +82,7 @@ var ThreadField = AbstractField.extend({
      * @param  {integer[]} message.partner_ids
      * @return {$.Promise}
      */
-    postMessage: function (ev) {
-        var message = ev;
+    postMessage: function (message) {
         var self = this;
         return this._documentThread.postMessage(message)
             .then(function () {
@@ -182,7 +181,8 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {mail.model.Message}
+     * @param {OdooEvent} event
+     * @param {mail.model.Message} ev.data
      */
     _onNewMessage: function (ev) {
         var message = ev.data;
@@ -200,7 +200,8 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {integer} channelID
+     * @param {OdooEvent} event
+     * @param {integer} ev.data.channelID
      */
     _onRedirectToChannel: function (ev) {
         var self = this;
@@ -211,8 +212,9 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {string} resModel
-     * @param {integer} resID
+     * @param {OdooEvent} event
+     * @param {string} ev.data.resModel
+     * @param {integer} ev.data.resID
      */
     _onRedirect: function (ev) {
         this.trigger('redirect', {
@@ -222,10 +224,11 @@ var ThreadField = AbstractField.extend({
     },
     /**
      * @private
-     * @param {mail.model.Message}
+     * @param {OdooEvent} event
+     * @param {mail.model.Message} ev.data.message
      */
-    _onUpdateMessage: function (event) {
-        var message = event.data.message;
+    _onUpdateMessage: function (ev) {
+        var message = ev.data.message;
         if (
             message.isLinkedToDocumentThread() &&
             message.getDocumentModel() === this.model &&

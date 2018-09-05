@@ -1277,7 +1277,8 @@ var MailManager =  AbstractService.extend({
 
     /**
      * @private
-     * @param {boolean} open
+     * @param {OdooEvent} event
+     * @param {boolean} ev.data.open
      */
     _onDiscussOpen: function (ev) {
         this._discussOpen = ev.data.open;

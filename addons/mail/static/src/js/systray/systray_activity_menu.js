@@ -77,6 +77,7 @@ var ActivityMenu = Widget.extend({
     /**
      * update counter based on activity status(created or Done)
      * @private
+     * @param {OdooEvent} event
      * @param {Object} [data] key, value to decide activity created or deleted
      * @param {String} [data.type] notification type
      * @param {Boolean} [data.activity_deleted] when activity deleted

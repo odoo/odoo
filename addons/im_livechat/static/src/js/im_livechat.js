@@ -273,7 +273,8 @@ var LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Object} message
+     * @param {OdooEvent} event
+     * @param {Object} ev.data (message)
      * @return {$.Deferred}
      */
     _sendMessage: function (ev) {
