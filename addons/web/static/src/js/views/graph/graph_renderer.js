@@ -331,13 +331,13 @@ return AbstractRenderer.extend({
     _renderLineChart: function () {
         var self = this;
 
+        // undefined label value becomes a string 'Undefined' translated
+        this.state.data.forEach(self._sanitizeLabel);
+
         // Remove Undefined of first GroupBy
         var graphData = _.filter(this.state.data, function(elem){
             return elem.labels[0] !== undefined;
         });
-
-        // undefined label value becomes a string 'Undefined' translated
-        this.state.data.forEach(self._sanitizeLabel);
 
         var data = [];
         var ticksLabels = [];
