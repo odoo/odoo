@@ -1681,6 +1681,8 @@ class Datetime(Field):
             return None
         if isinstance(value, date):
             if isinstance(value, datetime):
+                if value.tzinfo:
+                    raise ValueError("Datetime field expects a naive datetime: %s" % value)
                 return value
             return datetime.combine(value, time.min)
         try:

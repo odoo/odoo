@@ -897,13 +897,16 @@ class Meeting(models.Model):
                 enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
                 enddate = enddate.astimezone(pytz.utc)
-                meeting.stop = enddate
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
                 startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                meeting.start = startdate
+
+                meeting.write({
+                    'start': startdate.replace(tzinfo=None),
+                    'stop': enddate.replace(tzinfo=None)
+                })
             else:
                 meeting.write({'start': meeting.start_datetime,
                                'stop': meeting.stop_datetime})
