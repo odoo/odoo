@@ -905,6 +905,12 @@ actual arch.
             'datetime',
             'relativedelta',
             'current_date',
+            'abs',
+            'len',
+            'bool',
+            'float',
+            'str',
+            'unicode',
         }
 
     def get_attrs_field_names(self, arch, model, editable):
