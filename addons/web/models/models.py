@@ -37,8 +37,7 @@ class Base(models.AbstractModel):
             'quarter': 'QQQ yyyy',
             'year': 'yyyy'}
 
-        fields = [progress_bar['field'], group_by]
-        records_values = self.search_read(domain or [], fields)
+        records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
 
         data = {}
         for record_values in records_values:
@@ -46,10 +45,9 @@ class Base(models.AbstractModel):
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             field_type = self._fields[group_by].type
-            if field_type in ['date', 'datetime'] and isinstance(group_by_value, pycompat.string_types):
+            if group_by_value and field_type in ['date', 'datetime']:
                 locale = self._context.get('lang') or 'en_US'
-                dt_format = DEFAULT_SERVER_DATETIME_FORMAT if field_type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
-                group_by_value = datetime.strptime(group_by_value, dt_format)
+                group_by_value = fields.Datetime.to_datetime(group_by_value)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
                 if field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones:
