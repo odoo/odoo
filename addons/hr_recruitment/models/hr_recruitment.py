@@ -124,7 +124,6 @@ class Applicant(models.Model):
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
-    write_date = fields.Datetime("Update Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
