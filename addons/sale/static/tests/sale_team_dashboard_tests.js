@@ -6,10 +6,10 @@ var KanbanView = require('web.KanbanView');
 
 var createView = testUtils.createView;
 
-QUnit.module('SALE Sales Team Dashboard', {
+QUnit.module('Sales Team Dashboard', {
     beforeEach: function () {
         this.data = {
-            partner: {
+            team: {
                 fields: {
                     foo: {string: "Foo", type: "char"},
                     invoiced_target: {string: "Invoiced_target", type: "integer"},
@@ -23,11 +23,11 @@ QUnit.module('SALE Sales Team Dashboard', {
 });
 
 QUnit.test('enter the value of the target', function (assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     var kanban = createView({
         View: KanbanView,
-        model: 'partner',
+        model: 'team',
         data: this.data,
         arch: '<kanban>' +
                 '<templates>' +
@@ -43,8 +43,7 @@ QUnit.test('enter the value of the target', function (assert) {
               '</kanban>',
         mockRPC: function (route, args) {
             if (args.method === 'write') {
-                assert.strictEqual(args.args[1]['invoiced_target'], 123,
-                        "value has updated!");
+                assert.strictEqual(args.args[1]['invoiced_target'], 123, "value has updated!");
             }
             return this._super(route, args);
         },
@@ -52,14 +51,17 @@ QUnit.test('enter the value of the target', function (assert) {
     });
     assert.strictEqual(kanban.$('.o_kanban_view .sales_team_target_definition').length, 1,
                         "should have classname 'sales_team_target_definition'");
-    kanban.$('a.sales_team_target_definition').click();
-
     assert.strictEqual(kanban.$('.o_kanban_primary_bottom.bottom_block').length, 1,
                         "should have classname 'o_kanban_primary_bottom'");
 
-    kanban.$('.o_kanban_primary_bottom.bottom_block').focus();
+    kanban.$('a.sales_team_target_definition').click();
+    assert.strictEqual(kanban.$('.o_kanban_primary_bottom.bottom_block input').length, 1,
+                        "should have input element");
+
+    kanban.$('.o_kanban_primary_bottom.bottom_block input').focus();
     kanban.$('.o_kanban_primary_bottom.bottom_block input').val('123');
     kanban.$('.o_kanban_primary_bottom.bottom_block input').blur();
+    kanban.destroy();
 });
 
 });
