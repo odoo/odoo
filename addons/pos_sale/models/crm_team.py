@@ -77,7 +77,7 @@ class CrmTeam(models.Model):
                 for data_point in order_data:
                     result.append({'x_value': data_point.get('user_id')[0], 'y_value': data_point.get('price_total')})
 
-            else:
+            elif self.dashboard_graph_group_pos in ['day', 'week', 'month']:
                 # locale en_GB is used to be able to obtain the datetime from the string returned by read_group
                 # /!\ do not use en_US as it's not ISO-standard and does not match datetime's library
                 order_data = self.env['report.pos.order'].with_context(lang='en_GB').read_group(
