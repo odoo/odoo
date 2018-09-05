@@ -174,7 +174,8 @@
                     <t t-if="message.origin_id and (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
-                    <span t-if="options.display_email_icon and message.customer_email_data and message.customer_email_data.length" class="o_thread_tooltip_container">
+                    <span t-if="options.display_email_icon and ((message.customer_email_data and message.customer_email_data.length) or ['exception', 'bounce'].indexOf(message.customer_email_status) > -1)" class="o_thread_tooltip_container">
+
                         <t t-set="fatype" t-value="''"/>
                         <t t-if="message.customer_email_status === 'sent' or message.customer_email_status === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
