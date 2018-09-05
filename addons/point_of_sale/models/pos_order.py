@@ -146,8 +146,22 @@ class PosOrder(models.Model):
                     if not cash_journal:
                         raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
                 cash_journal_id = cash_journal[0].id
+            # Last statement in list is which has the amount return
+            last_statement = pos_order['statement_ids'][-1]
+            pay_journal = self.env['account.journal'].browse(
+                last_statement[2]['journal_id'])
+            cash_journal = self.env['account.journal'].browse(cash_journal_id)
+            pay_journal_cur = (pay_journal.currency_id or
+                               pay_journal.company_id.currency_id)
+            cash_journal_cur = (cash_journal.currency_id or
+                                cash_journal.company_id.currency_id)
+            amount_return = pos_order['amount_return']
+            if pay_journal_cur != cash_journal_cur:
+                amount_return = cash_journal_cur.with_context(
+                    date=last_statement[2]['name']).compute(
+                        pos_order['amount_return'], pay_journal_cur)
             order.add_payment({
-                'amount': -pos_order['amount_return'],
+                'amount': -amount_return,
                 'payment_date': fields.Date.context_today(self),
                 'payment_name': _('return'),
                 'journal': cash_journal_id,
@@ -1179,10 +1193,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
