@@ -86,6 +86,6 @@ class IrTranslation(models.Model):
                     'module': translation.module,
                     'src': werkzeug.url_quote_plus(
                             "text:'" +
-                            translation.source[:50].replace("'", "\'") +
+                            translation.source[:50].replace("'", "\\'") +
                             "'"),
                 }

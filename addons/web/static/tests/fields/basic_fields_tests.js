@@ -4418,6 +4418,33 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDomain');
 
+    QUnit.test('The domain editor should not crash the view when given a dynamic filter', function (assert) {
+        //dynamic filters (containing variables, such as uid, parent or today)
+        //are not handled by the domain editor, but it shouldn't crash the view
+        assert.expect(1);
+
+        this.data.partner.records[0].foo = '[["int_field", "=", uid]]';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                    '<field name="int_field" invisible="1"/>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                user_context: {uid: 14},
+            },
+        });
+
+        assert.strictEqual(form.$('.o_read_mode').text(), "This domain is not supported.",
+            "The widget should not crash the view, but gracefully admit its failure.");
+        form.destroy();
+    });
+
     QUnit.test('basic domain field usage is ok', function (assert) {
         assert.expect(6);
 

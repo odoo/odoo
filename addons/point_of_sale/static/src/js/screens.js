@@ -1547,7 +1547,12 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        window.print();
+        if($.browser.safari){
+            document.execCommand('print', false, null);
+        }
+        else{
+            window.print();
+        }
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
