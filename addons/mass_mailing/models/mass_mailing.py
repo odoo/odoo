@@ -96,7 +96,6 @@ class MassMailingList(models.Model):
 
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
-    create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
     contact_ids = fields.Many2many(
         'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
@@ -213,7 +212,6 @@ class MassMailingContact(models.Model):
     title_id = fields.Many2one('res.partner.title', string='Title')
     email = fields.Char(required=True)
     is_email_valid = fields.Boolean(compute='_compute_is_email_valid', store=True)
-    create_date = fields.Datetime(string='Creation Date')
     list_ids = fields.Many2many(
         'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
@@ -421,7 +419,6 @@ class MassMailing(models.Model):
     active = fields.Boolean(default=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
-    create_date = fields.Datetime(string='Creation Date')
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
     body_html = fields.Html(string='Body', sanitize_attributes=False)

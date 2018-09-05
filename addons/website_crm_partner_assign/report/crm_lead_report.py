@@ -19,7 +19,6 @@ class CrmLeadReportAssign(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     date_assign = fields.Date('Assign Date', readonly=True)
-    create_date = fields.Datetime('Create Date', readonly=True)
     delay_open = fields.Float('Delay to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case")
     delay_close = fields.Float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
     delay_expected = fields.Float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
