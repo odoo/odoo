@@ -244,11 +244,23 @@
     </template>
 
     <template id="portal_contact" name="Contact">
-        <h3 class="o_page_header"><t t-esc="title"/></h3>
-        <h5 t-esc="sales_user.name"/>
-        <p><a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/></p>
-        <p t-esc="sales_user.phone"/>
-        <p t-esc="sales_user.city"/>
+        <div class="o_portal_contact_details mb-5">
+            <h4><t t-if="title" t-esc="title"/><t t-else="">Your contact</t></h4>
+            <hr class="mt-1 mb0"/>
+            <h6 class="mb-1"><b t-esc="sales_user.name"/></h6>
+            <div class="d-flex align-items-center mb-1">
+                <div class="fa fa-envelope fa-fw mr-1"></div>
+                <a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-phone fa-fw mr-1"></div>
+                <span t-esc="sales_user.phone"/>
+            </div>
+            <div class="d-flex flex-nowrap align-items-center mb-1">
+                <div class="fa fa-map-marker fa-fw mr-1"></div>
+                <span t-esc="sales_user.city"/>
+            </div>
+        </div>
     </template>
 
     <template id="portal_archive_groups" name="Portal Archive Groups">
