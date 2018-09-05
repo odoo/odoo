@@ -199,9 +199,8 @@ class Product(models.Model):
         for p, p2 in pycompat.izip(self, self2):
             taxes = partner.property_account_position_id.map_tax(p.sudo().taxes_id.filtered(lambda x: x.company_id == company_id))
             p.website_price = taxes.compute_all(p2.price, pricelist.currency_id, quantity=qty, product=p2, partner=partner)[ret]
-            price_without_pricelist = taxes.compute_all(p.list_price, pricelist.currency_id)[ret]
-            p.website_price_difference = False if float_is_zero(price_without_pricelist - p.website_price, precision_rounding=pricelist.currency_id.rounding) else True
             p.website_public_price = taxes.compute_all(p2.lst_price, quantity=qty, product=p2, partner=partner)[ret]
+            p.website_price_difference = False if float_is_zero(p.website_public_price - p.website_price, precision_rounding=pricelist.currency_id.rounding) else True
 
     @api.multi
     def website_publish_button(self):
