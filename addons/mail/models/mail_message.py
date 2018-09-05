@@ -372,10 +372,19 @@ class Message(models.Model):
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
-
+            # we read customer_email_status before filtering inactive user because we don't want to miss a red enveloppe
+            customer_email_status = (
+                (all(n.email_status == 'sent' for n in message.notification_ids) and 'sent') or
+                (any(n.email_status == 'exception' for n in message.notification_ids) and 'exception') or
+                (any(n.email_status == 'bounce' for n in message.notification_ids) and 'bounce') or
+                'ready'
+            )
             customer_email_data = []
-            filter_notification = lambda notif: (notif.email_status in ('bounce', 'exception', 'canceled') and (notif.res_partner_id.partner_share and notif.res_partner_id.active)) or\
-                                                    (notif.res_partner_id.partner_share and notif.res_partner_id.active)
+            def filter_notification(notif):
+                return (
+                    (notif.email_status in ('bounce', 'exception', 'canceled') or notif.res_partner_id.partner_share) and
+                    notif.res_partner_id.active
+                )
             for notification in message.notification_ids.filtered(filter_notification):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
@@ -391,9 +400,7 @@ class Message(models.Model):
             message_dict.update({
                 'author_id': author,
                 'partner_ids': partner_ids,
-                'customer_email_status': (all(d[2] == 'sent' for d in customer_email_data) and 'sent') or
-                                        (any(d[2] == 'exception' for d in customer_email_data) and 'exception') or 
-                                        (any(d[2] == 'bounce' for d in customer_email_data) and 'bounce') or 'ready',
+                'customer_email_status': customer_email_status,
                 'customer_email_data': customer_email_data,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
