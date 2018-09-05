@@ -33,7 +33,6 @@ class ImBus(models.Model):
 
     _name = 'bus.bus'
 
-    create_date = fields.Datetime('Create date')
     channel = fields.Char('Channel')
     message = fields.Char('Message')
 
