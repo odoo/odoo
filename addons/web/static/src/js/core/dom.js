@@ -111,6 +111,9 @@ return {
             position: 'absolute',
             opacity: 0,
             height: 10,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+            padding: 0,
             top: -10000,
         }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
