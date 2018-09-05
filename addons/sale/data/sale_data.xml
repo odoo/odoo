@@ -15,5 +15,11 @@
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>
+
+        <!-- set default order confirmation template for electronic Payment -->
+        <record id="default_sale_confirmation_template" model="ir.config_parameter">
+            <field name="key">sale.sale_confirmation_template</field>
+            <field name="value" ref="sale.order_confirmation_mail_template"/>
+        </record>
     </data>
 </odoo>

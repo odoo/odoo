@@ -37,6 +37,7 @@ class ResConfigSettings(models.TransientModel):
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
                                                   default=_default_recovery_mail_template, related='website_id.cart_recovery_mail_template_id')
+    confirmation_template_id = fields.Many2one('mail.template', string='Confirmation Email', domain="[('model', '=', 'sale.order')]", config_parameter='website_sale.ecommerce_confirmation_template')
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
                                         default=1.0, related='website_id.cart_abandoned_delay')
 
