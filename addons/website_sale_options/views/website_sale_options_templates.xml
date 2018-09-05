@@ -107,7 +107,7 @@
                     <t t-call="website_sale.variants"/>
                   </div>
                 </td>
-                <td class="td-price">
+                <td class="text-center td-price">
                   <span class="text-danger oe_default_price oe_optional"
                     t-field="product.lst_price"
                     t-options='{
@@ -123,12 +123,12 @@
                    }'/>
                   <p class="css_not_available_msg bg-danger" style="padding: 5px;">Product not available</p>
 
-                  <div class='mt8'>
+                  <div>
                     <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
                     <a role="button" href="#" class="js_add btn btn-info"><strong>Add<span class='d-none d-md-inline'> to Cart</span></strong></a>
                     <span class="js_remove d-none">
                       <span class="js_item">1 </span><span class="js_items d-none">5 </span> <span t-field="product.uom_id.sudo().name"/><br/>
-                      <a role="button" href="#" class="js_remove btn btn-sm btn-info"><small>Remove <span class='d-none d-md-inline'> from Cart</span></small></a>
+                      <a role="button" href="#" class="js_remove btn btn-info"><small>Remove <span class='d-none d-md-inline'> from Cart</span></small></a>
                     </span>
                   </div>
                 </td>
