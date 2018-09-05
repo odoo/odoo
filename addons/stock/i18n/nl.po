@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:03+0000\n"
-"PO-Revision-Date: 2018-08-24 09:03+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -355,7 +355,7 @@ msgid "A Pack"
 msgstr "Een verpakking"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:82
+#: code:addons/stock/models/stock_move_line.py:88
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -493,11 +493,6 @@ msgstr "Alias"
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
 msgstr "Alle"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_type_list
-msgid "All Operations"
-msgstr "Alle bewerkingen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1612,8 +1607,8 @@ msgstr "Omschrijving voor interne verplaatsingen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "Description for Receptions"
-msgstr "Omschrijving voor ontvangsten"
+msgid "Description for Receipts"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
@@ -2891,6 +2886,7 @@ msgstr "Zoeken"
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
+#: model:ir.ui.view,arch_db:stock.view_location_tree2
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 #, python-format
@@ -3310,7 +3306,7 @@ msgid "New"
 msgstr "Nieuw"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:163
+#: code:addons/stock/models/stock_move_line.py:169
 #: code:addons/stock/models/stock_picking.py:613
 #, python-format
 msgid "New Move:"
@@ -3375,7 +3371,7 @@ msgid "No inventory found"
 msgstr "Geen voorraad gevonden"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:400
+#: code:addons/stock/models/stock_move_line.py:406
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Geen negatieve hoeveelheden toegestaan"
@@ -3527,6 +3523,7 @@ msgstr "Één product"
 #: code:addons/stock/models/stock_rule.py:97
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -3548,11 +3545,6 @@ msgid "Operation Types"
 msgstr "Bewerkingsoorten"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
-msgid "Operation Types Name"
-msgstr "Bewerkingssoort naam"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3562,6 +3554,7 @@ msgid "Operations"
 msgstr "Bewerkingen"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_type_list
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
 msgstr "Bewerkingsoorten"
@@ -4547,12 +4540,13 @@ msgstr "Ontvangsten"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly (1 step)"
-msgstr ""
+msgstr "Ontvang goederen direct (1 stap)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input and then stock (2 steps)"
 msgstr ""
+"Ontvang goederen in ontvangstlocatie en daarna in de stock (2 stappen)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -4623,7 +4617,7 @@ msgstr "Referentie van het document"
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
 msgid "Register a product receipt"
-msgstr ""
+msgstr "Registreer een product ticket"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_kandan
@@ -4822,17 +4816,13 @@ msgid "Reverse Transfer"
 msgstr "Retour zending"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__name
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_id
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Route"
 msgstr "Route"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_route__name
-msgid "Route Name"
-msgstr "Routenaam"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -4888,6 +4878,7 @@ msgstr "Regels"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
 msgstr "Planner uitvoeren"
 
@@ -4897,9 +4888,9 @@ msgid "Run Scheduler Manually"
 msgstr "Activeer planner handmatig"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-msgid "Run Schedulers"
-msgstr "Starten planners"
+#: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "Run the scheduler"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5726,7 +5717,7 @@ msgid "The product"
 msgstr "Het product"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:369
+#: code:addons/stock/models/stock_move_line.py:375
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
@@ -5738,7 +5729,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:284
-#: code:addons/stock/models/stock_move_line.py:76
+#: code:addons/stock/models/stock_move_line.py:82
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
@@ -5787,6 +5778,13 @@ msgstr "De voorraad bewerking waar de verpakking is aangemaakt"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__rule_id
 msgid "The stock rule that created this stock move"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+msgid ""
+"The stock will be reserved for operations waiting for availability and the "
+"reordering rules will be triggered."
 msgstr ""
 
 #. module: stock
@@ -5898,6 +5896,12 @@ msgstr ""
 "Locatiesoort kan niet aangepast worden omdat de locatie producten bevat."
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:74
+#, python-format
+msgid "This lot %s is incompatible with this product %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
 msgid ""
 "This menu gives you the full traceability of inventory\n"
@@ -6007,15 +6011,14 @@ msgstr "Aan"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
-#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "To Do"
 msgstr "Te doen"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-msgid "To Receive"
-msgstr "Te ontvangen"
+msgid "To Process"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -6129,7 +6132,6 @@ msgstr "Verplaatsingsreferentie"
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
 #: model:ir.ui.menu,name:stock.all_picking
-#: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
 msgstr "Verplaatsingen"
 
@@ -6453,6 +6455,7 @@ msgstr "Wachtende verplaatsingen"
 #: model:ir.model.fields,field_description:stock.field_stock_move__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_rule__warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse__name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__warehouse_id
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.stock_warehouse_view_search
@@ -6480,11 +6483,6 @@ msgid "Warehouse Management"
 msgstr "Magazijnbeheer"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse__name
-msgid "Warehouse Name"
-msgstr "Magazijn naam"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_warehouse_id
 msgid "Warehouse to Propagate"
 msgstr "Door te geven magazijn"
@@ -6506,8 +6504,8 @@ msgid "Warehouses"
 msgstr "Magazijnen"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:123
-#: code:addons/stock/models/stock_move_line.py:135
+#: code:addons/stock/models/stock_move_line.py:129
+#: code:addons/stock/models/stock_move_line.py:141
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -6646,15 +6644,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-msgid ""
-"When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
-"                and verify if some reordering rules should be triggered."
-msgstr ""
-"Wanneer u de planners uitvoert, probeert Odoo de beschikbare voorraad te reserveren om voorraad voor bestaande leveringen te reserveren\n"
-"en controleert of aanvulopdrachtregels moeten worden geactiveerd."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
 msgstr "Of de mutatie is toegevoegd na de bevestiging van de levering."
@@ -6721,7 +6710,7 @@ msgstr ""
 "reservering voor deze voorraad beweging eerst ongedaan moeten maken."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:331
+#: code:addons/stock/models/stock_move_line.py:337
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -6731,7 +6720,7 @@ msgstr ""
 " alleen de verwerkte hoeveelheden corrigeren."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:141
+#: code:addons/stock/models/stock_move_line.py:147
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr ""
@@ -6743,20 +6732,20 @@ msgid "You can only adjust storable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1144
+#: code:addons/stock/models/stock_move.py:1150
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Er kunnen alleen regels met de status 'Nieuw' worden verwijderd."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:134
+#: code:addons/stock/models/stock_move_line.py:140
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "U kan slechts 1.0%s verwerken van producten met een unieke serienummer."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1008
+#: code:addons/stock/models/stock_move.py:1014
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
@@ -6812,7 +6801,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1128
+#: code:addons/stock/models/stock_move.py:1134
 #, python-format
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
@@ -6838,7 +6827,7 @@ msgstr ""
 "\t%s - Hvh: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1175
+#: code:addons/stock/models/stock_move.py:1181
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
@@ -6846,7 +6835,7 @@ msgstr ""
 " bevestigen."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1171
+#: code:addons/stock/models/stock_move.py:1177
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
@@ -6868,8 +6857,8 @@ msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:116
-#: code:addons/stock/models/stock_move_line.py:120
+#: code:addons/stock/models/stock_move_line.py:122
+#: code:addons/stock/models/stock_move_line.py:126
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -6970,7 +6959,7 @@ msgid "You must first set the quantity you will put in the pack."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:398
+#: code:addons/stock/models/stock_move_line.py:404
 #: code:addons/stock/models/stock_picking.py:713
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
@@ -7051,6 +7040,11 @@ msgid "is not available in sufficient quantity"
 msgstr "is niet beschikbaar in voldoende hoeveelheid"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "manually to trigger the reordering rules right now."
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "of"
 msgstr "of"
@@ -7073,7 +7067,7 @@ msgstr "report.stock.forecast"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "report.stock.report_stock_rule"
-msgstr ""
+msgstr "report.stock.report_stock_rule"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -251,16 +251,6 @@ msgstr "<strong>工作中心</strong>"
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
 msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
-msgid ""
-"A manufacturing order, based on a bill of materials, will\n"
-"                consume raw materials and produce finished products."
-msgstr ""
-"生產單根據物料清單，將會\n"
-"消耗原材料並產出成品。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -802,8 +792,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid "Create a new manufacturing order"
 msgstr ""
 
@@ -903,11 +891,6 @@ msgstr "儀表板"
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__db_datas
 msgid "Database Data"
 msgstr "資料庫數據"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.oee_search_view
-msgid "Date"
-msgstr "日期   "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
@@ -1581,7 +1564,7 @@ msgid "Late Activities"
 msgstr "晚活動"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:490
+#: code:addons/mrp/models/mrp_production.py:492
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
@@ -1770,7 +1753,6 @@ msgstr "製造訂單"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
-#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.actions.act_window,name:mrp.mrp_production_report
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_report
@@ -1824,15 +1806,6 @@ msgstr ""
 "製造業務在工作中心進行。 工作中心的組成為\n"
 "工人和/或機器，它們被用於成本、調度、能力計劃等。\n"
 "工作中心在路線的操作上被定義。"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
-msgid ""
-"Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
-"                stock rule."
-msgstr "生產訂單通常根據客戶要求或自動規則，例如最小庫存規則來自動建議。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1926,7 +1899,6 @@ msgstr "我的活動"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
 msgid "Name"
 msgstr "名稱"
 
@@ -2841,6 +2813,7 @@ msgstr "責任用戶"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__routing_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__routing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing__name
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_search_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
@@ -2852,11 +2825,6 @@ msgstr "路線"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "路線行"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing__name
-msgid "Routing Name"
-msgstr "路線名稱"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2915,7 +2883,7 @@ msgid "Scheduled Month"
 msgstr "安排的月份"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:692
+#: code:addons/mrp/models/mrp_production.py:694
 #: code:addons/mrp/models/mrp_workorder.py:511
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3044,7 +3012,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:588
+#: code:addons/mrp/models/mrp_production.py:590
 #, python-format
 msgid ""
 "Some raw materials were produced for a lot without finished product. You can"
@@ -3160,11 +3128,6 @@ msgstr "存儲的文件名"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
 msgid "Sub BoM"
 msgstr "子 BoM"
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.oee_search_view
-msgid "TPM Big Loss"
-msgstr "TPM 大損失"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
@@ -3460,7 +3423,6 @@ msgid "To Consume"
 msgstr "待投料"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "To Do"
 msgstr "待辦"
@@ -3469,6 +3431,11 @@ msgstr "待辦"
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
 msgstr "待啟動"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
+msgid "To Process"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3731,11 +3698,6 @@ msgid "Waiting Availability"
 msgstr "等待可用"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action_waiting
-msgid "Waiting Availability MO"
-msgstr "可用性等待中MO"
-
-#. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/js/mrp.js:38
 #, python-format
@@ -3811,6 +3773,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workcenter_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__workcenter_id
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
@@ -3907,8 +3870,8 @@ msgstr "待投料工單"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production_specific
-#: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 #: model:ir.actions.act_window,name:mrp.action_work_orders
+#: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_todo
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workorder_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_ids
@@ -3927,13 +3890,13 @@ msgid "Work Orders Deviation"
 msgstr "工單偏差"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
 msgstr "工單效能"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
+#: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
 msgstr "工單規劃"
 
@@ -3953,7 +3916,7 @@ msgid "Work Sheet"
 msgstr "工作表"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:668
+#: code:addons/mrp/models/mrp_production.py:670
 #, python-format
 msgid "Work order %s is still running"
 msgstr "工單 %s 還在運行中"
@@ -4006,8 +3969,8 @@ msgstr "工作時間"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
-msgid "Working Time"
-msgstr "工作時間"
+msgid "Working Times"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -4027,7 +3990,7 @@ msgid ""
 msgstr "您可以從您的電腦上傳一個文件或者複製/粘貼一個網路鏈接到您的文件。"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:602
+#: code:addons/mrp/models/mrp_production.py:604
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
@@ -4040,7 +4003,7 @@ msgid "You can not change the finished work order."
 msgstr "您不能變更已完成的工單。"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:654
+#: code:addons/mrp/models/mrp_production.py:656
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "您不能不知道您消費的是那一個批次"
@@ -4190,7 +4153,7 @@ msgid "last"
 msgstr "最後的"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:714
+#: code:addons/mrp/models/mrp_production.py:716
 #, python-format
 msgid "manufacturing order"
 msgstr ""

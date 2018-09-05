@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Chris <krystof.reklamy13@gmail.com>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr ""
 "${object.company_id.name} Platební doklad (Ref ${object.name or 'n/a' })"
 
 #. module: account
-#: code:addons/account/models/account.py:926
+#: code:addons/account/models/account.py:927
 #, python-format
 msgid "%s (Copy)"
 msgstr "%s (Kopie)"
@@ -76,6 +76,12 @@ msgstr "%s (Kopie)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
+
+#. module: account
+#: code:addons/account/models/account.py:679
+#, python-format
+msgid "%s Sequence"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:399
@@ -139,7 +145,7 @@ msgid ": General ledger"
 msgstr ": Hlavní kniha"
 
 #. module: account
-#: code:addons/account/models/account.py:678
+#: code:addons/account/models/account.py:677
 #, python-format
 msgid ": Refund"
 msgstr ": Vrácení platby"
@@ -201,6 +207,11 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "<i class=\"fa fa-comment\"/> Contact us"
 msgstr ""
 
 #. module: account
@@ -409,11 +420,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<span>Description</span>"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.(%)</span>"
 msgstr ""
 
@@ -478,24 +484,9 @@ msgid "<span>Partners</span>"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<span>Quantity</span>"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Hlášení</span>"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<span>Source Document</span>"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<span>Taxes</span>"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -503,14 +494,14 @@ msgid "<span>Total</span>"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<span>Unit Price</span>"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
 msgstr "<span>Zobrazit</span>"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -680,11 +671,6 @@ msgstr "<strong>Mezisoučet :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Subtotal:</strong>"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Mezisoučet</strong>"
 
@@ -745,13 +731,13 @@ msgstr ""
 "zaúčtovat příspěvky, když peníze přicházejí, nebo odchází z pokladny."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1881
+#: code:addons/account/models/account_invoice.py:1872
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:844
+#: code:addons/account/models/account.py:845
 #, python-format
 msgid "A bank account can belong to only one journal."
 msgstr ""
@@ -2626,7 +2612,7 @@ msgid "Cannot generate an unused account code."
 msgstr "Nelze vytvořit nevyužitý kód účtu."
 
 #. module: account
-#: code:addons/account/models/account.py:746
+#: code:addons/account/models/account.py:747
 #, python-format
 msgid ""
 "Cannot generate an unused journal code. Please fill the 'Shortcode' field."
@@ -2734,7 +2720,7 @@ msgid "Change label of the counterpart that will hold the payment difference"
 msgstr ""
 
 #. module: account
-#: code:addons/account/controllers/portal.py:132
+#: code:addons/account/controllers/portal.py:103
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
@@ -2742,7 +2728,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/controllers/portal.py:138
+#: code:addons/account/controllers/portal.py:109
 #, python-format
 msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
@@ -2750,7 +2736,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/controllers/portal.py:135
+#: code:addons/account/controllers/portal.py:106
 #, python-format
 msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
@@ -3216,11 +3202,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Contact"
 msgstr "Kontakt"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Contact us"
-msgstr "Kontaktujte nás"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -4105,6 +4086,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:293
 #: model:ir.model.fields,field_description:account.field_account_account_type__note
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__name
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_account_type_form
 #: model:ir.ui.view,arch_db:account.view_invoice_line_form
@@ -4159,6 +4141,11 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+msgid "Disc (%)"
 msgstr ""
 
 #. module: account
@@ -4348,6 +4335,8 @@ msgstr "Návrh dobropisu"
 #. module: account
 #: code:addons/account/models/account_invoice.py:484
 #: model:ir.ui.view,arch_db:account.invoice_form
+#: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
+#: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
@@ -4376,7 +4365,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/controllers/portal.py:45
+#: code:addons/account/controllers/portal.py:40
 #: code:addons/account/static/src/xml/account_reconciliation.xml:276
 #: model:ir.model.fields,field_description:account.field_account_invoice__date_due
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__date_due
@@ -4442,6 +4431,11 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:412
 #, python-format
 msgid "EXCH"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Edit Invoice"
 msgstr ""
 
 #. module: account
@@ -5582,7 +5576,7 @@ msgstr "Příjmový účet na šabloně výrobku"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:747
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:748
 #, python-format
 msgid "Incorrect Operation"
 msgstr ""
@@ -5757,7 +5751,7 @@ msgid "Invoice Created"
 msgstr "Faktura vytvořena"
 
 #. module: account
-#: code:addons/account/controllers/portal.py:44
+#: code:addons/account/controllers/portal.py:39
 #: model:ir.model.fields,field_description:account.field_account_invoice__date_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6571,6 +6565,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
 msgid "Layout"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Leave Portal"
 msgstr ""
 
 #. module: account
@@ -7470,7 +7469,7 @@ msgstr "Otevřít"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:711
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:712
 #: code:addons/account/static/src/xml/account_reconciliation.xml:134
 #, python-format
 msgid "Open balance"
@@ -8083,7 +8082,7 @@ msgid "Percentage of balance"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1961
+#: code:addons/account/models/account_invoice.py:1952
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
@@ -8298,6 +8297,11 @@ msgid "Preview as a PDF"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.invoice_form
+msgid "Price"
+msgstr "Cena"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_print
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_print
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -8452,6 +8456,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__quantity
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Quantity"
 msgstr "Množství"
 
@@ -8610,7 +8615,7 @@ msgid "Record transactions in foreign currencies"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:919
+#: code:addons/account/models/account.py:920
 #, python-format
 msgid "Recursion found for tax '%s'."
 msgstr ""
@@ -8630,7 +8635,7 @@ msgid "Ref."
 msgstr "Odk."
 
 #. module: account
-#: code:addons/account/controllers/portal.py:46
+#: code:addons/account/controllers/portal.py:41
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__ref
 #: model:ir.model.fields,field_description:account.field_account_move__ref
@@ -9508,6 +9513,7 @@ msgstr "Řadit podle"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__origin
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__origin
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Source Document"
 msgstr "Zdrojový dokument"
 
@@ -9656,7 +9662,7 @@ msgid "States Count"
 msgstr ""
 
 #. module: account
-#: code:addons/account/controllers/portal.py:47
+#: code:addons/account/controllers/portal.py:42
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__state
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__state
 #: model:ir.model.fields,field_description:account.field_account_invoice__state
@@ -9999,6 +10005,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.onboarding_sale_tax_step
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
@@ -10348,7 +10355,7 @@ msgid "The amount of a cash transaction cannot be 0."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:921
+#: code:addons/account/models/account.py:922
 #, python-format
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
@@ -10440,7 +10447,7 @@ msgid "The currency used to enter statement"
 msgstr "Měna použitá k zadání příkazu"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1967
+#: code:addons/account/models/account_invoice.py:1958
 #, python-format
 msgid "The day of the month used for this term must be stricly positive."
 msgstr ""
@@ -10525,7 +10532,7 @@ msgid ""
 msgstr "Bude vybrán poslední den v měsíci, pokud zvolený den neexistuje."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1878
+#: code:addons/account/models/account_invoice.py:1869
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
 msgstr ""
@@ -10571,7 +10578,7 @@ msgid "The next sequence number will be used for the next invoice."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1969
+#: code:addons/account/models/account_invoice.py:1960
 #, python-format
 msgid "The number of days used for a payment term cannot be negative."
 msgstr ""
@@ -10657,7 +10664,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1749
+#: code:addons/account/models/account_invoice.py:1740
 #, python-format
 msgid ""
 "The selected unit of measure has to be in the same category as the product "
@@ -11259,6 +11266,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_unit
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Unit Price"
 msgstr "Jednotková cena"
 
@@ -11636,6 +11644,11 @@ msgid "View"
 msgstr "Zobrazení"
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "View accounts detail"
+msgstr ""
+
+#. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Warning"
 msgstr "Varování"
@@ -11652,8 +11665,8 @@ msgid "Warning on the Invoice"
 msgstr "Upozornění na fakturu"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1684
-#: code:addons/account/models/account_invoice.py:1748
+#: code:addons/account/models/account_invoice.py:1675
+#: code:addons/account/models/account_invoice.py:1739
 #, python-format
 msgid "Warning!"
 msgstr "Varování!"
@@ -11797,7 +11810,7 @@ msgstr ""
 "deníku jako soudní spor s přidruženým partnerem"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1926
+#: code:addons/account/models/account_invoice.py:1917
 #, python-format
 msgid ""
 "You can not delete payment terms as other records still reference it. "
@@ -11813,7 +11826,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1770
+#: code:addons/account/models/account_invoice.py:1761
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
 msgstr ""
@@ -11975,7 +11988,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:748
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:749
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr "Nelze smíchat položky z pohledávkových a splatných účtů."
@@ -12102,7 +12115,7 @@ msgid "You must first define an opening move."
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1685
+#: code:addons/account/models/account_invoice.py:1676
 #, python-format
 msgid "You must first select a partner."
 msgstr ""

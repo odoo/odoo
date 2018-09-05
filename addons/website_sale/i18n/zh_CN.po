@@ -18,13 +18,15 @@
 # Siyuan Gu <siyuancn@hotmail.com>, 2018
 # zpq001 <zpq001@live.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# Fisher <fisher@kdomi.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"Last-Translator: Fisher <fisher@kdomi.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -285,12 +287,16 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Abandoned Carts</span>"
+msgid ""
+"<span class=\"o_form_label\">Abandoned Carts</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Assignation</span>"
+msgid ""
+"<span class=\"o_form_label\">Assignation</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -830,11 +836,6 @@ msgid "Custom payment instructions"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Customer Experience"
-msgstr "客户体验"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
 msgid "Customers"
 msgstr "客户"
@@ -1022,11 +1023,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Generate the invoice automatically when the payment is received"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Give us your feedback"
 msgstr ""
@@ -1147,7 +1143,7 @@ msgstr "开票"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__is_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
 msgid "Is published"
-msgstr ""
+msgstr "已发布"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1202,8 +1198,8 @@ msgstr "最后更新时间"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Let returning shoppers save products in a whishlist"
-msgstr "让回头客将产品保存在心愿单中"
+msgid "Let returning shoppers save products in a wishlist"
+msgstr "让回头客将产品保存在购物清单中"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1290,7 +1286,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:1009
+#: code:addons/website_sale/controllers/main.py:1010
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1431,10 +1427,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #, python-format
 msgid "Orders"
 msgstr "订单"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Orders Followup"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -1626,11 +1626,6 @@ msgid "Product Attribute"
 msgstr "产品属性"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Product Catalog"
-msgstr "产品目录"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
 msgstr "产品比较工具"
@@ -1687,6 +1682,7 @@ msgstr "在 web 目录中显示的产品价格"
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
 #: model:ir.ui.view,arch_db:website_sale.product
+#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Products"
 msgstr "产品"
 
@@ -2025,7 +2021,7 @@ msgstr "商店 - 选择付款收单方"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products_add_to_cart
 msgid "Shopping cart"
-msgstr ""
+msgstr "购物车"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2322,7 +2318,7 @@ msgstr "查看购物车("
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "在当前网站显示"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website

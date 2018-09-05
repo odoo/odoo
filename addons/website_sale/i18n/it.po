@@ -18,15 +18,15 @@
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Pierantonio Fanelli <pfa@odoo.com>, 2018
+# pfaodoo <pfa@odoo.com>, 2018
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -288,12 +288,16 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Abandoned Carts</span>"
+msgid ""
+"<span class=\"o_form_label\">Abandoned Carts</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Assignation</span>"
+msgid ""
+"<span class=\"o_form_label\">Assignation</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -863,11 +867,6 @@ msgid "Custom payment instructions"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Customer Experience"
-msgstr "Esperienza Cliente"
-
-#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
 msgid "Customers"
 msgstr "Clienti"
@@ -1056,11 +1055,6 @@ msgstr "Generare una fattura da ordini pronti per la fatturazione."
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the electronic payment is confirmed"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Generate the invoice automatically when the payment is received"
 msgstr ""
 
 #. module: website_sale
@@ -1255,7 +1249,7 @@ msgstr "Ultima modifica il"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Let returning shoppers save products in a whishlist"
+msgid "Let returning shoppers save products in a wishlist"
 msgstr "Consenti ai clienti di salvare prodotti in una wishlist"
 
 #. module: website_sale
@@ -1348,7 +1342,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:1009
+#: code:addons/website_sale/controllers/main.py:1010
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1493,10 +1487,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
 #: model:ir.ui.menu,name:website_sale.menu_orders
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #, python-format
 msgid "Orders"
 msgstr "Ordini"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Orders Followup"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -1688,11 +1686,6 @@ msgid "Product Attribute"
 msgstr "Attributo prodotto"
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Product Catalog"
-msgstr "Catalogo Prodotti"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
 msgstr "Strumento di confronto Prodotto"
@@ -1749,6 +1742,7 @@ msgstr "Visualizzare il prezzo dei prodotti nel catalogo web"
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
 #: model:ir.ui.view,arch_db:website_sale.product
+#: model:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Products"
 msgstr "Prodotti"
 

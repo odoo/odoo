@@ -10,10 +10,10 @@
 # trendspotter, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-09-05 08:39+0000\n"
+"PO-Revision-Date: 2018-09-05 08:39+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:489
+#: code:addons/resource/models/resource.py:485
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -445,13 +445,13 @@ msgid "Test Resource Model"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:468
+#: code:addons/resource/models/resource.py:464
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/models/resource.py:523
+#: code:addons/resource/models/resource.py:519
 #, python-format
 msgid "The start date of the leave must be earlier end date."
 msgstr ""
@@ -608,10 +608,8 @@ msgid "Working Period"
 msgstr "Pracovní období"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
-#: model:ir.ui.menu,name:resource.menu_resource_calendar
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
@@ -619,3 +617,9 @@ msgstr "Pracovní období"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "Pracovní čas"
+
+#. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: model:ir.ui.menu,name:resource.menu_resource_calendar
+msgid "Working Times"
+msgstr ""
