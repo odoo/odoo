@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"Last-Translator: Cristóbal Martí Oliver <info@moblesmarti.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +58,7 @@ msgstr ""
 #. module: note
 #: model:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Añadir nueva etiqueta"
 
 #. module: note
 #. openerp-web
@@ -312,11 +313,19 @@ msgstr "Etiqueta de la nota"
 #. module: note
 #: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
+#: model:ir.ui.menu,name:note.menu_note_notes
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
 msgstr "Notas"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -368,11 +377,6 @@ msgstr "Propietario de la etapa de la nota"
 #: selection:note.note,activity_state:0
 msgid "Planned"
 msgstr "Planificado"
-
-#. module: note
-#: model:ir.ui.menu,name:note.menu_note_notes
-msgid "Productivity"
-msgstr "Productividad"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
@@ -519,21 +523,6 @@ msgid "Unread Messages Counter"
 msgstr "Contador de mensajes sin leer"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-"Use notas para organizar tareas personales o notas. Todas\n"
-"            las notas son privadas; nadie más será capaz de verlas. Sin embargo\n"
-"            usted puede compartir algunas notas con otras personas invitando como seguidores\n"
-"            en la nota. (Útil para actas de reuniones, sobre todo si se\n"
-"            activa la función de bloc para la escritura colaborativa)."
-
-#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Úselo para ordenar las fases de nota"
@@ -542,12 +531,3 @@ msgstr "Úselo para ordenar las fases de nota"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Usuarios"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Usted puede personalizar la forma de procesar sus notas / tareas añadiendo,\n"
-"            eliminando o modificando columnas.."

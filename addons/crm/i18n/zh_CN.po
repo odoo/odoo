@@ -7,13 +7,14 @@
 # zpq001 <zpq001@live.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:03+0000\n"
-"PO-Revision-Date: 2018-08-24 09:03+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"POT-Creation-Date: 2018-09-05 08:36+0000\n"
+"PO-Revision-Date: 2018-09-05 08:36+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "#会议"
 #. module: crm
 #: model:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% endif"
-msgstr ""
+msgstr "% endif"
 
 #. module: crm
 #: model:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -180,7 +181,7 @@ msgid "Activity Types"
 msgstr "活动类型"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:925
+#: code:addons/crm/models/crm_lead.py:926
 #, python-format
 msgid "Add a new lead"
 msgstr "添加一条新的线索"
@@ -271,10 +272,10 @@ msgstr "平均概率"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "黑名单"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:400
+#: code:addons/crm/models/crm_lead.py:401
 #, python-format
 msgid "Boom! Team record for the past 30 days."
 msgstr "哇！过去 30 天的团队记录。"
@@ -489,7 +490,7 @@ msgid "Convert to opportunities"
 msgstr "转为商机"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1108
+#: code:addons/crm/models/crm_lead.py:1109
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
@@ -563,7 +564,7 @@ msgid "Create an new opportunity related to this customer"
 msgstr "创建一个新的商机关联到此客户"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:927
+#: code:addons/crm/models/crm_lead.py:928
 #, python-format
 msgid "Create an opportunity in your pipeline"
 msgstr ""
@@ -630,7 +631,7 @@ msgid "Current"
 msgstr "当前的"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1160
+#: code:addons/crm/models/crm_lead.py:1161
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
@@ -650,7 +651,7 @@ msgid "Customer Autocomplete"
 msgstr "客户自动填充"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1162
+#: code:addons/crm/models/crm_lead.py:1163
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -753,7 +754,7 @@ msgstr "不要链接到某个客户"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Dropdown menu"
-msgstr ""
+msgstr "下拉菜单"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -910,7 +911,7 @@ msgid "Format phone numbers based on national conventions"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:598
+#: code:addons/crm/models/crm_lead.py:599
 #, python-format
 msgid "From %s : %s"
 msgstr "来自: %s:%s"
@@ -944,7 +945,7 @@ msgid "Global CC"
 msgstr "全局抄送"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:398
+#: code:addons/crm/models/crm_lead.py:399
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
 msgstr "快，快，快！祝贺您获得首单交易。"
@@ -967,7 +968,7 @@ msgstr "分组"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
+msgstr "分组方式"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
@@ -1038,6 +1039,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
+#: model:ir.model.fields,help:crm.field_crm_lead__partner_is_blacklisted
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
@@ -1054,7 +1056,7 @@ msgid "Import & Synchronize"
 msgstr "导入并同步"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1222
+#: code:addons/crm/models/crm_lead.py:1223
 #, python-format
 msgid "Import Template for Leads & Opportunities"
 msgstr ""
@@ -1161,7 +1163,7 @@ msgid "Late Activities"
 msgstr "逾期活动"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:905
+#: code:addons/crm/models/crm_lead.py:906
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1283,7 +1285,7 @@ msgid "Look up company information (name, logo, etc.)"
 msgstr "查找公司信息（名称、商标等）"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1114
+#: code:addons/crm/models/crm_lead.py:1115
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1367,7 +1369,7 @@ msgid "Medium"
 msgstr "普通"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:950
+#: code:addons/crm/models/crm_lead.py:951
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "会议安排在 '%s'<br>   主题: %s <br> 时长: %s 小时"
@@ -1414,25 +1416,25 @@ msgid "Merge with existing opportunities"
 msgstr "与已存在的商机合并"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:548
+#: code:addons/crm/models/crm_lead.py:549
 #, python-format
 msgid "Merged lead"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:580
+#: code:addons/crm/models/crm_lead.py:581
 #, python-format
 msgid "Merged leads"
 msgstr "合并的线索"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:580
+#: code:addons/crm/models/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "合并的商机"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:548
+#: code:addons/crm/models/crm_lead.py:549
 #, python-format
 msgid "Merged opportunity"
 msgstr "合并商机"
@@ -1531,7 +1533,7 @@ msgid "Next activity late"
 msgstr "下一个活动迟到"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1182
+#: code:addons/crm/models/crm_lead.py:1183
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -1665,8 +1667,8 @@ msgid "Opportunities with a date of Expected Closing which is in the past"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:446
-#: code:addons/crm/models/crm_lead.py:880
+#: code:addons/crm/models/crm_lead.py:447
+#: code:addons/crm/models/crm_lead.py:881
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
@@ -1787,6 +1789,11 @@ msgid "Partner Contact Phone"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
+msgid "Partner is blacklisted"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
 msgid "Partner/Customer"
 msgstr "业务合作伙伴/客户"
@@ -1800,7 +1807,7 @@ msgstr "电话"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr ""
+msgstr "号码格式"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:154
@@ -1858,7 +1865,7 @@ msgid "Planned"
 msgstr "已安排"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:652
+#: code:addons/crm/models/crm_lead.py:653
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
@@ -1988,7 +1995,7 @@ msgid "Sales Team"
 msgstr "销售团队"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1117
+#: code:addons/crm/models/crm_lead.py:1118
 #, python-format
 msgid "Sales Team Settings"
 msgstr ""
@@ -2353,7 +2360,7 @@ msgid ""
 msgstr "当这个阶段中没有任何记录要呈现的时候，这个阶段在看板视图中被折叠起来"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1080
+#: code:addons/crm/models/crm_lead.py:1081
 #, python-format
 msgid "This target does not exist."
 msgstr "这个目标不存在."
@@ -2581,7 +2588,7 @@ msgid "Within a Year"
 msgstr "一年内"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1113
+#: code:addons/crm/models/crm_lead.py:1114
 #: model:crm.stage,name:crm.stage_lead4
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -2598,7 +2605,7 @@ msgid "Won in Opportunities Target"
 msgstr "赢得是商机的最终目标"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:402
+#: code:addons/crm/models/crm_lead.py:403
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
 msgstr "耶！团队最近 7 天的交易。"
@@ -2612,13 +2619,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:404
+#: code:addons/crm/models/crm_lead.py:405
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr "您在过去的 30 天里打破了您的个人记录。"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:406
+#: code:addons/crm/models/crm_lead.py:407
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr "您在过去的 7 天里打破了您的个人记录。"
@@ -2672,7 +2679,7 @@ msgid "e.g. www.odoo.com"
 msgstr "例如：www.odoo.com"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:938
+#: code:addons/crm/models/crm_lead.py:939
 #, python-format
 msgid "or send an email to %s"
 msgstr "或者发送电子邮件给 %s"
@@ -2688,7 +2695,7 @@ msgid "team_count"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:944
+#: code:addons/crm/models/crm_lead.py:945
 #, python-format
 msgid "unknown"
 msgstr "未知的"

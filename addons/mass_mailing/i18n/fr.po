@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-05 08:40+0000\n"
+"PO-Revision-Date: 2018-09-05 08:40+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr ""
 "                                                <strong>Avec réponse</strong>"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:601
+#: code:addons/mass_mailing/models/mass_mailing.py:609
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -365,7 +365,7 @@ msgstr "Blacklist"
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Blacklist Me"
-msgstr ""
+msgstr "M'ajouter à la blacklist"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__body_html
@@ -490,8 +490,9 @@ msgstr "Titre de la colonne"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribe
+#: model:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Come Back"
-msgstr ""
+msgstr "Revenir"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_test__email_to
@@ -633,8 +634,8 @@ msgstr "Date de création"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
-msgid "Creation Month"
-msgstr "Mois de création"
+msgid "Creation Period"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
@@ -709,6 +710,7 @@ msgstr "Supprimer"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Livré"
@@ -856,6 +858,11 @@ msgstr "Exclure l'élément rejeté"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+msgid "Exclude Invalid Emails"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
 msgid "Exclude Opt Out"
 msgstr "Exclure les désinscrits"
 
@@ -882,7 +889,7 @@ msgid "Failed"
 msgstr "Échec"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:141
+#: code:addons/mass_mailing/controllers/main.py:143
 #, python-format
 msgid "Feedback from %s: %s"
 msgstr ""
@@ -995,6 +1002,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Si l'adresse email est sur la blacklist, le contact ne recevra plus de mass "
+"mailing d'aucune liste."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__ignored
@@ -1009,6 +1018,11 @@ msgstr ""
 #: selection:mail.mass_mailing,state:0
 msgid "In Queue"
 msgstr "Dans la queue"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__is_email_valid
+msgid "Is Email Valid"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_is_follower
@@ -1398,7 +1412,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__message_id
@@ -1507,7 +1521,7 @@ msgstr "Nombre de clics"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
@@ -1517,7 +1531,7 @@ msgstr "Nombre de messages exigeant une action"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
@@ -1557,7 +1571,7 @@ msgstr "Ventes multicanal"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_rel_list_contact_view_tree
 msgid "Open Contact"
-msgstr ""
+msgstr "Ouvrir le Contact"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1643,7 +1657,6 @@ msgstr "Voir plus..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
-#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Received"
 msgstr "Reçu"
@@ -1662,7 +1675,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__email
 msgid "Recipient email address"
-msgstr ""
+msgstr "Adresse email du destinataire"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts_from_list
@@ -1791,8 +1804,8 @@ msgstr "Date prévue"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
-msgid "Scheduled Month"
-msgstr "Mois planifié"
+msgid "Scheduled Period"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__next_departure
@@ -1887,8 +1900,8 @@ msgstr "Envoyez des courriels"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
-msgid "Sent Month"
-msgstr "Envoyez le mois"
+msgid "Sent Period"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_stage__sequence
@@ -1905,7 +1918,7 @@ msgstr "Configuration"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Show blacklist buttons on unsubscribe page"
-msgstr ""
+msgstr "Montrer le bouton Blacklist sur la page de désinscription"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__source_id
@@ -1921,7 +1934,7 @@ msgstr "Nom de l'origine"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 msgid "Specific Mail Server"
-msgstr ""
+msgstr "Serveur email spécifique"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -1998,7 +2011,7 @@ msgid "Test"
 msgstr "Test"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:652
+#: code:addons/mass_mailing/models/mass_mailing.py:660
 #, python-format
 msgid "Test Mailing"
 msgstr "Courriel test"
@@ -2018,7 +2031,7 @@ msgstr "Merci de vous joindre à nous! "
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:169
 #, python-format
 msgid "Thank you! Your feedback has been sent successfully!"
-msgstr ""
+msgstr "Merci! Votre retour a été envoyé avec succès!"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2026,6 +2039,14 @@ msgid "That way, Odoo evolves much faster than any other solution."
 msgstr ""
 "De cette manière, Odoo évolue bien plus vite que toutes les autres "
 "solutions."
+
+#. module: mass_mailing
+#: code:addons/mass_mailing/controllers/main.py:129
+#, python-format
+msgid ""
+"The %s asked to be removed from the blacklist\n"
+"            using the unsubscription page.ir.model"
+msgstr ""
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/controllers/main.py:57
@@ -2042,6 +2063,8 @@ msgid ""
 "The %s asked to not be contacted anymore \n"
 "            using the unsubscription page.ir.model"
 msgstr ""
+"Le %s a demandé à ne plus être contacté \n"
+"            en utilisant la page de désinscription page.ir.model"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
@@ -2076,19 +2099,20 @@ msgstr ""
 "quelques années seulement."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:619
+#: code:addons/mass_mailing/models/mass_mailing.py:627
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
-msgstr ""
+msgstr "Le destinataire <strong>s'est inscrit à %s</strong> liste(s) de mail"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:618
+#: code:addons/mass_mailing/models/mass_mailing.py:626
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr ""
+"Le destinataire <strong>s'est désinscrit de %s</strong> liste(s) de mail"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:781
+#: code:addons/mass_mailing/models/mass_mailing.py:789
 #, python-format
 msgid "There is no recipients selected."
 msgstr ""
@@ -2137,7 +2161,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "This mailing is scheduled for"
-msgstr ""
+msgstr "Cet email est prévu pour"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__campaign_id
@@ -2181,11 +2205,6 @@ msgstr "Total"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Tracking"
 msgstr "Suivi"
-
-#. module: mass_mailing
-#: model:ir.ui.view,arch_db:mass_mailing.unsubscribed
-msgid "Unblacklist Me"
-msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread
@@ -2262,7 +2281,7 @@ msgstr "Utilisateurs"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
-msgid "Valid Recipents"
+msgid "Valid Recipients"
 msgstr ""
 
 #. module: mass_mailing
@@ -2289,13 +2308,15 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribe
-msgid "We would appreciate if you provide feedback about why you unsubscribed"
+msgid ""
+"We would appreciate if you provide feedback about why you updated<br/>your "
+"subscriptions"
 msgstr ""
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mass_mailing_schedule_date_action
 msgid "When do you want to send your mailing?"
-msgstr ""
+msgstr "Quand voulez-vous envoyer votre email?"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2335,7 +2356,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:165
 #, python-format
 msgid "You are not authorized to do this!"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à faire cela! "
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -2347,14 +2368,14 @@ msgstr "Vous n'êtes pas abonné à l'une des notre liste d'envoi."
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:49
 #, python-format
 msgid "You have been <strong>successfully unsubscribed from </strong>."
-msgstr ""
+msgstr "Vous avez été <strong>désinscrit avec succès de</strong>."
 
 #. module: mass_mailing
 #. openerp-web
 #: code:addons/mass_mailing/static/src/js/unsubscribe.js:52
 #, python-format
 msgid "You have been <strong>successfully unsubscribed</strong>."
-msgstr ""
+msgstr "Vous avez été <strong>désinscrit avec succès</strong>."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2364,6 +2385,8 @@ msgid ""
 "You have been successfully <strong>added to our blacklist</strong>. You will"
 " not be contacted anymore by our services."
 msgstr ""
+"Vous avez été <strong>ajouté à notre blacklist</strong> avec succès. Vous ne"
+" serez plus contacté par nos services."
 
 #. module: mass_mailing
 #. openerp-web
@@ -2373,6 +2396,8 @@ msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
 "are now able to be contacted by our services."
 msgstr ""
+"Vous avez été <strong>retiré de notre blacklist</strong> avec succès. Vous "
+"pourrez maintenant être contacté par nos services."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.unsubscribed
@@ -2447,12 +2472,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "email(s) could not be sent."
-msgstr ""
+msgstr "email(s) n'ont pas pu être envoyés."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "email(s) have been ignored and will not be sent."
-msgstr ""
+msgstr "email(s) ont été ignorés et ne seront pas envoyés."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.layout
@@ -2477,4 +2502,4 @@ msgstr "res.config.settings"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.layout
 msgid "with"
-msgstr ""
+msgstr "avec"

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 12:14+0000\n"
-"PO-Revision-Date: 2018-08-24 12:14+0000\n"
+"POT-Creation-Date: 2018-09-05 08:42+0000\n"
+"PO-Revision-Date: 2018-09-05 08:42+0000\n"
 "Last-Translator: nasaaskii <nasaaskii@gmail.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -5603,7 +5603,7 @@ msgstr ""
 "ашигладаг төлбөр хүлээн авагчийн хэрэгжилтийг агуулдаг."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1081
+#: code:addons/base/models/ir_ui_view.py:1098
 #, python-format
 msgid " - %r in %s=%r"
 msgstr ""
@@ -5692,8 +5692,8 @@ msgstr "%p - AM болон PM цагийн ижил дүрслэл.\""
 #: code:addons/base/models/ir_filters.py:38
 #: code:addons/base/models/res_partner.py:330
 #: code:addons/base/models/res_users.py:138
-#: code:addons/base/models/res_users.py:510
-#: code:addons/base/models/res_users.py:512
+#: code:addons/base/models/res_users.py:511
+#: code:addons/base/models/res_users.py:513
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (хуулбар)"
@@ -7963,7 +7963,7 @@ msgid "Before Amount"
 msgstr "Дүнгийн Өмнө"
 
 #. module: base
-#: code:addons/base/models/res_users.py:1052
+#: code:addons/base/models/res_users.py:1053
 #, python-format
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
@@ -8229,7 +8229,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:273
 #, python-format
-msgid "By default the widget use the field informations"
+msgid "By default the widget uses the field informations"
 msgstr ""
 
 #. module: base
@@ -8644,7 +8644,7 @@ msgid "China - Standard CoA"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:727
+#: code:addons/base/models/ir_actions_report.py:735
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr ""
@@ -10714,8 +10714,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:593
-#: code:addons/base/models/ir_ui_view.py:674
+#: code:addons/base/models/ir_ui_view.py:610
+#: code:addons/base/models/ir_ui_view.py:691
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "'%s' элемент нь эцэг харагдацад байршиж болохгүй"
@@ -10829,7 +10829,7 @@ msgid "Error"
 msgstr "Алдаа"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:500
+#: code:addons/base/models/ir_ui_view.py:517
 #, python-format
 msgid ""
 "Error context:\n"
@@ -11477,7 +11477,7 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "\"Төрөл\" талбарыг моделиуд дээр өөрчлөх боломжгүй."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1080
+#: code:addons/base/models/ir_ui_view.py:1097
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
@@ -11509,7 +11509,7 @@ msgid "Field Type"
 msgstr "Талбарын төрөл"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1074
+#: code:addons/base/models/ir_ui_view.py:1091
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "`%(field_name)s` талбар байхгүй байна"
@@ -13585,7 +13585,7 @@ msgstr ""
 "тодорхойлох өгс/уруу - г дагалдуулах боломжтой)"
 
 #. module: base
-#: code:addons/base/models/res_users.py:414
+#: code:addons/base/models/res_users.py:415
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Буруу 'бүлэглэх' параметр"
@@ -13635,6 +13635,11 @@ msgstr ""
 "өргөтгөх ёстой"
 
 #. module: base
+#: sql_constraint:ir.ui.view:0
+msgid "Invalid key: QWeb view should have a key"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_actions.py:138
 #: code:addons/base/models/ir_actions.py:140
 #, python-format
@@ -13642,7 +13647,7 @@ msgid "Invalid model name %r in action definition."
 msgstr "Үйлдлийн тодорхойлолт дотор буруу моделийн нэр %r байна."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:665
+#: code:addons/base/models/ir_ui_view.py:682
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Буруу байрлалын шинж: '%s'"
@@ -13654,13 +13659,13 @@ msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "'%s' дараалалд буруу угтвар эсвэл дагавар байна"
 
 #. module: base
-#: code:addons/base/models/res_users.py:422
+#: code:addons/base/models/res_users.py:423
 #, python-format
 msgid "Invalid search criterion"
 msgstr "Хайлтын нөхцөл буруу байна"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:586
+#: code:addons/base/models/ir_ui_view.py:603
 #, python-format
 msgid "Invalid specification for moved nodes: '%s'"
 msgstr ""
@@ -13678,13 +13683,13 @@ msgid "Invalid value for %s.%s: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:343
+#: code:addons/base/models/ir_ui_view.py:344
 #, python-format
 msgid "Invalid view %s definition in %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:345
+#: code:addons/base/models/ir_ui_view.py:346
 #, python-format
 msgid ""
 "Invalid view %s definition in %s \n"
@@ -15184,7 +15189,7 @@ msgid "Missing required value for the field '%s' (%s)"
 msgstr "'%s' (%s) талбарт шаардлагатай утга алга"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:390
+#: code:addons/base/models/ir_ui_view.py:394
 #, python-format
 msgid "Missing view architecture."
 msgstr "Харагдацын архитектур алга."
@@ -15295,8 +15300,8 @@ msgid "Model name of the object to open in the view window"
 msgstr "Дэлгэцэнд нээгдэх обьектын модел нэр"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:804
-#: code:addons/base/models/ir_ui_view.py:1020
+#: code:addons/base/models/ir_ui_view.py:821
+#: code:addons/base/models/ir_ui_view.py:1037
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Модель олдсонгүй: %(model)s"
@@ -15672,8 +15677,8 @@ msgid "Niue"
 msgstr "Ниу"
 
 #. module: base
-#: code:addons/base/models/res_users.py:809
-#: code:addons/base/models/res_users.py:841
+#: code:addons/base/models/res_users.py:810
+#: code:addons/base/models/res_users.py:842
 #, python-format
 msgid ""
 "No 'group_xml_id' or 'category_xml_id' is set on the computed field %s "
@@ -15827,6 +15832,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
 #: model:ir.model.fields,field_description:base.field_res_users__comment
+#: model:ir.module.module,shortdesc:base.module_note
 #: model:ir.ui.view,arch_db:base.view_groups_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
@@ -17922,7 +17928,7 @@ msgid "Please specify a valid model for the object relation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:336
+#: code:addons/base/models/res_users.py:337
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -18125,7 +18131,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
-#: model:ir.module.module,shortdesc:base.module_note
 msgid "Productivity"
 msgstr "Бүтээмж"
 
@@ -18462,7 +18467,7 @@ msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:352
+#: code:addons/base/models/ir_ui_view.py:353
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -19563,7 +19568,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:662
+#: code:addons/base/models/res_users.py:663
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "Нууцлалын шалтгаанаар хоосон нууц үг зөвшөөрөгдөхгүй!"
@@ -20454,7 +20459,7 @@ msgid "Thailand - Accounting Reports"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:389
+#: code:addons/base/models/res_users.py:390
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
@@ -20526,7 +20531,7 @@ msgid "The active field allows you to hide the category without removing it."
 msgstr "Идэвхитэй талбар нь ангиллыг хасалгүйгээр нуух боломж олгоно."
 
 #. module: base
-#: code:addons/base/models/res_users.py:382
+#: code:addons/base/models/res_users.py:383
 #, python-format
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr "Сонгосон компани энэ хэрэглэгчид зөвшөөрөгдсөн компаниуд дунд алга."
@@ -20835,10 +20840,12 @@ msgid "The record id this is attached to."
 msgstr "Хавсрагдсан бичлэгийн дугаар."
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:319
-#: code:addons/base/models/ir_actions_report.py:323
+#: code:addons/base/models/ir_actions_report.py:668
 #, python-format
-msgid "The report's template is wrong, please contact your administrator"
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname."
 msgstr ""
 
 #. module: base
@@ -21229,7 +21236,7 @@ msgid "Tonga"
 msgstr "Тонга"
 
 #. module: base
-#: code:addons/base/models/res_users.py:901
+#: code:addons/base/models/res_users.py:902
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
@@ -21613,7 +21620,7 @@ msgid ""
 msgstr "Энэ баримтыг үндсэн шинжээр ашиглаж байгаа тул устгах боломжгүй"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:654
+#: code:addons/base/models/ir_actions_report.py:658
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr "Wkhtmltopdf-г сервер дээр олсонгүй. PDF-г үүсгэж чадахгүй."
@@ -22643,7 +22650,7 @@ msgid "Wizards to be Launched"
 msgstr "Дуудагдах харилцах цонхууд"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:401
+#: code:addons/base/models/ir_actions_report.py:405
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
@@ -22653,7 +22660,7 @@ msgstr ""
 "эсвэл дэд процессын дээд тоо тулсан. Зурвас : %s"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:404
+#: code:addons/base/models/ir_actions_report.py:408
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf амжилтгүй боллоо (алдааны код: %s). Зурвас: %s"
@@ -22746,7 +22753,7 @@ msgid "You can not have two users with the same login !"
 msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
 
 #. module: base
-#: code:addons/base/models/res_users.py:487
+#: code:addons/base/models/res_users.py:488
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -22782,19 +22789,19 @@ msgid "You cannot create recursive companies."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:359
+#: code:addons/base/models/ir_ui_view.py:360
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr "Та тойрог хамааралтай удамшсан харагдцуудыг үүсгэх боломжгүй."
 
 #. module: base
-#: code:addons/base/models/res_users.py:440
+#: code:addons/base/models/res_users.py:441
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr "Admin хэрэглэгчийг идэвхгүй болгох боломжгүй."
 
 #. module: base
-#: code:addons/base/models/res_users.py:442
+#: code:addons/base/models/res_users.py:443
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr ""
@@ -23458,7 +23465,7 @@ msgid "mrp"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:497
+#: code:addons/base/models/ir_ui_view.py:514
 #, python-format
 msgid "n/a"
 msgstr "б/гүй"

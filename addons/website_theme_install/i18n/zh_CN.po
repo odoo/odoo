@@ -3,18 +3,24 @@
 # * website_theme_install
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Ryan Zhang <so_happy_boy@hotmail.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# xiaobin wu <bd5dml@gmail.com>, 2018
+# Ryan Zhang <so_happy_boy@hotmail.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# fausthuang, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 11:03+0000\n"
-"PO-Revision-Date: 2017-02-15 11:03+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-05 08:40+0000\n"
+"PO-Revision-Date: 2018-09-05 08:40+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,9 +29,39 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__active
+msgid "Active"
+msgstr "有效"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__arch
+msgid "Arch"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__arch_fs
+msgid "Arch Fs"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__copy_ids
+msgid "Attachment using a copy of me"
+msgstr ""
+
+#. module: website_theme_install
 #: model:ir.ui.view,arch_db:website_theme_install.theme_view_search
 msgid "Author"
 msgstr "作者"
+
+#. module: website_theme_install
+#: selection:theme.ir.ui.view,mode:0
+msgid "Base view"
+msgstr "基础视图"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.view_website_form_inherit_view_themes
+msgid "Cancel"
+msgstr "取消"
 
 #. module: website_theme_install
 #: model:ir.ui.view,arch_db:website_theme_install.theme_view_search
@@ -33,9 +69,20 @@ msgid "Category"
 msgstr "类别"
 
 #. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:website_theme_install.view_website_form_inherit_view_themes
+msgid "Choose a theme"
+msgstr ""
+
+#. module: website_theme_install
 #: model:ir.actions.act_window,name:website_theme_install.theme_install_kanban_action
-msgid "Choose Your Theme"
-msgstr "选择你要的主题"
+msgid "Choose a theme for this website"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_res_company
+msgid "Companies"
+msgstr "公司"
 
 #. module: website_theme_install
 #: model:ir.actions.server,name:website_theme_install.theme_install_todo_action
@@ -43,9 +90,95 @@ msgid "Config: Choose Your Theme"
 msgstr "配置：选择您的主题"
 
 #. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__create_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__create_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__create_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__create_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__create_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__create_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__display_name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_utils__display_name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__display_name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: website_theme_install
+#: selection:theme.ir.ui.view,mode:0
+msgid "Extension View"
+msgstr "扩展视图"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__id
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__id
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_utils__id
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__id
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__inherit_id
+msgid "Inherit"
+msgstr "继承"
+
+#. module: website_theme_install
 #: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
-msgid "Install"
-msgstr "安装"
+msgid "Installed"
+msgstr "已安装"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_ir_module_module__is_installed_on_current_website
+msgid "Is Installed On Current Website"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_ir_attachment__key
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__key
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__key
+msgid "Key"
+msgstr "键"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment____last_update
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view____last_update
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_utils____last_update
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu____last_update
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__write_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__write_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__write_uid
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__write_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__write_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__write_date
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.onboarding_website_theme_step
+msgid "Let's start!"
+msgstr ""
 
 #. module: website_theme_install
 #: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
@@ -53,21 +186,209 @@ msgid "Live Preview"
 msgstr "实时预览"
 
 #. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__copy_ids
+msgid "Menu using a copy of me"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__mode
+msgid "Mode"
+msgstr "模式"
+
+#. module: website_theme_install
 #: model:ir.model,name:website_theme_install.model_ir_module_module
 msgid "Module"
 msgstr "模块"
 
 #. module: website_theme_install
-#: model:ir.model.fields,field_description:website_theme_install.field_ir_module_module_image_ids
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__name
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__name
+msgid "Name"
+msgstr "名称"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__new_window
+msgid "New Window"
+msgstr "新窗口"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_res_company__website_theme_onboarding_done
+msgid "Onboarding website theme step done"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_website_page
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__page_id
+msgid "Page"
+msgstr "页"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__website_indexed
+msgid "Page Indexed"
+msgstr "索引页面"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__parent_id
+msgid "Parent"
+msgstr "上级"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.customize_modal
+msgid "Please"
+msgstr "请"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__priority
+msgid "Priority"
+msgstr "优先级"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
+msgid "Remove theme"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_ir_module_module__image_ids
 msgid "Screenshots"
 msgstr "截屏"
 
 #. module: website_theme_install
-#: model:ir.ui.view,arch_db:website_theme_install.customize_modal
-msgid "See themes here"
-msgstr "这里查看主题"
+#: model:ir.ui.view,arch_db:website_theme_install.onboarding_website_theme_step
+msgid "Select a theme for your website."
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: website_theme_install
+#: model:ir.model.fields,help:website_theme_install.field_ir_attachment__key
+msgid ""
+"Technical field used to resolve multiple attachments in a multi-website "
+"environment."
+msgstr ""
 
 #. module: website_theme_install
 #: model:ir.ui.view,arch_db:website_theme_install.theme_view_search
 msgid "Theme"
 msgstr "主题"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_ir_attachment__theme_template_id
+#: model:ir.model.fields,field_description:website_theme_install.field_ir_ui_view__theme_template_id
+#: model:ir.model.fields,field_description:website_theme_install.field_mrp_document__theme_template_id
+#: model:ir.model.fields,field_description:website_theme_install.field_website_menu__theme_template_id
+#: model:ir.model.fields,field_description:website_theme_install.field_website_page__theme_template_id
+msgid "Theme Template"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
+msgid "Theme preview"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__copy_ids
+msgid "Theme using a copy of me"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__type
+msgid "Type"
+msgstr "类型"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
+msgid "Update theme"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_attachment__url
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_menu__url
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__url
+msgid "Url"
+msgstr "Url"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.theme_view_kanban
+msgid "Use this theme"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_website_page__view_id
+msgid "View"
+msgstr "视图"
+
+#. module: website_theme_install
+#: model:ir.model.fields,field_description:website_theme_install.field_theme_ir_ui_view__copy_ids
+msgid "Views using a copy of me"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_website
+msgid "Website"
+msgstr "网站"
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_website_menu
+msgid "Website Menu"
+msgstr "网站菜单"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.onboarding_website_theme_step
+msgid "Website Theme"
+msgstr "网站主题"
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.customize_modal
+msgid "install a theme"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_ir_ui_view
+#: selection:theme.ir.ui.view,inherit_id:0
+msgid "ir.ui.view"
+msgstr "ir.ui.view"
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_theme_ir_attachment
+msgid "theme.ir.attachment"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_theme_ir_ui_view
+#: selection:theme.ir.ui.view,inherit_id:0
+msgid "theme.ir.ui.view"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_theme_utils
+msgid "theme.utils"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_theme_website_menu
+msgid "theme.website.menu"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.model,name:website_theme_install.model_theme_website_page
+msgid "theme.website.page"
+msgstr ""
+
+#. module: website_theme_install
+#: model:ir.ui.view,arch_db:website_theme_install.customize_modal
+msgid "to customize your website."
+msgstr ""
