@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "% discount"
 msgstr ""
@@ -27,7 +27,12 @@ msgid "<em attrs=\"{'invisible': [('module_sale_quotation_builder','=',False)]}\
 msgstr ""
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "<span>Discount</span>"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
 msgstr ""
 
@@ -139,7 +144,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr ""
@@ -373,7 +378,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_id
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Product"
 msgstr ""
@@ -554,7 +558,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__price_unit
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Unit Price"
 msgstr ""
 
