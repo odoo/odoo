@@ -109,6 +109,8 @@ class WebsitePayment(http.Controller):
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
 
+        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         render_values = {
