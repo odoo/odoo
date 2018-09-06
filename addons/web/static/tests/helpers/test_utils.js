@@ -16,6 +16,7 @@ var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
+var DebugManager = require('web.DebugManager');
 var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
@@ -115,6 +116,37 @@ var createActionManager = function (params) {
     actionManager.appendTo(widget.$el);
 
     return actionManager;
+};
+/**
+ * Create and return an instance of DebugManager with all rpcs going through a
+ * mock method, assuming that the user has access rights, and is an admin.
+ *
+ * @param {Object} [params={}]
+ */
+var createDebugManager = function (params) {
+    params = params || {};
+    _.extend(params, {
+        mockRPC: function (route, args) {
+            if (args.method === 'check_access_rights') {
+                return $.when(true);
+            }
+            if (args.method === 'xmlid_to_res_id') {
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+        session: {
+            user_has_group: function (group) {
+                if (group === 'base.group_no_one') {
+                    return $.when(true);
+                }
+                return this._super.apply(this, arguments);
+            },
+        },
+    });
+    var debugManager = new DebugManager();
+    addMockEnvironment(debugManager, params);
+    return debugManager;
 };
 
 /**
@@ -869,6 +901,7 @@ return $.when(
     return {
         addMockEnvironment: addMockEnvironment,
         createActionManager: createActionManager,
+        createDebugManager: createDebugManager,
         createAsyncView: createAsyncView,
         createModel: createModel,
         createParent: createParent,
