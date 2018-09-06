@@ -1,44 +1,13 @@
 odoo.define('web.debugManagerTests', function (require) {
 "use strict";
 
-var DebugManager = require('web.DebugManager');
 var testUtils = require('web.test_utils');
 
-/**
- * Create and return an instance of DebugManager with all rpcs going through a
- * mock method, assuming that the user has access rights, and is an admin.
- *
- * @param {Object} [params={}]
- */
-var createDebugManager = function (params) {
-    params = params || {};
-    _.extend(params, {
-        mockRPC: function (route, args) {
-            if (args.method === 'check_access_rights') {
-                return $.when(true);
-            }
-            if (args.method === 'xmlid_to_res_id') {
-                return $.when(true);
-            }
-            return this._super.apply(this, arguments);
-        },
-        session: {
-            user_has_group: function (group) {
-                if (group === 'base.group_no_one') {
-                    return $.when(true);
-                }
-                return this._super.apply(this, arguments);
-            },
-        },
-    });
-    var debugManager = new DebugManager();
-    testUtils.addMockEnvironment(debugManager, params);
-    return debugManager;
-};
+var createDebugManager = testUtils.createDebugManager;
 
 QUnit.module('DebugManager', {}, function () {
 
-    QUnit.test("edit view menu item", function (assert) {
+    QUnit.test("list: edit view menu item", function (assert) {
         assert.expect(3);
 
         var debugManager = createDebugManager();
@@ -65,6 +34,53 @@ QUnit.module('DebugManager', {}, function () {
         assert.strictEqual($editView.text().trim(), "Edit View: List",
             "should have correct menu item text for editing view");
         assert.strictEqual($editView.data('id'), 1, "should have correct view_id");
+
+        debugManager.destroy();
+    });
+
+    QUnit.test("form: Manage Attachments option", function (assert) {
+        assert.expect(3);
+
+        var debugManager = createDebugManager({
+            intercepts: {
+                do_action: function (event) {
+                    assert.deepEqual(event.data.action, {
+                      domain: [["res_model", "=", "test.model"],["res_id", "=", 5]],
+                      name: "Manage Attachments",
+                      res_model: "ir.attachment",
+                      type: "ir.actions.act_window",
+                      views: [[false, "list"],[false, "form"]],
+                    });
+                },
+            },
+        });
+
+        debugManager.appendTo($('#qunit-fixture'));
+
+        // Simulate update debug manager from web client
+        var action = {
+            views: [{
+                displayName: "Form",
+                fieldsView: {
+                    view_id: 2,
+                },
+                type: "form",
+            }],
+            res_model: "test.model",
+        };
+        var view = {
+            viewType: "form",
+            getSelectedIds: function () {
+                return [5];
+            },
+        };
+        debugManager.update('action', action, view);
+
+        var $attachmentMenu = debugManager.$('a[data-action=get_attachments]');
+        assert.strictEqual($attachmentMenu.length, 1, "should have Manage Attachments menu item");
+        assert.strictEqual($attachmentMenu.text().trim(), "Manage Attachments",
+            "should have correct menu item text");
+        $attachmentMenu.click();
 
         debugManager.destroy();
     });

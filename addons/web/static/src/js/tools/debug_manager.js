@@ -353,7 +353,20 @@ DebugManager.include({
             }));
         }.bind(this));
     },
-
+    get_attachments: function() {
+        var selectedIDs = this._controller.getSelectedIds();
+        if (!selectedIDs.length) {
+            console.warn(_t("No attachment available"));
+            return;
+        }
+        this.do_action({
+            res_model: 'ir.attachment',
+            name: _t('Manage Attachments'),
+            views: [[false, 'list'], [false, 'form']],
+            type: 'ir.actions.act_window',
+            domain: [['res_model', '=', this._action.res_model], ['res_id', '=', selectedIDs[0]]],
+        });
+    },
     get_metadata: function() {
         var self = this;
         var selectedIDs = this._controller.getSelectedIds();
