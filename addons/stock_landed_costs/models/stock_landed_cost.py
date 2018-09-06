@@ -147,6 +147,7 @@ class LandedCost(models.Model):
         """ Check if each cost line its valuation lines sum to the correct amount
         and if the overall total amount is correct also """
         prec_digits = self.env['decimal.precision'].precision_get('Account')
+        product_price_prec_digits = self.env['decimal.precision'].precision_get('Product Price')
         for landed_cost in self:
             total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
             if not tools.float_compare(total_amount, landed_cost.amount_total, precision_digits=prec_digits) == 0:
@@ -155,9 +156,10 @@ class LandedCost(models.Model):
             val_to_cost_lines = defaultdict(lambda: 0.0)
             for val_line in landed_cost.valuation_adjustment_lines:
                 val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
-            if any(tools.float_compare(cost_line.price_unit, val_amount, precision_digits=prec_digits) != 0
-                   for cost_line, val_amount in val_to_cost_lines.iteritems()):
-                return False
+            for cost_line, val_amount in val_to_cost_lines.iteritems():
+                #Se aplica un redondeo con el product_price_prec_digits pues es la precision usada en las compos involucrados(price_unit, additional_landed_cost)
+                if tools.float_compare(tools.float_round(cost_line.price_unit, product_price_prec_digits), tools.float_round(val_amount, product_price_prec_digits), precision_digits=prec_digits) != 0:
+                    return False
         return True
 
     def get_valuation_lines(self):
