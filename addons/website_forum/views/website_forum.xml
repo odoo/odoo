@@ -47,8 +47,8 @@
             <div t-field="forum.welcome_message"/>
         </div>
 
-        <div class="container mt16 website_forum">
-            <div class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container mt16 website_forum mb32">
+            <div class="navbar navbar-expand-md navbar-light bg-white border rounded">
                 <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
                     <span t-field="forum.name"/>
                 </a>
@@ -76,12 +76,15 @@
                         <li class="nav-item">
                             <a t-attf-href="/forum/#{ slug(forum) }/badge"
                                 t-attf-class="nav-link#{searches.get('badges') and ' active' or ''}">Badges</a>
+                        </li><li class="nav-item">
+                            <a t-attf-href="/forum/#{ slug(forum) }/spam"
+                                t-attf-class="nav-link#{searches.get('badges') and ' active' or ''}">Spam</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li t-if="not is_public_user" class="nav-item">
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}" t-attf-class="nav-link#{searches.get('my_profile') and ' active' or ''}">
-                                <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
+                                <span class="fa fa-diamond text-secondary" /> <t t-esc="user_id.karma" />
                             </a>
                         </li>
                     </ul>
@@ -92,6 +95,7 @@
                                 <i class="fa fa-cog" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
                             </button>
                             <div class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{ slug(forum) }/user/#{uid}" class="dropdown-item">My Profile</a>
                                 <a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1" class="dropdown-item">Design Welcome Message</a>
                                 <a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum" class="dropdown-item">Forum Settings</a>
                             </div>
@@ -216,6 +220,7 @@
 
 <!-- Display a post -->
 <template id="display_post_question_block">
+    <span t-if="question.has_validated_answer" title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle oe_answer_true"/></span>
     <div class="question-block">
         <div class="question-name">
             <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
@@ -228,7 +233,6 @@
             <t t-if="question.post_type == 'link'" >
                 <a title="Redirect to external link" aria-label="External link" t-att-href="question.content_link" class="text-muted"><i class="fa fa-external-link forum_link"/></a>
             </t>
-            <span t-if="question.has_validated_answer" title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle oe_answer_true"/></span>
         </div>
         <div><t t-raw="post_content"/></div>
         <t t-foreach="question.tag_ids" t-as="question_tag">
@@ -242,9 +246,9 @@
             <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" role="img" aria-label="Discussion" t-att-title="question.post_type.capitalize()" />
             <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" role="img" aria-label="Link" t-att-title="question.post_type.capitalize()" />
             <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-            <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
-            <span> • </span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
-            <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+            <span class="ml-4 mr4 fa fa-calendar"></span><span t-field="question.write_date" t-options='{"format":"short"}'/>
+            <span class="ml-4 mr4 fa fa-eye"></span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
+            <span class="ml-4 mr4 fa fa-comments text-primary"></span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
 
                 <t t-esc="question.child_count"/>
                 <t t-if="question.post_type == 'question'">
@@ -265,7 +269,7 @@
 </template>
 
 <template id="display_post">
-    <div class="question">
+    <div class="question pb24 pt24 pl-3 pr-3 mb8 border rounded">
         <div class="float-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="question"/>
@@ -389,7 +393,7 @@
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
-        <h2 class="page-header mt0">
+        <h2 class="page-header mt0 pb4 border-bottom mb-4">
             <t t-esc="question_count"/>
                 <span t-if="post_type not in ('link','question','discussion')"> Posts </span>
                 <span t-if="post_type == 'question'"> Questions</span>
@@ -397,7 +401,7 @@
                 <span t-if="post_type == 'discussion'"> Threads</span>
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <a href="#" class="dropdown-toggle float-right" data-toggle="dropdown">
                   <t t-if="filters == 'unanswered'"> Unanswered</t>
                   <t t-if="filters == 'followed'"> Followed</t>
                   <t t-if="tag"> <span t-field="tag.name"/></t>
@@ -709,12 +713,12 @@
     <t t-set="can_upvote" t-value="post.can_upvote"/>
     <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div class="vote text-center">
-        <a t-attf-class="vote_up fa fa-caret-up no-decoration #{own_vote == 1 and 'text-success' or ''} #{((own_vote == 1 and not can_downvote) or not can_upvote) and 'karma_required' or ''}"
+        <a t-attf-class="vote_up fa fa-caret-up text-secondary no-decoration #{own_vote == 1 and 'text-success' or ''} #{((own_vote == 1 and not can_downvote) or not can_upvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{own_vote == 1 and karma_down or karma_up}"
             aria-label="Positive vote" title="Positive vote"
             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"/>
         <div class="vote_count text-muted" t-esc="post.vote_count"/>
-        <a t-attf-class="vote_down fa fa-caret-down no-decoration #{own_vote == -1 and 'text-warning' or ''} #{((own_vote == -1 and not can_upvote) or not can_downvote) and 'karma_required' or ''}"
+        <a t-attf-class="vote_down fa fa-caret-down text-secondary no-decoration #{own_vote == -1 and 'text-warning' or ''} #{((own_vote == -1 and not can_upvote) or not can_downvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{own_vote == -1 and karma_up or karma_down}"
             aria-label="Negative vote" title="Negative vote"
             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"/>
@@ -739,7 +743,7 @@
                     <t t-set="post" t-value="question"/>
                     <div class="mt4">
                         <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite" aria-label="Toggle favorite status" title="Toggle favorite status"
-                            t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                            t-attf-class="favourite_question no-decoration fa fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                     </div>
                 </t>
             </div>
@@ -804,91 +808,85 @@
 
                 <div class="clearfix">
                     <ul class="float-right list-inline mb0" id="options">
-                        <li t-if="question.state == 'close'" class="list-inline-item">
+                        <li t-if="question.state == 'close'" class="list-inline-item" title="Reopen">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
-                                <t t-set="label">Reopen</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-undo'"/>
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
                         </li>
-                        <li class="list-inline-item">
+                        <li class="list-inline-item" title="Edit">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
-                                <t t-set="label">Edit</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-pencil-square-o'"/>
                                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.state != 'close'" class="list-inline-item">
+                        <li t-if="question.state != 'close'" class="list-inline-item" title="Close">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
-                                <t t-set="label">Close</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-times'"/>
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.active" class="list-inline-item">
+                        <li t-if="question.active" class="list-inline-item" title="Delete">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
-                                <t t-set="label">Delete</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
                         </li>
-                        <li t-if="not question.active and question.state != 'offensive'" class="list-inline-item">
+                        <li t-if="not question.active and question.state != 'offensive'" class="list-inline-item" title="Reactivate">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
-                                <t t-set="label">Reactivate</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
                         </li>
-                        <li t-if="not question.active and question.state == 'offensive'" class="list-inline-item">
+                        <li t-if="not question.active and question.state == 'offensive'" class="list-inline-item" title="Reactivate">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
-                                <t t-set="label">Reactivate</t>
+                                <t t-set="label"></t>
                                 <t t-set="classes" t-value="'fa-trash-o'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.active" class="list-inline-item">
+                        <li t-if="question.active" class="list-inline-item" title="Flag">
                             <a t-attf-style="cursor: pointer;#{not question.can_flag and 'color:#999;' or ''}"
-                                t-attf-class="flag fa fa-flag #{not question.can_flag and 'karma_required' or ''}"
+                                t-attf-class="flag fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                 t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
                                 >
-                                <t t-if="question.state == 'flagged'">
+                                <!-- <t t-if="question.state == 'flagged'">
                                     Flagged
                                 </t>
                                 <t t-if="question.state != 'flagged'">
                                     Flag
-                                </t>
+                                </t> -->
                             </a>
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
-                        <li t-if="(question.post_type in ('link','question') and not question.uid_has_answered) and question.state != 'close' and question.active != False"
-                            class="list-inline-item">
-                            <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or ''}"
-                            t-att-data-karma="question.forum_id.karma_answer"
-                            href="#post_reply"> Reply</a>
-                        </li>
                         <li t-if="question.post_type == 'discussion'" class="list-inline-item">
-                            <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
+                            <a t-attf-class="#{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"><i class="fa fa-comment text-primary"/> Comment</a>
                         </li>
                         <li t-if="question.post_type == 'question'" class="list-inline-item">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
-                                t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
+                                t-attf-class="border rounded pt-3 pb-3 pl-3 pr-3 #{not question.can_comment and 'karma_required text-muted' or ''}"
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
-                                Comment
+                                <i class="fa fa-comment text-primary"/> Comment
                             </a>
                         </li>
-                        <li class="list-inline-item">
+                        <!-- <li class="list-inline-item">
                             <a href="javascript:void(0)" class="oe_social_share fa fa-share-square-o"
                                 t-attf-data-hashtags="#{question.post_type}"> Share</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
 
@@ -1126,11 +1124,12 @@
         </nav>
         <div class="row">
             <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" role="img" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
+                <b><t t-esc="tag.posts_count"/>&amp;nbsp;</b>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
-                        t-attf-class="badge #{'badge-primary' if tag.message_is_follower else 'badge-secondary'}">
+                        t-attf-class="badge #{'badge-primary' if tag.message_is_follower else 'badge-secondary'} pr-2 pl-2">
                     <span t-field="tag.name"/>
                 </a>
+                <span><i t-attf-class="fa #{'fa-star text-primary' if tag.message_is_follower else 'fa-star-o text-secondary'}" title="Close" role="img" aria-label="Close"/></span>
                 <div t-attf-class="o_forum_tag_follow_box">
                     <div class="row input-group">
                         <span>
@@ -1148,7 +1147,7 @@
 
 <template id="badge">
     <t t-call="website_forum.header">
-        <h1 class="mt0">
+        <h1 class="mt0 border-bottom mb-5">
             Badges
         </h1>
         <p>
@@ -1160,10 +1159,13 @@
             <tr t-foreach="badges" t-as="badge">
                 <td>
                     <span class="badge badge-pill float-left">
-                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
-                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
-                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
-                        <span> </span><span t-field="badge.name"/>
+                        <span t-if="badge.level == 'gold'" class="fa fa-trophy badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
+                        <span t-if="badge.level == 'silver'" class="fa fa-trophy badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-trophy badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
+                        <span>&amp;nbsp;</span>
+                        <span t-if="badge.level == 'gold'" t-field="badge.name" class="text-white bg-gold pt4 pb4 pl-2 pr-2 rounded_badge"/>
+                        <span t-if="badge.level == 'silver'" t-field="badge.name" class="text-white bg-silver pt4 pb4 pl-2 pr-2 rounded_badge"/>
+                        <span t-if="badge.level == 'bronze'" t-field="badge.name" class="text-white bg-bronze pt4 pb4 pl-2 pr-2 rounded_badge"/>
                     </span>
                 </td><td>
                     <b t-esc="badge.stat_count_distinct"/>
@@ -1225,24 +1227,27 @@
 <template id="users">
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
-            <div t-foreach="row_users" t-as="user" class="col-md-4">
-                <img class="float-left img rounded-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
+            <div t-foreach="row_users" t-as="user" class="col-md-4 border rounded pt128 pl-4 pr-4 pb-4">
+                <div class="float-left col-12 pt-0 pr-0 pb-0 pl-0 o_people_photo_over">
+                    <img class="img o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
+                </div>
                 <div>
-                    <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
-                        <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
+                        <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}' class='float-right'/>
                     </t>
-                    <b class='ml8'><t t-esc="user.karma"/></b>
+                    <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
+                    
+                    <b class='float-right'><t t-esc="user.karma"/></b>
                     <t t-raw="separator"/>
                     <div>
-                        <b> badges:</b>
+                        <b class="d-block pt-3 mt-3 mb-1 border-top"> Badges:</b>
                         <span>
-                            <span class="fa fa-circle badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
-                            <span t-esc="user.gold_badge" class="ml4"/>
-                            <span class="fa fa-circle badge-silver ml8" role="img" aria-label="Silver badge" title="Silver badge"/>
-                            <span t-esc="user.silver_badge" class="ml4" />
-                            <span class="fa fa-circle badge-bronze ml8" role="img" aria-label="Bronze badge" title="Bronze badge"/>
-                            <span t-esc="user.bronze_badge" class="ml4" />
+                            <span class="fa fa-trophy badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
+                            <span t-esc="user.gold_badge" class=""/>
+                            <span class="fa fa-trophy badge-silver ml16" role="img" aria-label="Silver badge" title="Silver badge"/>
+                            <span t-esc="user.silver_badge" class="" />
+                            <span class="fa fa-trophy badge-bronze ml16" role="img" aria-label="Bronze badge" title="Bronze badge"/>
+                            <span t-esc="user.bronze_badge" class="" />
                         </span>
                     </div>
                     <t t-raw="0"/>
@@ -1271,60 +1276,63 @@
 
 <template id="edit_profile">
     <t t-call="website_forum.header">
-        <h3>Edit Profile</h3>
-        <div class="row">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form" enctype="multipart/form-data">
+        <h1 class="border-bottom mb-4">Edit Profile</h1>
+        <div>
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form col-12 pl-0 pr-0" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
-                <div class="col-lg-2">
-                    <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
-                        <i class="fa fa-pencil fa-1g float-left" title="Edit"></i>
-                    </a>
-                    <a href="#" title="Clear" aria-label="Clear">
-                        <i class="fa fa-trash-o fa-1g float-right o_forum_profile_pic_clear"></i>
-                    </a>
-                    <img class="img img-fluid rounded-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
-                </div>
-                <div class="col-lg-10">
-                    <input name="user_id" t-att-value="user.id" type="hidden"/>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_name">Real name</label>
-                        <div class="col-lg-8 mb16">
-                            <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
-                        </div>
+                <div class="col-3 float-left rounded border">
+                    <img class="img img-fluid o_forum_avatar_img col-12 pl-0 pr-0" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
+                    <div class="text-center mt-3 col-10 offset-1">
+                        <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
+                            <i class="fa fa-pencil fa-1g float-left bg-primary pt-2 pl-3 pr-3 pb-2" title="Edit"></i>
+                        </a>
+                        <a href="#" title="Clear" aria-label="Clear">
+                            <i class="fa fa-trash-o fa-1g float-right o_forum_profile_pic_clear border pt-2 pl-3 pr-3 pb-2"></i>
+                        </a>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
-                        <div class="col-lg-8 mb16" t-if="user.id == uid">
+                    <div class="form-group mt-5 pt-3 border-top">
+                        <label class="mb-1 text-secondary" for="user_website_published" t-if="user.id == uid"><b>Public profile</b></label>
+                        <div class="mb16 float-right" t-if="user.id == uid">
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_website">Website</label>
-                        <div class="col-lg-8 mb16">
+                </div>
+                <div class="col-9 float-right row border rounded pt-4">
+                    <input name="user_id" t-att-value="user.id" type="hidden"/>
+                    <div class="form-group col-12">
+                        <label class="text-secondary mb-1 d-block" for="user_name"><b>Real name</b></label>
+                        <div class="mb16 d-block col-12 pl-0 pr-0">
+                            <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="mb-1 text-secondary" for="user_website"><b>Website</b></label>
+                        <div class="mb16">
                             <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group col-6">
                         <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required" role="alert">
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                         </div>
-                        <label class="col-lg-2 col-form-label mb16" for="user_email">Email</label>
-                        <div class="col-lg-8 mb16">
+                        <label class="ml-2 mb-1 text-secondary" for="user_email"><b>Email</b></label>
+                        <div class="mb16">
                             <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="user_city">City</label>
-                        <div class="col-lg-8 mb16">
+                    <div class="form-group col-6">
+                        <label class="mb-1 text-secondary" for="user_city"><b>City</b></label>
+                        <div class="mb16">
                             <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16">Country</label>
-                        <div class="col-lg-8 mb16">
+                    <div class="form-group col-6">
+                        <label class="mb-1 text-secondary"><b>Country</b></label>
+                        <div class="mb16">
                             <select class="form-control" name="country">
                                 <option value="">Country...</option>
                                 <t t-foreach="countries or []" t-as="country">
@@ -1334,15 +1342,15 @@
                         </div>
                     </div>
                     <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                    <div class="form-group row">
-                        <label class="col-lg-2 col-form-label mb16" for="description">Biography</label>
-                        <div class="col-lg-8 mb16">
+                    <div class="form-group col-12">
+                        <label class="mb-1 text-secondary" for="description"><b>Biography</b></label>
+                        <div class="mb16">
                             <textarea name="description" id="description" style="min-height: 120px" required="True"
                                 class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                         </div>
                     </div>
-                    <div class="offset-md-2 col-lg-2 mb16"><!-- FIXME should in a row -->
-                        <button type="submit" class="btn btn-primary btn-lg">Update</button>
+                    <div class="mb32 ml16"><!-- FIXME should in a row -->
+                        <button type="submit" class="btn btn-primary btn">Update</button>
                     </div>
                 </div>
             </form>
@@ -1352,63 +1360,90 @@
 
 <template id="user_detail_full">
     <t t-call="website_forum.header">
-        <h1 class="mt0 page-header">
-            <span t-field="user.name"/>
-            <small>profile</small>
-        </h1>
-        <div class="row">
-            <div class="col-md-2">
-                <img class="img img-fluid rounded-circle" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
-            </div>
-            <div class="col-md-10">
-                <table class="table table-sm">
-                <tr>
-                    <td rowspan="4" valign="top"><span class="text-muted">stats</span></td>
-                    <td>karma</td>
-                    <td><span t-field="user.karma"/></td>
-                </tr><tr>
-                    <td>votes</td>
-                    <td>
-                        <span class="fa fa-thumbs-up" role="img" aria-label="Positive votes" title="Positive votes"/>
+        <div class="mb-5 border-bottom">
+            <h1 class="mt0 page-header d-inline">Profile</h1>
+            <a class="float-right text-secondary mt-4" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit">Edit<i class="fa fa-angle-right ml-2"/></a>
+        </div>
+        <div>
+            <div class="col-md-4 border pb16 rounded mb-5 d-block float-left">
+                <div class="o_people_photo_over col-12 pl-0 pr-0">
+                    <img class="img img-fluid" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
+                </div>
+                <span t-field="user.name"/>
+                <div class="col-12 border-top mt-2 pt-2 pr-0 pl-0">
+                    <b class="text-secondary">Karma</b>
+                    <span class="float-right" t-field="user.karma"/>
+                </div>
+                <div class="col-12 border-top mt-2 pt-2 pr-0 pl-0">
+                    <b class="mb-1 text-secondary">Badges</b>
+                    <span class="float-right">
+                        <span class="fa fa-trophy badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
+                        <span t-esc="user.gold_badge" class=""/>
+                        <span class="fa fa-trophy badge-silver ml16" role="img" aria-label="Silver badge" title="Silver badge"/>
+                        <span t-esc="user.silver_badge" class="" />
+                        <span class="fa fa-trophy badge-bronze ml16" role="img" aria-label="Bronze badge" title="Bronze badge"/>
+                        <span t-esc="user.bronze_badge" class="" />
+                    </span>
+                </div>
+                <div class="col-12 border-top mt-2 pt-2 pr-0 pl-0">
+                    <b class="mb-1 text-secondary">Votes</b>
+                    <span class="float-right">
+                        <span class="fa fa-thumbs-up text-success" role="img" aria-label="Positive votes" title="Positive votes"/>
                         <span t-esc="up_votes"/>
-                        <span class="fa fa-thumbs-down" role="img" aria-label="Negative votes" title="Negative votes"/>
+                        <span class="fa fa-thumbs-down text-danger ml-3" role="img" aria-label="Negative votes" title="Negative votes"/>
                         <span t-esc="down_votes"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td>member since</td>
-                    <td><span t-field="user.create_date" t-options='{"format": "short"}'/></td>
-                </tr><tr>
-                    <td>last connection</td>
-                    <td><span t-field="user.login_date" t-options='{"format": "short"}'/></td>
-                </tr>
-                <tr>
-                    <td rowspan="2" valign="top"><span class="text-muted">bio</span></td>
-                    <td>website</td>
-                    <td>
-                        <a t-att-href="user.website" t-if="user.website">
-                            <span t-field="user.website"/>
-                        </a>
-                    </td>
-                </tr><tr>
-                    <td>location</td>
-                    <td>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-8 rounded float-left d-inline-block pr-0">
+                <b class="text-muted">Contribution</b>
+                <div class="border rounded pt-3 pb-3 pl-3 pr-3 mt-1 mb-4">
+                    <div class="col-12 d-block pr-0 pl-0">
+                        <div class="col-4 d-inline-block pr-0 pl-0">
+                            <b class="text-secondary">Member since</b>
+                        </div>
+                        <span t-field="user.create_date" t-options='{"format": "short"}'/>
+                    </div>
+                    <div class="col-12 d-block border-top pt-2 mt-2 pr-0 pl-0">
+                        <div class="col-4 d-inline-block pr-0 pl-0">
+                            <b class="text-secondary">Last connection</b>
+                        </div>
+                        <span t-field="user.login_date" t-options='{"format": "short"}'/>
+                    </div>
+                </div>
+
+                <b class="text-muted">Bio</b>
+                <div class="border rounded pt-3 pb-3 pl-3 pr-3 mt-1 mb-4">
+                    <div class=" col-12 d-block">
+                        <div class="col-4 d-inline-block pr-0 pl-0">
+                            <b class="text-secondary">Location</b>
+                        </div>
+                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/></t>
                         <span t-field="user.city"/>
                         <span t-if="user.city and user.country_id">, </span>
                         <span t-field="user.country_id"/>
-                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/></t>
+                    </div>
+                    <div class="col-12 d-block border-top pt-2 mt-2">
 
-                    </td>
-                </tr>
-                </table>
-                <div>
+                        <div class="col-4 d-inline-block pr-0 pl-0">
+                            <b class="text-secondary">Website</b>
+                        </div>
+                        <a t-att-href="user.website" t-if="user.website">
+                            <span t-field="user.website"/>
+                        </a>
+                        
+                    </div>
+                </div>
+
+                <b class="text-muted">Introducion</b>
+                <div class="border pt-3 pb-3 pr-3 pl-3 mt-1 mb-4 rounded">
                     <div><span t-field="user.partner_id.website_description" class="oe_no_empty"/></div>
                 </div>
-                <t t-if="uid == user.id">
+                <!-- <t t-if="uid == user.id">
                     <div>
                         <a t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"><i class="fa fa-arrow-right"/>Edit Your Profile</a>
                     </div>
-                </t>
+                </t> -->
             </div>
         </div>
 
