@@ -994,6 +994,7 @@ class AccountTax(models.Model):
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
                 'price_include': tax.price_include,
+                'tax_exigibility': tax.tax_exigibility,
             })
 
         return {
