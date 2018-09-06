@@ -1,4 +1,5 @@
 # coding: utf-8
+from collections import defaultdict
 import hashlib
 import hmac
 import logging
@@ -721,19 +722,21 @@ class PaymentTransaction(models.Model):
         invoices.action_invoice_open()
 
         # Create & Post the payments.
-        payments = self.env['account.payment']
+        payments = defaultdict(lambda: self.env['account.payment'])
         for trans in self:
             if trans.payment_id:
                 payments += trans.payment_id
                 continue
 
             payment_vals = trans._prepare_account_payment_vals()
-            payment = payments.create(payment_vals)
-            payments += payment
+            payment = self.env['account.payment'].create(payment_vals)
+            payments[trans.acquirer_id.company_id.id] += payment
 
             # Track the payment to make a one2one.
             trans.payment_id = payment
-        payments.post()
+
+        for company in payments:
+            payments[company].with_context(force_company=company, company_id=company).post()
 
         self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
         self._log_payment_transaction_received()
