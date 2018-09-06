@@ -61,10 +61,10 @@ class Department(models.Model):
 
 
 class Employee(models.Model):
-
     _inherit = "hr.employee"
 
-    remaining_leaves = fields.Float(compute='_compute_remaining_leaves', string='Remaining Legal Leaves', inverse='_inverse_remaining_leaves',
+    remaining_leaves = fields.Float(
+        compute='_compute_remaining_leaves', string='Remaining Legal Leaves',
         help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. '
              'Total based on all the leave types without overriding limit.')
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Leave Status",
@@ -114,39 +114,6 @@ class Employee(models.Model):
         remaining = self._get_remaining_leaves()
         for employee in self:
             employee.remaining_leaves = float_round(remaining.get(employee.id, 0.0), precision_digits=2)
-
-    @api.multi
-    def _inverse_remaining_leaves(self):
-        status_list = self.env['hr.leave.type'].search([('limit', '=', False)])
-        # Create leaves (adding remaining leaves) or raise (reducing remaining leaves)
-        actual_remaining = self._get_remaining_leaves()
-        for employee in self.filtered(lambda employee: employee.remaining_leaves):
-            # check the status list. This is done here and not before the loop to avoid raising
-            # exception on employee creation (since we are in a computed field).
-            if len(status_list) != 1:
-                raise UserError(_("The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one "
-                    "leave type with the option 'Allow to Override Limit' unchecked. (%s Found). "
-                    "Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. "
-                    "\n You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application "
-                    "to manage the leave days of the employees if the configuration does not allow to use this field.") % (len(status_list)))
-            status = status_list[0] if status_list else None
-            if not status:
-                continue
-            # if a status is found, then compute remaing leave for current employee
-            difference = float_round(employee.remaining_leaves - actual_remaining.get(employee.id, 0), precision_digits=2)
-            if difference > 0:
-                leave = self.env['hr.leave.allocation'].create({
-                    'name': _('Allocation for %s') % employee.name,
-                    'employee_id': employee.id,
-                    'holiday_status_id': status.id,
-                    'holiday_type': 'employee',
-                    'number_of_days_temp': difference
-                })
-                leave.action_approve()
-                if leave.validation_type == 'both':
-                    leave.action_validate()
-            elif difference < 0:
-                raise UserError(_('You cannot reduce validated allocation requests.'))
 
     @api.multi
     def _compute_leave_status(self):

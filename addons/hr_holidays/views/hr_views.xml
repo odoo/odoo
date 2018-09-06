@@ -1,33 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
 
-    <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
-        <field name="name">hr.employee.leave.tree</field>
-        <field name="model">hr.employee</field>
-        <field name="priority" eval="20"/>
-        <field name="arch" type="xml">
-            <tree string="Assign Leaves" editable="bottom">
-                <field name="name" string="Employee"/>
-                <field name="remaining_leaves" string="Remaining Legal Leaves"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="hr_holidays_leaves_assign_legal" model="ir.actions.act_window">
-       <field name="name">Allocate Leaves for Employees</field>
-       <field name="type">ir.actions.act_window</field>
-       <field name="res_model">hr.employee</field>
-       <field name="view_type">form</field>
-       <field name="view_mode">tree,form</field>
-       <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
-       <field name="help" type="html">
-         <p>
-           You can assign remaining Legal Leaves for each employee, Odoo
-           will automatically create and validate allocation requests.
-         </p>
-       </field>
-   </record>
-
    <record id="hr_employee_action_from_department" model="ir.actions.act_window">
        <field name="name">Absent Employees</field>
        <field name="res_model">hr.employee</field>
