@@ -63,7 +63,6 @@
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
         'views/procurement_views.xml',
-        'views/res_users_views.xml',
         'views/stock_package_level_views.xml',
 
         'data/default_barcode_patterns.xml',
