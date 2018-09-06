@@ -399,7 +399,10 @@ class ProductTemplate(models.Model):
             # We fetch the standard price as the superuser
             templates = self.with_context(force_company=company and company.id or self._context.get('force_company', self.env.user.company_id.id)).sudo()
         if not company:
-            company = self._context.get('force_company', self.env.user.company_id.id)
+            if self._context.get('force_company'):
+                company = self.env['res.company'].browse(self._context['force_company'])
+            else:
+                company = self.env.user.company_id
         date = self.env.context.get('date') or fields.Date.today()
 
         prices = dict.fromkeys(self.ids, 0.0)
