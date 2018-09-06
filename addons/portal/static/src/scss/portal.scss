@@ -14,16 +14,17 @@ $-navbar-height: $nav-link-height !default;
 // Frontend general
 #wrapwrap {
     position: relative;
-    display: table;
-    table-layout: fixed;
+    display: flex;
+    flex-flow: column nowrap;
     width: 100%;
     height: 100%;
+    overflow: auto;
 
     > * {
-        display: table-row;
+        flex: 0 0 auto;
     }
     > main {
-        height: 100%;
+        flex: 1 0 auto;
     }
 }
 
