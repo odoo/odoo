@@ -1,4 +1,3 @@
-
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
@@ -24,7 +23,6 @@ sent mails with personal token for the invitation of the survey.
         'views/survey_views.xml',
         'views/survey_templates.xml',
         'views/survey_result.xml',
-        'views/res_users_views.xml',
         'wizard/survey_email_compose_message.xml',
         'data/survey_stages.xml',
     ],
