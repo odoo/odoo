@@ -1203,7 +1203,11 @@ class AccountMoveLine(models.Model):
         amount_currency = False
         currency_id = False
         date = self.env.context.get('date') or fields.Date.today()
-        company = self.env.context.get('company_id', self.env.user.company_id)
+        company_id = self.env.context.get('company_id')
+        if company_id:
+            company = self.env['res.company'].browse(company_id)
+        else:
+            company = self.env.user.company_id
         if src_currency and src_currency != company_currency:
             amount_currency = amount
             amount = src_currency._convert(amount, company_currency, company, date)

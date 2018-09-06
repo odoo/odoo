@@ -323,7 +323,11 @@ class MonetaryConverter(models.AbstractModel):
 
         if options.get('from_currency'):
             date = options.get('date') or fields.Date.today()
-            company = options.get('company_id') or self.env.user.company_id
+            company_id = options.get('company_id')
+            if company_id:
+                company = self.env['res.company'].browse(company_id)
+            else:
+                company = self.env.user.company_id
             value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()
