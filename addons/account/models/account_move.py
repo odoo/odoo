@@ -1313,6 +1313,8 @@ class AccountMoveLine(models.Model):
                             ctx['date'] = vals['date']
                         temp['currency_id'] = bank.currency_id.id
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
+                    if vals.get('tax_exigible'):
+                        temp['tax_exigible'] = True
                     tax_lines_vals.append(temp)
 
         #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
