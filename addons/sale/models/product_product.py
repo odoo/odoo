@@ -17,10 +17,10 @@ class ProductProduct(models.Model):
         JOIN sale_order s ON l.order_id = s.id     
         LEFT JOIN product_product p ON l.product_id = p.id
         LEFT JOIN product_template t ON p.product_tmpl_id = t.id
-                   LEFT JOIN product_uom u ON u.id = l.product_uom
-                   LEFT JOIN product_uom u2 ON u2.id = t.uom_id
-                WHERE s.state in ('done', 'sale') and product_id in %s
-                GROUP BY l.product_id"""
+        LEFT JOIN product_uom u ON u.id = l.product_uom
+        LEFT JOIN product_uom u2 ON u2.id = t.uom_id
+        WHERE s.state in ('done', 'sale') and product_id in %s
+        GROUP BY l.product_id"""
         params = (tuple(self.ids),)
         self._cr.execute(query, params)
         product_qty = {r[0]: r[1] for r in self._cr.fetchall()}
