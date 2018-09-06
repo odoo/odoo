@@ -313,6 +313,18 @@ class ProductTemplate(models.Model):
          ('tenders', 'Propose a call for tenders')],
         string='Procurement', default='rfq')
 
+class StockMove(models.Model):
+    _inherit = "stock.move"
+
+    requistion_line_ids =  fields.One2many('purchase.requisition.line', 'move_dest_id')
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _get_exceptions_domain(self):
+        return super(ProcurementGroup, self)._get_exceptions_domain() + [('requistion_line_ids', '=', False)]
+
 
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
