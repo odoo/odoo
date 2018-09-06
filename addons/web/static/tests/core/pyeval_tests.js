@@ -343,11 +343,11 @@ QUnit.module('core', function () {
             '2015-02-02');
         assert.strictEqual(
             py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=7, months=42, days=42)).strftime('%Y-%m-%d')",
-                    pyeval.context()),
+                    pyEval.context()),
             '2028-09-12');
         assert.strictEqual(
             py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=-7, months=-42, days=-42)).strftime('%Y-%m-%d')",
-                    pyeval.context()),
+                    pyEval.context()),
             '2007-06-20');
     });
 
