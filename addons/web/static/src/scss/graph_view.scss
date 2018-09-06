@@ -8,6 +8,16 @@
             overflow: auto;
             svg {
                 background-color: $o-view-background-color;
+                .nv-y {
+                    path.domain, g.tick.zero {
+                        // Hide y axis line and zero tick label
+                        display: none;
+                    }
+                }
+                .nv-groups path.nv-area {
+                    // ligther area color
+                    fill-opacity: 0.1;
+                }
             }
         }
     }
