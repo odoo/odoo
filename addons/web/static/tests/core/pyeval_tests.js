@@ -319,7 +319,7 @@ QUnit.module('core', function () {
     });
 
     QUnit.test('relativedelta', function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         assert.strictEqual(
             py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
@@ -341,6 +341,14 @@ QUnit.module('core', function () {
             py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
                     pyEval.context()),
             '2015-02-02');
+        assert.strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=7, months=42, days=42)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2028-09-12');
+        assert.strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=-7, months=-42, days=-42)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2007-06-20');
     });
 
 
