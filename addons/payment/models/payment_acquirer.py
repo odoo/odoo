@@ -792,11 +792,10 @@ class PaymentTransaction(models.Model):
         # Fetch the last reference
         # E.g. If the last reference is SO42-5, this query will return '-5'
         self._cr.execute('''
-                SELECT CAST(SUBSTRING(reference FROM '-\d+') AS INTEGER) AS suffix
+                SELECT CAST(SUBSTRING(reference FROM '-\d+$') AS INTEGER) AS suffix
                 FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
-            ''', [prefix + '%'])
+            ''', [prefix + '-%'])
         query_res = self._cr.fetchone()
-
         if query_res:
             # Increment the last reference by one
             suffix = '%s' % (-query_res[0] + 1)
