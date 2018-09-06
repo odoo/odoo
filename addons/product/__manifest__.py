@@ -41,6 +41,7 @@ Print product labels with barcode.
         'report/product_pricelist_templates.xml',
         'report/product_product_templates.xml',
         'report/product_template_templates.xml',
+        'report/product_packaging.xml',
     ],
     'demo': [
         'data/product_demo.xml',
