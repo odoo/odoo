@@ -84,10 +84,10 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
     second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
-    type_request_unit = fields.Selection(related='holiday_status_id.request_unit')
+    type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     accrual = fields.Boolean("Accrual", related='holiday_status_id.accrual', store=True, readonly=True)
     number_per_interval = fields.Float("Number of unit per interval", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
     interval_number = fields.Integer("Number of unit between two intervals", readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=1)
