@@ -547,9 +547,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self._action_confirm()
+        draft_sales = self.filtered(lambda s: s.state in ('draft', 'sent'))
+        draft_sales._action_confirm()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
-            self.action_done()
+            draft_sales.action_done()
         return True
 
     @api.multi
