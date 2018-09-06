@@ -73,6 +73,8 @@
 
     <template id="portal_my_orders" name="My Sales Orders">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Sales Orders</t>
             </t>
@@ -115,6 +117,16 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
 
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+                <div t-ignore="true" class="text-center">
+                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
+                    <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations').id)">
+                        <b>Back in edit mode</b>.
+                    </a>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+            </t>
+
             <div class="row mt16 o_portal_sale_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
@@ -126,28 +138,33 @@
 
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <t t-if="sale_order.state in ('draft', 'sent', 'waiting_date')">
-                                <t t-set="to_accept" t-value="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()"/>
-                                <t t-set="to_accept_and_pay" t-value="not sale_order.is_expired and sale_order.has_to_be_paid()"/>
+                            <li class="list-group-item flex-grow-1">
+                                <a role="button" class="btn btn-block btn-secondary" target="_blank" t-att-href="sale_order.get_portal_url(report_type='pdf')"><i class="fa fa-print mr-1"/>Print</a>
 
-                                <li t-if="to_accept or to_accept_and_pay or sale_order.is_expired" class="list-group-item flex-grow-1">
-                                    <a role="button" t-if="to_accept" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                        <i class="fa fa-check"/> Accept
-                                    </a>
-                                    <a role="button" t-elif="to_accept_and_pay" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                        <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
-                                    </a>
-                                    <t t-if="sale_order.is_expired">
-                                        <div class="alert alert-warning small mb-2 py-1"><b>This offer expired!</b></div>
-                                        <a role="button" href="#discussion" class="btn btn-info btn-block o_normalwhitespace"> Get a new quotation.</a>
+                                <t t-if="sale_order.state in ('draft', 'sent', 'waiting_date')">
+                                    <t t-set="to_accept" t-value="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()"/>
+                                    <t t-set="to_accept_and_pay" t-value="not sale_order.is_expired and sale_order.has_to_be_paid()"/>
+
+                                    <t t-if="to_accept or to_accept_and_pay or sale_order.is_expired">
+                                        <a role="button" t-if="to_accept" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                            <i class="fa fa-check"/> Accept
+                                        </a>
+                                        <a role="button" t-elif="to_accept_and_pay" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                            <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
+                                        </a>
+                                        <t t-if="sale_order.is_expired">
+                                            <div class="alert alert-warning small mt-3 mb-1 py-1 px-2"><b class="d-block mb-1">This offer expired!</b>
+                                                <a role="button" href="#discussion" class="btn btn-info btn-block py-1 o_normalwhitespace"> Get a new quotation.</a>
+                                            </div>
+                                        </t>
                                     </t>
-                                </li>
-                            </t>
+                                </t>
 
-                            <li t-if="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')" class="list-group-item">
-                                <a role="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                    <i class="fa fa-check"></i> Pay Now
-                                </a>
+                                <t t-if="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')">
+                                    <a role="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
+                                        <i class="fa fa-check"></i> Pay Now
+                                    </a>
+                                </t>
                             </li>
 
                             <li class="navspy list-group-item pl-0 d-none d-lg-block" t-ignore="true" role="complementary">
@@ -370,20 +387,6 @@
             <h2 class="my-0">
                 <span t-field="sale_order.type_name"></span>
                 <em t-esc="sale_order.name"/>
-                <div t-ignore="true" class="float-md-right css_editable_mode_hidden d-print-none">
-                    <ul class="list-inline">
-                        <li groups="sales_team.group_sale_salesman" class="list-inline-item">
-                            <a role="button" class="btn btn-info btn-sm" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (sale_order._name, sale_order.id, sale_order.env.ref('sale.action_quotations').id)">
-                                <i class="fa fa-pencil mr-1"/>
-                                <t t-if="sale_order.state in ('draft', 'sent', 'cancel')">Edit Quotation</t>
-                                <t t-else="">Edit Sales Order</t>
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a role="button" class="btn btn-info btn-sm" target="_blank" t-att-href="sale_order.get_portal_url(report_type='pdf')"><i class="fa fa-print mr-1"/>Print</a>
-                        </li>
-                    </ul>
-                </div>
             </h2>
         </div>
 
