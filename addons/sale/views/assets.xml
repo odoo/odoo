@@ -11,4 +11,10 @@
             <link rel='stylesheet' href='/sale/static/src/less/sale_portal.less'/>
         </xpath>
     </template>
+
+    <template id="qunit_suite" name="sales_team_dashboard_tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/sale/static/tests/sales_team_dashboard_tests.js"></script>
+        </xpath>
+    </template>
 </odoo>
