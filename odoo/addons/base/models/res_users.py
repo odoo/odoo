@@ -39,22 +39,47 @@ DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
 concat = chain.from_iterable
 
 #
-# Functions for manipulating boolean and selection fields
+# Functions for manipulating boolean and selection pseudo-fields
 #
+def name_boolean_group(id):
+    return 'in_group_' + str(id)
 
+def name_selection_groups(ids):
+    return 'sel_groups_' + '_'.join(str(it) for it in ids)
 
 def is_boolean_group(name):
-    return name.startswith('has_group_')
-
+    return name.startswith('in_group_')
 
 def is_selection_groups(name):
-    return name.startswith('group_')
+    return name.startswith('sel_groups_')
 
+def is_reified_group(name):
+    return is_boolean_group(name) or is_selection_groups(name)
+
+def get_boolean_group(name):
+    return int(name[9:])
+
+def get_selection_groups(name):
+    return [int(v) for v in name[11:].split('_')]
+
+def parse_m2m(commands):
+    "return a list of ids corresponding to a many2many value"
+    ids = []
+    for command in commands:
+        if isinstance(command, (tuple, list)):
+            if command[0] in (1, 4):
+                ids.append(command[1])
+            elif command[0] == 5:
+                ids = []
+            elif command[0] == 6:
+                ids = list(command[2])
+        else:
+            ids.append(command)
+    return ids
 
 #----------------------------------------------------------
 # Basic res.groups and res.users
 #----------------------------------------------------------
-
 
 class Groups(models.Model):
     _name = "res.groups"
@@ -750,6 +775,268 @@ class UsersImplied(models.Model):
                 gs = set(concat(g.trans_implied_ids for g in user.groups_id))
                 vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, user).write(vals)
+        return res
+
+#
+# Virtual checkbox and selection for res.user form view
+#
+# Extension of res.groups and res.users for the special groups view in the users
+# form.  This extension presents groups with selection and boolean widgets:
+# - Groups are shown by application, with boolean and/or selection fields.
+#   Selection fields typically defines a role "Name" for the given application.
+# - Uncategorized groups are presented as boolean fields and grouped in a
+#   section "Others".
+#
+# The user form view is modified by an inherited view (base.user_groups_view);
+# the inherited view replaces the field 'groups_id' by a set of reified group
+# fields (boolean or selection fields).  The arch of that view is regenerated
+# each time groups are changed.
+#
+# Naming conventions for reified groups fields:
+# - boolean field 'in_group_ID' is True iff
+#       ID is in 'groups_id'
+# - selection field 'sel_groups_ID1_..._IDk' is ID iff
+#       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
+#
+
+class GroupsView(models.Model):
+    _inherit = 'res.groups'
+
+    @api.model
+    def create(self, values):
+        user = super(GroupsView, self).create(values)
+        self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
+        return user
+
+    @api.multi
+    def write(self, values):
+        res = super(GroupsView, self).write(values)
+        self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
+        return res
+
+    @api.multi
+    def unlink(self):
+        res = super(GroupsView, self).unlink()
+        self._update_user_groups_view()
+        # actions.get_bindings() depends on action records
+        self.env['ir.actions.actions'].clear_caches()
+        return res
+
+    @api.model
+    def _update_user_groups_view(self):
+        """ Modify the view with xmlid ``base.user_groups_view``, which inherits
+            the user form view, and introduces the reified group fields.
+        """
+        if self._context.get('install_mode'):
+            # use installation/admin language for translatable names in the view
+            user_context = self.env['res.users'].context_get()
+            self = self.with_context(**user_context)
+
+        # We have to try-catch this, because at first init the view does not
+        # exist but we are already creating some basic groups.
+        view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
+        if view and view.exists() and view._name == 'ir.ui.view':
+            group_no_one = view.env.ref('base.group_no_one')
+            xml1, xml2 = [], []
+            xml1.append(E.separator(string=_('Application Accesses'), colspan="2"))
+            for app, kind, gs in self.get_groups_by_application():
+                # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
+                attrs = {}
+                if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
+                    attrs['groups'] = 'base.group_no_one'
+
+                if kind == 'selection':
+                    # application name with a selection field
+                    field_name = name_selection_groups(gs.ids)
+                    xml1.append(E.field(name=field_name, **attrs))
+                    xml1.append(E.newline())
+                else:
+                    # application separator with boolean fields
+                    app_name = app.name or _('Other')
+                    xml2.append(E.separator(string=app_name, colspan="4", **attrs))
+                    for g in gs:
+                        field_name = name_boolean_group(g.id)
+                        if g == group_no_one:
+                            # make the group_no_one invisible in the form view
+                            xml2.append(E.field(name=field_name, invisible="1", **attrs))
+                        else:
+                            xml2.append(E.field(name=field_name, **attrs))
+
+            xml2.append({'class': "o_label_nowrap"})
+            xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
+            xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
+            xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
+
+            new_context = dict(view._context)
+            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
+
+    def get_application_groups(self, domain):
+        """ Return the non-share groups that satisfy ``domain``. """
+        return self.search(domain + [('share', '=', False)])
+
+    @api.model
+    def get_groups_by_application(self):
+        """ Return all groups classified by application (module category), as a list::
+
+                [(app, kind, groups), ...],
+
+            where ``app`` and ``groups`` are recordsets, and ``kind`` is either
+            ``'boolean'`` or ``'selection'``. Applications are given in sequence
+            order.  If ``kind`` is ``'selection'``, ``groups`` are given in
+            reverse implication order.
+        """
+        def linearize(app, gs):
+            # determine sequence order: a group appears after its implied groups
+            order = {g: len(g.trans_implied_ids & gs) for g in gs}
+            # check whether order is total, i.e., sequence orders are distinct
+            if len(set(order.values())) == len(gs):
+                return (app, 'selection', gs.sorted(key=order.get))
+            else:
+                return (app, 'boolean', gs)
+
+        # classify all groups by application
+        by_app, others = defaultdict(self.browse), self.browse()
+        for g in self.get_application_groups([]):
+            if g.category_id:
+                by_app[g.category_id] += g
+            else:
+                others += g
+        # build the result
+        res = []
+        for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
+            res.append(linearize(app, gs))
+        if others:
+            res.append((self.env['ir.module.category'], 'boolean', others))
+        return res
+
+
+class UsersView(models.Model):
+    _inherit = 'res.users'
+
+    @api.model
+    def create(self, values):
+        values = self._remove_reified_groups(values)
+        user = super(UsersView, self).create(values)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                group_multi_company.write({'users': [(3, user.id)]})
+            elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                group_multi_company.write({'users': [(4, user.id)]})
+        return user
+
+    @api.multi
+    def write(self, values):
+        values = self._remove_reified_groups(values)
+        res = super(UsersView, self).write(values)
+        group_multi_company = self.env.ref('base.group_multi_company', False)
+        if group_multi_company and 'company_ids' in values:
+            for user in self:
+                if len(user.company_ids) <= 1 and user.id in group_multi_company.users.ids:
+                    group_multi_company.write({'users': [(3, user.id)]})
+                elif len(user.company_ids) > 1 and user.id not in group_multi_company.users.ids:
+                    group_multi_company.write({'users': [(4, user.id)]})
+        return res
+
+    def _remove_reified_groups(self, values):
+        """ return `values` without reified group fields """
+        add, rem = [], []
+        values1 = {}
+
+        for key, val in values.items():
+            if is_boolean_group(key):
+                (add if val else rem).append(get_boolean_group(key))
+            elif is_selection_groups(key):
+                rem += get_selection_groups(key)
+                if val:
+                    add.append(val)
+            else:
+                values1[key] = val
+
+        if 'groups_id' not in values and (add or rem):
+            # remove group ids in `rem` and add group ids in `add`
+            values1['groups_id'] = list(itertools.chain(
+                pycompat.izip(repeat(3), rem),
+                pycompat.izip(repeat(4), add)
+            ))
+
+        return values1
+
+    @api.model
+    def default_get(self, fields):
+        group_fields, fields = partition(is_reified_group, fields)
+        fields1 = (fields + ['groups_id']) if group_fields else fields
+        values = super(UsersView, self).default_get(fields1)
+        self._add_reified_groups(group_fields, values)
+        return values
+
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        # determine whether reified groups fields are required, and which ones
+        fields1 = fields or list(self.fields_get())
+        group_fields, other_fields = partition(is_reified_group, fields1)
+
+        # read regular fields (other_fields); add 'groups_id' if necessary
+        drop_groups_id = False
+        if group_fields and fields:
+            if 'groups_id' not in other_fields:
+                other_fields.append('groups_id')
+                drop_groups_id = True
+        else:
+            other_fields = fields
+
+        res = super(UsersView, self).read(other_fields, load=load)
+
+        # post-process result to add reified group fields
+        if group_fields:
+            for values in res:
+                self._add_reified_groups(group_fields, values)
+                if drop_groups_id:
+                    values.pop('groups_id', None)
+        return res
+
+    def _add_reified_groups(self, fields, values):
+        """ add the given reified group fields into `values` """
+        gids = set(parse_m2m(values.get('groups_id') or []))
+        for f in fields:
+            if is_boolean_group(f):
+                values[f] = get_boolean_group(f) in gids
+            elif is_selection_groups(f):
+                selected = [gid for gid in get_selection_groups(f) if gid in gids]
+                values[f] = selected and selected[-1] or False
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        res = super(UsersView, self).fields_get(allfields, attributes=attributes)
+        # add reified groups fields
+        for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
+            if kind == 'selection':
+                # selection group field
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                res[name_selection_groups(gs.ids)] = {
+                    'type': 'selection',
+                    'string': app.name or _('Other'),
+                    'selection': [(False, '')] + [(g.id, g.name) for g in gs],
+                    'help': '\n'.join(tips),
+                    'exportable': False,
+                    'selectable': False,
+                }
+            else:
+                # boolean group fields
+                for g in gs:
+                    res[name_boolean_group(g.id)] = {
+                        'type': 'boolean',
+                        'string': g.name,
+                        'help': g.comment,
+                        'exportable': False,
+                        'selectable': False,
+                    }
         return res
 
 #----------------------------------------------------------
