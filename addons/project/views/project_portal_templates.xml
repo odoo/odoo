@@ -68,6 +68,16 @@
         <t t-call="portal.portal_layout">
             <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
 
+            <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
+                <div t-ignore="true" class="text-center">
+                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
+                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)">
+                        <b>Back in edit mode</b>.
+                    </a>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+            </t>
+
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
                     <h5 class="mb-0">
@@ -162,6 +172,17 @@
     <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
             <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
+
+            <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
+                <div t-ignore="true" class="text-center">
+                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
+                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)">
+                        <b>Back in edit mode</b>.
+                    </a>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+            </t>
+
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
                     <div class="row no-gutters">
@@ -172,7 +193,6 @@
                             </h5>
                         </div>
                         <div class="col-md text-md-right">
-                            <a role="button" class="btn btn-secondary btn-sm float-right float-md-none mr-md-2 " t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user"><i class="fa fa-pencil mr-1"/>Edit</a>
                             <small class="text-right">Status:</small>
                             <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
                         </div>
