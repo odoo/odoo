@@ -300,6 +300,14 @@ odoo.define_section('eval.types', ['web.pyeval'], function (test, mock) {
             py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
                     pyeval.context()),
             '2015-02-02');
+        strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=7, months=42, days=42)).strftime('%Y-%m-%d')",
+                    pyeval.context()),
+            '2028-09-12');
+        strictEqual(
+            py.eval("(datetime.date(2018, 2, 1) + relativedelta(years=-7, months=-42, days=-42)).strftime('%Y-%m-%d')",
+                    pyeval.context()),
+            '2007-06-20');
     });
 
     test('datetime.tojson', function (assert, pyeval) {
