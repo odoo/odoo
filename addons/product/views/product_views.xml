@@ -329,8 +329,11 @@
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
                 </group>
+                <field name="name" position="attributes">
+                    <attribute name="class">oe_edit_only</attribute>
+                </field>
                 <field name="name" position="after">
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
+                    <field name="product_tmpl_id" class="oe_read_only oe_inline" readonly="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
                 <field name="item_ids" position="inside">
                     <field name="pricelist_item_ids" widget="many2many">
