@@ -1920,19 +1920,12 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
-        'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    _onCloseColorPicker: function () {
-        this.$color_picker.remove();
-    },
     /**
      * @private
      * @param {MouseEvent} ev
@@ -1978,7 +1971,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {
-                this.prevColors[id] = currentColor
+                this.prevColors[id] = currentColor;
             } else {
                 color = this.prevColors[id] ? this.prevColors[id] : 1;
             }

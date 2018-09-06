@@ -12028,11 +12028,12 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldmany2many tags: update color', function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records[0].color = 0;
 
+        var color;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -12040,6 +12041,13 @@ QUnit.module('relational_fields', {
             arch:'<form string="Partners">' +
                     '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {color: color},
+                        "shoud write the new color");
+                }
+                return this._super.apply(this, arguments);
+            },
             res_id: 1,
         });
 
@@ -12048,17 +12056,20 @@ QUnit.module('relational_fields', {
             'first tag color should be 0');
 
         // Update the color in readonly
+        color = 1;
         form.$('.badge:first() .dropdown-toggle').click();
-        $('.o_colorpicker a[data-color="1"]').trigger('mousedown'); // choose color 1
-        assert.strictEqual(form.$('.badge:first()').data('color'), 1,
+        $('.o_colorpicker a[data-color="' + color + '"]').trigger('mousedown'); // choose color 1
+        assert.strictEqual(form.$('.badge:first()').data('color'), color,
             'should have correctly updated the color (in readonly)');
 
         // Update the color in edit
+        color = 6;
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.badge:first() .dropdown-toggle').click();
-        $('.o_colorpicker a[data-color="6"]').trigger('mousedown'); // choose color 6
-        assert.strictEqual(form.$('.badge:first()').data('color'), 6,
+        $('.o_colorpicker a[data-color="' + color + '"]').trigger('mousedown'); // choose color 6
+        assert.strictEqual(form.$('.badge:first()').data('color'), color,
             'should have correctly updated the color (in edit)');
+
         form.destroy();
     });
 
@@ -12246,6 +12257,99 @@ QUnit.module('relational_fields', {
             "should contain no tags");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_tags: tags title attribute', function (assert) {
+        assert.expect(1);
+        this.data.turtle.records[0].partner_ids = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch:'<form string="Turtles">' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.deepEqual(
+            form.$('.o_field_many2manytags.o_field_widget .badge .o_badge_text').attr('title'),
+            'second record', 'the title should be filled in'
+        );
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_tags: toggle colorpicker multiple times', function (assert) {
+        assert.expect(11);
+
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner_type.records[0].color = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual($('.o_field_many2manytags .badge').length, 1,
+            "should have one tag");
+        assert.strictEqual($('.o_field_many2manytags .badge').data('color'), 0,
+            "tag should have color 0");
+        assert.strictEqual($('.o_colorpicker:visible').length, 0,
+            "colorpicker should be closed");
+
+        // click on the badge to open colorpicker
+        form.$('.o_field_many2manytags .badge .dropdown-toggle').click();
+
+        assert.strictEqual($('.o_colorpicker:visible').length, 1,
+            "colorpicker should be open");
+
+        // click on the badge again to close colorpicker
+        form.$('.o_field_many2manytags .badge .dropdown-toggle').click();
+
+        assert.strictEqual($('.o_field_many2manytags .badge').data('color'), 0,
+            "tag should still have color 0");
+        assert.strictEqual($('.o_colorpicker:visible').length, 0,
+            "colorpicker should be closed");
+
+        // click on the badge to open colorpicker
+        form.$('.o_field_many2manytags .badge .dropdown-toggle').click();
+
+        assert.strictEqual($('.o_colorpicker:visible').length, 1,
+            "colorpicker should be open");
+
+        // click on the colorpicker, but not on a color
+        form.$('.o_colorpicker').click();
+
+        assert.strictEqual($('.o_field_many2manytags .badge').data('color'), 0,
+            "tag should still have color 0");
+        assert.strictEqual($('.o_colorpicker:visible').length, 0,
+            "colorpicker should be closed");
+
+        // click on the badge to open colorpicker
+        form.$('.o_field_many2manytags .badge .dropdown-toggle').click();
+
+        // click on a color in the colorpicker
+        form.$('.o_colorpicker .o_tag_color_2').trigger('mousedown');
+
+        assert.strictEqual($('.o_field_many2manytags .badge').data('color'), 2,
+            "tag should have color 2");
+        assert.strictEqual($('.o_colorpicker:visible').length, 0,
+            "colorpicker should be closed");
 
         form.destroy();
     });
