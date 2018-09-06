@@ -201,7 +201,7 @@ class ProductionLot(models.Model):
             ]).mapped('move_id').filtered(
                 lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
             lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
-            lot.purchase_order_count = len(stock_moves)
+            lot.purchase_order_count = len(lot.purchase_order_ids)
 
     def action_view_po(self):
         self.ensure_one()
