@@ -1811,37 +1811,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # assumption: existing data is sorted by field 'groupby_name'
         first, last = existing[0], existing[-1]
 
-        expected = collections.deque(date_utils.date_range(first, last, interval))
+        empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
+        empty_item.update({key: False for key in aggregated_fields})
+        empty_item.update({key: False for key in [group['field'] for group in annotated_groupbys[1:]]})
 
-        if len(existing) < len(expected):
-            empty_data = dict.fromkeys(aggregated_fields, False)
-            empty_data['id'] = False
-            empty_data[groupby_name.split(':')[0] + '_count'] = 0
+        grouped_data = collections.defaultdict(list)
+        for d in data:
+            grouped_data[d[groupby_name]].append(d)
 
-            data = collections.deque(data)
+        result = []
 
-            new_data = []
+        for dt in date_utils.date_range(first, last, interval):
+            result.extend(grouped_data[dt] or [dict(empty_item, **{groupby_name: dt})])
 
-            # Note: the list 'expected' contains the the dates that should be
-            # represented inside data when it is returned. Notice that 'expected'
-            # is sorted like data, so what we do is empty data progressivly by
-            # popping its elements from first to last. To do this properly, we
-            # need to compare dates together.
-            while expected or data:
-                if not data[0][groupby_name]:
-                    new_data.append(data.popleft())
-                    continue
-                dt = expected.popleft()
-                if data[0][groupby_name] == dt:
-                    new_data.append(data.popleft())
-                else:
-                    new_data.append(dict(empty_data, **{groupby_name: dt}))
+        if False in grouped_data:
+            result.extend(grouped_data[False])
 
-            assert not data
-            return new_data
-
-        return data
-
+        return result
 
     @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
