@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record model="ir.cron" id="snailmail_print">
-            <field name="name">Snaimail: process letters queue</field>
+            <field name="name">Snailmail: process letters queue</field>
             <field name="model_id" ref="model_snailmail_letter"/>
             <field name="state">code</field>
             <field name="code">model._snailmail_cron()</field>
