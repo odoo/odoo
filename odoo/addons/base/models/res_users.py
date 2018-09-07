@@ -1047,9 +1047,12 @@ class UsersView(models.Model):
                 selection_vals = [(False, '')]
                 if app.xml_id == 'base.module_category_user_type':
                     selection_vals = []
+                field_name = name_selection_groups(gs.ids)
+                if allfields and field_name not in allfields:
+                    continue
                 # selection group field
                 tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
-                res[name_selection_groups(gs.ids)] = {
+                res[field_name] = {
                     'type': 'selection',
                     'string': app.name or _('Other'),
                     'selection': selection_vals + [(g.id, g.name) for g in gs],
@@ -1060,7 +1063,10 @@ class UsersView(models.Model):
             else:
                 # boolean group fields
                 for g in gs:
-                    res[name_boolean_group(g.id)] = {
+                    field_name = name_boolean_group(g.id)
+                    if allfields and field_name not in allfields:
+                        continue
+                    res[field_name] = {
                         'type': 'boolean',
                         'string': g.name,
                         'help': g.comment,
