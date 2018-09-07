@@ -30,21 +30,39 @@ QUnit.module('core', {}, function () {
     QUnit.test('test case to perform trigger properly', function (assert) {
         assert.expect(1);
 
-        var W = Widget.extend({
-            trigger_event: function () {
-                this.trigger('custom_event', { some_data: "suh" });
+        var parentWidget = Widget.extend({
+            custom_events: {
+                'w_event': function (isWorking) {
+                    return isWorking;
+                }
+            }
+        });
+
+        var childWidget = Widget.extend({
+            custom_events: {
+                'w_event': function (isWorking) {
+                    return isWorking;
+                }
             },
+            call_me: function() {
+                this.trigger('w_event', {isWorking: true});
+            }
         });
 
-        var widget = new W();
+        // parent widget instance
+        var parentInstance = new parentWidget();
+        // child widget instance
+        var childInstance = new childWidget(parent);
 
-        testUtils.intercept(widget, 'custom_event', function (event) {
-            assert.strictEqual(event.data.some_data, 'suh',
+        // intercept the w_event in parent instance
+        testUtils.intercept(parentInstance, 'w_event', function (ev) {
+            assert.strictEqual(ev.data.isWorking, true,
                 "should have sent proper data");
-        });
-        widget.trigger_event();
+        },true);
 
-        widget.destroy();
+        childInstance.call_me();
+
+        parentInstance.destroy();
 
     });
 
