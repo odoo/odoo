@@ -242,15 +242,16 @@ actual arch.
 
         for view in self:
             arch_fs = None
-            if 'xml' in config['dev_mode'] and view.arch_fs and view.xml_id:
+            xml_id = view.xml_id or view.key
+            if 'xml' in config['dev_mode'] and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
-                    arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+                    arch_fs = get_view_arch_from_file(fullpath, xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id).replace('%%', '%')
+                    arch_fs = arch_fs and resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
                 else:
-                    _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
+                    _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
             view.arch = pycompat.to_text(arch_fs or view.arch_db)
 
