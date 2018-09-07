@@ -3,7 +3,7 @@
 import time
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, ADMINUSER_ID, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import config
@@ -75,7 +75,7 @@ class IrRule(models.Model):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
 
-        if self._uid == SUPERUSER_ID:
+        if self._uid == ADMINUSER_ID:
             return None
 
         query = """ SELECT r.id FROM ir_rule r JOIN ir_model m ON (r.model_id=m.id)
