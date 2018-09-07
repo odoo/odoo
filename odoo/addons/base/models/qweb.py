@@ -12,6 +12,7 @@ from textwrap import dedent
 
 import itertools
 from lxml import etree, html
+from psycopg2.extensions import TransactionRollbackError
 import werkzeug
 from werkzeug.utils import escape as _escape
 
@@ -340,7 +341,7 @@ class QWeb(object):
             new.update(values)
             try:
                 return compiled(self, append, new, options, log)
-            except QWebException as e:
+            except (QWebException, TransactionRollbackError) as e:
                 raise e
             except Exception as e:
                 path = log['last_path_node']

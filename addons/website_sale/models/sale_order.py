@@ -105,6 +105,7 @@ class SaleOrder(models.Model):
             'order_id': order_id,
             'product_uom': product.uom_id.id,
             'price_unit': pu,
+            'customer_lead': product.sale_delay,
         }
 
     @api.multi
