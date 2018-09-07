@@ -772,8 +772,11 @@ class UsersImplied(models.Model):
         if values.get('groups_id'):
             # add implied groups for all users
             for user in self.with_context({}):
-                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                vals = {'groups_id': [(4, g.id) for g in gs]}
+                if not user.has_group('base.group_user'):
+                    vals = {'groups_id': [(5, 0, 0)] + values['groups_id']}
+                else:
+                    gs = set(concat(g.trans_implied_ids for g in user.groups_id))
+                    vals = {'groups_id': [(4, g.id) for g in gs]}
                 super(UsersImplied, user).write(vals)
         return res
 
