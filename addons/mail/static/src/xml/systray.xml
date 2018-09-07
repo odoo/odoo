@@ -78,6 +78,17 @@
                         <span class="o_preview_name">
                             <t t-esc="activity.name"/>
                         </span>
+                        <div t-if="activity.actions" class="o_mail_activity_action_buttons">
+                            <t t-foreach="activity.actions" t-as="action">
+                                <button type="button"
+                                    t-att-title="action.name"
+                                    t-att-class="'o_mail_activity_action btn btn-link fa ' + action.icon"
+                                    t-att-data-action_xmlid="action.action_xmlid"
+                                    t-att-data-res_model="activity.model"
+                                    t-att-data-model_name="activity.name">
+                                </button>
+                            </t>
+                        </div>
                     </div>
                     <div t-if="activity and activity.type == 'activity'">
                         <button t-if="activity.overdue_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='overdue'><t t-esc="activity.overdue_count"/> Late </button>
