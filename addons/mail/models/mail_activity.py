@@ -408,16 +408,22 @@ class MailActivity(models.Model):
     def get_activity_data(self, res_model, domain):
         res = self.env[res_model].search(domain)
         activity_domain = [('res_id', 'in', res.ids), ('res_model', '=', res_model)]
-        grouped_activities = self.env['mail.activity'].read_group(activity_domain, ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'], ['res_id', 'activity_type_id'], lazy=False)
+        grouped_activities = self.env['mail.activity'].read_group(
+            activity_domain,
+            ['res_id', 'activity_type_id', 'res_name:max(res_name)', 'ids:array_agg(id)', 'date_deadline:min(date_deadline)'],
+            ['res_id', 'activity_type_id'],
+            lazy=False)
         activity_type_ids = self.env['mail.activity.type']
-        res_list = set()
+        res_id_to_name = {}
+        res_id_to_deadline = {}
         activity_data = defaultdict(dict)
         for group in grouped_activities:
             res_id = group['res_id']
             res_name = group['res_name']
             activity_type_id = group['activity_type_id'][0]
             activity_type_ids |= self.env['mail.activity.type'].browse(activity_type_id)  # we will get the name when reading mail_template_ids
-            res_list.add((res_id, res_name))
+            res_id_to_name[res_id] = res_name
+            res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
             state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
             activity_data[res_id][activity_type_id] = {
                 'count': group['__count'],
@@ -426,6 +432,7 @@ class MailActivity(models.Model):
                 'state': state,
                 'o_closest_deadline': group['date_deadline'],
             }
+        res_ids_sorted = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
         activity_type_infos = []
         for elem in activity_type_ids:
             mail_template_info = []
@@ -435,7 +442,7 @@ class MailActivity(models.Model):
 
         return {
             'activity_types': activity_type_infos,
-            'res_ids': list(res_list),
+            'res_ids': [(rid, res_id_to_name[rid]) for rid in res_ids_sorted],
             'grouped_activities': activity_data,
             'model': res_model,
         }
