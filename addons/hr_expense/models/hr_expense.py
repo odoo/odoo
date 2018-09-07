@@ -31,10 +31,10 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_id_domain(self):
-        res = [(1, '=', 0)]
 
+        res= [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
-            res = [(1, '=', 1)]
+            res = [] # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
@@ -42,12 +42,11 @@ class HrExpense(models.Model):
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id)]
-
         return res
 
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain())
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))

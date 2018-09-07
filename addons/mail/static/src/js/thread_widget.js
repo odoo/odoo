@@ -41,6 +41,7 @@ var ThreadWidget = Widget.extend({
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
         'click .o_thread_message_email_exception': '_onClickEmailException',
+        'click .o_thread_message_email_bounce': '_onClickEmailException',
         'click .o_thread_message_moderation': '_onClickMessageModeration',
         'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },

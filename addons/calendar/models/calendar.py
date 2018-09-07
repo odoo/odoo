@@ -792,6 +792,9 @@ class Meeting(models.Model):
     res_model = fields.Char('Document Model Name', related='res_model_id.model', readonly=True, store=True)
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
 
+    #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
+    message_ids = fields.One2many(auto_join=False)
+
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     rrule_type = fields.Selection([
@@ -1115,10 +1118,11 @@ class Meeting(models.Model):
             order_fields.append('id')
 
         leaf_evaluations = None
+        recurrent_ids = [meeting.id for meeting in self if meeting.recurrency and meeting.rrule]
         #compose a query of the type SELECT id, condition1 as domain1, condition2 as domaine2
         #This allows to load leaf interpretation of the where clause in one query
         #leaf_evaluations is then used when running custom interpretation of domain for recuring events
-        if self:
+        if self and recurrent_ids:
             select_fields = ["id"]
             where_params_list = []
             for pos, arg in enumerate(domain):
@@ -1129,7 +1133,7 @@ class Meeting(models.Model):
                     where_params_list += where_params
             if len(select_fields) > 1:
                 query = "SELECT %s FROM calendar_event WHERE id in %%s" % (", ".join(select_fields))  # could be improved by only taking event with recurency ?
-                where_params_list += [tuple(self.ids)]
+                where_params_list += [tuple(recurrent_ids)]
                 self._cr.execute(query, where_params_list)
                 leaf_evaluations = dict([(row['id'], row) for row in self._cr.dictfetchall()])
         result_data = []
@@ -1792,8 +1796,6 @@ class Meeting(models.Model):
     def _fix_rrule(self, values):
         rule_str = values.get('rrule')
         if rule_str:
-            rule = rrule.rrulestr(rule_str)
-            if not rule._until and not rule._count:
-                rule._count = 100
-                rule_str = str(rule).split('RRULE:')[-1]
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
         return rule_str
