@@ -489,6 +489,8 @@ class AccountMoveLine(models.Model):
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
 
+        company_ids = self.env['res.company'].search([('id', 'child_of', self.env.user.company_id.id)])
+
         query = ("""
             SELECT {0} account_id, account_name, account_code, max_date,
                    to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked
@@ -509,7 +511,7 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
-                        AND l.company_id = {6}
+                        AND l.company_id IN {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
@@ -535,7 +537,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
-                self.env.user.company_id.id,
+                tuple(company_ids.ids),
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
