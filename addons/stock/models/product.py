@@ -132,17 +132,19 @@ class Product(models.Model):
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
-            res[product.id] = {}
+            product_id = product.id
+            rounding = product.uom_id.rounding
+            res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(product.id, 0.0) - moves_in_res_past.get(product.id, 0.0) + moves_out_res_past.get(product.id, 0.0)
+                qty_available = quants_res.get(product_id, 0.0) - moves_in_res_past.get(product_id, 0.0) + moves_out_res_past.get(product_id, 0.0)
             else:
-                qty_available = quants_res.get(product.id, 0.0)
-            res[product.id]['qty_available'] = float_round(qty_available, precision_rounding=product.uom_id.rounding)
-            res[product.id]['incoming_qty'] = float_round(moves_in_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['outgoing_qty'] = float_round(moves_out_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['virtual_available'] = float_round(
-                qty_available + res[product.id]['incoming_qty'] - res[product.id]['outgoing_qty'],
-                precision_rounding=product.uom_id.rounding)
+                qty_available = quants_res.get(product_id, 0.0)
+            res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
+            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['virtual_available'] = float_round(
+                qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
+                precision_rounding=rounding)
 
         return res
 

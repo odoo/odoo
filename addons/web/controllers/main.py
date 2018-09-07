@@ -1290,7 +1290,7 @@ class Export(http.Controller):
                       'relation_field': field.get('relation_field')}
             records.append(record)
 
-            if len(name.split('/')) < 3 and 'relation' in field:
+            if len(id.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
                 record['value'] += '/id'
                 record['params'] = {'model': ref, 'prefix': id, 'name': name}

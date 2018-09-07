@@ -10,7 +10,7 @@ from datetime import timedelta, datetime, time
 from pytz import timezone, UTC
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
@@ -18,27 +18,47 @@ from odoo.addons.resource.models.resource import float_to_time
 
 _logger = logging.getLogger(__name__)
 
-class HolidaysRequest(models.Model):
-    """
-        Here are the rights associated with the flow of leave requests
 
-        State       Groups              Restriction
-        ============================================================================================================
-        Draft       Anybody             Own Request only and state in [confirm, refuse]
-                    Holiday Manager     State in [confirm, refuse]
-        Confirm     All                 State = draft
-        Validate1   Holiday Officer     Not his own Request and state = confirm
-                    Holiday Manager     Not his own Request or has no manager and State = confirm
-        Validate    Holiday Officer     Not his own Request and state = confirm
-                    Holiday Manager     Not his own Request or has no manager and State in [validate1, confirm]
-        Refuse      Holiday Officer     State in [confirm, validate, validate1]
-                    Holiday Manager     State in [confirm, validate, validate1]
-        ============================================================================================================
+class HolidaysRequest(models.Model):
+    """ Leave Requests Access specifications
+
+     - a regular employee / user
+      - can see all leaves;
+      - cannot see name field of leaves belonging to other user as it may contain
+        private information that we don't want to share to other people than
+        HR people;
+      - can modify only its own not validated leaves (except writing on state to
+        bypass approval);
+      - can discuss on its leave requests;
+      - can reset only its own leaves;
+      - cannot validate any leaves;
+     - an Officer
+      - can see all leaves;
+      - can validate "HR" single validation leaves from people if
+       - he is the employee manager;
+       - he is the department manager;
+       - he is member of the same department;
+       - target employee has no manager and no department manager;
+      - can validate "Manager" single validation leaves from people if
+       - he is the employee manager;
+       - he is the department manager;
+       - target employee has no manager and no department manager;
+      - can first validate "Both" double validation leaves from people like "HR"
+        single validation, moving the leaves to validate1 state;
+      - cannot validate its own leaves;
+      - can reset only its own leaves;
+      - can refuse all leaves;
+     - a Manager
+      - can do everything he wants
+
+    On top of that multicompany rules apply based on company defined on the
+    leave request leave type.
     """
     _name = "hr.leave"
     _description = "Leave"
     _order = "date_from desc"
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _mail_post_access = 'read'
 
     def _default_domain_holiday_status(self):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
@@ -57,7 +77,6 @@ class HolidaysRequest(models.Model):
 
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-
 
     name = fields.Char('Description')
     state = fields.Selection([
@@ -297,25 +316,28 @@ class HolidaysRequest(models.Model):
             holiday.number_of_hours = holiday.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day
 
     @api.multi
+    @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_reset(self):
-        """ User can reset a leave request if it is its own leave request
-            or if he is an Hr Manager.
-        """
-        user = self.env.user
-        group_hr_manager = self.env.ref('hr_holidays.group_hr_holidays_manager')
         for holiday in self:
-            if group_hr_manager in user.groups_id or holiday.employee_id and holiday.employee_id.user_id == user:
+            try:
+                holiday._check_approval_update('draft')
+            except (AccessError, UserError):
+                holiday.can_reset = False
+            else:
                 holiday.can_reset = True
 
-    @api.depends('employee_id', 'department_id')
+    @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_approve(self):
-        """ User can only approve a leave request if it is not his own
-            Exception : User is holiday manager and has no manager
-        """
         for holiday in self:
-            # User is holiday manager and has no manager
-            manager = self.user_has_groups('hr_holidays.group_hr_holidays_manager')
-            holiday.can_approve = (holiday.employee_id.user_id.id != self.env.uid) or manager
+            try:
+                if holiday.state == 'confirm' and holiday.holiday_status_id.validation_type == 'both':
+                    holiday._check_approval_update('validate1')
+                else:
+                    holiday._check_approval_update('validate')
+            except (AccessError, UserError):
+                holiday.can_approve = False
+            else:
+                holiday.can_approve = True
 
     @api.constrains('date_from', 'date_to')
     def _check_date(self):
@@ -382,8 +404,9 @@ class HolidaysRequest(models.Model):
                 dto    = fields.Datetime.from_string(leave.date_to)
 
                 if dfrom and dto and (dfrom < vstart or dto > vstop):
-                    raise UserError(_('You can take %s only between %s and %s') % (leave.holiday_status_id.display_name, \
-                                                                                  leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
+                    raise UserError(
+                        _('You can take %s only between %s and %s') % (
+                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
 
     @api.model
     def create(self, values):
@@ -398,9 +421,29 @@ class HolidaysRequest(models.Model):
         holiday.activity_update()
         return holiday
 
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        if 'name' in field_names and 'employee_id' not in field_names:
+            field_names.append('employee_id')
+        super(HolidaysRequest, self)._read_from_database(field_names, inherited_field_names)
+        if 'name' in field_names:
+            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
+                return
+            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
+            for record in self:
+                emp_id = record._cache.get('employee_id', [False])[0]
+                if emp_id != current_employee.id:
+                    try:
+                        record._cache['name']
+                        record._cache['name'] = '*****'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass
+
     @api.multi
     def write(self, values):
         employee_id = values.get('employee_id', False)
+        if values.get('state'):
+            self._check_approval_update(values['state'])
         result = super(HolidaysRequest, self).write(values)
         self.add_follower(employee_id)
         if 'employee_id' in values:
@@ -494,8 +537,6 @@ class HolidaysRequest(models.Model):
     @api.multi
     def action_draft(self):
         for holiday in self:
-            if not holiday.can_reset:
-                raise UserError(_('Only an HR Manager or the concerned employee can reset the leave request to draft.'))
             if holiday.state not in ['confirm', 'refuse']:
                 raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to be reset to draft.'))
             holiday.write({
@@ -522,22 +563,10 @@ class HolidaysRequest(models.Model):
     def action_approve(self):
         # if validation_type == 'both': this method is the first approval approval
         # if validation_type != 'both': this method calls action_validate() below
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
-
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         if any(holiday.state != 'confirm' for holiday in self):
             raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
-        for holiday in self:
-            validation_type = holiday.holiday_status_id.validation_type
-            manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
-            if (validation_type in ['hr', 'both']) and (manager and manager != current_employee)\
-              and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('You must be %s manager to approve this leave') % (holiday.employee_id.name))
-            elif validation_type == 'manager' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('You must be a Human Resource Manager to approve this leave.'))
-
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         self.activity_update()
@@ -545,18 +574,10 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def action_validate(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
-
-        if any(not holiday.can_approve for holiday in self):
-            raise UserError(_('Only your manager can approve your leave requests'))
-
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
-            if holiday.state == 'validate1' and not holiday.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
-                raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
             if holiday.validation_type == 'both':
@@ -580,9 +601,6 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def action_refuse(self):
-        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
-
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
@@ -600,6 +618,40 @@ class HolidaysRequest(models.Model):
         self._remove_resource_leave()
         self.activity_update()
         return True
+
+    def _check_approval_update(self, state):
+        """ Check if target state is achievable. """
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
+        for holiday in self:
+            val_type = holiday.holiday_status_id.validation_type
+            if state == 'confirm':
+                continue
+
+            if state == 'draft':
+                if holiday.employee_id != current_employee and not is_manager:
+                    raise UserError(_('Only a Leave Manager can reset other people leaves.'))
+                continue
+
+            if not is_officer:
+                raise UserError(_('Only a Leave Officer or Manager can approve or refuse leave requests.'))
+
+            if is_officer:
+                # use ir.rule based first access check: department, members, ... (see security.xml)
+                holiday.check_access_rule('write')
+
+            if holiday.employee_id == current_employee and not is_manager:
+                raise UserError(_('Only a Leave Manager can approve its own requests.'))
+
+            if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):
+                manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
+                if (manager and manager != current_employee) and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                    raise UserError(_('You must be either %s\'s manager or Leave manager to approve this leave') % (holiday.employee_id.name))
+
+            if state == 'validate' and val_type == 'both':
+                if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                    raise UserError(_('Only an Leave Manager can apply the second approval on leave requests.'))
 
     # ------------------------------------------------------------
     # Activity methods

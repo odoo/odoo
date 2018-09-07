@@ -44,6 +44,7 @@ var PivotView = AbstractView.extend({
 
         var measures = {};
         var groupableFields = {};
+        var widgets = {};
 
         this.fields.__count = {string: _t("Count"), type: "integer"};
         _.each(this.fields, function (field, name) {
@@ -63,6 +64,10 @@ var PivotView = AbstractView.extend({
             var name = field.attrs.name;
             if (field.attrs.interval) {
                 name += ':' + field.attrs.interval;
+            }
+
+            if (field.attrs.widget) {
+                widgets[name] = field.attrs.widget;
             }
 
             // add active measures to the measure list.  This is very rarely
@@ -95,6 +100,8 @@ var PivotView = AbstractView.extend({
         this.loadParams.colGroupBys = colGroupBys;
         this.loadParams.rowGroupBys = rowGroupBys;
         this.loadParams.fields = this.fields;
+
+        this.rendererParams.widgets = widgets;
 
         this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
         this.controllerParams.enableLinking = !this.arch.attrs.disable_linking;

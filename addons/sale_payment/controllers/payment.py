@@ -27,6 +27,9 @@ class PaymentPortal(http.Controller):
         except:
             return False
 
+        # we check if the order need to create a payment token
+        save_token = save_token or order_sudo._get_payment_type() == "form_save"
+
         if request.env.user == request.env.ref('base.public_user'):
             save_token = False
 

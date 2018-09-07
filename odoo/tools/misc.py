@@ -960,6 +960,10 @@ def freehash(arg):
         else:
             return id(arg)
 
+def clean_context(context):
+    """ This function take a dictionary and remove each entry with its key starting with 'default_' """
+    return {k: v for k, v in context.items() if not k.startswith('default_')}
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
