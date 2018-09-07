@@ -217,7 +217,14 @@ class AccountAssetAsset(models.Model):
                 # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
                 # purchase month in other cases
                 if self.method_period >= 12:
-                    asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
+                    if self.company_id.fiscalyear_last_month:
+                        asset_date = date(year=int(self.date[:4]),
+                                                   month=self.company_id.fiscalyear_last_month,
+                                                   day=self.company_id.fiscalyear_last_day) + \
+                                     relativedelta(days=1) + \
+                                     relativedelta(year=int(self.date[:4]))  # e.g. 2018-12-31 +1 -> 2019
+                    else:
+                        asset_date = datetime.strptime(self.date[:4] + '-01-01', DF).date()
                 else:
                     asset_date = datetime.strptime(self.date[:7] + '-01', DF).date()
                 # if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
