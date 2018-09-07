@@ -67,14 +67,25 @@ class ProductAttribute(models.Model):
 class ProductAttributeValue(models.Model):
     _inherit = "product.attribute.value"
 
+    is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
     html_color = fields.Char(
         string='HTML Color Index', oldname='color',
         help="""Here you can set a
         specific HTML color index (e.g. #ff0000) to display the color if the
-        attibute type is 'Color'.""")
+        attribute type is 'Color'.""")
 
 
 class ProductProductAttributeValue(models.Model):
     _inherit = "product.product.attribute.value"
 
     html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
+    is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
+
+
+class ProductAttributeCustomValue(models.Model):
+    _name = "product.attribute.custom.value"
+    _rec_name = 'custom_value'
+
+    attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute')
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sale order line')
+    custom_value = fields.Char('Custom value')

@@ -72,6 +72,8 @@ class SaleOrder(models.Model):
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
+        else:
+            domain += [('product_custom_variant_values', '=', False)]
 
         lines = self.env['sale.order.line'].sudo().search(domain)
 
@@ -116,7 +118,7 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def _get_line_description(self, order_id, product_id, attributes=None):
+    def _get_line_description(self, order_id, product_id, attributes=None, custom_values=None):
         if not attributes:
             attributes = {}
 
@@ -139,6 +141,9 @@ class SaleOrder(models.Model):
 
         if product.description_sale:
             name += '\n%s' % (product.description_sale)
+
+        if custom_values:
+            name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
 
         return name
 
@@ -170,7 +175,15 @@ class SaleOrder(models.Model):
         # Create line if no line with product_id can be located
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
-            values['name'] = self._get_line_description(self.id, product_id, attributes=attributes)
+
+            custom_values = kwargs.get('product_custom_variant_values')
+            if custom_values:
+                values['product_custom_variant_values'] = [(0, 0, {
+                    'attribute_value_id': custom_value['attribute_value_id'],
+                    'custom_value': custom_value['custom_value']
+                }) for custom_value in custom_values]
+
+            values['name'] = self._get_line_description(self.id, product_id, attributes=attributes, custom_values=custom_values)
             order_line = SaleOrderLineSudo.create(values)
 
             try:

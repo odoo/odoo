@@ -2,28 +2,45 @@ odoo.define('sale.OptionalProductsModal', function (require) {
     "use strict";
 
 var ajax = require('web.ajax');
-var Widget = require('web.Widget');
+var Dialog = require('web.Dialog');
 var ServicesMixin = require('web.ServicesMixin');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 var weContext = require('web_editor.context');
-var ProductConfiguratorUtils = require('sale.product_configurator_utils');
 
 var product_name_map = {};
 var optional_products_map = {};
 
-var OptionalProductsModal = Widget.extend(ServicesMixin, {
-    events: _.extend({}, Widget.prototype.events, {
+var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixin, {
+    events:  _.extend({}, Dialog.prototype.events, ProductConfiguratorMixin.events, {
+        'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
+        'change input[name="add_qty"]': '_onChangeMainProductQuantity',
         'click .css_attribute_color input': '_onColorClick',
+        'change input.js_quantity': '_onChangeQuantity'
     }),
     /**
+     * Initializes the optional products modal
+     *
      * @override
      */
-    init: function (quantity, product_id, container, pricelistId, isWebsite) {
-        this._super.apply(this, arguments);
-        this.quantity = quantity;
-        this.product_id = product_id;
-        this.container = container;
-        this.pricelistId = pricelistId;
-        this.isWebsite = isWebsite;
+    init: function (parent, params) {
+        this._super(parent, {
+            size: 'large',
+            buttons: [{
+                text: params.okButtonText,
+                click: this._onConfirmButtonClick,
+                classes: 'btn-primary'
+            }, {
+                text: params.cancelButtonText,
+                click: this._onCancelButtonClick
+            }],
+            title: params.title
+        });
+
+        this.rootProduct = params.rootProduct;
+        this.container = parent;
+        this.pricelistId = params.pricelistId;
+        this.isWebsite = params.isWebsite;
+        this.dialogClass = 'oe_optional_products_modal' + (params.isWebsite ? ' oe_website_sale' : '');
     },
      /**
      * @override
@@ -31,26 +48,69 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
     willStart: function () {
         var self = this;
 
-        var getModalContent = ajax.jsonRpc(this._getUri("/product_configurator/show_optional_products"), 'call', {
-            product_id: self.product_id,
+        var uri = this._getUri("/product_configurator/show_optional_products");
+        var getModalContent = ajax.jsonRpc(uri, 'call', {
+            product_id: self.rootProduct.product_id,
             pricelist_id: self.pricelistId,
             kwargs: {
-                context: _.extend({'quantity': self.quantity}, weContext.get()),
+                context: _.extend({'quantity': self.rootProduct.quantity}, weContext.get()),
             }
         })
-        .then(function (modal_content) {
-            self.modal_content = modal_content;
+        .then(function (modalContent) {
+            if (modalContent){
+                var $modalContent = $(modalContent);
+                $modalContent = self._postProcessContent($modalContent);
+                self.$content = $modalContent;
+            } else {
+                self.trigger('options_empty');
+                self.preventOpening = true;
+            }
         });
 
         var parentInit = self._super.apply(self, arguments);
         return $.when(getModalContent, parentInit);
     },
+
     /**
+     * Show a dialog
+     *
+     * @param {Object} options
+     * @param {boolean} options.shouldFocusButtons  if true, put the focus on
+     * the first button primary when the dialog opens
+     */
+    open: function (options) {
+        $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
+
+        var self = this;
+        this.appendTo($('<div/>')).then(function () {
+            if (!self.preventOpening){
+                self.$modal.find(".modal-body").replaceWith(self.$el);
+                self.$modal.attr('open', true);
+                self.$modal.removeAttr("aria-hidden");
+                self.$modal.modal().appendTo(self.container);
+                self._opened.resolve();
+            }
+        });
+        if (options && options.shouldFocusButtons) {
+            self._onFocusControlButton();
+        }
+
+        return self;
+    },
+    /**
+     * Will:
+     * - trigger add_qty change to synchronize quantity with previous window
+     * - trigger variant change to compute the price and other
+     *   variant specific changes
+     *
+     *
      * @override
      */
-    start: function() {
-        this._renderModal();
-        return this._super.apply(this, arguments);
+    start: function (){
+        this._super.apply(this, arguments);
+
+        this.$el.find('input[name="add_qty"]').val(this.rootProduct.quantity).change();
+        this.triggerVariantChange(this.$el);
     },
 
     //--------------------------------------------------------------------------
@@ -58,24 +118,32 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * @public
      * Returns the list of selected products as products[{product_id, quantity}]
+     *
+     * @public
      */
-    getSelectedProducts: function() {
+    getSelectedProducts: function () {
         var self = this;
-        var products = [];
-        this.$modal.find('.js_product.in_cart').each(function(){
+        var products = [this.rootProduct];
+        this.$modal.find('.js_product.in_cart:not(.main_product)').each(function (){
             var quantity = 0;
             var $item = $(this);
-            if($item.find('input[name="add_qty"]').length){
+            if ($item.find('input[name="add_qty"]').length){
                 quantity = $item.find('input[name="add_qty"]').val();
             } else {
-                quantity = parseInt($item.find('.optional_product_quantity span.add_qty').html().trim());
+                quantity = parseInt(
+                    $item
+                        .find('.optional_product_quantity span.add_qty')
+                        .html()
+                        .trim()
+                );
             }
-            
+
+            var productCustomVariantValues = self.getCustomVariantValues($(this));
             products.push({
-                product_id: $item.find('input.product_id').length ? $item.find('input.product_id').val() : self.product_id,
-                quantity: quantity
+                product_id: parseInt($item.find('input.product_id').val()),
+                quantity: quantity,
+                product_custom_variant_values: productCustomVariantValues
             });
         });
 
@@ -86,34 +154,40 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
     // Private
     // ------------------------------------------
 
-    _renderModal: function(){
-        var self = this;
-        if (self.modal_content){
-            var $modal = $(self.modal_content);
-            $modal.find('img:first').attr("src", "/web/image/product.product/" + self.product_id + "/image_medium");
-    
-            $modal
-                .modal()
-                .appendTo(self.container)
-                .addClass('oe_optional_products_modal' + (self.isWebsite ? ' oe_website_sale' : ''))
-                .on('hidden.bs.modal', function () {
-                    $(this).remove();
-                })
-                .on('shown.bs.modal', function () {
-                    self.trigger('modal_ready', $modal);
-                });
+    /**
+     * Adds the product image and updates the product description
+     *
+     * @private
+     */
+    _postProcessContent: function ($modalContent) {
+        var productId = this.rootProduct.product_id;
+        $modalContent
+            .find('img:first')
+            .attr("src", "/web/image/product.product/" + productId + "/image_medium");
 
-                self.$modal = $modal;
-                self._addModalEvents();
-        } else {
-            self.trigger('options_empty');
+        if (this.rootProduct && this.rootProduct.product_custom_variant_values) {
+            var $productDescription = $modalContent
+                .find('.main_product')
+                .find('td.td-product_name div.text-muted.small');
+            var description = $productDescription.html();
+            $.each(this.rootProduct.product_custom_variant_values, function (){
+                description += '<br/>' + this.attribute_value_name + ': ' + this.custom_value;
+            });
+
+            $productDescription.html(description);
         }
+
+        return $modalContent;
     },
 
     /**
-     * Website behavior is slighlty different from backend so we append "_website" to URLs to lead to a different route
+     * Website behavior is slightly different from backend so we append
+     * "_website" to URLs to lead to a different route
+     *
+     * @private
+     * @param {string} uri The uri to adapt
      */
-    _getUri: function(uri) {
+    _getUri: function (uri) {
         if (this.isWebsite){
             return uri + '_website';
         } else {
@@ -121,56 +195,49 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
         }
     },
 
-    _addModalEvents: function() {
-        this.$modal.on('click', '.a-submit', {self: this}, this._onSubmit);
-        this.$modal.on('click', '.css_attribute_color input', this._onColorClick);
-        this.$modal.on("click", 'a.js_add, a.js_remove', {self: this}, this._onAddOrRemoveOption);
-        this.$modal.on("change", "input.js_quantity", {self: this}, this._onChangeQuantity);
-        this.$modal.on("change", 'input[name="add_qty"]', this._onChangeMainProductQuantity);
-        ProductConfiguratorUtils.addConfiguratorEvents(this.$modal, "small", this.isWebsite, this.pricelistId);
-
-        // trigger add_qty change to synchronise quantity with previous window
-        this.$modal.find('input[name="add_qty"]').val(this.quantity).change();
-
-        // trigger input change to validate fields and display custom prices
-        $('.js_add_cart_variants', this.$modal).each(function () {
-            $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
-        });
+    _onConfirmButtonClick: function () {
+        this.trigger('confirm');
+        this.close();
     },
 
-    /**
-     * Handles the "Back" and "Confirm" buttons and triggers the according events
-     */
-    _onSubmit: function(ev){
-        var $modal = $(this).parents('.oe_optional_products_modal');
-        $modal.modal('hide');
-        ev.preventDefault();
-
-        var $a = $(this);
-        ev.data.self.trigger($a.hasClass('confirm') ? 'confirm' : 'back');
+    _onCancelButtonClick: function () {
+        this.trigger('back');
+        this.close();
     },
 
-    /**
-     * TODO (awa): check if necessary
-     */
-    _onColorClick: function(){
-        var $modal = $(this).parents('.oe_optional_products_modal');
+    _onColorClick: function (ev){
+        var $modal = $(ev.currentTarget).parents('.oe_optional_products_modal');
         $modal.find('.css_attribute_color').removeClass("active");
         $modal.find('.css_attribute_color:has(input:checked)').addClass("active");
+
+        this._onChangeColorAttribute(ev);
     },
 
-    _onAddOrRemoveOption: function(ev){
+    /**
+     * Will add/remove the option, that includes:
+     * - Moving it to the correct DOM section
+     *   and possibly under its parent product
+     * - Hiding variants and showing the quantity
+     * - Remove optional products if parent product is removed
+     * - Compute the total price
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAddOrRemoveOption: function (ev){
         ev.preventDefault();
-        var $modal = $(this).parents('.oe_optional_products_modal');
+        var self = this;
+        var $target = $(ev.currentTarget);
+        var $modal = $target.parents('.oe_optional_products_modal');
         var $select_options_text = $modal.find('.o_select_options');
         var $main_product = $modal.find('.js_product:first');
-        var $parent = $(this).parents('.js_product:first');
+        var $parent = $target.parents('.js_product:first');
         $parent.find("a.js_add, span.js_remove").toggleClass('d-none');
-        $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
+        $parent.find("input.js_optional_same_quantity").val($target.hasClass("js_add") ? 1 : 0 );
         $parent.find(".js_remove");
 
         var product_id = $parent.find(".product_template_id").val();
-        if ($(this).hasClass('js_add')) {
+        if ($target.hasClass('js_add')) {
             // remove attribute values selection and move quantity to the correct table spot (".td-qty"))
             $parent.addClass('in_cart');
             $parent.find('.td-qty').addClass('text-center');
@@ -181,11 +248,29 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
             product_name_map[product_id] = $parent.find(".product-name").html();
             $parent.find(".product-name").html($parent.find(".product_display_name").val());
 
+            var product_custom_variant_values = self.getCustomVariantValues($parent);
+            if (product_custom_variant_values) {
+                var $productDescription = $parent
+                    .find('td.td-product_name div.float-left');
+
+                var description = '';
+                $.each(product_custom_variant_values, function (){
+                    description += '<br/>' + this.attribute_value_name + ': ' + this.custom_value;
+                });
+
+                var $customAttributeValuesDescription = $('<div>', {
+                    class: 'custom_attribute_values_description text-muted small',
+                    html: description
+                });
+
+                $productDescription.append($customAttributeValuesDescription);
+            }
+
             // if it's an optional product of an optional product, place it after it's parent
             var parent_product_id = null;
-            for (var produt_id_key in optional_products_map) {
-                if (optional_products_map[produt_id_key].indexOf(product_id) != -1) {
-                    parent_product_id = produt_id_key;
+            for (var product_id_key in optional_products_map) {
+                if (optional_products_map[product_id_key].indexOf(product_id) !== -1) {
+                    parent_product_id = product_id_key;
                     break;
                 }
 
@@ -201,17 +286,13 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
                 $main_product.after($parent);
             }
 
-            var isWebsite = ev.data.self.isWebsite;
-            var pricelistId = ev.data.self.pricelistId;
             var product_variant_id = $parent.find('.product_id').val();
-            ajax.jsonRpc(ev.data.self._getUri("/product_configurator/optional_product_items"), 'call', {
+            ajax.jsonRpc(self._getUri("/product_configurator/optional_product_items"), 'call', {
                 'product_id': product_variant_id,
-                'pricelist_id': ev.data.self.pricelistId
+                'pricelist_id': self.pricelistId
             }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
-
-                ProductConfiguratorUtils.addConfiguratorEvents($addedItem, "small", isWebsite, pricelistId);
 
                 // trigger input change to validate fields
                 $('.js_add_cart_variants', $addedItem).each(function () {
@@ -229,8 +310,8 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
                         return $(this).val();
                     }).get();
                 }
-                
-                if($select_options_text.nextAll('.js_product').length === 0){
+
+                if ($select_options_text.nextAll('.js_product').length === 0){
                     // no more optional products to select -> hide the header
                     $select_options_text.hide();
                 }
@@ -240,6 +321,7 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
             $parent.removeClass('in_cart');
             $parent.find('.td-qty').removeClass('text-center');
             $parent.find('.js_remove.d-none').prepend($parent.find('.optional_product_quantity'));
+            $parent.find('.custom_attribute_values_description').remove();
 
             $select_options_text.show();
 
@@ -260,12 +342,15 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
             $('tr:last').after($parent);
         }
 
-        ProductConfiguratorUtils.computePriceTotal();
+        self.computePriceTotal();
     },
 
-    _onChangeQuantity: function(ev){
-        var qty = parseFloat($(this).val());
-        var $modal = $(this).parents('.oe_optional_products_modal');
+    _onChangeQuantity: function (ev){
+        this.onChangeAddQuantity(ev);
+
+        var $quantity = $(ev.currentTarget);
+        var qty = parseFloat($quantity.val());
+        var $modal = $quantity.parents('.oe_optional_products_modal');
         if (qty === 1) {
             $modal.find(".js_items").addClass('d-none').removeClass('add_qty');
             $modal.find(".js_item").removeClass('d-none').addClass('add_qty');
@@ -275,8 +360,9 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
         }
     },
 
-    _onChangeMainProductQuantity: function(){
-        var $modal = $(this).parents('.oe_optional_products_modal');
+    _onChangeMainProductQuantity: function (ev){
+        var $quantity = $(ev.currentTarget);
+        var $modal = $quantity.parents('.oe_optional_products_modal');
         var product_id = $modal.find('span.oe_price[data-product-id]').first().data('product-id');
         var product_ids = [product_id];
         var $products_dom = [];
@@ -288,11 +374,10 @@ var OptionalProductsModal = Widget.extend(ServicesMixin, {
             });
         });
 
-        // trigger input change to validate fields and display custom prices
-        $('.js_add_cart_variants', $modal).each(function () {
-            $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
-        });
+        this.triggerVariantChange($modal);
     }
 });
+
 return OptionalProductsModal;
+
 });

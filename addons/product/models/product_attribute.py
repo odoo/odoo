@@ -52,19 +52,20 @@ class ProductAttributeValue(models.Model):
 
 class ProductProductAttributeValue(models.Model):
     _name = "product.product.attribute.value"
+    _order = 'sequence, attribute_id, id'
 
     name = fields.Char('Value', related="product_attribute_value_id.name")
     product_attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value', required=True, ondelete='cascade', index=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True, ondelete='cascade', index=True)
     attribute_id = fields.Many2one('product.attribute', string='Attribute', related="product_attribute_value_id.attribute_id")
-    sequence = fields.Integer('product.sequence', related="product_attribute_value_id.sequence")
+    sequence = fields.Integer('Sequence', related="product_attribute_value_id.sequence")
     price_extra = fields.Float(
         string='Attribute Price Extra', default=0.0, digits=dp.get_precision('Product Price'),
         help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
     exclude_for = fields.Many2many(
         'product.attribute.filter.line', string="Exclude for", relation="product_attribute_value_exclusion",
-        help="""A list of product and attribute values that you want to exclude for this product's attribue value.
-        Also applies on optionnal and accessory products.""")
+        help="""A list of product and attribute values that you want to exclude for this product's attribute value.
+        Also applies on optional and accessory products.""")
 
     @api.multi
     def name_get(self):
@@ -90,7 +91,12 @@ class ProductAttributeLine(models.Model):
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', ondelete='cascade', required=True)
     attribute_id = fields.Many2one('product.attribute', string='Attribute', ondelete='restrict', required=True)
     value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
-    product_value_ids = fields.Many2many('product.product.attribute.value', string='Product Attribute Values', compute="_set_product_value_ids")
+    product_value_ids = fields.Many2many(
+        'product.product.attribute.value',
+        string='Product Attribute Values',
+        compute="_set_product_value_ids",
+        store=False
+    )
 
     @api.constrains('value_ids', 'attribute_id')
     def _check_valid_attribute(self):
@@ -114,13 +120,14 @@ class ProductAttributeLine(models.Model):
         for product_attribute_line in self:
             product_attribute_line.product_value_ids = self.env['product.product.attribute.value'].search([
                 ('product_tmpl_id', 'in', product_attribute_line.product_tmpl_id.ids),
-                ('product_attribute_value_id.attribute_id', 'in', product_attribute_line.value_ids.mapped('attribute_id').ids)])
+                ('product_attribute_value_id.attribute_id', 'in', product_attribute_line.value_ids.mapped('attribute_id').ids)]
+            ).sorted(lambda product_product_attribute: product_product_attribute.sequence)
 
     @api.multi
     def unlink(self):
         for product_attribute_line in self:
             self.env['product.product.attribute.value'].search([
-                ('product_tmpl_id', 'in', product_attribute_line.product_tmpl_id.ids), 
+                ('product_tmpl_id', 'in', product_attribute_line.product_tmpl_id.ids),
                 ('product_attribute_value_id.attribute_id', 'in', product_attribute_line.value_ids.mapped('attribute_id').ids)]).unlink()
 
         return super(ProductAttributeLine, self).unlink()
@@ -152,6 +159,7 @@ class ProductAttributeLine(models.Model):
                     self.env['product.product.attribute.value'].create({
                         'product_attribute_value_id': product_attribute_value.id,
                         'product_tmpl_id': attribute_line.product_tmpl_id.id})
+
             # at this point, existing properties can be removed to reflect the modifications on value_ids
             if product_product_attribute_values_to_remove:
                 product_product_attribute_values_to_remove.unlink()

@@ -36,13 +36,17 @@ class ProductConfiguratorController(http.Controller):
 
     def _optional_product_items(self, product_id, pricelist, **kw):
         product = request.env['product.product'].with_context(self._get_product_context(pricelist, **kw)).browse(int(product_id))
+        to_currency = product.currency_id
+        if pricelist:
+            to_currency = pricelist.currency_id
 
         return request.env['ir.ui.view'].render_template("sale.optional_product_items", {
             'product': product,
             'reference_product': product,
             'pricelist': pricelist,
+            'to_currency': to_currency,
             'get_attribute_value_ids': self._get_attribute_value_ids,
-            'main_product_attr_ids': self._get_main_product_attr_ids(product),
+            'main_product_attr_ids': self._get_main_product_attr_ids(product, pricelist=pricelist),
         })
 
     def _show_optional_products(self, product_id, pricelist, handle_stock, **kw):
@@ -74,7 +78,7 @@ class ProductConfiguratorController(http.Controller):
                 'to_currency': to_currency,
                 'handle_stock': handle_stock,
                 'get_attribute_value_ids': self._get_attribute_value_ids,
-                'main_product_attr_ids': self._get_main_product_attr_ids(product),
+                'main_product_attr_ids': self._get_main_product_attr_ids(product, pricelist=pricelist),
             })
 
     def _get_attribute_value_ids(self, product, reference_product=None, pricelist=None):
@@ -111,8 +115,8 @@ class ProductConfiguratorController(http.Controller):
 
         return attribute_value_ids
 
-    def _get_main_product_attr_ids(self, product):
-        main_product_attr_ids = self._get_attribute_value_ids(product.product_tmpl_id)
+    def _get_main_product_attr_ids(self, product, pricelist=None):
+        main_product_attr_ids = self._get_attribute_value_ids(product.product_tmpl_id, pricelist=pricelist)
         for variant in main_product_attr_ids:
             if variant[0] == product.id:
                 # We indeed need a list of lists (even with only 1 element)
