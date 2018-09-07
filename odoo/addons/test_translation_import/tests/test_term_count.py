@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
+import io
 
 import odoo
 from odoo.tests import common
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
 
 
 class TestTermCount(common.TransactionCase):
@@ -35,7 +31,7 @@ class TestTermCount(common.TransactionCase):
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', module_name='test_translation_import', verbose=False, context={'overwrite': True})
 
         # trans_load invalidates ormcache but not record cache
-        menu.refresh()
+        menu.clear_caches()
         self.assertEqual(menu.name, "New Name")
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
 
@@ -61,7 +57,7 @@ class TestTermCount(common.TransactionCase):
         """When the string and the translation is equal the translation is empty"""
         # Export the translations
         def update_translations():
-            with closing(StringIO()) as bufferobj:
+            with closing(io.BytesIO()) as bufferobj:
                 odoo.tools.trans_export('fr_FR', ['test_translation_import'], bufferobj, 'po', self.cr)
                 bufferobj.name = 'test_translation_import/i18n/fr.po'
                 odoo.tools.trans_load_data(self.cr, bufferobj, 'po', 'fr_FR', verbose=False, context={'overwrite': True})
