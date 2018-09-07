@@ -23,7 +23,7 @@
 # Gab_Odoo <gab@odoo.com>, 2017
 # David Lehov <KHottend@gmx.de>, 2017
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
-# Krakataua Katarajtu <shlok@hotmail.de>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # Marvin Elia Hoppe <marvin_elia@web.de>, 2017
 # Andi, 2017
 # Silvan Wyden <silvan.wyden@braintec-group.com>, 2017
@@ -33,6 +33,7 @@
 # key six <mobile.umts@gmail.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Mathias Neef <mn@copado.de>, 2017
+# Jan Meyer <jan.meyer@ife.de>, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
@@ -590,7 +591,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
 msgid "<strong>Max qty :</strong>"
-msgstr "<strong>Maximale Menge</strong>"
+msgstr "<strong>Maximale Menge:</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -2384,12 +2385,12 @@ msgstr "Ende"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
 msgid "Entire Package"
-msgstr ""
+msgstr "Gesamtes Paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
 msgid "Entire Package Detail"
-msgstr ""
+msgstr "Detail zum Gesamtpaket"
 
 #. module: stock
 #. openerp-web
@@ -3042,7 +3043,7 @@ msgstr "Importieren Sie durch Klick auf den Button oben rechts"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
 msgid "In Entire Package"
-msgstr ""
+msgstr "In Gesamtpaket"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6532,6 +6533,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"Der Wert 'Manueller Vorgang' erzeugt nach der aktuellen Lagerbuchung eine "
+"weitere. Mit 'Automatisch ohne Folgeschritt' wird der Lagerplatz in "
+"ursprünglicher Buchung ersetzt."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6983,12 +6987,14 @@ msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
 msgstr ""
+"Dies sind alle Pakete der Kommissionierung aus der detaillierten Sicht auf "
+"Vorgänge"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
 msgid ""
 "Those are the entire packages of a picking shown in the view of operations"
-msgstr ""
+msgstr "Dies sind alle Pakete der Kommissionierung aus der Sicht auf Vorgänge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
@@ -7856,6 +7862,10 @@ msgid ""
 "lot. Please first validate the first inventory adjustement with this product"
 " before creating another one."
 msgstr ""
+"Sie dürfen nicht gleichzeitig mehrere Bestandskorrekturen zu einem Produkt "
+"(%s), gleicher Platz (%s), gleiches Paket, gleicher Eigner und gleiche "
+"Charge 'In Bearbeitung' haben. Bitte schließen Sie die erste "
+"Bestandskorrektur zu diesem Produkt ab bevor Sie eine Neue anlegen."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:159

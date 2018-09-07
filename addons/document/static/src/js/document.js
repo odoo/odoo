@@ -15,12 +15,13 @@ Sidebar.include({
      */
     init : function (parent, options) {
         this._super.apply(this, arguments);
-        if (options.viewType === "form") {
+        this.hasAttachments = options.viewType === "form";
+        if (this.hasAttachments) {
             this.sections.splice(1, 0, { 'name' : 'files', 'label' : _t('Attachment(s)'), });
             this.items.files = [];
+            this.fileuploadId = _.uniqueId('oe_fileupload');
+            $(window).on(this.fileuploadId, this._onFileUploaded.bind(this));
         }
-        this.fileuploadId = _.uniqueId('oe_fileupload');
-        $(window).on(this.fileuploadId, this._onFileUploaded.bind(this));
     },
     /**
      * Get the attachment linked to the record when the toolbar started
@@ -29,13 +30,16 @@ Sidebar.include({
      */
     start: function () {
         var _super = this._super.bind(this);
-        this._updateAttachments().then(_super);
+        var def = this.hasAttachments ? this._updateAttachments() : $.when();
+        return def.then(_super);
     },
     /**
      * @override
      */
     destroy: function () {
-        $(window).off(this.fileuploadId);
+        if (this.hasAttachments) {
+            $(window).off(this.fileuploadId);
+        }
         this._super.apply(this, arguments);
     },
 
@@ -46,8 +50,10 @@ Sidebar.include({
      * @override
      */
     updateEnv: function (env) {
-        this.env = env;
-        this._updateAttachments().then(this._redraw.bind(this));
+        if (this.hasAttachments) {
+            this.env = env;
+            this._updateAttachments().then(this._redraw.bind(this));
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -90,10 +96,12 @@ Sidebar.include({
      */
     _redraw: function () {
         this._super.apply(this, arguments);
-        this.$('.o_sidebar_add_attachment .o_form_binary_form')
-            .change(this._onAddAttachment.bind(this));
-        this.$('.o_sidebar_delete_attachment')
-            .click(this._onDeleteAttachment.bind(this));
+        if (this.hasAttachments) {
+            this.$('.o_sidebar_add_attachment .o_form_binary_form')
+                .change(this._onAddAttachment.bind(this));
+            this.$('.o_sidebar_delete_attachment')
+                .click(this._onDeleteAttachment.bind(this));
+        }
     },
     /**
      * Update the attachments to be displayed in the attachment section
@@ -102,6 +110,9 @@ Sidebar.include({
      * @private
      */
     _updateAttachments: function () {
+        if (this.items.files === undefined) {
+            return $.when();
+        }
         var activeId = this.env.activeIds[0];
         if (!activeId) {
             this.items.files = [];

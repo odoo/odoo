@@ -584,8 +584,11 @@ class PoFile(object):
                 # end of this next() call), and keep the others to generate
                 # additional entries (returned the next next() calls).
                 trans_type, name, res_id = targets.pop(0)
+                code = trans_type == 'code'
                 for t, n, r in targets:
-                    if t == trans_type == 'code': continue
+                    if t == 'code' and code: continue
+                    if t == 'code':
+                        code = True
                     self.extra_lines.append((t, n, r, source, trad, comments))
 
         if name is None:
@@ -1076,7 +1079,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         for type, name, res_id, src, _ignored, comments in pot_reader:
             if type is not None:
                 target = pot_targets[src]
-                target.targets.add((type, name, res_id))
+                target.targets.add((type, name, type != 'code' and res_id or 0))
                 target.comments = comments
 
         # read the rest of the file
@@ -1097,11 +1100,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if src in pot_targets:
                 target = pot_targets[src]
                 target.value = dic['value']
-                target.targets.discard((dic['type'], dic['name'], dic['res_id']))
+                target.targets.discard((dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0))
 
             # This would skip terms that fail to specify a res_id
             res_id = dic['res_id']
-            if not res_id:
+            if not res_id and dic['type'] != 'code':
                 return
 
             if isinstance(res_id, pycompat.integer_types) or \

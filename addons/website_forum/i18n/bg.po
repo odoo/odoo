@@ -10,13 +10,14 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Anton Vassilev, 2018
 # Radina <radis.choice@gmail.com>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Radina <radis.choice@gmail.com>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,6 +242,9 @@ msgid ""
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
+"<b>Преди да попитате - моля, уверете се, че сте потърсили подобен въпрос.</b> Можете\n"
+"    да търсите въпроси по тяхното заглавие или маркери. Освен това е OK да\n"
+"    отговаряте на собствените си въпроси."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_badges
@@ -699,7 +703,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_post
 msgid "Can Automatically be Validated"
-msgstr ""
+msgstr "може да бъде валидирано автоматично"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_close
@@ -809,7 +813,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Click to get good question titles"
-msgstr ""
+msgstr "Натиснете бутона, за да получите заглавия на добри въпроси"
 
 #. module: website_forum
 #. openerp-web
@@ -1026,7 +1030,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_order
 msgid "Default Order"
-msgstr ""
+msgstr "Поръчка по подразбиране"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_post_type
@@ -1301,6 +1305,12 @@ msgid ""
 "    for a question or answer per day. The table given at the end explains reputation point\n"
 "    requirements for each type of moderation task."
 msgstr ""
+"Например, ако зададете интересен въпрос или дадете полезен отговор, приносът Ви\n"
+"    ще бъде оценен положително. От друга страна, ако отговорът е подвеждащ, той ще\n"
+"    бъде оценен отрицателно. Всеки глас \"за\" ще генерира 10 точки, всеки глас \"против\"\n"
+"    ще отнеме 10 точки. Има лимит от 200 точки, които могат да се акумулират\n"
+"   за отговор или въпрос на ден. Таблицата, поместена в края, обяснява изискванията\n"
+"    за точките, трупащи репутация, за всеки вид задача за модериране."
 
 #. module: website_forum
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
@@ -1383,7 +1393,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:33
 #, python-format
 msgid "Give your question title."
-msgstr ""
+msgstr "Озаглавете въпроса си"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_gold_badge
@@ -1947,7 +1957,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Заглавие на публикация"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2061,17 +2071,17 @@ msgstr ""
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_4
 msgid "Question set as favorite by 1 user"
-msgstr ""
+msgstr "Въпрос, настроен като фаворит от 1 потребител "
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_6
 msgid "Question set as favorite by 25 users"
-msgstr ""
+msgstr "Въпрос, настроен като фаворит от 25 потребители"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_q_5
 msgid "Question set as favorite by 5 users"
-msgstr ""
+msgstr "Въпрос, настроен като фаворит от 5 потребители"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:335
@@ -2261,6 +2271,8 @@ msgid ""
 "Set a clear, explicit and concise question title\n"
 "                (check"
 msgstr ""
+"Поставете ясно, категорично и стегнато заглавие на въпроса\n"
+"                (проверете"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2474,6 +2486,8 @@ msgid ""
 "This community is for professional and enthusiast users,\n"
 "    partners and programmers. You can ask questions about:"
 msgstr ""
+"Тази общност е създадена за потребители - професионалисти, любители,\n"
+"    контрагенти и програмисти. Можете да задавате въпроси относно:"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -2526,7 +2540,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Threads"
-msgstr ""
+msgstr "Поредици"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_name
@@ -2537,14 +2551,14 @@ msgstr "Заглавие"
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Title must not be empty"
-msgstr ""
+msgstr "Заглавието не трябва да е празно"
 
 #. module: website_forum
 #: code:addons/website_forum/controllers/main.py:333
 #: code:addons/website_forum/controllers/main.py:404
 #, python-format
 msgid "Title should not be empty."
-msgstr ""
+msgstr "Заглавието не трябва да е празно."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
@@ -2756,6 +2770,10 @@ msgid ""
 "    measure of the community trust to him/her. Various moderation tasks are\n"
 "    gradually assigned to the users based on those points."
 msgstr ""
+"Когато даден въпрос или отговор са качени в мрежата, потребителят, който ги е публикувал, ще натрупа определен\n"
+"    брой точки, наречени \"карма точки\". Тези точки представляват своеобразна груба \n"
+"    преценка на доверието на общността към него. Въз основа на тези точки на потребителите постепенно се възлагат\n"
+"    множество по-умерени задачи."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
@@ -2803,12 +2821,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
 msgid "Your Discussion Title..."
-msgstr ""
+msgstr "Заглавие на Вашето обсъждане"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Your Question Title..."
-msgstr ""
+msgstr "Заглавие на Вашия въпрос"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_reply
@@ -2918,7 +2936,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "every answer is equally valid: “What’s your favorite ______?”"
-msgstr ""
+msgstr "всеки въпрос е еднакво валиден: “Кой е Вашият любим ______?”"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
@@ -3006,7 +3024,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_13
 msgid "inappropriate and unacceptable statements"
-msgstr ""
+msgstr "неподходящи и неприемливи извлечения"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq

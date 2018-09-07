@@ -5,7 +5,7 @@ from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
@@ -699,6 +699,22 @@ class AccountMoveLine(models.Model):
         """
         if not str:
             return []
+
+        epsilon = 0.0001
+
+        def _domain_range_amount(field, amount, signed=False):
+            def build_for_amount(amount):
+                return expression.AND([
+                    [(field, '>=', amount - epsilon)],
+                    [(field, '<=', amount + epsilon)]
+                ])
+
+            unsigned_domain = build_for_amount(amount)
+            if not signed:
+                return unsigned_domain
+
+            return expression.OR([unsigned_domain, build_for_amount(-amount)])
+
         str_domain = [
             '|', ('move_id.name', 'ilike', str),
             '|', ('move_id.ref', 'ilike', str),
@@ -710,28 +726,32 @@ class AccountMoveLine(models.Model):
                 amounts_str = str.split('|')
                 for amount_str in amounts_str:
                     amount = amount_str[0] == '-' and float(amount_str) or float(amount_str[1:])
-                    amount_domain = [
-                        '|', ('amount_residual', '=', amount),
-                        '|', ('amount_residual_currency', '=', amount),
-                        '|', (amount_str[0] == '-' and 'credit' or 'debit', '=', float(amount_str[1:])),
-                        ('amount_currency', '=', amount),
-                    ]
+                    amount_domain = expression.OR([
+                        _domain_range_amount(field, amount)
+                        for field in ('amount_residual', 'amount_residual_currency', 'amount_currency')
+                    ] + [_domain_range_amount(amount_str[0] == '-' and 'credit' or 'debit', float(amount_str[1:]))]
+                    )
                     str_domain = expression.OR([str_domain, amount_domain])
             except:
                 pass
         else:
             try:
                 amount = float(str)
-                amount_domain = [
-                    '|', ('amount_residual', '=', amount),
-                    '|', ('amount_residual_currency', '=', amount),
-                    '|', ('amount_residual', '=', -amount),
-                    '|', ('amount_residual_currency', '=', -amount),
-                    '&', ('account_id.internal_type', '=', 'liquidity'),
-                    '|', '|', '|', ('debit', '=', amount), ('credit', '=', amount),
-                        ('amount_currency', '=', amount),
-                        ('amount_currency', '=', -amount),
-                ]
+                residual_domain = expression.OR([
+                    _domain_range_amount(field, amount, True)
+                    for field in ('amount_residual', 'amount_residual_currency')
+                ])
+
+                liquidity_domain = expression.AND([
+                    [('account_id.internal_type', '=', 'liquidity')],
+                    expression.OR([
+                        _domain_range_amount('debit', amount),
+                        _domain_range_amount('credit', amount),
+                        _domain_range_amount('amount_currency', amount, True),
+                    ])
+                ])
+
+                amount_domain = expression.OR([residual_domain, liquidity_domain])
                 str_domain = expression.OR([str_domain, amount_domain])
             except:
                 pass
@@ -789,8 +809,8 @@ class AccountMoveLine(models.Model):
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.internal_type,
-                'date_maturity': line.date_maturity,
-                'date': line.date,
+                'date_maturity': format_date(self.env, line.date_maturity),
+                'date': format_date(self.env, line.date),
                 'journal_id': [line.journal_id.id, line.journal_id.display_name],
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
@@ -1459,8 +1479,9 @@ class AccountMoveLine(models.Model):
             an analytic account. This method is intended to be extended in other modules.
         """
         amount = (self.credit or 0.0) - (self.debit or 0.0)
+        default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
-            'name': self.name,
+            'name': default_name,
             'date': self.date,
             'account_id': self.analytic_account_id.id,
             'tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
@@ -1540,6 +1561,21 @@ class AccountMoveLine(models.Model):
                 ids.append(aml.id)
         action['domain'] = [('id', 'in', ids)]
         return action
+
+    @api.multi
+    def _payment_invoice_match(self):
+        '''
+        If a partial reconciliation involves payments and invoices
+        mark the invoices as paid by the payments
+        Specifically made for len(self) == 2
+        '''
+        if not self:
+            return
+        invoice_ids = self.mapped('invoice_id')
+        payment_ids = self.mapped('payment_id')
+
+        if payment_ids and invoice_ids:
+            payment_ids.write({'invoice_ids': [(4, inv.id, False) for inv in invoice_ids]})
 
 
 class AccountPartialReconcile(models.Model):
@@ -1829,6 +1865,7 @@ class AccountPartialReconcile(models.Model):
             aml.append(vals['credit_move_id'])
         # Get value of matched percentage from both move before reconciliating
         lines = self.env['account.move.line'].browse(aml)
+        lines._payment_invoice_match()
         if lines[0].account_id.internal_type in ('receivable', 'payable'):
             percentage_before_rec = lines._get_matched_percentage()
         # Reconcile
@@ -1847,8 +1884,11 @@ class AccountPartialReconcile(models.Model):
             if rec.full_reconcile_id:
                 full_to_unlink |= rec.full_reconcile_id
         #reverse the tax basis move created at the reconciliation time
-        move = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self._ids)])
-        move.reverse_moves()
+        for move in self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self._ids)]):
+            if move.date > (move.company_id.period_lock_date or '0000-00-00'):
+                move.reverse_moves(date=move.date)
+            else:
+                move.reverse_moves()
         res = super(AccountPartialReconcile, self).unlink()
         if full_to_unlink:
             full_to_unlink.unlink()

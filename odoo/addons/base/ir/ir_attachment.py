@@ -11,7 +11,7 @@ from collections import defaultdict
 import uuid
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -263,6 +263,15 @@ class IrAttachment(models.Model):
                 index_content = b"\n".join(words).decode('ascii')
         return index_content
 
+    @api.model
+    def get_serving_groups(self):
+        """ An ir.attachment record may be used as a fallback in the
+        http dispatch if its type field is set to "binary" and its url
+        field is set as the request's url. Only the groups returned by
+        this method are allowed to create and write on such records.
+        """
+        return ['base.group_system']
+
     name = fields.Char('Attachment Name', required=True)
     datas_fname = fields.Char('File Name')
     description = fields.Text('Description')
@@ -299,6 +308,18 @@ class IrAttachment(models.Model):
                            self._table, ['res_model', 'res_id'])
         return res
 
+    @api.one
+    @api.constrains('type', 'url')
+    def _check_serving_attachments(self):
+        # restrict writing on attachments that could be served by the
+        # ir.http's dispatch exception handling
+        if self.env.user._is_superuser():
+            return
+        if self.type == 'binary' and self.url:
+            has_group = self.env.user.has_group
+            if not any([has_group(g) for g in self.get_serving_groups()]):
+                raise ValidationError("Sorry, you are not allowed to write on this document")
+
     @api.model
     def check(self, mode, values=None):
         """Restricts the access to an ir.attachment, according to referred model
@@ -328,6 +349,11 @@ class IrAttachment(models.Model):
             # was not)
             if res_model not in self.env:
                 require_employee = True
+                continue
+            elif res_model == 'res.users' and len(res_ids) == 1 and self._uid == list(res_ids)[0]:
+                # by default a user cannot write on itself, despite the list of writeable fields
+                # e.g. in the case of a user inserting an image into his image signature
+                # we need to bypass this check which would needlessly throw us away
                 continue
             records = self.env[res_model].browse(res_ids).exists()
             if len(records) < len(res_ids):

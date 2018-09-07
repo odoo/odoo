@@ -11,13 +11,14 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
 # Daniel Forslund <daniel.forslund@gmail.com>, 2017
+# Peter Wickenberg <peter@wickenberg.nu>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Peter Wickenberg <peter@wickenberg.nu>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -426,13 +427,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fel! Rekursiv avdelningsstruktur ej tillåten."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Fel! Rekusriva hierarkier med anställda ej möjligt-"
@@ -528,7 +529,7 @@ msgstr "Gruppera på"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "HR-avdelningen"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -708,6 +709,11 @@ msgid "Launch new products, marketing campaigns and offers"
 msgstr ""
 
 #. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Man"
@@ -732,8 +738,8 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr ""
+msgid "Married"
+msgstr "Gift"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -842,7 +848,7 @@ msgstr ""
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Tjänsteman"
 
 #. module: hr
 #: selection:hr.employee,gender:0
