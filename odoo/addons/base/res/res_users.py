@@ -427,7 +427,11 @@ class Users(models.Model):
             else:
                 context_key = False
             if context_key:
-                res = getattr(user, k) or False
+                try:
+                    res = getattr(user, k) or False
+                except Exception:
+                    _logger.warning("Error getting attribute %s of %s", k, user, exc_info=True)
+                    res = dict(lang='en_US').get(k, False)
                 if isinstance(res, models.BaseModel):
                     res = res.id
                 result[context_key] = res or False
