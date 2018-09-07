@@ -124,7 +124,7 @@ odoo.define('website_sale.website_sale', function (require) {
 'use strict';
 
 var utils = require('web.utils');
-var ProductConfiguratorUtils = require('sale.product_configurator_utils');
+var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
 var core = require('web.core');
 var config = require('web.config');
 var sAnimations = require('website.content.snippets.animation');
@@ -132,7 +132,7 @@ require("website.content.zoomodoo");
 
 var _t = core._t;
 
-sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
+sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorMixin, {
     selector: '.oe_website_sale',
     read_events: {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
@@ -140,7 +140,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
         'touchend .js_publish': '_onMouseupPublish',
         'change .oe_cart input.js_quantity[data-product-id]': '_onChangeCartQuantity',
         'click .oe_cart a.js_add_suggested_products': '_onClickSuggestedProduct',
-        'click a.js_add_cart_json, button.js_add_cart_json': '_onClickAddCartJSON',
+        'click a.js_add_cart_json': '_onClickAddCartJSON',
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
@@ -162,6 +162,8 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
 
         this._changeCartQuantity = _.debounce(this._changeCartQuantity.bind(this), 500);
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
+
+        this.isWebsite = true;
     },
     /**
      * @override
@@ -176,9 +178,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
             $('input.js_product_change', product).first().trigger('change');
         });
 
-        _.each(this.$('.js_add_cart_variants'), function (add_variant) {
-            $('input.js_variant_change, select.js_variant_change', add_variant).first().trigger('change');
-        });
+        this.triggerVariantChange(this.$el);
 
         this.$('select[name="country_id"]').change();
 
@@ -336,10 +336,17 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
 
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickAddCartJSON: function (ev){
+        this.onClickAddCartJSON(ev);
+    },
+    /**
+     * @private
      * @param {Event} ev
      */
-    _onChangeAddQuantity: function (ev, isWebsite, pricelist, no_stock_check) {
-        ProductConfiguratorUtils.onChangeAddQuantity(ev, true, pricelist, no_stock_check);
+    _onChangeAddQuantity: function (ev, no_stock_check) {
+        this.onChangeAddQuantity(ev, no_stock_check);
     },
     /**
      * @private
@@ -374,13 +381,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
      */
     _onClickSuggestedProduct: function (ev) {
         $(ev.currentTarget).prev('input').val(1).trigger('change');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickAddCartJSON: function (ev) {
-        ProductConfiguratorUtils.onClickAddCartJSON(ev);
     },
     /**
      * @private
@@ -447,7 +447,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onChangeVariant: function (ev) {
-        ProductConfiguratorUtils.onChangeVariant(ev, false);
+        this.onChangeVariant(ev, false);
     },
     /**
      * @private

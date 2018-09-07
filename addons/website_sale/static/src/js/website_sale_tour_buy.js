@@ -40,7 +40,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'a:contains("Proceed to Checkout")',
+            trigger: 'button:contains("Proceed to Checkout")',
         },
         {
             content: "add suggested",

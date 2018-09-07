@@ -936,7 +936,9 @@ class SaleOrderLine(models.Model):
             res['product_id'] = int(self._context.get('product_id'))
         if self._context.get('quantity'):
             res['product_uom_qty'] = float(self._context.get('quantity'))
-
+        if self._context.get('product_custom_variant_values'):
+            values = self._context.get('product_custom_variant_values')
+            res['product_custom_variant_values'] = [(0, 0, value) for value in values]
         return res
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
@@ -1126,6 +1128,7 @@ class SaleOrderLine(models.Model):
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
+    product_custom_variant_values = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='Custom variant values')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -1421,7 +1424,14 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
+        name = self.get_sale_order_line_multiline_description_sale(product)
+        if self.product_custom_variant_values:
+            name += '\n'
+            for product_custom_variant_value in self.product_custom_variant_values:
+                if product_custom_variant_value.custom_value and product_custom_variant_value.custom_value.strip():
+                    name += '\n' + product_custom_variant_value.attribute_value_id.name + ': ' + product_custom_variant_value.custom_value.strip()
+
+        vals.update(name=name)
 
         self._compute_tax_id()
 

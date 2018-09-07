@@ -399,6 +399,7 @@ class WebsiteSale(ProductConfiguratorController):
             add_qty=add_qty,
             set_qty=set_qty,
             attributes=self._filter_attributes(**kw),
+            product_custom_variant_values=json.loads(kw.get('product_custom_variant_values'))
         )
         return request.redirect("/shop/cart")
 
@@ -1083,6 +1084,8 @@ class WebsiteSale(ProductConfiguratorController):
 
         attributes = self._filter_attributes(**kw)
 
+        product_custom_variant_values = json.loads(kw.get('product_custom_variant_values'))
+
         value = {}
         if add_qty or set_qty:
             value = order._cart_update(
@@ -1090,7 +1093,8 @@ class WebsiteSale(ProductConfiguratorController):
                 add_qty=add_qty,
                 set_qty=set_qty,
                 attributes=attributes,
-                optional_product_ids=optional_product_ids
+                optional_product_ids=optional_product_ids,
+                product_custom_variant_values=self._get_custom_variant_value(int(product_id), product_custom_variant_values)
             )
 
         # options have all time the same quantity
@@ -1099,10 +1103,19 @@ class WebsiteSale(ProductConfiguratorController):
                 product_id=option_id,
                 set_qty=value.get('quantity'),
                 attributes=attributes,
-                linked_line_id=value.get('line_id')
+                linked_line_id=value.get('line_id'),
+                product_custom_variant_values=self._get_custom_variant_value(option_id, product_custom_variant_values)
             )
 
         return str(order.cart_quantity)
+
+    def _get_custom_variant_value(self, product_id, product_custom_variant_values):
+        if product_custom_variant_values:
+            for product_custom_variant_value in product_custom_variant_values:
+                if product_custom_variant_value['product_id'] == product_id:
+                    return product_custom_variant_value['product_custom_variant_values']
+
+        return None
 
     @http.route(['/product_configurator/show_optional_products_website'], type='json', auth="public", methods=['POST'], website=True)
     def show_optional_products_website(self, product_id, **kw):

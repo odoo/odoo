@@ -52,7 +52,7 @@
             </field>
         </field>
     </record>
-    
+
     <record id="product_product_attribute_value_view_form_inherit" model="ir.ui.view">
         <field name="name">product.product.attribute.value.view.form.inherit</field>
         <field name="model">product.product.attribute.value</field>
@@ -70,6 +70,7 @@
         <field name="inherit_id" ref="product.variants_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
+                <field name="is_custom" groups="product.group_product_variant" />
                 <field name="html_color"/>
             </field>
         </field>
