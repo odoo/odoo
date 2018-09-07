@@ -663,6 +663,8 @@ var ListRenderer = BasicRenderer.extend({
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', this.isGrouped);
         $table.toggleClass('o_list_view_ungrouped', !this.isGrouped);
+        this.hasHandle = this.state.orderedBy.length === 0 ||
+            this.state.orderedBy[0].name === this.handleField;
         if (this.isGrouped) {
             $table
                 .append(this._renderHeader(true))

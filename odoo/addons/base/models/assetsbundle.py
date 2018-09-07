@@ -449,6 +449,7 @@ class AssetsBundle(object):
 
             if not self.css_errors and old_attachments:
                 old_attachments.unlink()
+                old_attachments = None
 
             fragments = self.rx_css_split.split(compiled)
             at_rules = fragments.pop(0)

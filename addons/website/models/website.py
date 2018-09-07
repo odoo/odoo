@@ -1002,7 +1002,7 @@ class Page(models.Model):
             pages_linked_to_iruiview = self.search(
                 [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
             )
-            if len(pages_linked_to_iruiview) == 0 and not page.view_id.inherit_children_ids:
+            if not pages_linked_to_iruiview and not page.view_id.inherit_children_ids:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
                 page.view_id.unlink()
         return super(Page, self).unlink()

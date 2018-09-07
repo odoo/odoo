@@ -375,7 +375,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="auto_printing" attrs="{'invisible': [('is_posbox', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" id="auto_printing">
                             <div class="o_setting_left_pane">
                                 <field name="iface_print_auto"/>
                             </div>
@@ -384,7 +384,7 @@
                                 <div class="text-muted">
                                     Print receipts automatically once the payment is registered
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible' : [('iface_print_auto', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('is_posbox', '=', False)]}">
                                     <div>
                                         <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                     </div>

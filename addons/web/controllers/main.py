@@ -178,11 +178,11 @@ def module_installed_bypass_session(dbname):
     return {}
 
 def module_boot(db=None):
-    server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
-    serverside = []
+    server_wide_modules = odoo.conf.server_wide_modules or []
+    serverside = ['base', 'web']
     dbside = []
     for i in server_wide_modules:
-        if i in http.addons_manifest:
+        if i in http.addons_manifest and i not in serverside:
             serverside.append(i)
     monodb = db or db_monodb()
     if monodb:
@@ -1308,7 +1308,7 @@ class Export(http.Controller):
                       'relation_field': field.get('relation_field')}
             records.append(record)
 
-            if len(name.split('/')) < 3 and 'relation' in field:
+            if len(id.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
                 record['value'] += '/id'
                 record['params'] = {'model': ref, 'prefix': id, 'name': name, 'parent_field': field}

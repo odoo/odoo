@@ -24,6 +24,7 @@ var PivotRenderer = AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.compare = state.compare;
+        this.fieldWidgets = params.widgets || {};
         this.timeRangeDescription = params.timeRangeDescription;
         this.comparisonTimeRangeDescription = params.comparisonTimeRangeDescription;
     },
@@ -208,7 +209,7 @@ var PivotRenderer = AbstractRenderer.extend({
             for (j = 0; j < length; j++) {
                 value = rows[i].values[j];
                 name = this.state.measures[j % nbrMeasures];
-                formatter = field_utils.format[measureTypes[j % nbrMeasures]];
+                formatter = field_utils.format[this.fieldWidgets[name] || measureTypes[j % nbrMeasures]];
                 measure = this.state.fields[name];
                 if (this.compare) {
                     if (value instanceof Object) {

@@ -109,6 +109,8 @@ class WebsitePayment(http.Controller):
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
 
+        reference_values = order_id and {'sale_order_ids': [(4, order_id)]} or {}
+        values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         render_values = {
@@ -116,7 +118,7 @@ class WebsitePayment(http.Controller):
             'partner_id': partner_id,
         }
 
-        return acquirer.sudo().render(reference, float(amount), int(currency_id), values=render_values)
+        return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
 
     @http.route(['/website_payment/token/<string:reference>/<string:amount>/<string:currency_id>',
                 '/website_payment/token/v2/<string:amount>/<string:currency_id>/<path:reference>'], type='http', auth='public', website=True)
