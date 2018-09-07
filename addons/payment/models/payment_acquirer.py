@@ -725,6 +725,12 @@ class PaymentTransaction(models.Model):
         if any(trans.state not in ('draft', 'authorized') for trans in self):
             raise ValidationError(_('Only draft/authorized transaction can be posted.'))
 
+        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._reconcile_after_transaction_done()
+        self._log_payment_transaction_received()
+
+    @api.multi
+    def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
         invoices.action_invoice_open()
@@ -745,9 +751,6 @@ class PaymentTransaction(models.Model):
 
         for company in payments:
             payments[company].with_context(force_company=company, company_id=company).post()
-
-        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
 
     @api.multi
     def _set_transaction_cancel(self):
