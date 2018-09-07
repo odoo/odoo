@@ -166,6 +166,27 @@
             </field>
         </record>
 
+        <record id="im_livechat_channel_rule_view_kanban" model="ir.ui.view">
+            <field name="name">im_livechat.channel.rule.kanban</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="regex_url"/>
+                    <field name="action"/>
+                    <field name="country_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div><field name="action"/></div>
+                                <field name="regex_url" />
+                                <field name="country_ids" widget="many2many_tags" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="im_livechat_channel_rule_view_form" model="ir.ui.view">
             <field name="name">im_livechat.channel.rule.form</field>
             <field name="model">im_livechat.channel.rule</field>
