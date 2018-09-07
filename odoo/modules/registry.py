@@ -339,7 +339,7 @@ class Registry(Mapping):
         # make sure all tables are present
         missing = [name
                    for name, model in env.items()
-                   if not model._abstract and not model._table_exist()]
+                   if model._auto and not model._table_exist()]
         if missing:
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
@@ -351,7 +351,7 @@ class Registry(Mapping):
                     cr.commit()
             # check again, and log errors if tables are still missing
             for name, model in env.items():
-                if not model._abstract and not model._table_exist():
+                if model._auto and not model._table_exist():
                     _logger.error("Model %s has no table.", name)
 
     def clear_caches(self):
