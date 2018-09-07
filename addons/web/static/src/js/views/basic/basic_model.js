@@ -90,6 +90,7 @@ var core = require('web.core');
 var Domain = require('web.Domain');
 var session = require('web.session');
 var utils = require('web.utils');
+var field_utils = require('web.field_utils');
 
 var _t = core._t;
 
@@ -246,10 +247,16 @@ var BasicModel = AbstractModel.extend({
                     return option[1] === group.value;
                 });
                 value = choice[0];
+            } else if (fieldType === 'date' || fieldType === 'datetime') {
+                try {
+                    value = JSON.parse(JSON.stringify(field_utils.parse[fieldType](field_utils.format[fieldType](moment(group.value)))));
+                } catch (err) {
+                    value = '';
+                }
             } else {
                 value = group.value;
             }
-            defaultContext['default_' + rawGroupField] = value;
+            value ? defaultContext['default_' + rawGroupField] = value : false;
             group = parent;
         }
         currentGroup.context = _.extend(defaultContext, currentGroup.context);
