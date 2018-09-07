@@ -4521,6 +4521,43 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('domain field can be reset with a new domain (from onchange)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = '[]';
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.foo = '[["id", "=", 1]]';
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '5 record(s)',
+            "the domain being empty, there should be 5 records");
+
+        // update display_name to trigger the onchange and reset foo
+        form.$('.o_field_widget[name=display_name]').val('new value').trigger('input');
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '1 record(s)',
+            "the domain has changed, there should be only 1 record");
+
+        form.destroy();
+    });
+
     QUnit.test('domain field: handle false domain as []', function (assert) {
         assert.expect(3);
 
