@@ -491,7 +491,7 @@ var DomainSelector = DomainTree.extend({
         }
         var parsedDomain = this._parseDomain(domain);
         if (parsedDomain) {
-            return this._redraw(domain);
+            return this._redraw(parsedDomain);
         }
     },
 
