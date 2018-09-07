@@ -3,8 +3,8 @@
 [![Help](http://img.shields.io/badge/9.0-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
 [![Nightly Builds](http://img.shields.io/badge/9.0-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
 
-Odoo
-----
+OpenERP
+-------
 
 Odoo is a suite of web based open source business apps.
 
@@ -36,4 +36,8 @@ To add the odoo-dev remote use this command:
 To fetch odoo merge pull requests refs use this command:
 
     $ ./odoo.py setup_git_review
+
+
+
+
 
