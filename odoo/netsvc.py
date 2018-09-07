@@ -95,7 +95,7 @@ class ColoredPerfFilter(PerfFilter):
                 return COLOR_PATTERN % (30 + YELLOW, 40 + DEFAULT, format % time)
             return format % time
         return (
-            colorize_time(query_time, "%.3f", 100, 1000),
+            colorize_time(query_count, "%d", 100, 1000),
             colorize_time(query_time, "%.3f", 0.1, 3),
             colorize_time(remaining_time, "%.3f", 1, 5)
             )
