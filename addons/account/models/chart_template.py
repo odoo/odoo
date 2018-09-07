@@ -454,12 +454,15 @@ class AccountChartTemplate(models.Model):
             account_template = getattr(self, record[0])
 
             if account_template:
-                account = acc_template_ref[account_template.id]
+                account_id = acc_template_ref[account_template.id]
 
                 # Write the default tax on the account
-                account.write({'tax_ids': [(4, getattr(company, record[3]))]})
+                default_tax = getattr(company, record[3])
+                if default_tax:
+                    account = self.env['account.account'].browse(account_id)
+                    account.write({'tax_ids': [(4, default_tax.id)]})
 
-                value = 'account.account,' + str(account.id)
+                value = 'account.account,' + str(account_id)
                 field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
                     'name': record[0],

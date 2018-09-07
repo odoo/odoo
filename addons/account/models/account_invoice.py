@@ -560,6 +560,7 @@ class AccountInvoice(models.Model):
                 return view.id
 
         context = self._context
+        supplier_form_view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             partner = self.env['res.partner'].browse(context['active_ids'])[0]
             if not view_type:
@@ -567,10 +568,19 @@ class AccountInvoice(models.Model):
                 view_type = 'tree'
             elif view_type == 'form':
                 if partner.supplier and not partner.customer:
-                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
+                    view_id = supplier_form_view_id
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
-        return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        rslt = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        if view_id == supplier_form_view_id and self.env.user.company_id.account_simplified_bills:
+            lines_tree_data = rslt['fields']['invoice_line_ids']['views']['tree']
+            lines_tree_doc = etree.XML(lines_tree_data['arch'])
+            lines_tree_doc.remove(lines_tree_doc.find(".//field[@name='product_id']"))
+            lines_tree_data['arch'] = etree.tostring(lines_tree_doc, encoding='unicode')
+
+        return rslt
 
     @api.multi
     def invoice_print(self):
@@ -1619,6 +1629,7 @@ class AccountInvoiceLine(models.Model):
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc, encoding='unicode')
+
         return res
 
     @api.v8
