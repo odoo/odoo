@@ -640,6 +640,24 @@
             </field>
         </record>
 
+        <record id="sale_order_quotation_view_search_inherit" model="ir.ui.view">
+            <field name="name">sale.order.quotation.search.view.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
+                    <separator/>
+                    <filter string="My Quotations" name="my_quotation" domain="[('state','=','draft'), ('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Sales Orders" name="sales" domain="[('state','in',('sale','done'))]"/>
+                    <separator/>
+                    <filter string="Order Date" name="filter_order_date" date="date_order"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="sale_order_view_search_inherit_sale" model="ir.ui.view">
             <field name="name">sale.order.search.inherit.sale</field>
             <field name="model">sale.order</field>
@@ -787,6 +805,7 @@
             <field name="view_id" ref="view_quotation_tree_with_onboarding"/>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
@@ -801,6 +820,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
