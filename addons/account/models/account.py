@@ -1024,7 +1024,8 @@ class AccountTax(models.Model):
         return str(invoice_tax_val['tax_id']) + '-' + \
                str(invoice_tax_val['account_id']) + '-' + \
                str(invoice_tax_val['account_analytic_id']) + '-' + \
-               str(invoice_tax_val.get('analytic_tag_ids', []))
+               str(invoice_tax_val.get('analytic_tag_ids', [])) + '-' + \
+               str(invoice_tax_val.get('tax_ids') or [])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is

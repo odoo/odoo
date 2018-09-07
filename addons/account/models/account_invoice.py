@@ -634,7 +634,7 @@ class AccountInvoice(models.Model):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
             return self.env.ref('account.account_invoices_without_payment').report_action(self)
-    
+
     @api.multi
     def action_reconcile_to_check(self, params):
         self.ensure_one()
@@ -1013,12 +1013,13 @@ class AccountInvoice(models.Model):
         else:
             return self.env.ref('account.invoice_form').id
 
-    def _prepare_tax_line_vals(self, line, tax):
-        """ Prepare values to create an account.invoice.tax line
-
-        The line parameter is an account.invoice.line, and the
-        tax parameter is the output of account.tax.compute_all().
-        """
+    def _prepare_tax_line_vals(self, line, tax, tax_ids):
+        ''' Prepare values to create an account.invoice.tax line.
+        :param line:    An account.invoice.line record.
+        :param tax:     Tax values outputted by compute_all() in account.tax.
+        :param taxes:   A list of account.tax ids affecting the tax base amount.
+        :return:        The account.invoice.tax values to create a new record.
+        '''
         vals = {
             'invoice_id': self.id,
             'name': tax['name'],
@@ -1030,6 +1031,7 @@ class AccountInvoice(models.Model):
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
             'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
+            'tax_ids': tax_ids and [(6, None, tax_ids)] or False,
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -1042,6 +1044,11 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def get_taxes_values(self, tax_group_fields=False):
+        def is_tax_affecting_base_amount(tax):
+            return (tax.amount_type not in ('group', 'division') and tax.include_base_amount and tax.price_include)\
+                   or (tax.amount_type == 'division' and tax.include_base_amount and not tax.price_include)
+        # Avoid redundant browsing.
+        tax_map = dict((t.id, t) for t in self.invoice_line_ids.mapped('invoice_line_tax_ids'))
         default_tax_group_fields = set(['amount', 'base'])
         if tax_group_fields:
             default_tax_group_fields |= set(tax_group_fields)
@@ -1050,18 +1057,38 @@ class AccountInvoice(models.Model):
         for line in self.invoice_line_ids:
             if not line.account_id:
                 continue
+
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
-            for tax in taxes:
-                val = self._prepare_tax_line_vals(line, tax)
-                key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
+
+            affecting_base_tax_ids = []
+            for tax_vals in taxes:
+                # Retrieve the tax record (not in tax_vals when dealing with group of taxes).
+                if tax_map.get(tax_vals['id']):
+                    tax = tax_map[tax_vals['id']]
+                else:
+                    tax = tax_map[tax_vals['id']] = self.env['account.tax'].browse(tax_vals['id'])
+
+                val = self._prepare_tax_line_vals(line, tax_vals, affecting_base_tax_ids)
+                key = tax.get_grouping_key({
+                    'tax_id': val['tax_id'],
+                    'account_id': val['account_id'],
+                    'account_analytic_id': val['account_analytic_id'],
+                    'analytic_tag_ids': val['analytic_tag_ids'],
+                    'tax_ids': affecting_base_tax_ids,
+                })
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                     tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
                     for field in default_tax_group_fields:
-                        tax_grouped[key][field] += round_curr(val.get(field) or 0)
+                        tax_grouped[key][field] += val.get(field) or 0
+
+                if tax.amount_type == "group":
+                    affecting_base_tax_ids += tax.children_tax_ids.filtered(lambda t: is_tax_affecting_base_amount(t)).ids
+                elif is_tax_affecting_base_amount(tax):
+                    affecting_base_tax_ids.append(tax.id)
         return tax_grouped
 
     @api.multi
@@ -1162,19 +1189,14 @@ class AccountInvoice(models.Model):
             res.append(move_line_dict)
         return res
 
-    @api.model
+    @api.multi
     def tax_line_move_line_get(self):
+        self.ensure_one()
+
         res = []
-        # keep track of taxes already processed
-        done_taxes = []
         # loop the invoice.tax.line in reversal sequence
         for tax_line in sorted(self.tax_line_ids, key=lambda x: -x.sequence):
             if tax_line.amount_total:
-                tax = tax_line.tax_id
-                if tax.amount_type == "group":
-                    for child_tax in tax.children_tax_ids:
-                        done_taxes.append(child_tax.id)
-
                 analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
@@ -1188,9 +1210,8 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
+                    'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
                 })
-                done_taxes.append(tax.id)
         return res
 
     def inv_line_characteristic_hashcode(self, invoice_line):
@@ -1817,7 +1838,7 @@ class AccountInvoiceLine(models.Model):
             self_lang = self
             if part.lang:
                 self_lang = self.with_context(lang=part.lang)
-   
+
             product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
@@ -1953,7 +1974,7 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
-    _order = 'sequence'
+    _order = 'sequence, id desc'
 
     def _prepare_invoice_tax_val(self):
         self.ensure_one()
@@ -1961,7 +1982,9 @@ class AccountInvoiceTax(models.Model):
             'tax_id': self.tax_id.id,
             'account_id': self.account_id.id,
             'account_analytic_id': self.account_analytic_id.id,
-            'analytic_tag_ids': self.analytic_tag_ids.ids or False}
+            'analytic_tag_ids': self.analytic_tag_ids.ids or False,
+            'tax_ids': self.tax_ids and tax.tax_ids.ids,
+        }
 
     @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
@@ -1991,6 +2014,8 @@ class AccountInvoiceTax(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
     base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
+    tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes',
+        help='Taxes affecting the tax base amount applied before this one.')
 
     @api.depends('amount', 'amount_rounding')
     def _compute_amount_total(self):
