@@ -18,5 +18,5 @@ class ResUsers(models.Model):
 
     group_purchase_user = fields.Selection(
         selection=lambda self: self._get_group_selection('base.module_category_purchase_management'),
-        string='Purchases', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        string='Purchase', compute='_compute_groups_id', inverse='_inverse_groups_id',
         category_xml_id='base.module_category_purchase_management')

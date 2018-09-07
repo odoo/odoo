@@ -13,7 +13,7 @@ class User(models.Model):
 
     group_hr_user = fields.Selection(
         selection=lambda self: self._get_group_selection('base.module_category_human_resources'),
-        string="Human Resources", compute='_compute_groups_id', inverse='_inverse_groups_id',
+        string="Employees", compute='_compute_groups_id', inverse='_inverse_groups_id',
         category_xml_id='base.module_category_human_resources',
         help='Officer: The user will be able to approve document created by employees.\nManager: The user will have access to the human resources configuration as well as statistic reports.')
 

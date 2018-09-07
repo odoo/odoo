@@ -27,5 +27,5 @@ class ResUsers(models.Model):
 
     group_account_user = fields.Selection(
         selection=lambda self: self._get_group_selection('base.module_category_accounting_and_finance'),
-        string='Accounting & Finance', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        string='Accounting', compute='_compute_groups_id', inverse='_inverse_groups_id',
         category_xml_id='base.module_category_accounting_and_finance')
