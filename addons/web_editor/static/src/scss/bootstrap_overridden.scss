@@ -13,14 +13,14 @@ $-main-color-lightness: lightness($-main-color);
 $-palette: map-merge((
     // alpha and beta colors are used to override primary and secondary BS4
     // colors by default, so that theme colors affect the default Odoo layouts
-    primary: $-main-color,
-    secondary: map-get($-palette, 'beta'),
+    'primary': $-main-color,
+    'secondary': map-get($-palette, 'beta'),
 
     // BS light and dark colors are not used for any BS component, just
     // for color utilities. By default, we set them to a very light and
     // very dark version of a desaturate version of the primary color
-    light: lighten(desaturate($-main-color, 40%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
-    dark: darken(desaturate($-main-color, 40%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
+    'light': lighten(desaturate($-main-color, 40%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
+    'dark': darken(desaturate($-main-color, 40%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
 ), o-map-omit($-palette));
 @if $-is-backend {
     $-palette: map-remove($-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
