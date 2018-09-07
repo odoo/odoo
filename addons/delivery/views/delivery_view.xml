@@ -283,6 +283,7 @@
                   <xpath expr="//field[@name='payment_term_id']" position="after">
                       <field name="id" invisible="1"/>
                       <field name="available_carrier_ids" invisible="1"/>
+                      <field name="invoice_shipping_on_delivery" string="Each delivery will add shipping costs" attrs="{'readonly': [('state', 'in', ('done'))]}"/>
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
