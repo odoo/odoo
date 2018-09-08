@@ -177,7 +177,9 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
             // If it is not handled, we should display something clearer than the common crash_manager error dialog
             // since it won't show anything except "Script error."
             // This link will probably explain it better: https://blog.sentry.io/2016/05/17/what-is-script-error.html
-            if (message === "Script error." && !file && !line && !col && !error) {
+            if (!file && !line && !col) {
+                // Chrome and Opera set "Script error." on the `message` and hide the `error`
+                // Firefox handles the "Script error." directly. It sets the error thrown by the CORS file into `error`
                 if (window.onOriginError) {
                     window.onOriginError();
                     delete window.onOriginError;
@@ -185,7 +187,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                     crash_manager.show_error({
                         type: _t("Odoo Client Error"),
                         message: _t("Unknown CORS error"),
-                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin.")},
+                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin. (Opening your browser console might give you a hint on the error.)")},
                     });
                 }
             } else {
