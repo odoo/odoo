@@ -9,10 +9,10 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Radina <radis.choice@gmail.com>, 2016
 # Любо Енев, 2016
-# Anton Vassilev, 2016
 # Todor Mladenov <tmladenov@dir.bg>, 2016
 # Vihren Kanev <vihren.kanev@gmail.com>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
+# Anton Vassilev, 2016
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Chudomir Monevski <cm@plana.solutions>, 2018
@@ -120,27 +120,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template_sales_count
 msgid "# Sales"
-msgstr "бр. продажби"
+msgstr "# Продажби"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "бр. фактури"
+msgstr "# на фактури"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
 msgid "# of Lines"
-msgstr "# от редове"
+msgstr "# на редове"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr "# от поръчки"
+msgstr "# на поръчки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "# of Qty"
-msgstr "# от кол."
+msgstr "# на количество"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
@@ -154,6 +154,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -161,8 +163,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state в ('чернова', 'изпратена') и "
+"'оферта' или 'поръчка'} (Реф. ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -178,7 +180,7 @@ msgstr "&amp;bull;"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "(update)"
-msgstr "(обнови)"
+msgstr "(актуализация)"
 
 #. module: sale
 #. openerp-web
@@ -267,6 +269,78 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- ГОРЕН КОЛОНТИТУЛ -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- СЪДЪРЖАНИЕ -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- ДОЛЕН КОЛОНТИТУЛ -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Осъществено от<a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -275,6 +349,9 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Пример: предплатени оферти за услуги, за които клиентът трябва\n"
+"                да купи допълнителен пакет часове, тъй като е използвал всичките си часове\n"
+"                за поддръжка.</i>"
 
 #. module: sale
 #. openerp-web
@@ -808,7 +885,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: sale
 #: model:res.groups,name:sale.group_display_incoterm
@@ -1157,7 +1234,7 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
@@ -1165,7 +1242,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence

@@ -8,15 +8,13 @@
 # Martin Trigaux, 2016
 # kalatchev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Anton Vassilev, 2016
-# Antoan Georgiev <expocarbg@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Antoan Georgiev <expocarbg@gmail.com>, 2016\n"
+"Last-Translator: preslav <hackerz99999@gmail.com>, 2016\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +40,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"- Натиснете на <span class=\"fa fa-phone text-success\"></span>, за да обявите, че поръчката е поръчана <br>\n"
+"                - Натиснете на <span class=\"fa fa-check text-success\"></span>, за да обявите, че поръчката е получена <br>\n"
+"                - Натиснете на <span class=\"fa fa-times-circle text-danger\"></span>, за да обявите, че поръчката не е налична"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -60,6 +61,9 @@ msgid ""
 "                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
+"Дадено движение в касата може да бъде или разход, или плащане.<br>\n"
+"                Разход се създава автоматично с касовата бележка на поръчката.<br>\n"
+"                Плащане ще рече възстановяването на пари на компанията от страна на служителя."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
@@ -79,20 +83,20 @@ msgstr "Активен"
 #: code:addons/lunch/static/src/xml/lunch.xml:15
 #, python-format
 msgid "Add"
-msgstr "Добави"
+msgstr "Добавете"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:263
 #, python-format
 msgid "Alert"
-msgstr "Внимание"
+msgstr "Сигнал"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_alerts
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
 msgid "Alerts"
-msgstr ""
+msgstr "Сигнали"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -116,7 +120,7 @@ msgstr "И"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Archive/Unarchive"
-msgstr ""
+msgstr "Архивирайте/разархивирайте"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -147,7 +151,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
-msgstr ""
+msgstr "Чрез потребител"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -307,7 +311,7 @@ msgstr "Показване"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: lunch
 #. openerp-web
@@ -434,7 +438,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_product___last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_uid
@@ -445,7 +449,7 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_uid
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_write_date
@@ -456,7 +460,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_write_date
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form

@@ -92,23 +92,30 @@ msgid ""
 " * Transferred: has been processed, can't be modified or cancelled anymore\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+" * Чернова: все още непотвърден и няма да бъде планиран, докато не бъде потвърден\n"
+" * Изчакващ друга операция: изчакващ да се извърши друго движение преди да стане автоматично наличен (напр. в потоци 'Изгответе по поръчка')\n"
+" * Изчакващ наличност: все още изчакващ наличието на продукти\n"
+" * Частично наличен: някои продукти са налични и резервирани\n"
+" * Готов за трансфер: резервни продукти, просто изчакващи потвърждение.\n"
+" * Трансфериран: обработен, повече не може да бъде коригиран или анулиран\n"
+" * Отменен: отменен, повече не може да бъде потвърден"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr ""
+msgstr "#Продукти"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:449
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Доставяйте продукт от %s"
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Местоположение на транзита"
+msgstr "%s: Транзитна локация"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_state
@@ -119,6 +126,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Ново: Когато движението в склада е създадено, но все още не е потвърдено.\n"
+"* Изчакване на друго движение: Това състоявие може да бъде видяно, когато дадено движение изчаква следващо такова, например във верижен поток.\n"
+"* Изчакване на наличност: Това състояние се достига, когато решението за възлагане на доставката не е достатъчно ясно. Възможно е да се наложи планьорът да заработи, да се произведе даден компонент и т.н.\n"
+"* Наличен: Когато се резервират продукти, се настройва на 'Наличен'.\n"
+"* Извършен: Когато превозът е обработен, състоянието е 'Извършен'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -157,8 +169,8 @@ msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">'Available'</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">На "
-"разположение</span>"
+"<span class=\"label label-default text-center odoo_purple\">'На "
+"разположение'</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -166,8 +178,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Delivery</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Кликнете на<span"
-" class=\"fa fa-truck\"/> Доставки </span>"
+"<span class=\"label label-default text-center odoo_purple\">Натсинете "
+"на<span class=\"fa fa-truck\"/> Доставка </span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -175,7 +187,7 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Shipment</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Кликнете на "
+"<span class=\"label label-default text-center odoo_purple\">Натиснете на "
 "<span class=\"fa fa-truck\"/> Пратка</span>"
 
 #. module: stock
@@ -621,7 +633,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Source</strong>"
-msgstr ""
+msgstr "<strong>Източник</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -871,7 +883,7 @@ msgstr "Apple In-Ear Headphones"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_4
 msgid "Apple Wireless Keyboard"
-msgstr "Apple Wireless Keyboard"
+msgstr "Безжична клавиатура на Apple"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -2118,7 +2130,7 @@ msgstr "Зона за изпращане"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -3261,7 +3273,7 @@ msgstr "Последните 10 извършени пикинга"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse___last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_write_uid
@@ -3294,7 +3306,7 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_write_date
@@ -3327,7 +3339,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:64
@@ -3525,7 +3537,7 @@ msgstr "Партида"
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Портиден/сериен номер"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:198
@@ -3760,7 +3772,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Правило за минимален инвентар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_min_qty

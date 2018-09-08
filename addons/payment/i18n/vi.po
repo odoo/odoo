@@ -281,7 +281,7 @@ msgstr "Mô-đun tương ứng"
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Mã đếm thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -382,7 +382,7 @@ msgstr "E-mail"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Điện tử"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -413,17 +413,17 @@ msgstr "Phí"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Hỗ trợ tính toán phí"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Lệ phí; do hệ thống đặt ra vì phụ thuộc vào nhà cung cấp"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
+msgstr "Trường được dùng để chứa lỗi và/hoặc thông điệp xác nhận thông tin"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
@@ -448,7 +448,7 @@ msgstr "Mẫu nút bấm"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "Biểu mẫu có mã thông báo"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -475,7 +475,7 @@ msgstr "Hình ảnh"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -486,12 +486,12 @@ msgstr "Cài đặt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
 msgid "Installation State"
-msgstr ""
+msgstr "Trạng thái cài đặt"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "Tham chiếu nội bộ của TX"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -522,7 +522,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "Hãy để khách hàng quyết định"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -608,7 +608,7 @@ msgstr "Tên"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Tên của mã thanh toán"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -688,7 +688,7 @@ msgstr "Nhật kí thanh toán"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Mã thanh toán"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
@@ -697,7 +697,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Mã thanh toán"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -836,6 +836,9 @@ msgid ""
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
 msgstr ""
+"Hình ảnh có kích thước nhỏ của nhà cung cấp này. Nó được tự động thay đổi "
+"kích thước thành hình ảnh 64x64px, với tỷ lệ khung hình được giữ nguyên. Sử "
+"dụng trường này ở bất kỳ đâu cần có hình ảnh nhỏ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -925,7 +928,7 @@ msgstr "Phí nội địa thay đổi (tính bằng phần trăm)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Phí quốc tế (tính theo phần trăm)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
@@ -935,7 +938,7 @@ msgstr "Hiện Cổng thông tin/Website"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Giao dịch trống"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -947,6 +950,7 @@ msgstr "Chuyển khoản ngân hàng"
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
 msgstr ""
+"Bạn sẽ được nhắc với trang Stripe Thanh toán để biết thông tin thanh toán."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -1022,27 +1026,28 @@ msgstr "Mã bưu chính"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "nhà cung cấp: duyệt bản ghi payment.acquirer"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "số tiền: số tiền giao dịch, số dư"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "ngữ cảnh: từ điển ngữ cảnh hiện tại"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "tiền tệ: hồ sơ duyệt giao dịch tiền tệ"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
 msgstr ""
+"đối tác: bản ghi duyệt đối tác của người mua, không nhất thiết phải đặt"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1050,26 +1055,28 @@ msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
 msgstr ""
+"partner_values: giá trị cụ thể về người mua, ví dụ: đến từ biểu mẫu giao "
+"hàng"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr ""
+msgstr "tham khảo: số giao dịch tham khảo"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_url: transaction URL to post the form"
-msgstr ""
+msgstr "tx_url: URL giao dịch để đăng biểu mẫu"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "tx_values: transaction values"
-msgstr ""
+msgstr "tx_values: giá trị giao dịch"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

@@ -31,7 +31,7 @@ msgstr "# от продукти"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Складови счетоводни обекти"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -43,6 +43,8 @@ msgstr "Счетоводна информация"
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
 msgstr ""
+"Позволява да се конфигурират остойностявания на продукти и продуктови "
+"категории."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -54,7 +56,7 @@ msgstr "Средна цена"
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Откажете"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:244
@@ -75,9 +77,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Не може да се открие сметка изписване на стоки за този продукт %s. Трябва да"
-" определите една за продуктовата категория или за местонадначението преди да"
-" обработите тази операция."
+"Не може да се открие сметка изписване на стоки за този продукт %s. Преди да "
+"обработите тази операция трябва да определите една за продуктовата категория"
+" или за локацията."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -94,7 +96,7 @@ msgstr "Променете стандартна цена"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
-msgstr ""
+msgstr "Изберете минала дата, за да получите инвентара на тази дата."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -109,7 +111,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr "Изберете вашата дата"
+msgstr "Изберете датата си"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -172,7 +174,7 @@ msgstr "Дата"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
@@ -240,7 +242,7 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Включете разтоварни разходи в изчисляването на стойността на продукта"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -248,7 +250,7 @@ msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
 msgstr ""
-"Инсталирайте модула, който позволява да се повлияят крайните цени на "
+"Инсталирайте модула, който позволява да се повлияят разтоварните разходи на "
 "пикингите и ги разхвърляйте върху различните продукти."
 
 #. module: stock_account
@@ -295,26 +297,26 @@ msgstr "Ред от фактура"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Доставни разходи"
+msgstr "Разтоварни разходи"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_history___last_update
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_location_id
@@ -326,7 +328,7 @@ msgstr "Местонахождение"
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Портиден/сериен номер"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
@@ -342,7 +344,7 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Без разтоварни разходи"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date

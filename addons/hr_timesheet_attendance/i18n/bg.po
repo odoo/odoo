@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2016
-# kalatchev, 2016
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# kalatchev, 2016
 # Anton Vassilev, 2017
 # Ivan Ivanov, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
@@ -36,6 +36,8 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+"Допустима разлика в часовете между вписването/отписването и изчисляването на"
+" графика за една диаграма. Настройте на 0, ако не желаете никакъв контрол."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_hr_attendance
@@ -71,18 +73,18 @@ msgstr "Разлика"
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "Разлики"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: hr_timesheet_attendance
 #: model:ir.actions.act_window,name:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "HR Timesheet/Attendance Report"
-msgstr "Отчет за часове на ЧР"
+msgstr "Отчет за график/посещаемост ЧР"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report_id
@@ -94,7 +96,7 @@ msgstr "ИН"
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report___last_update
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_day___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_sheet_sheet_period_ids
@@ -108,7 +110,7 @@ msgstr "Период"
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr "Моля, проверете дали общата разлика на листа е по - малка от%.2f"
+msgstr "Моля, проверете дали общата разлика на листа е по-малка от%.2f"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_attendance_sheet_id
@@ -124,6 +126,8 @@ msgid ""
 "The timesheet cannot be validated as it contains an attendance record with "
 "no Check Out)."
 msgstr ""
+"Графикът не може да бъде валидиран, тъй като съдържа регистрация на "
+"посещенията без 'Изписани')."
 
 #. module: hr_timesheet_attendance
 #: model:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search

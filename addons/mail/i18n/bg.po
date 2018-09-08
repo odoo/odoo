@@ -114,12 +114,97 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div>\n"
+"% if ctx.get('has_button_access'):\n"
+"<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
+"    </div>\n"
+"</div>\n"
+"% endif\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        % if ctx.get('has_button_access'):\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('has_button_follow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        % elif ctx.get('has_button_unfollow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('actions'):\n"
+"        % for action in ctx['actions']:\n"
+"        |\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
+"        % endfor\n"
+"        % endif\n"
+"    </td>\n"
+"    <td valign=\"center\" align=\"right\">\n"
+"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"    </td>\n"
+"</tr>\n"
+"<tr>\n"
+"    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"        <hr width=\"100%\"\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
+"        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
+"            <strong>Вътрешна бележка</strong>: отговорите не са изпратени на последователите.\n"
+"        </span>\n"
+"        % endif\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"% endif\n"
+"${object.body | safe}\n"
+"% if ctx.get('tracking'):\n"
+"    <ul>\n"
+"    % for tracking in ctx['tracking']\n"
+"        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
+"    % endfor\n"
+"    </ul>\n"
+"% endif\n"
+"\n"
+"% if ctx.get('signature'):\n"
+"    ${ctx['signature'] | safe}\n"
+"% endif\n"
+"<br/>\n"
+"<p style=\"color: #555555;\">\n"
+"    Изпратено от\n"
+"    % if ctx.get('website_url'):\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"    % endif\n"
+"    ${ctx.get('company_name')}\n"
+"    % if ctx.get('website_url'):\n"
+"    </a>\n"
+"    % endif\n"
+"    използвайки\n"
+"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
+"</p>\n"
+"</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
+" Този канал е поверителен. Хората трябва да бъдат поканени да се присъединят"
+" към него."
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -129,6 +214,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
+"или (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) или (object.parent_id и "
+"object.parent_id.record_name и 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -147,13 +236,13 @@ msgstr "%s (копие)"
 #: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
-msgstr "%s създадени"
+msgstr "%s създадено"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:69
 #, python-format
 msgid "%s has joined the %s network."
-msgstr "%s се пръсъедини към %s мрежа."
+msgstr "%s се пръсъедини към %s мрежата."
 
 #. module: mail
 #. openerp-web
@@ -170,14 +259,14 @@ msgid ""
 msgstr ""
 "* Символите Smiley се използват само за HTML код, за да се покаже "
 "изображение * Текст (стойност по подразбиране) се използва, за да подмени "
-"един текст с друг."
+"един текст с друг"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:195
 #, python-format
 msgid "-------- Show older messages --------"
-msgstr "-------- Покажи по-стари съобщения --------"
+msgstr "-------- Покажете по-стари съобщения --------"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:643
@@ -189,6 +278,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Можете да споменете някого, като изпишете <b>@username</b>, това ще привлече неговото внимание.<br>\n"
+"            Можете да споменете канал, като изпишете <b>#channel</b>.<br>\n"
+"            Можете да изпълните команда, като изпишете <b>/command</b>.<br>\n"
+"            Можете да вмъкнете предварително изготвени отговори в съобщението си, като изпишете <b>:shortcut</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:475
@@ -239,6 +333,7 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
+"<div><p>Привет,</p><p>%s Ви покани да последвате %s документ: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -340,6 +435,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"Краткият код представлява клавишна комбинация. Например, изпишете #gm и то "
+"ще се трансформира в \"Good Morning\" - \"Добро утро\"."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -795,7 +892,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
-msgstr ""
+msgstr "Канали"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
@@ -1198,7 +1295,7 @@ msgstr "Обсъждане"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "Дискусионен канал"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -1225,7 +1322,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_display_name
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1431,7 +1528,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Failed"
-msgstr ""
+msgstr "Неуспешен"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:363
@@ -2305,7 +2402,7 @@ msgstr "Дата на последното съобщение"
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite___last_update
 #: model:ir.model.fields,field_description:mail.field_publisher_warranty_contract___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_last_seen_partner_ids
@@ -2334,7 +2431,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_write_date
@@ -2352,7 +2449,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_write_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
@@ -2414,20 +2511,20 @@ msgstr "Дневник"
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Регистрирайте бележка. Последователите няма да бъдат известени."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Регистрирайте вътрешна бележка"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:59
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "Регистрирайте вътрешна бележка"
 
 #. module: mail
 #. openerp-web
@@ -2437,6 +2534,8 @@ msgid ""
 "Log an internal note which will not be sent to followers, but which can be read\n"
 "                    by users accessing this document."
 msgstr ""
+"Регистрирайте вътрешна бележка, която няма да бъде изпратена на последователи, но която ще може да бъде прочетена\n"
+"                    от потребителите, имащи достъп до този документ."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
