@@ -7,7 +7,6 @@
 # kalatchev, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Martin Trigaux, 2016
-# preslav <hackerz99999@gmail.com>, 2016
 # Anton Vassilev, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Весел Карастоянов <vesel@abv.bg>, 2018
@@ -48,6 +47,10 @@ msgid ""
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
+"A <b>поръчка за доставка</b> се използва, за да документира нужда от определен\n"
+"                продукт за конкретна локация. Поръчките за доставки обикновено са\n"
+"                създадени автоматично от <i>поръчки за продажби, правила за логистично пулване или\n"
+"                правила за минимална наличност.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -67,17 +70,17 @@ msgstr "Всичко наведнъж"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Archived"
-msgstr "Архивирани"
+msgstr "Архивирано"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Отменете"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "Отменете доставката"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -87,7 +90,7 @@ msgstr "Отменено"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Проверете доставка"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
@@ -96,13 +99,16 @@ msgid ""
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
 msgstr ""
+"Избрано правило за разрешаването на доставките. Обикновено избрано от "
+"системата, но може да се настрои механично от мениджъра доставки с цел да се"
+" предизвика необичайно поведение."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Натиснете, за да създадете поръчка за доставка."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -113,12 +119,12 @@ msgstr "Компания"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Изчислете всички доставки на заден план."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr ""
+msgstr "Изчислете всички планьори"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -157,7 +163,7 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -234,7 +240,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
@@ -242,7 +248,7 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
@@ -250,7 +256,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter

@@ -15,13 +15,14 @@
 # Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Kari Lindgren <karisatu@gmail.com>, 2016
 # Jukka Paulin <jukka.paulin@gmail.com>, 2018
+# santeri valjakka <santeri.valjakka@avoin.systems>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2018\n"
+"Last-Translator: santeri valjakka <santeri.valjakka@avoin.systems>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,6 +295,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">loi <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:473
@@ -313,6 +316,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">poistui <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -2940,7 +2945,7 @@ msgstr "Seuraajien lisäys"
 #: code:addons/mail/static/src/xml/thread.xml:16
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "Haku ei tuottanut tuloksia"
 
 #. module: mail
 #. openerp-web
@@ -3204,7 +3209,7 @@ msgstr "Odoo"
 #, python-format
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
-msgstr ""
+msgstr "Odoolla on nyt lupa lähettää huomautusviestejä tälle laitteelle."
 
 #. module: mail
 #. openerp-web
@@ -3220,7 +3225,7 @@ msgstr "Odoo tarvitsee lupasi"
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
-msgstr ""
+msgstr "Odoolla ei ole lupaa lähettää huomautusviestejä tälle laitteelle."
 
 #. module: mail
 #. openerp-web
@@ -3315,7 +3320,7 @@ msgstr "Avaa keskustelu"
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
 #: model:ir.model.fields,field_description:mail.field_res_users_opt_out
 msgid "Opt-Out"
-msgstr "Jättäydy pois"
+msgstr "Markkinointikielto"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_force_thread_id
@@ -3597,7 +3602,7 @@ msgstr "Yksityiset kanavat"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Julkiset Kanavat"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3608,7 +3613,7 @@ msgstr "Vast:"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Ready to Send"
-msgstr ""
+msgstr "Valmiina lähetettäväksi"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3784,7 +3789,7 @@ msgstr "Suunniteltu päivämäärä"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Aikataulutettu lähetyspäivä"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -4282,6 +4287,8 @@ msgstr "UUID"
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
 msgstr ""
+"Sähköpostin lähetys ei onnistu, koska lähettäjältä puuttuu sähköpostiosoite."
+" Lisääthän käyttäjälle sähköpostiosoitteen."
 
 #. module: mail
 #. openerp-web
@@ -4745,7 +4752,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "on"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4760,7 +4767,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -4796,7 +4803,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "muokattu"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain

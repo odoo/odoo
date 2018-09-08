@@ -31,13 +31,13 @@ msgstr "# на сесии"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
 msgid "# of speakers"
-msgstr ""
+msgstr "# на говорещите"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr ""
+msgstr "% Доволен"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
@@ -46,6 +46,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"* \"Показване на бутона\" показва бутона за чат на страниците.\n"
+"* 'Автоматично изскачане' показва бутона и автоматично отваря прозореца за разговори.\n"
+"* 'Скриване на бутон' скрива бутона за чат на страницата."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -56,6 +59,12 @@ msgid ""
 "country, GeoIP must be install on your server, otherwise, the countries of "
 "the rule will not be taken into account.</span>"
 msgstr ""
+"<span>Определете правила за канала Ви за поддръжка на живо. Можете да "
+"приложите дийствие (деактивирайте поддръжката, автоматично отворете "
+"поддръжката си или просто направете бутона достъпен) за дадения URL, и за "
+"държава.<br/>За да идентифицирате държавата, GeoIP трябва да бъде инсталиран"
+" на сървъра Ви, в противен случай страните, които съблюдават това правило, "
+"няма да бъдат взети под внимание.</span>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
@@ -65,64 +74,64 @@ msgstr "Действие"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel_anonymous_name
 msgid "Anonymous Name"
-msgstr ""
+msgstr "Анонимно име"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_are_you_inside
 msgid "Are you inside the matrix?"
-msgstr ""
+msgstr "Намирате ли се в матрицата?"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/js/im_livechat.js:27
 #, python-format
 msgid "Ask something ..."
-msgstr ""
+msgstr "Попитайте нещо ..."
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
-msgstr "Участници"
+msgstr "Присъстващи"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Auto popup"
-msgstr ""
+msgstr "Автоматично изскачащо меню"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
 msgid "Auto popup timer"
-msgstr ""
+msgstr "Автоматично изскачащ таймер"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_duration
 msgid "Average duration"
-msgstr ""
+msgstr "Средно времетраене"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_message
 msgid "Average message"
-msgstr ""
+msgstr "Средно съобщение"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_time_to_answer
 msgid "Average time to give the first answer to the visitor"
-msgstr ""
+msgstr "Средно време, за да дадете първия отговор на посетителя"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:13
 #, python-format
 msgid "Bad"
-msgstr ""
+msgstr "Лош"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr ""
+msgstr "Предварителнто изготвени отговори"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -147,7 +156,7 @@ msgstr "Канал"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_name
 msgid "Channel Name"
-msgstr ""
+msgstr "Име на канал"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
@@ -163,7 +172,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
-msgstr ""
+msgstr "Канали"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_input_placeholder
@@ -284,7 +293,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "Дискусионен канал"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_display_name
@@ -292,7 +301,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_display_name
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -424,7 +433,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel_partner
@@ -435,13 +444,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
