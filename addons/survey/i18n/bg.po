@@ -37,6 +37,14 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"<p>Привет,</p>\n"
+"<p>Провеждаме проучване и вашият отговор ще бъде добре дошъл.</p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Моля, натиснете тук, за да стартирате проучването</a></p>\n"
+"<p>Благодарим Ви за участието!</p>\n"
+"                \n"
+"            "
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
@@ -57,12 +65,12 @@ msgstr "&amp;време;"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid "<b>Question </b>"
-msgstr ""
+msgstr "<b>Въпрос </b>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\">123..</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x\">123..</i>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_matrix
@@ -70,31 +78,33 @@ msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
 "                    Graph"
 msgstr ""
+"<i class=\"fa fa-bar-chart\"/>\n"
+"                    Диаграма"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> Диаграма"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart-o\"/> Диаграма тип торта"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> отговор"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o  fa-lg\"/> отговор"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg\"/> answer"
-msgstr ""
+msgstr "<i class=\"fa fa-dot-circle-o fa-lg\"/> отговор"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -102,6 +112,8 @@ msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    All Data"
 msgstr ""
+"<i class=\"fa fa-list-alt\"/>\n"
+"                    Всички данни"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_matrix
@@ -109,11 +121,13 @@ msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    Data"
 msgstr ""
+"<i class=\"fa fa-list-alt\"/>\n"
+"                    Данни"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-list-alt\"/> Data"
-msgstr ""
+msgstr "<i class=\"fa fa-list-alt\"/> Данни"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_number
@@ -121,6 +135,8 @@ msgid ""
 "<i class=\"fa fa-list-ol\"/>\n"
 "                    Most Common"
 msgstr ""
+"<i class=\"fa fa-list-ol\"/>\n"
+"                    Най-често срещани"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -554,7 +570,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
@@ -864,7 +880,7 @@ msgstr "Етикети"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input___last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_write_uid
@@ -876,7 +892,7 @@ msgstr "Последно променено на"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_write_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_write_date
@@ -888,7 +904,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_write_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
@@ -2050,7 +2066,7 @@ msgstr "ir.autovacuum"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "log in"
-msgstr ""
+msgstr "Влезте в системата"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page

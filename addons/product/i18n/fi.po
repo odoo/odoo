@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
@@ -154,6 +154,9 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Julkinen hinta  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Kulu  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Toinen hinnasto  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -200,7 +203,7 @@ msgstr ""
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Samaa viivakoodia ei voi käyttää useassa tuotteessa!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -346,7 +349,7 @@ msgstr "Saatavilla"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Vaikutus"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -1099,7 +1102,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Fix Price"
-msgstr ""
+msgstr "Kiinteä hinta"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_fixed_price
@@ -1527,7 +1530,7 @@ msgstr "Hallitse useita (mitta)yksiköitä"
 #. module: product
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
-msgstr ""
+msgstr "Hallitse hinnaston rivejä"
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1711,7 +1714,7 @@ msgstr "Kumppani"
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
 msgid "Percentage (discount)"
-msgstr ""
+msgstr "Alennusprosentti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_percent_price
@@ -1843,7 +1846,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Hinnaston rivejä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_name

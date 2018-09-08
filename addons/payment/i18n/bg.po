@@ -6,9 +6,9 @@
 # Martin Trigaux, 2016
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Bernard <bernard@abv.bg>, 2016
-# kalatchev, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# kalatchev, 2016
+# Bernard <bernard@abv.bg>, 2016
 # Anton Vassilev, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
@@ -37,7 +37,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr ""
+msgstr "3D защита HTML"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -45,6 +45,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Тест</span>\n"
+"                                    <span class=\"o_stat_text\">Среда</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -52,6 +54,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"Производство\n"
+"                                    <span class=\"o_stat_text\">Среда</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -65,7 +69,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Отказ,</i> Вашето плащане е отказано.</span>"
+msgstr "<span><i>Отменете,</i> Вашето плащане е отменено.</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -102,6 +106,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Грешка,</i> Моля, бъдете наясно, че в хода на транзакциата се появи"
+" грешка. Поръчката е потвърдена, но няма да бъде платена. Не се колебайте да"
+" се свържете с нас, ако имате някакви въпроси относно състоянието на "
+"поръчката Ви.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -117,8 +125,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
-"<span><i>Задържано,</i>  Вашето онлайн плащане е успешно, но поръчката Ви "
-"още не е потвърдена.</span>"
+"<span><i>Изчакващо,</i>  Вашето онлайн плащане е успешно обработено, но "
+"поръчката Ви още не е потвърдена.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -126,7 +134,8 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
-"<span><i>Висяща</i>... Поръчката ще бъде валидирана след плащането.</span>"
+"<span><i>Изчакваща</i>... Поръчката ще бъде валидирана след "
+"плащането.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -136,22 +145,22 @@ msgstr "Журнал на сметка, използван за автомати
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr "Обработчик на плащането"
+msgstr "Обработчик на плащане"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Профил на обработчик"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Референция на обработчик"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Референция за приобретател"
+msgstr "Референция за обработчик"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -161,7 +170,7 @@ msgstr "Активен"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Добавете допълнителни такси"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -191,6 +200,7 @@ msgstr "Сума"
 msgid ""
 "Authorize & capture the amount and confirm the SO on acquirer confirmation"
 msgstr ""
+"Упълномощете & уловете сумата, потвърдете SO на одобрението на обработчика"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -198,6 +208,8 @@ msgid ""
 "Authorize & capture the amount, confirm the SO and auto-validate the invoice"
 " on acquirer confirmation"
 msgstr ""
+"Упълномощете & уловете сумата, потвърдете SO и валидирайте автоматично "
+"фактурата на обработчика"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
@@ -205,6 +217,8 @@ msgid ""
 "Authorize the amount and confirm the SO on acquirer confirmation (capture "
 "manually)"
 msgstr ""
+"Упълномощете сумата и потвърдете SO на одобрението на обработчика "
+"(мзеханично улавяне)"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -247,7 +261,7 @@ msgstr "Град"
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Click to create a payment acquirer."
-msgstr ""
+msgstr "Натиснете, за да създадете обработчик на плащането."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -278,7 +292,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Сметнете жетона за плащане"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -354,7 +368,7 @@ msgstr "Определете реда на показване"
 #: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -416,6 +430,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
+"Сумата на таксите; настроено от системата, защото зависи от обработчика"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
@@ -500,21 +515,21 @@ msgstr "Език"
 #: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -525,6 +540,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
 msgstr ""
+"Направете този обработчик на плащане наличен (клиентски фактури и т.н.)"
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -618,6 +634,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Обърнете внимание, че символите от обработчици, които са настроени да "
+"разрешават само транзакции (вместо да улавят сумата), не са налице."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -663,14 +681,14 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Обработчик на плащането"
+msgstr "Обработчик на плащане"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Обработчици на плащане"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
@@ -762,7 +780,7 @@ msgstr "Референция"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Референция на TX, както е съхранена в базата данни на обработчика"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -873,6 +891,8 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
+"Тази функция не е налична за обработчици на плащане, настроени за режима \"Упълномощете\".\n"
+"Моля използвайте символ на доставчик, различен от %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -1005,7 +1025,7 @@ msgstr "Пощенски код"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "обработчик: payment.acquirer преглед на запис"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

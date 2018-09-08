@@ -44,6 +44,10 @@ msgid ""
 "<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Привет,</p>\n"
+"<p>Имаме удоволствието да Ви приветстваме сред нашите Сребърни контрагенти, считано от днес!</p>\n"
+"<p>Влагодарим Ви,</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_1
@@ -53,11 +57,15 @@ msgid ""
 "<p>You will receive your welcome pack via email shortly.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Привет,</p>\n"
+"<p>В най-скоро време ще получите пакета си за добре дошли.</p>\n"
+"<p>Благодарим Ви,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
 msgid "# of Actions"
-msgstr ""
+msgstr "# на действия"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -65,6 +73,8 @@ msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Кампания</span>\n"
+"                            <span class=\"o_stat_text\">Статистика</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -114,7 +124,7 @@ msgstr "Всички"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr "Всички записи (без дублирани)"
+msgstr "Всички записи (без дубликати)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_signal
@@ -122,6 +132,8 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Дейност със сигнал може да се нарече програмно. Бъдете внимателни, workitem "
+"се създава винаги при изпратен сигнал"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -360,7 +372,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
@@ -607,7 +619,7 @@ msgstr "Юни"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
@@ -621,7 +633,7 @@ msgstr "Последна синхронизация"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_date
@@ -630,7 +642,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
@@ -803,7 +815,7 @@ msgstr "Само записи създадени след последната �
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr "Само записи променени след последната синхронизация (без дублирани)"
+msgstr "Само записи, коригирани след последната синхронизация (без дубликати)"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -1002,6 +1014,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
+"Режим синхронизиране: само записи, актуализирани след последната "
+"синхронизация"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode

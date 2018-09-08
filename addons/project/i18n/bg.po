@@ -135,6 +135,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % настройте last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Автоматична регистрация</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Вашето приложение Odoo Проект е гоново и работи</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Какво следва?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Опитайте да съставите задача, като изпратите имейл до </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Поканете нови потребители</span></a></span>\n"
+"                                        <span>да се включат</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Открийте </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">проектния планьор,</span></a></span>\n"
+"                                <span> за да активирате допълнителни функции</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Проследявайте часовете с графици,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Планирайте задачи и ресурси с прогнози,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Получавайте прецизни отчети и точни табла за управление,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Обявявайте време за задачи или въпроси,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>И много повече...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Имате нужда от помощ?</span>\n"
+"                                <span style=\"font-style:italic;\">Вие не сте сами</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Ще се радваме да Ви помагаме по пътя. Свържете се с нас чрез нашата\n"
+"                                <a href=\"https://www.odoo.com/help\">форма за подкрепа,</a> в случай че имате някакви въпроси.\n"
+"                                Можете да откриете и как да извлечете максимална полза от Проекта Odoo Project с нашата </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Документация за потребителя</span></a>\n"
+"                                </span><span> или с нашата </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">документация по приложно-програмния интерфейс - API</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Радвайте се на опита си в Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Екипът на Odoo<br/>ПП: Хората харесват Odoo, вижте </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">какво казват за него.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -145,6 +246,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаеми/а ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Благодарим за Вашето запитване.<br /></p>\n"
+"<p>Ако имате някакви въпроси, моля, обърнете се към нас.</p>\n"
+"<p>С най-добри пожелания,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -154,12 +260,12 @@ msgstr "# Дни за разпределяне"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr ""
+msgstr "# Дни до затваряне"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Дни до крайния срок"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -170,12 +276,12 @@ msgstr "# Задачи"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr ""
+msgstr "# Работни дни"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr "# Задачи"
+msgstr "# на задачи"
 
 #. module: project
 #: code:addons/project/models/project.py:240
@@ -190,6 +296,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
+"(Раз)архивирането на даден проект (раз)архивира автоматично неговите задачи "
+"и проблеми. Желаете ли да продължите?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -199,13 +307,15 @@ msgstr "- Екипът на Odoo"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks, Issues and Timesheets."
-msgstr ""
+msgstr "1. Разучете задачите, грешките и графиците."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
+"2. Сега, отделете малко време да съставите <strong>проукта, от който ще "
+"имате нужда:</strong>"
 
 #. module: project
 #. openerp-web
@@ -224,6 +334,8 @@ msgstr ""
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
+"<b>Нотиснете бутона за запазване,</b> за да приложите промените си към "
+"задачата."
 
 #. module: project
 #. openerp-web
@@ -231,6 +343,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
+"<b>Влачете&amp; пускайте задачи</b> между колони, докато работите върху тях."
 
 #. module: project
 #. openerp-web
@@ -252,7 +365,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Отговорно лице"
 
 #. module: project
 #: code:addons/project/models/project.py:122
@@ -698,6 +811,12 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
+"<strong>В режим 'Придвижете'</strong>, задачите, готови да преминат към "
+"следващия етап, са точно означени като 'Готови за следващ етап' (използващи "
+"иконата за състояние) от отговорното лице за настоящия етап. Тотава "
+"отговорното лице за следващия етап поема задачата и я придвижвя към "
+"следващия етап. Това е най-добрият начин за работа, в случай че имате "
+"разнородни отговорности за Вашите канбан етапи."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -707,6 +826,10 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
+"<strong>В режим 'Придвижете'</strong>, задачите се придвижват към следващия "
+"етап (след като отговорят на всички изисквания) от отговорното лице за "
+"настоящия етап. Това е опростен начин за работа, но функционира адекватно, "
+"ако работите сами."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -840,7 +963,7 @@ msgid ""
 "                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
 "<strong>Трябва да управлявате версии и да проследявате промени</strong><br/>\n"
-"                            Etherpad запазва документа автоматично на редовни кратки интервали и потребителите могат да запазят трайно конкретни версии по всяко време. Освен това функцията \"времеви слайдер\" също позволява на всеки да проучва историята на подложката."
+"                            Etherpad запазва документа автоматично на редовни кратки интервали и потребителите могат да запазят трайно конкретни версии по всяко време. Освен това функцията \"времеви слайдер\" също позволява на всеки да проучва историята на документа."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1003,6 +1126,8 @@ msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
+"Като алтернатива, графиците могат да се добавят директно от 'Задачи' чрез "
+"активиране на <strong>'Регистрирайте работни дейности по задачи'</strong> в"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1185,7 +1310,7 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Чрез отговорно лице"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1212,6 +1337,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project_use_tasks
 msgid "Check this box to manage internal activities through this project"
 msgstr ""
+"Отметнете това поле, за да управлявате вътрешни дейности чрез този проект"
 
 #. module: project
 #. openerp-web
@@ -1616,7 +1742,7 @@ msgstr "Откажи"
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr "Име за показване"
+msgstr "Покажете име"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -1706,7 +1832,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "Редактирайте задача"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1758,6 +1884,8 @@ msgid ""
 "Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
+"Дори и в Odoo да не е посочено конкретно поле, е важно да определите лице, което да отговаря за всеки етап от проекта Ви.<br/>\n"
+"                        Този човек ще носи отговорност за валидилането на всеки етап и ще гарантира, че изискванията за преминаване към следващия етап са изпълнени."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2019,6 +2147,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
 msgstr ""
+"В идеалния случай един човек трябва да носи отговорност само за един проект."
 
 #. module: project
 #. openerp-web
@@ -2158,7 +2287,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues"
-msgstr ""
+msgstr "Грешки"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2262,7 +2391,7 @@ msgstr "Последно съобщение"
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr "Последно променено на"
+msgstr "Последно коригирано на"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
@@ -2277,7 +2406,7 @@ msgstr "Последно обновяване на етапа"
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr "Последно обновено от"
+msgstr "Последно актуализирано от"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
@@ -2285,7 +2414,7 @@ msgstr "Последно обновено от"
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
-msgstr "Последно обновено на"
+msgstr "Последно актуализирано на"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2307,6 +2436,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
+"Дайте възможност на компанията да персонализира коя Pad инсталация трябва да се използва за свързване с новите документи (напр.: http://ietherpad.com/).\n"
+"-Това инсталира модула PAD."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2623,7 +2754,7 @@ msgstr "Собственик"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
 msgid "Pads"
-msgstr ""
+msgstr "Документи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
@@ -3178,7 +3309,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.task_type_edit
 #: model:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "Етап на задача"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -3851,7 +3982,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "for Tasks: 'Log work activities on tasks'"
-msgstr ""
+msgstr "за задачи: 'Регистрирайте работни дейности по задачи'"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
