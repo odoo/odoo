@@ -49,6 +49,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo1}: |
     picking = self.picking_ids[0]
+    #La siguiente line fue modificado por trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Check the standard price of the product (fifo icecream), that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
@@ -77,6 +78,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fifo2}: |
     picking = self.picking_ids[0]
+    #La siguiente line fue modificado por trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Check the standard price of the product, that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
@@ -108,6 +110,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment}: |
+     #La siguiente line fue modificado por trescloud
      self.with_context(came_form_test_env=True).do_transfer()
 - 
   Check product standard price changed to 65.0 (because last outgoing shipment was made of 10 kg at 50€ and 10 kg at 80€)
@@ -185,6 +188,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo_usd}: |
     picking = self.picking_ids[0]
+    #La siguiente line fue modificado por trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   We create delivery order of 49.5 kg
@@ -211,6 +215,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
+    #La siguiente line fue modificado por trescloud
     self.with_context(came_form_test_env=True).do_transfer()
 - 
  Check rounded price is 102 euro (because last outgoing shipment was made of 19.5kg at 80€ and 30kg at $150 (rate=1.2834)
@@ -242,6 +247,7 @@
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
+    #La siguiente line fue modificado por trescloud
     self.with_context(came_form_test_env=True).do_transfer()
 - 
   Check rounded price is 150.0 / 1.2834
@@ -314,6 +320,7 @@
   Process the delivery of the outgoing shipments
 - 
   !python {model: stock.picking, id: outgoing_fifo_shipment_neg2}: |
+    #La siguiente line fue modificado por trescloud
     self.with_context(came_form_test_env=True).do_transfer()
 
 - 
@@ -338,6 +345,7 @@
 -
   !python {model: purchase.order, id: purchase_order_fifo_neg}: |
     picking = self.picking_ids[0]
+    #La siguiente line fue modificado por trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Assert price on product is still the old price as the out move has not been received fully yet
@@ -367,6 +375,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
     picking = self.picking_ids[0]
+    #La siguiente line fue modificado por trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   The price of the product should have changed back to 65.0
