@@ -41,6 +41,7 @@
 -
   !python {model: purchase.order, id: purchase_order_average1}: |
     picking = self.picking_ids[0]
+    #siguiente lineas fueron modificadas por Trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Check the standard price of the product (average icecream).
@@ -70,6 +71,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_average2}: |
     picking = self.picking_ids[0]
+    #siguiente lineas fueron modificadas por Trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Check the standard price
@@ -96,6 +98,7 @@
 - 
   !python {model: stock.picking, id: outgoing_average_shipment}: |
     self.action_assign()
+    #siguiente lineas fueron modificadas por Trescloud
     self.with_context(came_form_test_env=True).do_transfer()
 - 
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
@@ -125,6 +128,7 @@
 - 
   !python {model: purchase.order, id: purchase_order_average3}: |
     picking = self.picking_ids[0]
+    #siguiente lineas fueron modificadas por Trescloud
     picking.with_context(came_form_test_env=True).do_transfer()
 - 
   Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878

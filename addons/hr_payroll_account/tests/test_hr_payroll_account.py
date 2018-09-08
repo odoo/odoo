@@ -25,6 +25,7 @@ class TestHrPayrollAccount(common.TransactionCase):
 
         self.payslip_action_id = self.ref('hr_payroll.menu_department_tree')
 
+        #Las siguiente lineas fueron agregadas por Trescloud
         sales_comision_rule = self.env.ref('hr_payroll.hr_salary_rule_sales_commission')
         sales_comision_rule.write({'amount_python_compute':
                                        'result = ((inputs.SALEURO and '
@@ -37,8 +38,7 @@ class TestHrPayrollAccount(common.TransactionCase):
             'acc_type': 'bank',
             'bank_id': self.ref('base.res_bank_1'),
         })
-
-
+        #Fin de las lineas agregadas
         self.hr_employee_john = self.env['hr.employee'].create({
             'address_home_id': self.ref('base.res_partner_address_2'),
             'address_id': self.ref('base.res_partner_address_12'),
@@ -64,6 +64,7 @@ class TestHrPayrollAccount(common.TransactionCase):
                     self.ref('hr_payroll.hr_salary_rule_professionaltax1'),
                     self.ref('hr_payroll.hr_salary_rule_providentfund1'),
                     self.ref('hr_payroll.hr_salary_rule_meal_voucher'),
+                    #siguiente lineas fueron agregadas por Trescloud
                     sales_comision_rule.id
             ])],
         })
@@ -119,6 +120,7 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip.action_payslip_draft()
 
         # Confirm Payslip
+        #siguiente lineas fueron agregadas por Trescloud
         self.hr_payslip.with_context(came_form_test_env=True).action_payslip_done()
 
         # I verify that the Accounting Entries are created.
