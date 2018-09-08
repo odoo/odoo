@@ -669,23 +669,3 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if (action_id):
             return RedirectWarning(msg % values, action_id, _('Go to the configuration panel'))
         return UserError(msg % values)
-
-#El siguiente modelo es agregado por TRESCLOUD
-#TODO: quitar cambio.
-class CountryCompanyConfigSettings(models.TransientModel):
-    _name = 'country.company.config.settings'
-
-    @api.model
-    def load_country_company(self, country_code=None):
-        if not country_code:
-            country_code = 'ec'
-        if not country_code:
-            raise ValidationError(
-                _('Error COUNTRY environment variable with country code'
-                  ' not defined'))
-        country = self.env['res.country'].search([
-            ('code', 'ilike', country_code)], limit=1)
-        if not country:
-            raise ValidationError(
-                _('Country code %s not found. Use ISO 3166 codes 2 letters'))
-        self.env.ref('base.main_company').write({'country_id': country.id})
