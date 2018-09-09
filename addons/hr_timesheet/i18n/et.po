@@ -3,9 +3,9 @@
 # * hr_timesheet
 # 
 # Translators:
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Marek Pontus, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
@@ -27,17 +27,17 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 msgid "<span class=\"o_label\">Timesheets</span>"
-msgstr "<span class=\"o_label\">Ajaarvestus</span>"
+msgstr "<span class=\"o_label\">Tööaja arvestuslhed</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr "<span class=\"o_stat_text\">Ajaarvestus</span>"
+msgstr "<span class=\"o_stat_text\">Tööaja arvestuslehed</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Timesheet Entries</span>"
-msgstr "<span>Ajaarvestuse sissekanded</span>"
+msgstr "<span>Tööaja arvestuslehtede sissekanded</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -58,13 +58,13 @@ msgstr "Tegevused"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Kõik ajaarvestused"
+msgstr "Kõik tööaja arvestulehed"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr "Luba ajaarvestus"
+msgstr "Luba tööaja arvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
@@ -89,7 +89,7 @@ msgstr "Keskm. Plaani.- Efekt"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_synchro
 msgid "Awesome Timesheet"
-msgstr "Vinge ajaarvestus"
+msgstr "Vinge tööaja arvestusleht"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -126,7 +126,7 @@ msgstr "Ülesannete ja alamülesannete vahel ei ole lubatud ristviited"
 #: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "Click to record activities."
-msgstr "Vajuta tegevuste salvestamiseks"
+msgstr "Kliki tegevuste salvestamiseks"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -219,13 +219,13 @@ msgstr "Kulutatud tunnid"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Algselt planeeritud aeg"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_holidays
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Leaves"
-msgstr "Puhkused"
+msgstr "Puudumised"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -237,7 +237,7 @@ msgstr "Juhataja"
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "My Timesheets"
-msgstr "Minu ajaarvestus"
+msgstr "Minu tööaja arvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_planned
@@ -248,7 +248,7 @@ msgstr "Planeeritud tunnid"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_progress
 msgid "Progress"
-msgstr "Edenemine"
+msgstr "Progress"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
@@ -276,13 +276,13 @@ msgstr "Järelejäänud tunnid"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
-msgstr "Analüüs"
+msgstr "Aruandlus"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Responsible"
-msgstr "Vastutav"
+msgstr "Vastutaja"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -291,9 +291,9 @@ msgid ""
 "Timesheets app and invoice them based on a fixed price (ordered quantity) or"
 " on the time spent (delivered quantity)"
 msgstr ""
-"Müü tooteid (nt projekt, hooldus), salvesta ajakulu Ajaarvestuse rakendusega"
-" ja esita fikseeritud hinnaga arveid (tellitud kogus) või kulutatud aja eest"
-" (tarnitud kogus)"
+"Müü tooteid (nt projekt, hooldus), salvesta ajakulu Tööaja arvestuslehtede "
+"rakendusega ja esita fikseeritud hinnaga arveid (tellitud kogus) või "
+"kulutatud aja eest (tarnitud kogus)"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -358,7 +358,7 @@ msgstr "See nädal"
 #: code:addons/hr_timesheet/models/project.py:71
 #, python-format
 msgid "This task must have a project since they are linked to timesheets."
-msgstr ""
+msgstr "This task must have a project since they are linked to timesheets."
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -381,34 +381,34 @@ msgstr "Ajaline arveldus"
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Ajagraafik"
+msgstr "Tööaja arvestusleht"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr "Ajaarvestuse tegevused"
+msgstr "Tööaja arvestuslehe tegevused"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheet Apps"
-msgstr "Ajaarvestuse rakendused"
+msgstr "Tööaja arvestuslehe rakendused"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
 #: model:ir.actions.report,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
-msgstr "Ajaarvestuse kirjed"
+msgstr "Tööaja arvestuslehtede sissekanded"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr "Ajaarvestuse kuu"
+msgstr "Tööaja arvestuslehe kuu"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr "Ajaarvestus kuu lõikes"
+msgstr "Tööaja arvestusleht kuu lõikes"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -422,7 +422,7 @@ msgstr "Ajaarvestus kuu lõikes"
 #: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheets"
-msgstr "Tööajaarvestus"
+msgstr "Tööaja arvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours
@@ -448,7 +448,7 @@ msgstr "Kasutaja"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Validated leaves create timesheets automatically."
-msgstr "Kinnitatud puhkused loovad automaatselt ajaarvestuse."
+msgstr "Kinnitatud puhkused loovad automaatselt tööaja arvestuslehed."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line

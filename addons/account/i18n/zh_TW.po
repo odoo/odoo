@@ -1503,7 +1503,7 @@ msgstr "科目標籤"
 msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
-msgstr "將會設定在退款單上的發票稅明細行上的科目。留空以使用支出帳戶。"
+msgstr "將會設定在折讓單上的發票稅明細行上的科目。留空以使用支出帳戶。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -2667,7 +2667,7 @@ msgstr "取消"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "權限：創建退款單和調節"
+msgstr "作廢：創建銷貨折讓單並完成調節"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2945,7 +2945,7 @@ msgstr "勾選此框，如果這個科目允許發票和付款與日記帳匹配
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "勾選此框，則您不想分享此日記帳的會計發票或退款所使用的同一個序列"
+msgstr "勾選此框，則您不想分享此日記帳的會計發票或折讓所使用的同一個序列"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -3694,12 +3694,12 @@ msgstr "退款分錄序列"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Notes"
-msgstr "退款單"
+msgstr "折讓單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr "退款：下一號碼"
+msgstr "折讓單：下一號碼"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -3809,7 +3809,7 @@ msgstr "客戶退款"
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_out_refund
 msgid "Customer Credit Notes"
-msgstr "客戶退款單"
+msgstr "銷貨折讓單"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7827,7 +7827,7 @@ msgstr "請創建發票明細行。"
 #: code:addons/account/models/account_move.py:157
 #, python-format
 msgid "Please define a sequence for the credit notes"
-msgstr "請為退款單定義序列"
+msgstr "請為折讓單定義序列"
 
 #. module: account
 #: code:addons/account/models/account_move.py:162
@@ -9172,7 +9172,7 @@ msgstr "稅科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_refund_account_id
 msgid "Tax Account on Credit Notes"
-msgstr "退款單的稅科目"
+msgstr "折讓單的稅科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_refund_account_id
@@ -10901,7 +10901,7 @@ msgstr "供應商退款單-%s"
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr "供應商退款單"
+msgstr "進貨折讓單"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1217
