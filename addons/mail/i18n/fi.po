@@ -19,13 +19,15 @@
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
 # Jussi Lehto <jussi@gulfeo.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
+# santeri valjakka <santeri.valjakka@avoin.systems>, 2018
+# Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 08:39+0000\n"
 "PO-Revision-Date: 2018-09-05 08:39+0000\n"
-"Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
+"Last-Translator: Teemu Ahonen <teemu.ahonen@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +55,7 @@ msgstr "%d viestiä"
 #: code:addons/mail/static/src/js/activity.js:89
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%d päivää myöhässä"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:249
@@ -105,7 +107,7 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/xml/discuss.xml:285
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
@@ -119,7 +121,7 @@ msgstr "(lähettäjä"
 #: code:addons/mail/static/src/xml/activity.xml:56
 #, python-format
 msgid ", due on"
-msgstr ""
+msgstr ", erääntyy"
 
 #. module: mail
 #. openerp-web
@@ -133,21 +135,21 @@ msgstr "-------- Näytä vanhemmat viestit --------"
 #: code:addons/mail/static/src/xml/systray.xml:88
 #, python-format
 msgid "0 Future"
-msgstr ""
+msgstr "0 Tulevaisuudessa"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:84
 #, python-format
 msgid "0 Late"
-msgstr ""
+msgstr "0 Myöhässä"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/systray.xml:86
 #, python-format
 msgid "0 Today"
-msgstr ""
+msgstr "0 Tänään"
 
 #. module: mail
 #: model:mail.template,body_html:mail.mail_template_channel_send_guidelines
@@ -190,6 +192,8 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">loi <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:724
@@ -209,6 +213,8 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">poistui <a href=\"#\" "
+"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -328,7 +334,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
-msgstr ""
+msgstr "<strong> Palaute</strong>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_notification_email
@@ -347,7 +353,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>Ehdotetut toimenpiteet</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
@@ -487,14 +493,14 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model,name:mail.model_mail_activity_type
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Activity Type"
-msgstr ""
+msgstr "Toimenpiteiden tyyppi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
 #: model:ir.ui.menu,name:mail.menu_mail_activity_type
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Activity Types"
-msgstr ""
+msgstr "Toimenpiteiden tyypit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_type
@@ -506,7 +512,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:37
 #, python-format
 msgid "Activity type"
-msgstr ""
+msgstr "Toimenpiteiden tyyppi"
 
 #. module: mail
 #. openerp-web
@@ -576,7 +582,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:71
 #, python-format
 msgid "Add a private channel"
-msgstr ""
+msgstr "Lisää yksityinen kanava"
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -1988,7 +1994,7 @@ msgstr "Poikkeus"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Execute Python Code"
-msgstr ""
+msgstr "Suorita Python-koodi"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -2527,7 +2533,7 @@ msgstr "Viestiketjun alkuperäinen viesti."
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integraatiot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__internal
@@ -2907,14 +2913,14 @@ msgstr "Kirjaa sisäinen muistiinpano"
 #: code:addons/mail/static/src/xml/chatter.xml:66
 #, python-format
 msgid "Log note"
-msgstr ""
+msgstr "Kirjaa muistiinpano"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:69
 #, python-format
 msgid "Log or schedule an activity"
-msgstr ""
+msgstr "Kirjaa tai aikatauluta toimenpide"
 
 #. module: mail
 #. openerp-web
@@ -3424,14 +3430,14 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:182
 #, python-format
 msgid "New Channel"
-msgstr ""
+msgstr "Uusi kanava"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:181
 #, python-format
 msgid "New Message"
-msgstr ""
+msgstr "Uusi viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_char
@@ -3545,7 +3551,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:20
 #, python-format
 msgid "No activities planned."
-msgstr ""
+msgstr "Toimenpiteitä ei suunniteltuna."
 
 #. module: mail
 #. openerp-web
@@ -3571,7 +3577,7 @@ msgstr "Seuraajien lisäys"
 #: code:addons/mail/static/src/xml/thread.xml:18
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "Haku ei tuottanut tuloksia"
 
 #. module: mail
 #. openerp-web
@@ -4046,7 +4052,7 @@ msgstr "Placeholder-lauseke"
 #: selection:mail.activity.mixin,activity_state:0
 #: selection:res.partner,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Suunniteltu"
 
 #. module: mail
 #. openerp-web
@@ -4182,7 +4188,7 @@ msgstr "Yksityiset kanavat"
 #: code:addons/mail/static/src/js/discuss.js:1346
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Julkiset Kanavat"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4212,7 +4218,7 @@ msgstr "Valmis siirrettäväksi"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Ready to Send"
-msgstr ""
+msgstr "Valmiina lähetettäväksi"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -4488,7 +4494,7 @@ msgstr "Aikatauluta"
 #: code:addons/mail/static/src/xml/chatter.xml:70
 #, python-format
 msgid "Schedule activity"
-msgstr ""
+msgstr "Aikatauluta toimenpide"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:378
@@ -4501,7 +4507,7 @@ msgstr "Aikatauluta toimenpide"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:69
 #, python-format
 msgid "Schedule an activity"
-msgstr ""
+msgstr "Aikatauluta toimenpide"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__scheduled_date
@@ -4513,7 +4519,7 @@ msgstr "Suunniteltu päivämäärä"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Aikataulutettu lähetyspäivä"
 
 #. module: mail
 #: selection:ir.ui.view,type:0
@@ -4636,7 +4642,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:63
 #, python-format
 msgid "Send message"
-msgstr ""
+msgstr "Lähetä viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__email_send
@@ -4656,7 +4662,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/thread_field.js:91
 #, python-format
 msgid "Sending Error"
-msgstr ""
+msgstr "Lähetysvirhe"
 
 #. module: mail
 #. openerp-web
@@ -5797,7 +5803,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "on"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:271
@@ -5834,7 +5840,7 @@ msgstr "ir.ui.view"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1036
@@ -5858,7 +5864,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "modified"
-msgstr ""
+msgstr "muokattu"
 
 #. module: mail
 #: selection:mail.activity.type,delay_unit:0
