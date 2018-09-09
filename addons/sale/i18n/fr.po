@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 # Saad Thaifa <saad.thaifa@gmail.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
 # ShevAbam, 2018
@@ -14,17 +15,18 @@
 # f5f0a0dac17dde787a1d812a6989680e, 2018
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # fr trans <e2ffr05@hotmail.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2018
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 08:39+0000\n"
 "PO-Revision-Date: 2018-09-05 08:39+0000\n"
-"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
+"Last-Translator: Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +95,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:64
 #, python-format
 msgid "<b>Print this quotation to preview it.</b>"
-msgstr ""
+msgstr "<b>Imprimez ce devis pour un aperçu.</b>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -204,7 +206,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vendu</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -219,6 +221,8 @@ msgid ""
 "<span>\n"
 "                                    , for an amount of </span>"
 msgstr ""
+"<span>\n"
+"                                    , pour un montant de </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -233,7 +237,7 @@ msgstr "<span>Rem.(%)</span>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Discount</span>"
-msgstr ""
+msgstr "<span>Réduction</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -326,7 +330,7 @@ msgstr "<strong>Adresse de livraison:</strong>"
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Signature</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -340,6 +344,8 @@ msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                    Contact us for new quotation."
 msgstr ""
+"<strong>Cette offre a expiré!</strong><br/>\n"
+"                                    Contactez-nous pour un nouveau devis."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -792,7 +798,7 @@ msgstr "Confirmer"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Confirmation &amp; Payment"
-msgstr ""
+msgstr "Confirmation &amp; Paiement"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__confirmation_date
@@ -934,7 +940,7 @@ msgstr "Personnaliser"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
-msgstr ""
+msgstr "Personnalisez le look de vos devis."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -965,7 +971,7 @@ msgstr "La date a laquelle le bon de command est confirmé. "
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
-msgstr ""
+msgstr "Limite par Défaut:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
@@ -1349,7 +1355,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1774,7 +1780,7 @@ msgstr "Méthode"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Appliquer des routes spécifiques"
 
 #. module: sale
 #: sql_constraint:sale.order.line:0
@@ -2193,7 +2199,7 @@ msgstr "Intermédiaires de paiement"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Instructions de paiement"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -2589,7 +2595,7 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Rapport"
+msgstr "Analyse"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3155,7 +3161,7 @@ msgstr "Taxes utilisées pour les dépôts"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Champ technique utilisé à des fins ergonomiques"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3852,4 +3858,4 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
-msgstr ""
+msgstr "type: [(name, amount, base, formated amount, formated base)]"

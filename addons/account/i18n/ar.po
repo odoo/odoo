@@ -107,13 +107,13 @@ msgstr "%s (نسخة)"
 #: code:addons/account/models/account.py:679
 #, python-format
 msgid "%s Sequence"
-msgstr ""
+msgstr "مسلسل %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "%sreversal of: "
-msgstr ""
+msgstr "%s يعكس:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -138,12 +138,12 @@ msgstr "-> عرض القيود المسواة جزئياً"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
 msgid "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
-msgstr ""
+msgstr "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "/account/static/src/img/account_invoice_onboarding_bg.jpg"
-msgstr ""
+msgstr "/account/static/src/img/account_invoice_onboarding_bg.jpg"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -153,7 +153,7 @@ msgstr "15 يوم"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr ""
+msgstr "شهران"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
@@ -163,7 +163,7 @@ msgstr "صافي 30 يوم"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
-msgstr ""
+msgstr "45 يوم"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -201,6 +201,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        السيد ${object.partner_id.name}<br/><br/>\n"
+"        نشكر لسيادتكم إتمامكم عملية السداد.\n"
+"        فيما تفاصيل إيصال السداد <strong>${(object.name or '').replace('/','-')}</strong> بقيمة\n"
+"        وقدرها <strong>${format_amount(object.amount, object.currency_id)}</strong> من ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا متى كان لديك أي استفسارات.\n"
+"        <br/><br/>\n"
+"        مع أطيب أمنياتنا،<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -234,27 +250,55 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        السيد ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        تجد أدناه \n"
+"        % if object.number:\n"
+"            فاتورة رقم<strong>${object.number}</strong>\n"
+"        % else:\n"
+"            فاتورة\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        بقيمة وقدرها <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        من ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            تم سداد قيمة الفاتورة بالفعل.\n"
+"        % else:\n"
+"            نرجو من سيادتكم سداد الفاتورة في أقرب وقت مناسب لكم.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        نرجو ألا تترددوا في التواصل معنا متى كان لديكم أي استفسارات.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-comment\"/> Contact us"
-msgstr ""
+msgstr "تواصل معنا"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "تحميل"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
-msgstr ""
+msgstr "ضبط سيرفرات البريد الإلكتروني"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-print\"/> Print"
-msgstr ""
+msgstr "طباعة"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:697
@@ -262,7 +306,7 @@ msgstr ""
 msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
-msgstr ""
+msgstr "يمكنك إصدار الفواتير بناء على أوامر الشراء أو المنتجات المُستلمة."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -273,6 +317,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>إرسال مراسلات جماعية</strong> إلى\n"
+"                                        <span>البنود المحددة\n"
+"                                    </span>\n"
+"                                    <span>متابعو المستند و</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -281,6 +330,9 @@ msgid ""
 "label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d-md-"
 "inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-clock-o\" aria-"
+"label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d-md-"
+"inline\"> في انتظار السداد</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -289,6 +341,9 @@ msgid ""
 "label=\"Paid\" title=\"Paid\" role=\"img\"/><span class=\"d-none d-md-"
 "inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-check\" aria-"
+"label=\"Paid\" title=\"Paid\" role=\"img\"/><span class=\"d-none d-md-"
+"inline\"> مُسددة</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -297,6 +352,9 @@ msgid ""
 "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span class=\"d-none d"
 "-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-remove\" aria-"
+"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span class=\"d-none d"
+"-md-inline\"> ملغية</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -315,6 +373,9 @@ msgid ""
 "['|',('state','=','draft'), ('type','!=','out_refund')]}\">Credit "
 "Note</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"['|',('state','=','draft'), ('type','!=','out_refund')]}\">الإشعارات "
+"الدائنة</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view

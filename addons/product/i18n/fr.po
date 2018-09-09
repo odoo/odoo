@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 08:39+0000\n"
 "PO-Revision-Date: 2018-09-05 08:39+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span class=\"o_form_label\">New Price =</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Nouveau Prix =</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -171,6 +172,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un service est un produit immatériel que vous fournissez.\n"
+"Un contenu digital est un produit immatériel que vous vendez en ligne. Les fichiers attachés aux produits sont ceux qui sont vendus sur l'e-commerce comme des livres électroniques, de la musique, des images, ... L'application \"Produit Digital\" doit être installée. "
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
@@ -780,7 +785,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -1157,7 +1162,7 @@ msgstr "Catégorie mère"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Chemin parent"
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1178,7 +1183,7 @@ msgstr "Planifié"
 #. module: product
 #: selection:res.config.settings,product_weight_in_lbs:0
 msgid "Pound"
-msgstr ""
+msgstr "Livre"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -1412,7 +1417,7 @@ msgstr "Emballage des produits"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr ""
+msgstr "Conditionnements de produits"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1805,7 +1810,7 @@ msgstr ""
 #: code:addons/product/models/product_pricelist.py:434
 #, python-format
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "La marge minimum doit être plus petite que la marge maximum. "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -1893,7 +1898,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "Cette note est pour usage interne seulement."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -1950,7 +1955,7 @@ msgstr "Unité de mesure"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Nom de l'Unité de Mesure"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -2152,7 +2157,7 @@ msgstr ""
 #: code:addons/product/models/product.py:54
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr ""
+msgstr "Vous ne pouvez pas créer de catégories récursives."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -2169,7 +2174,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:102
 #, python-format
 msgid "You cannot use this attribute with the following value."
-msgstr ""
+msgstr "Vous ne pouvez pas utiliser cet attribut avec la valeur suivante."
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
