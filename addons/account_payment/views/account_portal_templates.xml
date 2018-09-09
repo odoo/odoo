@@ -45,7 +45,7 @@
                             <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
                         </div>
                         <div class="modal-footer">
-                            <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
+                            <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left w-100">
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
                                     <t t-set="partner_id" t-value="invoice.partner_id.id"/>
