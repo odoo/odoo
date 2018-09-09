@@ -25,13 +25,14 @@
 # fr trans <e2ftrans1@yahoo.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
 # Olivier Dony <odo@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Olivier Dony <odo@odoo.com>, 2018\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +66,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Cher(e) ${object.name},<br/>\n"
+"    Merci pour votre demande.<br/>\n"
+"    Voici votre badge pour l'évènement ${object.event_id.name}.<br/>\n"
+"    N'hésitez pas à nous contacter si vous avez la moindre question.\n"
+"    <br/><br/>\n"
+"    Merci,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -490,7 +502,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "Ajouter un nouveau participant"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1076,7 +1088,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
@@ -1251,7 +1263,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
@@ -1312,7 +1324,7 @@ msgstr "Nombre de participants"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner__event_count
@@ -1330,7 +1342,7 @@ msgstr "Nombre de messages exigeant une action"
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_unread_counter
@@ -1568,7 +1580,7 @@ msgstr "S'inscrire"
 #: code:addons/event/models/event.py:269
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "La date de fin ne peut pas être antérieure à la date de début."
 
 #. module: event
 #: code:addons/event/models/event.py:313

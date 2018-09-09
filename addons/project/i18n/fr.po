@@ -36,13 +36,14 @@
 # e2f <projects@e2f.com>, 2018
 # Micky Jault <micky037@hotmail.fr>, 2018
 # Hubert TETARD <htetard@apik-conseils.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:11+0000\n"
 "PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Hubert TETARD <htetard@apik-conseils.com>, 2018\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,7 +179,7 @@ msgstr "Nb de tâches"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Enquête de satisfaction"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -684,6 +685,8 @@ msgstr ""
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
+"Choisissez un <b>nom de tâche</b>. (e.g. Design site web, Achats de bien, "
+"etc.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -710,7 +713,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr ""
+msgstr "Cliquez sur <i>Créer</i> pour commencer une nouvelle tâche."
 
 #. module: project
 #. openerp-web
@@ -823,7 +826,7 @@ msgstr "Créer un projet."
 #: model:ir.actions.act_window,help:project.open_view_project_all
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Créer un nouveau projet"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1018,7 +1021,7 @@ msgstr "Développement"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Marketing Digital"
 
 #. module: project
 #. openerp-web
@@ -1173,7 +1176,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Document Final"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1385,7 +1388,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:project.field_project_project__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1589,7 +1592,7 @@ msgstr "Créons votre premier projet !"
 #: code:addons/project/static/src/js/tour.js:42
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Créons votre première tâche."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1605,7 +1608,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #. module: project
 #. openerp-web
@@ -1647,7 +1650,7 @@ msgstr "Membres"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
@@ -1709,7 +1712,7 @@ msgstr "Nouveau"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "Nouvelles Commandes"
 
 #. module: project
 #. openerp-web
@@ -1756,7 +1759,7 @@ msgstr "Pas de sujet"
 #: model:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Pas encore d'évaluations de clients "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.rating_index
@@ -1771,7 +1774,7 @@ msgstr "Pas d'évaluation"
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "No scheduled activity at the moment"
-msgstr ""
+msgstr "Pas d'activités programmée pour le moment"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:101
@@ -1815,7 +1818,7 @@ msgstr "Nombre de documents joints"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -1827,7 +1830,7 @@ msgstr "Nombre de messages exigeant une action"
 #: model:ir.model.fields,help:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_unread_counter
@@ -2408,7 +2411,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Spécifications"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2507,7 +2510,7 @@ msgstr "Sous-tâches"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Sous-tâches"
 
 #. module: project
 #. openerp-web
@@ -2734,12 +2737,12 @@ msgstr "Il n'y a pas de tâches"
 #: code:addons/project/static/src/xml/project.xml:11
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Il n'y a pas d'image disponible pour la couverture."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
+msgstr "Il n'y a pas d'évaluation pour cet objet pour le moment."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2845,6 +2848,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Utilisez les activités et les étapes sur une tâche. <br>\n"
+"                   Discutez en temps réel ou par email pour collaborer efficacement."
 
 #. module: project
 #. openerp-web
@@ -2912,7 +2917,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_users__has_group_subtask_project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Utiliser les sous-tâches"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -3094,6 +3099,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Vous ne pouvez pas supprimer un projet contenant des tâches. Vous pouvez "
+"soit l'archiver, soit supprimer toutes ses tâches."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
