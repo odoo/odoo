@@ -145,11 +145,16 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаеми/а ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Благодарим за Вашето запитване.<br /></p>\n"
+"<p>Ако имате някакви въпроси, моля, обърнете се към нас.</p>\n"
+"<p>С най-добри пожелания,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Дни до крайния срок"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -185,6 +190,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
+"(Раз)архивирането на даден проект (раз)архивира автоматично неговите задачи "
+"и проблеми. Желаете ли да продължите?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -201,6 +208,8 @@ msgstr ""
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
+"2. Сега, отделете малко време да съставите <strong>проукта, от който ще "
+"имате нужда:</strong>"
 
 #. module: project
 #. openerp-web
@@ -219,6 +228,8 @@ msgstr ""
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
+"<b>Нотиснете бутона за запазване,</b> за да приложите промените си към "
+"задачата."
 
 #. module: project
 #. openerp-web
@@ -226,6 +237,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
+"<b>Влачете&amp; пускайте задачи</b> между колони, докато работите върху тях."
 
 #. module: project
 #. openerp-web
@@ -243,11 +255,13 @@ msgstr ""
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
 msgstr ""
+"<b>Поставяйте звездички на задачите,</b> за да маркирате приоритетите на "
+"екипа."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Отговорно лице"
 
 #. module: project
 #: code:addons/project/models/project.py:116
@@ -583,7 +597,7 @@ msgstr "<strong>Дата:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Краен срок:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -673,6 +687,12 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
+"<strong>В режим 'Изтеглете'</strong>, задачите, готови да преминат към "
+"следващия етап, са точно означени като 'Готови за следващ етап' (използващи "
+"иконата за състояние) от отговорното лице за настоящия етап. Тотава "
+"отговорното лице за следващия етап поема задачата и я придвижвя към "
+"следващия етап. Това е най-добрият начин за работа, в случай че имате "
+"разнородни отговорности за Вашите канбан етапи."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -682,6 +702,10 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
+"<strong>В режим 'Придвижете'</strong>, задачите се придвижват към следващия "
+"етап (след като отговорят на всички изисквания) от отговорното лице за "
+"настоящия етап. Това е опростен начин за работа, но функционира адекватно, "
+"ако работите сами."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -732,12 +756,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
 msgid "<strong>Project Manager</strong>"
-msgstr ""
+msgstr "<strong>Мениджър проекти</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>Проект:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -983,6 +1007,8 @@ msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
+"Като алтернатива, графиците могат да се добавят директно от 'Задачи' чрез "
+"активиране на <strong>'Регистрирайте работни дейности по задачи'</strong> в"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1182,7 +1208,7 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Чрез отговорно лице"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
@@ -1225,6 +1251,9 @@ msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
 msgstr ""
+"Избирането на проект с подзадачи ще даде възможност както да се задават "
+"подзадачи, така и да се настрои техен проект по подразбиране (вероятно "
+"самият проект)"
 
 #. module: project
 #. openerp-web
@@ -1475,12 +1504,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr ""
+msgstr "Настоящ етап на задачата"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Настоящ етап на тази задача"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
@@ -1721,7 +1750,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_my_task
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "Редактирайте задача"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_from
@@ -1772,6 +1801,8 @@ msgid ""
 "Even if there is no specific field in Odoo, it's important to define a person responsible for each stage of your Project.<br/>\n"
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
+"Дори и в Odoo да не е посочено конкретно поле, е важно да определите лице, което да отговаря за всеки етап от проекта Ви.<br/>\n"
+"                        Този човек ще носи отговорност за валидилането на всеки етап и ще гарантира, че изискванията за преминаване към следващия етап са изпълнени."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2055,6 +2086,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
 msgstr ""
+"В идеалния случай един човек трябва да носи отговорност само за един проект."
 
 #. module: project
 #. openerp-web
@@ -2548,7 +2580,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:83
 #, python-format
 msgid "Newest"
-msgstr ""
+msgstr "Най-новите"
 
 #. module: project
 #: model:ir.ui.menu,name:project.project_task_menu_activity
@@ -3404,7 +3436,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.task_type_edit
 #: model:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "Етап на задача"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage

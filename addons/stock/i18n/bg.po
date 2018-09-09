@@ -105,6 +105,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* Ново: Когато движението в склада е създадено, но все още не е потвърдено.\n"
+"* Изчакване на друго движение: Това състоявие може да бъде видяно, когато дадено движение изчаква следващо такова, например във верижен поток.\n"
+"* Изчакване на наличност: Това състояние се достига, когато решението за възлагане на доставката не е достатъчно ясно. Възможно е да се наложи планьорът да заработи, да се произведе даден компонент и т.н.\n"
+"* Наличен: Когато се резервират продукти, се настройва на 'Наличен'.\n"
+"* Извършен: Когато превозът е обработен, състоянието е 'Извършен'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -2224,7 +2229,7 @@ msgstr "Изтегли "
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:78
 #, python-format
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "Проследяване надолу по веригата"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3621,7 +3626,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Портиден/сериен номер"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
@@ -3798,7 +3803,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Правило за минимален инвентар"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_min_qty
