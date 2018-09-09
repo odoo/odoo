@@ -22,7 +22,7 @@
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Fred Gilson <fgi@odoo.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # nthnnl <nathan070@me.com>, 2017
@@ -63,12 +63,12 @@ msgstr "3D Secure HTML"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Montant:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Référence:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -94,7 +94,7 @@ msgstr "<i class=\"fa fa-trash\"/>"
 #: code:addons/payment/models/payment_acquirer.py:124
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Annulé,</i> votre paiement a été annulé."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:120
@@ -103,6 +103,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Fait,</i> votre paiement en ligne a été enregistré. Merci de votre "
+"commande."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:128
@@ -237,7 +239,7 @@ msgstr ""
 #: code:addons/payment/models/account_payment.py:55
 #, python-format
 msgid "A payment transaction already exists."
-msgstr ""
+msgstr "Une transaction de paiement existe déjà."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:57
@@ -1122,7 +1124,7 @@ msgstr "Transactions de paiement"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "Paiement d'Odoo"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:150
@@ -1241,7 +1243,7 @@ msgstr "Référence"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "La référence doit être unique!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1391,7 +1393,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:645
 #, python-format
 msgid "The customer has selected %s to pay this document."
-msgstr ""
+msgstr "Le client a sélectionné %s pour payer ce document."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:662
@@ -1535,7 +1537,7 @@ msgstr "Annuler la transaction"
 #: code:addons/payment/models/payment_acquirer.py:651
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "En attente de la confirmation de paiement..."
 
 #. module: payment
 #. openerp-web
@@ -1557,6 +1559,8 @@ msgstr ""
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
 msgstr ""
+"Nous ne sommes pas en mesure d'ajouter votre méthode de paiement pour le "
+"moment.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1565,6 +1569,8 @@ msgstr ""
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
 msgstr ""
+"Nous ne sommes pas en mesure de supprimer votre méthode de paiement pour le "
+"moment."
 
 #. module: payment
 #. openerp-web
@@ -1585,7 +1591,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:191
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Impossible de traiter votre paiement."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1708,6 +1714,7 @@ msgstr ""
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
+"e.g. Les détails de votre carte de crédit sont faux. Veuillez vérifier."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
