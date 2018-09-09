@@ -55,6 +55,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Hei ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Sinulle on myönnetty pääsy ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Kirjautumistunnuksesi ovat:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Käyttäjätunnus: ${object.user_id.login or ''}</li>\n"
+"    <li>Portaali: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Tietokanta: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Voit asettaa tai vaihtaa salasanasi osoitteessa:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -64,7 +87,7 @@ msgstr "<b>Kirjaudu sisään</b>"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr ""
+msgstr "<span id=\"search_label\">Etsi</span> <span class=\"caret\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -103,7 +126,7 @@ msgstr "Pyyhi"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Paina tästä nähdäksesi dokumenttisi."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -116,6 +139,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Vahvista\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -156,7 +181,7 @@ msgstr "Luotu"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Asiakasportaalin osoite"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -170,7 +195,7 @@ msgstr "Näyttönimi"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Piirrä allekirjoituksesi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -187,7 +212,7 @@ msgstr "Sähköpostiviestiketju"
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
-msgstr ""
+msgstr "Ryhmä %s ei ole portaali"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -268,7 +293,7 @@ msgstr "Seuraava"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "Oho! Jotain meni vikaa. Kokeile ladata sivu uudelleen ja kirjautua."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -294,7 +319,7 @@ msgstr "Portaalin käytönhallinta"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portaalin osoite"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -311,7 +336,7 @@ msgstr "Edellinen"
 #: code:addons/portal/static/src/js/portal_chatter.js:101
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Julkaistu %s"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -335,19 +360,21 @@ msgstr "Lähetä"
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Usealla kontaktilla on sama sähköpostiosoite:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Joillain kontakteilla ei ole toimivaa sähköpostiosoitetta:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Joillain kontakteilla on sama sähköpostiosoite kuin olemassa olevalla "
+"portaalikäyttäjällä:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:197
@@ -382,7 +409,7 @@ msgstr "Portaali johon käyttäjät voidaan yhdistää tai erottaa."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Ei kommentteja tällä hetkellä."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -572,7 +599,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Yhteystietosi"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -583,7 +610,7 @@ msgstr "Yhteystietosi"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Omat dokumentit"
 
 #. module: portal
 #. openerp-web
@@ -608,7 +635,7 @@ msgstr "Postinumero"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -622,7 +649,7 @@ msgstr "kommentti"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comments"
-msgstr "kommentit"
+msgstr "kommenttia"
 
 #. module: portal
 #. openerp-web
@@ -634,7 +661,7 @@ msgstr "kirjautunut sisään"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details

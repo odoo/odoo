@@ -55,6 +55,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Състоянието 'Чернова' се използва, когато потребителят кодира нова и непотвърдена поръчка за ремонт.\n"
+"* Състоянието 'Потвърдено' се използва, когато потребителят потвърждава поръчката за ремонт.\n"
+"* Състоянието 'Готово за ремонт' се използва при започването на ремонта, потребителят може да започне ремонта, само след като поръчката за ремонт е потвърдена.\n"
+"* Състоянието 'За фактуриране' се използва, за да се създаде фактурата, преди или след като е извършен ремонта.\n"
+"* Състоянието 'Извършено' се настройва, когато ремонтът е приключил.\n"
+"* Състоянието 'Отменено' се използва, когато потребителят отмени поръчката за ремонт."
 
 #. module: mrp_repair
 #: model:mail.template,body_html:mrp_repair.mail_template_mrp_repair_quotation
@@ -133,12 +139,12 @@ msgstr "Добави"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Добавяйте вътрешни бележки"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Добавете бележки по оферти..."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0

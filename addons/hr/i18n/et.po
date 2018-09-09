@@ -8,6 +8,7 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Marek Pontus, 2017
 msgid ""
@@ -231,7 +232,7 @@ msgstr "Juhendaja"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
 msgid "Color Index"
-msgstr "Värvi indeks"
+msgstr "Värvikood"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
@@ -358,7 +359,7 @@ msgstr "Lahutatud"
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
-msgstr "E-posti aliased"
+msgstr "E-maili aliased"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -381,7 +382,7 @@ msgstr "Töötaja silt"
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
-msgstr "Töötaja sildid"
+msgstr "Töötajate sildid"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_bank_account_id
@@ -589,9 +590,7 @@ msgstr "Identifitseerimisnumber"
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Kui märgite välja mitteaktiivseks, siis peidetakse väli ilma seda "
-"kustutamata."
+msgstr "Mitteaktiivset ressursi kirjet on võimalik peita ilma kustutamata."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -682,7 +681,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
@@ -690,7 +689,7 @@ msgstr "Viimati uuendatud"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -715,7 +714,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Legal Cohabitant"
-msgstr ""
+msgstr "Elukaaslasega"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -743,7 +742,7 @@ msgstr "Turundus- ja kommunikatsioonijuht"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr ""
+msgstr "Abielus"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -818,7 +817,7 @@ msgstr "Ei värba"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr "Märkus"
+msgstr "Märkused"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
@@ -968,7 +967,7 @@ msgstr "Seotud kasutajanimi ressursi juurdepääsu haldamiseks."
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reporting"
-msgstr "Analüüs"
+msgstr "Aruandlus"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
@@ -1087,7 +1086,7 @@ msgstr "Isikukood"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
-msgstr "Olek"
+msgstr "Staatus"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1263,7 +1262,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "Lahkunu"
+msgstr "Lesk"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1299,12 +1298,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr "Töökoha aadress"
+msgstr "Ettevõte"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
-msgstr "Töö e-post"
+msgstr "Töö e-mail"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1314,7 +1313,7 @@ msgstr "Töö informatsioon"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
-msgstr "Töökoha asukoht"
+msgstr "Töö asukoht"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone
@@ -1339,7 +1338,7 @@ msgstr "Tööloa nr"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
-msgstr "Lauatelefon (töö)"
+msgstr "Telefon (töö)"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1533,7 +1532,7 @@ msgid ""
 "employee information, or contact your HR manager."
 msgstr ""
 "Teie dokumenti pole loodud, kuna teie e-posti aadressi ei leitud. Palun "
-"saatke e-kirju teie töötaja informatsiooni alla salvestatud e-posti "
+"saatke e-maile teie töötaja informatsiooni alla salvestatud e-maili "
 "aadressiga või võtke ühendust personalijuhiga."
 
 #. module: hr
@@ -1544,7 +1543,7 @@ msgstr "osakond"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr "nt osalise koormusega"
+msgstr "Nt osalise koormusega"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form

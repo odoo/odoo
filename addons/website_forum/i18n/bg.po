@@ -66,6 +66,43 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Уважаеми/а ${object.name},</p>\n"
+"                <p>Бяхте поканени да потвърдите имейла си, за да получите достъп до\n"
+"                \"${object.company_id.name}\" форуми въпроси/отговори.</p>\n"
+"                <p>За да потвърдите имейла си, моля натиснете върху следния линк:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Валидирайте моя профил за \"${object.company_id.name}\" форуми въпроси/отговори\n"
+"                </a>\n"
+"                <p>Благодарим Ви за участието!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_forum
 #. openerp-web
@@ -75,16 +112,18 @@ msgid ""
 " karma is required to perform this action. You can earn karma by having your"
 " answers upvoted by the community."
 msgstr ""
+" за да се извърши това действие се изисква 'карма'. Можете да натрупате "
+"карма, когато отговорите Ви беват одобрени от общността."
 
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "Удостоверяване на форуми ${object.company_id.name} "
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -94,7 +133,7 @@ msgstr "&amp;време;"
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
 msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
-msgstr ""
+msgstr "(Горният раздел беше адаптиран от Stackoverflow’s FAQ.)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -102,6 +141,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
+"(Раз)архивирането на даден форум (раз)архивира автоматично неговите "
+"публикации. Желаете ли да продължите?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -109,23 +150,25 @@ msgid ""
 "(Un)archiving a post automatically (un)archives its answers. Do you want to "
 "proceed?"
 msgstr ""
+"(Раз)архивирането на дадена публикация (раз)архивира автоматично нейните "
+"отговори. Желаете ли да продължите?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "(votes - 1) **"
-msgstr ""
+msgstr "(гласа - 1) **"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "/ (days + 2) **"
-msgstr ""
+msgstr "/ (дни + 2) **"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
 #, python-format
 msgid "45% of questions shared"
-msgstr ""
+msgstr "45% от споделените въпроси"
 
 #. module: website_forum
 #. openerp-web
@@ -135,30 +178,32 @@ msgid ""
 "65% more chance to get an\n"
 "        answer"
 msgstr ""
+"65% по-голям шанс да получете\n"
+"        отговор"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Closed]</b>"
-msgstr ""
+msgstr "<b> [Затворен]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Deleted]</b>"
-msgstr ""
+msgstr "<b> [Изтрито]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Offensive]</b>"
-msgstr ""
+msgstr "<b> [Оскърбително]</b>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.users
 msgid "<b> badges:</b>"
-msgstr ""
+msgstr "<b> значки:</b>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -166,6 +211,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
 msgstr ""
+"<b>Отговорите не трябва да добавят или разширяват въпроси</b>. Вместо това\n"
+"    или редактирайте въпроса, или добавете коментар."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -334,7 +381,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">или</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -357,7 +404,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>От </span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -653,7 +700,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Badges"
-msgstr ""
+msgstr "Значки"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
@@ -1347,7 +1394,7 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr ""
+msgstr "Публикация във форум"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
@@ -1376,17 +1423,17 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "Значка за игровизация"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "Предизвикателство за игровизация"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr ""
+msgstr "Значка за потребител на игровизация"
 
 #. module: website_forum
 #. openerp-web
@@ -1757,7 +1804,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Newest"
-msgstr ""
+msgstr "Най-новите"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
@@ -2061,7 +2108,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "Въпросът е приел отговор"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
@@ -2166,7 +2213,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Пренасочете към външен линк"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full

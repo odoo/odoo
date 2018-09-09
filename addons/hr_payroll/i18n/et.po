@@ -8,16 +8,17 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
-# Marek Pontus, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
+# Marek Pontus, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-27 15:42+0000\n"
 "PO-Revision-Date: 2018-06-27 15:42+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2017\n"
+"Last-Translator: Marek Pontus, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,24 +69,24 @@ msgstr "<strong>Pangakonto</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
-msgstr "<strong>Kuupäev alates:</strong>"
+msgstr "<strong>Alguskuupäev:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
-msgstr "<strong>Kuupäev alates</strong>"
+msgstr "<strong>Alguskuupäev</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr "<strong>Kuupäev kuni:</strong>"
+msgstr "<strong>Lõppkuupäev:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
-msgstr "<strong>Kuupäev kuni</strong>"
+msgstr "<strong>Lõppkuupäev</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -135,8 +136,8 @@ msgid ""
 "            estate or anyone that collect or inject money on payslips."
 msgstr ""
 "Maksuhaldur on kolmas osapool, kes on seotud töötajale palga maksmisega. See"
-" võib olla sotsiaalkindlustus, kinnisvara või keegi, kes kogub või paneb "
-"raha sisse palgamakseteks."
+" võib olla sotsiaalkindlustus, kinnisvarahaldur või keegi, kes kogub või "
+"paneb raha sisse palgamakseteks."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -158,7 +159,7 @@ msgstr "Aktiivne"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr "Lisa sisemine teade"
+msgstr "Lisa märkus"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
@@ -221,12 +222,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.BASIC
 msgid "Basic"
-msgstr ""
+msgstr "Basic"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
 msgid "Basic Salary"
-msgstr ""
+msgstr "Basic Salary"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
@@ -251,7 +252,7 @@ msgstr "Arvutused"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
-msgstr "Tühista"
+msgstr "Loobu"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -262,7 +263,7 @@ msgstr "Tühista palgaleht"
 #: code:addons/hr_payroll/models/hr_payslip.py:98
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr "Lõpetatud palgalehte ei saa tühistada."
+msgstr "Tehtud palgalehte ei saa tühistada."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -301,7 +302,7 @@ msgstr "Valige palgaarvestuse lokaliseerimine"
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
-msgstr "Vajuta, et lisada uus maksuhaldur."
+msgstr "Kliki, et lisada uus maksuhaldur."
 
 #. module: hr_payroll
 #: selection:hr.payslip.run,state:0
@@ -358,7 +359,7 @@ msgstr "Arvutus"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr "Arvutuste leht"
+msgstr "Arvuta"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
@@ -483,12 +484,12 @@ msgstr "Kuupäev alates"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
-msgstr "Kuupäev kuni"
+msgstr "Kuupäevani"
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
-msgstr ""
+msgstr "Deduction"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
@@ -530,13 +531,13 @@ msgstr "Kirjeldus"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Details By Salary Rule Category"
-msgstr "Andmed palgareeglite kategooria järgi"
+msgstr "Andmed palgalehe koodide järgi"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
-msgstr "Andmed palgareeglite kategooria järgi"
+msgstr "Andmed palgalehe koodide järgi"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_display_name
@@ -614,7 +615,7 @@ msgstr "Töötaja funktsioon"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr "Töötaja palgaleht"
+msgstr "Töötajate palgalehed"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
@@ -633,7 +634,7 @@ msgstr "Töötajad"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr "Viga! Te ei saa luua rekursiivset palgastruktuuri."
+msgstr "Viga! Te ei saa luua rekursiivset palgaliiki."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:91
@@ -786,7 +787,7 @@ msgstr "Sisendid"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
 msgid "Internal Note"
-msgstr "Sisemine märkus"
+msgstr "Sisemised märkused"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
@@ -849,7 +850,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_write_date
@@ -866,7 +867,7 @@ msgstr "Viimati uuendatud"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
@@ -889,7 +890,7 @@ msgstr "Tööandja poolt volitatud alampiir selle eelise jaoks"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
 msgid "Made Payment Order ? "
-msgstr "Tegi maksekorralduse?"
+msgstr "Tegi maksekorralduse ?"
 
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
@@ -945,7 +946,7 @@ msgstr "Neto"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "Netopalk"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:199
@@ -988,7 +989,7 @@ msgstr "Ülem"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
 msgid "Parent Salary Rule"
-msgstr "Ülem palgareegel"
+msgstr "Ülem palgalehe kood"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
@@ -1045,7 +1046,7 @@ msgstr "Palgalehe nimi"
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
-msgstr "Palgaleht"
+msgstr "Palgaarvestus"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1055,17 +1056,17 @@ msgstr "Palgaarvestuse kirjed"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Rules"
-msgstr "Palgaarvestuse reeglid"
+msgstr "Palgaarvestuse koodid"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
-msgstr "Palgaarvestuse struktuurid"
+msgstr "Palgaarvestus liigid"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
-msgstr "Palgaarvestuse reeglid, mis kehtivad teie riigis"
+msgstr "Palgaarvestuse koodid, mis kehtivad teie riigis"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
@@ -1077,14 +1078,14 @@ msgstr "Palgaleht"
 #: code:addons/hr_payroll/models/hr_payslip.py:84
 #, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "Palgalehe \"kuupäev alates\" peab olema enne \"kuupäev kuni\"."
+msgstr "Palgalehe \"alguskuupäev\" peab olema enne \"lõppkuupäeva\"."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
-msgstr "Palgalehe kogumikud"
+msgstr "Igakuised palgalehed"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
@@ -1152,7 +1153,7 @@ msgstr "Palgalehed"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
 msgid "Payslips Batches"
-msgstr "Palgalehtede kogumikud"
+msgstr "Igakuised palgalehed"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -1182,7 +1183,7 @@ msgstr "Periood"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
-msgstr "Postita palgalipikud raamatupidamisse"
+msgstr "Postita palgaarvestused raamatupidamisse"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1298,7 +1299,7 @@ msgstr "Palgakategooria"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
-msgstr "Palgaarvutus"
+msgstr "Palgaarvestus"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1307,26 +1308,26 @@ msgstr "Palgaarvutus"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
-msgstr "Palgareegli kategooriad"
+msgstr "Palgalehe koodide kategooriad"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
 msgid "Salary Rule Categories Hierarchy"
-msgstr "Palgareegli kategooriate hierarhia"
+msgstr "Palgalehe koodide kategooriate hierarhia"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
-msgstr "Palgareegli kategooria"
+msgstr "Palgalehe koodide kategooria"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
 msgid "Salary Rule Input"
-msgstr "Palgareegli sisend"
+msgstr "Palgalehe koodide sisend"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
@@ -1338,7 +1339,7 @@ msgstr "Palgareegli sisend"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Salary Rules"
-msgstr "Palgareeglid"
+msgstr "Palgalehe koodid"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:396
@@ -1354,18 +1355,18 @@ msgstr "%s palgaleht %s jaoks"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
 msgid "Salary Structure"
-msgstr "Palgastruktuur"
+msgstr "Palgaliik"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr "Palgastruktuurid"
+msgstr "Palgaliigid"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
 msgid "Scheduled Pay"
-msgstr "Planeeritud makse"
+msgstr "Maksete regulaarsus"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1385,7 +1386,7 @@ msgstr "Otsi palgalehti"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Search Salary Rule"
-msgstr "Otsi palgareegleid"
+msgstr "Otsi palgalehe koode"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1421,7 +1422,7 @@ msgstr "Maakonnad"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
 msgid "Status"
-msgstr "Olek"
+msgstr "Staatus"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
@@ -1435,15 +1436,15 @@ msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
-"Palgareeglite koodi võib kasutada teiste reeglite koostamisel viitena. "
-"Sellisel juhul on tegemist tõstutundliku tekstiga."
+"Palgalehe koode võib kasutada teiste reeglite koostamisel viitena. Sellisel "
+"juhul on tegemist tõstutundliku tekstiga."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
 #: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
 msgid "The code that can be used in the salary rules"
-msgstr "Kood, mida võib kasutada palgareeglites"
+msgstr "Kood, mida võib kasutada palgalehe koodides"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
@@ -1524,7 +1525,7 @@ msgstr "Kasutage ümberkorraldamiseks  arvutusjärjekorda"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
 msgid "Used to display the salary rule on payslip."
-msgstr "Kasutatakse palgareegli näitamiseks palgalehel."
+msgstr "Kasutatakse palgaarvestuse koodide näitamiseks palgalehel."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0

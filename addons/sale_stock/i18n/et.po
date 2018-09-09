@@ -7,6 +7,7 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Ants Peetsalu <ants@avalah.ee>, 2018
 msgid ""
@@ -75,7 +76,7 @@ msgstr "Ettevõtted"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Saada kõik tooted korraga"
+msgstr "Saada kõik tooted üh korraga"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -85,7 +86,7 @@ msgstr "Saada iga toode kohe, kui see on saadaval"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr "Tarne"
+msgstr "Transport"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
@@ -95,7 +96,7 @@ msgstr "Tarnekuupäev"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "Tarne tellimused"
+msgstr "Saatmiskorraldused"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -158,7 +159,7 @@ msgstr "Arve rida"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "Arveldus"
+msgstr "Raamatupidamine"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
@@ -229,12 +230,12 @@ msgstr "Ostude kontroll"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Hankimise reeglid"
+msgstr "Hankimisreeglid"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Quotation"
-msgstr "Pakkumine"
+msgstr "Quotation"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -244,9 +245,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
-"Toodete käsitsi reserveerimine saatetellimusel või kasutades selleks "
-"planeerijat on soovituslik pikemate kliendi viiteaegade või/ja tihedate lao "
-"otsasaamiste puhul. Algselt planeerija töötab iga 24 tunni järel."
+"Toodete manuaalne reserveerimine saatelehel või kasutades selleks "
+"automaatset planeerimist, on soovituslik pikemate tarneaegade ja/või kui "
+"toode on tihti laost otsas. Automaatne planeerimise kontroll tehakse iga 24 "
+"tunni järel."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -301,7 +303,7 @@ msgstr "Müügi turvalisuse päevad"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "Planeeri tarned varemaks viivituste vältimiseks"
+msgstr "Planeeri tarned varasemaks, et vältida viivitusi."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
@@ -311,7 +313,7 @@ msgstr "Turvalisuse viiteaeg"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Turvalisuse viiteaeg müügiks"
+msgstr "Varuga müügitellimuse täitmisaeg"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -326,12 +328,14 @@ msgstr "Määra tellimustele tarnekuupäev"
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr "Saada kõik tooted korraga"
+msgstr "Saada kõik saatelehel olevad tooted ühekorraga"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr "Saada tooted kohe kui võimali, koos järeltellimustega"
+msgstr ""
+"Saada tooted esimesel võimalusel ning koosta eraldi saateleht täitmata "
+"tellimusele"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -341,7 +345,7 @@ msgstr "Kohaletoimetamise informatsioon"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
 msgid "Shipping Management"
-msgstr "Koheletoimetamise haldus"
+msgstr "Tarneprotsessi haldus"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -351,7 +355,7 @@ msgstr "Saatmispoliitika"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Laoseisu liikumine"
+msgstr "Laoliikumine"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
@@ -366,9 +370,9 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
-"Võimaldab määrata spetsiaalse marsruudi müügitellimuse reale (näiteks tarne "
-"otse lõppkliendile) ebatavalise tellimusel puhul. Et marsruuti oleks "
-"võimalik määrata peab olema marsruudil olema valitud 'Müügitellimuse rida'."
+"Võimaldab määrata spetsiaalse marsruudi ebatavalisele müügitellimusele "
+"(näiteks tarne otse lõppkliendile). Et marsruuti oleks võimalik määrata, "
+"peab marsruudil olema valitud 'Müügitellimuse rida'."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
@@ -396,12 +400,12 @@ msgstr "Hoiatus"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr "Millal reserveerida müüdud tooted"
+msgstr "Millal reserveerida müüdud tooted?"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "Millal alustada saatmist"
+msgstr "Millal alustada saatmist?"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:189
@@ -423,7 +427,7 @@ msgstr "Sa planeerid müüa %s %s aga saada on %s %s %s laos."
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "päevad"
+msgstr "päeva pärast"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings

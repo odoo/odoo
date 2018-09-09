@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Eneli Õigus <enelioigus@gmail.com>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
@@ -11,7 +12,6 @@
 # Gert Valdek <gert@airobot.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
-# Mattias Põldaru <mahfiaz@gmail.com>, 2017
 # Marek Pontus, 2018
 # Ants Peetsalu <ants@avalah.ee>, 2018
 msgid ""
@@ -58,6 +58,32 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Dear\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Here is, in attachment, a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Do not hesitate to contact us, further you have any question.</p>\n"
+"<p>Best regards,</p>\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -83,6 +109,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Dear ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>You can reply to this email if you have any questions.</p>\n"
+"<p>Thank you,</p>\n"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:79
@@ -122,7 +168,7 @@ msgstr "Ostutellimuste arv"
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.mail_template_data_notification_email_purchase_order
@@ -214,6 +260,77 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -227,12 +344,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>Amount</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr ""
+msgstr "<strong>Date Req.</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -326,6 +443,8 @@ msgid ""
 "A sale order that generated this purchase order has been deleted. Check if "
 "an action is needed."
 msgstr ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -382,7 +501,7 @@ msgstr "Kinnitamise kuupäev"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "Approve Order"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_line_purchase_id
@@ -390,11 +509,13 @@ msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
 msgstr ""
+"Associated Purchase Order. Filled in automatically when a PO is chosen on "
+"the vendor bill."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Average Delivery Time"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
@@ -404,27 +525,27 @@ msgstr "Keskmine hind"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
 msgid "Bill Control"
-msgstr ""
+msgstr "Arve kontroll"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr ""
+msgstr "Bill Lines"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
-msgstr ""
+msgstr "Billed Qty"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "Billed Quantity:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
-msgstr "Arveldamise olek"
+msgstr "Arveldamise staatus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
@@ -434,13 +555,13 @@ msgstr "Ostuarved"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Bills Received"
-msgstr ""
+msgstr "Saadud arved"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr "Blokeerimissõnum"
+msgstr "Veateade"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:73
@@ -452,7 +573,7 @@ msgstr "Osta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
 msgid "Buy rule"
-msgstr ""
+msgstr "Ostmise reegel"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -461,6 +582,9 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"By default, vendor prices can be set manually in the product detail form. If"
+" your vendors provide you with pricelist files, this option allows you to "
+"easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -475,6 +599,10 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Calls for tenders are used when you want to generate requests for quotations"
+" to several vendors for a given set of products. You can configure per "
+"product if you directly do a Request for Quotation to one vendor or if you "
+"want a Call for Tenders to compare offers from several vendors."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:76
@@ -498,23 +626,24 @@ msgstr "Tühistatud"
 #: code:addons/purchase/models/purchase.py:737
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Cannot delete a purchase order line which is in state '%s'."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr ""
+msgstr "Click here to record a vendor bill."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
 msgstr ""
+"Click to create a quotation that will be converted into a purchase order."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr "Vajute, et koostada hinnapäring."
+msgstr "Kliki, et koostada hinnapäring."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -535,7 +664,7 @@ msgstr "Vajuta siia selle ostuga seotud tarnijate arvete salvestamiseks."
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Juriidiline keha"
+msgstr "Äriühing"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -629,17 +758,17 @@ msgstr "Dokumendi loomise kuupäev"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_delay_pass
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Päevad kohale toimetamiseks"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_delay
 msgid "Days to Validate"
-msgstr ""
+msgstr "Päevade arv kehtestamiseks"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr ""
+msgstr "Määrake oma tingimused..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_type_id
@@ -663,6 +792,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Depicts the date where the Quotation should be validated and converted into "
+"a purchase order."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -672,12 +803,12 @@ msgstr "Kirjeldus"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Description for Vendors"
-msgstr "Tarnijatele kirjeldus"
+msgstr "Kirjeldus tarnijatele"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr ""
+msgstr "Destination Location Type"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
@@ -694,12 +825,12 @@ msgstr "Valmis"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Double validation amount"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
 msgid "Downstream Moves"
-msgstr ""
+msgstr "Downstream Moves"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -709,17 +840,17 @@ msgstr "Hinnapäringu mustand"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
 msgid "Drop Ship Address"
-msgstr ""
+msgstr "Drop Ship Address"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Otsetarne kliendile"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Elektronkirja koostamise viisard"
+msgstr "E-maili koostamise viisard"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -727,6 +858,8 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Encoding help. When selected, the associated purchase order lines are added "
+"to the vendor bill. Several PO can be selected."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -742,14 +875,14 @@ msgstr "Laiendatud filtrid"
 #: code:addons/purchase/models/purchase.py:577
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Extra line with %s "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_fiscal_position_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
-msgstr "Maksupositsioon"
+msgstr "Finantspositsioon"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -759,12 +892,12 @@ msgstr "Tulevased tegevused"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
+msgstr "Get 2 levels of approvals to confirm a purchase order"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
+msgstr "Saage hoiatusi toodete tellimuste või tarnijate kohta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -801,6 +934,8 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"If enabled, activates 3-way matching on vendor bills : the items must be "
+"received in order to pay the invoice."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -816,7 +951,7 @@ msgstr "Osutellimuse kustutamiseks tuleb see kõigepealt tühistada."
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr "Sisenevad tooted"
+msgstr "Saabuvad tooted"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -826,7 +961,7 @@ msgstr "Sisenevad saadetised"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr "Tarnetingimus"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_incoterm_id
@@ -878,28 +1013,28 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_date
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "Üle tähtaja tegevused"
+msgstr "Hilinenud tegevused"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation
 msgid "Levels of Approvals"
-msgstr ""
+msgstr "Levels of Approvals"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation
 msgid "Levels of Approvals *"
-msgstr ""
+msgstr "Levels of Approvals *"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -928,6 +1063,8 @@ msgstr "Logistika"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
+"Tehke kindlaks, et Te maksaksite ainult need arved, mille eest olete kauba "
+"kätte saanud"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -937,7 +1074,7 @@ msgstr "Halda tarnija hinda"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "Halda oma ostulepinguid (esita hinnapäringuid, üldiseid tellimusi)"
+msgstr "Halda oma ostulepinguid (esita hinnapäringuid, üldised tellimused)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -947,12 +1084,12 @@ msgstr "Juhataja"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Managers must approve orders"
-msgstr ""
+msgstr "Juhatajad peavad tellimused heaks kiitma"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Manual Invoices"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_lead
@@ -962,6 +1099,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for procuring products, they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_use_po_lead
@@ -971,6 +1111,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Margin of error for vendor lead times. When the system generates Purchase "
+"Orders for reordering products,they will be scheduled that many days earlier"
+" to cope with unexpected vendor delays."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1011,8 +1154,8 @@ msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
 msgstr ""
-"Enamus ostutellimustest koostatakse Odoos automaatselt\n"
-"                lähtudes laos kauba vajadustest."
+"Enamus ostutellimusi koostatakse Odoos automaatselt\n"
+"                lähtuvalt kirjeldatud reeglitest ja kauba vajadustest."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1039,7 +1182,7 @@ msgstr "Uusim"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "No Bill to Receive"
-msgstr ""
+msgstr "No Bill to Receive"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1058,6 +1201,8 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
+"Non-stored related field to allow portal user to see the image of the "
+"product he has ordered"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1081,6 +1226,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"On ordered quantities: control bills based on ordered quantities.\n"
+"On received quantities: control bills based on received quantity."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1090,7 +1237,7 @@ msgstr "Saadud koguste põhjal"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_order_approval
 msgid "Order Approval"
-msgstr ""
+msgstr "Tellimuse kinnitus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_order
@@ -1104,12 +1251,12 @@ msgstr "Tellimuse kuupäev"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_order_line
 msgid "Order Lines"
-msgstr "Ostu read"
+msgstr "Osturead"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "Order Month"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_order_id
@@ -1121,27 +1268,27 @@ msgstr "Tellimuse viide"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_state
 msgid "Order Status"
-msgstr "Tellimuse olek"
+msgstr "Korralduse staatus"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr ""
+msgstr "Order of Day"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr ""
+msgstr "Ordered Quantity:"
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
-msgstr "Tellitud kogustel"
+msgstr "Tellitud kogused"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Orderpoint"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1152,7 +1299,7 @@ msgstr "Tellimused"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
@@ -1204,7 +1351,7 @@ msgstr "Ostude kontroll"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Hankimise reeglid"
+msgstr "Hankimisreeglid"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1218,7 +1365,7 @@ msgstr "Toode"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr "Toodete kategooriad"
+msgstr "Toote kategooriad"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_category
@@ -1272,7 +1419,7 @@ msgstr "Toodete väärtus"
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr ""
+msgstr "Provide a double validation mechanism for purchases"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1289,7 +1436,7 @@ msgstr "Ostulepingud"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "Ostuanalüüs"
+msgstr "Ostude analüüs"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1298,6 +1445,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Purchase Analysis allows you to easily check and analyse your company "
+"purchase history and performance. From this menu you can track your "
+"negotiation performance, the delivery performance of your vendors, etc."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
@@ -1363,12 +1513,12 @@ msgstr "Ostutellimuse read"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
 msgid "Purchase Order Modification"
-msgstr ""
+msgstr "Purchase Order Modification"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lock
 msgid "Purchase Order Modification *"
-msgstr ""
+msgstr "Purchase Order Modification *"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_lock
@@ -1377,6 +1527,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Purchase Order Modification used when you want to purchase order editable "
+"after confirm"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1394,7 +1546,7 @@ msgstr "Ostutellimused"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr ""
+msgstr "Purchase Orders #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1415,12 +1567,12 @@ msgstr "Ostutellimused, mis sisaldavad arveldamata ridu."
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Ostke kaupa laovarude täiendamiseks"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Ostu-standardhind"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1442,6 +1594,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1487,7 +1641,7 @@ msgstr "Hinnapäring saadetud"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1530,7 +1684,7 @@ msgstr "Viide"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
 msgid "Reference Unit of Measure"
-msgstr "Näidis mõõteüksus"
+msgstr "Võrdlusühik"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
@@ -1538,6 +1692,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Reference of the document that generated this purchase order request (e.g. a"
+" sales order)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1546,11 +1702,14 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Reference of the sales order or bid sent by the vendor. It's used to do the "
+"matching when you receive the products as this reference is usually written "
+"on the delivery order sent by your vendor."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
 msgid "Reporting"
-msgstr "Analüüs"
+msgstr "Aruandlus"
 
 #. module: purchase
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
@@ -1567,13 +1726,13 @@ msgstr "Hinnapäringu nr"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "Paluge oma tarnijal tooted otse Teie klientidele toimetada"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Hinnapäring"
+msgstr "Hinnapäringud"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1590,12 +1749,12 @@ msgstr "Vastutav"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Tagastuse noppimine"
+msgstr "Tagastuskorje"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "Planeeri tarned varasemaks, et vältida viivitusi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
@@ -1612,7 +1771,7 @@ msgstr "Otsi ostutellimust"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Varuga ostutellimuse täitmisaeg"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
@@ -1687,12 +1846,12 @@ msgstr "Alusdokument"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
-msgstr "Olek"
+msgstr "Staatus"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr "Laoseisu liikumine"
+msgstr "Laoliikumine"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1730,7 +1889,7 @@ msgstr "Maksud:"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Technical field used to display the Drop Ship Address"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1740,7 +1899,7 @@ msgstr "Tingimused"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "The full URL to access the document through the website."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1749,6 +1908,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"The product form contains detailed information to improve the\n"
+"                purchase process: prices, procurement logistics, accounting data,\n"
+"                available vendors, etc."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1757,6 +1919,9 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"The product form contains detailed information to improve the\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
+"            available vendors, etc."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1765,6 +1930,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund. "
 msgstr ""
+"The quantities on your purchase order indicate less than billed. You should "
+"ask for a refund. "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1773,9 +1940,8 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
-"Pakkumine sisaldab arutelu/läbirääkimiste ajalugu,\n"
-"                mis sul oli tarnijaga. Kui kinnitatud, siis hinnapäring\n"
-"                muudetakse ostutellimuseks."
+"Pakkumise juurde tekib tarnijaga suhtlusest logi.\n"
+"                Kui pakkumine on kinnitatud, siis on võimalik see automaatselt muuta ostutellimuseks."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1784,6 +1950,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    of the products and the vendor bill."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:878
@@ -1792,6 +1961,8 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1809,6 +1980,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1819,11 +1992,16 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"This adds a dropshipping route to apply on products in order to request your"
+" vendors to deliver to your customers. A product to dropship will generate a"
+" purchase request for quotation once the sales order confirmed. This is a "
+"on-demand flow. The requested delivery address will be the customer delivery"
+" address and not your warehouse."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
-msgstr ""
+msgstr "This changes the scheduled date of all order lines to the given date"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1832,6 +2010,8 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"This currency will be used, instead of the default one, for purchases from "
+"the current partner"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_default_purchase_method
@@ -1840,6 +2020,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"This default value is applied to any new product created. This can be "
+"changed in the product detail form."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1850,13 +2032,13 @@ msgstr "See märkus on nähtav ostutellimustel."
 #: code:addons/purchase/models/account_invoice.py:203
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "This vendor bill has been created from: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:217
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "This vendor bill has been modified from: %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1901,7 +2083,7 @@ msgstr "Kokku maksudeta summa"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Total amount"
-msgstr "Kogu summa"
+msgstr "Kogusumma"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1915,6 +2097,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Unable to cancel purchase order %s as some receptions have already been "
+"done."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:365
@@ -1923,6 +2107,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Unable to cancel this purchase order. You must first cancel related vendor "
+"bills."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1972,6 +2158,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Use this menu to control the invoices to be received from your\n"
+"            vendors. When registering a new bill, set the purchase order\n"
+"            and Odoo will fill the bill automatically according to ordered\n"
+"            or received quantities."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1981,6 +2171,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Use this menu to search within your purchase orders by\n"
+"                references, vendor, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the vendor, control\n"
+"                the products received and control the vendor bills."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1990,7 +2184,7 @@ msgstr "Kasutaja"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Praktiline väli väljendamaks valuuta summat"
+msgstr "Kasulik väli väljendamaks valuuta summat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_id
@@ -2016,7 +2210,7 @@ msgstr "Ostuarved"
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
-msgstr "Edasimüüja hinnakirjad"
+msgstr "Tarnija hinnakirjad"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
@@ -2037,6 +2231,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                    orders or receipts. This allows you to control bills\n"
+"                    you receive from your vendor according to the draft\n"
+"                    document in Odoo."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -2047,7 +2245,7 @@ msgstr "Maht"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Ootel olevad arved"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -2091,7 +2289,7 @@ msgstr "Veebilehe URL"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "When products are bought, they can be delivered to this warehouse"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2099,6 +2297,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"You can control the invoice from your vendor according to\n"
+"            what you purchased (services) or received (products)."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2107,6 +2307,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"You must define a product for everything you purchase, whether\n"
+"                it's a physical product, a consumable or services you buy to\n"
+"                subcontractors."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2115,17 +2318,20 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"You must define a product for everything you purchase, whether\n"
+"            it's a physical product, a consumable or services you buy to\n"
+"            subcontractors."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:395
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "You must set a Vendor Location for this partner %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "days"
-msgstr "päevad"
+msgstr "päeva pärast"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings

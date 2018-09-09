@@ -438,7 +438,7 @@ msgstr "<span class=\"o_stat_text\">Truy vết</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr ""
+msgstr "<span>Gấp trong cơ hội tuyển dụng:</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -498,7 +498,7 @@ msgstr "An ninh về Bí danh liên hệ"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
 msgid "Alias ID"
-msgstr ""
+msgstr "ID Bí danh"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
@@ -518,7 +518,7 @@ msgstr "Bí danh Model"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "Tất cả đơn xin việc"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -576,6 +576,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
+"Ứng viên và CV đính kèm của họ được tạo tự động khi một email được gửi.\n"
+"             Nếu bạn cài đặt các mô-đun quản lý tài liệu, tất cả các hồ sơ sẽ được lập chỉ mục tự động,\n"
+"             để bạn có thể dễ dàng tìm kiếm thông qua nội dung của họ."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -633,7 +636,7 @@ msgstr "Đính kèm"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
 msgid "Automated Email"
-msgstr ""
+msgstr "Email tự động"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
@@ -956,7 +959,7 @@ msgstr "Bí danh Email"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email alias"
-msgstr ""
+msgstr "Email bí danh"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
@@ -1119,6 +1122,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
+"Nếu trường hoạt động được đặt thành false, trường này sẽ cho phép bạn ẩn "
+"trường hợp mà không xóa trường đó."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
@@ -1142,27 +1147,27 @@ msgstr "Công việc"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Job Application Confirmation: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Xác nhận đơn xin việc: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
-msgstr ""
+msgstr "Đơn xin việc"
 
 #. module: hr_recruitment
 #: model:utm.campaign,name:hr_recruitment.utm_campaign_job
 msgid "Job Campaign"
-msgstr ""
+msgstr "Chiến dịch việc làm"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Job Email"
-msgstr ""
+msgstr "Email công việc"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
 msgid "Job ID"
-msgstr ""
+msgstr "ID công việc"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
@@ -1290,7 +1295,7 @@ msgstr "Hoạt động của tôi"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Applications"
-msgstr ""
+msgstr "Đơn xin việc của tôi"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_activity
@@ -1384,7 +1389,7 @@ msgstr "Số lượng đính kèm"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
 msgid "Number of days to close"
-msgstr ""
+msgstr "Số ngày để đóng"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1392,6 +1397,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Hệ thống giúp bạn theo dõi người nộp đơn trong tuyển dụng\n"
+"                 xử lý và theo dõi tất cả các hoạt động: cuộc họp, phỏng vấn, v.v."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1399,11 +1406,13 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
+"Hệ thống giúp bạn theo dõi người nộp đơn trong tuyển dụng\n"
+"             xử lý và theo dõi tất cả các hoạt động: cuộc họp, phỏng vấn, v.v."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Offer"
-msgstr ""
+msgstr "Nhận"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -1416,6 +1425,8 @@ msgid ""
 "Once a job position is created, you can track related applications\n"
 "              and manage the recruitment process."
 msgstr ""
+"Khi vị trí công việc được tạo, bạn có thể theo dõi các ứng dụng liên quan\n"
+"               và quản lý quá trình tuyển dụng."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
@@ -1424,6 +1435,9 @@ msgid ""
 "                  and manage the recruitment process related to the job\n"
 "                  position."
 msgstr ""
+"Khi vị trí công việc được tạo, bạn có thể theo dõi người đăng ký\n"
+"                   và quản lý quá trình tuyển dụng liên quan đến công việc\n"
+"                   Chức vụ."
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1693,6 +1707,8 @@ msgstr "Nguồn của ứng viên"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Công việc cụ thể sử dụng giai đoạn này. Các công việc khác sẽ không sử dụng "
+"giai đoạn này."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1733,6 +1749,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
+"Giai đoạn của người nộp đơn trước khi ở giai đoạn hiện tại. Được sử dụng cho"
+" phân tích trường hợp bị mất."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -1819,6 +1837,8 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Những bí danh này có thể là email hoặc url cho mọi nguồn. Khi người nộp đơn "
+"đến đây thông qua một trong những điều này bạn sẽ biết anh ta đến từ đâu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1849,6 +1869,10 @@ msgid ""
 "                files so that you can search keywords from the content of these\n"
 "                files."
 msgstr ""
+"Trình đơn này giúp bạn tìm kiếm thông qua hồ sơ và động lực\n"
+"                 bức thư. Hệ thống tự động lập chỉ mục .PDF, .DOC, DOCX, .TXT\n"
+"                 các tệp để bạn có thể tìm kiếm từ khóa từ nội dung của các tệp này\n"
+"                 các tập tin."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
@@ -1904,6 +1928,9 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on Survey app."
 msgstr ""
+"Sử dụng các mẫu phỏng vấn phù hợp với từng vị trí công việc trong quá trình "
+"tuyển dụng. Chọn biểu mẫu để sử dụng trong biểu mẫu chi tiết vị trí công "
+"việc. Điều này dựa trên ứng dụng Khảo sát."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1948,6 +1975,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"Chỉ với một cái nhìn nhanh trên màn hình nhân viên của Hệ thống, bạn\n"
+"                 có thể dễ dàng tìm thấy tất cả thông tin bạn cần cho mỗi người;\n"
+"                 dữ liệu liên lạc, vị trí công việc, tính khả dụng, v.v."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:430
@@ -1958,12 +1988,12 @@ msgstr "Bạn phải nhập Vị trí Ứng tuyển và Tên liên hệ cho hồ
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
 msgid "Your Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Đơn của bạn: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: ${object.job_id.name | safe}"
-msgstr ""
+msgstr "Đơn xin việc của bạn: ${object.job_id.name | safe}"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

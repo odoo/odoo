@@ -382,7 +382,7 @@ msgstr "<span>Naujas</span>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<span>No reservation or quantity done yet.</span>"
-msgstr ""
+msgstr "<span>Dar neatlikta rezervacijų ar kiekių.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -2735,6 +2735,10 @@ msgid ""
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
 msgstr ""
+"Ledai gali būti masiškai gaminami ir todėl yra plačiai pasiekiami "
+"išsivysčiusiose pasaulio šalyse. Ledai gali būti perkami didelėmis "
+"pakuotėmis iš prekybos centrų, mažesniais kiekiais ledų parduotuvėlių, "
+"maisto parduotuvių ir mažomis porcijomis iš prekybininkų renginiuose."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -4718,7 +4722,7 @@ msgstr "Rezervuoti + Išsiųsti"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
 msgid "Pick Type"
-msgstr "Rezervavimo tipas"
+msgstr "Paėmimo tipas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer_picking_id
@@ -4726,17 +4730,17 @@ msgstr "Rezervavimo tipas"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_picking_id
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Siunta"
+msgstr "Paėmimas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "Važtaraščių sąrašas"
+msgstr "Paėmimo sąrašas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Rezervavimo sąrašas"
+msgstr "Paėmimo sąrašai"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
@@ -4746,27 +4750,27 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "rezervavimo operacijos"
+msgstr "Paėmimo operacijos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "Rezervavimo sąrašas"
+msgstr "Paėmimo sąrašas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Pickings"
-msgstr "Važtaraščiai"
+msgstr "Paėmimai"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Atliktos siuntos"
+msgstr "Jau apdoroti paėmimai"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr "Rezervavimai grupėms"
+msgstr "Paėmimai grupėms"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4776,7 +4780,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 msgid "Pivot"
-msgstr ""
+msgstr "Suvestinis"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5100,7 +5104,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "Atšaukti ir padalinti"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
@@ -5132,7 +5136,7 @@ msgstr "Pastūmimo taisyklės"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Pastumtas ciklas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
@@ -5401,7 +5405,7 @@ msgstr "Gauti kiekiai"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Receptions"
-msgstr "Gavimai"
+msgstr "Priėmimai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_name
@@ -5586,7 +5590,7 @@ msgstr "Grąžinimo vieta"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Siuntos grąžinimas"
+msgstr "Grąžinti paėmimą"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:97
@@ -5921,7 +5925,9 @@ msgstr "Nustatyti kaip juodraštį"
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr "Atsargų vieta, iš kurios paimami produktai."
+msgstr ""
+"Nustato vietą, jei gaminate fiksuotoje lokacijoje. Tai gali būti partnerio "
+"lokacija, jei dalijatės gaminimo operacijas."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -6229,7 +6235,7 @@ msgstr "Atsargų operacijos"
 #: model:ir.model.fields,field_description:stock.field_res_users_picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_picking_id
 msgid "Stock Picking"
-msgstr "Atsargų siunt"
+msgstr "Atsargų paėmimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_quant_ids
@@ -6505,7 +6511,7 @@ msgstr "Nauja vieta, į kurią turi patekti prekės"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "Operacijos tipas nustato paėmimo vaizdą"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6682,7 +6688,7 @@ msgstr "Tai yra operacijos tipas, kuris bus nurodytas prie atsargų perkėlimų"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
 msgid "This is the owner of the quant"
-msgstr "Kiekio savininkas"
+msgstr "Tai yra kiekio savininkas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_uom_qty
@@ -7340,7 +7346,7 @@ msgstr "Įspėjimas"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Rezervavimo įspėjimas"
+msgstr "Paėmimo perspėjimas"
 
 #. module: stock
 #: code:addons/stock/models/product.py:303

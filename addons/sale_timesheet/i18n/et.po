@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
-# Marek Pontus, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 msgid ""
 msgstr ""
@@ -37,11 +37,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Click to record timesheets.\n"
+"                </p><p>\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    customers if required.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "<b>Total</b>"
-msgstr ""
+msgstr "<b>Total</b>"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -56,32 +65,32 @@ msgstr "Analüütiline rida"
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 msgid "Billable Fixed"
-msgstr ""
+msgstr "Billable Fixed"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable Hours"
-msgstr ""
+msgstr "Billable Hours"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 msgid "Billable Time"
-msgstr ""
+msgstr "Billable Time"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_type
 msgid "Billable Type"
-msgstr ""
+msgstr "Billable Type"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable fixed"
-msgstr ""
+msgstr "Billable fixed"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billable time"
-msgstr ""
+msgstr "Billable time"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
@@ -143,12 +152,12 @@ msgstr "Fikseeritud"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Fixed Price Projects"
-msgstr ""
+msgstr "Fixed Price Projects"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Fixed price services"
-msgstr ""
+msgstr "Fikseeritud hinnaga teenused"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -170,7 +179,7 @@ msgstr "Arvelda põhinedes"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr ""
+msgstr "Invoice created from the timesheet"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -180,12 +189,12 @@ msgstr "Arveldatud"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_is_service
 msgid "Is a Service"
-msgstr ""
+msgstr "Is a Service"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Milestone services"
-msgstr ""
+msgstr "Mitme etapiga teenused"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -196,28 +205,28 @@ msgstr "Etappide kaupa (manuaalselt lisa tellimustele kogused)"
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "No task found"
-msgstr ""
+msgstr "No task found"
 
 #. module: sale_timesheet
 #: selection:account.analytic.line,timesheet_invoice_type:0
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non Billable"
-msgstr ""
+msgstr "Non Billable"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Hours"
-msgstr ""
+msgstr "Non Billable Hours"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable"
-msgstr ""
+msgstr "Non billable"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
 msgid "Number of timesheets"
-msgstr ""
+msgstr "Number of timesheets"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
@@ -226,6 +235,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or "
 "task. From those, you can track the service you are selling."
 msgstr ""
+"On Sales order confirmation, this product can generate a project and/or "
+"task. From those, you can track the service you are selling."
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -253,7 +264,7 @@ msgstr "Tooted"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Profitability"
-msgstr ""
+msgstr "Profitability"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_project
@@ -265,7 +276,7 @@ msgstr "Projekt"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Project associated to this sale"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
@@ -282,12 +293,12 @@ msgstr "Projektid"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "Projects used in this sales order."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
 msgid "Quotation"
-msgstr "Pakkumine"
+msgstr "Quotation"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -305,6 +316,8 @@ msgid ""
 "Sale order line from which the project has been created. Used for "
 "tracability."
 msgstr ""
+"Sale order line from which the project has been created. Used for "
+"tracability."
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -315,7 +328,7 @@ msgstr "Müügitellimus"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Müügiartikkel"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -329,6 +342,8 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr ""
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -337,6 +352,8 @@ msgid ""
 "Select a non billable project on which tasks can be created. This setting "
 "must be set for each company."
 msgstr ""
+"Select a non billable project on which tasks can be created. This setting "
+"must be set for each company."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
@@ -357,7 +374,7 @@ msgstr "Seadista oma etappidega teenused"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your time-based services"
-msgstr "Seadista oma ajal põhinevad teenused"
+msgstr "Seadista oma ajapõhisd teenused"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -371,11 +388,12 @@ msgstr "Ülesanne"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
 msgid "Task generated by the sales order item"
-msgstr ""
+msgstr "Task generated by the sales order item"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:109
@@ -389,12 +407,12 @@ msgstr "Ülesanded"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Tasks associated to this sale"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There is no timesheet for now."
-msgstr ""
+msgstr "There is no timesheet for now."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:237
@@ -403,6 +421,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -412,12 +432,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Time by people"
-msgstr ""
+msgstr "Time by people"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
 msgid "Time-based services"
-msgstr ""
+msgstr "Ajapõhised teenused"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -428,22 +448,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #, python-format
 msgid "Timesheet"
-msgstr "Ajagraafik"
+msgstr "Tööaja arvestusleht"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr ""
+msgstr "Tunnihind (kulu)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "Timesheet activities"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Timesheet activities associated to this sale"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:101
@@ -454,18 +474,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"
-msgstr "Tööajaarvestus"
+msgstr "Tööaja arvestusleht"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr ""
+msgstr "Timesheets of %s"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Timesheets on tasks"
-msgstr "Ülesannete ajaarvestuse põhjal"
+msgstr "Ülesannete tööaja arvestuslehed"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -479,6 +499,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
+"You can not modify already invoiced timesheets (linked to a Sales order "
+"items invoiced on Time and material)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:74
@@ -487,8 +509,10 @@ msgid ""
 "You cannot delete a task related to a Sales Order. You can only archive this"
 " task."
 msgstr ""
+"You cannot delete a task related to a Sales Order. You can only archive this"
+" task."
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
 msgid "per hour"
-msgstr ""
+msgstr "tunnis"

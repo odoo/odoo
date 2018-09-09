@@ -449,6 +449,13 @@ msgid "Error: no matching grid."
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
 msgstr "Estimeret leveringspris"
@@ -476,6 +483,7 @@ msgid "Fixed Price"
 msgstr "Fast pris"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -663,6 +671,7 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -867,6 +876,7 @@ msgid "Stock Move"
 msgstr "Lagerflytning"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"

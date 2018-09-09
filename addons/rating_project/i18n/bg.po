@@ -6,13 +6,14 @@
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
 "PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,12 +101,12 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Заявка за категория обслужване"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% на задачи"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -115,7 +116,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Автоматично канбан състояние"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -130,7 +131,7 @@ msgstr ""
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Категории клиенти"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
@@ -143,6 +144,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Клиентски оценки за задачи. Ако нямате оценка, променете настройките на "
+"проекта си, за да го активирате."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
@@ -150,11 +153,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Клиентски оценки на задачи/въпроси. Ако нямате оценка, променете проектните "
+"си настройки, за да я активирате."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Клиентски оценки"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -167,16 +172,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Редактирайте етапите на проекта и настройте шаблон за имейл\n"
+"                            на етапите, по които искате да активирате оценката."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Доволен % на проект"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Доволен % на задача"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -187,6 +194,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Как да получите отзивите на клиентите?\n"
+"- Оценяване при смяна на етапа: когато дадена задача/въпрос бъде придвижена към друг етап, ще се изпраща имейл; \n"
+"- Периодично оценяване: периодично ще се изпраща имейл\n"
+"\n"
+"Не забравяйте да настроите пощенските шаблони на етапите, за които желаете да получавате отзиви от клиенти."
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -199,27 +211,27 @@ msgstr ""
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Last 30 days"
-msgstr ""
+msgstr "Последните 30 дни"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Последна оценка: Крайно неудовлетворително"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Последна оценка: Незадоволителна"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Последна оценка: Задоволителен"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Няма оценка"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -295,7 +307,7 @@ msgstr ""
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "Оценки"
 
 #. module: rating_project
 #: code:addons/rating_project/models/project.py:107
@@ -327,7 +339,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Етап на задача"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
@@ -352,4 +364,4 @@ msgstr "Седмично"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr ""
+msgstr "Ежегодно"

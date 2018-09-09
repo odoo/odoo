@@ -385,6 +385,13 @@ msgid "Error: no matching grid."
 msgstr "Hata: Eşleşen tablo yok."
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
 msgstr "Tahmini Teslim Fiyatı"
@@ -411,6 +418,7 @@ msgid "Fixed Price"
 msgstr "Sabit Fiyat"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -599,6 +607,7 @@ msgstr ""
 "Bu komutla eşleşen bir fiyat kuralı yok, teslimat bedeli hesaplanamaz."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -805,6 +814,7 @@ msgid "Stock Move"
 msgstr "Stok Hareketi"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"

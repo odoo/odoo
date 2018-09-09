@@ -124,6 +124,8 @@ msgstr ""
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
+" Този канал е поверителен. Хората трябва да бъдат поканени да се присъединят"
+" към него."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_days
@@ -138,6 +140,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
+"или (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) или (object.parent_id и "
+"object.parent_id.record_name и 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -240,6 +246,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Можете да споменете някого, като изпишете <b>@username</b>, това ще привлече неговото внимание.<br>\n"
+"            Можете да споменете канал, като изпишете <b>#channel</b>.<br>\n"
+"            Можете да изпълните команда, като изпишете <b>/command</b>.<br>\n"
+"            Можете да вмъкнете предварително изготвени отговори в съобщението си, като изпишете <b>:shortcut</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:584
@@ -278,6 +289,7 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
 msgstr ""
+"<div><p>Привет,</p><p>%s Ви покани да последвате %s документ: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
@@ -285,6 +297,7 @@ msgstr ""
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr ""
+"<div><p>Привет,</p><p>%s Ви покани да последвате нов документ.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -295,6 +308,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Чат със сътрудници</b> в реално време посредством директни "
+"съобщения.</p><p><i>Възможно е да се наложи първо да поканите потребителите "
+"от приложението 'Настройки'.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -398,6 +414,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"Краткият код представлява клавишна комбинация. Например, изпишете #gm и то "
+"ще се трансформира в \"Good Morning\" - \"Добро утро\"."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -967,7 +985,7 @@ msgstr "Тип на канала"
 #: model:ir.ui.view,arch_db:mail.mail_channel_partner_view_tree
 #, python-format
 msgid "Channels"
-msgstr ""
+msgstr "Канали"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
@@ -2790,7 +2808,7 @@ msgstr "Дневник"
 #: code:addons/mail/static/src/xml/chatter.xml:56
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "Регистрирайте бележка. Последователите няма да бъдат известени."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -2806,7 +2824,7 @@ msgstr "Регистрирайте активност"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "Регистрирайте вътрешна бележка"
 
 #. module: mail
 #. openerp-web
@@ -3684,7 +3702,7 @@ msgstr "Брой непрочетени съобщения"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: mail
 #. openerp-web
@@ -4409,7 +4427,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr ""
+msgstr "Разписание"
 
 #. module: mail
 #. openerp-web

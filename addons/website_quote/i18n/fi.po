@@ -215,16 +215,18 @@ msgid ""
 "<span>I agree that by signing this proposal, I\n"
 "                                    accept it on the behalf of </span>"
 msgstr ""
+"<span>Ymmärrän, että allekirjoittamalla tämän tarjouksen,\n"
+"                                  hyväksyn sen </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr "<span>Ehdotetut tuotteet</span>"
+msgstr "<span>Mahdolliset lisäpalvelut ja -tuotteet</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr "<span> ja maksuehdolla: </span>"
+msgstr "<span> ja maksuehdolla </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -508,7 +510,7 @@ msgstr "Hyväksymissähköposti"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_require_payment
 msgid "Confirmation Mode"
-msgstr ""
+msgstr "Vahvistustapa"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -579,7 +581,7 @@ msgstr "Päivä 3"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_res_config_settings_default_template_id
 msgid "Default Template"
-msgstr ""
+msgstr "Oletuspohja"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_name
@@ -648,7 +650,7 @@ msgstr "Muokkaa tarjousta"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr "Muokkaa mallia"
+msgstr "Muokkaa pohjaa"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -787,7 +789,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "sis. alv)"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -984,13 +986,13 @@ msgstr ""
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Payment"
-msgstr ""
+msgstr "Verkkomaksu"
 
 #. module: website_quote
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Signature"
-msgstr ""
+msgstr "Allekirjoitus verkossa"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1020,17 +1022,17 @@ msgstr "Lisätuotelinjat"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Tarjoomamme"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Meidän laatu"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Meidän palvelu"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1073,7 +1075,7 @@ msgstr "Maksa & Hyväksy"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Pay with"
-msgstr ""
+msgstr "Maksa"
 
 #. module: website_quote
 #: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
@@ -1213,7 +1215,7 @@ msgstr "Tarjous avattu"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation expires after"
-msgstr ""
+msgstr "Tarjouksen vanhenemisaika"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:50
@@ -1316,7 +1318,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr "Ehdotetut tuotteet"
+msgstr "Lisäpalvelut ja -tuotteet"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1353,7 +1355,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Ehdot"
+msgstr "Toimitusehdot"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
@@ -1406,6 +1408,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Tämä sähköpostipohja lähetetään tarjouksen hyväksynnästä. Jätä tyhjäksi, jos"
+" et halua lähettää mitään."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1519,7 +1523,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Validate Order"
-msgstr "Tarkista tilaus"
+msgstr "Hyväksy tilaus"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1627,7 +1631,7 @@ msgstr "Viitteenne:"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your advantage:"
-msgstr ""
+msgstr "Etusi:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1635,7 +1639,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Your advantages"
-msgstr ""
+msgstr "Etusi"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

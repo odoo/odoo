@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2017
 # Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Iliana Ilieva <i.ilieva@sunservice-bg.com>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,9 @@ msgid ""
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
+"Дата, до която клиентът е поискал доставката на продуктите.\n"
+"Когато тази поръчка бъде потвърдена, очакваната дата на поръчката за доставка ще бъде изчислена въз основа на тази дата и фирмената политика срещу закъснения.\n"
+"Оставете това поле празно, ако искате поръчката за доставка да бъде обработена възможно най-скоро. В този случай очакваната дата ще бъде изчислена според стандартния метод: въз основа на времето за доставка на продукта и фирмената политика срещу закъснения."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
@@ -38,11 +42,14 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Дата, до която е сигурно, че продукттите ще бъдат доставени. Това е датата, "
+"която можете да обещаете на клиента въз основа времето на продуктовите "
+"лийдове."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Денят, когато е създадена първата поръчка за доставка."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
@@ -77,3 +84,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"Заяветага от клиента дата е по-рано от датата на поемане на ангажимента. "
+"Възможно е да не успеете да удовлетворите желанието на клиента."
