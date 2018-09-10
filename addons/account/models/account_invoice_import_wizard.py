@@ -13,6 +13,7 @@ class ImportInvoiceImportWizard(models.TransientModel):
     def _create_invoice_from_file(self, attachment):
         invoice_form = Form(self.env['account.invoice'], view='account.invoice_supplier_form')
         invoice = invoice_form.save()
+        attachment.write({'res_model': 'account.invoice', 'res_id': invoice.id})
         invoice.message_post(attachment_ids=[attachment.id])
         return invoice
 
