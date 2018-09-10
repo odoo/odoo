@@ -692,6 +692,9 @@ QUnit.module('account', {
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_bank_statement_line with ids");
+            var def = $.Deferred();
+            def.abort = function () {};
+            event.data.callback(def);
         });
 
         // click on reconcile button
@@ -734,6 +737,9 @@ QUnit.module('account', {
                                         analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_bank_statement_line with ids");
+            var def = $.Deferred();
+            def.abort = function () {};
+            event.data.callback(def);
         });
 
         // click on validate button
@@ -787,6 +793,9 @@ QUnit.module('account', {
                                         name: 'SAJ/2014/002 and SAJ/2014/003 : Open balance'
                                     }]}]],
                 "Should call process_bank_statement_line with ids");
+            var def = $.Deferred();
+            def.abort = function () {};
+            event.data.callback(def);
         });
 
         // click on validate button
