@@ -240,7 +240,7 @@ var BasicModel = AbstractModel.extend({
             var groupByField = parent.groupedBy[0];
             var rawGroupField = groupByField.split(':')[0];
             var fieldType = group.fields[rawGroupField].type;
-            if (fieldType === 'many2one'){
+            if (fieldType === 'many2one') {
                 value = group.res_id || false;
             } else if (fieldType === 'selection') {
                 var choice = _.find(group.fields[groupByField].selection, function (option) {
@@ -249,14 +249,18 @@ var BasicModel = AbstractModel.extend({
                 value = choice[0];
             } else if (fieldType === 'date' || fieldType === 'datetime') {
                 try {
-                    value = JSON.parse(JSON.stringify(field_utils.parse[fieldType](field_utils.format[fieldType](moment(group.value)))));
+                    value = field_utils.parse[fieldType](field_utils.format[fieldType](moment(group.value))).toJSON();
                 } catch (err) {
                     value = '';
                 }
             } else {
                 value = group.value;
             }
-            value ? defaultContext['default_' + rawGroupField] = value : false;
+
+            // set default context if group field has proper value(value can be '' if date is invalid)
+            if (value) {
+                defaultContext['default_' + rawGroupField] = value;
+            }
             group = parent;
         }
         currentGroup.context = _.extend(defaultContext, currentGroup.context);

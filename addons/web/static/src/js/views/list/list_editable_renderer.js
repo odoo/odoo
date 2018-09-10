@@ -806,7 +806,7 @@ ListRenderer.include({
         // To select a row, the currently selected one must be unselected first
         var self = this;
         return this.unselectRow().then(function () {
-            if (recrodID) {
+            if (!recrodID) {
                 // The row to selected doesn't exist anymore (probably because
                 // an onchange triggered when unselecting the previous one
                 // removes rows)
@@ -838,7 +838,7 @@ ListRenderer.include({
         // the row that we are creating, because it counts as a click on a tr
         ev.stopPropagation();
 
-         var self = this;
+        var self = this;
         var groupID = $(ev.target).data('groupID');
         this.unselectRow().then(function () {
             self.trigger_up('add_record', {
@@ -966,11 +966,11 @@ ListRenderer.include({
                 var column = this.columns[this.currentFieldIndex];
                 var lastWidget = this._getLastWidget();
                 if (column.attrs.name === lastWidget.name) {
-                    if (this.currentRow + 1 < this.$('table.o_list_view > tbody tr').length) {
+                    if (this.currentRow + 1 < this.state.data.length) {
                         this._selectCell(this.currentRow+1, 0, {wrap:false})
                             .guardedCatch(this._moveToNextLine.bind(this));
                     } else {
-                        var currentRowData = this.getRecordID(this.currentRow);
+                        var currentRowData = this.state.data[this.currentRow];
                         if (currentRowData.isDirty(currentRowData.id)) {
                             this._moveToNextLine();
                         }

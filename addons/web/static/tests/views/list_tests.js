@@ -4065,6 +4065,7 @@ QUnit.module('Views', {
 
         list.destroy();
         delete widgetRegistry.map.asyncWidget;
+    });
 
     QUnit.module('ListGroupByEditable');
 
