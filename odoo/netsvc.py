@@ -54,6 +54,42 @@ class PostgreSQLHandler(logging.Handler):
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
 
+try:
+    from rfc5424logging import Rfc5424SysLogHandler
+    import os
+    class RemoteLoggingHandler(Rfc5424SysLogHandler):
+        def __init__(self, **kwargs):
+            kwargs['appname']="Odoo"
+            kwargs['procid']=os.getpid()
+            structured_data = kwargs.get('structured_data', {})
+            structured_data.update({'com_odoo_rl_1': {
+                'version': odoo.release.version,
+            }})
+            kwargs['structured_data']= structured_data
+            super(RemoteLoggingHandler, self).__init__(**kwargs)
+
+        def handle(self, record):
+            structured_data = record.structured_data if hasattr(record, 'structured_data') else {}
+            structured_data.update({'com_odoo_rl_2': {
+                'db': record.dbname,
+                'name': record.name,
+                'model': record.name,
+                'module': record.module,
+                'pathname': record.pathname,
+                'lineno': record.lineno,
+                'levelno': record.levelno,
+                'funcName': record.funcName,
+                'exc_info': record.exc_info,
+                'exc_text': record.exc_text,
+                'stack_info': record.stack_info,
+            }})
+            record.structured_data = structured_data
+            super(RemoteLoggingHandler, self).handle(record)
+
+except Exception as e:
+    _logger.debug('Cannot create class for remote logging, please install rfc5424-logging-handler')
+
+
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
 #These are the sequences need to get colored ouput
@@ -160,6 +196,24 @@ def init_logger():
         postgresqlHandler = PostgreSQLHandler()
         postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
+
+    if tools.config['log_remote']:
+        args = None
+        try:
+            from odoo.tools.safe_eval import safe_eval
+            args = safe_eval(tools.config['log_remote'])
+        except Exception as e:
+            _logger.error('Cannot activate remote logging, please check config for log_remote: %s', e)
+
+        if args:
+            try:
+                _root_logger = logging.getLogger()
+                remote_logging_handler = RemoteLoggingHandler(**args)
+                _root_logger.addHandler(remote_logging_handler)
+
+                _logger.info('Enabled RFC5424 logging for thread')
+            except Exception as e:
+                _logger.error('Cannot activate remote logging', e)
 
     # Configure loggers levels
     pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])

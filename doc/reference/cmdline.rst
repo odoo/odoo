@@ -330,6 +330,17 @@ customize the amount of logging output
     database. The database can be the name of a database in the "current"
     PostgreSQL, or `a PostgreSQL URI`_ for e.g. log aggregation
 
+.. option:: --log_remote <remote-logging-spec>
+
+    :samp:`log_remote = {'address': ('127.0.0.1', 514), 'socktype': 2, 'enterprise_id': 1234}`
+    enables remote logging onto ``127.0.0.1`` port ``514`` with UDP.
+
+    * ``socktype``: 2 enabled logging over UDP which is default
+    * ``socktype``: 1 enables logging over TCP
+
+    The logger uses `RFC 5424 <https://tools.ietf.org/html/rfc5424>`_ compatible
+    logging. For this to work you need to install `rfc5424-logging-handler<https://pypi.org/project/rfc5424-logging-handler/>`_.
+
 .. option:: --log-handler <handler-spec>
 
     :samp:`{LOGGER}:{LEVEL}`, enables ``LOGGER`` at the provided ``LEVEL``

@@ -176,6 +176,13 @@ class configmanager(object):
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="odoo.sql_db:DEBUG", help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
+        group.add_option('--log-remote',
+                         dest='log_remote',
+                         help="Logging to remote server (rfc5424):\n"
+                              "# 'socktype': 2 (UDP, default)\n"
+                              "# 'socktype': 1 (TCP)\n"
+                              "log_remote = {'address': ('127.0.0.1', 514), 'socktype': 2, 'enterprise_id': 1234}",
+                         my_default=False)
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -404,7 +411,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'log_remote', 'geoip_database', 'dev_mode', 'shell_interface'
         ]
 
         for arg in keys:
