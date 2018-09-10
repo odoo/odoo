@@ -17,8 +17,8 @@ class TestLeavesRights(TestHrHolidaysBase):
         super(TestLeavesRights, self).setUp()
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited',
-            'limit': True,
             'validation_type': 'hr',
+            'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False
@@ -30,7 +30,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_emp.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -60,9 +60,9 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hruser.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
-        res = other_leave.sudo(self.user_employee_id).read(['number_of_days_temp', 'state', 'name'])
+        res = other_leave.sudo(self.user_employee_id).read(['number_of_days', 'state', 'name'])
         self.assertEqual(
             res[0]['name'], '*****',
             'Private information should have been stripped, received %s instead' % res[0]['name']
@@ -78,7 +78,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hruser.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         self.assertEqual(
             other_leave.sudo(self.user_employee_id).name, '*****',
@@ -88,7 +88,7 @@ class TestLeavesRights(TestHrHolidaysBase):
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_own(self):
         """ Users should be able to read name field of own requests """
-        res = self.employee_leave.read(['name', 'number_of_days_temp', 'state'])
+        res = self.employee_leave.read(['name', 'number_of_days', 'state'])
         self.assertEqual(res[0]['name'], 'Test')
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -112,7 +112,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hruser.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         with self.assertRaises(AccessError):
             other_leave.sudo(self.user_employee_id).write({'name': 'Crocodile Dundee is my man'})
@@ -131,7 +131,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hrmanager.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         manager_leave.sudo(self.user_hrmanager).action_draft()
 
@@ -150,7 +150,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hruser.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         officer_leave.sudo(self.user_hruser).action_draft()
 
@@ -175,7 +175,7 @@ class TestLeavesRights(TestHrHolidaysBase):
             'employee_id': self.employee_hruser.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
         with self.assertRaises(UserError):
             other_leave.sudo(self.user_employee_id).action_draft()
@@ -316,9 +316,9 @@ class TestMultiCompany(TestHrHolidaysBase):
         })
         self.leave_type = self.env['hr.leave.type'].create({
             'name': 'Unlimited - Company New',
-            'limit': True,
             'company_id': self.new_company.id,
             'validation_type': 'hr',
+            'allocation_type': 'no',
         })
         self.rd_dept.manager_id = False
         self.hr_dept.manager_id = False
@@ -330,7 +330,7 @@ class TestMultiCompany(TestHrHolidaysBase):
             'employee_id': self.employee_emp.id,
             'date_from': datetime.now(),
             'date_to': datetime.now() + relativedelta(days=1),
-            'number_of_days_temp': 1,
+            'number_of_days': 1,
         })
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

@@ -6,15 +6,14 @@
 import logging
 import math
 
-from datetime import timedelta, datetime, time
+from datetime import datetime
 from pytz import timezone, UTC
 
 from odoo import api, fields, models
+from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
-
-from odoo.addons.resource.models.resource import float_to_time
 
 _logger = logging.getLogger(__name__)
 
@@ -60,17 +59,13 @@ class HolidaysRequest(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
-    def _default_domain_holiday_status(self):
-        if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
-            return [('valid', '=', True)]
-        return [('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both'])]
-
     @api.model
     def default_get(self, fields_list):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
+        defaults = self._default_get_request_parameters(defaults)
 
         LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
-        lt = LeaveType.search(self._default_domain_holiday_status())
+        lt = LeaveType.search([('valid', '=', True)])
 
         defaults['holiday_status_id'] = lt[0].id if len(lt) > 0 else defaults.get('holiday_status_id')
         return defaults
@@ -78,6 +73,26 @@ class HolidaysRequest(models.Model):
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    def _default_get_request_parameters(self, values):
+        new_values = dict(values)
+        global_from, global_to = False, False
+        # TDE FIXME: consider a mapping on several days that is not the standard
+        # calendar widget 7-19 in user's TZ is some custom input
+        if values.get('date_from'):
+            user_tz = self.env.user.tz or 'UTC'
+            localized_dt = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
+            global_from = localized_dt.time().hour == 7 and localized_dt.time().minute == 0
+            new_values['request_date_from'] = values['date_from'].date()
+        if values.get('date_to'):
+            user_tz = self.env.user.tz or 'UTC'
+            localized_dt = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
+            global_to = localized_dt.time().hour == 19 and localized_dt.time().minute == 0
+            new_values['request_date_to'] = values['date_to'].date()
+        if global_from and global_to:
+            new_values['request_unit_custom'] = True
+        return new_values
+
+    # description
     name = fields.Char('Description')
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -87,233 +102,261 @@ class HolidaysRequest(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
-            help="The status is set to 'To Submit', when a leave request is created." +
-            "\nThe status is 'To Approve', when leave request is confirmed by user." +
-            "\nThe status is 'Refused', when leave request is refused by manager." +
-            "\nThe status is 'Approved', when leave request is approved by manager.")
-    payslip_status = fields.Boolean('Reported in last payslips',
-        help='Green this button when the leave has been taken into account in the payslip.')
+        help="The status is set to 'To Submit', when a leave request is created." +
+        "\nThe status is 'To Approve', when leave request is confirmed by user." +
+        "\nThe status is 'Refused', when leave request is refused by manager." +
+        "\nThe status is 'Approved', when leave request is approved by manager.")
+    payslip_status = fields.Boolean('Reported in last payslips', help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False, required=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    date_to = fields.Datetime('End Date', readonly=True, copy=False, required=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
+    # leave type configuration
+    holiday_status_id = fields.Many2one(
+        "hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        domain=lambda self: self._default_domain_holiday_status())
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
+        domain=[('valid', '=', True)])
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
+    # HR data
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
+    department_id = fields.Many2one(
+        'hr.department', string='Department', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    number_of_days_temp = fields.Float(
-        'Duration (Days)', copy=False, readonly=True,
+    # duration
+    date_from = fields.Datetime(
+        'Start Date', readonly=True, index=True, copy=False, required=True,
+        default=fields.Datetime.now,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    date_to = fields.Datetime(
+        'End Date', readonly=True, copy=False, required=True,
+        default=fields.Datetime.now,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+    number_of_days = fields.Float(
+        'Duration (Days)', copy=False, readonly=True, track_visibility='onchange',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='Number of days of the leave request according to your working schedule.')
-    number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
-    number_of_hours = fields.Float(
-        'Duration (Hours)', copy=False, readonly=True, compute='_compute_number_of_hours',
-        help='Number of hours of the leave request according to your working schedule.')
+    number_of_days_display = fields.Float(
+        'Duration in days', compute='_compute_number_of_days_display', copy=False, readonly=True,
+        help='Number of days of the leave request. Used for interface.')
+    number_of_hours_display = fields.Float(
+        'Duration in hours', compute='_compute_number_of_hours_display', copy=False, readonly=True, 
+        help='Number of hours of the leave request according to your working schedule. Used for interface.')
+    # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
-
     parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     holiday_type = fields.Selection([
         ('employee', 'By Employee'),
+        ('company', 'By Company'),
         ('department', 'By Department'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True, required=True, default='employee',
+        ('category', 'By Employee Tag')],
+        string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
-    first_approver_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
+    category_id = fields.Many2one(
+        'hr.employee.category', string='Employee Tag', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
+    mode_company_id = fields.Many2one(
+        'res.company', string='Company', readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    first_approver_id = fields.Many2one(
+        'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
-    second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
+    second_approver_id = fields.Many2one(
+        'hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
-    # Those fields are mostly for the interface only
-
+    # UX fields
+    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
     # Interface fields used when not using hour-based computation
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
-
-    leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
-
-    # These fields are only used only when the leave is taken in half days
-    request_date_from_period = fields.Selection([('am', 'Morning'),
-                                                 ('pm', 'Afternoon')], string="Date Period Start", default='am')
-    request_date_to_period = fields.Selection([('am', 'Morning'),
-                                               ('pm', 'Afternoon')], string="Date Period End", default='pm')
-
-    request_unit_all = fields.Selection([('half', 'Half-day'),
-                             ('day', '1 Day'),
-                             ('period', 'Period')])
-    # Duplicate field because we cannot hide some entries of a selection field
-    request_unit_day = fields.Selection([('day', '1 Day'),
-                                         ('period', 'Period')], default='day')
+    # Interface fields used when using hour-based computation
+    request_hour_from = fields.Selection([
+        (0, '12:00 PM'), (0.5, '0:30 AM'),
+        (1, '1:00 AM'), (1.5, '1:30 AM'),
+        (2, '2:00 AM'), (2.5, '2:30 AM'),
+        (3, '3:00 AM'), (3.5, '3:30 AM'),
+        (4, '4:00 AM'), (4.5, '4:30 AM'),
+        (5, '5:00 AM'), (5.5, '5:30 AM'),
+        (6, '6:00 AM'), (6.5, '6:30 AM'),
+        (7, '7:00 AM'), (7.5, '7:30 AM'),
+        (8, '8:00 AM'), (8.5, '8:30 AM'),
+        (9, '9:00 AM'), (9.5, '9:30 AM'),
+        (10, '10:00 AM'), (10.5, '10:30 AM'),
+        (11, '11:00 AM'), (11.5, '11:30 AM'),
+        (12, '12:00 AM'), (12.5, '0:30 PM'),
+        (13, '1:00 PM'), (13.5, '1:30 PM'),
+        (14, '2:00 PM'), (14.5, '2:30 PM'),
+        (15, '3:00 PM'), (15.5, '3:30 PM'),
+        (16, '4:00 PM'), (16.5, '4:30 PM'),
+        (17, '5:00 PM'), (17.5, '5:30 PM'),
+        (18, '6:00 PM'), (18.5, '6:30 PM'),
+        (19, '7:00 PM'), (19.5, '7:30 PM'),
+        (20, '8:00 PM'), (20.5, '8:30 PM'),
+        (21, '9:00 PM'), (21.5, '9:30 PM'),
+        (22, '10:00 PM'), (22.5, '10:30 PM'),
+        (23, '11:00 PM'), (23.5, '11:30 PM')], string='Hour from')
+    request_hour_to = fields.Selection([
+        (0, '12:00 PM'), (0.5, '0:30 AM'),
+        (1, '1:00 AM'), (1.5, '1:30 AM'),
+        (2, '2:00 AM'), (2.5, '2:30 AM'),
+        (3, '3:00 AM'), (3.5, '3:30 AM'),
+        (4, '4:00 AM'), (4.5, '4:30 AM'),
+        (5, '5:00 AM'), (5.5, '5:30 AM'),
+        (6, '6:00 AM'), (6.5, '6:30 AM'),
+        (7, '7:00 AM'), (7.5, '7:30 AM'),
+        (8, '8:00 AM'), (8.5, '8:30 AM'),
+        (9, '9:00 AM'), (9.5, '9:30 AM'),
+        (10, '10:00 AM'), (10.5, '10:30 AM'),
+        (11, '11:00 AM'), (11.5, '11:30 AM'),
+        (12, '12:00 AM'), (12.5, '0:30 PM'),
+        (13, '1:00 PM'), (13.5, '1:30 PM'),
+        (14, '2:00 PM'), (14.5, '2:30 PM'),
+        (15, '3:00 PM'), (15.5, '3:30 PM'),
+        (16, '4:00 PM'), (16.5, '4:30 PM'),
+        (17, '5:00 PM'), (17.5, '5:30 PM'),
+        (18, '6:00 PM'), (18.5, '6:30 PM'),
+        (19, '7:00 PM'), (19.5, '7:30 PM'),
+        (20, '8:00 PM'), (20.5, '8:30 PM'),
+        (21, '9:00 PM'), (21.5, '9:30 PM'),
+        (22, '10:00 PM'), (22.5, '10:30 PM'),
+        (23, '11:00 PM'), (23.5, '11:30 PM')], string='Hour to')
+    # used only when the leave is taken in half days
+    request_date_from_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period Start", default='am')
+    # request type
+    request_unit_half = fields.Boolean('Half Day')
+    request_unit_hours = fields.Boolean('Custom Hours')
+    request_unit_custom = fields.Boolean('Days-long custom hours')
 
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL) or (holiday_type='department' AND department_id IS NOT NULL) )",
-         "The employee, department or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
+        ('type_value',
+         "CHECK((holiday_type='employee' AND employee_id IS NOT NULL) or "
+         "(holiday_type='company' AND mode_company_id IS NOT NULL) or "
+         "(holiday_type='category' AND category_id IS NOT NULL) or "
+         "(holiday_type='department' AND department_id IS NOT NULL) )",
+         "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('date_check2', "CHECK ((date_from <= date_to))", "The start date must be anterior to the end date."),
-        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
+        ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
-    @api.onchange('request_unit_all', 'request_date_from_period', 'request_date_to_period',
-                  'holiday_status_id', 'request_date_from', 'request_date_to', 'employee_id')
+    @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
+                  'request_date_from', 'request_date_to',
+                  'employee_id')
     def _onchange_request_parameters(self):
-        date_from = False
-        date_to = False
-
-        if not self.employee_id:
+        if not self.request_date_from:
+            self.date_from = False
             return
 
-        if self.request_date_from:
-            if self.date_from:
-                date_from = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_from), fields.Datetime.from_string(self.date_from).time()))
-            else:
-                date_from = datetime.combine(self.request_date_from, time.min)
+        if self.request_unit_half or self.request_unit_hours:
+            self.request_date_to = self.request_date_from
 
-        if self.request_date_to:
-            if self.date_to:
-                date_to = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_to), fields.Datetime.from_string(self.date_to).time()))
-            else:
-                date_to = datetime.combine(self.request_date_to, time.max)
-
-        if not self.request_date_from or not self.request_date_to:
-            if date_from:
-                self.date_from = date_from
-            if date_to:
-                self.date_to = date_to
-            self.number_of_days_temp = 0
+        if not self.request_date_to:
+            self.date_to = False
             return
 
-        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id)]
+        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env.user.company_id.resource_calendar_id.id)]
         attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
 
-        first_day = fields.Date.from_string(date_from)
-        last_day = fields.Date.from_string(date_to)
-
-        if self.request_unit_all in ['day', 'half']:
-            last_day = first_day
-
         # find first attendance coming after first_day
-        attendance_from = next((att for att in attendances if int(att.dayofweek) >= first_day.weekday()), attendances[0])
+        attendance_from = next((att for att in attendances if int(att.dayofweek) >= self.request_date_from.weekday()), attendances[0])
         # find last attendance coming before last_day
-        attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= last_day.weekday()), attendances[-1])
+        attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()), attendances[-1])
 
-        if self.request_unit_all == 'day' or (self.request_unit_all == 'period' and self.leave_type_request_unit == 'day'):
+        if self.request_unit_half:
+            if self.request_date_from_period == 'am':
+                hour_from = float_to_time(attendance_from.hour_from)
+                hour_to = float_to_time(attendance_from.hour_to)
+            else:
+                hour_from = float_to_time(attendance_to.hour_from)
+                hour_to = float_to_time(attendance_to.hour_to)
+        elif self.request_unit_hours:
+            hour_from = float_to_time(self.request_hour_from)
+            hour_to = float_to_time(self.request_hour_to)
+        elif self.request_unit_custom:
+            hour_from = self.date_from.time()
+            hour_to = self.date_to.time()
+        else:
             hour_from = float_to_time(attendance_from.hour_from)
             hour_to = float_to_time(attendance_to.hour_to)
 
-        elif self.request_unit_all == 'half':
-            hour_from = float_to_time(attendance_from.hour_from if self.request_date_from_period == 'am' else attendance_to.hour_from)
-            hour_to = float_to_time(attendance_from.hour_to if self.request_date_from_period == 'am' else attendance_to.hour_to)
+        tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'  # custom -> already in UTC
+        self.date_from = timezone(tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
+        self.date_to = timezone(tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
 
-        elif self.request_unit_all == 'period' and self.leave_type_request_unit == 'half':
-            hour_from = float_to_time(attendance_from.hour_from if self.request_date_from_period == 'am' else attendance_from.hour_to)
-            hour_to = float_to_time(attendance_to.hour_from if self.request_date_to_period == 'am' else attendance_to.hour_to)
+    @api.onchange('request_unit_half')
+    def _onchange_request_unit_half(self):
+        if self.request_unit_half:
+            self.request_unit_hours = False
+            self.request_unit_custom = False
+        self._onchange_request_parameters()
 
-        if self.leave_type_request_unit == 'hour' and self.request_unit_all == 'period':
-            date_from = fields.Datetime.from_string(date_from)
-            date_to = fields.Datetime.from_string(date_to)
-        else:
-            tz = self.env.user.tz or 'UTC'
-            date_from = timezone(tz).localize(datetime.combine(first_day, hour_from)).astimezone(UTC)
-            date_to = timezone(tz).localize(datetime.combine(last_day, hour_to)).astimezone(UTC)
+    @api.onchange('request_unit_hours')
+    def _onchange_request_unit_hours(self):
+        if self.request_unit_hours:
+            self.request_unit_half = False
+            self.request_unit_custom = False
+        self._onchange_request_parameters()
 
-        self.date_from = date_from
-        self.date_to = date_to
-
-        if not (self.leave_type_request_unit == 'hour' and self.request_unit_all == 'period'):
-            date_from = date_from
-            date_to = date_to
-
-        self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-
-    @api.onchange('request_unit_day')
-    def _onchange_request_unit_day(self):
-        self.request_unit_all = self.request_unit_day
+    @api.onchange('request_unit_custom')
+    def _onchange_request_unit_custom(self):
+        if self.request_unit_custom:
+            self.request_unit_half = False
+            self.request_unit_hours = False
+        self._onchange_request_parameters()
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
         if self.holiday_type == 'employee' and not self.employee_id:
-            if self.env.user.employee_ids:
-                self.employee_id = self.env.user.employee_ids[0]
-        elif self.holiday_type == 'department':
-            if self.env.user.employee_ids:
-                self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
-            self.employee_id = None
+            self.employee_id = self.env.user.employee_ids[0].id
+            self.mode_company_id = False
+            self.category_id = False
+        elif self.holiday_type == 'company' and not self.mode_company_id:
+            self.employee_id = False
+            self.mode_company_id = self.env.user.company_id.id
+            self.category_id = False
+        elif self.holiday_type == 'department' and not self.department_id:
+            self.employee_id = False
+            self.mode_company_id = False
+            self.department_id = self.env.user.employee_ids[0].department_id.id
+            self.category_id = False
         elif self.holiday_type == 'category':
-            self.employee_id = None
-            self.department_id = None
-
-    @api.onchange('date_from')
-    def _onchange_date_from(self):
-        """ If there are no date set for date_to, automatically set one 8 hours later than
-            the date_from. Also update the number_of_days.
-        """
-        date_from = fields.Datetime.from_string(self.date_from)
-        date_to = fields.Datetime.from_string(self.date_to)
-
-        # No date_to set so far: automatically compute one 8 hours later
-        if date_from and not date_to:
-            date_to = date_from + timedelta(hours=self.employee_id.resource_calendar_id.hours_per_day)
-            self.date_to = date_to
-
-        self.request_date_from = date_from.date() if date_from else False
-        self.request_date_to = date_to.date() if date_to else False
-
-        if (date_from and date_to) and (date_from.day < date_to.day):
-            self.request_unit_all = 'period'
-            self.request_unit_day = 'period'
-
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
-
-    @api.onchange('date_to')
-    def _onchange_date_to(self):
-        """ Update the number_of_days. """
-        date_from = fields.Datetime.from_string(self.date_from)
-        date_to = fields.Datetime.from_string(self.date_to)
-
-        self.request_date_from = date_from.date() if date_from else False
-        self.request_date_to = date_to.date() if date_to else False
-
-        if (date_from and date_to) and (date_from.day < date_to.day):
-            self.request_unit_all = 'period'
-            self.request_unit_day = 'period'
-
-        # Compute and update the number of days
-        if (date_to and date_from) and (date_from <= date_to):
-            self.number_of_days_temp = self._get_number_of_days(date_from, date_to, self.employee_id.id)
-        else:
-            self.number_of_days_temp = 0
+            self.employee_id = False
+            self.mode_company_id = False
+            self.department_id = False
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id.department_id
+        self.manager_id = self.employee_id.parent_id.id
+        if self.employee_id:
+            self.department_id = self.employee_id.department_id
+
+    @api.onchange('date_from', 'date_to')
+    def _onchange_leave_dates(self):
+        if self.date_from and self.date_to:
+            self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)
+        else:
+            self.number_of_days = 0
 
     @api.multi
-    @api.depends('number_of_days_temp')
-    def _compute_number_of_days(self):
+    @api.depends('number_of_days')
+    def _compute_number_of_days_display(self):
         for holiday in self:
-            holiday.number_of_days = -holiday.number_of_days_temp
+            holiday.number_of_days_display = holiday.number_of_days
 
     @api.multi
-    @api.depends('number_of_days_temp')
-    def _compute_number_of_hours(self):
+    @api.depends('number_of_days')
+    def _compute_number_of_hours_display(self):
         for holiday in self:
-            holiday.number_of_hours = holiday.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day
+            calendar = self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+            holiday.number_of_hours_display = holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -353,10 +396,10 @@ class HolidaysRequest(models.Model):
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
-    @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
+    @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
-            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.limit or holiday.holiday_status_id.negative:
+            if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.allocation_type == 'no':
                 continue
             leave_days = holiday.holiday_status_id.get_days(holiday.employee_id.id)[holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
@@ -382,9 +425,21 @@ class HolidaysRequest(models.Model):
         res = []
         for leave in self:
             if self.env.context.get('short_name'):
-                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days_temp)))
+                res.append((leave.id, _("%s : %.2f day(s)") % (leave.name or leave.holiday_status_id.name, leave.number_of_days)))
             else:
-                res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+                if leave.holiday_type == 'company':
+                    target = leave.mode_company_id.name
+                elif leave.holiday_type == 'department':
+                    target = leave.department_id.name
+                elif leave.holiday_type == 'category':
+                    target = leave.category_id.name
+                else:
+                    target = leave.employee_id.name
+                res.append(
+                    (leave.id,
+                     _("%s on %s :%.2f day(s)") %
+                     (target, leave.holiday_status_id.name, leave.number_of_days))
+                )
         return res
 
     @api.multi
@@ -499,11 +554,12 @@ class HolidaysRequest(models.Model):
     @api.multi
     def _prepare_holidays_meeting_values(self):
         self.ensure_one()
+        calendar = self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
         meeting_values = {
             'name': self.display_name,
             'categ_ids': [(6, 0, [
                 self.holiday_status_id.categ_id.id])] if self.holiday_status_id.categ_id else [],
-            'duration': self.number_of_days_temp * self.employee_id.resource_calendar_id.hours_per_day,
+            'duration': self.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
             'description': self.notes,
             'user_id': self.user_id.id,
             'start': self.date_from,
@@ -528,7 +584,7 @@ class HolidaysRequest(models.Model):
             'date_from': self.date_from,
             'date_to': self.date_to,
             'notes': self.notes,
-            'number_of_days_temp': self.number_of_days_temp,
+            'number_of_days': self.number_of_days,
             'parent_id': self.id,
             'employee_id': employee.id
         }
@@ -586,12 +642,20 @@ class HolidaysRequest(models.Model):
                 holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee':
                 holiday._validate_leave_request()
-            elif holiday.holiday_type in ['category', 'department']:
+            elif holiday.holiday_type in ['company', 'category', 'department']:
                 leaves = self.env['hr.leave']
-                employees = holiday.category_id.employee_ids if holiday.holiday_type == 'category' else holiday.department_id.member_ids
+                if holiday.holiday_type == 'category':
+                    employees = holiday.category_id.employee_ids
+                elif holiday.holiday_type == 'company':
+                    employees = self.env['hr.employee'].search([('company_id', '=', self.mode_company_id.id)])
+                else:
+                    holiday.department_id.member_ids
                 for employee in employees:
                     values = holiday._prepare_holiday_values(employee)
-                    leaves += self.with_context(mail_notify_force_send=False).create(values)
+                    leaves += self.with_context(
+                        mail_notify_force_send=False,
+                        mail_activity_automation_skip=True
+                    ).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
                 if leaves and leaves[0].validation_type == 'both':
