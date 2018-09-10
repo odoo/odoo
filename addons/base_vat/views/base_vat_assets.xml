@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="Base VAT Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/base_vat/static/src/scss/vat_checker.scss"/>
+            <script type="text/javascript" src="/base_vat/static/src/js/vat_checker.js" />
+        </xpath>
+    </template>
+</odoo>

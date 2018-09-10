@@ -36,6 +36,7 @@ only the country code will be validated.
     """,
     'depends': ['account'],
     'data': [
+        'views/base_vat_assets.xml',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',

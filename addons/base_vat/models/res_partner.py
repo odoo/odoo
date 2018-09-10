@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
 import logging
 import string
 import re
+from odoo.addons.iap import jsonrpc
 
 _logger = logging.getLogger(__name__)
 try:
@@ -14,7 +14,7 @@ except ImportError:
                     "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
-from odoo import api, models, _
+from odoo import api, models, fields, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
@@ -26,11 +26,15 @@ _eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
 
 _ref_vat = {
     'at': 'ATU12345675',
+    'al': 'ALK99999999L',
+    'ar': 'AR00000000000',
     'be': 'BE0477472701',
-    'bg': 'BG1234567892',
+    'bg': 'BG1234567892 or BG1001000000',
     'ch': 'CHE-123.456.788 TVA or CH TVA 123456',  # Swiss by Yannick Vaucher @ Camptocamp
+    'cl': 'CL334441113',
+    'co': 'CO9001279338',
     'cy': 'CY12345678F',
-    'cz': 'CZ12345679',
+    'cz': 'CZ12345679 or CZ612345670 or CZ6306150004',
     'de': 'DE123456788',
     'dk': 'DK12345674',
     'ee': 'EE123456780',
@@ -39,12 +43,12 @@ _ref_vat = {
     'fi': 'FI12345671',
     'fr': 'FR32123456789',
     'gb': 'GB123456782',
-    'gr': 'GR12345670',
+    'gr': 'GR12345670 or GT123456783',
     'hu': 'HU12345676',
     'hr': 'HR01234567896',  # Croatia, contributed by Milan Tribuson
     'ie': 'IE1234567FA',
     'it': 'IT12345670017',
-    'lt': 'LT123456715',
+    'lt': 'LT123456715 or LT123456789011',
     'lu': 'LU12345613',
     'lv': 'LV41234567891',
     'mt': 'MT12345634',
@@ -54,20 +58,34 @@ _ref_vat = {
     'pe': 'PER10254824220 or PED10254824220',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
-    'ro': 'RO1234567897',
+    'ro': 'RO24736200 or RO1234567897 or RO1630615123457',
+    'ru': 'RU5505035011 or RU550501929014',
     'se': 'SE123456789701',
     'si': 'SI12345679',
-    'sk': 'SK0012345675',
-    'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)'  # Levent Karakas @ Eska Yazilim A.S.
+    'sk': 'SK531231123 or SK0012345675',
+    'sm': 'SM12345',
+    'tr': 'TR1234567890 (VERGINO) veya TR12345678901 (TCKIMLIKNO)',  # Levent Karakas @ Eska Yazilim A.S.
+    'ua': 'UA12345678',
 }
 
+PARTNER_REMOTE_URL = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete'
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    vat_validation_state = fields.Char('VAT Validation state')
+
+    @api.model
     def _split_vat(self, vat):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
+
+    @api.model
+    def _get_check_func(self, country_code):
+        if not ustr(country_code).encode('utf-8').isalpha():
+            return False
+        check_func_name = 'check_vat_' + country_code
+        return getattr(self, check_func_name, None) or getattr(vatnumber, check_func_name, None)
 
     @api.model
     def simple_vat_check(self, country_code, vat_number):
@@ -75,10 +93,7 @@ class ResPartner(models.Model):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        if not ustr(country_code).encode('utf-8').isalpha():
-            return False
-        check_func_name = 'check_vat_' + country_code
-        check_func = getattr(self, check_func_name, None) or getattr(vatnumber, check_func_name, None)
+        check_func = self._get_check_func(country_code)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
             if country_code.upper() == 'EU':
@@ -90,7 +105,45 @@ class ResPartner(models.Model):
         return check_func(vat_number)
 
     @api.model
-    def vies_vat_check(self, country_code, vat_number):
+    def check_vat_rpc(self, vat):
+        validity = {
+            'found_format': False,
+            'format': False,
+            'existing': False,
+        }
+        vat_country, vat_number = self._split_vat(vat)
+
+        validity['found_format'] = True if self._get_check_func(vat_country) else False
+
+        if validity['found_format']:
+            validity['extra_msg'] = _ref_vat.get(vat_country) or ''
+
+            # First check VAT format
+            validity['format'] = self.simple_vat_check(vat_country, vat_number)
+
+            if validity['format']:
+                url = '%s/check_vat' % PARTNER_REMOTE_URL
+                params = {
+                    'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                    'vat': vat,
+                }
+
+                try:
+                    response = jsonrpc(url=url, params=params)
+                    if response:
+                        validity['existing'] = True
+                        validity['extra_msg'] = response.get('name', '')
+                except Exception as exception:
+                    _logger.error('Check VAT error: %s' % str(exception))
+                    return False, str(exception)
+
+        else:
+            validity['extra_msg'] = vat_country.upper()
+
+        return validity
+
+    @api.model
+    def vies_vat_check(self, country_code, vat_number, fail_on_exception=False):
         try:
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
@@ -101,7 +154,10 @@ class ResPartner(models.Model):
             # TIMEOUT or SERVER_BUSY. There is no way we can validate the input
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we fall back to the simple check.
-            return self.simple_vat_check(country_code, vat_number)
+            if fail_on_exception:
+                return False
+            else:
+                return self.simple_vat_check(country_code, vat_number)
 
     @api.model
     def fix_eu_vat_number(self, country_id, vat):
@@ -116,7 +172,7 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.constrains('vat')
+    # @api.constrains('vat')
     def check_vat(self):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
@@ -131,10 +187,10 @@ class ResPartner(models.Model):
         for partner in self:
             if not partner.vat:
                 continue
-            #check with country code as prefix of the TIN
+            # check with country code as prefix of the TIN
             vat_country, vat_number = self._split_vat(partner.vat)
             if not check_func(vat_country, vat_number):
-                #if fails, check with country code from country
+                # if fails, check with country code from country
                 country_code = partner.commercial_partner_id.country_id.code
                 if country_code:
                     if not check_func(country_code.lower(), partner.vat):
@@ -182,7 +238,7 @@ class ResPartner(models.Model):
         match = self.__check_vat_ch_re2.match(vat)
         if match:
             # For new TVA numbers, do a mod11 check
-            num = [s for s in match.group(1) if s.isdigit()]        # get the digits only
+            num = [s for s in match.group(1) if s.isdigit()]  # get the digits only
             factor = (5, 4, 3, 2, 7, 6, 5, 4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
             check = (11 - (csum % 11)) % 11
@@ -198,7 +254,7 @@ class ResPartner(models.Model):
             else:
                 # invalid
                 return -1
-        checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
+        checksum = extra + sum((8 - i) * int(x) for i, x in enumerate(vat[:7]))
         return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
 
     def check_vat_ie(self, vat):
@@ -235,7 +291,7 @@ class ResPartner(models.Model):
         vat = ustr(vat).encode('iso8859-1')
         m = self.__check_vat_mx_re.match(vat)
         if not m:
-            #No valid format
+            # No valid format
             return False
         try:
             ano = int(m.group('ano'))
@@ -257,7 +313,7 @@ class ResPartner(models.Model):
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
         """
         if len(vat) == 12 and vat.upper().endswith('MVA'):
-            vat = vat[:-3] # Strictly speaking we should enforce the suffix MVA but...
+            vat = vat[:-3]  # Strictly speaking we should enforce the suffix MVA but...
 
         if len(vat) != 9:
             return False
@@ -267,9 +323,9 @@ class ResPartner(models.Model):
             return False
 
         sum = (3 * int(vat[0])) + (2 * int(vat[1])) + \
-            (7 * int(vat[2])) + (6 * int(vat[3])) + \
-            (5 * int(vat[4])) + (4 * int(vat[5])) + \
-            (3 * int(vat[6])) + (2 * int(vat[7]))
+              (7 * int(vat[2])) + (6 * int(vat[3])) + \
+              (5 * int(vat[4])) + (4 * int(vat[5])) + \
+              (3 * int(vat[6])) + (2 * int(vat[7]))
 
         check = 11 - (sum % 11)
         if check == 11:
@@ -329,8 +385,8 @@ class ResPartner(models.Model):
             sum = 0
             check = 0
             for f in range(0, 9):
-                c1 = (int(vat[f]) + (9-f)) % 10
-                c2 = (c1 * (2 ** (9-f))) % 9
+                c1 = (int(vat[f]) + (9 - f)) % 10
+                c2 = (c1 * (2 ** (9 - f))) % 9
                 if (c1 != 0) and (c2 == 0):
                     c2 = 9
                 sum += c2
