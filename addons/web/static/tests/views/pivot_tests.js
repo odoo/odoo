@@ -1204,18 +1204,23 @@ QUnit.module('Views', {
         assert.expect(2);
 
         var data = this.data;
+        // It's important to compare capitalized and lowercased words
+        // to be sure the sorting is effective with both of them
         data.partner.fields.bouh = {string: "bouh", type: "integer"};
+        data.partner.fields.modd = {string: "modd", type: "integer"};
+        data.partner.fields.zip = {string: "Zip", type: "integer"};
 
         var pivot = createView({
             View: PivotView,
             model: "partner",
             data: data,
             arch: '<pivot>' +
+                        '<field name="zip" type="measure"/>' +
                         '<field name="foo" type="measure"/>' +
                         '<field name="bouh" type="measure"/>' +
+                        '<field name="modd" type="measure"/>' +
                   '</pivot>',
         });
-
         assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:first').data('field'), 'bouh',
             "Bouh should be the first measure");
         assert.strictEqual(pivot.$buttons.find('.o_pivot_measures_list .dropdown-item:last').data('field'), '__count',
