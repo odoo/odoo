@@ -21,6 +21,9 @@ var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
+        closed: function (ev ) {
+            ev.stopPropagation();
+        }
     }),
     events: _.extend({} , Widget.prototype.events, {
         'keydown .modal-footer button':'_onFooterButtonKeyDown',
