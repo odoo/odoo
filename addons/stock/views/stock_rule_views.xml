@@ -17,7 +17,7 @@
                         <group>
                             <field name="name"/>
                             <field name="move_type"/>
-                        </group>                        
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -45,9 +45,9 @@
             <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <tree string="Rules">
+                    <field name="action"/>
                     <field name="location_src_id"/>
                     <field name="location_id"/>
-                    <field name="action"/>
                     <field name="route_id"/>
                 </tree>
             </field>
