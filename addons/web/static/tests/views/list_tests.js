@@ -3333,7 +3333,7 @@ QUnit.module('Views', {
                   '</tree>',
         });
 
-        assert.strictEqual(list.$('tbody').text(), '1200.00500.00300.000.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '1200.00500.00300.000.00',
             "default should be sorted by int_field");
 
         // Drag and drop the fourth line in second position
@@ -3344,13 +3344,13 @@ QUnit.module('Views', {
         );
 
         // Handle should be unlocked at this point
-        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '1200.000.00500.00300.00',
             "drag and drop should have succeeded, as the handle is unlocked");
 
         // Sorting by a field different for int_field should lock the handle
         list.$('.o_column_sortable').eq(1).click();
 
-        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '0.00300.00500.001200.00',
             "should have been sorted by amount");
 
         // Drag and drop the fourth line in second position (not)
@@ -3360,13 +3360,13 @@ QUnit.module('Views', {
             {position: 'bottom'}
         );
 
-        assert.strictEqual(list.$('tbody').text(), '0.00300.00500.001200.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '0.00300.00500.001200.00',
             "drag and drop should have failed as the handle is locked");
 
         // Sorting by int_field should unlock the handle
         list.$('.o_column_sortable').eq(0).click();
 
-        assert.strictEqual(list.$('tbody').text(), '1200.000.00500.00300.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '1200.000.00500.00300.00',
             "records should be ordered as per the previous resequence");
 
         // Drag and drop the fourth line in second position
@@ -3376,7 +3376,7 @@ QUnit.module('Views', {
             {position: 'bottom'}
         );
 
-        assert.strictEqual(list.$('tbody').text(), '1200.00300.000.00500.00',
+        assert.strictEqual(list.$('tbody span[name="amount"]').text(), '1200.00300.000.00500.00',
             "drag and drop should have worked as the handle is unlocked");
 
         list.destroy();
