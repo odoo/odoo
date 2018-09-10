@@ -7107,6 +7107,68 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('save record with onchange on one2many with required field', function (assert) {
+        // in this test, we have a one2many with a required field, whose value is
+        // set by an onchange on another field ; we manually set the value of that
+        // first field, and directly click on Save (before the onchange RPC returns
+        // and sets the value of the required field)
+        assert.expect(6);
+
+        this.data.partner.fields.foo.default = undefined;
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.foo = obj.display_name ? 'foo value' : undefined;
+            },
+        };
+
+        var onchangeDef;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="foo" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(onchangeDef).then(_.constant(result));
+                }
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.args[0].p[0][2].foo, 'foo value',
+                        "should have wait for the onchange to return before saving");
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), '',
+            "display_name should be the empty string by default");
+        assert.strictEqual(form.$('.o_field_widget[name=foo]').val(), '',
+            "foo should be the empty string by default");
+
+        onchangeDef = $.Deferred(); // delay the onchange
+
+        form.$('.o_field_widget[name=display_name]').val('some value').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.step('resolve');
+        onchangeDef.resolve();
+
+        assert.verifySteps(['resolve', 'create']);
+
+        form.destroy();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
