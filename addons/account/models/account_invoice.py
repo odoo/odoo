@@ -1629,7 +1629,6 @@ class AccountInvoiceLine(models.Model):
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
             res['arch'] = etree.tostring(doc, encoding='unicode')
-
         return res
 
     @api.v8
@@ -1718,12 +1717,12 @@ class AccountInvoiceLine(models.Model):
         return {'domain': domain}
 
     def _get_invoice_line_name_from_product(self):
-        """ Returns the automatic name to give to give to the invoice line for
-        the product it contains.
+        """ Returns the automatic name to give to the invoice line depending on
+        the product it is linked to.
 
         This function can be overridden to return None when we don't want to
-        update the invoice line name when resolving the onchange event of
-        product_id field.
+        update the invoice line name (hence, when resolving the onchange event of
+        product_id field).
         """
         if not self.product_id:
             return ''

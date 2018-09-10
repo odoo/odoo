@@ -85,7 +85,6 @@ You could use this simplified accounting in case you work with an (external) acc
         "static/src/xml/account_reconciliation.xml",
         "static/src/xml/account_payment.xml",
         "static/src/xml/account_report_backend.xml",
-        "static/src/xml/bills_tree_upload_views.xml",
     ],
     'installable': True,
     'application': True,

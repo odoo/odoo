@@ -452,7 +452,6 @@ class AccountChartTemplate(models.Model):
         ]
         for record in todo_list:
             account_template = getattr(self, record[0])
-
             if account_template:
                 account_id = acc_template_ref[account_template.id]
 
