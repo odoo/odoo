@@ -38,7 +38,7 @@ function genericJsonRpc (fct_name, params, settings, fct) {
     });
     // FIXME: jsonp?
     deferred.abort = function () {
-        deferred.reject('communication', $.Event(), 'abort', 'abort');
+        deferred.reject({message: "XmlHttpRequestError abort"}, $.Event('abort'));
         if (xhr.abort) {
             xhr.abort();
         }
