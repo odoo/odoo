@@ -235,12 +235,14 @@ class Employee(models.Model):
             self.tz = self.resource_calendar_id.tz
 
     def _sync_user(self, user):
-        return dict(
+        vals = dict(
             name=user.name,
             image=user.image,
             work_email=user.email,
-            tz=user.tz,
         )
+        if user.tz:
+            vals['tz'] = user.tz
+        return vals
 
     @api.model
     def create(self, vals):
