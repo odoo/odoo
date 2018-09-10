@@ -21,8 +21,9 @@ class TestSaleOrder(TestCommonSaleNoChart):
         cls.setUpUsers()
         group_salemanager = cls.env.ref('sales_team.group_sale_manager')
         group_salesman = cls.env.ref('sales_team.group_sale_salesman')
-        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id])]})
-        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id])]})
+        group_employee = cls.env.ref('base.group_user')
+        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
+        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
