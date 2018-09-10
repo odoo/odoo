@@ -1698,18 +1698,14 @@ class AccountInvoiceLine(models.Model):
             else:
                 product = self.product_id
 
-            self.name = product.partner_ref
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
                 self.account_id = account.id
             self._set_taxes()
 
-            if type in ('in_invoice', 'in_refund'):
-                if product.description_purchase:
-                    self.name += '\n' + product.description_purchase
-            else:
-                if product.description_sale:
-                    self.name += '\n' + product.description_sale
+            product_name = self._get_invoice_line_name_from_product()
+            if product_name != None:
+                self.name = product_name
 
             if not self.uom_id or product.uom_id.category_id.id != self.uom_id.category_id.id:
                 self.uom_id = product.uom_id.id
@@ -1720,6 +1716,27 @@ class AccountInvoiceLine(models.Model):
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id)
         return {'domain': domain}
+
+    def _get_invoice_line_name_from_product(self):
+        """ Returns the automatic name to give to give to the invoice line for
+        the product it contains.
+
+        This function can be overridden to return None when we don't want to
+        update the invoice line name when resolving the onchange event of
+        product_id field.
+        """
+        if not self.product_id:
+            return ''
+
+        rslt = self.product_id.partner_ref
+        if type in ('in_invoice', 'in_refund'):
+            if self.product_id.description_purchase:
+                rslt += '\n' + self.product_id.description_purchase
+        else:
+            if self.product_id.description_sale:
+                rslt += '\n' + self.product_id.description_sale
+
+        return rslt
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
