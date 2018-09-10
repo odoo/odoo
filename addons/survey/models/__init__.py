@@ -3,4 +3,3 @@
 
 from . import survey
 from . import ir_autovacuum
-from . import res_users

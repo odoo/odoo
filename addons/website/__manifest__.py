@@ -28,7 +28,6 @@
         'views/res_config_settings_views.xml',
         'views/ir_actions_views.xml',
         'views/ir_attachment_views.xml',
-        'views/res_users_views.xml',
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
     ],
