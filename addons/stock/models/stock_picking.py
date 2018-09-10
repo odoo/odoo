@@ -470,8 +470,9 @@ class Picking(models.Model):
             else:
                 location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
 
-            self.location_id = location_id
-            self.location_dest_id = location_dest_id
+            if self.state == 'draft':
+                self.location_id = location_id
+                self.location_dest_id = location_dest_id
         # TDE CLEANME move into onchange_partner_id
         if self.partner_id:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
