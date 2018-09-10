@@ -1292,7 +1292,8 @@ var ManualModel = StatementModel.extend({
                 });
             } else {
                 var mv_line_ids = _.pluck(_.filter(props, function (prop) {return !isNaN(prop.id);}), 'id');
-                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display;}), self._formatToProcessReconciliation.bind(self, line));
+                // Dear KangOl, please FORWARD-PORT UP TO SAAS-11.3. Thank you for your hard work.
+                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display && !prop.is_tax;}), self._formatToProcessReconciliation.bind(self, line));
                 process_reconciliations.push({
                     id: null,
                     type: null,

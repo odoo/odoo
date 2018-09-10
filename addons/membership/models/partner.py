@@ -164,8 +164,10 @@ class Partner(models.Model):
 
     @api.model
     def _cron_update_membership(self):
-        # used to recompute 'membership_state'; should no longer be necessary
-        pass
+        partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
+        # mark the field to be recomputed, and recompute it
+        partners._recompute_todo(self._fields['membership_state'])
+        self.recompute()
 
     @api.multi
     def create_membership_invoice(self, product_id=None, datas=None):

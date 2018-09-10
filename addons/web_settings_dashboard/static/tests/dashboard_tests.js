@@ -11,12 +11,12 @@ var Dashboard = webSettingsDashboard.Dashboard;
 function createDashboard(params) {
     var widget = new Widget();
     var dashboard = new Dashboard(widget);
-    dashboard.all_dashboards = ['invitations']; // test only user invitations
+    dashboard.all_dashboards = params.dashboards || ['invitations']; // test only user invitations
 
     testUtils.addMockEnvironment(widget, params);
 
     var originalDestroy = Dashboard.prototype.destroy;
-    Dashboard.destroy = function () {
+    dashboard.destroy = function () {
         dashboard.destroy = originalDestroy;
         widget.destroy();
     };
