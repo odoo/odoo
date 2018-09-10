@@ -116,16 +116,38 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
 
     def test_make_billable_at_task_rate(self):
         """ Starting from a non billable project, make it billable at task rate, using the wizard """
+        Timesheet = self.env['account.analytic.line']
+        Task = self.env['project.task']
         # set a customer on the project
         self.project_non_billable.write({
             'partner_id': self.partner_2.id
         })
+        # create a task and 2 timesheets
+        task = Task.with_context(default_project_id=self.project_non_billable.id).create({
+            'name': 'first task',
+            'partner_id': self.project_non_billable.partner_id.id,
+            'planned_hours': 10,
+        })
+        timesheet1 = Timesheet.create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 3,
+            'employee_id': self.employee_manager.id,
+        })
+        timesheet2 = Timesheet.create({
+            'name': 'Test Line tde',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'employee_id': self.employee_tde.id,
+        })
 
         # create wizard
         wizard = self.env['project.create.sale.order'].with_context(active_id=self.project_non_billable.id, active_model='project.project').create({
-            'line_ids': [
-                (0, 0, {'product_id': self.product_delivery_timesheet3.id, 'quantity': 10, 'price_unit': self.product_delivery_timesheet3.list_price})  # product creates new T in new P
-            ]
+            'product_id': self.product_delivery_timesheet3.id,  # product creates new T in new P
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'billable_type': 'project_rate',
         })
 
         self.assertEqual(self.project_non_billable.billable_type, 'no', "The project should still be non billable")
@@ -138,24 +160,49 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         self.assertEqual(self.project_non_billable.billable_type, 'task_rate', "The project should be 'task rate' billable")
         self.assertEqual(sale_order.partner_id, self.project_non_billable.partner_id, "The customer of the SO should be the same as the project")
         self.assertEqual(len(sale_order.order_line), 1, "The SO should have 1 line")
-        self.assertEqual(sale_order.order_line.product_id, wizard.line_ids.product_id, "The product of the only SOL should be the selected on the wizard")
+        self.assertEqual(sale_order.order_line.product_id, wizard.product_id, "The product of the only SOL should be the selected on the wizard")
         self.assertEqual(sale_order.order_line.project_id, self.project_non_billable, "SOL should be linked to the project")
         self.assertTrue(sale_order.order_line.task_id, "The SOL creates a task as they were no task already present in the project (system limitation)")
         self.assertEqual(sale_order.order_line.task_id.project_id, self.project_non_billable, "The created task should be in the project")
+        self.assertEqual(sale_order.order_line.qty_delivered, timesheet1.unit_amount + timesheet2.unit_amount, "The create SOL should have an delivered quantity equals to the sum of tasks'timesheets")
 
     def test_make_billable_at_employee_rate(self):
         """ Starting from a non billable project, make it billable at employee rate, using the wizard """
+        Timesheet = self.env['account.analytic.line']
+        Task = self.env['project.task']
         # set a customer on the project
         self.project_non_billable.write({
             'partner_id': self.partner_2.id
         })
+        # create a task and 2 timesheets
+        task = Task.with_context(default_project_id=self.project_non_billable.id).create({
+            'name': 'first task',
+            'partner_id': self.project_non_billable.partner_id.id,
+            'planned_hours': 10,
+        })
+        timesheet1 = Timesheet.create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 3,
+            'employee_id': self.employee_manager.id,
+        })
+        timesheet2 = Timesheet.create({
+            'name': 'Test Line tde',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'employee_id': self.employee_user.id,
+        })
 
         # create wizard
         wizard = self.env['project.create.sale.order'].with_context(active_id=self.project_non_billable.id, active_model='project.project').create({
+            'billable_type': 'employee_rate',
+            'partner_id': self.partner_2.id,
             'line_ids': [
-                (0, 0, {'product_id': self.product_delivery_timesheet1.id, 'quantity': 4, 'price_unit': self.product_delivery_timesheet1.list_price}),  # product creates no T
-                (0, 0, {'product_id': self.product_delivery_timesheet2.id, 'quantity': 5, 'price_unit': self.product_delivery_timesheet2.list_price}),  # product creates T in global project
-                (0, 0, {'product_id': self.product_delivery_timesheet3.id, 'quantity': 10, 'price_unit': self.product_delivery_timesheet3.list_price}),  # product creates new T in new P
+                (0, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_tde.id}),  # product creates no T
+                (0, 0, {'product_id': self.product_delivery_timesheet1.id, 'price_unit': 15, 'employee_id': self.employee_manager.id}),  # product creates no T (same product than previous one)
+                (0, 0, {'product_id': self.product_delivery_timesheet3.id, 'price_unit': self.product_delivery_timesheet3.list_price, 'employee_id': self.employee_user.id}),  # product creates new T in new P
             ]
         })
 
@@ -167,29 +214,31 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         action = wizard.action_create_sale_order()
         sale_order = self.env['sale.order'].browse(action['res_id'])
 
-        self.assertEqual(self.project_non_billable.billable_type, 'task_rate', "The project should be 'employee rate' billable")
+        self.assertEqual(self.project_non_billable.billable_type, 'employee_rate', "The project should be 'employee rate' billable")
         self.assertEqual(sale_order.partner_id, self.project_non_billable.partner_id, "The customer of the SO should be the same as the project")
-        self.assertEqual(len(sale_order.order_line), 3, "The SO should have 3 lines")
+        self.assertEqual(len(sale_order.order_line), 2, "The SO should have 2 lines, as in wizard map there were 2 time the same product with the same price (for 2 different employees)")
+        self.assertEqual(len(self.project_non_billable.sale_line_employee_ids), 3, "The project have 3 lines in its map")
+        self.assertEqual(self.project_non_billable.sale_line_id, sale_order.order_line[0], "The wizard sets sale line fallbakc on project as the first of the list")
+        self.assertEqual(task.sale_line_id, sale_order.order_line[0], "The wizard sets sale line fallback on tasks")
+        self.assertEqual(task.partner_id, wizard.partner_id, "The wizard sets the customer on tasks to make SOL line field visible")
 
         line1 = sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet1)
-        line2 = sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet2)
-        line3 = sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet3)
+        line2 = sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet3)
 
-        self.assertTrue(line1, "Sale line with product 1 should exists")
-        self.assertTrue(line2, "Sale line with product 2 should exists")
-        self.assertTrue(line3, "Sale line with product 3 should exists")
+        self.assertTrue(line1, "Sale line 1 with product 1 should exists")
+        self.assertTrue(line2, "Sale line 2 with product 3 should exists")
 
         self.assertFalse(line1.project_id, "Sale line 1 should be linked to the 'non billable' project")
-        self.assertFalse(line2.project_id, "Sale line 2 should not be linked to a project, as it creates a task in a global one")
-        self.assertEqual(line3.project_id, self.project_non_billable, "Sale line 3 should be linked to the 'non billable' project")
+        self.assertEqual(line2.project_id, self.project_non_billable, "Sale line 3 should be linked to the 'non billable' project")
+        self.assertEqual(line1.price_unit, 15, "The unit price of SOL 1 should be 15")
+        self.assertEqual(line1.product_uom_qty, 0, "The ordered qty of SOL 1 should be one")
+        self.assertEqual(line2.product_uom_qty, 0, "The ordered qty of SOL 1 should be one")
 
-        # filling the map will set billable type to emlpoyee rate
-        self.env['project.sale.line.employee.map'].create({
-            'project_id': self.project_non_billable.id,
-            'sale_line_id': line1.id,
-            'employee_id': self.employee_manager.id,
-        })
-        self.assertEqual(self.project_non_billable.billable_type, 'employee_rate', "The project should be 'employee rate' billable")
+        self.assertEqual(self.project_non_billable.sale_line_employee_ids.mapped('sale_line_id'), sale_order.order_line, "The SO lines of the map should be the same of the sales order")
+        self.assertEqual(timesheet1.so_line, line1, "Timesheet1 should be linked to sale line 1, as employee manager create the timesheet")
+        self.assertEqual(timesheet2.so_line, line2, "Timesheet2 should be linked to sale line 2, as employee tde create the timesheet")
+        self.assertEqual(timesheet1.unit_amount, line1.qty_delivered, "Sale line 1 should have a delivered qty equals to the sum of its linked timesheets")
+        self.assertEqual(timesheet2.unit_amount, line2.qty_delivered, "Sale line 2 should have a delivered qty equals to the sum of its linked timesheets")
 
     def test_billing_employee_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'employee rate'. Then move the task into a 'task rate' project. """
