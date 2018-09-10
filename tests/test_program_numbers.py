@@ -352,6 +352,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(order.amount_untaxed, 1435.46, "The order untaxed total with programs should be 1435.46")
         self.assertEqual(len(order.order_line.ids), 12, "Order should contains 5 regular product lines, 3 free product lines and 4 discount lines (one for every tax)")
 
+        # -- This is a test inside the test
+        order.order_line._compute_tax_id()
+        self.assertEqual(order.amount_total, 1746, "Recomputing tax on sale order lines should not change total amount")
+        self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
+        self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 1746, "Recomputing tax on sale order lines should not change total amount")
+        self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
+        self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
+        # -- End test inside the test
+
         # Now we want to apply a 20% discount only on iPad
         self.env['sale.coupon.program'].create({
             'name': '20% reduction on ipad in cart',
