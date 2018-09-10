@@ -722,7 +722,7 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _set_transaction_done(self):
         '''Move the transaction's payment to the done state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized') for trans in self):
+        if any(trans.state not in ('draft', 'authorized', 'pending') for trans in self):
             raise ValidationError(_('Only draft/authorized transaction can be posted.'))
 
         self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
