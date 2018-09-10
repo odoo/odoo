@@ -659,7 +659,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
         return this.alive(this.searchview.appendTo($('<div>')))
             .then(function () {
-                self.$searchview_buttons = self.searchview.$buttons.contents();
+                self.$searchview_buttons = self.searchview.$buttons;
                 // manually call do_search to generate the initial domain and filter
                 // the messages in the default thread
                 self.searchview.do_search();

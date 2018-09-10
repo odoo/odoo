@@ -107,6 +107,36 @@ QUnit.test('basic rendering', function (assert) {
     });
 });
 
+QUnit.test('searchview options visibility', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+    })
+    .then(function (discuss) {
+        var $searchviewOptions = $('.o_search_options > div');
+        var $searchviewOptionsToggler = $('.o_searchview_more.fa.fa-search-minus');
+        assert.strictEqual($searchviewOptions.length, 1,
+            "should have search options");
+        assert.strictEqual($searchviewOptionsToggler.length, 1,
+            "should have a button to toggle search options");
+        assert.strictEqual($searchviewOptions.css('display'), 'block',
+            "search options should be visible by default");
+
+        $searchviewOptionsToggler.click();
+        assert.strictEqual($searchviewOptions.css('display'), 'none',
+            "search options should be hidden after clicking on search option toggler");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 QUnit.test('unescape channel name in the sidebar', function (assert) {
     // When the user creates a channel, the channel's name is escaped, this in
     // order to prevent XSS attacks. However, the user should see visually the
