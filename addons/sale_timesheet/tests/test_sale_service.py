@@ -259,6 +259,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
 
         # reconfirm SO
+        self.sale_order.action_draft()
         self.sale_order.action_confirm()
 
         self.assertTrue(so_line1.task_id, "SO reconfirmation should not have create another task")
