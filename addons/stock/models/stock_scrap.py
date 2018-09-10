@@ -66,6 +66,12 @@ class StockScrap(models.Model):
         scrap.do_scrap()
         return scrap
 
+    @api.multi
+    def unlink(self):
+        if 'done' in self.mapped('state'):
+            raise UserError(_('You cannot delete a scrap which is done.'))
+        return super(StockScrap, self).unlink()
+
     def _get_origin_moves(self):
         return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
 
@@ -74,16 +80,17 @@ class StockScrap(models.Model):
         for scrap in self:
             moves = scrap._get_origin_moves() or self.env['stock.move']
             move = self.env['stock.move'].create(scrap._prepare_move_values())
-            quants = self.env['stock.quant'].quants_get_preferred_domain(
-                move.product_qty, move,
-                domain=[
-                    ('qty', '>', 0),
-                    ('lot_id', '=', self.lot_id.id),
-                    ('package_id', '=', self.package_id.id)],
-                preferred_domain_list=scrap._get_preferred_domain())
-            if any([not x[0] for x in quants]):
-                raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
-            self.env['stock.quant'].quants_reserve(quants, move)
+            if move.product_id.type == 'product':
+                quants = self.env['stock.quant'].quants_get_preferred_domain(
+                    move.product_qty, move,
+                    domain=[
+                        ('qty', '>', 0),
+                        ('lot_id', '=', self.lot_id.id),
+                        ('package_id', '=', self.package_id.id)],
+                    preferred_domain_list=scrap._get_preferred_domain())
+                if any([not x[0] for x in quants]):
+                    raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
+                self.env['stock.quant'].quants_reserve(quants, move)
             move.action_done()
             scrap.write({'move_id': move.id, 'state': 'done'})
             moves.recalculate_move_state()

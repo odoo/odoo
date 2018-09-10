@@ -155,6 +155,14 @@ def constrains(*args):
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
         supported and will be ignored
+
+        ``@constrains`` will be triggered only if the declared fields in the
+        decorated method are included in the ``create`` or ``write`` call.
+        It implies that fields not present in a view will not trigger a call
+        during a record creation. A override of ``create`` is necessary to make
+        sure a constraint will always be triggered (e.g. to test the absence of
+        value).
+
     """
     return attrsetter('_constrains', args)
 

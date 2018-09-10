@@ -3,13 +3,14 @@
 # * account_asset
 # 
 # Translators:
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Gab_Odoo <gab@odoo.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
 # Henry Mineehen <info@mineehen.de>, 2016
@@ -18,13 +19,14 @@
 # Renzo Meister <info@jamotion.ch>, 2016
 # Philipp Hug <philipp@hug.cx>, 2016
 # Dejan Dinic <dejan.dinic@bluewin.ch>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Dejan Dinic <dejan.dinic@bluewin.ch>, 2016\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +75,7 @@ msgstr "Buchungssatz"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Konto für die Abschreibungsbuchungen, um den Wert der Anlage zu mindern."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -80,12 +83,14 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Aufwandskonto für die Abschreibungsbuchungen, um den Wertverlust der Anlage "
+"als Aufwand zu buchen."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
-msgstr ""
+msgstr "Anlagenkonto zum Buchen der Anlage zu ihren Anschaffungskosten."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -117,7 +122,7 @@ msgstr "Summe bei Teilzahlungen"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
 msgid "Analytic Account"
-msgstr "Analysekonto"
+msgstr "Kostenstelle"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_asset_id
@@ -147,9 +152,9 @@ msgid "Asset Durations to Modify"
 msgstr "Lebensdauer der Anlage verändern"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
-msgstr "Vermögenswert Enddatum"
+msgstr "Anlage Enddatum"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
@@ -159,12 +164,12 @@ msgstr "Lineare Abschreibung"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
 msgid "Asset Name"
-msgstr "Anlagegut Bezeichnung"
+msgstr "Anlagebezeichnung"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
-msgstr "Vermögenswert Startdatum"
+msgstr "Anlage Startdatum"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
@@ -196,7 +201,7 @@ msgstr "Anlage erzeugt"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Anlage Abschreibungszeile"
+msgstr "Abschreibungszeilen der Anlage"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:296
@@ -230,7 +235,7 @@ msgstr "Anlagenanalyse"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Abschreibungsbuchungen"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -260,7 +265,7 @@ msgstr "Anlage 'aktiv'"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Anlagen automatisch bestätigen"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -293,6 +298,8 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Aktivieren, um die generierten Abschreibungsbuchungen nach Anlagetyp zu "
+"gruppieren."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -324,7 +331,7 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Wählen Sie die Periode für die automatische Abschreibungsbuchungen der "
+"Wählen Sie die Periode, für die automatische Abschreibungsbuchungen der "
 "aktiven Anlagen erzeugt werden sollen."
 
 #. module: account_asset
@@ -427,7 +434,7 @@ msgstr "Datum"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Date of asset"
-msgstr "Datum Geschäftsausstattung"
+msgstr "Anlagedatum"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -442,7 +449,7 @@ msgstr "Abschreibungsdatum"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr "Konto Noch nicht realisierter Umsatz"
+msgstr "Konto für passive Rechnungsabgrenzungsposten"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
@@ -453,7 +460,7 @@ msgstr "Umsatzabgrenzungstyp"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Deferred Revenues"
-msgstr "Verzögerte Einnahmen"
+msgstr "Passive Rechnungsabgrenzung"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -561,13 +568,13 @@ msgstr "Anzeigename"
 #: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
-msgstr "Verschrottungsbuchung"
+msgstr "Veräußerungsbuchung"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
-msgstr "Verschrottungsbuchungen"
+msgstr "Veräußerungsbuchungen"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:550
@@ -648,7 +655,7 @@ msgstr "Gruppieren nach ..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Abschreibungsbuchungen gruppieren"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -694,8 +701,7 @@ msgstr "Rechungsposition"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
-"Das ist der geplante Erinnerungswert, der nicht abgeschrieben werden kann."
+msgstr "Das ist der geplante Restwert, der nicht abgeschrieben werden kann."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -751,7 +757,7 @@ msgstr "Linear"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Mit Abschreibungsbuchung verbunden"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -802,7 +808,7 @@ msgstr "Anzahl der Abschreibungen"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "Zahl der Buchungen"
+msgstr "Anzahl der Buchungen"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -812,7 +818,7 @@ msgstr "Anzahl der Monate in Perioden"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Eine Buchung alle"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -902,7 +908,7 @@ msgstr "Grund"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Abschreibungsposten: Aufwandskonto"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -933,7 +939,7 @@ msgstr "Laufend"
 #. module: account_asset
 #: selection:account.asset.category,type:0
 msgid "Sale: Revenue Recognition"
-msgstr "Verkauf: Erfolgswirksamer Umsatz"
+msgstr "Verkauf: passive Rechnungsabgrenzung"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -943,7 +949,7 @@ msgstr "Verkauf"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Liquidationswert"
+msgstr "Veräußerungswert"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -996,13 +1002,23 @@ msgstr ""
 "vollständig abschreibt."
 
 #. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
+"Diese Abschreibung ist bereits mit einem Journal verknüpft! Bitte buchen "
+"oder löschen Sie es."
+
+#. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 "Dieser Assistent bucht Zu-/Abschreibungspositionen im gewählten Monat,<br/>\n"
-"Dies erzeugt auch Buchungssätze für alle zugehörigen, erfolgswirksamen Tilgungs-/Zuschreibungpositionen dieser Periode."
+"Dies erzeugt auch Buchungssätze für alle zugehörigen passiven und aktiven Rechnungsabgrenzungsposten dieser Periode."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1049,10 +1065,10 @@ msgid ""
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"Wenn eine Anlage angelegt wird, ist der Status \"Entwurf\". Nach Bestätigung"
+"Wenn eine Anlage angelegt wird, ist ihr Status \"Entwurf\". Nach Bestätigung"
 " der Anlage wird diese 'aktiv' und Abschreibungen können verbucht werden. "
-"Sie können die Anlage automatisch schließen, wenn die Abschreibungen vorbei "
-"sind. Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
+"Sie können die Anlage schließen, wenn alle nötigen Abschreibungen verbucht "
+"wurden. Nach Verbuchung der letzen Abschreibung wird die Anlage automatisch "
 "geschlossen."
 
 #. module: account_asset
@@ -1070,7 +1086,7 @@ msgstr "Sie können kein Dokument löschen, welches im %s Staus ist."
 #: code:addons/account_asset/models/account_asset.py:110
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr "Sie dürfen ein Dokument, mit gebuchten Posten, nicht löschen."
+msgstr "Sie dürfen ein Dokument mit gebuchten Posten nicht löschen."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:579

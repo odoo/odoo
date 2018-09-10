@@ -6,16 +6,17 @@ from odoo.addons.website.models.website import slug
 from odoo.http import request
 
 
+# NB: DO NOT FORWARD PORT THE FALSY LEAVES IN 11.0
 class WebsiteHrRecruitment(http.Controller):
     @http.route([
         '/jobs',
-        '/jobs/country/<model("res.country"):country>',
-        '/jobs/department/<model("hr.department"):department>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>',
+        '''/jobs/country/<model("res.country", "[(0, '=', 1)]"):country>''',
+        '''/jobs/department/<model("hr.department", "[(0, '=', 1)]"):department>''',
+        '''/jobs/country/<model("res.country"):country>/department/<model("hr.department", "[(0, '=', 1)]"):department>''',
         '/jobs/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/office/<int:office_id>',
-        '/jobs/department/<model("hr.department"):department>/office/<int:office_id>',
-        '/jobs/country/<model("res.country"):country>/department/<model("hr.department"):department>/office/<int:office_id>',
+        '''/jobs/country/<model("res.country", "[(0, '=', 1)]"):country>/office/<int:office_id>''',
+        '''/jobs/department/<model("hr.department", "[(0, '=', 1)]"):department>/office/<int:office_id>''',
+        '''/jobs/country/<model("res.country"):country>/department/<model("hr.department", "[(0, '=', 1)]"):department>/office/<int:office_id>''',
     ], type='http', auth="public", website=True)
     def jobs(self, country=None, department=None, office_id=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
@@ -68,7 +69,8 @@ class WebsiteHrRecruitment(http.Controller):
 
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
-        job = request.env['hr.job'].create({
+        # avoid branding of website_description by setting rendering_bundle in context
+        job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))

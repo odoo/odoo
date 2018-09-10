@@ -26,6 +26,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tools.parse_version import parse_version
+from odoo.tools.misc import topological_sort
 
 _logger = logging.getLogger(__name__)
 
@@ -168,6 +169,7 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
                 output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
@@ -598,7 +600,7 @@ class Module(models.Model):
         res = [0, 0]    # [update, add]
 
         default_version = modules.adapt_version('1.0')
-        known_mods = self.search([])
+        known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
         # iterate through detected modules and update/create them in db
@@ -763,7 +765,13 @@ class Module(models.Model):
             filter_lang = [lang.code for lang in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
-        mod_names = [mod.name for mod in self if mod.state in ('installed', 'to install', 'to upgrade')]
+
+        update_mods = self.filtered(lambda r: r.state in ('installed', 'to install', 'to upgrade'))
+        mod_dict = {
+            mod.name: mod.dependencies_id.mapped('name')
+            for mod in update_mods
+        }
+        mod_names = topological_sort(mod_dict)
         self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
 
     @api.multi

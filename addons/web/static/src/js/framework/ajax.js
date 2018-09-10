@@ -232,8 +232,20 @@ function get_file(options) {
                 if (options.error) {
                     var body = this.contentDocument.body;
                     var nodes = body.children.length === 0 ? body.childNodes : body.children;
-                    var node = nodes[1] || nodes[0];
-                    options.error(JSON.parse(node.textContent));
+                    var errorParams = {};
+
+                    try { // Case of a serialized Odoo Exception: It is Json Parsable
+                        var node = nodes[1] || nodes[0];
+                        errorParams = JSON.parse(node.textContent);
+                    } catch (e) { // Arbitrary uncaught python side exception
+                        errorParams = {
+                            message: nodes.length > 1 ? nodes[1].textContent : '',
+                            data: {
+                                title: nodes.length > 0 ? nodes[0].textContent : '',
+                            }
+                        }
+                    }
+                    options.error(errorParams);
                 }
             } finally {
                 complete();

@@ -1,22 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
+# amos lin <seeing@edirect168.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-02-10 09:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:598
+#, python-format
+msgid "(%d more)"
+msgstr "( 還有 %d)"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:375
+#, python-format
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect"
+msgstr "文件中僅有一個欄位，這經常意味著文件分隔符號不正確"
 
 #. module: base_import
 #. openerp-web
@@ -24,6 +42,28 @@ msgstr ""
 #, python-format
 msgid "Cancel"
 msgstr "取消"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:599
+#, python-format
+msgid "Column %s contains incorrect values (value: %s)"
+msgstr "列 %s 包含錯誤之數據(值: %s)"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:619
+#, python-format
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr "列 %s 包含錯誤之數據. 錯誤在行%d: %s"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:256
+#: code:addons/base_import/static/src/js/base_import.js:263
+#: code:addons/base_import/static/src/js/base_import.js:275
+#, python-format
+msgid "Comma"
+msgstr "逗號"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_create_uid
@@ -41,7 +81,7 @@ msgstr "取消"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_create_date
@@ -59,7 +99,35 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:152
+#: code:addons/base_import/models/base_import.py:157
+#, python-format
+msgid "Database ID"
+msgstr "資料庫 ID"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:125
+#, python-format
+msgid "Date Format:"
+msgstr "數據格式："
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:126
+#, python-format
+msgid "Datetime Format:"
+msgstr "日期時間格式:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:128
+#, python-format
+msgid "Decimal Separator:"
+msgstr "十進制分隔符："
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -81,27 +149,106 @@ msgstr "顯示名稱"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:419
+#, python-format
+msgid "Don't import"
+msgstr "不導入"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:264
+#: code:addons/base_import/static/src/js/base_import.js:282
+#, python-format
+msgid "Dot"
+msgstr "點"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/js/base_import.js:120
 #, python-format
 msgid "Encoding:"
-msgstr "編碼："
+msgstr "編碼:"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:621
+#, python-format
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr "日期語法錯誤 [%s:L%d]: %s"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:234
+#, python-format
+msgid "Error cell found while reading XLS/XLSX file: %s"
+msgstr "讀取XLS/XLSX文件: %s 時發現錯誤單元格"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:575
+#, python-format
+msgid "Everything seems valid."
+msgstr "看上去一切正常。"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:117
 #: code:addons/base_import/models/base_import.py:151
 #, python-format
 msgid "External ID"
-msgstr "外部編號"
+msgstr "外部 ID"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_file
 msgid "File"
-msgstr "檔案"
+msgstr "文件"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_file_name
 msgid "File Name"
-msgstr "檔案名稱"
+msgstr "文件名稱"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_import_file_type
+msgid "File Type"
+msgstr "文件類型"
+
+#. module: base_import
+#: model:ir.model.fields,help:base_import.field_base_import_import_file
+msgid "File to check and/or import, raw binary (not base64)"
+msgstr "文件的審核或導入， 採原始二進制編碼（不是base64編碼）"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:115
+#, python-format
+msgid "For CSV files, the issue could be an incorrect encoding."
+msgstr "對於CSV文件來說，這個問題可能由錯誤的編碼造成。"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:622
+#, python-format
+msgid "Get all possible values"
+msgstr "獲取所有可能的值"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:11
+#, python-format
+msgid "Help"
+msgstr "幫助"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:609
+#, python-format
+msgid "Here are the possible values:"
+msgstr "這裡是可能的值："
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:116
+#, python-format
+msgid "Here is the start of the file we could not import:"
+msgstr "下面是我們無法導入的起始文件："
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_id
@@ -119,7 +266,34 @@ msgstr "檔案名稱"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:73
+#, python-format
+msgid ""
+"If the file contains\n"
+"                the column names, Odoo can try auto-detecting the\n"
+"                field corresponding to the column. This makes imports\n"
+"                simpler especially when the file has many columns."
+msgstr ""
+"如果文件中包含列字段名\n"
+"                則odoo能夠自動檢測並識別\n"
+"                字段對應的列。這使得導入文件\n"
+"                簡單多了，尤其是當文件有很多列的時候。"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:60
+#, python-format
+msgid ""
+"If the model uses openchatter, history tracking                             "
+"will set up subscriptions and send notifications"
+"                             during the import, but lead to a slower import."
+msgstr ""
+"如果該數據模型聲明使用openchatter，歷史追蹤功能\n"
+"，系統就會自動於導入時設定訂閱和發送通知，但執行上會較慢。"
 
 #. module: base_import
 #. openerp-web
@@ -127,7 +301,21 @@ msgstr "編號"
 #: code:addons/base_import/static/src/xml/base_import.xml:147
 #, python-format
 msgid "Import"
-msgstr "匯入"
+msgstr "導入"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:182
+#, python-format
+msgid "Import a File"
+msgstr "導入文件"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:114
+#, python-format
+msgid "Import preview failed due to:"
+msgstr "導入預覽文件失敗"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
@@ -145,7 +333,7 @@ msgstr "匯入"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child___last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_write_uid
@@ -163,7 +351,7 @@ msgstr "最後修改:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_write_date
@@ -181,7 +369,21 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:19
+#, python-format
+msgid "Load File"
+msgstr "加載文件"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:56
+#, python-format
+msgid "Map your columns to import"
+msgstr "匹配導入列"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -191,14 +393,142 @@ msgstr "模型"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_name
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:15
+#, python-format
+msgid "No file chosen..."
+msgstr "沒有選擇文件..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:485
+#, python-format
+msgid "Normal Fields"
+msgstr "正常字段"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:30
+#, python-format
+msgid "Options…"
+msgstr "選項..."
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
+msgid "Other Variable"
+msgstr "其它變量"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
+msgid "Parent id"
+msgstr "上一階之ID"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:486
+#, python-format
+msgid "Relation Fields"
+msgstr "關聯字段"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:24
+#, python-format
+msgid "Reload File"
+msgstr "重新載入文件"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:11
+#, python-format
+msgid "Select a CSV or Excel file to import."
+msgstr "選擇 CSV 或者 Excel 文件進行導入。"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:246
+#, python-format
+msgid "Semicolon"
+msgstr "分號"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/base_import.js:121
 #, python-format
 msgid "Separator:"
-msgstr "分隔符號："
+msgstr "分隔符："
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:72
+#, python-format
+msgid "Show fields of relation fields (advanced)"
+msgstr "顯示關係字段的字段（高級）"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
+msgid "Some Value"
+msgstr "一些值"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:248
+#, python-format
+msgid "Space"
+msgstr "空格鍵"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:247
+#, python-format
+msgid "Tab"
+msgstr "選項卡"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:122
+#, python-format
+msgid "Text Delimiter:"
+msgstr "文本分隔符: "
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:68
+#, python-format
+msgid ""
+"The first row\n"
+"                 contains the label of the column"
+msgstr "文件的第一行包含表頭"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:127
+#, python-format
+msgid "Thousands Separator:"
+msgstr "千分位分隔符:"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:62
+#, python-format
+msgid "Track history during import"
+msgstr "導入時追蹤導入歷史"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:199
+#, python-format
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr "無法裝載 \"{extension}\"  文件:需要Python 模塊 \"{modname}\""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:200
+#, python-format
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr "不支援的文件格式 \"{}\"，只支援導入CSV, ODS, XLS, XLSX格式"
 
 #. module: base_import
 #. openerp-web
@@ -206,3 +536,109 @@ msgstr "分隔符號："
 #, python-format
 msgid "Validate"
 msgstr "驗證"
+
+#. module: base_import
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_readonly_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_required_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_states_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_stillreadonly_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_related_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_related_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_required_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_m2o_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
+#: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
+msgid "Value"
+msgstr "值"
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:537
+#, python-format
+msgid "You must configure at least one field to import"
+msgstr "您必須至少配置一個字段來導入"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:592
+#, python-format
+msgid "at row %d"
+msgstr "在第 %d 行"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_import
+msgid "base_import.import"
+msgstr "base_import.import"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char
+msgid "base_import.tests.models.char"
+msgstr "base_import.tests.models.char"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
+msgid "base_import.tests.models.char.noreadonly"
+msgstr "base_import.tests.models.char.noreadonly"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
+msgid "base_import.tests.models.char.readonly"
+msgstr "base_import.tests.models.char.readonly"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_required
+msgid "base_import.tests.models.char.required"
+msgstr "base_import.tests.models.char.required"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_states
+msgid "base_import.tests.models.char.states"
+msgstr "base_import.tests.models.char.states"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
+msgid "base_import.tests.models.char.stillreadonly"
+msgstr "base_import.tests.models.char.stillreadonly"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o
+msgid "base_import.tests.models.m2o"
+msgstr "base_import.tests.models.m2o"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
+msgid "base_import.tests.models.m2o.related"
+msgstr "base_import.tests.models.m2o.related"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
+msgid "base_import.tests.models.m2o.required"
+msgstr "base_import.tests.models.m2o.required"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
+msgid "base_import.tests.models.m2o.required.related"
+msgstr "base_import.tests.models.m2o.required.related"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m
+msgid "base_import.tests.models.o2m"
+msgstr "base_import.tests.models.o2m"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
+msgid "base_import.tests.models.o2m.child"
+msgstr "base_import.tests.models.o2m.child"
+
+#. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_preview
+msgid "base_import.tests.models.preview"
+msgstr "base_import.tests.models.preview"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:594
+#, python-format
+msgid "between rows %d and %d"
+msgstr "在第 %d 行和第 %d 行之間"

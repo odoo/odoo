@@ -68,9 +68,8 @@ class HrTimesheetSheet(models.Model):
              '\n* The \'Waiting Approval\' status is used to confirm the timesheet by user. '
              '\n* The \'Approved\' status is used when the users timesheet is accepted by his/her senior.')
     account_ids = fields.One2many('hr_timesheet_sheet.sheet.account', 'sheet_id', string='Analytic accounts', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company')
-    department_id = fields.Many2one('hr.department', string='Department',
-        default=lambda self: self.env['res.company']._company_default_get())
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.company']._company_default_get())
+    department_id = fields.Many2one('hr.department', string='Department')
 
     @api.constrains('date_to', 'date_from', 'employee_id')
     def _check_sheet_date(self, forced_user_id=False):

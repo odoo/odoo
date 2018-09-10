@@ -212,7 +212,6 @@ Use the following pattern :
   *concerned_group* is the short name of the concerned group ('user'
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
-* For a group : :samp:`{<model_name>}_group_{<group_name>}` where *group_name* is the name of the group, generally 'user', 'manager', ...
 
 .. code-block:: xml
 
@@ -345,7 +344,7 @@ Idiomatics Python Programming
     new_dict = dict(my_dict)
     new_list = list(old_list)
 
-- Python dictionnary : creation and update
+- Python dictionary : creation and update
 
 .. code-block:: python
 

@@ -283,6 +283,14 @@ class Lead(FormatAddress, models.Model):
     # ----------------------------------------
 
     @api.model
+    def name_create(self, name):
+        res = super(Lead, self).name_create(name)
+        
+        # update the probability of the lead if the stage is set to update it automatically
+        self.browse(res[0])._onchange_stage_id()
+        return res
+
+    @api.model
     def create(self, vals):
         # set up context used to find the lead's sales team which is needed
         # to correctly set the default stage_id
@@ -294,6 +302,11 @@ class Lead(FormatAddress, models.Model):
 
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
+
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner = self.env['res.partner'].browse(context['default_partner_id'])
+            vals['email_from'] = partner.email
+
         # context: no_log, because subtype already handle this
         return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
 
@@ -323,6 +336,9 @@ class Lead(FormatAddress, models.Model):
         # Set date_open to today if it is an opp
         default = default or {}
         default['date_open'] = fields.Datetime.now() if self.type == 'opportunity' else False
+        # Do not assign to an archived user
+        if not self.user_id.active:
+            default['user_id'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
@@ -488,7 +504,8 @@ class Lead(FormatAddress, models.Model):
         for field in fields:
             value = getattr(self, field.name, False)
             if field.ttype == 'selection':
-                value = dict(field.get_values(self.env)).get(value, value)
+                selections = self.fields_get()[field.name]['selection']
+                value = next((v[1] for v in selections if v[0] == value), value)
             elif field.ttype == 'many2one':
                 if value:
                     value = value.sudo().name_get()[0][1]
@@ -641,6 +658,8 @@ class Lead(FormatAddress, models.Model):
     @api.model
     def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False):
         """ Search for opportunities that have the same partner and that arent done or cancelled """
+        if not email:
+            return self.env['crm.lead']
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
@@ -648,7 +667,7 @@ class Lead(FormatAddress, models.Model):
             partner_match_domain.append(('partner_id', '=', partner_id))
         partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
-            return []
+            return self.env['crm.lead']
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
@@ -912,34 +931,36 @@ class Lead(FormatAddress, models.Model):
             'nb_opportunities': 0,
         }
 
+        today = fields.Date.from_string(fields.Date.context_today(self))
+
         opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
             # Expected closing
             if opp.date_deadline:
                 date_deadline = fields.Date.from_string(opp.date_deadline)
-                if date_deadline == date.today():
+                if date_deadline == today:
                     result['closing']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                if today <= date_deadline <= today + timedelta(days=7):
                     result['closing']['next_7_days'] += 1
-                if date_deadline < date.today() and not opp.date_closed:
+                if date_deadline < today and not opp.date_closed:
                     result['closing']['overdue'] += 1
             # Next activities
             if opp.next_activity_id and opp.date_action:
                 date_action = fields.Date.from_string(opp.date_action)
-                if date_action == date.today():
+                if date_action == today:
                     result['activity']['today'] += 1
-                if date.today() <= date_action <= date.today() + timedelta(days=7):
+                if today <= date_action <= today + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < today and not opp.date_closed:
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:
                 date_closed = fields.Date.from_string(opp.date_closed)
-                if date.today().replace(day=1) <= date_closed <= date.today():
+                if today.replace(day=1) <= date_closed <= today:
                     if opp.planned_revenue:
                         result['won']['this_month'] += opp.planned_revenue
-                elif  date.today() + relativedelta(months=-1, day=1) <= date_closed < date.today().replace(day=1):
+                elif  today + relativedelta(months=-1, day=1) <= date_closed < today.replace(day=1):
                     if opp.planned_revenue:
                         result['won']['last_month'] += opp.planned_revenue
 
@@ -964,9 +985,9 @@ class Lead(FormatAddress, models.Model):
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])
-                if date.today().replace(day=1) <= date_act <= date.today():
+                if today.replace(day=1) <= date_act <= today:
                     result['done']['this_month'] += 1
-                elif date.today() + relativedelta(months=-1, day=1) <= date_act < date.today().replace(day=1):
+                elif today + relativedelta(months=-1, day=1) <= date_act < today.replace(day=1):
                     result['done']['last_month'] += 1
 
         # Meetings
@@ -981,9 +1002,9 @@ class Lead(FormatAddress, models.Model):
         for meeting in meetings:
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                if start == date.today():
+                if start == today:
                     result['meeting']['today'] += 1
-                if date.today() <= start <= date.today() + timedelta(days=7):
+                if today <= start <= today + timedelta(days=7):
                     result['meeting']['next_7_days'] += 1
 
         result['done']['target'] = self.env.user.target_sales_done

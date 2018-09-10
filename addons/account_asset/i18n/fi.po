@@ -6,13 +6,13 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Topi Aura <topi@aurat.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
+# Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Jussi Lehto <jussi@gulfeo.com>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2017
@@ -94,7 +94,7 @@ msgstr "Aktiivinen"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Lisävalinnat"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -145,7 +145,7 @@ msgid "Asset Durations to Modify"
 msgstr ""
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Hyödykkeen päättymispäivä"
 
@@ -160,7 +160,7 @@ msgid "Asset Name"
 msgstr "Omaisuuserän nimi"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Hyödykkeen alkamispäivä"
 
@@ -758,7 +758,7 @@ msgstr "Kuukausi"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_mrr
 msgid "Monthly Recurring Revenue"
-msgstr ""
+msgstr "Kuukausittainen toistuva tulo"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
@@ -969,6 +969,14 @@ msgstr "Kahden poiston välinen aika kuukausissa."
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
 msgstr "Poistojen määrä tämän omaisuuserän kokonaispoistolle"
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:477
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

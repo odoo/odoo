@@ -33,7 +33,7 @@ function get_fc_defaultOptions() {
 
     // adapt format for fullcalendar v1.
     // see http://fullcalendar.io/docs1/utilities/formatDate/
-    var conversions = [['YYYY', 'yyyy'], ['YY', 'y'], ['DDDD', 'dddd'], ['DD', 'dd']];
+    var conversions = [['YYYY', 'yyyy'], ['YY', 'yy'], ['DDDD', 'dddd'], ['DD', 'dd']];
     _.each(conversions, function(conv) {
         dateFormat = dateFormat.replace(conv[0], conv[1]);
     });
@@ -54,7 +54,7 @@ function get_fc_defaultOptions() {
         monthNamesShort: moment.monthsShort(),
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
-        firstDay: moment._locale._week.dow,
+        firstDay: moment()._locale._week.dow,
         weekNumberCalculation: function(date) {
             return moment(date).week();
         },
@@ -892,7 +892,7 @@ var CalendarView = View.extend({
         var index = this.dataset.get_id_index(id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).always(function() {
+            this.dataset.write(event_id, data, {context: {from_ui: true}}).always(function() {
                 if (is_virtual_id(event_id)) {
                     // this is a virtual ID and so this will create a new event
                     // with an unknown id for us.
@@ -917,9 +917,10 @@ var CalendarView = View.extend({
             }
         }
         else {
+            var res_id = parseInt(id).toString() === id ? parseInt(id) : id;
             new form_common.FormViewDialog(this, {
                 res_model: this.model,
-                res_id: parseInt(id).toString() === id ? parseInt(id) : id,
+                res_id: res_id,
                 context: this.dataset.get_context(),
                 title: title,
                 view_id: +this.open_popup_action,
@@ -931,7 +932,7 @@ var CalendarView = View.extend({
                     }},
 
                     {text: _t("Delete"), close: true, click: function() {
-                        self.remove_event(id);
+                        self.remove_event(res_id);
                     }},
 
                     {text: _t("Close"), close: true}

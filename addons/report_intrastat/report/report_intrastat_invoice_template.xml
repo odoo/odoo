@@ -130,6 +130,10 @@
             </p>
             <p t-if="o.fiscal_position_id">
                 <strong>Fiscal Position:</strong>
+                <span t-field="o.fiscal_position_id"/>
+            </p>
+            <p t-if="o.fiscal_position_id.note">
+                <strong>Fiscal Position Remark:</strong>
                 <span t-field="o.fiscal_position_id.note"/>
             </p>
         </div>

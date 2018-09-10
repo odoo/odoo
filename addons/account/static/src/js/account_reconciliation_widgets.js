@@ -763,7 +763,9 @@ var abstractReconciliationLine = Widget.extend({
             else if (preset_line.amount_type === "percentage") {
                 self.amount_field.set_value(0);
                 self.updateBalance();
-                self.amount_field.set_value(-1 * self.get("balance") * preset_line.amount / 100);
+                var currency_dict = session.get_currency(self.get("currency_id"));
+                var preset_amount = utils.round_currency(currency_dict, -1 * self.get("balance") * preset_line.amount / 100);
+                self.amount_field.set_value(preset_amount);
             }
         }
     },
@@ -998,7 +1000,7 @@ var abstractReconciliationLine = Widget.extend({
             var tax_id = self.tax_id_field.get("value");
             if (amount && tax_id) {
                 deferred_tax = self.model_tax
-                    .call("json_friendly_compute_all", [[tax_id], amount, self.get("currency_id")])
+                    .call("json_friendly_compute_all", [[tax_id], amount, self.get("currency_id")], {context: {round: true}}) // just as the python will do
                     .then(function(data){
                         line_created_being_edited.length = 1; // remove tax lines
                         line_created_being_edited[0].amount_before_tax = amount;

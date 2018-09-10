@@ -4,16 +4,14 @@
 import base64
 import os
 import random
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+
 from lxml import etree
 from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version_info
+from odoo.tools import pickle
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons.anonymization.models.anonymization import group
 
@@ -128,6 +126,9 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
     @api.multi
     def anonymize_database(self):
         """Sets the 'anonymized' state to defined fields"""
+        # pylint: disable=W0101
+        raise UserError("""The Odoo Migration Platform no longer accepts anonymized databases.\n
+            If you wish for your data to remain private during migration, please contact us at upgrade@odoo.com""")
         self.ensure_one()
 
         # create a new history record:
@@ -207,7 +208,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
 
         # save pickle:
         fn = open(abs_filepath, 'w')
-        pickle.dump(data, fn, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(data, fn, protocol=-1)
 
         # update the anonymization fields:
         ano_fields.write({'state': 'anonymized'})

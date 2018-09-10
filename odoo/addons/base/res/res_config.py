@@ -521,15 +521,24 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # default values fields
         IrValues = self.env['ir.values'].sudo()
         for name, model, field in classified['default']:
-            IrValues.set_default(model, field, self[name])
+            if isinstance(self[name], models.BaseModel):
+                if self._fields[name].type == 'many2one':
+                    value = self[name].id
+                else:
+                    value = self[name].ids
+            else:
+                value = self[name]
+            IrValues.set_default(model, field, value)
 
         # group fields: modify group / implied groups
-        for name, groups, implied_group in classified['group']:
-            if self[name]:
-                groups.write({'implied_ids': [(4, implied_group.id)]})
-            else:
-                groups.write({'implied_ids': [(3, implied_group.id)]})
-                implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+        with self.env.norecompute():
+            for name, groups, implied_group in classified['group']:
+                if self[name]:
+                    groups.write({'implied_ids': [(4, implied_group.id)]})
+                else:
+                    groups.write({'implied_ids': [(3, implied_group.id)]})
+                    implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
+        self.recompute()
 
         # other fields: execute all methods that start with 'set_'
         for method in dir(self):

@@ -5,10 +5,10 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Patrik Lermon <patrik.lermon@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr "Kod"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_uid
@@ -122,7 +122,7 @@ msgstr "Fel! Lämna start-datum måste vara lägre sedan lämna slutdatum."
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Friday"
-msgstr "Fredag"
+msgstr "fredag"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -205,7 +205,7 @@ msgstr "Frånvarodetaljer"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Frånvaromånad"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -220,7 +220,7 @@ msgstr "Material"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Monday"
-msgstr "Måndag"
+msgstr "måndag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -345,7 +345,13 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr "Söndag"
+msgstr "söndag"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:714
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -384,7 +390,7 @@ msgstr "Användare"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
-msgstr "Onsdag"
+msgstr "onsdag"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

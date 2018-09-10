@@ -25,6 +25,8 @@ msgid ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
+"<span class=\"col-xs-6 text-right text-muted\" title=\"Livrarea va fi "
+"actualizată după alegerea noii metode de livrare\"> Livrare:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -62,7 +64,7 @@ msgstr "Produse alternative"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
 msgid "Availability"
-msgstr "Disponibil"
+msgstr "Disponibilitate"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
@@ -121,7 +123,7 @@ msgstr "Descriere pentru cotații online"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_quote_description
 msgid "Description for the quote"
-msgstr "Descriere pentru cotație"
+msgstr "Descriere pentru ofertă"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -137,6 +139,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Egal: Costul va fi egal împărțit\n"
+"Cantitate: Costul va fi împărțit în funcție de cantitatea produsului\n"
+"Cost: Costul va fi împărțit în funcție de costul curent al produsului\n"
+"Masă: Costul va fi împărțit în funcție de masa sa\n"
+"Volum: Costul va fi împărțit în funcție de volumul său."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
@@ -166,7 +173,7 @@ msgstr "Cod intrastat"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_landed_cost_ok
 msgid "Landed Costs"
-msgstr ""
+msgstr "Costuri adiționale"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/models/sale_order.py:99

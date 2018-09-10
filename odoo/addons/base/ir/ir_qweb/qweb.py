@@ -5,6 +5,7 @@ from lxml import etree, html
 import re
 import traceback
 from itertools import count
+from psycopg2.extensions import TransactionRollbackError
 from textwrap import dedent
 import werkzeug
 from werkzeug.utils import escape as _escape
@@ -313,7 +314,7 @@ class QWeb(object):
             values = dict(self.default_values(), **values)
             try:
                 return compiled(self, append, values, options, log)
-            except QWebException, e:
+            except (QWebException, TransactionRollbackError) as e:
                 raise e
             except Exception, e:
                 path = log['last_path_node']
@@ -1023,7 +1024,26 @@ class QWeb(object):
 
     def _compile_directive_esc(self, el, options):
         field_options = self._compile_widget_options(el, 'esc')
-        content = self._compile_widget(el, el.attrib.pop('t-esc'), field_options, 'escape')
+        content = self._compile_widget(el, el.attrib.pop('t-esc'), field_options)
+        if not field_options:
+            # if content is not False and if content is not None:
+            #     content = escape(unicodifier(content))
+            content.append(self._if_content_is_not_Falsy([
+                ast.Assign(
+                    targets=[ast.Name(id='content', ctx=ast.Store())],
+                    value=ast.Call(
+                        func=ast.Name(id='escape', ctx=ast.Load()),
+                        args=[ast.Call(
+                            func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                            args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
+                            starargs=None, kwargs=None
+                        )],
+                        keywords=[],
+                        starargs=None, kwargs=None
+                    )
+                )],
+                []
+            ))
         return content + self._compile_widget_value(el, options)
 
     def _compile_directive_raw(self, el, options):
@@ -1031,33 +1051,8 @@ class QWeb(object):
         content = self._compile_widget(el, el.attrib.pop('t-raw'), field_options)
         return content + self._compile_widget_value(el, options)
 
+    # escape attribute is deprecated and will remove after v11
     def _compile_widget(self, el, expression, field_options, escape=None):
-        # if isinstance(value, basestring):
-        #   value = escape(unicodifier(value))
-        escaped = ast.If(
-            test=ast.Call(
-                func=ast.Name(id='isinstance', ctx=ast.Load()),
-                args=[
-                    ast.Name(id='content', ctx=ast.Load()),
-                    ast.Name(id='basestring', ctx=ast.Load())
-                ], keywords=[],
-                starargs=None, kwargs=None
-            ),
-            body=[ast.Assign(
-                targets=[ast.Name(id='content', ctx=ast.Store())],
-                value=ast.Call(
-                    func=ast.Name(id=escape, ctx=ast.Load()),
-                    args=[ast.Call(
-                        func=ast.Name(id='unicodifier', ctx=ast.Load()),
-                        args=[ast.Name(id='content', ctx=ast.Load())], keywords=[],
-                        starargs=None, kwargs=None
-                    )], keywords=[],
-                    starargs=None, kwargs=None
-                ) if escape else ast.Name(id='content', ctx=ast.Load())
-            )],
-            orelse=[]
-        )
-
         if field_options:
             return [
                 # value = t-(esc|raw)
@@ -1065,7 +1060,6 @@ class QWeb(object):
                     targets=[ast.Name(id='content', ctx=ast.Store())],
                     value=self._compile_expr0(expression)
                 ),
-                escaped,
                 # t_attrs, content, force_display = self._get_widget(value, expression, tagName, field options, template options, values)
                 ast.Assign(
                     targets=[ast.Tuple(elts=[
@@ -1109,8 +1103,7 @@ class QWeb(object):
                     self._compile_expr0(expression),
                     ast.Name(id='None', ctx=ast.Load()),
                 ], ctx=ast.Load())
-            ),
-            escaped
+            )
         ]
 
     # for backward compatibility to remove after v10

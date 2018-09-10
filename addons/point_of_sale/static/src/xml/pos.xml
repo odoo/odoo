@@ -900,7 +900,7 @@
             <line t-foreach='payments' t-as='payment'>
                 <left><t t-esc='payment.name' /></left>
                 <right>
-                    <t t-esc='payment.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(payment.total)'/>
                 </right>
             </line>
 
@@ -914,7 +914,7 @@
             <line t-foreach='taxes' t-as='taxe'>
                 <left><t t-esc='taxe.name' /></left>
                 <right>
-                    <t t-esc='taxe.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(taxe.total)'/>
                 </right>
             </line>
 
@@ -925,7 +925,7 @@
             <line>
                 <left>Total:</left>
                 <right>
-                    <t t-esc='total_paid'/>
+                    <t t-esc='widget.format_currency_no_symbol(total_paid)'/>
                 </right>
             </line>
 
@@ -1402,11 +1402,15 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
+            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
-            Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
+            <div class="receipt-phone">
+                Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+            </div>
+            <div class="receipt-user">
+                User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
+            </div>
             <br />
             <t t-if="receipt.header">
                 <div style='text-align:center'>
@@ -1454,10 +1458,12 @@
                     </tr>
                 </t>
                 <tr>
-                    <td>Discount:</td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_total_discount())"/>
-                    </td>
+                    <t t-if="order.get_total_discount() > 0">
+                        <td>Discount:</td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(order.get_total_discount())"/>
+                        </td>
+                    </t>
                 </tr>
                 <tr class="emph">
                     <td>Total:</td>

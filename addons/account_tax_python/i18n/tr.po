@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2016\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,11 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Parametre 'result' değerini ayarlayarak vergi tutarını hesaplayın: param "
+"base_amount: float, verginin uygulanacağı gerçek miktarı: param price_unit: "
+"float: param miktarı: float: param şirket: res.company Kayıt kümesi "
+"singleton: param ürün: product.product kayıt kümesi tek veya Yok: param "
+"ortak: res.partner kayıt kümesi tek veya yok"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -49,6 +55,10 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Parametre 'result' değerini ayarlayarak vergi tutarını hesaplayın: param "
+"base_amount: float, vergi uygulanacak gerçek miktarı: param price_unit: "
+"float: param quantity: float: param ürün: product.product Recordset "
+"singleton veya None: param ortağı: res.partner recordset singleton veya None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -61,6 +71,11 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"'Result' değişkenini True veya False. olarak ayarlayarak vergilerin "
+"uygulanıp uygulanmayacağını belirleyin: param price_unit: float: param "
+"quantity: float: param şirket: res.company recordset singleton: param ürün: "
+"product.product Recordset singleton veya None: param ortağı: res.partner "
+"recordset singleton veya None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -72,6 +87,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"'Result' değişkenini True veya False olarak ayarlayarak vergi uygulanıp uygulanmayacağını belirleyin.\n"
+"\n"
+": Param fiyat_birimi: float\n"
+"Parametre miktarı: float\n"
+": Param ürün: product.product kayıt grubu tek veya hiçbiri\n"
+": Param partner: res.partner kayıt kümesi singleton veya yok"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute

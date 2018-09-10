@@ -16,8 +16,16 @@ $(document).ready(function () {
         return ajax.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
         }).then(function (result) {
             _poll_nbr += 1;
-            if(result.recall && _poll_nbr <= 5){
-                setTimeout(function () { payment_transaction_poll_status(); }, 1000);
+            if(result.recall) {
+                if (_poll_nbr < 20){
+                    setTimeout(function () { payment_transaction_poll_status(); }, Math.ceil(_poll_nbr / 3) * 1000);
+                }
+                else {
+                    var $message = $(result.message);
+                    $message.find('span:first').prepend($(
+                        "<i title='We are waiting the confirmation of the bank or payment provider' class='fa fa-warning' style='margin-right:10px;'>"));
+                    result.message = $message.html();
+                }
             }
             $('div.oe_website_sale_tx_status').html(result.message);
         });

@@ -1,27 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_tax_cash_basis
-#
+# 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2015-09-07 16:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/"
-"language/zh_TW/)\n"
-"Language: zh_TW\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_move
 msgid "Account Entry"
-msgstr "分錄"
+msgstr "會計分錄"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Account use when creating entry for tax cash basis"
+msgstr "創建稅務現金基礎時的帳戶使用"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -29,14 +35,71 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move_line
+msgid "Journal Item"
+msgstr "日記帳項目"
+
+#. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
 msgid "Partial Reconcile"
 msgstr "部分調節"
 
 #. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:39
+#, python-format
+msgid "Please configure a Tax Received Account for tax %s"
+msgstr "請為稅務設置 %s 設置應收稅款帳戶"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid ""
+"Select this if the tax should use cash basis,which will create an entry for "
+"this tax on a given account during reconciliation"
+msgstr "如果稅務應使用現金基礎，選擇此項，這將在對帳時在給定帳戶中創建此稅項的分錄"
+
+#. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
 msgid "Tax"
-msgstr "稅別"
+msgstr "稅金"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid "Tax Cash Basis Entry of"
+msgstr "稅金現金收付制分錄"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
+msgid "Tax Cash Basis Journal"
+msgstr "稅金現金收付制日記帳"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Tax Received Account"
+msgstr "應收稅款科目"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid ""
+"Technical field used to keep track of the tax cash basis reconciliation.This"
+" is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
+msgstr "用於追蹤稅收現金基礎調節的技術領域。取消來源時需要這樣：它將透過逆轉日記帳分錄以取消該部分。"
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
+#, python-format
+msgid ""
+"There is no tax cash basis journal defined for this company: \"%s\" \n"
+"Configure it in Accounting/Configuration/Settings"
+msgstr ""
+"這個公司尚未定義稅收現金收付制日記帳: \"%s\" \n"
+"在選單Accounting/Configuration/Settings下設定"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid "Use Cash Basis"
+msgstr "使用現金收付制"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_config_settings

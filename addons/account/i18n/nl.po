@@ -5,12 +5,13 @@
 # Translators:
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Eric Geens <eric.geens@vitabiz.be>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # Volluta <volluta@tutanota.com>, 2016
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2016
 # wilcobergacker <wilcobergacker@gmail.com>, 2016
 # Олег <pehotaolega.ru@mail.ru>, 2016
 msgid ""
@@ -233,7 +234,7 @@ msgstr ": Grootboek"
 #: code:addons/account/models/account.py:397
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": Credit factuur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -316,6 +317,78 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      Factuur ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -790,7 +863,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr "<strong>Partners.:</strong>"
+msgstr "Relaties.:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -1559,6 +1632,11 @@ msgid "Adjustment Tax"
 msgstr "Aanpassingsboeking"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr "Tellingsoort"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1592,7 +1670,7 @@ msgstr "Beïnvloed opvolgende BTW"
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Aged Partner Balance"
-msgstr "Ouderdomsanalyse per relatie"
+msgstr "Ouderdom per relatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -1679,8 +1757,8 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
-"Alle facturen en betalingen zijn gematched, uw rekeningsaldo's zijn "
-"opgeschoond."
+"Alle facturen en betalingen zijn afgeletterd. Uw rekeningsaldo's zijn "
+"bijgewerkt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1696,10 +1774,10 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
-"Alle handmatig gemaakte nieuwe boekingen zijn meestal in de staat "
+"Alle handmatig gemaakte nieuwe boekingen zijn meestal in de status "
 "'Ongeboekt', maar u kunt met de optie instellen om deze status over te slaan"
 " op het betreffende dagboek. In dat geval worden ze behandeld als boekingen "
-"automatisch aangemaakt door het systeem bij document validatie (facturen, "
+"automatisch aangemaakt door het systeem bij document bevestiging (facturen, "
 "bankafschriften, ...). Tevens worden ze aangemaakt in de 'Geboekt' status."
 
 #. module: account
@@ -1734,7 +1812,7 @@ msgstr "Maak het annuleren van boekingen mogelijk"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr "Sta factuur & betaling matching toe"
+msgstr "Sta factuur & betaling afletteren toe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_reconcile
@@ -1833,8 +1911,7 @@ msgstr "Bedrag getekend"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
-msgstr ""
-"Bedrag betrokken bij deze matching. Verondersteld altijd positief te zijn"
+msgstr "Het bedrag bij deze aflettering dient positief te zijn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
@@ -2262,6 +2339,12 @@ msgstr "Voorinstellingen tbv afletteren banken"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankafschrift"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Bankafschrift %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2736,8 +2819,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Vink deze optie aan als u deze rekening wilt toestaan op facturen & "
-"betalingen te matchen."
+"Vink deze optie aan als u deze rekening wilt toestaan bij het afletteren van"
+" facturen & betalingen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_expects_chart_of_accounts
@@ -3219,7 +3302,7 @@ msgstr "Landengroep"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_country_id
 msgid "Country of the Partner Company"
-msgstr "Land van partner bedrijf"
+msgstr "Land van relatie"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3443,7 +3526,7 @@ msgstr "Bedrag credit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit_cash_basis
 msgid "Credit cash basis"
-msgstr "Crediteer kasbasis"
+msgstr "Credit kasbasis"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
@@ -5348,7 +5431,7 @@ msgstr "Invoice Tax"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr "Factuur waar dit een creditfactur voor is"
+msgstr "Factuur waar dit een creditfactuur voor is"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5745,7 +5828,7 @@ msgstr "Facturen met een periode in het huidige jaar"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Boekingen waar het matchende nummer niet is ingesteld. "
+msgstr "Boekingen waar de aflettercode niet is ingesteld. "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6389,7 +6472,7 @@ msgstr "Diversen"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #, python-format
 msgid "Miscellaneous Operations"
-msgstr "Memoriaal boekingen"
+msgstr "Memoriaal"
 
 #. module: account
 #. openerp-web
@@ -7016,7 +7099,7 @@ msgstr "Widget voor debet/credit"
 #: code:addons/account/models/account_invoice.py:119
 #, python-format
 msgid "Outstanding debits"
-msgstr "Uitstaande uitgaven"
+msgstr "Openstaande debet bedragen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7232,7 +7315,7 @@ msgstr "Betaalverschil"
 #: code:addons/account/static/src/js/account_payment_widget.js:53
 #, python-format
 msgid "Payment Information"
-msgstr ""
+msgstr "Betaalinformatie"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_journal_id
@@ -7433,7 +7516,7 @@ msgstr "Percentage van aantal"
 #: selection:account.reconcile.model,amount_type:0
 #: selection:account.reconcile.model.template,amount_type:0
 msgid "Percentage of balance"
-msgstr "Percentage van balans"
+msgstr "Percentage van saldo"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1470
@@ -7544,7 +7627,7 @@ msgstr "Verschil boeken in"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Dagboekregels boeken"
+msgstr "Maak boekingen"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -8305,7 +8388,7 @@ msgstr "Zoek factuur"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Zoek dagboekregels"
+msgstr "Zoek boekregels"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -9234,8 +9317,8 @@ msgid ""
 "The discussions with your customer are automatically displayed at\n"
 "                the bottom of each invoice."
 msgstr ""
-"De discussies met uw klant worden automatisch getoond aan\n"
-"de bodem van elke factuur."
+"De discussies met uw klant worden automatisch getoond\n"
+"onderaan iedere factuur."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:184
@@ -9367,7 +9450,7 @@ msgstr "Het relatiekenmerk van deze factuur."
 #: code:addons/account/models/account_payment.py:55
 #, python-format
 msgid "The payment amount must be strictly positive."
-msgstr ""
+msgstr "Het betaalbedrag kan alleen maar positief zijn."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:342
@@ -9436,6 +9519,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
+"Er zijn nog ongeboekte boekingen in de periode die u wilt blokkeren. U dient"
+" deze te boeken of te verwijderen."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:172
@@ -9837,8 +9922,8 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"Deze wizard bevestigd alle geselecteerde boekingen. Na de validatie kunnen "
-"de boekingen niet meer gewijzigd worden."
+"Deze wizard bevestigd alle geselecteerde boekingen. Na de bevestiging kunnen"
+" de boekingen niet meer gewijzigd worden."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -9854,7 +9939,9 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:21
 #, python-format
 msgid "Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet."
-msgstr "Tip: Druk op CTRL-Enter om alle regels die matchen af te letteren."
+msgstr ""
+"Tip: Druk op CTRL-Enter om alle regels die correct gekoppeld zijn af te "
+"letteren."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -10507,7 +10594,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Welcome"
-msgstr "Welko"
+msgstr "Welkom"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10708,6 +10795,16 @@ msgstr ""
 "afgeletterde betaling eerst ongedaan te maken."
 
 #. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"Het is niet mogelijk de valuta van het bedrijf te wijzigen omdat er al "
+"financiële boekingen zijn gemaakt."
+
+#. module: account
 #: code:addons/account/models/account.py:180
 #, python-format
 msgid ""
@@ -10882,6 +10979,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "You have"
 msgstr "U heeft"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:360
+#, python-format
+msgid "You have to define a sequence for %s in your company."
+msgstr "U dient een reeks aan te maken voor %s in uw bedrijf."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
@@ -11113,7 +11216,7 @@ msgstr "voor de leverancier. U kan deze toewijzen om te markeren als betaald."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "factuur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -11125,7 +11228,7 @@ msgstr "of"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr "uitstaande uitgaven"
+msgstr "openstaande debet bedragen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -11142,7 +11245,7 @@ msgstr "afletteringen met de ctrl-enter sneltoets"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "refund"
-msgstr ""
+msgstr "credit factuur"
 
 #. module: account
 #. openerp-web

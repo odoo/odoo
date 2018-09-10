@@ -15,3 +15,5 @@ List of contributors:
 David Tran david.tran@tvtmarine.com https://github.com/davidtranhp
 Long Do dhlong.1209@gmail.com https://github.com/hoanglong87
 Hao Hoang hao.hoang@ma.tvtmarine.com https://github.com/hoanghao2001
+Tommy Tran tu.tran@tvtmarine.com https://github.com/tutran81
+Emily Ha emily.ha@tvtmarine.com https://github.com/emilyha

@@ -55,15 +55,14 @@ class MailMail(models.Model):
         self.ensure_one()
         body = super(MailMail, self).send_get_mail_body(partner=partner)
 
-        links_blacklist = ['/unsubscribe_from_list']
-
         if self.mailing_id and body and self.statistics_ids:
             for match in re.findall(URL_REGEX, self.body_html):
-
                 href = match[0]
                 url = match[1]
 
-                if not [s for s in links_blacklist if s in href]:
+                parsed = urlparse.urlparse(url, scheme='http')
+
+                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
@@ -88,7 +87,7 @@ class MailMail(models.Model):
     def send_get_email_dict(self, partner=None):
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         res = super(MailMail, self).send_get_email_dict(partner)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url').rstrip('/')
         if self.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False

@@ -122,7 +122,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
+        return unicodifier(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}'))
 
 
 class FloatConverter(models.AbstractModel):
@@ -142,7 +142,7 @@ class FloatConverter(models.AbstractModel):
             value = float_utils.float_round(value, precision_digits=precision)
             fmt = '%.{precision}f'.format(precision=precision)
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'\u2011')
+        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         # %f does not strip trailing zeroes. %g does but its precision causes
         # it to switch to scientific notation starting at a million *and* to
@@ -173,7 +173,11 @@ class DateConverter(models.AbstractModel):
         locale = babel.Locale.parse(lang.code)
 
         if isinstance(value, basestring):
-            value = fields.Datetime.from_string(value[:10])
+            if len(value) > 10:  # datetime to be displayed as date
+                value = fields.Datetime.from_string(value)
+                value = fields.Datetime.context_timestamp(self, value)
+            else:
+                value = fields.Datetime.from_string(value)
 
         if options and 'format' in options:
             pattern = options['format']
@@ -322,7 +326,7 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
+                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
 
         pre = post = u''
         if display_currency.position == 'before':

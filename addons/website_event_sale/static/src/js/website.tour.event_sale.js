@@ -75,7 +75,7 @@ tour.register('event_buy_tickets', {
             trigger: 'a[href="/shop/confirm_order"]:contains("Confirm")',
         },
         {
-            content: "Check that the subtotal is 5,500.00",
+            content: "Check that the subtotal is 5,500.00 USD", // this test will fail if the currency of the main company is not USD
             trigger: '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
             run: function () {}, // it's a check
         },
@@ -91,6 +91,7 @@ tour.register('event_buy_tickets', {
         {
             content: "Last step",
             trigger: '.oe_website_sale:contains("Thank you for your order")',
+            timeout: 30000,
         }
     ]
 );

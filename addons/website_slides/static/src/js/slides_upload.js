@@ -150,6 +150,8 @@ var SlideDialog = Widget.extend({
                                 _.each(data.items, function (obj) {
                                     page_content = page_content + obj.str + " ";
                                 });
+                                // page_content may contain null characters
+                                page_content = page_content.replace(/\0/g, "");
                                 self.index_content = self.index_content + page_number + ". " + page_content + '\n';
                                 if (maxPages === page_number) {
                                     if (loaded) {

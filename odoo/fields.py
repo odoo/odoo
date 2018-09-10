@@ -53,18 +53,33 @@ def _check_value(value):
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    todo, done = set(records), set()
+    src = records.env
+    todo = defaultdict(set)             # {model_name: ids}
+    done = defaultdict(set)             # {model_name: ids}
+    todo[records._name].update(records._ids)
     while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for name in record._cache:
-                field = record._fields[name]
-                value = record[name]
-                if isinstance(value, BaseModel):
-                    todo.update(value)
-                target._cache[name] = field.convert_to_cache(value, target, validate=False)
+        model_name = next(iter(todo))
+        record_ids = todo.pop(model_name) - done[model_name]
+        if not record_ids:
+            continue
+        done[model_name].update(record_ids)
+        for name, field in src[model_name]._fields.items():
+            src_cache = src.cache[field]
+            dst_cache = env.cache[field]
+            for record_id in record_ids:
+                if record_id in src_cache:
+                    # copy the cached value as such
+                    if isinstance(src_cache[record_id], FailedValue):
+                        # But not if it's a FailedValue, which often is an access error
+                        # because the other environment (eg. sudo()) is well expected to have access.
+                        continue
+                    value = dst_cache[record_id] = src_cache[record_id]
+                    if field.relational and isinstance(value, tuple):
+                        todo[field.comodel_name].update(value)
+
+def first(records):
+    """ Return the first record in ``records``, with the same prefetching. """
+    return next(iter(records)) if len(records) > 1 else records
 
 
 def resolve_mro(model, name, predicate):
@@ -305,6 +320,7 @@ class Field(object):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'inherited_field': None,        # the corresponding inherited field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -565,19 +581,48 @@ class Field(object):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related[:-1]:
-            record = record[name][:1]
+            record = record[name][:1].with_prefetch(record._prefetch)
         return record, self.related_field
 
     def _compute_related(self, records):
         """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
-        for record, other in zip(records, others):
-            if not record.id and record.env != other.env:
-                # draft records: copy record's cache to other's cache first
-                copy_cache(record, other.env)
-            other, field = self.traverse_related(other)
-            record[self.name] = other[field.name]
+        # copy the cache of draft records into others' cache
+        if records.env != others.env:
+            copy_cache(records - records.filtered('id'), others.env)
+        #
+        # Traverse fields one by one for all records, in order to take advantage
+        # of prefetching for each field access. In order to clarify the impact
+        # of the algorithm, consider traversing 'foo.bar' for records a1 and a2,
+        # where 'foo' is already present in cache for a1, a2. Initially, both a1
+        # and a2 are marked for prefetching. As the commented code below shows,
+        # traversing all fields one record at a time will fetch 'bar' one record
+        # at a time.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v2 = b2.bar         # fetch/compute bar for b2
+        #
+        # On the other hand, traversing all records one field at a time ensures
+        # maximal prefetching for each field access.
+        #
+        #       b1 = a1.foo         # mark b1 for prefetching
+        #       b2 = a2.foo         # mark b2 for prefetching
+        #       v1 = b1.bar         # fetch/compute bar for b1, b2
+        #       v2 = b2.bar         # value already in cache
+        #
+        # This difference has a major impact on performance, in particular in
+        # the case where 'bar' is a computed field that takes advantage of batch
+        # computation.
+        #
+        values = list(others)
+        for name in self.related[:-1]:
+            values = [first(value[name]) for value in values]
+        # assign final values to records
+        for record, value in zip(records, values):
+            record[self.name] = value[self.related_field.name]
 
     def _inverse_related(self, records):
         """ Inverse the related field ``self`` on ``records``. """
@@ -603,7 +648,7 @@ class Field(object):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
-        return self.related_field.base_field if self.inherited else self
+        return self.inherited_field.base_field if self.inherited_field else self
 
     #
     # Company-dependent fields
@@ -892,11 +937,11 @@ class Field(object):
             spec = self.modified_draft(record)
 
             # set value in cache, inverse field, and mark record as dirty
-            record._cache[self] = value
+            env.cache[self][record.id] = value
             if env.in_onchange:
                 for invf in record._field_inverses[self]:
                     invf._update(record[self.name], record)
-                record._set_dirty(self.name)
+                env.dirty[record].add(self.name)
 
             # determine more dependent fields, and invalidate them
             if self.relational:
@@ -909,7 +954,7 @@ class Field(object):
             record.write({self.name: write_value})
             # Update the cache unless value contains a new record
             if not (self.relational and not all(value)):
-                record._cache[self] = value
+                env.cache[self][record.id] = value
 
     ############################################################################
     #
@@ -978,6 +1023,7 @@ class Field(object):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
@@ -1482,6 +1528,9 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
+    def convert_to_column(self, value, record):
+        return super(Date, self).convert_to_column(value or None, record)
+
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
@@ -1550,6 +1599,9 @@ class Datetime(Field):
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
+
+    def convert_to_column(self, value, record):
+        return super(Datetime, self).convert_to_column(value or None, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -2199,14 +2251,13 @@ class One2many(_RelationalMulti):
                 elif act[0] == 6:
                     record = records[-1]
                     comodel.browse(act[2]).write({inverse: record.id})
-                    query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
-                    comodel._cr.execute(query, (record.id, act[2] or [0]))
-                    lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
+                    domain = self.domain(records) if callable(self.domain) else self.domain
+                    domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
                     inverse_field = comodel._fields[inverse]
                     if inverse_field.ondelete == 'cascade':
-                        lines.unlink()
+                        comodel.search(domain).unlink()
                     else:
-                        lines.write({inverse: False})
+                        comodel.search(domain).write({inverse: False})
 
 
 class Many2many(_RelationalMulti):

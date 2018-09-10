@@ -4,3 +4,4 @@
 import sale_order
 import sale_quote
 import product_template
+import ir_model_fields

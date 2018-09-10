@@ -375,7 +375,7 @@ msgstr "Righe Timesheet"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Timesheet range"
-msgstr "Range timesheet"
+msgstr "Intervallo Timesheet"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
@@ -489,6 +489,14 @@ msgstr "Non si può eliminare un timesheet che è già stato confermato."
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Non è possibile duplicare un timesheet."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60

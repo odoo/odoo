@@ -338,4 +338,19 @@
     </t>
 </template>
 
+<template id="not_subscribed" name="Email address was not subscribed">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    The address <t t-esc="partner_id.email"/> is already
+                    unsubscribed or was never subscribed to the mailing
+                    list, you may want to check that the address was
+                    correct.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
 </odoo>

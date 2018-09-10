@@ -520,8 +520,12 @@ class Escpos:
         # Print Code
         if code:
             self._raw(code)
+            # We are using type A commands
+            # So we need to add the 'NULL' character
+            # https://github.com/python-escpos/python-escpos/pull/98/files#diff-a0b1df12c7c67e38915adbe469051e2dR444
+            self._raw('\x00')
         else:
-            raise exception.BarcodeCodeError()
+            raise BarcodeCodeError()
 
     def receipt(self,xml):
         """

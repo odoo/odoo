@@ -7,6 +7,7 @@ var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
 var local_storage = require('web.local_storage');
+var website = require('website.website');
 
 var _t = core._t;
 var page_widgets = {};
@@ -15,19 +16,20 @@ $(document).ready(function () {
 
     var widget_parent = $('body');
 
-
-    $("timeago.timeago").each(function (index, el) {
-        var datetime = $(el).attr('datetime'),
-            datetime_obj = time.str_to_datetime(datetime),
-            // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
-            // then return fix formate string else timeago
-            display_str = "";
-        if (datetime_obj && new Date().getTime() - datetime_obj.getTime() > 7 * 24 * 60 * 60 * 1000) {
-            display_str = datetime_obj.toDateString();
-        } else {
-            display_str = moment(datetime_obj).fromNow();
-        }
-        $(el).text(display_str);
+    website.localeDef.then(function () {
+        $("timeago.timeago").each(function (index, el) {
+            var datetime = $(el).attr('datetime'),
+                datetime_obj = time.str_to_datetime(datetime),
+                // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)
+                // then return fix formate string else timeago
+                display_str = "";
+            if (datetime_obj && new Date().getTime() - datetime_obj.getTime() > 7 * 24 * 60 * 60 * 1000) {
+                display_str = moment(datetime_obj).format('ll');
+            } else {
+                display_str = moment(datetime_obj).fromNow();
+            }
+            $(el).text(display_str);
+        });
     });
 
     // To prevent showing channel settings alert box once user closed it.
@@ -109,11 +111,12 @@ $(document).ready(function () {
         },
     });
 
-    $('iframe').ready(function() {
+    $('iframe.o_wslides_iframe_viewer').ready(function() {
         // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
         // still now set (the pdf is still loading)
-        var max_page = $('iframe').contents().find('#page_count').val();
-        new SlideSocialEmbed($(this), max_page).setElement($('.oe_slide_js_embed_code_widget'));
+        var $iframe = $(this);
+        var max_page = $iframe.contents().find('#page_count').val();
+        new SlideSocialEmbed($iframe, max_page).setElement($('.oe_slide_js_embed_code_widget'));
     });
 
 

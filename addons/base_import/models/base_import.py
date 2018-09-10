@@ -305,6 +305,8 @@ class Import(models.TransientModel):
         if all(val.lower() in ('true', 'false', 't', 'f', '') for val in preview_values):
             return ['boolean']
         # If all values can be cast to float, type is either float or monetary
+        # Or a date/datetime if it matches the pattern
+        results = []
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
@@ -336,7 +338,7 @@ class Import(models.TransientModel):
             if thousand_separator and not options.get('float_decimal_separator'):
                 options['float_thousand_separator'] = thousand_separator
                 options['float_decimal_separator'] = decimal_separator
-            return ['float', 'monetary']
+            results  = ['float', 'monetary']
         except ValueError:
             pass
         # Try to see if all values are a date or datetime
@@ -372,13 +374,15 @@ class Import(models.TransientModel):
         current_date_pattern = check_patterns(date_patterns, preview_values)
         if current_date_pattern:
             options['date_format'] = current_date_pattern
-            return ['date']
+            results += ['date']
 
         current_datetime_pattern = check_patterns(datetime_patterns, preview_values)
         if current_datetime_pattern:
             options['datetime_format'] = current_datetime_pattern
-            return ['datetime']
+            results += ['datetime']
 
+        if results:
+            return results
         return ['text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
 
     @api.model
@@ -453,7 +457,7 @@ class Import(models.TransientModel):
             :rtype: (None, None) | (list(str), dict(int: list(str)))
         """
         if not options.get('headers'):
-            return None, None
+            return [], {}
 
         headers = next(rows)
         return headers, {
@@ -500,7 +504,7 @@ class Import(models.TransientModel):
                 'headers_type': header_types or False,
                 'preview': preview,
                 'options': options,
-                'advanced_mode': any([len(models.fix_import_export_id_paths(col)) > 1 for col in headers]),
+                'advanced_mode': any([len(models.fix_import_export_id_paths(col)) > 1 for col in headers or []]),
                 'debug': self.user_has_groups('base.group_no_one'),
             }
         except Exception, error:
@@ -582,7 +586,7 @@ class Import(models.TransientModel):
             # Check that currency exists
             currency = self.env['res.currency'].search([('symbol', '=', split_value[currency_index].strip())])
             if len(currency):
-                return split_value[currency_index + 1 % 2] if not negative else '-' + split_value[currency_index + 1 % 2]
+                return split_value[(currency_index + 1) % 2] if not negative else '-' + split_value[(currency_index + 1) % 2]
             # Otherwise it is not a float with a currency symbol
             return False
 
@@ -601,9 +605,18 @@ class Import(models.TransientModel):
 
     @api.multi
     def _parse_import_data(self, data, import_fields, options):
+        """ Lauch first call to _parse_import_data_recursive with an
+        empty prefix. _parse_import_data_recursive will be run
+        recursively for each relational field.
+        """
+        return self._parse_import_data_recursive(self.res_model, '', data, import_fields, options)
+
+    @api.multi
+    def _parse_import_data_recursive(self, model, prefix, data, import_fields, options):
         # Get fields of type date/datetime
-        all_fields = self.env[self.res_model].fields_get()
+        all_fields = self.env[model].fields_get()
         for name, field in all_fields.iteritems():
+            name = prefix + name
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)
@@ -615,12 +628,16 @@ class Import(models.TransientModel):
                     for num, line in enumerate(data):
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(ustr(line[index].strip()).encode('utf-8'), user_format), server_format)
                             except ValueError, e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
                             except Exception, e:
                                 raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
-
+            # Check if the field is in import_field and is a relational (followed by /)
+            # Also verify that the field name exactly match the import_field at the correct level.
+            elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
+                # Recursive call with the relational as new model and add the field name to the prefix
+                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case
@@ -664,7 +681,13 @@ class Import(models.TransientModel):
             }]
 
         _logger.info('importing %d rows...', len(data))
-        import_result = self.env[self.res_model].with_context(import_file=True).load(import_fields, data)
+
+        model = self.env[self.res_model].with_context(import_file=True)
+        defer_parent_store = self.env.context.get('defer_parent_store_computation', True)
+        if defer_parent_store and model._parent_store:
+            model = model.with_context(defer_parent_store_computation=True)
+        
+        import_result = model.load(import_fields, data)
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise

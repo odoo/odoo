@@ -8,7 +8,7 @@ from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import logging
 
@@ -21,7 +21,7 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type'])
 
-    name = fields.Char('Warehouse Name', index=True, required=True)
+    name = fields.Char('Warehouse Name', index=True, required=True, default=lambda self: self.env['res.company']._company_default_get('stock.inventory').name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('stock.inventory'),
@@ -151,11 +151,14 @@ class Warehouse(models.Model):
         # If another partner assigned
         if vals.get('partner_id'):
             warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+
         res = super(Warehouse, self).write(vals)
 
         # check if we need to delete and recreate route
         if vals.get('reception_steps') or vals.get('delivery_steps'):
-            warehouses._update_routes()
+            route_vals = warehouses._update_routes()
+            if route_vals:
+                self.write(route_vals)
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
@@ -282,7 +285,7 @@ class Warehouse(models.Model):
                 reception_route.pull_ids.unlink()
                 reception_route.push_ids.unlink()
             else:
-                reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
+                warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
             routings = routes_data[warehouse.id][warehouse.reception_steps]
             push_rules_list, pull_rules_list = warehouse._get_push_pull_rules_values(
@@ -427,6 +430,7 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id),
                 self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id),
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'company_id': warehouse.company_id.id,
         }) for warehouse in self)
 
     @api.multi
@@ -436,6 +440,7 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'product_selectable': False,
             'sequence': 10,
+            'company_id': self.company_id.id,
         }
 
     @api.model
@@ -455,7 +460,8 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
-            'supplier_wh_id': supplier_warehouse.id}
+            'supplier_wh_id': supplier_warehouse.id,
+            'company_id': self.company_id.id}
 
     def _get_inter_wh_route(self, supplier_warehouse):
         # FIXME - remove me in master/saas-14
@@ -469,7 +475,8 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
-            'sequence': 20}
+            'sequence': 20,
+            'company_id': self.company_id.id}
 
     def _get_crossdock_route(self, route_name):
         # FIXME - remove me in master/saas-14
@@ -581,12 +588,19 @@ class Warehouse(models.Model):
         # change the default source and destination location and (de)activate picking types
         self._update_picking_type()
         # update delivery route and rules: unlink the existing rules of the warehouse delivery route and recreate it
-        self._create_or_update_delivery_route(routes_data)
+        delivery_route = self._create_or_update_delivery_route(routes_data)
         # update receipt route and rules: unlink the existing rules of the warehouse receipt route and recreate it
-        self._create_or_update_reception_route(routes_data)
-        self._create_or_update_crossdock_route(routes_data)
-        self._create_or_update_mto_pull(routes_data)
-        return True
+        reception_route = self._create_or_update_reception_route(routes_data)
+        crossdock_route = self._create_or_update_crossdock_route(routes_data)
+        mto_pull = self._create_or_update_mto_pull(routes_data)
+
+        return {
+            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
+            'mto_pull_id': mto_pull.id,
+            'reception_route_id': reception_route.id,
+            'delivery_route_id': delivery_route.id,
+            'crossdock_route_id': crossdock_route.id,
+        }
 
     @api.multi
     def change_route(self):
@@ -686,11 +700,11 @@ class Warehouse(models.Model):
 
     def _get_sequence_values(self):
         return {
-            'in_type_id': {'name': self.name + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
-            'out_type_id': {'name': self.name + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
-            'pack_type_id': {'name': self.name + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
-            'pick_type_id': {'name': self.name + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
-            'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
+            'in_type_id': {'name': self.name + ' ' + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
+            'out_type_id': {'name': self.name + ' ' + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
+            'pack_type_id': {'name': self.name + ' ' + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
+            'pick_type_id': {'name': self.name + ' ' + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
+            'int_type_id': {'name': self.name + ' ' + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
         }
 
     @api.multi
@@ -841,15 +855,16 @@ class Orderpoint(models.Model):
         days = self.lead_days or 0.0
         if self.lead_type == 'supplier':
             # These days will be substracted when creating the PO
-            days += self.product_id._select_seller().delay or 0.0
+            qty = self.env.context.get('product_qty', 0.0)
+            days += self.product_id._select_seller(quantity=qty).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         return {
             'name': self.name,
-            'date_planned': date or self._get_date_planned(datetime.today()),
+            'date_planned': date or self.with_context(product_qty=product_qty)._get_date_planned(datetime.today()),
             'product_id': self.product_id.id,
             'product_qty': product_qty,
             'company_id': self.company_id.id,

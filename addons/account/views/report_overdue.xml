@@ -16,7 +16,7 @@
                 </p>
 
                 <t t-if="Lines[o.id]">
-                    <span t-field="res_company.overdue_msg"/>
+                    <span t-field="res_company.with_context(lang=o.lang).overdue_msg"/>
                     <table class="table table-condensed" t-foreach="Lines[o.id]" t-as="currency">
                         <thead>
                             <tr>

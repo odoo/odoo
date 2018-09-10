@@ -4,7 +4,7 @@
 import logging
 import time
 from os import listdir
-from os.path import join
+from os.path import join, isdir
 from Queue import Queue, Empty
 from select import select
 from threading import Thread, Lock
@@ -119,7 +119,10 @@ class Scanner(Thread):
     def get_devices(self):
         try:
             if not evdev:
-                return None
+                return []
+
+            if not isdir(self.input_dir):
+                return []
 
             new_devices = [device for device in listdir(self.input_dir)
                            if join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]

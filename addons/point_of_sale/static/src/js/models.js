@@ -203,7 +203,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'account.tax',
         fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
-        domain: null,
+        domain: function(self) {return [['company_id', '=', self.company && self.company.id || false]]},
         loaded: function(self, taxes){
             self.taxes = taxes;
             self.taxes_by_id = {};
@@ -221,7 +221,7 @@ exports.PosModel = Backbone.Model.extend({
         fields: ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at','sequence_number','login_number'],
         domain: function(self){ return [['state','=','opened'],['user_id','=',session.uid]]; },
         loaded: function(self,pos_sessions){
-            self.pos_session = pos_sessions[0]; 
+            self.pos_session = pos_sessions[0];
         },
     },{
         model: 'pos.config',
@@ -240,6 +240,9 @@ exports.PosModel = Backbone.Model.extend({
             }
 
             self.db.set_uuid(self.config.uuid);
+            self.cashier = self.get_cashier();
+            // We need to do it here, since only then the local storage has the correct uuid
+            self.db.save('pos_session_id', self.pos_session.id);
 
             var orders = self.db.get_orders();
             for (var i = 0; i < orders.length; i++) {
@@ -254,6 +257,7 @@ exports.PosModel = Backbone.Model.extend({
             // we attribute a role to the user, 'cashier' or 'manager', depending
             // on the group the user belongs. 
             var pos_users = [];
+            var current_cashier = self.get_cashier();
             for (var i = 0; i < users.length; i++) {
                 var user = users[i];
                 for (var j = 0; j < user.groups_id.length; j++) {
@@ -271,6 +275,9 @@ exports.PosModel = Backbone.Model.extend({
                 // replace the current user with its updated version
                 if (user.id === self.user.id) {
                     self.user = user;
+                }
+                if (user.id === current_cashier.id) {
+                    self.set_cashier(user);
                 }
             }
             self.users = pos_users; 
@@ -507,7 +514,7 @@ exports.PosModel = Backbone.Model.extend({
                                     .then(function(){ load_model(index + 1); },
                                           function(err){ loaded.reject(err); });
                             }catch(err){
-                                console.error(err.stack);
+                                console.error(err.message, err.stack);
                                 loaded.reject(err);
                             }
                         },function(err){
@@ -572,11 +579,16 @@ exports.PosModel = Backbone.Model.extend({
 
     // returns the user who is currently the cashier for this point of sale
     get_cashier: function(){
-        return this.cashier || this.user;
+        // reset the cashier to the current user if session is new
+        if (this.db.load('pos_session_id') !== this.pos_session.id) {
+            this.set_cashier(this.user);
+        }
+        return this.db.get_cashier() || this.cashier || this.user;
     },
     // changes the current cashier
     set_cashier: function(user){
         this.cashier = user;
+        this.db.set_cashier(this.cashier);
     },
     //creates a new empty order and sets it as the current order
     add_new_order: function(){
@@ -723,10 +735,10 @@ exports.PosModel = Backbone.Model.extend({
                 // generate the pdf and download it
                 self.chrome.do_action('point_of_sale.pos_invoice_report',{additional_context:{ 
                     active_ids:order_server_id,
-                }});
-
-                invoiced.resolve();
-                done.resolve();
+                }}).done(function () {
+                    invoiced.resolve();
+                    done.resolve();
+                });
             });
 
             return done;
@@ -1109,6 +1121,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
+        orderline.price = this.price;
         orderline.type = this.type;
         orderline.selected = false;
         return orderline;
@@ -1149,7 +1162,8 @@ exports.Orderline = Backbone.Model.extend({
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
+                    this.quantity = round_di(this.quantity, decimals)
+                    this.quantityStr = formats.format_value(this.quantity, { type: 'float', digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1426,6 +1440,9 @@ exports.Orderline = Backbone.Model.extend({
         _(taxes).each(function(tax) {
             if (!no_map_tax){
                 tax = self._map_tax_fiscal_position(tax);
+            }
+            if (!tax){
+                return;
             }
             if (tax.amount_type === 'group'){
                 var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
@@ -1937,6 +1954,8 @@ exports.Order = Backbone.Model.extend({
 
     initialize_validation_date: function () {
         this.validation_date = new Date();
+        this.formatted_validation_date = formats.format_value(
+            this.validation_date, {type: 'datetime'});
     },
 
     set_tip: function(tip) {
@@ -1971,7 +1990,9 @@ exports.Order = Backbone.Model.extend({
                 }
             })
 
-            unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            if (mapped_included_taxes.length > 0) {
+                unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            }
 
             line.set_unit_price(unit_price);
         }

@@ -6,18 +6,19 @@
 # Anna Maglia <angiolettachit92@gmail.com>, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Paolo Valier, 2016
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
+# mymage <stefano.consolaro@mymage.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:54+0000\n"
 "PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +65,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
+"Una nomenclatura barcode definisce come il punto vendita identifica e "
+"interpreta i codici"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
@@ -81,11 +84,12 @@ msgstr "Sempre"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_name
 msgid "An internal identification for this barcode nomenclature rule"
 msgstr ""
+"Un identificativo interno per questa regola della nomenclatura barcode"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
 msgid "An internal identification of the barcode nomenclature"
-msgstr ""
+msgstr "Un identificativo interno della nomenclatura barcode"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:177
@@ -109,7 +113,7 @@ msgstr "Nomenclature Barcode"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
 msgid "Barcode Pattern"
-msgstr ""
+msgstr "Modello codice"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
@@ -124,7 +128,7 @@ msgstr "Barcode Letto"
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Cashier"
-msgstr ""
+msgstr "Cassiere"
 
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -336,6 +340,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
+"Questa regola verrà applicata solo se il codice rispetta la codifica "
+"specificata"
 
 #. module: barcodes
 #. openerp-web
@@ -363,6 +369,9 @@ msgid ""
 "setting determines if a UPC/EAN barcode should be automatically converted in"
 " one way or another when trying to match a rule with the other encoding."
 msgstr ""
+"I codici UPC possono essere convertiti a EAN anteponendo uno zero. Questa "
+"impostazione determina se un codice UPC/EAN debba essere convertito "
+"automaticamente quando viene applicata una delle due codifiche."
 
 #. module: barcodes
 #: selection:barcode.rule,encoding:0
@@ -399,7 +408,7 @@ msgstr "Valore dell'ultimo barcode letto."
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Weighted Product"
-msgstr ""
+msgstr "Prodotto pesato"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature

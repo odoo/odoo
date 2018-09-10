@@ -3,16 +3,19 @@
 # * sale_timesheet
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# kalatchev <kalatchev@gmail.com>, 2016
+# kalatchev, 2016
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: kalatchev <kalatchev@gmail.com>, 2016\n"
+"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +36,7 @@ msgstr "Аналитичен ред"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
 msgid "Companies"
-msgstr "Предприятия"
+msgstr "Компании"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
@@ -41,7 +44,7 @@ msgstr "Предприятия"
 msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
-msgstr ""
+msgstr "Създайте задача по този проект за потвърждаване поръчката за продажба"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -51,13 +54,13 @@ msgstr "Служител"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Ред на поръчка"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr "Снабдаване"
+msgstr "Доставка"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -67,17 +70,17 @@ msgstr "Продукт"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Време за сигнал за продукт"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Време на живот на продукта"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Време за премахване на продукта"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -87,7 +90,7 @@ msgstr "Шаблон за продукт"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Срок на годност на продукт"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
@@ -99,7 +102,7 @@ msgstr "Проект"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Проект, свързан с тази продажба"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -111,7 +114,7 @@ msgstr "Поръчка за продажба"
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
-msgstr "Ред от нареждане за продажба"
+msgstr "Ред от поръчка за продажба"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -125,6 +128,8 @@ msgstr "Задача"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Създадена задача (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -144,6 +149,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Тази задача бе създадена от: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -184,6 +191,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Когато се издаде нов Сериен Номер, това е броят дни преди да започнем да "
+"получаваме предупреждения."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -191,6 +200,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Когато се издаде нов Сериен Номер, това е броят дни преди продуктът да стане"
+" опасен и не бива да се консумира."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -198,6 +209,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Когато се издаде нов Сериен Номер, това е броят дни преди продуктът да "
+"трябва да се премахне от наличност."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -205,6 +218,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Когато се издаде нов Сериен Номер, това е броят дни преди качеството на "
+"продукт да започне да се влошава, без да е опасен все още."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
@@ -214,9 +229,9 @@ msgid ""
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
-"Можете да видите само един продукт на графика с дейности за една поръчка. "
-"Трябва да разделите поръчката, така че да съдържа само договор базиран на "
-"време и материали."
+"Можете да използвате само един продукт в графика за една поръчка. Трябва да "
+"разделите поръчката си, така че да съдържа само договор, базиран на време и "
+"материали."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17

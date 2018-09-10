@@ -146,7 +146,16 @@ function make_message (data) {
     _.each(_.keys(emoji_substitutions), function (key) {
         var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
         var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
+        var msg_bak = msg.body;
         msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+emoji_substitutions[key]+'</span> ');
+
+        // Idiot-proof limit. If the user had the amazing idea of copy-pasting thousands of emojis,
+        // the image rendering can lead to memory overflow errors on some browsers (e.g. Chrome).
+        // Set an arbitrary limit to 200 from which we simply don't replace them (anyway, they are
+        // already replaced by the unicode counterpart).
+        if (_.str.count(msg.body, 'o_mail_emoji') > 200) {
+            msg.body = msg_bak;
+        }
     });
 
     function property_descr(channel) {
@@ -221,13 +230,21 @@ function make_message (data) {
     // can not be done in preprocess, since it alter the original value
     if (msg.tracking_value_ids && msg.tracking_value_ids.length) {
         _.each(msg.tracking_value_ids, function(f) {
-            if (_.contains(['date', 'datetime'], f.field_type)) {
-                var format = (f.field_type === 'date') ? 'LL' : 'LLL';
+            if (f.field_type === 'datetime') {
+                var format = 'LLL';
                 if (f.old_value) {
                     f.old_value = moment.utc(f.old_value).local().format(format);
                 }
                 if (f.new_value) {
                     f.new_value = moment.utc(f.new_value).local().format(format);
+                }
+            } else if (f.field_type === 'date') {
+                var format = 'LL';
+                if (f.old_value) {
+                    f.old_value = moment(f.old_value).local().format(format);
+                }
+                if (f.new_value) {
+                    f.new_value = moment(f.new_value).local().format(format);
                 }
             }
         });
@@ -519,7 +536,7 @@ function on_partner_notification (data) {
             }
             remove_channel(channel);
             chat_manager.bus.trigger("unsubscribe_from_channel", data.id);
-            web_client.do_notify(_("Unsubscribed"), msg);
+            web_client.do_notify(_t("Unsubscribed"), msg);
         }
     } else if (data.type === 'toggle_star') {
         on_toggle_star_notification(data);

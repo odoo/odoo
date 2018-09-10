@@ -15,7 +15,7 @@ from werkzeug import url_encode, unescape
 from odoo import models, fields, api, _
 from odoo.tools import ustr
 
-URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
+URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
 
 def VALIDATE_URL(url):
     if urlparse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
@@ -248,19 +248,20 @@ class link_tracker_click(models.Model):
 
             vals = {
                 'link_id': code_rec.link_id.id,
-                'create_date': datetime.date.today(),
                 'ip': ip,
                 'country_id': country_record.id,
-                'mail_stat_id': stat_id
             }
 
             if stat_id:
                 mail_stat = self.env['mail.mail.statistics'].search([('id', '=', stat_id)])
+                # It could happen that the related ID is no longer available, but we still want the link to work
+                if mail_stat.exists():
+                    vals['mail_stat_id'] = stat_id
 
-                if mail_stat.mass_mailing_campaign_id:
-                    vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
+                    if mail_stat.mass_mailing_campaign_id:
+                        vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
 
-                if mail_stat.mass_mailing_id:
-                    vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
+                    if mail_stat.mass_mailing_id:
+                        vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
 
             self.create(vals)

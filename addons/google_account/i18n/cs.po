@@ -4,20 +4,21 @@
 # 
 # Translators:
 # xlu <xlu@seznam.cz>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Jiří P., 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Jiří P., 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
@@ -58,7 +59,7 @@ msgstr "Naposled upraveno"
 #: code:addons/google_account/models/google_service.py:169
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
-msgstr ""
+msgstr "Metoda není podporována [%s] v [GET, POST, PUT, PATCH nebo DELETE]!"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:117
@@ -67,6 +68,8 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr ""
+"Během vaší generace tokenů se něco pokazilo. Možná je váš autorizační kód "
+"neplatný"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:52
@@ -75,6 +78,8 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired"
 msgstr ""
+"Během vaší generace tokenů se něco pokazilo. Možná je váš autorizační kód "
+"neplatný nebo již vypršel"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:144
@@ -83,14 +88,16 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
 msgstr ""
+"Během vaší generace tokenů se něco pokazilo. Možný váš autorizační kód je "
+"neplatný nebo již vypršel [%s]"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
-msgstr ""
+msgstr "Něco se stalo s vaším požadavkem na Google"
 
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

@@ -6,6 +6,7 @@
 {
     'name': 'Singapore - Accounting',
     'author': 'Tech Receptives',
+    'version': '2.0',
     'website': 'http://www.techreceptives.com',
     'category': 'Localization',
     'description': """
@@ -31,4 +32,5 @@ After installing this module, the Configuration wizard for accounting is launche
              'data/account_tax_data.xml',
              'data/account_chart_template_data.yml',
     ],
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

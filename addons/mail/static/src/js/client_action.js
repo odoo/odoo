@@ -124,10 +124,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             var def = window.Notification && window.Notification.requestPermission();
             if (def) {
                 def.then(function (value) {
-                    if (value === 'denied') {
-                        utils.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
-                    } else {
+                    if (value === 'granted') {
                         utils.send_notification(_t('Permission granted'), _t('Odoo has now the permission to send you native notifications on this device.'));
+                    } else {
+                        utils.send_notification(_t('Permission denied'), _t('Odoo will not have the permission to send native notifications on this device.'));
                     }
                 });
             }
@@ -249,6 +249,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def3 = this.extended_composer.appendTo(this.$('.o_mail_chat_content'));
         var def4 = this.searchview.appendTo($("<div>")).then(function () {
             self.$searchview_buttons = self.searchview.$buttons.contents();
+            // manually call do_search to generate the initial domain and filter
+            // the messages in the default channel
+            self.searchview.do_search();
         });
 
         this.render_sidebar();
@@ -565,7 +568,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
 
         this.domain = result.domain;
-        this.fetch_and_render_thread();
+        if (this.channel) {
+            // initially (when do_search is called manually), there is no
+            // channel set yet, so don't try to fetch and render the thread as
+            // this will be done as soon as the default channel is set
+            this.fetch_and_render_thread();
+        }
     },
 
     on_post_message: function (message) {
@@ -667,7 +675,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
     destroy: function() {
-        this.$buttons.off().destroy();
+        if (this.$buttons) {
+            this.$buttons.off().destroy();
+        }
         this._super.apply(this, arguments);
     },
 });

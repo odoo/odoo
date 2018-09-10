@@ -11,7 +11,11 @@ class Project(models.Model):
         """ Instead of the classic form view, redirect to website for portal users
         that can read the project. """
         self.ensure_one()
-        if self.env.user.share:
+        if self.env.context.get('uid'):
+            user = self.env['res.users'].browse(self.env.context['uid'])
+        else:
+            user = self.env.user
+        if user.share:
             try:
                 self.check_access_rule('read')
             except exceptions.AccessError:
@@ -43,7 +47,11 @@ class Task(models.Model):
         """ Instead of the classic form view, redirect to website for portal users
         that can read the task. """
         self.ensure_one()
-        if self.env.user.share:
+        if self.env.context.get('uid'):
+            user = self.env['res.users'].browse(self.env.context['uid'])
+        else:
+            user = self.env.user
+        if user.share:
             try:
                 self.check_access_rule('read')
             except exceptions.AccessError:

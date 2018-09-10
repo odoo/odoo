@@ -30,7 +30,7 @@ class except_orm(Exception):
 
 class UserError(except_orm):
     def __init__(self, msg):
-        super(UserError, self).__init__(msg)
+        super(UserError, self).__init__(msg, value='')
 
 
 # deprecated due to collision with builtins, kept for compatibility
@@ -46,6 +46,10 @@ class RedirectWarning(Exception):
       :param string button_text: text to put on the button that will trigger
           the redirection.
     """
+    # using this RedirectWarning won't crash if used as an except_orm
+    @property
+    def name(self):
+        return self.args[0]
 
 
 class AccessDenied(Exception):

@@ -3,7 +3,7 @@
 # * calendar
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Robert Frykelius <robert.frykelius@linserv.se>, 2016
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # Patrik Lermon <patrik.lermon@gmail.com>, 2016
@@ -11,14 +11,15 @@
 # Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
+# Kim Asplund <kim.asplund@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: larmar <martin.wilderoth@linserv.se>, 2016\n"
+"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -296,17 +297,17 @@ msgstr "[Mig]"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr "${object.event_id.name} - Påminnelse"
+msgstr "${object.event_id.name} - påminnelse"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} inbjudan"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: datum uppdaterat"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:639
@@ -328,13 +329,13 @@ msgstr "%s klockan %s till %s (%s)"
 #: code:addons/calendar/models/calendar.py:191
 #, python-format
 msgid "%s has accepted invitation"
-msgstr "% har accepterat inbjudan"
+msgstr "%s har accepterat inbjudan"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:199
 #, python-format
 msgid "%s has declined invitation"
-msgstr "% har avböjt inbjudan"
+msgstr "%s har avböjt inbjudan"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -345,7 +346,7 @@ msgstr "<span> timmar</span>"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr "Godkänn"
+msgstr "Acceptera"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
@@ -556,7 +557,7 @@ msgstr "Visa namn"
 #: code:addons/calendar/static/src/js/base_calendar.js:156
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
-msgstr ""
+msgstr "Vill du verkligen ta bort det här filtret från favoriter?"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
@@ -621,13 +622,13 @@ msgstr "Slutar"
 #: code:addons/calendar/models/calendar.py:821
 #, python-format
 msgid "Ending date cannot be set before starting date."
-msgstr ""
+msgstr "Slutdatum kan inte vara före startdatum."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:819
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
-msgstr ""
+msgstr "Sluttid kan inte vara före starttid."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -697,12 +698,12 @@ msgstr "Ledig/upptagen"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_fr
 msgid "Fri"
-msgstr "Fri"
+msgstr "fre"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Friday"
-msgstr "Fredag"
+msgstr "fredag"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -762,7 +763,7 @@ msgstr "Inbjudningsdetaljer"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "Inbjudan för"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1077,7 +1078,7 @@ msgstr "Ansvarig"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
 msgid "Sat"
-msgstr "Sat"
+msgstr "lör"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1172,12 +1173,12 @@ msgstr "Ämne"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_su
 msgid "Sun"
-msgstr "Sun"
+msgstr "sön"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Sunday"
-msgstr "Söndag"
+msgstr "söndag"
 
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
@@ -1187,7 +1188,7 @@ msgstr "Namntaggen existerar redan !"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
 msgid "Tags"
-msgstr "Taggar"
+msgstr "Etiketter"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1230,7 +1231,7 @@ msgstr "torsdag"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_tu
 msgid "Tue"
-msgstr "Tue"
+msgstr "tis"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
@@ -1277,12 +1278,12 @@ msgstr "Uppdatera endast denna instans"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_we
 msgid "Wed"
-msgstr "Wed"
+msgstr "ons"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr "Onsdag"
+msgstr "onsdag"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0

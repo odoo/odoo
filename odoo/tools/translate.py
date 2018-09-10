@@ -448,7 +448,7 @@ def quote(s):
                      .replace('\n', '\\n"\n"')
 
 re_escaped_char = re.compile(r"(\\.)")
-re_escaped_replacements = {'n': '\n', }
+re_escaped_replacements = {'n': '\n', 't': '\t',}
 
 def _sub_replacement(match_obj):
     return re_escaped_replacements.get(match_obj.group(1)[1], match_obj.group(1)[1])
@@ -935,7 +935,8 @@ def trans_generate(lang, modules, cr):
     def get_module_from_path(path):
         for (mp, rec) in path_list:
             mp = os.path.join(mp, '')
-            if rec and path.startswith(mp) and os.path.dirname(path) != mp:
+            dirname = os.path.join(os.path.dirname(path), '')
+            if rec and path.startswith(mp) and dirname != mp:
                 path = path[len(mp):]
                 return path.split(os.path.sep)[0]
         return 'base' # files that are not in a module are considered as being in 'base' module

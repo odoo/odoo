@@ -106,13 +106,12 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date', fields.Date.today())
+            date = self._context.get('date') or fields.Date.context_today(self)
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:
             # rebrowse with uom if given
-            product_ids = [item[0].id for item in products_qty_partner]
-            products = self.env['product.product'].with_context(uom=uom_id).browse(product_ids)
+            products = [item[0].with_context(uom=uom_id) for item in products_qty_partner]
             products_qty_partner = [(products[index], data_struct[1], data_struct[2]) for index, data_struct in enumerate(products_qty_partner)]
         else:
             products = [item[0] for item in products_qty_partner]
@@ -335,7 +334,7 @@ class ResCountryGroup(models.Model):
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc"
+    _order = "applied_on, min_quantity desc, categ_id desc, id"
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',
@@ -347,7 +346,7 @@ class PricelistItem(models.Model):
         'product.category', 'Product Category', ondelete='cascade',
         help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
     min_quantity = fields.Integer(
-        'Min. Quantity', default=1,
+        'Min. Quantity', default=0,
         help="For the rule to apply, bought/sold quantity must be greater "
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
@@ -439,7 +438,7 @@ class PricelistItem(models.Model):
         elif self.compute_price == 'percentage':
             self.price = _("%s %% discount") % (self.percent_price)
         else:
-            self.price = _("%s %% discount and %s surcharge") % (abs(self.price_discount), self.price_surcharge)
+            self.price = _("%s %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
 
     @api.onchange('applied_on')
     def _onchange_applied_on(self):

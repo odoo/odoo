@@ -34,6 +34,7 @@ class Currency(models.Model):
     ]
 
     @api.multi
+    @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Datetime.now()
         company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
@@ -208,7 +209,7 @@ class CurrencyRate(models.Model):
     rate = fields.Float(digits=(12, 6), help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.user._get_company())
+                                 default=lambda self: self.env.user.company_id)
 
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=80):

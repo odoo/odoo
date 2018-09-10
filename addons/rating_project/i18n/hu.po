@@ -3,15 +3,16 @@
 # * rating_project
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Martin Trigaux, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgid ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
@@ -103,26 +104,26 @@ msgstr ""
 "            <tr><td>\n"
 "                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    Satisfaction Survey\n"
+"                    Ügyfélelégedettség felmérése\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
-"                <p>Kedves,</p>\n"
-"                <p>Kérjük a feladathoz kötődő szolgáltatásaink értékelését \"<strong>${object.name}</strong>\"\n"
-"                   hozzárendelve <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
-"                <p>Köszönjük visszajelzését. Hozzájárul folyamatos fejlesztésünkhöz.</p>\n"
+"                <p>Üdvözöljük,</p>\n"
+"                <p>Kérjük, fordítson egy percet a következő feladathoz kapcsolódó szolgáltatásunk értékelésére: \"<strong>${object.name}</strong>\".\n"
+"                   A feladathoz rendelt személy: <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>Köszönjük a visszajelzését, ami segít nekünk a folyamatos fejlődésben.</p>\n"
 "            </td></tr>\n"
 "            <tr><td style=\"padding:10px 20px\">\n"
 "                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                    <tr>\n"
 "                        <td style=\"text-align:center;\">\n"
 "                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
-"                                Mondja el véleményét a szolgáltatásunkról:\n"
+"                                Mondja el, mit érez a szolgáltatásunkkal kapcsolatban:\n"
 "                            </h2>\n"
-"                            <div style=\"text-color: #888888\">(click on one of these smileys)</div>\n"
+"                            <div style=\"text-color: #888888\">(kattintson ezen hangulatjelek egyikére)</div>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                    <tr>\n"
@@ -131,17 +132,17 @@ msgstr ""
 "                                <tr>\n"
 "                                    <td>\n"
 "                                        <a href=\"/rating/${access_token}/10\">\n"
-"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Elégedett\"/>\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
 "                                        </a>\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <a href=\"/rating/${access_token}/5\">\n"
-"                                            <img alt=\"Elégedetlen\" src=\"/rating/static/src/img/rating_5.png\" title=\"Elégedetlen\"/>\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
 "                                        </a>\n"
 "                                    </td>\n"
 "                                    <td>\n"
 "                                        <a href=\"/rating/${access_token}/1\">\n"
-"                                            <img alt=\"Nagyon elégedetlen\" src=\"/rating/static/src/img/rating_1.png\" title=\"Nagyon elégedetlen\"/>\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
 "                                        </a>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -150,19 +151,19 @@ msgstr ""
 "                    </tr>\n"
 "                </table>\n"
 "            </td></tr>\n"
-"            <tr><td style=\"padding:15px 20px 10px 20px;\">${object.user_id.signature or ''| safe}</td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
 "    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
 "                % if object.project_id.rating_status == 'stage':\n"
-"                    <p>Ezt az értékelést azért kapta, mert a feladat egy másik szakaszba lépett <b>${object.stage_id.name}</b></p>\n"
+"                    <p>Ez az ügyfélelégedettségi felmérés azért került elküldésre, mert az Ön feladata átmozgatásra került a következő szakaszba: <b>${object.stage_id.name}</b></p>\n"
 "                % endif\n"
 "                % if object.project_id.rating_status == 'periodic':\n"
-"                    <p>Ezt a vásárlói értékelést küldi <b>${object.project_id.rating_status_period}</b> amíg a feladat  <b>${object.stage_id.name}</b> ebben a szakaszban van.</p>\n"
+"                    <p>Ez az ügyfélelégedettségi felmérés <b>${object.project_id.rating_status_period}</b> kerül elküldésre addig, amíg a feladat a(z) <b>${object.stage_id.name}</b> szakaszban van.\n"
 "                % endif\n"
-"                <p>Email automatikus küldője <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Projekt téma</a> ehhez <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"                <p>Ezt az e-mailt automatikusan küldte az <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo projektalkalmazása</a> a(z) <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a> részére.</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -171,8 +172,7 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
-"${object.project_id.company_id.name}: Szolgáltatás értékelés igénylése"
+msgstr "${object.project_id.company_id.name}: Szolgáltatásértékelés igénylése"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -182,7 +182,7 @@ msgstr "% Feladatokon"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr "Automatikus kanban állapot"
+msgstr "Automatikus kanbanállapot"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -191,9 +191,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Automatikusan módosítja a kanban állapotot, ha a vásárló reagál a szakaszon lévő visszajelzésen.\n"
-" * Egy nagyszerű vásárlói visszajelzés frissíti a kanban állapotot a 'készen áll a következő szakaszra' (zöld golyó).\n"
-" * Egy közepes vagy rossz visszajelzésre a kanban állapota 'blokkolt' (piros golyó).\n"
+"Automatikusan módosítja a kanbanállapotot, amikor az ügyfél válaszol ezen szakasz visszajelzés-igénylésére.\n"
+" * A jó ügyféli visszajelzés frissíti a kanbanállapotot a 'készen áll a következő szakaszra' állapotra (zöld pont).\n"
+" * A közepes vagy rossz visszajelzés a kanbanállapot 'blokkolt' állapotba helyezi (piros pont).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -201,7 +201,7 @@ msgstr ""
 #: model:ir.ui.menu,name:rating_project.rating_rating_menu_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "Customer Ratings"
-msgstr "Vásárlói értékelések"
+msgstr "Ügyféli értékelések"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -209,8 +209,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
-"Vásárlói értékelések a feladatokon. Ha nincs értékelése, változtassa meg a "
-"projekt téma Beállításait és aktiválja azt."
+"Ügyféli értékelések a feladatokon. Ha nem kap értékeléseket, változtassa meg"
+" a projektbeállításait az aktiválásuk érdekében."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -218,18 +218,18 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
-"Vásárlói értékelések a feladatokon/ügyeken. Ha nincs értékelése, változtassa"
-" meg a projekt téma Beállításait és aktiválja azt."
+"Ügyféli értékelések a feladatokon/ügyeken. Ha nem kap értékeléseket, "
+"változtassa meg a projektbeállításait az aktiválásuk érdekében."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr "Vásárlói értékelés(ek)"
+msgstr "Ügyféli értékelések"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr "Napi"
+msgstr "Naponta"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -237,18 +237,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
-"Projekt téma szakaszok szerkesztése és email sablon beállítása\n"
-"arra a szakaszra, melyre aktiválni szeretné az értékelést."
+"Projektszakaszok szerkesztése és e-mail sablon beállítása\n"
+"azon szakaszokra, melyekre aktiválni szeretné az értékelést."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr "Öröm % ezen a projekt témán"
+msgstr "A projekttel való elégedettség aránya"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr "Öröm % ezen a feladaton"
+msgstr "A feladattal való elégedettség aránya"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -259,11 +259,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
-"Hogy kapjon vásárlói visszajelzést?\n"
-"- Értékelés szakasz változásnál: Email kiküldés egy feladat/ügy következő szakaszba lépésénél\n"
-"- Ütemezett értékelés: Email kiküldés ütemezve\n"
+"Hogyan kaphat ügyféli visszajelzéseket?\n"
+"- Értékelés szakaszváltoztatáskor: egy e-mail fog elküldésre kerülni, amikor egy feladat/ügy áthúzásra kerül a következő szakaszba\n"
+"- Időszakos értékelés: egy e-mail fog elküldésre kerülni időszakosan\n"
 "\n"
-"Ne feledje az email sablonok beállítását a szakaszokhoz, melyekre vásárlói visszajelzést szeretne."
+"Ne felejtse el az e-mail sablonok beállítását azon szakaszokra, melyekre az ügyféli visszajelzéseket kapni szeretné."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
@@ -301,8 +301,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
-"Örömteli értékelés százaléka az elmúlt 30 napban. Értékelés részleteit "
-"előhívhatja a Több menüből."
+"Az elégedett értékelések százaléka az elmúlt 30 napban. Az értékelések "
+"részleteit a Több menüben találja."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -312,12 +312,12 @@ msgstr "Időszakos értékelés"
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
 msgid "Project"
-msgstr "Projekt téma"
+msgstr "Projekt"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr "Negyedéves"
+msgstr "Negyedévente"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
@@ -327,7 +327,7 @@ msgstr "Értékelés"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr "Értékelő email sablon"
+msgstr "Értékelő e-mail sablon"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
@@ -337,12 +337,12 @@ msgstr "Értékelés gyakorisága"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating request deadline"
-msgstr "Értékelés igény lejárta"
+msgstr "Értékelési igény határideje"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr "Értékelés szakasz változáskor"
+msgstr "Értékelés szakaszváltoztatáskor"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
@@ -355,19 +355,19 @@ msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
 msgstr ""
-"Egy email sablon kiválasztása. Egy emailt küld a vásárlónak, ha a feladat "
-"eléri ezt a lépést."
+"E-mail sablon kiválasztása. Egy e-mail fog elküldésre kerülni az ügyfél "
+"részére, amikor a feladat eléri ezt a szakaszt."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
 msgid "Task"
-msgstr "Fladat"
+msgstr "Feladat"
 
 #. module: rating_project
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr "Feladat értékelés"
+msgstr "Feladat értékelése"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -382,7 +382,7 @@ msgstr "Havonta kétszer"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr "Heti"
+msgstr "Hetente"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

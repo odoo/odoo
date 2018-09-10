@@ -25,3 +25,5 @@ Philippe Schmidt philippe.schmidt@acsone.eu https://github.com/phschmidt
 Stéphane Bidoul stephane.bidoul@acsone.eu https://github.com/sbidoul
 Thomas Binsfeld thomas.binsfeld@acsone.eu https://github.com/ThomasBinsfeld
 Benjamin Willig benjamin.willig@acsone.eu https://github.com/benwillig
+François Honoré francois.honore@acsone.eu https://github.com/acsonefho
+Denis Robinet denis.robinet@acsone.eu https://github.com/RobinetDenisAcsone

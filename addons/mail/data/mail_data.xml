@@ -66,6 +66,7 @@
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
+% set company = ctx.get('company', user.company_id)
 <div>
 % if ctx.get('has_button_access'):
 <div itemscope itemtype="http://schema.org/EmailMessage">
@@ -105,7 +106,7 @@
         % endif
     </td>
     <td valign="center" align="right">
-        <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
+        <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}">
     </td>
 </tr>
 <tr>

@@ -19,6 +19,7 @@ import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
 from cStringIO import StringIO
@@ -361,6 +362,29 @@ try:
 
 except ImportError:
     xlwt = None
+
+
+try:
+    import xlsxwriter
+
+    # add some sanitizations to respect the excel sheet name restrictions
+    # as the sheet name is often translatable, can not control the input
+    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
+
+        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
+        def add_worksheet(self, name=None, **kw):
+            if name:
+                # invalid Excel character: []:*?/\
+                name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+                # maximum size is 31 characters
+                name = name[:31]
+            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
+
+    xlsxwriter.Workbook = PatchedXlsxWorkbook
+
+except ImportError:
+    xlsxwriter = None
 
 
 class UpdateableStr(local):
@@ -1016,15 +1040,17 @@ def dumpstacks(sig=None, frame=None):
     # modified for python 2.5 compatibility
     threads_info = {th.ident: {'name': th.name,
                                'uid': getattr(th, 'uid', 'n/a'),
-                               'dbname': getattr(th, 'dbname', 'n/a')}
+                               'dbname': getattr(th, 'dbname', 'n/a'),
+                               'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s)" %
+        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
                     (thread_info.get('name', 'n/a'),
                      threadId,
                      thread_info.get('dbname', 'n/a'),
-                     thread_info.get('uid', 'n/a')))
+                     thread_info.get('uid', 'n/a'),
+                     thread_info.get('url', 'n/a')))
         for line in extract_stack(stack):
             code.append(line)
 
@@ -1150,11 +1176,8 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, (str, unicode)) and not value:
         return ''
 
-    lang = env.user.company_id.partner_id.lang or 'en_US'
-    lang_objs = env['res.lang'].search([('code', '=', lang)])
-    if not lang_objs:
-        lang_objs = env['res.lang'].search([], limit=1)
-    lang_obj = lang_objs[0]
+    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
+    lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1192,3 +1215,23 @@ class Pickle(object):
     dump = cPickle.dump
 
 pickle = Pickle
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

@@ -1,14 +1,17 @@
 odoo.define('pos_discount.pos_discount', function (require) {
 "use strict";
 
+var core = require('web.core');
 var screens = require('point_of_sale.screens');
+
+var _t = core._t;
 
 var DiscountButton = screens.ActionButtonWidget.extend({
     template: 'DiscountButton',
     button_click: function(){
         var self = this;
         this.gui.show_popup('number',{
-            'title': 'Discount Percentage',
+            'title': _t('Discount Percentage'),
             'value': this.pos.config.discount_pc,
             'confirm': function(val) {
                 val = Math.round(Math.max(0,Math.min(100,val)));

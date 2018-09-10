@@ -23,11 +23,12 @@ class AccountInvoice(models.Model):
         purchase_line_ids = self.invoice_line_ids.mapped('purchase_line_id')
         purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
 
-        result['domain'] = {'purchase_id': [
-            ('invoice_status', '=', 'to invoice'),
-            ('partner_id', 'child_of', self.partner_id.id),
-            ('id', 'not in', purchase_ids.ids),
-            ]}
+        domain = [('invoice_status', '=', 'to invoice')]
+        if self.partner_id:
+            domain += [('partner_id', 'child_of', self.partner_id.id)]
+        if purchase_ids:
+            domain += [('id', 'not in', purchase_ids.ids)]
+        result['domain'] = {'purchase_id': domain}
         return result
 
     def _prepare_invoice_line_from_po_line(self, line):
@@ -47,7 +48,7 @@ class AccountInvoice(models.Model):
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
             'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
-            'price_unit': line.order_id.currency_id.compute(line.price_unit, self.currency_id, round=False),
+            'price_unit': line.order_id.currency_id.with_context(date=self.date_invoice).compute(line.price_unit, self.currency_id, round=False),
             'quantity': qty,
             'discount': 0.0,
             'account_analytic_id': line.account_analytic_id.id,
@@ -58,6 +59,13 @@ class AccountInvoice(models.Model):
         if account:
             data['account_id'] = account.id
         return data
+
+    def _onchange_product_id(self):
+        domain = super(AccountInvoice, self)._onchange_product_id()
+        if self.purchase_id:
+            # Use the purchase uom by default
+            self.uom_id = self.product_id.uom_po_id
+        return domain
 
     # Load all unsold PO lines
     @api.onchange('purchase_id')
@@ -82,7 +90,7 @@ class AccountInvoice(models.Model):
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                line.price_unit = line.purchase_id.currency_id.compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
+                line.price_unit = line.purchase_id.currency_id.with_context(date=self.date_invoice).compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
 
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):

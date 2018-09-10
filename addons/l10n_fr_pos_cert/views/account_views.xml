@@ -1,0 +1,26 @@
+<odoo>
+    <record id="view_bank_statement_form_readonly" model="ir.ui.view">
+        <field name="name">account.bank.statement.form</field>
+        <field name="model">account.bank.statement</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <field name="pos_session_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']" position="attributes">
+                <attribute name="attrs">{'readonly': [('pos_session_id', '!=', False)]}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

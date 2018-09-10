@@ -4,7 +4,7 @@
 import math
 
 from odoo import models, fields, api, _
-from odoo.tools import amount_to_text_en, float_round
+from odoo.tools import amount_to_text_en, float_round, float_is_zero
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -12,7 +12,7 @@ class AccountRegisterPayments(models.TransientModel):
     _inherit = "account.register.payments"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
+    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     # Note: a check_number == 0 means that it will be attributed when the check is printed
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
         help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
@@ -36,7 +36,6 @@ class AccountRegisterPayments(models.TransientModel):
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,
-                'check_manual_sequencing': self.check_manual_sequencing,
             })
         return res
 
@@ -45,7 +44,7 @@ class AccountPayment(models.Model):
     _inherit = "account.payment"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
+    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
@@ -55,7 +54,7 @@ class AccountPayment(models.Model):
         check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
         decimals = amount % 1
-        if decimals >= 10**-2:
+        if not float_is_zero(decimals, precision_digits=2):
             check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
         return check_amount_in_words
 
@@ -82,10 +81,10 @@ class AccountPayment(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals['payment_method_id'] == self.env.ref('account_check_printing.account_payment_method_check').id\
-                and vals.get('check_manual_sequencing'):
-            sequence = self.env['account.journal'].browse(vals['journal_id']).check_sequence_id
-            vals.update({'check_number': sequence.next_by_id()})
+        if vals['payment_method_id'] == self.env.ref('account_check_printing.account_payment_method_check').id:
+            journal = self.env['account.journal'].browse(vals['journal_id'])
+            if journal.check_manual_sequencing:
+                vals.update({'check_number': journal.check_sequence_id.next_by_id()})
         return super(AccountPayment, self).create(vals)
 
     @api.multi

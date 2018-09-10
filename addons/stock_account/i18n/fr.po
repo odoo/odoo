@@ -5,25 +5,28 @@
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
+# Florian Hatat, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# lap.odoo <lap@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# e2f Production <e2f_prod@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: e2f Production <e2f_prod@outlook.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,6 +88,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Impossible de trouver un compte de stock/production pour le produit %s. Vous"
+" devez en définir un dans la catégorie de produit ou l'emplacement avant "
+"d'effectuer cette opération."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -125,18 +131,14 @@ msgid "Company"
 msgstr "Société"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr "Calculez le prix moyen"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Erreur de configuration. Configurez le compte de différence de prix sur le "
+"produit ou sa catégorie pour procéder à l'opération."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -159,7 +161,7 @@ msgstr "Méthode de coût"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Compte de contre-valeur"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -221,6 +223,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valorisation perpétuelle est activée pour un produit, le système "
+"créera automatiquement des entrées comptables correspondant aux mouvements "
+"de stock, avec un prix de produit conforme à la méthode de valorisation. La "
+"variation du compte de stock établie sur la catégorie de produit "
+"représentera la valeur actuelle des stocks, le compte d'entrée et de sortie "
+"en stock présenteront la contrepartie des mouvements."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -243,7 +251,7 @@ msgstr ""
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr "Inclure les frais de débarquement dans le calcul du coût produit"
+msgstr "Inclure les frais de douane dans le calcul du coût d'un article"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -251,7 +259,7 @@ msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
 msgstr ""
-"Installer le module qui permet d'imputer les frais de douane sur les "
+"Installe le module qui permet d'imputer les frais de douane sur les "
 "réceptions et les répartir sur les différents articles."
 
 #. module: stock_account
@@ -374,8 +382,8 @@ msgstr "Perpétuel (automatisé)"
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
-"Valorisation d'inventaire perpéturl (chaque mouvement de stock produit des "
-"écritures comptables)"
+"Valorisation d'inventaire perpétuelle (chaque mouvement de stock produit des"
+" écritures comptables)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -461,6 +469,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Prix Standard: Le coût est mis à jour manuellement à la fin d'une période spécifique (en général une fois par an).\n"
+"                Prix Moyen: Le coût est recalculé à chaque entrée en stock et utilisé pour la valorisation du produit.\n"
+"                Prix réel: Le coût affiché est le coût du dernier produit sorti de stock (il sera utilisé dans le cas d'une perte d'inventaire par exemple). "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -469,10 +480,20 @@ msgid ""
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
+"Prix Standard: Le coût est mis à jour manuellement à la fin d'une période "
+"spécifique (en général une fois par an). Prix Moyen: Le coût est recalculé à"
+" chaque entrée en stock et utilisé pour la valorisation du produit. Prix "
+"réel: Le coût affiché est le coût du dernier produit sorti de stock (il sera"
+" utilisé dans le cas d'une perte d'inventaire par exemple). "
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
 msgstr ""
 
 #. module: stock_account
@@ -582,7 +603,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr "Valorisatio"
+msgstr "Valorisation"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -691,6 +712,9 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Vous n'avez aucun compte de valorisation d'inventaire défini dans votre "
+"catégorie de produit. Vous devez en définir un avant d'effectuer cette "
+"opération."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price

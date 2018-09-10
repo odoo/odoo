@@ -4,36 +4,38 @@
 # 
 # Translators:
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Jiří P., 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Last-Translator: Jiří P., 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_department_id
 msgid "Assigned to Department"
-msgstr ""
+msgstr "Přiřazeno k oddělení"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_employee_id
 msgid "Assigned to Employee"
-msgstr ""
+msgstr "Přiřazeno zaměstnanci"
 
 #. module: hr_maintenance
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
-msgstr ""
+msgstr "Vytvořil(a)"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request_department_id
@@ -54,12 +56,12 @@ msgstr "Zaměstnanec"
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
 msgid "Equipment"
-msgstr ""
+msgstr "Zařízení"
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
 msgid "Maintenance Requests"
-msgstr ""
+msgstr "Žádosti o údržbu"
 
 #. module: hr_maintenance
 #: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
@@ -74,4 +76,4 @@ msgstr "Jiné"
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment_equipment_assign_to
 msgid "Used By"
-msgstr ""
+msgstr "použitý"

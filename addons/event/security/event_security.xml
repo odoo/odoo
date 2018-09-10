@@ -51,6 +51,13 @@
                                         ]
             </field>
         </record>
+        <record model="ir.rule" id="event_registration_portal">
+            <field name="name">Event/Registration: Portal</field>
+            <field name="model_id" ref="model_event_registration"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">['|', ('email', '=', user.partner_id.email), ('partner_id', '=', user.partner_id.id)]
+            </field>
+        </record>
 
     </data>
 </odoo>

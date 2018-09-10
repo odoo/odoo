@@ -3,18 +3,21 @@
 # * payment_stripe
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,9 +57,23 @@ msgid "Checkout Image URL"
 msgstr "URL de la imagen del proceso de pago"
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#, python-format
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Confirmar <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#, python-format
+msgid "Error"
+msgstr "Error"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -79,9 +96,16 @@ msgid "Payment Transaction"
 msgstr "Transacción de pago"
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:43
+#, python-format
+msgid "Payment error"
+msgstr "Error en el pago"
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
 msgid "Stripe publishable key"
-msgstr "Stripe clave publicable"
+msgstr "Stripe clave pública"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
@@ -97,8 +121,10 @@ msgstr "Stripe: %s órdenes encontrados para referencia %s"
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:111
 #, python-format
-msgid "Stripe: invalid reply received from provider, missing reference"
-msgstr "Stripe: repuesta inválida recibida del proveedor, falta de referencia"
+msgid ""
+"Stripe: invalid reply received from provider, missing reference. Additional "
+"message: %s"
+msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:116
@@ -109,4 +135,4 @@ msgstr "Stripe: no se encontró una orden para la referencia %s"
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"

@@ -3,7 +3,8 @@
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class HrHolidaySummaryReport(models.AbstractModel):
@@ -67,8 +68,8 @@ class HrHolidaySummaryReport(models.AbstractModel):
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
-                    count+=1
                 date_from += timedelta(1)
+            count += abs(holiday.number_of_days)
         self.sum = count
         return res
 
@@ -102,6 +103,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        if not data.get('form'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         Report = self.env['report']
         holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
         holidays = self.env['hr.holidays'].browse(self.ids)

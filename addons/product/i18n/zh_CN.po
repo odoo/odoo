@@ -3,15 +3,18 @@
 # * product
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
+# Maie <m@maie.name>, 2017
+# zpq001 <zpq001@live.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,6 +259,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"库存产品是您管理库存的产品。 “库存”应用程序必须安装。\n"
+"另一方面，消费品是不需要管理库存的产品。\n"
+"服务是您提供的非物质产品。\n"
+"数字内容是您在线销售的非物质产品。 附在产品上的文件是在电子商务上销售的文件，例如电子书，音乐，图片等等。必须安装“数字产品”模块。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -344,7 +351,7 @@ msgstr "应用于"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "已存档"
+msgstr "归档"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
@@ -749,7 +756,7 @@ msgstr "产品的成本，以产品的默认计量单位表示。"
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr ""
+msgstr "成本加成合同"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -816,7 +823,6 @@ msgstr ""
 "创造这样一个惊人的超薄设计了技术创新的一些同样令人惊叹的壮举。我们提炼，重新想象，或重新设计，一切的iMac从内到外。其结果是一种先进的，优雅的所有功能于一身的计算机的尽可能多的艺术作品，因为它是最先进的。"
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -862,7 +868,7 @@ msgstr "日期"
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr "天(s)"
+msgstr "天"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_id
@@ -1263,14 +1269,14 @@ msgstr ""
 msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "这个度量单位的数量大于此类别中的参考度量单位：1 *（本单位）=比率*（参考单位）"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_factor
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "本类别计量单位和参考计量单位相比，大或者小的倍数。1 * (参考单位)=比率 * (本单位)"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1374,6 +1380,7 @@ msgstr "内部"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "内部类别"
 
@@ -1382,7 +1389,7 @@ msgstr "内部类别"
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr "内部参考"
+msgstr "内部参照"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1642,7 +1649,7 @@ msgstr "新价格 ="
 #. module: product
 #: selection:base.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "产品无任何变体"
+msgstr "产品无变体"
 
 #. module: product
 #: selection:product.category,type:0
@@ -1968,7 +1975,7 @@ msgstr "产品计量单位"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr "产品UoM 类别"
+msgstr "产品计量单位 类别"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2041,11 +2048,6 @@ msgstr "产品： "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "公开价格"
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "公开价格表"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2179,6 +2181,7 @@ msgstr "销售价格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "销售价格表"
 
@@ -2264,7 +2267,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
 msgid "Share product to all companies"
-msgstr "分享产品 给所有公司"
+msgstr "所有公司共享产品"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
@@ -2698,6 +2701,7 @@ msgstr "该说明将显示在报价单。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2735,6 +2739,11 @@ msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
 msgstr "USB端口允许软件更新，以确保持续的蓝牙设备兼容"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
+msgstr "美元"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2849,7 +2858,7 @@ msgstr "变体信息"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr "变体价格额外"
+msgstr "变体额外价格"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -3020,14 +3029,6 @@ msgstr "产品变体可以让你为同一个产品定义不同的变体，例如
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "工作时间"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr "您不能为公司的主要货币定义小于“帐户”的小数精度的舍入因子。"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -3211,7 +3212,7 @@ msgstr "磅"
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr "英里(s)"
+msgstr "英里"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
@@ -3221,17 +3222,17 @@ msgstr "盎司"
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history

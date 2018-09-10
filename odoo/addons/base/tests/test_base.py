@@ -526,3 +526,8 @@ class TestGroups(TransactionCase):
         # create a cycle and check
         a.implied_ids = d
         self.assertFalse(a._check_m2m_recursion('implied_ids'))
+
+    def test_res_group_copy(self):
+        a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
+        b = a.copy()
+        self.assertFalse(a.name == b.name)

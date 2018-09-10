@@ -4,7 +4,7 @@
 import babel
 from datetime import datetime, timedelta
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from odoo.addons.website.controllers.backend import WebsiteBackend
@@ -50,19 +50,19 @@ class WebsiteCrmBackend(WebsiteBackend):
             'graph': [
                 {
                     'values': leads_graph,
-                    'key': 'Leads',
+                    'key': _('Leads'),
                 },
                 {
                     'values': previous_leads_graph,
-                    'key': 'Previous Leads',
+                    'key': _('Previous Leads'),
                 },
             ],
             'leads': leads,
             'lead_fields': {
-                'create_date': 'Create Date',
-                'campaign_id': 'Campaign',
-                'medium_id': 'Medium',
-                'source_id': 'Source',
+                'create_date': _('Create Date'),
+                'campaign_id': _('Campaign'),
+                'medium_id': _('Medium'),
+                'source_id': _('Source'),
             },
         }
 
@@ -85,7 +85,7 @@ class WebsiteCrmBackend(WebsiteBackend):
         leads_graph = [{
             '0': d.strftime(DEFAULT_SERVER_DATE_FORMAT) if not previous else (d + timedelta(days=days_between)).strftime(DEFAULT_SERVER_DATE_FORMAT),
             # Respect read_group format in models.py
-            '1': daily_leads_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
+            '1': daily_leads_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang') or 'en_US'), 0)
         } for d in date_list]
 
         return leads_graph

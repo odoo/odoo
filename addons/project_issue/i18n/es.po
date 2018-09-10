@@ -22,15 +22,15 @@
 # Rafael Blasco <rafabn@antiun.com>, 2016
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
 # Jairo Llopis <yajo.sk8@gmail.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">como </span>"
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Activate timesheets on issues"
-msgstr "Activar horarios en incidencias"
+msgstr "Activar partes de horas en incidencias"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -455,7 +455,7 @@ msgstr "Incidencia abierta"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "Incidencia lista para la siguiente etapa"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -696,7 +696,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "Valoración en la incidencia"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -757,6 +757,12 @@ msgid ""
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"El gestor de incidencias de Odoo le permite gestionar eficientemente\n"
+"cuestiones como las peticiones internas, errores de desarrollo de \n"
+"software, quejas de los clientes, problemas en el proyecto, rupturas de \n"
+"material, etc.\n"
+"\n"
+"        "
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -764,6 +770,9 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Estas direcciones de correo serán añadidas al campo CC para todos los "
+"correos entrantes y salientes de este registro antes de ser enviados. Separe"
+" las diferentes direcciones de correo con una coma."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -773,7 +782,7 @@ msgstr "Estas personas recibirán correo electronico."
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "Esto permite a los clientes dar una calorificación de la incidencia"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -798,12 +807,12 @@ msgstr "Partes de horas"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
-msgstr ""
+msgstr "Parte de horas para las incidencias"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
-msgstr ""
+msgstr "Seguimiento de la satisfacción del cliente en incidencias"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter

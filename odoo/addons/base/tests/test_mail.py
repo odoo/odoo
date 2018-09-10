@@ -115,7 +115,7 @@ class TestSanitizer(unittest.TestCase):
         test_data = [
             (
                 '<span style="position: fixed; top: 0px; left: 50px; width: 40%; height: 50%; background-color: red;">Coin coin </span>',
-                ['background-color: red', 'Coin coin'],
+                ['background-color:red', 'Coin coin'],
                 ['position', 'top', 'left']
             ), (
                 """<div style='before: "Email Address; coincoin cheval: lapin";  
@@ -123,7 +123,7 @@ class TestSanitizer(unittest.TestCase):
     
           this; means: anything ?#ùµ"
     ; some-property: 2px; top: 3'>youplaboum</div>""",
-                ['font-size: 30px', 'youplaboum'],
+                ['font-size:30px', 'youplaboum'],
                 ['some-property', 'top', 'cheval']
             ), (
                 '<span style="width">Coincoin</span>',

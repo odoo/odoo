@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import time
-from odoo import api, models
+from odoo import api, models, _
+from odoo.exceptions import UserError
 
 
 class ReportTrialBalance(models.AbstractModel):
@@ -50,13 +51,18 @@ class ReportTrialBalance(models.AbstractModel):
                 res['balance'] = account_result[account.id].get('balance')
             if display_account == 'all':
                 account_res.append(res)
-            if display_account in ['movement', 'not_zero'] and not currency.is_zero(res['balance']):
+            if display_account == 'not_zero' and not currency.is_zero(res['balance']):
+                account_res.append(res)
+            if display_account == 'movement' and (not currency.is_zero(res['debit']) or not currency.is_zero(res['credit'])):
                 account_res.append(res)
         return account_res
 
 
     @api.model
     def render_html(self, docids, data=None):
+        if not data.get('form') or not self.env.context.get('active_model'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
         display_account = data['form'].get('display_account')

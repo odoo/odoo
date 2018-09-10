@@ -1120,6 +1120,11 @@ default and behave as booleans (they can only be enabled by default).
 Gantt
 -----
 
+.. warning::
+
+    The gantt view requires the web_gantt module which is present in
+    :ref:`the enterprise edition <setup/install/editions>` version.
+
 Horizontal bar charts typically used to show project planning and advancement,
 their root element is ``<gantt>``.
 
@@ -1850,7 +1855,7 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     systems without *explicitly* going through XML-RPC or JSON-RPC, such as:
 
     * https://github.com/akretion/ooor
-    * https://github.com/syleam/openobject-library
+    * https://github.com/OCA/odoorpc
     * https://github.com/nicolas-van/openerp-client-lib
     * http://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib

@@ -1,4 +1,4 @@
-México, 9-2-2015
+México, 2015-02-09
 
 Vauxoo agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 
@@ -36,3 +36,6 @@ Oriana Maita oriana@vauxoo.com https://github.com/maitaoriana
 Gabriela Mogollon gmogollon@vauxoo.com https://github.com/GavyMG
 Jesus Zapata jesus@vauxoo.com https://github.com/JesusZapata
 Germana Oliveira germana@vauxoo.com https://github.com/goliveirab
+Mariano Fernandez mariano@vauxoo.com https://github.com/Batuto
+Edgar Rivero edgar@vauxoo.com https://github.com/egrivero
+Edilianny Sánchez esanchez@vauxoo.com https://github.com/edy1192

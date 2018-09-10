@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -14,6 +15,12 @@ _logger = logging.getLogger(__name__)
 # cf https://stripe.com/docs/api#versioning
 # changelog https://stripe.com/docs/upgrades#api-changelog
 STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
+
+# The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
+INT_CURRENCIES = [
+    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYGí', u'RWF', u'KRW',
+    u'VUV', u'VND', u'XOF'
+];
 
 
 class PaymentAcquirerStripe(models.Model):
@@ -34,16 +41,16 @@ class PaymentAcquirerStripe(models.Model):
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
             'company': self.company_id.name,
-            'amount': tx_values.get('amount'),
-            'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
-            'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
-            'address_line1': tx_values['partner_address'],
-            'address_city': tx_values['partner_city'],
-            'address_country': tx_values['partner_country'] and tx_values['partner_country'].name or '',
-            'email': tx_values['partner_email'],
-            'address_zip': tx_values['partner_zip'],
-            'name': tx_values['partner_name'],
-            'phone': tx_values['partner_phone'],
+            'amount': tx_values['amount'],  # Mandatory
+            'currency': tx_values['currency'].name,  # Mandatory anyway
+            'currency_id': tx_values['currency'].id,  # same here
+            'address_line1': tx_values.get('partner_address'),  # Any info of the partner is not mandatory
+            'address_city': tx_values.get('partner_city'),
+            'address_country': tx_values.get('partner_country') and tx_values.get('partner_country').name or '',
+            'email': tx_values.get('partner_email'),
+            'address_zip': tx_values.get('partner_zip'),
+            'name': tx_values.get('partner_name'),
+            'phone': tx_values.get('partner_phone'),
         }
 
         temp_stripe_tx_values['returndata'] = stripe_tx_values.pop('return_url', '')
@@ -84,7 +91,7 @@ class PaymentTransactionStripe(models.Model):
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
-            'amount': int(self.amount*100),  # Stripe takes amount in cents (https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support)
+            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name,
             'metadata[reference]': self.reference
         }
@@ -103,17 +110,20 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref)
+        result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
         return self._stripe_s2s_validate_tree(result)
 
     @api.model
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data['metadata']['reference']
+        reference = data.get('metadata', {}).get('reference')
         if not reference:
-            error_msg = _('Stripe: invalid reply received from provider, missing reference')
-            _logger.error(error_msg, data['metadata'])
+            error_msg = _(
+                'Stripe: invalid reply received from provider, missing reference. Additional message: %s'
+                % data.get('error', {}).get('message', '')
+            )
+            _logger.error(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
         if not tx:
@@ -140,8 +150,8 @@ class PaymentTransactionStripe(models.Model):
                 'date_validate': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            if self.sudo().callback_eval:
+                safe_eval(self.sudo().callback_eval, {'self': self})
             return True
         else:
             error = tree['error']['message']

@@ -7,6 +7,7 @@ odoo.define('website.website', function (require) {
     var Widget = require('web.Widget');
     var session = require('web.session');
     var base = require('web_editor.base');
+    var utils = require('web.utils');
 
     var qweb = core.qweb;
     var _t = core._t;
@@ -217,7 +218,7 @@ odoo.define('website.website', function (require) {
         init_kanban(this);
     });
 
-    $('.js_website_submit_form').on('submit', function () {
+    $('body').on('submit', '.js_website_submit_form', function() {
         var $buttons = $(this).find('button[type="submit"], a.a-submit');
         _.each($buttons, function (btn) {
             $(btn).attr('data-loading-text', '<i class="fa fa-spinner fa-spin"></i> ' + $(btn).text()).button('loading');
@@ -237,6 +238,10 @@ odoo.define('website.website', function (require) {
             $img.css('background-image', "url('" + $img.data('src') + "')");
         }
     });
+
+    /* Load localizations */
+    var lang = utils.get_cookie('website_lang') || $('html').attr('lang') || 'en_US';
+    var localeDef = ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
     /**
      * Object who contains all method and bind for the top bar, the template is create server side.
@@ -286,6 +291,7 @@ odoo.define('website.website', function (require) {
             console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
             return base.ready();
         },
+        localeDef: localeDef,
     };
     return data;
 });

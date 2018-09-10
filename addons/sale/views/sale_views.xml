@@ -241,9 +241,9 @@
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
-                                            <label for="analytic_tag_ids"/>
+                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
                                             <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags"/>
+                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting"/>
                                             </div>
                                         </group>
                                     </group>
@@ -612,7 +612,7 @@
                     <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
-                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
                     </group>
                 </group>
             </field>

@@ -22,7 +22,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Înapoi la conttul meu"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
@@ -32,7 +32,7 @@ msgstr "Colector"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Add a new payment method:"
-msgstr ""
+msgstr "Adaugă o nouă metodă de plată:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -65,7 +65,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete a payment method:"
-msgstr ""
+msgstr "Șterge o metodă de plată:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
@@ -80,6 +80,12 @@ msgstr "De la"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
+msgstr ""
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
 msgstr ""
 
 #. module: website_payment
@@ -107,7 +113,7 @@ msgstr "Metoda de plată"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Payment Methods"
-msgstr "Metode de plata"
+msgstr "Metode de plată"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -129,6 +135,14 @@ msgstr ""
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Pagină web"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

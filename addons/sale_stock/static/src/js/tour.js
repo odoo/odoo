@@ -20,7 +20,9 @@ odoo.define("sale_stock.tour", function (require) {
         auto: true,
         in_modal: false,
         run: function (actions) {
-            actions.auto(".modal-footer .btn-primary");
+            if ($('.modal-footer .btn-primary').length){
+                actions.auto(".modal-footer .btn-primary");
+            }
         },
     });
 });

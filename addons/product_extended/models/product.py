@@ -41,10 +41,12 @@ class ProductProduct(models.Model):
                 # No attribute_value_ids means the bom line is not variant specific
                 price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * sbom_data['qty']
         if bom.routing_id:
-            total_cost = 0.0
-            for order in bom.routing_id.operation_ids:
-                total_cost += (order.time_cycle/60) * order.workcenter_id.costs_hour
-            price += bom.product_uom_id._compute_price(total_cost, bom.product_id.uom_id)
+            # FIXME master: remove me
+            if hasattr(self.env['mrp.workcenter'], 'costs_hour'):                
+                total_cost = 0.0
+                for order in bom.routing_id.operation_ids:
+                    total_cost += (order.time_cycle/60) * order.workcenter_id.costs_hour
+                price += bom.product_uom_id._compute_price(total_cost, bom.product_id.uom_id)
         # Convert on product UoM quantities
         if price > 0:
             price = bom.product_uom_id._compute_price(price / bom.product_qty, self.uom_id)

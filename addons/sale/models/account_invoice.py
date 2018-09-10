@@ -39,6 +39,9 @@ class AccountInvoice(models.Model):
     def _onchange_delivery_address(self):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
+        if self.env.context.get('type', 'out_invoice') == 'out_invoice':
+            company = self.company_id or self.env.user.company_id
+            self.comment = company.with_context(lang=self.partner_id.lang).sale_note
 
     @api.multi
     def action_invoice_paid(self):
@@ -102,6 +105,5 @@ class AccountInvoiceLine(models.Model):
         'invoice_line_id', 'order_line_id',
         string='Sale Order Lines', readonly=True, copy=False)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(
-        related='layout_category_id.sequence',
-        string='Layout Sequence', store=True)
+    layout_category_sequence = fields.Integer(string='Layout Sequence')
+    # TODO: remove layout_category_sequence in master or make it work properly

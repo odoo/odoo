@@ -2,6 +2,7 @@ odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
 var core = require('web.core');
+var session = require('web.session');
 var mixins = core.mixins;
 
 
@@ -26,7 +27,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     suffix: /[\n\r\t]+/,
     // Keys from a barcode scanner are usually processed as quick as possible,
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
-    max_time_between_keys_in_ms: 55,
+    max_time_between_keys_in_ms: session.max_time_between_keys_in_ms || 55,
 
     init: function() {
         mixins.PropertiesMixin.init.call(this);
@@ -114,7 +115,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
             e.key === "ArrowUp" || e.key === "ArrowDown" ||
             e.key === "Escape" || e.key === "Tab" ||
             e.key === "Backspace" || e.key === "Delete" ||
-            /F\d\d?/.test(e.key)) {
+            e.key === "Home" || e.key === "End" ||
+            e.key === "PageUp" || e.key === "PageDown" ||
+            e.key === "Unidentified" || /F\d\d?/.test(e.key)) {
             return true;
         } else {
             return false;

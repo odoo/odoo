@@ -5,14 +5,14 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Martin Trigaux, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,7 +195,7 @@ msgstr ""
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Un cod de bare se poate atribui doar la un produs!"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -249,6 +249,8 @@ msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
 msgstr ""
+"O listă de prețuri conține reguli care trebuie evaluate pentru a calcula "
+"prețul de vânzare al produselor."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -265,6 +267,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un produs stocabil este un produs pentru care gestionați stocul. Aplicația \"Inventar\" trebuie instalată.\n"
+"Un produs consumabil, pe de altă parte, este un produs pentru care nu este gestionat stocul.\n"
+"Un serviciu este un produs nematerial pe care îl oferiți.\n"
+"Un conținut digital este un produs nematerial pe care îl vindeți online. Fișierele sunt atașate la produsele comercializate pe e-commerce, cum ar fi e-cărți, muzică, imagini, ... Trebuie instalat modulul \"Produs digital\"."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -355,7 +361,7 @@ msgstr "Arhivat"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "Alocă prioritatea listei de furnizori de produse."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_attribute_id
@@ -422,6 +428,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Preț de bază pentru calcul\n"
+"Preț public: Prețul de bază va fi prețul de vânzare / public\n"
+"Cost Preț: Prețul de bază va fi prețul de cost\n"
+"Lista de prețuri: Calculul prețului de bază bazat pe un altă Listă de prețuri."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -476,7 +486,7 @@ msgstr "Raport mărire"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Mai mare decât Unitatea de Masura de referință"
+msgstr "Mai mare decât Unitatea de Masură de referință"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -611,12 +621,12 @@ msgstr "Categorii secundare"
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
 msgid "Click to add a new unit of measure category."
-msgstr ""
+msgstr "Faceți clic pentru a adăuga o nouă categorie de unitate de măsură."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
 msgid "Click to add a new unit of measure."
-msgstr ""
+msgstr "Faceți clic pentru a adăuga o nouă unitate de măsură."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -824,7 +834,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -960,6 +969,9 @@ msgid ""
 "                product category...) and a computation that easily helps to achieve\n"
 "                any kind of pricing."
 msgstr ""
+"Fiecare regulă include un set de criterii de aplicabilitate (intervalul de "
+"date, categoria de produs ...) și un calcul care ajută cu ușurință la "
+"realizarea oricărui tip de preț."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -1392,6 +1404,7 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Categorie internă"
 
@@ -1885,7 +1898,7 @@ msgstr "Liste de prețuri"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
-msgstr ""
+msgstr "Liste de preț în produse"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -1994,7 +2007,7 @@ msgstr "Unitate de măsură produs"
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr ""
+msgstr "Categorii unități de măsură produs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
@@ -2071,11 +2084,6 @@ msgid "Public Price"
 msgstr "Preț public"
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Lista de prețuri publică"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template_description_purchase
 msgid "Purchase Description"
@@ -2090,7 +2098,7 @@ msgstr "Unitate de masură achiziție"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Cantitate per pachet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1
@@ -2206,6 +2214,7 @@ msgstr "Preț vânzare"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Listă prețuri de vânzare"
 
@@ -2298,6 +2307,9 @@ msgid ""
 " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
 msgstr ""
+"Partajați produsul dvs. tuturor companiilor definite în instanța dvs. \n"
+"  * Bifat: Produsul este vizibil pentru fiecare companie, chiar dacă o firmă este definită de partener\n"
+"  * Nebifat: Fiecare companie poate vedea doar produsul său (produsul compania în care este definit ). Produsul care nu are legătură cu o companie este vizibil pentru toate companiile."
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2577,7 +2589,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "Prețul pentru achiziționarea unui produs"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2588,6 +2600,9 @@ msgid ""
 "                process: price, notes in the quotation, accounting data,\n"
 "                procurement methods, etc."
 msgstr ""
+"Formularul de produs conține informații pentru a simplifica procesul de "
+"vânzare: prețul, notele din cotație, datele contabile, metodele de achiziție"
+" etc."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -2595,6 +2610,9 @@ msgid ""
 "The product form contains information to simplify the sale process: price, "
 "notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"Formularul de produs conține informații pentru a simplifica procesul de "
+"vânzare: prețul, notele din cotație, datele contabile, metodele de achiziție"
+" etc."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -2726,12 +2744,13 @@ msgstr "Aceasta nota va fi afisata la oferte..."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
 "Aceasta lista de prețuri va fi folosită în locul celei implicite pentru "
-"vânzarile către partenerul curent"
+"vânzările către partenerul curent"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_code
@@ -2767,6 +2786,11 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
+msgstr "USD"
+
+#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
@@ -2794,7 +2818,7 @@ msgstr "Unitate"
 #: model:ir.model.fields,field_description:product.field_product_template_uom_id
 #: model:ir.model.fields,field_description:product.field_product_uom_name
 msgid "Unit of Measure"
-msgstr "Unitatea de masura"
+msgstr "Unitatea de măsură"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -2816,7 +2840,7 @@ msgstr "Unități de măsură"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
 msgid "Units of Measure categories"
-msgstr "Categorii Unitati de masura"
+msgstr "Categorii Unități de măsură"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -2932,7 +2956,7 @@ msgstr "Unitate de măsură furnizor"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_name
 msgid "Vendor of this product"
-msgstr ""
+msgstr "Furnizorul acestui produs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_seller_ids
@@ -3046,20 +3070,14 @@ msgid "Working Time"
 msgstr "Program de lucru"
 
 #. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: product
 #: code:addons/product/models/decimal_precision.py:16
 #, python-format
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Nu puteți defini precizia zecimală a \"contului\" ca fiind mai mare decât "
+"factorul de rotunjire a monedei principale a companiei"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3067,6 +3085,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Trebuie să definiți o rată de conversie între mai multe unități de măsură "
+"din aceeași categorie."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3077,6 +3097,9 @@ msgid ""
 "                a physical product, a consumable or a service you offer to\n"
 "                customers."
 msgstr ""
+"Trebuie să definiți un produs pentru tot ce vă vindeți, indiferent dacă este"
+" vorba de un produs fizic, de un consumabil sau de un serviciu pe care îl "
+"oferiți clienților."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
@@ -3084,6 +3107,9 @@ msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
 msgstr ""
+"Trebuie să definiți un produs pentru tot ce vă vindeți, indiferent dacă este"
+" vorba de un produs fizic, de un consumabil sau de un serviciu pe care îl "
+"oferiți clienților."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11

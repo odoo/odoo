@@ -14,7 +14,7 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     to_refund_so = fields.Boolean(
-        "To Refund in SO", default=False,
+        "To Refund in SO", copy=False, default=False,
         help='Trigger a decrease of the delivered quantity in the associated Sale Order')
 
     @api.multi
@@ -39,6 +39,11 @@ class StockMove(models.Model):
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
         return result
+
+    def _prepare_move_split_vals(self, defaults):
+        defaults = super(StockMove, self)._prepare_move_split_vals(defaults)
+        defaults['to_refund_so'] = self.to_refund_so
+        return defaults
 
 
 class StockPicking(models.Model):

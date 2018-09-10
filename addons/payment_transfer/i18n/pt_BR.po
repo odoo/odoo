@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 14:52+0000\n"
-"PO-Revision-Date: 2016-12-14 14:52+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#: code:addons/payment_transfer/models/payment.py:63
+#, python-format
+msgid "; multiple order found"
+msgstr "; múltiplas ordens encontradas"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:61
+#, python-format
+msgid "; no order found"
+msgstr "; nenhuma ordem encontrada"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:28
 #, python-format
 msgid ""
 "<div>\n"
@@ -39,18 +51,6 @@ msgstr ""
 "<h4>Comunicação</h4>\n"
 "<p>Por favor utilize o nome da ordem como referência de comunicação.</p>\n"
 "</div>"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:63
-#, python-format
-msgid "; multiple order found"
-msgstr "; múltiplas ordens encontradas"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:61
-#, python-format
-msgid "; no order found"
-msgstr "; nenhuma ordem encontrada"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26

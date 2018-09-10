@@ -3,18 +3,18 @@
 # * website_payment
 # 
 # Translators:
+# Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
-# Bernard <bernard@abv.bg>, 2016
-# kalatchev <kalatchev@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Anton Vassilev <anton.vasilev@gmail.com>, 2016
+# kalatchev, 2016
+# Martin Trigaux, 2016
+# Anton Vassilev, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Anton Vassilev <anton.vasilev@gmail.com>, 2016\n"
+"Last-Translator: Anton Vassilev, 2016\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +25,17 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Обратно към Моя Профил"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Обратно към Моя профил"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Acquirer"
-msgstr "Обработчик на плащането"
+msgstr "Обработчик"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Add a new payment method:"
-msgstr "Добавяне на нов метод за плащане:"
+msgstr "Добавете нов метод за плащане:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -51,7 +51,7 @@ msgstr "Конфигуриране на обработчици за плащан
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr "Обработчик по подразбиране"
+msgstr "Стандартен обработчик"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
@@ -59,23 +59,23 @@ msgid ""
 "Default payment acquirer for website payments; your provider needs to be "
 "visible in the website."
 msgstr ""
-"Обработчик по подразбиране за плащания през уебсайта (провайдъра трябва да е"
-" видим с сайта)."
+"Стандартен обработчик за плащания през уебсайта; провайдърът Ви трябва да е "
+"видим с сайта."
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "Изтрий <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Изтрийте <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete a payment method:"
-msgstr "Изтрий метод за плащане:"
+msgstr "Изтрийте метод за плащане:"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
 msgid "E-Commerce"
-msgstr "Елетронна Търговия"
+msgstr "Елетронна търговия"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -85,13 +85,19 @@ msgstr "От"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr "Управление на начини за плащане"
+msgstr "Управлявайте методите си на плащане"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr "Опа! Има проблем с плащането Ви."
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
-msgstr "Плати Сега"
+msgstr "Платете сега"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -102,7 +108,7 @@ msgstr "Плащане"
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Обработчик на плащането"
+msgstr "Обработчик на плащане"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
@@ -123,7 +129,7 @@ msgstr "Плащането е обработено от"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
-msgstr "Означение"
+msgstr "Референция"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -134,6 +140,14 @@ msgstr "Транзакцията ще бъде обработена от"
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Уеб-страница"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

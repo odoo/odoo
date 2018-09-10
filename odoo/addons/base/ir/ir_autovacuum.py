@@ -4,6 +4,7 @@
 import logging
 
 from odoo import api, models
+from odoo.exceptions import AccessDenied
 
 _logger = logging.getLogger(__name__)
 
@@ -17,7 +18,11 @@ class AutoVacuum(models.AbstractModel):
         for mname in self.env:
             model = self.env[mname]
             if model.is_transient():
-                model._transient_vacuum(force=True)
+                try:
+                    with self._cr.savepoint():
+                        model._transient_vacuum(force=True)
+                except Exception as e:
+                    _logger.warning("Failed to clean transient model %s\n%s", model, str(e))
 
     @api.model
     def _gc_user_logs(self):
@@ -32,6 +37,8 @@ class AutoVacuum(models.AbstractModel):
 
     @api.model
     def power_on(self):
+        if not self.env.user._is_admin():
+            raise AccessDenied()
         self.env['ir.attachment']._file_gc()
         self._gc_transient_models()
         self._gc_user_logs()

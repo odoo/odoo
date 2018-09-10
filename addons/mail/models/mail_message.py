@@ -94,6 +94,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
+        groups="base.group_no_one",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
@@ -148,7 +149,7 @@ class Message(models.Model):
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
         delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
-        if domain is None and delete_mode:
+        if not domain and delete_mode:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
@@ -281,7 +282,7 @@ class Message(models.Model):
         # 1. Aggregate partners (author_id and partner_ids), attachments and tracking values
         partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
-        trackings = self.env['mail.tracking.value']
+        message_ids = message_tree.keys()
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partners |= message.author_id
@@ -293,8 +294,6 @@ class Message(models.Model):
                 partners |= message.needaction_partner_ids
             if message.attachment_ids:
                 attachments |= message.attachment_ids
-            if message.tracking_value_ids:
-                trackings |= message.tracking_value_ids
         # Read partners as SUPERUSER -> message being browsed as SUPERUSER it is already the case
         partners_names = partners.name_get()
         partner_tree = dict((partner[0], partner) for partner in partners_names)
@@ -309,13 +308,18 @@ class Message(models.Model):
         }) for attachment in attachments_data)
 
         # 3. Tracking values
-        tracking_tree = dict((tracking.id, {
-            'id': tracking.id,
-            'changed_field': tracking.field_desc,
-            'old_value': tracking.get_old_display_value()[0],
-            'new_value': tracking.get_new_display_value()[0],
-            'field_type': tracking.field_type,
-        }) for tracking in trackings)
+        tracking_values = self.env['mail.tracking.value'].sudo().search([('mail_message_id', 'in', message_ids)])
+        message_to_tracking = dict()
+        tracking_tree = dict.fromkeys(tracking_values.ids, False)
+        for tracking in tracking_values:
+            message_to_tracking.setdefault(tracking.mail_message_id.id, list()).append(tracking.id)
+            tracking_tree[tracking.id] = {
+                'id': tracking.id,
+                'changed_field': tracking.field_desc,
+                'old_value': tracking.get_old_display_value()[0],
+                'new_value': tracking.get_new_display_value()[0],
+                'field_type': tracking.field_type,
+            }
 
         # 4. Update message dictionaries
         for message_dict in messages:
@@ -342,9 +346,9 @@ class Message(models.Model):
                 if attachment.id in attachments_tree:
                     attachment_ids.append(attachments_tree[attachment.id])
             tracking_value_ids = []
-            for tracking_value in message.tracking_value_ids:
-                if tracking_value.id in tracking_tree:
-                    tracking_value_ids.append(tracking_tree[tracking_value.id])
+            for tracking_value_id in message_to_tracking.get(message_id, list()):
+                if tracking_value_id in tracking_tree:
+                    tracking_value_ids.append(tracking_tree[tracking_value_id])
 
             message_dict.update({
                 'author_id': author,
@@ -463,6 +467,7 @@ class Message(models.Model):
         - if author_id == pid, uid is the author, OR
         - uid belongs to a notified channel, OR
         - uid is in the specified recipients, OR
+        - uid has a notification on the message, OR
         - uid have read access to the related document is model, res_id
         - otherwise: remove the id
         """
@@ -490,17 +495,22 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+        self._cr.execute("""
+            SELECT DISTINCT m.id, m.model, m.res_id, m.author_id,
+                            COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                            channel_partner.channel_id as channel_id
             FROM "%s" m
             LEFT JOIN "mail_message_res_partner_rel" partner_rel
-            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+            LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+            ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
             LEFT JOIN "mail_message_mail_channel_rel" channel_rel
             ON channel_rel.mail_message_id = m.id
             LEFT JOIN "mail_channel" channel
             ON channel.id = channel_rel.mail_channel_id
             LEFT JOIN "mail_channel_partner" channel_partner
-            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, pid, ids,))
+            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+            WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=ids))
         for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
@@ -528,6 +538,7 @@ class Message(models.Model):
             - read: if
                 - author_id == pid, uid is the author OR
                 - uid is in the recipients (partner_ids) OR
+                - uid has been notified (needaction) OR
                 - uid is member of a listern channel (channel_ids.partner_ids) OR
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
@@ -578,17 +589,22 @@ class Message(models.Model):
         message_values = dict((res_id, {}) for res_id in self.ids)
 
         if operation in ['read', 'write']:
-            self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+            self._cr.execute("""
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
+                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                                channel_partner.channel_id as channel_id
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_message_mail_channel_rel" channel_rel
                 ON channel_rel.mail_message_id = m.id
                 LEFT JOIN "mail_channel" channel
                 ON channel.id = channel_rel.mail_channel_id
                 LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, self.ids,))
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
             for mid, rmod, rid, author_id, parent_id, partner_id, channel_id in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
@@ -723,7 +739,12 @@ class Message(models.Model):
         if 'record_name' not in values and 'default_record_name' not in self.env.context:
             values['record_name'] = self._get_record_name(values)
 
+        # delegate creation of tracking after the create as sudo to avoid access rights issues
+        tracking_values_cmd = values.pop('tracking_value_ids', False)
         message = super(Message, self).create(values)
+        if tracking_values_cmd:
+            message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+
         message._invalidate_documents()
 
         if not self.env.context.get('message_create_from_mail_mail'):

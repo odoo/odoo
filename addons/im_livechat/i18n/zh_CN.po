@@ -3,14 +3,16 @@
 # * im_livechat
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# Maie <m@maie.name>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +43,9 @@ msgid ""
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"*“显示按钮”在页面上显示聊天按钮。\n"
+"*“自动弹出”显示按钮并自动打开对话窗口。\n"
+"*“隐藏按钮”在页面上隐藏聊天按钮。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -128,7 +133,7 @@ msgid ""
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
-msgstr ""
+msgstr "<i/>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
@@ -269,7 +274,7 @@ msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
-msgstr ""
+msgstr "自动打开对话窗口的延迟（以秒计）。注意：所选操作必须为“自动弹出”，否则将不会考虑此参数。"
 
 #. module: im_livechat
 #. openerp-web
@@ -349,7 +354,7 @@ msgstr "分组..."
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Has a Rating"
-msgstr ""
+msgstr "已有评级"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
@@ -486,7 +491,7 @@ msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
-msgstr ""
+msgstr "实时聊天支持频道统计允许您轻松检查和分析公司实时聊天会话的表现。提取关于错过的会话、观众、会话持续时间等的信息"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -607,7 +612,7 @@ msgstr ""
 msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
-msgstr ""
+msgstr "在 Odoo 中未显示任何活动超过 30 分钟的操作人员将被视为已断开连接。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -629,13 +634,13 @@ msgstr "点评"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:309
 #, python-format
 msgid "Rating: :rating_%d"
-msgstr ""
+msgstr "评价：:rating_%d"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
-msgstr ""
+msgstr "指定此规则将在网页上应用的正则表达式。"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -737,6 +742,8 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"该规则将仅适用于这些国家/地区。示例：如果您选择“比利时”和“美国”，然后将操作设置为“隐藏按钮”，将会对位于这两个国家/地区的访客的指定 URL "
+"隐藏聊天按钮。此功能的使用需要在服务器上安装 GeoIP。"
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
@@ -829,13 +836,15 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"您可以为每个想要\n"
+" 集成网站实时聊天小工具的网站创建频道，这样您的网站访客便能够与操作人员实时交流。"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid ""
 "Your chatter history is empty. Create a channel and start chatting to fill "
 "up your history."
-msgstr ""
+msgstr "你的交谈记录为空，现在创建一个频道并开始交谈就可以生成你的交谈记录。"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

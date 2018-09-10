@@ -51,7 +51,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_start(self):
@@ -65,7 +65,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_stop(self):
@@ -79,7 +79,7 @@ class Partner(models.Model):
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
                  'free_member',
-                 'member_lines.date_to', 'member_lines.date_from',
+                 'member_lines.date_to', 'member_lines.date_from', 'member_lines.date_cancel',
                  'membership_state',
                  'associate_member.membership_state')
     def _compute_membership_cancel(self):
@@ -161,8 +161,10 @@ class Partner(models.Model):
 
     @api.model
     def _cron_update_membership(self):
-        # used to recompute 'membership_state'; should no longer be necessary
-        pass
+        partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
+        # mark the field to be recomputed, and recompute it
+        partners._recompute_todo(self._fields['membership_state'])
+        self.recompute()
 
     @api.multi
     def create_membership_invoice(self, product_id=None, datas=None):

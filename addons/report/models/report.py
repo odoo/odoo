@@ -282,7 +282,7 @@ class Report(models.Model):
                 active_ids = docids
             context = dict(self.env.context, active_ids=active_ids)
 
-        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)])
+        report = self.env['ir.actions.report.xml'].with_context(context).search([('report_name', '=', report_name)], limit=1)
         if not report:
             raise UserError(_("Bad Report Reference") + _("This report is not loaded into the database: %s.") % report_name)
 
@@ -511,7 +511,7 @@ class Report(models.Model):
         :specific_paperformat_args: a dict containing prioritized wkhtmltopdf arguments
         :returns: list of string representing the wkhtmltopdf arguments
         """
-        command_args = []
+        command_args = ['--disable-local-file-access']
         if paperformat.format and paperformat.format != 'custom':
             command_args.extend(['--page-size', paperformat.format])
 

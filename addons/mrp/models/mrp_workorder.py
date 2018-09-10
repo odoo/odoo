@@ -282,7 +282,7 @@ class MrpWorkorder(models.Model):
         for move_lot in self.active_move_lot_ids:
             # Check if move_lot already exists
             if move_lot.quantity_done <= 0:  # rounding...
-                move_lot.unlink()
+                move_lot.sudo().unlink()
                 continue
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
@@ -291,7 +291,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
-                move_lot.unlink()
+                move_lot.sudo().unlink()
             else:
                 move_lot.lot_produced_id = self.final_lot_id.id
                 move_lot.done_wo = True
@@ -312,20 +312,25 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
-            if production_move.product_id.tracking != 'none':
-                move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                if move_lot:
-                    move_lot.quantity += self.qty_producing
+            production_moves = self.production_id.move_finished_ids.filtered(lambda x: (x.state not in ('done', 'cancel')))
+            for production_move in production_moves:
+                if production_move.product_id.id == self.production_id.product_id.id and production_move.product_id.tracking != 'none':
+                    move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                    if move_lot:
+                        move_lot.quantity += self.qty_producing
+                        move_lot.quantity_done += self.qty_producing
+                    else:
+                        move_lot.create({'move_id': production_move.id,
+                                         'lot_id': self.final_lot_id.id,
+                                         'quantity': self.qty_producing,
+                                         'quantity_done': self.qty_producing,
+                                         'workorder_id': self.id,
+                                         })
+                elif production_move.unit_factor:
+                    rounding = production_move.product_uom.rounding
+                    production_move.quantity_done += float_round(self.qty_producing * production_move.unit_factor, precision_rounding=rounding)
                 else:
-                    move_lot.create({'move_id': production_move.id,
-                                     'lot_id': self.final_lot_id.id,
-                                     'quantity': self.qty_producing,
-                                     'quantity_done': self.qty_producing,
-                                     'workorder_id': self.id,
-                                     })
-            else:
-                production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
+                    production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
@@ -391,9 +396,12 @@ class MrpWorkorder(models.Model):
         domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
         if not doall:
             domain.append(('user_id', '=', self.env.user.id))
+        not_productive_timelines = timeline_obj.browse()
         for timeline in timeline_obj.search(domain, limit=None if doall else 1):
             wo = timeline.workorder_id
-            if timeline.loss_type != 'productive':
+            if wo.duration_expected <= wo.duration:
+                if timeline.loss_type == 'productive':
+                    not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
                 maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wo.duration_expected - wo.duration)
@@ -402,10 +410,12 @@ class MrpWorkorder(models.Model):
                     timeline.write({'date_end': enddate})
                 else:
                     timeline.write({'date_end': maxdate})
-                    loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
-                    if not len(loss_id):
-                        raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-                    timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
+                    not_productive_timelines += timeline.copy({'date_start': maxdate, 'date_end': enddate})
+        if not_productive_timelines:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            not_productive_timelines.write({'loss_id': loss_id.id})
         return True
 
     @api.multi

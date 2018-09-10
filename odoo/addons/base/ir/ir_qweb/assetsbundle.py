@@ -8,7 +8,7 @@ import textwrap
 import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
-from odoo import fields, tools
+from odoo import fields, tools, SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
@@ -191,20 +191,24 @@ class AssetsBundle(object):
         self.env.cr.execute("""
              SELECT max(id)
                FROM ir_attachment
-              WHERE url like %s
+              WHERE create_uid = %s
+                AND url like %s
            GROUP BY datas_fname
            ORDER BY datas_fname
-         """, [url_pattern])
+         """, [SUPERUSER_ID, url_pattern])
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
     def save_attachment(self, type, content, inc=None):
+        assert type in ('js', 'css')
         ira = self.env['ir.attachment']
 
         fname = '%s%s.%s' % (self.name, ('' if inc is None else '.%s' % inc), type)
+        mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
             'name': "/web/content/%s" % type,
             'datas_fname': fname,
+            'mimetype' : mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
             'type': 'binary',
@@ -479,7 +483,7 @@ class WebAsset(object):
                 with open(self._filename, 'rb') as fp:
                     return fp.read().decode('utf-8')
             else:
-                return self._ir_attach['datas'].decode('base64')
+                return self._ir_attach['datas'].decode('base64').decode('utf-8')
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:
