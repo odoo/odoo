@@ -9,38 +9,41 @@ class TestHrHolidaysBase(common.TransactionCase):
     def setUp(self):
         super(TestHrHolidaysBase, self).setUp()
 
-        Users = self.env['res.users'].with_context(no_reset_password=True)
-
-        # Find Employee group
-        group_employee_id = self.ref('base.group_user')
+        self._quick_create_ctx = {
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_notrack': True,
+        }
+        self._quick_create_user_ctx = dict(self._quick_create_ctx, no_reset_password=True)
 
         # Test users to use through the various tests
+        Users = self.env['res.users'].with_context(self._quick_create_user_ctx)
         self.user_hruser = Users.create({
             'name': 'Armande HrUser',
             'login': 'Armande',
             'email': 'armande.hruser@example.com',
-            'groups_id': [(6, 0, [group_employee_id, self.ref('hr_holidays.group_hr_holidays_user')])]
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('hr_holidays.group_hr_holidays_user')])]
         })
         self.user_hruser_id = self.user_hruser.id
         self.user_hrmanager = Users.create({
             'name': 'Bastien HrManager',
             'login': 'bastien',
             'email': 'bastien.hrmanager@example.com',
-            'groups_id': [(6, 0, [group_employee_id, self.ref('hr_holidays.group_hr_holidays_manager')])]
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('hr_holidays.group_hr_holidays_manager')])]
         }).id
         self.user_hrmanager_id = self.user_hrmanager
         self.user_employee = Users.create({
             'name': 'David Employee',
             'login': 'david',
             'email': 'david.employee@example.com',
-            'groups_id': [(6, 0, [group_employee_id])]
+            'groups_id': [(6, 0, [self.ref('base.group_user')])]
         })
         self.user_employee_id = self.user_employee.id
         self.user_hrmanager_2_id = Users.create({
             'name': 'Florence HrManager',
             'login': 'florence',
             'email': 'florence.hrmanager@example.com',
-            'groups_id': [(6, 0, [group_employee_id, self.ref('hr_holidays.group_hr_holidays_manager')])]
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('hr_holidays.group_hr_holidays_manager')])]
         }).id
 
         # Hr Data

@@ -2248,7 +2248,7 @@ QUnit.module('Views', {
             archs: archs,
             viewOptions: {
                 initialDate: initialDate,
-                action: {views: [[1, 'kanban'], [43, 'form']]}
+                action: {views: [{viewID: 1, type: 'kanban'}, {viewID: 43, type: 'form'}]}
             },
             mockRPC: function (route, args) {
                 if (args.method === "create") {

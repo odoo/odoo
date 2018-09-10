@@ -1,17 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 
-    <!-- Graph report -->
     <record id="view_evaluation_report_graph" model="ir.ui.view">
-            <field name="name">hr.holidays.graph</field>
-            <field name="model">hr.leave</field>
-            <field name="arch" type="xml">
+        <field name="name">hr.holidays.graph</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
             <graph string="Appraisal Analysis" stacked="True">
                 <field name="employee_id" type="row"/>
                 <field name="holiday_status_id" type="row"/>
                 <field name="date_from" type="col"/>
                 <field name="number_of_days" type="measure"/>
-             </graph>
+            </graph>
          </field>
     </record>
 
@@ -65,10 +64,80 @@
         </field>
     </record>
 
-    <!-- Holidays: Leave Request -->
+    <record id="hr_leave_view_kanban" model="ir.ui.view">
+        <field name="name">hr.leave.view.kanban</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <field name="employee_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="name"/>
+                <field name="number_of_days"/>
+                <field name="can_approve"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <span>
+                                    <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar float-left mr4"/>
+                                </span>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span class="float-right badge badge-secondary">
+                                            <field name="state" widget="kanban_label_selection"
+                                                options="{'classes': {'draft': 'default', 'confirm': 'default', 'validate': 'success', 'cancel': 'danger'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-muted o_kanban_record_subtitle">
+                                        <t t-esc="record.name.value"/>
+                                    </div>
+                                </div>
+                                <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit Task</a>
+                                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                        <a t-if="record.can_approve.value" name="action_approve" type="object"
+                                            role="menuitem" class="dropdown-item">Approve</a>
+                                        <a t-if="record.can_approve.value" name="action_refuse" type="object"
+                                            role="menuitem" class="dropdown-item">Refuse</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom mt8 mb4">
+                                <div t-attf-class="oe_kanban_bottom_left #{record.date_from.value ? 'mt8 mb4': ''}">
+                                    <table class="text-right" t-if="record.date_from.value">
+                                        <tr>
+                                            <td style="padding-bottom:4px"><small class="text-muted">from</small></td>
+                                            <td style="padding:0 0 4px 4px"><t t-esc="record.date_from.value"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><small class="text-muted">to</small></td>
+                                            <td style="padding-left:4px"><t t-esc="record.date_to.value"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div t-attf-class="oe_kanban_bottom_right #{record.date_from.value ? 'mt8': ''}">
+                                    <span class="badge badge-pill"><t t-esc="record.number_of_days.value"/> days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+     </record>
 
-    <record id="view_holiday_new_calendar" model="ir.ui.view">
-        <field name="name">Leave Request</field>
+    <record id="hr_leave_view_calendar" model="ir.ui.view">
+        <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <calendar string="Leave Request" date_start="date_from" date_stop="date_to" mode="month" quick_add="False" color="employee_id">
@@ -77,9 +146,10 @@
         </field>
     </record>
 
-    <record id="edit_holiday_new_request" model="ir.ui.view">
-        <field name="name">Leave Request</field>
+    <record id="hr_leave_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.view.form</field>
         <field name="model">hr.leave</field>
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Leave Request">
             <field name="can_reset" invisible="1"/>
@@ -91,60 +161,94 @@
                 <button string="Refuse" name="action_refuse"  type="object" attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate','validate1'))]}"/>
                 <button string="Reset to Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
-                <div class="oe_title">
-                    <h1><field name="display_name"/></h1>
-                </div>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <group>
                     <group>
-                        <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                        <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
+                        <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True}"/>
 
-                        <label for="number_of_days_temp" string="Duration"/>
+                        <field name="number_of_days" invisible="1"/>
+                        <label for="number_of_days_display" string="Duration"/>
                         <div>
                             <div attrs="{'invisible': [('leave_type_request_unit', '=', 'hour')]}">
-                                <field name="number_of_days_temp" nolabel="1" class="oe_inline"/>
+                                <field name="number_of_days_display" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Days</span>
                             </div>
                             <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}">
-                                <field name="number_of_hours" nolabel="1" class="oe_inline"/>
+                                <field name="number_of_hours_display" nolabel="1" class="oe_inline"/>
                                 <span class="ml8">Hours</span>
                             </div>
-                            <field name="request_unit_all" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
-                            <field name="request_unit_day" widget="radio" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '!=', 'day')]}"/>
+                        </div>
 
-                            <div class="o_row">
-                                <span attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">From </span>
-                                <field name="request_date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '=', 'period')]}"/>
-                                <field name="date_from" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')]}"/>
-                                <span class="ml8" attrs="{'invisible': ['|', '&amp;', ('request_unit_all', '!=', 'half'), ('leave_type_request_unit', '!=', 'half'), '&amp;', ('request_unit_all', '=', 'day'), ('leave_type_request_unit', '=', 'half')]}"/>
-                                <field name="request_date_from_period" options="{'horizontal': True}"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', '|', ('leave_type_request_unit', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'half'), ('request_unit_all', '=', 'day'), '&amp;', ('leave_type_request_unit', '=', 'hour'), ('request_unit_all', '!=', 'half')]}"/>
+                        <label for="request_date_from" string="From"/>
+                        <div>
+                            <field name="date_from" invisible="1"/>
+                            <field name="date_to" invisible="1"/>
+                            <div class="o_row o_row_readonly">
+                                <field name="request_date_from" class="oe_inline"
+                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                                <span class="oe_inline"
+                                    attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
+                                    To
+                                </span>
+                                <field name="request_date_to" class="oe_inline"
+                                    attrs="{
+                                        'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                        'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]
+                                    }"/>
+                                <field name="request_date_from_period" class="oe_inline"
+                                    string="In"
+                                    options="{'horizontal': True}"
+                                    attrs="{
+                                        'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                        'required': [('request_unit_half', '=', True)],
+                                        'invisible': [('request_unit_half', '=', False)]}"/>
                             </div>
-                            <div class="o_row">
-                                <span  attrs="{'invisible': [('request_unit_all', '!=', 'period')]}">To </span>
-                                <field name="request_date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('request_unit_all', '!=', 'period'), ('leave_type_request_unit', '=', 'hour')]}"/>
-                                <field name="date_to" attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'hour'), ('request_unit_all', '!=', 'period')], 'required': ['|', ('request_unit_all', '=', 'period'), ('request_unit_day', '=', 'period')]}"/>
-                                <span class="ml8" attrs="{'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
-                                <field name="request_date_to_period" options="{'horizontal': True}"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': ['|', ('leave_type_request_unit', '!=', 'half'), ('request_unit_all', '!=', 'period')]}"/>
+                            <div class="o_row o_row_readonly">
+                                <label for="request_unit_half"
+                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                                <field name="request_unit_half"
+                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
+                                <label for="request_unit_hours" attrs="{
+                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                    'invisible': [('leave_type_request_unit', '!=', 'hour')]
+                                }"/>
+                                <field name="request_unit_hours" attrs="{
+                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                    'invisible': [('leave_type_request_unit', '!=', 'hour')]
+                                }"/>
+                                <label for="request_unit_custom" invisible="1" attrs="{
+                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                }"/>
+                                <field name="request_unit_custom" invisible="1" attrs="{
+                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                }"/>
+                            </div>
+                            <div class="o_row o_row_readonly">
+                                <label for="request_hour_from" string="From"
+                                    attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
+                                <field name="request_hour_from"
+                                    attrs="{
+                                        'readonly': [('state', '=', 'validate')],
+                                        'required': [('request_unit_hours', '=', True)],
+                                        'invisible': [('request_unit_hours', '=', False)]}"/>
+                                <label for="request_hour_to" string="To"
+                                    attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
+                                <field name="request_hour_to"
+                                    attrs="{
+                                        'readonly': [('state', '=', 'validate')],
+                                        'required': [('request_unit_hours', '=', True)],
+                                        'invisible': [('request_unit_hours', '=', False)]}"/>
                             </div>
                         </div>
+                        <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                     </group>
-                    <group>
-                        <field name="holiday_type" attrs="{'readonly':[('state','!=','draft')]}" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
-                        <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}" groups="hr_holidays.group_hr_holidays_user"/>
-                        <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly': [('state','!=','draft'), ('state','!=','confirm')], 'invisible':[('holiday_type','!=','category')]}"/>
-                        <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'readonly':['|',('state','=', 'validate'),('holiday_type','!=','department')],'invisible':[('holiday_type','=','category')]}"/>
-                        <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" widget="toggle_button"/>
+                    <group name="col_right">
+                        <field name="employee_id" invisible="1"/>
+                        <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
                     </group>
-                    <div groups="hr_holidays.group_hr_holidays_manager">
-                        <separator string="Comment by Manager"/>
-                        <field name="report_note" placeholder="e.g. Report to the next month..."/>
-                    </div>
                 </group>
             </sheet>
             <div class="oe_chatter">
@@ -156,8 +260,45 @@
         </field>
     </record>
 
-    <record id="view_holiday" model="ir.ui.view">
-        <field name="name">hr.holidays.tree</field>
+    <record id="hr_leave_view_form_manager" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.manager</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_leave_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='col_right']" position="replace">
+                <group>
+                    <field name="holiday_type" string="Mode"
+                        groups="hr_holidays.group_hr_holidays_user"/>
+                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'employee')],
+                        'invisible': [('holiday_type', '!=', 'employee')]
+                        }"/>
+                    <field name="mode_company_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'company')],
+                        'invisible': [('holiday_type', '!=', 'company')]
+                        }"/>
+                    <field name="category_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'category')],
+                        'invisible': [('holiday_type', '!=','category')]
+                        }"/>
+                    <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                        'required': [('holiday_type', '=', 'department')],
+                        'invisible': [('holiday_type', 'not in', ('employee', 'department'))]
+                        }"/>
+                    <field name="payslip_status" groups="hr_holidays.group_hr_holidays_manager" widget="toggle_button"/>
+                </group>
+                <div groups="hr_holidays.group_hr_holidays_manager">
+                    <separator string="Comment by Manager"/>
+                    <field name="report_note" placeholder="e.g. Report to the next month..."/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.view.tree</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <tree decoration-danger="state == 'refuse'" decoration-info="state == ' draft'" string="Leave Requests"
@@ -172,11 +313,48 @@
                 <field name="state"/>
                 <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="category_id" invisible="1"/>
-                <field name="department_id" invisible="not context.get('set_visible',False)"/>
+                <field name="department_id" invisible="1"/>
                 <field name="manager_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
+                <button string="Approve" name="action_approve" type="object"
+                    icon="fa-check text-success"
+                    states="confirm"
+                    groups="hr_holidays.group_hr_holidays_user"/>
+                <button string="Validate" name="action_validate" type="object"
+                    icon="fa-check text-success"
+                    states="validate1"
+                    groups="hr_holidays.group_hr_holidays_manager"/>
+                <button string="Refuse" name="action_refuse" type="object"
+                    icon="fa-ban text-danger"
+                    states="confirm,validate,validate1"
+                    groups="hr_holidays.group_hr_holidays_manager"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_tree_my" model="ir.ui.view">
+        <field name="name">hr.holidays.view.tree</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_leave_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payslip_status']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -217,6 +395,24 @@
         parent="menu_hr_holidays_root"
         sequence="4"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
+    <menuitem
+        id="hr_holidays_menu_manager_approve"
+        name="To Approve"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="1"/>
+    <menuitem
+        id="hr_holidays_menu_manager_all"
+        name="All"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="2"/>
+    <menuitem
+        id="hr_holidays_menu_manager_payroll"
+        name="Payroll"
+        parent="menu_hr_holidays_approvals"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        sequence="3"/>
 
     <menuitem
         id="menu_hr_holidays_report"
@@ -225,15 +421,13 @@
         sequence="99"
         groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"/>
 
-    <record id="open_ask_holidays" model="ir.actions.act_window">
+    <record id="hr_leave_action_new_request" model="ir.actions.act_window">
         <field name="name">New Request</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar,tree,form</field>
-        <field name="view_id" ref="edit_holiday_new_request"/>
         <field name="context">{}</field>
         <field name="domain">[('user_id', '=', uid)]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new leave request
@@ -245,104 +439,39 @@
             </p>
         </field>
     </record>
-
-    <record id="action_open_ask_holidays_tree" model="ir.actions.act_window.view">
-        <field name="sequence" eval="20"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
-
-    <record id="action_open_ask_holidays_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="edit_holiday_new_request"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
-
-    <record id="action_open_ask_holidays_calendar" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+    <record id="hr_leave_action_new_request_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="view_holiday_new_calendar"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
+        <field name="act_window_id" ref="hr_leave_action_new_request"/>
+        <field name="view_id" ref="hr_leave_view_calendar"/>
     </record>
-
-    <record id="hr_leave_action_my_tree" model="ir.actions.act_window">
-        <field name="name">Leaves Request</field>
-        <field name="res_model">hr.leave</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,calendar,form</field>
-        <field name="view_id" ref="edit_holiday_new_request"/>
-        <field name="context">{}</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new leave request
-            </p><p>
-                Once you have recorded your leave request, it will be sent
-                to a manager for validation. Be sure to set the right leave
-                type (recuperation, legal leaves, sickness) and the exact
-                number of open days related to your leave.
-            </p>
-        </field>
+    <record id="hr_leave_action_new_request_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_leave_action_new_request"/>
+        <field name="view_id" ref="hr_leave_view_tree_my"/>
+    </record>
+    <record id="hhr_leave_action_new_request_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">3</field>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_leave_action_new_request"/>
+        <field name="view_id" ref="hr_leave_view_form"/>
     </record>
 
     <menuitem
-        id="menu_open_ask_holidays_new"
-        parent="menu_hr_holidays_root"
-        action="open_ask_holidays"
+        id="hr_leave_menu_new_request"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_action_new_request"
         sequence="2"/>
 
-    <record id="hr_leave_action_view_my_tree_tree" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
-    </record>
-
-    <record id="hr_leave_action_view_my_tree_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="20"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="edit_holiday_new_request"/>
-        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
-    </record>
-
-    <record id="hr_leave_action_view_my_tree_calendar" model="ir.actions.act_window.view">
-        <field name="sequence" eval="10"/>
-        <field name="view_mode">calendar</field>
-        <field name="view_id" ref="view_holiday_new_calendar"/>
-        <field name="act_window_id" ref="hr_leave_action_my_tree"/>
-    </record>
-    <menuitem
-        id="hr_leave_menu_my"
-        parent="menu_hr_holidays_my_leaves"
-        action="hr_leave_action_my_tree"
-        sequence="22"/>
-
-    <record id="open_employee_leaves" model="ir.actions.act_window">
-        <field name="name">Leaves Overview</field>
-        <field name="res_model">hr.leave</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form,calendar</field>
-        <field name="view_id" eval="view_holiday"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new leave request
-            </p>
-        </field>
-        <field name="context">{}</field>
-        <field name="domain">[]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
-    </record>
-
-    <record id="open_department_holidays_approve" model="ir.actions.act_window">
-        <field name="name">Department Leaves</field>
+    <record id="hr_leave_action_my" model="ir.actions.act_window">
+        <field name="name">Leaves Requests</field>
+        <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,kanban</field>
-        <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
-        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new leave request
@@ -353,89 +482,111 @@
                 number of open days related to your leave.
             </p>
         </field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
+    </record>
+    <record id="hr_leave_action_my_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="hr_leave_action_my"/>
+        <field name="view_id" ref="hr_leave_view_tree_my"/>
+    </record>
+    <record id="hr_leave_action_my_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="hr_leave_action_my"/>
+        <field name="view_id" ref="hr_leave_view_form"/>
     </record>
 
     <menuitem
-        id="menu_open_department_leave_approve"
-        name="Leaves to Approve"
-        parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
-        action="open_department_holidays_approve"
-        sequence="1"/>
-
-    <menuitem
-        id="menu_open_employee_leave"
-        parent="menu_hr_holidays_approvals"
-        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
-        action="open_employee_leaves"
+        id="hr_leave_menu_my"
+        parent="menu_hr_holidays_my_leaves"
+        action="hr_leave_action_my"
         sequence="4"/>
 
-    <!-- Shortcuts -->
-    <record id="view_allocation_tree_customize" model="ir.ui.view">
-        <field name="name">hr.leave.allocation.tree.customize</field>
-        <field name="model">hr.leave.allocation</field>
-        <field name="arch" type="xml">
-            <tree string="Allocation Requests" editable="top">
-                <field name="employee_id"/>
-                <field name="holiday_type"/>
-                <field name="holiday_status_id"/>
-                <field name="name" readonly="1"/>
-                <field name="number_of_days_temp" string="Allocated Days" sum="Total leaves"/>
-                <field name="state"/>
-            </tree>
+    <record id="hr_leave_action_all" model="ir.actions.act_window">
+        <field name="name">Leaves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p>
         </field>
     </record>
 
-    <record id="act_hr_employee_holiday_request_approved" model="ir.actions.act_window">
-        <field name="name">Leaves to be reported in Payslip</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">hr.leave</field>
-        <field name="src_model">hr.employee</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_employee_id': [active_id], 'search_default_validated': True, 'search_default_gray': True}</field>
-        <field name="domain">[('date_from','&gt;=', context_today().strftime("%Y-%m-1")), ('date_from','&lt;', ((context_today() + relativedelta(months=1)).strftime('%Y-%m-1')) )]</field>
-        <field name="view_id" eval="view_allocation_tree_customize"/>
-    </record>
-
-   <!-- Assing leave -->
-    <record id="hr_holidays_action_request_from_department" model="ir.actions.act_window">
-        <field name="name">Leave Request to Approve</field>
+    <record id="hr_leave_action_action_approve_department" model="ir.actions.act_window">
+        <field name="name">Department Leaves</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
         <field name="context">{
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id,
+            'search_default_department':1,
             'search_default_approve':1}
         </field>
         <field name="domain">[]</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p>
+        </field>
     </record>
 
-    <record id="action_hr_holidays_leaves_analysis" model="ir.actions.act_window">
+    <record id="hr_leave_action_action_department" model="ir.actions.act_window">
         <field name="name">Leaves Analysis</field>
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot</field>
-        <field name="domain">[('holiday_type','=','employee')]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
-    </record>
-
-    <record id="action_hr_holidays_leaves_analysis_filtered" model="ir.actions.act_window">
-        <field name="name">Leaves Analysis</field>
-        <field name="res_model">hr.leave</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,pivot</field>
-        <field name="domain">[('holiday_type','=','employee')]</field>
         <field name="context">{
             'search_default_department_id': [active_id],
             'default_department_id': active_id}
         </field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        <field name="domain">[('holiday_type','=','employee')]</field>
     </record>
+
+    <menuitem
+        id="menu_open_department_leave_approve"
+        name="Leaves"
+        parent="hr_holidays_menu_manager_approve"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="hr_leave_action_action_approve_department"
+        sequence="1"/>
+    <menuitem
+        id="menu_open_employee_leave"
+        name="Leaves"
+        parent="hr_holidays_menu_manager_all"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="hr_leave_action_all"
+        sequence="1"/>
+
+    <record id="hr_leave_action_payroll" model="ir.actions.act_window">
+        <field name="name">Leaves Requests</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="context">{'search_default_gray': True}</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new leave request
+            </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal leaves, sickness) and the exact
+                number of open days related to your leave.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_holidays_menu_manager_payroll_to_report"
+        name="Leaves to report"
+        parent="hr_holidays_menu_manager_payroll"
+        groups="hr_holidays.group_hr_holidays_manager,hr_holidays.group_hr_holidays_user"
+        action="hr_leave_action_payroll"
+        sequence="1"/>
 
     <record id="view_holiday_pivot" model="ir.ui.view">
         <field name="name">hr.holidays.report_pivot</field>
@@ -467,16 +618,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,calendar,form</field>
-        <field name="view_id"></field>  <!-- force empty -->
         <field name="context">{'search_default_leaves':1}</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter"/>
-    </record>
-
-    <record id="action_window_leave_pivot" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">pivot</field>
-        <field name="view_id" ref="view_holiday_pivot"/>
-        <field name="act_window_id" ref="action_hr_available_holidays_report"/>
     </record>
 
     <record id="action_window_leave_graph" model="ir.actions.act_window.view">
