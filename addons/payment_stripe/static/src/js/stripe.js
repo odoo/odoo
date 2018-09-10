@@ -93,7 +93,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         }
 
         var access_token = $("input[name='access_token']").val() || $("input[name='token']").val() || '';
-        var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
+        var so_id = $("input[name='return_url']").val().match(/[quote|order]s?\/([0-9]+)/) || undefined;
         if (so_id) {
             so_id = parseInt(so_id[1]);
         }
