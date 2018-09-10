@@ -5,6 +5,7 @@ from odoo import http
 from odoo.http import request
 from odoo import tools
 from odoo.tools.translate import _
+from odoo.addons.web.controllers.main import Home
 
 from odoo.fields import Date
 
@@ -127,3 +128,13 @@ class website_account(http.Controller):
             error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message
+
+
+class HomePortal(Home):
+
+    @http.route()
+    def web_login(self, redirect=None, *args, **kw):
+        response = super(HomePortal, self).web_login(redirect=redirect, *args, **kw)
+        if not redirect and request.params['login_success'] and not request.env['res.users'].sudo().browse(request.session.uid).has_group('base.group_user'):
+            return http.redirect_with_hash('/my')
+        return response
