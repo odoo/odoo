@@ -530,7 +530,7 @@ ListRenderer.include({
      */
     _renderBody: function () {
         var $body = this._super();
-        if (this.handleField) {
+        if (this.hasHandle) {
             $body.sortable({
                 axis: 'y',
                 items: '> tr.o_data_row',
