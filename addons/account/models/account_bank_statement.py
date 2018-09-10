@@ -298,7 +298,7 @@ class AccountBankStatement(models.Model):
                         WHERE account_id IS NULL AND not exists (select 1 from account_move m where m.statement_line_id = stl.id)
                             AND company_id = %s
                 """
-        params = (self.company_id.id,)
+        params = (self.mapped('company_id').id,)
         if statements:
             sql_query += ' AND stl.statement_id IN %s'
             params += (tuple(statements.ids),)
@@ -323,7 +323,7 @@ class AccountBankStatement(models.Model):
                                     )
                                 AND aml.ref IN %s
                                 """
-            params = (self.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
+            params = (self.mapped('company_id').id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
             if statements:
                 sql_query += 'AND stl.id IN %s'
                 params += (tuple(stl_to_assign_partner),)
