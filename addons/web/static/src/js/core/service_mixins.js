@@ -125,8 +125,14 @@ var ServicesMixin = {
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);
-        var def = this.call('ajax', 'rpc', query.route, query.params, options);
-        return def ? def.promise() : $.Deferred().promise();
+        var def = this.call('ajax', 'rpc', query.route, query.params, options, this);
+        if (!def && this.isDestroyed()) {
+            def = $.Deferred();
+            def.abort = function () {};
+        }
+        var promise = def.promise();
+        promise.abort = def.abort.bind(def);
+        return promise;
     },
     loadFieldView: function (dataset, view_id, view_type, options) {
         return this.loadViews(dataset.model, dataset.get_context().eval(), [[view_id, view_type]], options).then(function (result) {
