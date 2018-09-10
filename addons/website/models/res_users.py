@@ -12,15 +12,6 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    group_website_user = fields.Selection(
-        selection=lambda self: self._get_group_selection('base.module_category_website'),
-        string='Website Editor', compute='_compute_groups_id', inverse='_inverse_groups_id',
-        category_xml_id='base.module_category_website')
-    has_group_multi_website = fields.Boolean(
-        'Multi-Websites',
-        compute='_compute_groups_id', inverse='_inverse_groups_id',
-        group_xml_id='website.group_multi_website')
-
     _sql_constraints = [
         # this is done in Python because a SQL constraint like UNIQUE
         # (login, website_id) allows ('abc', NULL) and
