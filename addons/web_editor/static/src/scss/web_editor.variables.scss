@@ -101,8 +101,10 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 }
 
 @mixin o-w-preserve-forms {
-    .form-control {
+    :not(.input-group):not(.form-group):not(.input-group-append):not(.input-group-prepend) > .form-control {
         height: 34px;
+    }
+    .form-control {
         padding: 6px 12px;
         font-size: 14px;
         line-height: 1.5;
