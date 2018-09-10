@@ -17,12 +17,8 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        Project = request.env['project.project']
-        Task = request.env['project.task']
-        # portal users can't view projects they don't follow
-        projects = Project.sudo().search([('privacy_visibility', '=', 'portal')])
-        values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
-        values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
+        values['project_count'] = request.env['project.project'].search_count([])
+        values['task_count'] = request.env['project.task'].search_count([])
         return values
 
     # ------------------------------------------------------------
@@ -39,7 +35,7 @@ class CustomerPortal(CustomerPortal):
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
-        domain = [('privacy_visibility', '=', 'portal')]
+        domain = []
 
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -127,20 +123,12 @@ class CustomerPortal(CustomerPortal):
         }
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        partner = request.env.user.partner_id
-        domain_projects = [
-            '&',
-            ('privacy_visibility', '=', 'portal'),
-            '|',
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('task_ids.message_partner_ids', 'child_of', [partner.commercial_partner_id.id])
-        ]
-
-        projects = request.env['project.project'].sudo().search(domain_projects)
-        domain = [('project_id', 'in', projects.ids)]
-        for proj in projects:
+        project_groups = request.env['project.task'].read_group([], ['project_id'], ['project_id'])
+        for group in project_groups:
+            proj_id = group['project_id'][0] if group['project_id'] else False
+            proj_name = group['project_id'][1] if group['project_id'] else _('Others')
             searchbar_filters.update({
-                str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
+                str(proj_id): {'label': proj_name, 'domain': [('project_id', '=', proj_id)]}
             })
 
         # default sort by value
@@ -150,7 +138,7 @@ class CustomerPortal(CustomerPortal):
         # default filter by value
         if not filterby:
             filterby = 'all'
-        domain += searchbar_filters[filterby]['domain']
+        domain = searchbar_filters[filterby]['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('project.task', domain)
@@ -193,7 +181,6 @@ class CustomerPortal(CustomerPortal):
         values.update({
             'date': date_begin,
             'date_end': date_end,
-            'projects': projects,
             'grouped_tasks': grouped_tasks,
             'page_name': 'task',
             'archive_groups': archive_groups,
