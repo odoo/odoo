@@ -314,7 +314,7 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
-        for node in root.xpath(match_klass.format('page')):
+        for node in root.xpath("//article[@data-model]"):
             body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
             bodies.append(body)
             if node.get('data-model') == self.model:
@@ -666,7 +666,7 @@ class IrActionsReport(models.Model):
 
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
-                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname.") %  self.name)
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the 'article' tag.") %  self.name)
 
         pdf_content = self._run_wkhtmltopdf(
             bodies,

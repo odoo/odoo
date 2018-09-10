@@ -149,23 +149,6 @@
 
     <!-- External layouts styles -->
 
-    <template id="address_layout">
-        <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
-        <t t-if="address">
-            <div class="row">
-                <t t-if="information_block">
-                    <t t-set="colclass" t-value="'col-5 offset-1'"/>
-                    <div name="information_block" class="col-6">
-                        <t t-raw="information_block"/>
-                    </div>
-                </t>
-                <div name="address" t-att-class="colclass">
-                    <t t-raw="address"/>
-                </div>
-            </div>
-        </t>
-    </template>
-
     <template id="external_layout_background">
         <div class="header o_background_header">
             <div class="float-right">
@@ -183,7 +166,6 @@
         </div>
 
         <div class="article o_report_layout_background">
-            <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
 
@@ -223,7 +205,6 @@
         </div>
 
         <div class="article o_report_layout_boxed">
-            <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
 
@@ -262,7 +243,6 @@
         </div>
 
         <div class="article o_report_layout_clean">
-            <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
 
@@ -310,7 +290,6 @@
         </div>
 
         <div class="article o_report_layout_standard">
-            <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
 

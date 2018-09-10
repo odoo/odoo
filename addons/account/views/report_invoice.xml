@@ -2,13 +2,24 @@
 <odoo>
     <data>
         <template id="report_invoice_document">
-            <t t-call="web.external_layout">
+            <article t-att-data-model="o._name" t-att-data-id="o.id">
                 <t t-set="o" t-value="o.with_context({'lang': lang})"/>
-                <t t-set="address">
-                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                    <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></div>
-                </t>
-                <div class="page" t-att-data-model="o._name" t-att-data-id="o.id">
+
+                <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
+                <div class="row">
+                    <t t-if="information_block">
+                        <t t-set="colclass" t-value="'col-5 offset-1'"/>
+                        <div name="information_block" class="col-6">
+                            <t t-raw="information_block"/>
+                        </div>
+                    </t>
+                    <div name="address" t-att-class="colclass">
+                        <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        <div t-if="o.partner_id.vat" class="mt16"><t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.partner_id.vat"/></div>
+                    </div>
+                </div>
+
+                <div class="page">
                     <h2>
                         <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
@@ -187,7 +198,7 @@
                         <strong class="text-center">The SEPA QR Code informations are not set correctly.</strong><br />
                     </p>
                 </div>
-            </t>
+            </article>
         </template>
 
         <template id="report_invoice_document_with_payments" inherit_id="account.report_invoice_document" primary="True">
@@ -216,18 +227,22 @@
 
         <template id="report_invoice">
             <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document" t-lang="lang"/>
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                        <t t-call="account.report_invoice_document" t-lang="lang"/>
+                    </t>
                 </t>
             </t>
         </template>
 
         <template id="report_invoice_with_payments">
             <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document_with_payments" t-lang="lang"/>
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                        <t t-call="account.report_invoice_document_with_payments" t-lang="lang"/>
+                    </t>
                 </t>
             </t>
         </template>
