@@ -83,7 +83,7 @@ var AltDialog = Dialog.extend({
         this.$editable = $editable;
         this.media = media;
         this.alt = ($(this.media).attr('alt') || "").replace(/&quot;/g, '"');
-        this.title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
+        this.tag_title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
     },
 
     //--------------------------------------------------------------------------

@@ -31,15 +31,21 @@
     <!-- Alt Dialog (allows to change alt and title of page images) -->
     <form t-name="web_editor.dialog.alt" action="#">
         <div class="form-group row">
-            <label class="col-md-3 col-form-label" for="alt">Description (alt tag)</label>
+            <label class="col-md-3 col-form-label" for="alt"
+                   title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+               Description <small>(ALT Tag)</small>
+            </label>
             <div class="col-md-8">
                 <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-md-3 col-form-label" for="title">Tooltip</label>
+            <label class="col-md-3 col-form-label" for="title"
+                   title="'Title tag' is shown as a tooltip when you hover the picture.">
+               Tooltip  <small>(TITLE Tag)</small>
+            </label>
             <div class="col-md-8">
-                <input class="form-control" id="title" required="required" t-att-value="widget.title" type="text"/>
+                <input class="form-control" id="title" required="required" t-att-value="widget.tag_title" type="text"/>
             </div>
         </div>
     </form>
