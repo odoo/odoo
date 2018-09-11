@@ -766,11 +766,11 @@ class Page(models.Model):
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
             pages_linked_to_iruiview = self.search(
-                [('view_id', '=', self.view_id.id), ('id', '!=', self.id)]
+                [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
             )
-            if len(pages_linked_to_iruiview) == 0:
+            if not pages_linked_to_iruiview:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
-                self.env['ir.ui.view'].search([('id', '=', self.view_id.id)]).unlink()
+                page.view_id.unlink()
         # And then delete the website_page itself
         return super(Page, self).unlink()
 

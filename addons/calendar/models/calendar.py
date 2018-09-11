@@ -946,11 +946,13 @@ class Meeting(models.Model):
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
-        self.start = self.start_date
+        if self.start_date:
+            self.start = self.start_date
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
-        self.stop = self.stop_date
+        if self.stop_date:
+            self.stop = self.stop_date
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1755,8 +1757,6 @@ class Meeting(models.Model):
     def _fix_rrule(self, values):
         rule_str = values.get('rrule')
         if rule_str:
-            rule = rrule.rrulestr(rule_str)
-            if not rule._until and not rule._count:
-                rule._count = 100
-                rule_str = str(rule).split('RRULE:')[-1]
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
         return rule_str

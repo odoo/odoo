@@ -14,11 +14,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 # Note: there is normally an additional line:
-#     #: code:addons/test_translation_import/models.py:17
+#     #: code:addons/test_translation_import/models.py:15
 # This line is present in the POT and removed here to test the translation
 # import behavior.
 #. module: test_translation_import
-#: field:test.translation.import,name:0
+#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import_name
 #, python-format
 msgid "1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB"
 msgstr "1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB in french"
@@ -50,3 +50,20 @@ msgstr "Test translation import in french"
 msgid "Test translation"
 msgstr "Test translation in french"
 
+#. module: test_translation_import
+#: code:addons/base/models/arthur.py:42
+#: code:addons/base/models/arthur.py:43
+msgid "Test translation with two code lines"
+msgstr "Test traduction avec deux lignes de code"
+
+#. module: test_translation_import
+#: code:addons/base/models/ford.py:43
+msgid "Test translation with a code type but different line number in pot"
+msgstr "Test traduction avec un type code mais différent numéro de ligne dans le pot"
+
+#. module: test_translation_import
+#: model:ir.model.fields,field_description:test_translation_import.field_test_translation_import_other_name
+#: code:addons/base/models/marvin.py:42
+#: code:addons/base/models/trillian.py:42
+msgid "Test translation with two code type and model"
+msgstr "Test traduction avec deux type code et un model"

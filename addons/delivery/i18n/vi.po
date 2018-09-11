@@ -28,13 +28,14 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,report_name:delivery.mail_template_data_delivery_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Đơn giao hàng (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
@@ -127,6 +128,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"Mua phiên bản doanh nghiệp để có nhiều tính năng hơn.\n"
+"</p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -153,7 +157,7 @@ msgstr "<strong>Khối lượng</strong>"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Hành động trong khi xác thực Đơn giao hàng"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -187,7 +191,7 @@ msgstr "Dựa trên Quy tắc"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "Trọng lượng hàng loạt"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
@@ -195,6 +199,8 @@ msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
 msgstr ""
+"Có thể được thay đổi trong quá trình 'đóng gói' để điều chỉnh trọng lượng "
+"của hàng hóa."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -215,7 +221,7 @@ msgstr "Nhà vận chuyển"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Check price"
-msgstr ""
+msgstr "Kiểm tra giá"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -269,7 +275,7 @@ msgstr "Giao hàng"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Dịch vụ giao hàng"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -337,7 +343,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "Đang có tại điểm đến"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
@@ -374,6 +380,13 @@ msgstr "Môi trường"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
+msgstr "Lỗi: không có mạng lưới phù hợp."
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
 msgstr ""
 
 #. module: delivery
@@ -410,17 +423,17 @@ msgstr "Miễn phí giao hàng"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "Miễn phí nếu số lượng đặt hàng là ở trên"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Lấy đánh giá"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Nhận tỷ lệ và tạo lô hàng"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -465,11 +478,14 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"Thông tin:\n"
+"Giao hàng miễn phí vì số tiền đặt hàng vượt quá %.2f.\n"
+"(Chi phí vận chuyển thực tế là: %.2f)"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Cài đặt thêm Nhà cung cấp"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
@@ -535,12 +551,12 @@ msgstr "Lợi nhuận biên"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Ký quỹ không thể thấp hơn -100%"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Biên độ đánh giá"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
@@ -585,6 +601,8 @@ msgstr "Chưa có nhà vận chuyển được thiết lập cho đơn hàng nà
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Không có quy tắc giá nào khớp với đơn đặt hàng này; không thể tính toán chi "
+"phí giao hàng."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
@@ -638,7 +656,7 @@ msgstr "Hoạt động đóng gói"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "Đóng gói kiện hàng"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -651,7 +669,7 @@ msgstr "Đóng gói kiện hàng"
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
-msgstr ""
+msgstr "Vui lòng sử dụng \"Kiểm tra giá\" để tính giá vận chuyển cho báo giá này."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -707,7 +725,7 @@ msgstr "Trả hàng"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Giá bán cơ bản"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_list_price
@@ -727,7 +745,7 @@ msgstr "Lưu"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "Gửi mail xác nhận"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -749,6 +767,7 @@ msgstr "Đặt giá"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Đặt thành Đúng nếu thông tin xác thực của bạn được chứng nhận để sản xuất."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -773,13 +792,13 @@ msgstr "Khối lượng Vận chuyển"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Trọng lượng giao hàng:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
+msgstr "Mã tiêu chuẩn cho khai báo hàng hóa và vận chuyển quốc tế"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -816,7 +835,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Tỷ lệ phần trăm này sẽ được thêm vào giá vận chuyển."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -831,7 +850,7 @@ msgstr "Mã số Truy vết"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "URL theo dõi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -901,7 +920,7 @@ msgstr "Khối lượng Vận chuyển"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Trọng lượng:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
@@ -911,7 +930,7 @@ msgstr "Chiều rộng"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Chiều rộng phải dương"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:206
@@ -920,12 +939,15 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Bạn đang vận chuyển các loại gói hàng khác nhau trong cùng một lô hàng.\n"
+"Loại đóng gói: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
+"Bạn chỉ có thể thêm giá giao hàng vào các trích dẫn chưa được xác nhận."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182
@@ -934,6 +956,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
+"Phương thức giao hàng của bạn không được chuyển hướng đến trang web của nhà "
+"cung cấp dịch vụ chuyển phát nhanh để theo dõi đơn đặt hàng này."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from

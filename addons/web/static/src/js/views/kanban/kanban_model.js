@@ -60,11 +60,15 @@ var KanbanModel = BasicModel.extend({
         if (!groupByField || groupByField.type !== 'many2one') {
             return $.Deferred().reject(); // only supported when grouped on m2o
         }
+        // ignore action default which may be for another model
+        var context = _.pick(parent.context, function (value, key) {
+            return key.slice(0,8) !== 'default_';
+        });
         return this._rpc({
                 model: groupByField.relation,
                 method: 'name_create',
                 args: [name],
-                context: parent.context, // todo: combine with view context
+                context: context, // todo: combine with view context
             })
             .then(function (result) {
                 var newGroup = self._makeDataPoint({
@@ -222,6 +226,9 @@ var KanbanModel = BasicModel.extend({
             options.groupBy = this.defaultGroupedBy;
         }
         var def = this._super(id, options);
+        if (options && options.loadMoreOffset) {
+            return def;
+        }
         return this._reloadProgressBarGroupFromRecord(id, def);
     },
     /**

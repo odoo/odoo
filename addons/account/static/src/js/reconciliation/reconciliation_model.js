@@ -445,6 +445,7 @@ var StatementModel = BasicModel.extend({
             model: 'account.bank.statement.line',
             method: 'get_data_for_reconciliation_widget',
             args: [ids, excluded_ids],
+            context: self.context,
         })
         .then(self._formatLine.bind(self));
     },
@@ -854,8 +855,14 @@ var StatementModel = BasicModel.extend({
                     }
                 }
             });
-            total = Math.round(total*1000)/1000 || 0;
-            amount_currency = Math.round(amount_currency);
+            var company_currency = session.get_currency(line.st_line.currency_id);
+            var company_precision = company_currency && company_currency.digits[1] || 2;
+            total = utils.round_precision(total*1000, company_precision)/1000 || 0;
+            if(isOtherCurrencyId){
+                var other_currency = session.get_currency(isOtherCurrencyId);
+                var other_precision = other_currency && other_currency.digits[1] || 2;
+                amount_currency = utils.round_precision(amount_currency, other_precision)
+            }
             line.balance = {
                 amount: total,
                 amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),
@@ -1075,6 +1082,7 @@ var StatementModel = BasicModel.extend({
                 model: 'account.bank.statement.line',
                 method: 'get_move_lines_for_reconciliation_widget',
                 args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
+                context: this.context,
             })
             .then(this._formatMoveLine.bind(this, handle));
     },
@@ -1143,6 +1151,7 @@ var ManualModel = StatementModel.extend({
      */
     load: function (context) {
         var self = this;
+        this.context = context;
 
         var domain_account_id = [];
         if (context && context.company_ids) {
@@ -1255,7 +1264,8 @@ var ManualModel = StatementModel.extend({
                 });
             } else {
                 var mv_line_ids = _.pluck(_.filter(props, function (prop) {return !isNaN(prop.id);}), 'id');
-                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display;}), self._formatToProcessReconciliation.bind(self, line));
+                // Dear KangOl, please FORWARD-PORT UP TO SAAS-11.3. Thank you for your hard work.
+                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display && !prop.is_tax;}), self._formatToProcessReconciliation.bind(self, line));
                 process_reconciliations.push({
                     id: null,
                     type: null,
@@ -1433,6 +1443,7 @@ var ManualModel = StatementModel.extend({
                 model: 'account.move.line',
                 method: 'get_move_lines_for_manual_reconciliation',
                 args: args,
+                context: this.context,
             })
             .then(this._formatMoveLine.bind(this, handle));
     },

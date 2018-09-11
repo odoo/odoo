@@ -29,6 +29,8 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"Đó là %s%s hiện đang có trong tất cả kho hàng."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -39,7 +41,7 @@ msgstr "<strong>Tham chiếu Khách hàng:</strong>"
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Điều khoản thương mại:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -58,6 +60,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Theo mặc định, Hệ thống tính toán ngày giao hàng dự kiến theo cách này: ngày"
+" đặt hàng + thời gian khách hàng tiềm năng cao nhất của sản phẩm. Với tùy "
+"chọn này, bạn có thể đặt ngày phân phối cụ thể trên đơn đặt hàng thay vì đặt"
+" thời gian dẫn trên sản phẩm."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -159,6 +165,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Biên độ lỗi cho các ngày đã hứa với khách hàng. Sản phẩm sẽ được lên kế "
+"hoạch phân phối sớm hơn nhiều ngày so với ngày thực tế đã hứa, để đối phó "
+"với sự chậm trễ bất ngờ trong chuỗi cung ứng."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -234,6 +243,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Các sản phẩm dự trữ theo cách thủ công trong các Đơn giao hàng hoặc bằng "
+"cách lên lịch quản lý được khuyến nghị tốt hơn các ưu tiên trong trường hợp "
+"khách hàng có thời gian khách hàng tiềm năng lâu dài hoặc/và mua hàng thường"
+" xuyên. Theo mặc định, lịch trình chạy tự động sau mỗi 24 giờ."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -353,6 +366,10 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Điều này cho phép áp dụng một tuyến đường đặc biệt trên các dòng đặt hàng "
+"(ví dụ: chuyển giao hàng, sản xuất dự trữ) trong đó có trường hợp đặt hàng "
+"bất thường. Để có sẵn trong Đơn bán hàng, các tuyến đường phải có tùy chọn "
+"'Chi tiết bán hàng' được chọn trong biểu mẫu thiết lập của họ."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
@@ -403,6 +420,7 @@ msgstr ""
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
+"Kế hoạch của bạn phải bán %s%s nhưng bạn chỉ có %s%s tồn trong %s kho hàng."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
