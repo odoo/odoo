@@ -914,7 +914,7 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        if help:
+        if help and help.find("oe_view_nocontent_create") == -1:
             alias_record = self.env.ref("crm.mail_alias_lead_info", raise_if_not_found=False)
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
@@ -922,7 +922,9 @@ class Lead(models.Model):
                 dynamic_help = _("""All email incoming to %s will automatically
                     create new opportunity. Update your business card, phone book, social media,...
                     Send an email right now and see it here.""") % (email_link,)
-                return '<p class="oe_view_nocontent_create">%s</p>%s<p>%s</p>' % (_('Click to add a new opportunity'), help, dynamic_help)
+                return '<p class="oe_view_nocontent_create">%s</p>%s<p class="oe_view_nocontent_alias">%s</p>' % (
+                    _('Click to add a new opportunity'), help, dynamic_help
+                )
         return super(Lead, self.with_context(
             empty_list_help_model='crm.team',
             empty_list_help_id=self._context.get('default_team_id', False),
