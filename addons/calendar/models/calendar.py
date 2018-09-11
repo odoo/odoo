@@ -563,7 +563,10 @@ class Meeting(models.Model):
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         for meeting in recurring_meetings:
-            rset1._exdate.append(todate(meeting.recurrent_id_date))
+            date = todate(meeting.recurrent_id_date)
+            if date_field == 'stop':
+                date = date + timedelta(hours=self.duration)
+            rset1._exdate.append(date)
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
 
     @api.multi
