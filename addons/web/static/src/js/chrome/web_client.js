@@ -107,7 +107,8 @@ return AbstractWebClient.extend({
                         args: [[session.uid], ['action_id']],
                     })
                     .done(function(result) {
-                        if (didHashChanged) {
+                        var amDef = self.action_manager.dp.current_def;
+                        if (didHashChanged || (amDef && amDef.state() === 'pending')) {
                             return;
                         }
                         var data = result[0];
