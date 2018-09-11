@@ -289,7 +289,7 @@ class AccountBankStatement(models.Model):
                         WHERE account_id IS NULL AND not exists (select 1 from account_move m where m.statement_line_id = stl.id)
                             AND company_id = %s
                 """
-        params = (self.env.user.company_id.id,)
+        params = (self.company_id.id,)
         if statements:
             sql_query += ' AND stl.statement_id IN %s'
             params += (tuple(statements.ids),)
@@ -317,7 +317,7 @@ class AccountBankStatement(models.Model):
                                     )
                                 AND aml.ref IN %s
                                 """
-            params = (self.env.user.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
+            params = (self.company_id.id, (st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
             if statements:
                 sql_query += 'AND stl.id IN %s'
                 params += (tuple(stl_to_assign_partner),)
@@ -626,7 +626,7 @@ class AccountBankStatementLine(models.Model):
         st_line_currency = self.currency_id or self.journal_id.currency_id
         currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
-        params = {'company_id': self.env.user.company_id.id,
+        params = {'company_id': self.company_id.id,
                     'account_payable_receivable': (self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id),
                     'amount': float_repr(float_round(amount, precision_digits=precision), precision_digits=precision),
                     'partner_id': self.partner_id.id,
@@ -677,7 +677,7 @@ class AccountBankStatementLine(models.Model):
         st_line_currency = self.currency_id or self.journal_id.currency_id
         currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
-        params = {'company_id': self.env.user.company_id.id,
+        params = {'company_id': self.company_id.id,
                     'account_payable_receivable': (self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id),
                     'amount': float_round(amount, precision_digits=precision),
                     'partner_id': self.partner_id.id,
