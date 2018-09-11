@@ -29,6 +29,9 @@
                 <xpath expr="//group/filter[@name='user']" position="after">
                     <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="team_id"/>
+                </xpath>
             </field>
         </record>
 
