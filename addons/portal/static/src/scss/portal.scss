@@ -465,8 +465,11 @@ img.o_we_custom_image {
     color: $danger;
 }
 
-.label-optional {
-    font-weight: normal;
+form label {
+    font-weight: $font-weight-bold;
+    &.label-optional {
+        font-weight: $font-weight-normal;
+    }
 }
 
 .o_portal_contact_img {
