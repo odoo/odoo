@@ -664,7 +664,8 @@ class WebsiteSale(http.Controller):
                     order.partner_id = partner_id
                     order.onchange_partner_id()
                     if not kw.get('use_same'):
-                        kw['callback'] = kw.get('callback') or (not order.only_services and '/shop/address')
+                        kw['callback'] = kw.get('callback') or \
+                            (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
@@ -709,7 +710,6 @@ class WebsiteSale(http.Controller):
         if post.get('express'):
             return request.redirect('/shop/confirm_order')
 
-
         values.update({'website_sale_order': order})
 
         # Avoid useless rendering if called in ajax
@@ -725,14 +725,13 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
-
         order.onchange_partner_shipping_id()
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.env.ref('website_sale.extra_info_option')
         if extra_step.active:
-            return request.redirect("/shop/extra_info")
+            return request.redirect("/shop/confirm_order")
 
         return request.redirect("/shop/payment")
 
@@ -741,9 +740,8 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True)
     def extra_info(self, **post):
-
         # Check that this option is activated
-        extra_step = request.env.ref('website_sale.extra_info_option')
+        extra_step = request.env['ir.ui.view']._view_obj('website_sale.extra_info_option')  # ref but specific
         if not extra_step.active:
             return request.redirect("/shop/payment")
 
