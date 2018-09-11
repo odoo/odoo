@@ -31,7 +31,7 @@ class AccountInvoiceRefund(models.TransientModel):
     @api.one
     def _get_refund_only(self):
         invoice_id = self.env['account.invoice'].browse(self._context.get('active_id',False))
-        if len(invoice_id.payment_move_line_ids) != 0 and invoice_id.state != 'paid':
+        if len(invoice_id.payment_move_line_ids) != 0 or invoice_id.state == 'paid':
             self.refund_only = True
         else:
             self.refund_only = False
