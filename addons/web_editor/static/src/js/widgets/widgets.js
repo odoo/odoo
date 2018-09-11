@@ -1461,7 +1461,7 @@ var LinkDialog = Dialog.extend({
         // and secondary = beta for example but this may depend on the theme)
         this.opened().then(function () {
             var colors = [];
-            _.each(self.$('.o_btn_preview'), function (btn) {
+            _.each(self.$('.o_btn_preview.o_link_dialog_color_item'), function (btn) {
                 var $btn = $(btn);
                 var color = $btn.css('background-color');
                 if (_.contains(colors, color)) {
@@ -1521,7 +1521,7 @@ var LinkDialog = Dialog.extend({
         $preview.attr({
             target: data.isNewWindow ? '_blank' : '',
             href: data.url && data.url.length ? data.url : '#',
-            class: data.classes.replace(/pull-\w+/, '') + ' o_btn_preview',
+            class: data.classes.replace(/float-\w+/, '') + ' o_btn_preview',
         }).html((data.label && data.label.length) ? data.label : data.url);
     },
     /**
