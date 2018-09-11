@@ -6,9 +6,10 @@
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
         @param {boolean} [options.displayNoMatchFound]
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="mail.widget.Thread">
-        <t t-if="thread.hasMessages()">
+        <t t-if="thread.hasMessages({ 'domain': options.domain || [] })">
             <t t-call="mail.widget.Thread.Content"/>
         </t>
         <t t-elif="options.displayEmptyThread">
@@ -136,6 +137,7 @@
         @param {Object} options
         @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
           the thread messages (from top to bottom)
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
         @param {Object} ORDER
         @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
         @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
@@ -152,7 +154,7 @@
 
     -->
     <t t-name="mail.widget.Thread.Content">
-        <t t-set="messages" t-value="thread.getMessages()"/>
+        <t t-set="messages" t-value="thread.getMessages({ 'domain': options.domain || [] })"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
     </t>

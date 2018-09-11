@@ -137,6 +137,79 @@ QUnit.test('searchview options visibility', function (assert) {
     });
 });
 
+QUnit.test('searchview filter messages', function (assert) {
+    assert.expect(10);
+    var done = assert.async();
+
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>abc</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }, {
+        author_id: [6, 'Test User'],
+        body: '<p>def</p>',
+        id: 2,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }];
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            partner_id: 3
+        },
+        archs: {
+            'mail.message,false,search':
+                '<search>' +
+                    '<field name="body"/>' +
+                '</search>',
+        },
+    })
+    .then(function (discuss) {
+        assert.strictEqual(discuss.$('.o_thread_message').length, 2,
+            "there should be two messages in the inbox mailbox");
+        assert.strictEqual($('.o_searchview_input').length, 1,
+            "there should be a searchview on discuss");
+        assert.strictEqual($('.o_searchview_input').val(), '',
+            "the searchview should be empty initially");
+
+        // interact with searchview so that there is only once message
+        $('.o_searchview_input').val("ab").trigger('keyup');
+        $('.o_searchview').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+
+        assert.strictEqual($('.o_searchview_facet').length, 1,
+            "the searchview should have a facet");
+        assert.strictEqual($('.o_facet_values').text().trim(), 'ab',
+            "the facet should be a search on 'ab'");
+        assert.strictEqual(discuss.$('.o_thread_message').length, 1,
+            "there should be a single message after filter");
+
+        // interact with search view so that there are no matching messages
+        $('.o_facet_remove').click();
+        $('.o_searchview_input').val("abcd").trigger('keyup');
+        $('.o_searchview').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER }));
+
+        assert.strictEqual($('.o_searchview_facet').length, 1,
+            "the searchview should have a facet");
+        assert.strictEqual($('.o_facet_values').text().trim(), 'abcd',
+            "the facet should be a search on 'abcd'");
+        assert.strictEqual(discuss.$('.o_thread_message').length, 0,
+            "there should be no message after 2nd filter");
+        assert.strictEqual(discuss.$('.o_thread_title').text().trim(),
+            "No matches found",
+            "should display that there are no matching messages");
+
+        discuss.destroy();
+        done();
+    });
+});
+
 QUnit.test('unescape channel name in the sidebar', function (assert) {
     // When the user creates a channel, the channel's name is escaped, this in
     // order to prevent XSS attacks. However, the user should see visually the

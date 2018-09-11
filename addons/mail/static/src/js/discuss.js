@@ -432,14 +432,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 this.messagesSeparatorPosition = messageID || 'top';
             }
         }
+        var hasThreadMessages = this._thread.hasMessages({domain: this.domain});
         return {
             displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
             displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
+            domain: this.domain,
             messagesSeparatorPosition: this.messagesSeparatorPosition,
             squashCloseMessages: this._thread.getType() !== 'mailbox' &&
                                     !this._thread.isMassMailing(),
-            displayEmptyThread: !this._thread.hasMessages() && !this.domain.length,
-            displayNoMatchFound: !this._thread.hasMessages() && this.domain.length,
+            displayEmptyThread: !hasThreadMessages && !this.domain.length,
+            displayNoMatchFound: !hasThreadMessages && !!this.domain.length,
             displaySubjectOnMessages: this._thread.isMassMailing() ||
                 this._thread.getID() === 'mailbox_inbox' ||
                 this._thread.getID() === 'mailbox_moderation',
