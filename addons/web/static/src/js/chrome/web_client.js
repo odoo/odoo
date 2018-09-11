@@ -47,11 +47,9 @@ return AbstractWebClient.extend({
         // Start the menu once both systray and user menus are rendered
         // to prevent overflows while loading
         return $.when(systray_menu_loaded, user_menu_loaded).then(function() {
-            self.menu.start();
             self.bind_hashchange();
-            setTimeout(function () {
-                self.menu.$el.removeClass('d-none');
-            }, 200)
+            self.menu.$el.removeClass('d-none');
+            self.menu.start();
         });
 
     },
