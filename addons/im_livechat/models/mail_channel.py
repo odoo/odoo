@@ -104,7 +104,7 @@ class MailChannel(models.Model):
     @api.model
     def get_empty_list_help(self, help):
         if help:
-            return '<p">%s</p>' % (help)
+            return '<p>%s</p>' % (help)
         return super(MailChannel, self).get_empty_list_help(help)
 
     def _define_command_history(self):
