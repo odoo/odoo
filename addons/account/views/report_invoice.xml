@@ -19,28 +19,28 @@
                         <span t-field="o.number"/>
                     </h2>
 
-                    <div class="row col mt32 mb32">
-                        <div class="mr32" t-if="o.name" name="description">
+                    <div class="row mt32 mb32">
+                        <div class="mr32 col-3" t-if="o.name" name="description">
                             <strong>Description:</strong>
                             <p t-field="o.name"/>
                         </div>
-                        <div class="mr32" t-if="o.date_invoice" name="invoice_date">
+                        <div class="mr32 col-3" t-if="o.date_invoice" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div class="mr32" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
+                        <div class="mr32 col-3" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
-                        <div class="mr32" t-if="o.origin" name="origin">
+                        <div class="mr32 col-3" t-if="o.origin" name="origin">
                             <strong>Source:</strong>
                             <p t-field="o.origin"/>
                         </div>
-                        <div class="mr32" t-if="o.partner_id.ref" name="customer_code">
+                        <div class="mr32 col-3" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p t-field="o.partner_id.ref"/>
                         </div>
-                        <div name="reference" class="mr32" t-if="o.reference">
+                        <div name="reference" class="mr32 col-3" t-if="o.reference">
                             <strong>Reference:</strong>
                             <p t-field="o.reference"/>
                         </div>
@@ -52,15 +52,15 @@
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="6"/>
-                                <th class="text-left">Description</th>
-                                <th class="d-none text-left">Source Document</th>
-                                <th class="text-right">Quantity</th>
-                                <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
+                                <th class="text-left"><span>Description</span></th>
+                                <th class="d-none text-left"><span>Source Document</span></th>
+                                <th class="text-right"><span>Quantity</span></th>
+                                <th t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Unit Price</span></th>
                                 <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                     <span>Disc.(%)</span>
                                     <t t-set="colspan" t-value="colspan+1"/>
                                 </th>
-                                <th t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">Taxes</th>
+                                <th t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                 <th class="text-right">
                                     <span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
                                     <span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
