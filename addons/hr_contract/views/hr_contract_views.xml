@@ -60,9 +60,9 @@
                     <separator />
                     <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-                    <separator/>
                     <filter string="To Report to Social Secretariat" name="to_report" domain="[('reported_to_secretariat', '=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
