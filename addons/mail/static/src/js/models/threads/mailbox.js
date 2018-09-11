@@ -49,23 +49,23 @@ var Mailbox = SearchableThread.extend({
      * Override so that there are options to filter messages based on document
      * model and ID.
      *
+     * @override
      * @param {Object} [options]
      * @param {string} [options.documentModel] model of the document that the
      *   local messages of inbox must be linked to.
      * @param {integer} [options.documentID] ID of the document that the local
      *   messages of inbox must be linked to.
+     * @returns {mail.model.Message[]}
      */
     getMessages: function (options) {
         var messages = this._super.apply(this, arguments);
-        if (!options) {
-            return messages;
-        }
         if (options.documentModel && options.documentID) {
             return _.filter(messages, function (message) {
                 return message.getDocumentModel() === options.documentModel &&
                         message.getDocumentID() === options.documentID;
             });
         }
+        return messages;
     },
     /**
      * Get the mailbox counter of this mailbox.

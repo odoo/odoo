@@ -102,6 +102,8 @@ var ThreadWidget = Widget.extend({
      *      - ORDER.ASC: last message is at the bottom of the thread
      *      - ORDER.DESC: last message is at the top of the thread
      * @param {boolean} [options.displayLoadMore]
+     * @param {Array} [options.domain=[]] the domain for the messages in the
+     *    thread.
      * @param {boolean} [options.isCreateMode]
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
@@ -116,7 +118,7 @@ var ThreadWidget = Widget.extend({
         this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages());
+        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                  this._enabledOptions;
