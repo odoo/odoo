@@ -68,14 +68,15 @@
             <search string="Hr Attendance Search">
                 <field name="employee_id"/>
                 <field name="department_id"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <separator/>
                 <filter name="check_in_filter" string="Check In Date" date="check_in"/>
                 <filter string="No Check Out" name="nocheckout" domain="[('check_out', '=', False)]" />
-                <separator/>
-                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                 <group expand="0" string="Group By">
                     <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <separator/>
-                    <filter name="groupby_name" string="Date" context="{'group_by':'check_in'}"/>
+                    <filter name="groupby_name" string="Check In Date" context="{'group_by': 'check_in'}"/>
+                    <filter name="groupby_check_out" string="Check Out Date" context="{'group_by': 'check_out'}"/>
                 </group>
             </search>
         </field>
