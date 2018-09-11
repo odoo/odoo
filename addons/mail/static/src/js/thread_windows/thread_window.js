@@ -101,15 +101,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this._focusInput();
     },
     /**
-     * Get the ID of the thread window, which is equivalent to the ID of the
-     * thread related to this window
-     *
-     * @returns {integer|string}
-     */
-    getID: function () {
-        return this._getThreadID();
-    },
-    /**
      * Overrides so that if this thread window is not linked to any thread
      * (= "blank" thread window), displays "New message" as its title.
      *

@@ -131,6 +131,15 @@ var AbstractThreadWindow = Widget.extend({
      */
     close: function () {},
     /**
+     * Get the ID of the thread window, which is equivalent to the ID of the
+     * thread related to this window
+     *
+     * @returns {integer|string}
+     */
+    getID: function () {
+        return this._getThreadID();
+    },
+    /**
      * Get the status of the thread, such as the im status of a DM chat
      * ('online', 'offline', etc.). If this window has no thread, returns
      * `undefined`.
