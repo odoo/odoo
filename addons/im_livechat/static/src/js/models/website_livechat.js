@@ -17,7 +17,6 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @private
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} params.data.anonymous_name
      * @param {boolean} [params.data.folded] states whether the livechat is
      *   folded or not. It is considered only if this is defined and it is a
      *   boolean.
