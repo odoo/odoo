@@ -30,7 +30,7 @@ WebsiteNewMenu.include({
         wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: "Product Name",
+            input: _t("Name"),
         }).then(function (name) {
             self._rpc({
                 route: '/shop/add_product',
