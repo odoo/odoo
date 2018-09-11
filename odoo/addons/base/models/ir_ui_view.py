@@ -1044,17 +1044,11 @@ actual arch.
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
 
-        is_base_model = self.env.context.get('base_model_name', model) == model
-
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.env[node.getchildren()[0].get('object')]
                 node_fields = node_model.fields_get(None)
                 fields.update(node_fields)
-                if (not node.get("create") and
-                        not node_model.check_access_rights('create', raise_exception=False) or
-                        not self._context.get("create", True) and is_base_model):
-                    node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.env[node.getchildren()[1].get('object')].fields_get(None)
                 fields.update(arrow_fields)
@@ -1069,23 +1063,7 @@ actual arch.
             attrs_fields = self.get_attrs_field_names(node, Model, editable)
 
         fields_def = self.postprocess(model, node, view_id, False, fields)
-        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
-            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
-                if (not node.get(action) and
-                        not Model.check_access_rights(operation, raise_exception=False) or
-                        not self._context.get(action, True) and is_base_model):
-                    node.set(action, 'false')
-        if node.tag in ('kanban',):
-            group_by_name = node.get('default_group_by')
-            if group_by_name in Model._fields:
-                group_by_field = Model._fields[group_by_name]
-                if group_by_field.type == 'many2one':
-                    group_by_model = Model.env[group_by_field.comodel_name]
-                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
-                        if (not node.get(action) and
-                                not group_by_model.check_access_rights(operation, raise_exception=False) or
-                                not self._context.get(action, True) and is_base_model):
-                            node.set(action, 'false')
+        self._postprocess_access_rights(model, node)
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         for k in list(fields):
@@ -1112,6 +1090,42 @@ actual arch.
             self.raise_view_error("\n".join(msg_lines), view_id)
 
         return arch, fields
+
+    def _postprocess_access_rights(self, model, node):
+        """ Compute and set on node access rights based on view type. Specific
+        views can add additional specific rights like creating columns for
+        many2one-based grouping views. """
+        Model = self.env[model]
+        is_base_model = self.env.context.get('base_model_name', model) == model
+
+        if node.tag == 'diagram':
+            if node.getchildren()[0].tag == 'node':
+                node_model = self.env[node.getchildren()[0].get('object')]
+                if (not node.get("create") and
+                        not node_model.check_access_rights('create', raise_exception=False) or
+                        not self._context.get("create", True) and is_base_model):
+                    node.set("create", 'false')
+
+        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if (not node.get(action) and
+                        not Model.check_access_rights(operation, raise_exception=False) or
+                        not self._context.get(action, True) and is_base_model):
+                    node.set(action, 'false')
+
+        if node.tag in ('kanban',):
+            group_by_name = node.get('default_group_by')
+            if group_by_name in Model._fields:
+                group_by_field = Model._fields[group_by_name]
+                if group_by_field.type == 'many2one':
+                    group_by_model = Model.env[group_by_field.comodel_name]
+                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                        if (not node.get(action) and
+                                not group_by_model.check_access_rights(operation, raise_exception=False) or
+                                not self._context.get(action, True) and is_base_model):
+                            node.set(action, 'false')
+
+        return node
 
     #------------------------------------------------------
     # QWeb template views
