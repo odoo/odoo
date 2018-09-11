@@ -60,16 +60,27 @@ class WebsiteSaleDelivery(WebsiteSale):
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
         currency = order.currency_id
+        result = {}
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id)
-            return {'status': order.delivery_rating_success,
-                    'error_message': order.delivery_message,
-                    'carrier_id': carrier_id,
-                    'new_amount_delivery': self._format_amount(order.delivery_price, currency),
-                    'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
-                    'new_amount_tax': self._format_amount(order.amount_tax, currency),
-                    'new_amount_total': self._format_amount(order.amount_total, currency),
+            result = {
+                'status': order.delivery_rating_success,
+                'error_message': order.delivery_message,
+                'carrier_id': carrier_id,
+                'new_amount_delivery': self._format_amount(order.delivery_price, currency),
+                'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
+                'new_amount_tax': self._format_amount(order.amount_tax, currency),
+                'new_amount_total': self._format_amount(order.amount_total, currency),
             }
+        response = super(WebsiteSaleDelivery, self).update_eshop_carrier(**post)
+        if not response:
+            response = result
+        else:
+            for key, value in result.items():
+                if not response.get(key):
+                    response[key] = value
+
+        return response
 
     def _format_amount(self, amount, currency):
         fmt = "%.{0}f".format(currency.decimal_places)

@@ -14,6 +14,9 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         var $amount_total = $('#order_total span.oe_currency_value');
         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+        var $freeShippingLine = $('*[data-freeshipping="True"]');
+        var $order_discounted = $('#order_discounted span.oe_currency_value');
+
         if (result.status === true) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
@@ -23,6 +26,12 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $carrier_badge.removeClass('hidden');
             $compute_badge.addClass('hidden');
             $pay_button.prop('disabled', false);
+            if ($freeShippingLine && result.new_amount_free_shipping) {
+                $freeShippingLine.find('span.oe_currency_value').text(result.new_amount_free_shipping);
+            }
+            if ($order_discounted && result.new_amount_order_discounted) {
+                $order_discounted.text(result.new_amount_order_discounted);
+            }
         }
         else {
             console.error(result.error_message);

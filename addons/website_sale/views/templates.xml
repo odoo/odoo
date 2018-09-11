@@ -1277,7 +1277,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr t-foreach="website_sale_order.website_order_line" t-as="line">
+                                        <t t-foreach="website_sale_order.website_order_line" t-as="line">
+                                        <tr name="line_row">
                                             <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
                                             <td class='td-img' t-if="line.product_id.product_tmpl_id">
                                                 <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
@@ -1302,6 +1303,7 @@
                                               <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                                             </td>
                                         </tr>
+                                        </t>
                                     </tbody>
                                 </table>
                             </div>
