@@ -838,6 +838,7 @@ var StatementModel = BasicModel.extend({
 
                             prop.computed_with_tax = tax.price_include
                             prop.tax_amount = tax.amount
+                            prop.tax_exigible = tax.tax_exigibility === 'on_payment' ? true : undefined
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                             prop.invalid = !self._isValid(prop);
@@ -1132,6 +1133,7 @@ var StatementModel = BasicModel.extend({
             name : prop.label,
             debit : amount > 0 ? amount : 0,
             credit : amount < 0 ? -amount : 0,
+            tax_exigible: prop.tax_exigible,
             // This one isn't usefull for the server,
             // But since we need to change the amount (and thus its semantics) into base_amount
             // It might be useful to have a trace in the RPC for debugging purposes
