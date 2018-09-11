@@ -9,8 +9,8 @@ class AccountChartTemplate(models.Model):
     def _prepare_transfer_account_for_direct_creation(self, name, company):
         res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
         xml_id = self.env.ref('l10n_de.tag_de_asset_bs_B_III_2').id
-        existing_tags = [x[-1:] for x in res.get('tag_ids', [])]
-        res['tag_ids'] = [(6, 0, existing_tags + [xml_id])]
+        res.setdefault('tag_ids', [])
+        res['tag_ids'].append((4, xml_id))
         return res
 
     # Write paperformat and report template used on company
