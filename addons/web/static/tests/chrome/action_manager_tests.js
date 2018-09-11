@@ -2598,21 +2598,21 @@ QUnit.module('ActionManager', {
 
         assert.ok($('.o_control_panel  .fa-bar-chart-o').hasClass('active'),
             "bar chart button is active");
-        assert.ok(!$('.o_control_panel  .fa-line-chart').hasClass('active'),
+        assert.ok(!$('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is not active");
 
         // display line chart
-        $('.o_control_panel  .fa-line-chart').click();
-        assert.ok($('.o_control_panel  .fa-line-chart').hasClass('active'),
+        $('.o_control_panel  .fa-area-chart').click();
+        assert.ok($('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is now active");
 
         // switch to kanban and back to graph view
         $('.o_control_panel .o_cp_switch_kanban').click();
-        assert.strictEqual($('.o_control_panel  .fa-line-chart').length, 0,
+        assert.strictEqual($('.o_control_panel  .fa-area-chart').length, 0,
             "graph buttons are no longer in control panel");
 
         $('.o_control_panel .o_cp_switch_graph').click();
-        assert.ok($('.o_control_panel  .fa-line-chart').hasClass('active'),
+        assert.ok($('.o_control_panel  .fa-area-chart').hasClass('active'),
             "line chart button is still active");
         actionManager.destroy();
     });
