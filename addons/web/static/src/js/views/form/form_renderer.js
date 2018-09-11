@@ -108,10 +108,10 @@ var FormRenderer = BasicRenderer.extend({
     /*
      * Updates translation alert fields for the current state and display updated fields
      *
-     *  @param {Object[]} alertFields field list
+     *  @param {Object} alertFields
      */
     updateAlertFields: function (alertFields) {
-        this.alertFields[this.state.res_id] = _.uniq(_.union(this.alertFields[this.state.res_id] , alertFields), false, function(item){ return item.string; });
+        this.alertFields[this.state.res_id] = _.extend(this.alertFields[this.state.res_id] || {}, alertFields);
         this.displayTranslationAlert();
     },
     /**
@@ -985,6 +985,12 @@ var FormRenderer = BasicRenderer.extend({
         event.preventDefault();
         this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
     },
+    /**
+     * remove alert fields of record from alertFields object
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
     _onTranslateNotificationClose: function(ev) {
         delete this.alertFields[this.state.res_id];
     },
