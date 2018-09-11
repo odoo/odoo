@@ -37,12 +37,14 @@
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
                     <li t-if="editable" class="dropdown" id="content-menu">
-                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Pages</a>
+                        <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Content</a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
                             <a role="menuitem" href="/website/pages" title="Manage Your Website Pages" class="dropdown-item">Manage Pages</a>
                             <div t-if="deletable" role="separator" class="dropdown-divider"/>
                             <a role="menuitem" href="#" data-action="page_properties" class="dropdown-item" t-if="deletable">Page Properties</a>
+                            <a role="menuitem" href="#" data-action="page_clone" class="dropdown-item" t-if="deletable">Clone this page</a>
+                            <a role="menuitem" href="#" data-action="page_delete" class="dropdown-item" t-if="deletable">Delete this page</a>
                         </div>
                     </li>
                     <!-- Customize -->
@@ -59,7 +61,8 @@
                     <li class="dropdown" id="promote-menu">
                         <a class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" href="#">Promote</a>
                         <div class="dropdown-menu oe_promote_menu" role="menu">
-                            <a role="menuitem" data-action="promote-current-page" href="#" title="Promote page on the web" class="dropdown-item">Optimize SEO</a>
+                            <a role="menuitem" data-action="optimize-seo" href="#" title="Optimize the referencing in search engines" class="dropdown-item">Optimize SEO</a>
+                            <a role="menuitem" data-action="social-share" href="#" title="Select an image to use in social share" class="dropdown-item">Social Share</a>
                         </div>
                     </li>
                 </ul>

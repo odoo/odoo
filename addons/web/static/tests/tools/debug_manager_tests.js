@@ -56,6 +56,7 @@ QUnit.module('DebugManager', {}, function () {
             }],
         };
         var view = {
+            viewName: "List",
             viewType: "list",
         };
         debugManager.update('action', action, view);
