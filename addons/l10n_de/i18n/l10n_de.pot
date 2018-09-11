@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:19+0000\n"
-"PO-Revision-Date: 2015-09-18 08:19+0000\n"
+"POT-Creation-Date: 2018-09-17 13:45+0000\n"
+"PO-Revision-Date: 2018-09-17 13:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,727 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_de
-#: model:ir.ui.menu,name:l10n_de.account_reports_de_statements_menu
-msgid "German Statements"
+#: model:ir.model.fields,help:l10n_de.field_account_tax__l10n_de_datev_code
+msgid "2 digits code use by Datev"
 msgstr ""
 
 #. module: l10n_de
-#: model:account.account.type,name:l10n_de.account_type_other
-msgid "Jahresabschlusskonten u. Statistik"
+#: code:addons/l10n_de/models/datev.py:31
+#, python-format
+msgid "Account %s does not authorize to have tax %s specified on the line.                                 Change the tax used in this invoice or remove all taxes from the account"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_bw
+msgid "Baden-Würtenberg"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_by
+msgid "Bayern"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_be
+msgid "Berlin"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_I_1
+msgid "Bilanz-Aktiva: A I 1-Selbst geschaffene gewerbliche Schutzrechte und ähnliche Rechte und Werte"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_I_2
+msgid "Bilanz-Aktiva: A I 2-Konzessionen, Lizenzen und ähnliche Rechte und Werte"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_I_3
+msgid "Bilanz-Aktiva: A I 3-Geschäfts- oder Firmenwert"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_I_4
+msgid "Bilanz-Aktiva: A I 4-geleistete Anzahlungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_II_1
+msgid "Bilanz-Aktiva: A II 1-Grundstücke. grundstücksgleiche Rechte und Bauten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_II_2
+msgid "Bilanz-Aktiva: A II 2-Technische  Anlagen und Maschinen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_II_3
+msgid "Bilanz-Aktiva: A II 3-Andere Anlagen. Betriebs- und Geschäftsausstattung"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_II_4
+msgid "Bilanz-Aktiva: A II 4-Geleistete Anzahlungen und Anlagen im Bau"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_1
+msgid "Bilanz-Aktiva: A III 1-Anteile an verbundenen Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_2
+msgid "Bilanz-Aktiva: A III 2-Ausleihungen an verbundene Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_3
+msgid "Bilanz-Aktiva: A III 3-Beteiligungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_4
+msgid "Bilanz-Aktiva: A III 4-Ausleihungen an Unternehmen, mit denen ein Beteiligungsverhältnis besteht"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_5
+msgid "Bilanz-Aktiva: A III 5-Wertpapiere des Anlagevermögens"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_A_III_6
+msgid "Bilanz-Aktiva: A III 6-sonstige Ausleihungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_I_1
+msgid "Bilanz-Aktiva: B I 1-Roh-, Hilfs- und Betriebsstoffe"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_I_2
+msgid "Bilanz-Aktiva: B I 2-Unfertige Erzeugnisse, unfertige Leistungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_I_3
+msgid "Bilanz-Aktiva: B I 3-Fertige Erzeugnisse und Waren"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_I_4
+msgid "Bilanz-Aktiva: B I 4-Geleistete Anzahlungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_II_1
+msgid "Bilanz-Aktiva: B II 1-Forderungen aus Lieferungen und Leistungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_II_2
+msgid "Bilanz-Aktiva: B II 2-Forderungen gegen verbundene Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_II_3
+msgid "Bilanz-Aktiva: B II 3-Forderungen gegen Unternehmen, mit denen ein Beteiligungsverhältnis besteht"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_II_4
+msgid "Bilanz-Aktiva: B II 4-Sonstige Vermögensgegenstände"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_III_1
+msgid "Bilanz-Aktiva: B III 1-Anteile an verbundenen Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_III_2
+msgid "Bilanz-Aktiva: B III 2-sonstige Wertpapiere"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_B_IV
+msgid "Bilanz-Aktiva: B IV-Kassenbestand, Bundesbankguthaben, Guthaben bei Kreditinstituten und Schecks"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_C
+msgid "Bilanz-Aktiva: C-Rechnungsabgrenzungsposten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_D
+msgid "Bilanz-Aktiva: D-Aktive latente Steuern"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_asset_bs_E
+msgid "Bilanz-Aktiva: E-Aktiver Unterschiedsbetrag aus der Vermögensverrechnung"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_I
+msgid "Bilanz-Passiva: A I-Gezeichnetes Kapital"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_II
+msgid "Bilanz-Passiva: A II-Kapitalrücklage"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_III_1
+msgid "Bilanz-Passiva: A III 1-Gesetzliche Rücklage"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_III_2
+msgid "Bilanz-Passiva: A III 2-Rücklage für Anteile an einem herrschenden oder mehrheitlich beteiligten Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_III_3
+msgid "Bilanz-Passiva: A III 3-Satzungsmäßige Rücklagen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_III_4
+msgid "Bilanz-Passiva: A III 4-Andere Gewinnrücklagen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_IV
+msgid "Bilanz-Passiva: A IV-Gewinnvortrag/Verlustvortrag"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_A_V
+msgid "Bilanz-Passiva: A V-Jahresüberschuß/Jahresfehlbetrag"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_B
+msgid "Bilanz-Passiva: B Sonderposten mit Rücklageanteil"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_C_1
+msgid "Bilanz-Passiva: C 1-Rückstellungen für Pensionen und ähnliche Verpflichtungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_C_2
+msgid "Bilanz-Passiva: C 2-Steuerrückstellungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_C_3
+msgid "Bilanz-Passiva: C 3-Sonstige Rückstellungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_1
+msgid "Bilanz-Passiva: D 1-Anleihen, davon konvertibeln"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_2
+msgid "Bilanz-Passiva: D 2-Verbindlichkeiten gegenüber Kreditinstituten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_3
+msgid "Bilanz-Passiva: D 3-Erhaltene Anzahlungen auf Bestellungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_4
+msgid "Bilanz-Passiva: D 4-Verbindlichkeiten aus Lieferungen und Leistungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_5
+msgid "Bilanz-Passiva: D 5-Verbindlichkeiten aus der Annahme gezogener Wechsel und der Ausstellung eigener Wechsel"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_6
+msgid "Bilanz-Passiva: D 6-Verbindlichkeiten gegenüber verbundenen Unternehmen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_7
+msgid "Bilanz-Passiva: D 7-Verbindlichkeiten gegenüber Unternehmen, mit denen ein Beteiligungsverhältnis besteht"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_D_8
+msgid "Bilanz-Passiva: D 8-Sonstige Verbindlichkeiten, davon aus Steuern, davon im Rahmen der sozialen Sicherheit"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_E
+msgid "Bilanz-Passiva: E-Rechnungsabgrenzungsposten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_liabilities_bs_F
+msgid "Bilanz-Passiva: F-Passive latente Steuern"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_bb
+msgid "Brandenburg"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_hb
+msgid "Bremen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_intracom_ABC
+msgid "Dreiecksgeschäfte"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_01
+msgid "G&V: 1-Umsatzerlöse"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_10
+msgid "G&V: 10-Erträge aus anderen Wertpapieren und Ausleihungen des Finanzanlagevermögens"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_11
+msgid "G&V: 11-Sonstige Zinsen und ähnliche Erträge"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_12
+msgid "G&V: 12-Abschreibungen auf Finanzanlagen und auf Wertpapiere des Umlaufvermögens"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_13
+msgid "G&V: 13-Zinsen und ähnliche Aufwendungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_14
+msgid "G&V: 14-Steuern vom Einkommen und Ertrag"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_15
+msgid "G&V: 15-Sonstige Steuern"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_02
+msgid "G&V: 2-Erhöhung oder Verminderung des Bestands an fertigen und unfertigen Erzeugnissen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_03
+msgid "G&V: 3-Andere aktivierte Eigenleistungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_04
+msgid "G&V: 4-Sonstige betrieliche Erträge"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_05
+msgid "G&V: 5-Materialaufwand"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_06
+msgid "G&V: 6-Personalaufwand"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_07
+msgid "G&V: 7-Abschreibungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_1
+msgid "G&V: 8.1-Raumkosten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_2
+msgid "G&V: 8.2-Versicherungen, Beiträge und Abgaben"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_3
+msgid "G&V: 8.3-Reparaturen und Instandhaltungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_4
+msgid "G&V: 8.4-Fahrzeugkosten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_5
+msgid "G&V: 8.5-Werbe- und Reisekosten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_6
+msgid "G&V: 8.6-Kosten der Warenabgabe"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_08_7
+msgid "G&V: 8.7-verschiedene betriebliche Kosten"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_pl_09
+msgid "G&V: 9-Erträge aus Beteiligungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.ui.menu,name:l10n_de.account_reports_de_statements_menu
+msgid "Germany"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_hh
+msgid "Hamburg"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_he
+msgid "Hessen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_intracom_community_delivery
+msgid "Innergemeinschaftliche Lieferung"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model.fields,field_description:l10n_de.field_account_tax__l10n_de_datev_code
+#: model:ir.model.fields,field_description:l10n_de.field_account_tax_template__l10n_de_datev_code
+msgid "L10N De Datev Code"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_mv
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_ni
+msgid "Niedersachsen"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_nw
+msgid "Nordrhein-Westfalen"
+msgstr ""
+
+#. module: l10n_de
+#: model_terms:ir.ui.view,arch_db:l10n_de.external_layout_din5008
+msgid "Page:\n"
+"                            <span class=\"page\"/>\n"
+"                            of\n"
+"                            <span class=\"topage\"/>"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_rp
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_sl
+msgid "Saarland"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_sn
+msgid "Sachsen"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_st
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_sh
+msgid "Schleswig-Holstein"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_intracom_community_supplies
+msgid "Sonstige Leistungen"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr ""
+
+#. module: l10n_de
+#: model:ir.model,name:l10n_de.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr ""
+
+#. module: l10n_de
+#: model:res.country.state,name:l10n_de.state_de_th
+msgid "Thüringen"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_21
+msgid "Ust-VA KZ 21"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_35
+msgid "Ust-VA KZ 35"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_36
+msgid "Ust-VA KZ 36"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_39
+msgid "Ust-VA KZ 39"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_41
+msgid "Ust-VA KZ 41"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_42
+msgid "Ust-VA KZ 42"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_43
+msgid "Ust-VA KZ 43"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_44
+msgid "Ust-VA KZ 44"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_45
+msgid "Ust-VA KZ 45"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_46
+msgid "Ust-VA KZ 46"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_47
+msgid "Ust-VA KZ 47"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_48
+msgid "Ust-VA KZ 48"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_49
+msgid "Ust-VA KZ 49"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_52
+msgid "Ust-VA KZ 52"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_53
+msgid "Ust-VA KZ 53"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_59
+msgid "Ust-VA KZ 59"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_60
+msgid "Ust-VA KZ 60"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_61
+msgid "Ust-VA KZ 61"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_62
+msgid "Ust-VA KZ 62"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_63
+msgid "Ust-VA KZ 63"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_64
+msgid "Ust-VA KZ 64"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_65
+msgid "Ust-VA KZ 65"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_66
+msgid "Ust-VA KZ 66"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_67
+msgid "Ust-VA KZ 67"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_68
+msgid "Ust-VA KZ 68"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_69
+msgid "Ust-VA KZ 69"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_73
+msgid "Ust-VA KZ 73"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_74
+msgid "Ust-VA KZ 74"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_76
+msgid "Ust-VA KZ 76"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_77
+msgid "Ust-VA KZ 77"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_78
+msgid "Ust-VA KZ 78"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_79
+msgid "Ust-VA KZ 79"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_80
+msgid "Ust-VA KZ 80"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_81
+msgid "Ust-VA KZ 81"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_83
+msgid "Ust-VA KZ 83"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_84
+msgid "Ust-VA KZ 84"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_85
+msgid "Ust-VA KZ 85"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_86
+msgid "Ust-VA KZ 86"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_89
+msgid "Ust-VA KZ 89"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_91
+msgid "Ust-VA KZ 91"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_93
+msgid "Ust-VA KZ 93"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_94
+msgid "Ust-VA KZ 94"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_95
+msgid "Ust-VA KZ 95"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_96
+msgid "Ust-VA KZ 96"
+msgstr ""
+
+#. module: l10n_de
+#: model:account.account.tag,name:l10n_de.tag_de_98
+msgid "Ust-VA KZ 98"
 msgstr ""
 
