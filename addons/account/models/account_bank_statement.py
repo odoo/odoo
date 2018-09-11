@@ -533,6 +533,13 @@ class AccountBankStatementLine(models.Model):
                 data['open_balance_account_id'] = self.partner_id.property_account_receivable_id.id
             else:
                 data['open_balance_account_id'] = self.partner_id.property_account_payable_id.id
+        else:
+            property_account_receivable_id = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+            property_account_payable_id = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+            if amount > 0 and property_account_receivable_id:
+                data['open_balance_account_id'] = self.env['ir.property'].get('property_account_receivable_id', 'res.partner').id
+            elif property_account_payable_id:
+                data['open_balance_account_id'] = self.env['ir.property'].get('property_account_payable_id', 'res.partner').id
 
         return data
 
