@@ -27,7 +27,7 @@ class IrTranslation(models.Model):
         """ Convert the HTML fragment ``value`` to XML if necessary, and write
         it as the value of translation ``self``.
         """
-        assert len(self) == 1 and self.type == 'model'
+        assert len(self) == 1 and self.type == 'model_terms'
         mname, fname = self.name.split(',')
         field = self.env[mname]._fields[fname]
         if field.translate == xml_translate:
