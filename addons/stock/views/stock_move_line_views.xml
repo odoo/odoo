@@ -78,6 +78,7 @@
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by':'state'}"/>
+                    <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
                 </group>
             </search>
         </field>
@@ -118,7 +119,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="context">{'search_default_done': 1}</field>
+            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_empty_folder">
                 There's no product move yet
