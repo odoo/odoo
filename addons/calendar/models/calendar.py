@@ -630,6 +630,8 @@ class Meeting(models.Model):
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
                     recurring_date = todate(meeting.recurrent_id_date)
+                if date_field == "stop":
+                    recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
