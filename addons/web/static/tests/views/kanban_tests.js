@@ -1241,7 +1241,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(33);
+        assert.expect(36);
 
         testUtils.patch(KanbanRenderer, {
             _renderGrouped: function () {
@@ -1858,6 +1858,7 @@ QUnit.module('Views', {
 
     QUnit.test('resequence columns in grouped by m2o', function (assert) {
         assert.expect(7);
+        this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
 
         var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         var kanban = createView({
@@ -1871,12 +1872,6 @@ QUnit.module('Views', {
                         '</t></templates>' +
                     '</kanban>',
             groupBy: ['product_id'],
-            mockRPC: function (route) {
-                if (route === '/web/dataset/resequence') {
-                    return $.when();
-                }
-                return this._super.apply(this, arguments);
-            },
             intercepts: {
                 env_updated: function (event) {
                     assert.deepEqual(event.data.ids, envIDs,
@@ -1900,7 +1895,7 @@ QUnit.module('Views', {
         kanban.update({}, {reload: false}); // re-render without reloading
 
         assert.strictEqual(kanban.$('.o_kanban_group:first').data('id'), 5,
-            "first column should be id 5 before resequencing");
+            "first column should be id 5 after resequencing");
 
         kanban.destroy();
     });
