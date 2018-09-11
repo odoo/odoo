@@ -20,7 +20,6 @@ $o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
 // Page custom bg (eg. 'Invoice')
 $o-portal-bg: true; // Enable/Disable page custom bg.
 $o-portal-bg-color: desaturate($gray-200, 100%);
-$o-portal-bg-text-color: $body-color;
 
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
@@ -329,11 +328,9 @@ img.o_we_custom_image {
 // don't want to force the design because of themes.
 @if ($o-portal-bg) {
     #wrapwrap.o_portal_bg_dark {
-        background-color: $o-portal-bg-color;
-        color: $o-portal-bg-text-color;
+        @include o-bg-color($o-portal-bg-color);
     }
 }
-
 
 .o_portal {
     .breadcrumb {
