@@ -6,13 +6,13 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='month']" position="after">
+                <xpath expr="//filter[@name='month']" position="before">
                     <field name="timesheet_invoice_type"/>
                     <field name="timesheet_invoice_id"/>
-                    <separator/>
                     <filter name="billable_time" string="Billable Hours" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
                     <filter name="billable_fixed" string="Fixed Price Projects" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
                     <filter name="non_billable" string="Non Billable Hours" domain="[('timesheet_invoice_type', '=', 'non_billable')]"/>
+                    <separator/>
                 </xpath>
             </field>
     </record>
