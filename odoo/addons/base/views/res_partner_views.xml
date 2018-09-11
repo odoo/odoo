@@ -444,6 +444,7 @@
                 <search string="Search Partner">
                    <field name="name"
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
+                   <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
                    <filter name="filter_my_partners" help="My Contacts"
                            domain="[('user_id','=',uid)]"/>
                    <separator/>
@@ -456,7 +457,7 @@
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
-                   <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
+                   <field name="phone" filter_domain="['|',('phone','ilike',self),('mobile','=',self)]"/>
                    <group expand="0" name="group_by" string="Group By">
                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>
