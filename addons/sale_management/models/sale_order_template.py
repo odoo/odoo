@@ -30,6 +30,15 @@ class SaleOrderTemplate(models.Model):
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
     active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
 
+    @api.multi
+    def write(self, vals):
+        if 'active' in vals and not vals.get('active'):
+            template_id = self.env['ir.default'].get('sale.order', 'sale_order_template_id')
+            for template in self:
+                if template_id and template_id == template.id:
+                    raise UserError('Before archiving "%s" please select another default template in the settings.' % template.name)
+        return super(SaleOrderTemplate, self).write(vals)
+
 
 class SaleOrderTemplateLine(models.Model):
     _name = "sale.order.template.line"
