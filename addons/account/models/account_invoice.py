@@ -548,7 +548,11 @@ class AccountInvoice(models.Model):
         else:
             pterm = self.payment_term_id
             pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
-            self.date_due = max(line[0] for line in pterm_list)[0]
+            #Siguiente linea fue modificado por trescloud.
+            res = max(line[0] for line in pterm_list)
+            if not isinstance(res, (str)):
+                res = res[0]
+            self.date_due = res
 
     @api.multi
     def action_invoice_draft(self):
@@ -849,6 +853,8 @@ class AccountInvoice(models.Model):
                                                                            active_model='account.invoice',
                                                                            active_id=self.id).compute(total,
                                                                            self.date_invoice)[0][0]
+            if type(totlines) is tuple:
+                totlines = [totlines]
             res_amount_currency = total_currency
             ctx['date'] = self.date_invoice
             count = 0

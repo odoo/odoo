@@ -161,8 +161,16 @@ def redirect_with_hash(url, code=303):
     # redirect. And even if IE10 pretends to support it, it still fails
     # inexplicably in case of multiple redirects (and we do have some).
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
-    if request.httprequest.user_agent.browser in ('firefox',):
+    
+    
+    #Modificado por TRESCLOUD, conforme el test (y para el SEO con Google), chrome cumple al 100% con redireccion
+    #if request.httprequest.user_agent.browser in ('firefox'):
+    if request.httprequest.user_agent.browser in ('firefox','chrome'):
         return werkzeug.utils.redirect(url, code)
+    elif code == 301:
+        #en el caso de codigo 301, dado que todos los navegaadores principales lo manejan
+        return werkzeug.utils.redirect(url, code)
+    
     url = url.strip()
     if urlparse.urlparse(url, scheme='http').scheme not in ('http', 'https'):
         url = 'http://' + url
