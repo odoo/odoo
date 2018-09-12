@@ -55,8 +55,7 @@ class WebsiteSaleDelivery(WebsiteSale):
         values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
         return values
 
-    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
-    def update_eshop_carrier(self, **post):
+    def _update_website_sale_delivery(self, **post):
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
         currency = order.currency_id
@@ -70,10 +69,4 @@ class WebsiteSaleDelivery(WebsiteSale):
                     'new_amount_tax': self._format_amount(order.amount_tax, currency),
                     'new_amount_total': self._format_amount(order.amount_total, currency),
             }
-
-    def _format_amount(self, amount, currency):
-        fmt = "%.{0}f".format(currency.decimal_places)
-        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
-
-        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
-            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+        return {}
