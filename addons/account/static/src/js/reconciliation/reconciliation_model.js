@@ -1199,7 +1199,15 @@ var ManualModel = StatementModel.extend({
                 self.accounts = _.object(self.account_ids, _.pluck(accounts, 'code'));
             });
 
-        return def_account.then(function () {
+        var def_reconcileModel = this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+            })
+            .then(function (reconcileModels) {
+                self.reconcileModels = reconcileModels;
+            });
+
+        return $.when(def_reconcileModel, def_account).then(function () {
             switch(context.mode) {
                 case 'customers':
                 case 'suppliers':
@@ -1400,7 +1408,7 @@ var ManualModel = StatementModel.extend({
             offset: 0,
             limitMoveLines: this.limitMoveLines,
             filter: "",
-            reconcileModels: [],
+            reconcileModels: this.reconcileModels,
             account_id: this._formatNameGet([data.account_id, data.account_name]),
             st_line: data,
             visible: true
