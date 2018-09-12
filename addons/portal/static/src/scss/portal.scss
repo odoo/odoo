@@ -473,10 +473,22 @@ form label {
 }
 
 .o_portal_sidebar {
-    .o_portal_contact_block {
-        @include media-breakpoint-down(md) {
+    #sidebar_content.card {
+        border-left: 0;
+        border-bottom: 0;
+
+        > div.card-body {
             border-left: $border-width solid $border-color;
-            border-bottom: 0;
+        }
+
+        > ul > li {
+            border-left: $border-width solid $border-color;
+            margin-bottom: -1px;
+        }
+
+        > div.card-footer {
+            border-left: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
         }
     }
 

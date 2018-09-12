@@ -96,7 +96,7 @@
 
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <li class="list-group-item o_payment_button flex-grow-1 flex-sm-grow-0">
+                            <li class="list-group-item flex-grow-1">
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
                                     <div class="btn-group  flex-grow-1 mr-1 mb-1">
                                         <a class="btn btn-secondary btn-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
@@ -106,8 +106,8 @@
                                     </div>
                                 </div>
                             </li>
-                            <li t-if="invoice.user_id" class="list-group-item flex-grow-1 o_portal_contact_block">
-                                <div class="small mb-1"><strong class="text-muted">Your Contact:</strong></div>
+                            <li t-if="invoice.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Your Contact</strong></div>
                                 <div class="row">
                                     <div class="col flex-grow-0 pr-2">
                                         <img t-if="invoice.user_id.image" class="rounded-circle mt-1 o_portal_contact_img" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>

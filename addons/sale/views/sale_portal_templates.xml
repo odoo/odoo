@@ -150,7 +150,7 @@
                                 </div>
                             </li>
 
-                            <li class="navspy list-group-item pl-0 d-none d-lg-block" t-ignore="true" role="complementary">
+                            <li class="navspy list-group-item pl-0 d-none d-lg-block flex-grow-1" t-ignore="true" role="complementary">
                                 <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
                             </li>
 
@@ -163,7 +163,7 @@
                                         <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
                                 </li>
-                                <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item">
+                                <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item flex-grow-1">
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
@@ -181,8 +181,8 @@
                                 </li>
                             </t>
 
-                            <li t-if="sale_order.user_id" class="list-group-item flex-grow-1 o_portal_contact_block">
-                                <div class="small mb-1"><strong class="text-muted">Your Contact:</strong></div>
+                            <li t-if="sale_order.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Your Contact</strong></div>
                                 <div class="row flex-nowrap">
                                     <div class="col flex-grow-0 pr-2">
                                         <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image" t-attf-src="data:image/png;base64,#{sale_order.user_id.image}" alt="Contact"/>
