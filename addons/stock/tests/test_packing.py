@@ -26,23 +26,24 @@ class TestPacking(TransactionCase):
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
+        vals = {
             'name': 'Incoming picking',
             'partner_id': self.ref('base.res_partner_2'),
             'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
             'move_lines': [(0, 0, {
+                'name': '/',
                 'product_id': product1.id,
+                'product_uom': product1.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
-        })
-        pick1 = self.env['stock.picking'].new(default_get_vals)
+        }
+        pick1 = self.env['stock.picking'].create(vals)
         pick1.onchange_picking_type()
         pick1.move_lines.onchange_product_id()
-        vals = pick1._convert_to_write(pick1._cache)
-        pick1 = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking
         pick1.action_confirm()
@@ -106,23 +107,24 @@ class TestPacking(TransactionCase):
         self.assertTrue(len(pick1.move_lines) == 1)
 
         # Make a delivery order of 300 pieces to the customer
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
+        vals = {
             'name': 'outgoing picking',
             'partner_id': self.ref('base.res_partner_4'),
             'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_lines': [(0, 0, {
+                'name': '/',
                 'product_id': product1.id,
+                'product_uom': product1.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
-        })
-        delivery_order1 = self.env['stock.picking'].new(default_get_vals)
+        }
+        delivery_order1 = self.env['stock.picking'].create(vals)
         delivery_order1.onchange_picking_type()
         delivery_order1.move_lines.onchange_product_id()
-        vals = delivery_order1._convert_to_write(delivery_order1._cache)
-        delivery_order1 = self.env['stock.picking'].create(vals)
 
         # Assign and confirm
         delivery_order1.action_confirm()
