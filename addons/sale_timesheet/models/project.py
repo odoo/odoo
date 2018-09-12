@@ -99,6 +99,7 @@ class Project(models.Model):
     @api.multi
     def action_make_billable(self):
         return {
+            "name": _("Create Sales Order"),
             "type": 'ir.actions.act_window',
             "res_model": 'project.create.sale.order',
             "views": [[False, "form"]],
