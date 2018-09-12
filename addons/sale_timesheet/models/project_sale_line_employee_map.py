@@ -19,5 +19,5 @@ class ProjectProductEmployeeMap(models.Model):
     price_unit = fields.Float(related='sale_line_id.price_unit', readonly=True)
 
     _sql_constraints = [
-        ('uniq_map_sale_line_employee_per_project', 'UNIQUE(project_id,employee_id)', 'You can only map one employee with sale order item per project.'),
+        ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
     ]
