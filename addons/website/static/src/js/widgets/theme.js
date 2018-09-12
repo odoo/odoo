@@ -289,7 +289,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.$modal.addClass('o_theme_customize_loading');
 
         var bodyCustomImageXMLID = 'option_custom_body_image';
-        var $inputBodyCustomImage = $inputs.filter('[data-xmlid*="website.' + bodyCustomImageXMLID + '"]');
+        var $inputBodyCustomImage = $inputs.filter('[data-xmlid*="website.' + bodyCustomImageXMLID + '"]:checked');
         if (!$inputBodyCustomImage.length) {
             return $.when();
         }
@@ -439,8 +439,8 @@ var ThemeCustomizeDialog = Dialog.extend({
         var $options = $option;
         var checked = $option.is(':checked');
 
-        // If it was enabled, enable/disable the related input (see data-enable, data-disable)
-        // and retain the ones that actually changed
+        // If it was enabled, enable/disable the related input (see data-enable,
+        // data-disable) and retain the ones that actually changed
         if (checked) {
             var $inputs;
             // Input to enable
@@ -452,10 +452,16 @@ var ThemeCustomizeDialog = Dialog.extend({
             $options = $options.add($inputs.filter(':checked'));
             $inputs.prop('checked', false);
         }
+        var optionNames = _.uniq(_.map($options, function (option) {
+            return option.name;
+        }));
+        $options = this.$inputs.filter(function (i, input) {
+            return _.contains(optionNames, input.name);
+        });
 
         // Look at all options to see if they are enabled or disabled
-        var $enable = this.$inputs.filter('[data-xmlid]:checked');
-        var $disable = this.$inputs.filter('[data-xmlid]:not(:checked)');
+        var $enable = $options.filter('[data-xmlid]:checked');
+        var $disable = $options.filter('[data-xmlid]:not(:checked)');
 
         this._setActive();
 
