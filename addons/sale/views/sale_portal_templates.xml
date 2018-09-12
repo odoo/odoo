@@ -131,36 +131,23 @@
                     <t t-set="title">
                         <h2 class="mb-0"><b t-field="sale_order.amount_total"/> </h2>
                     </t>
-
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
-                                <a role="button" class="btn btn-block btn-secondary" target="_blank" t-att-href="sale_order.get_portal_url(report_type='pdf')"><i class="fa fa-print mr-1"/>Print</a>
-
-                                <t t-if="sale_order.state in ('draft', 'sent', 'waiting_date')">
-                                    <t t-set="to_accept" t-value="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()"/>
-                                    <t t-set="to_accept_and_pay" t-value="not sale_order.is_expired and sale_order.has_to_be_paid()"/>
-
-                                    <t t-if="to_accept or to_accept_and_pay or sale_order.is_expired">
-                                        <a role="button" t-if="to_accept" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                            <i class="fa fa-check"/> Accept &amp; Sign
-                                        </a>
-                                        <a role="button" t-elif="to_accept_and_pay" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                            <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
-                                        </a>
-                                        <t t-if="sale_order.is_expired">
-                                            <div class="alert alert-warning small mt-3 mb-1 py-1 px-2"><b class="d-block mb-1">This offer expired!</b>
-                                                <a role="button" href="#discussion" class="btn btn-info btn-block py-1 o_normalwhitespace"> Get a new quotation.</a>
-                                            </div>
-                                        </t>
-                                    </t>
-                                </t>
-
-                                <t t-if="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')">
-                                    <a role="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                        <i class="fa fa-check"></i> Pay Now
-                                    </a>
-                                </t>
+                                <a t-if="sale_order.has_to_be_signed(True)" role="button" t-attf-class="btn btn-{{ 'primary' if sale_order.has_to_be_paid() else 'success'}} btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/> Accept &amp; Sign
+                                </a>
+                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" class="btn btn-success btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
+                                </a>
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn" t-att-href="sale_order.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="sale_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                                    </div>
+                                </div>
                             </li>
 
                             <li class="navspy list-group-item pl-0 d-none d-lg-block" t-ignore="true" role="complementary">
@@ -168,34 +155,26 @@
                             </li>
 
                             <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
-                                <input type="hidden" t-att-value="sale_order.validity_date" id="validity_date"/>
                                 <li t-if="sale_order.remaining_validity_days &gt; 0" class="list-group-item">
                                     <small><b class="text-muted">This offer expires in</b></small>
                                     <div class="day_counter">
                                         <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
                                         <t t-esc="sale_order.remaining_validity_days"/>
-                                        day<t t-if="sale_order.remaining_validity_days &gt; 1">s</t>
+                                        <t t-if="sale_order.remaining_validity_days &gt; 1">days</t><t t-else="">day</t>
                                     </div>
                                 </li>
-
                                 <li t-if="sale_order.amount_undiscounted &gt; sale_order.amount_untaxed" class="list-group-item">
                                     <small><b class="text-muted">Your advantage</b></small>
+                                    <small>
+                                        <b t-field="sale_order.amount_undiscounted"
+                                            t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
+                                            style="text-decoration: line-through"
+                                            class="d-block mt-1"/>
+                                    </small>
                                     <t t-if="sale_order.amount_untaxed == sale_order.amount_total">
-                                        <small>
-                                            <b t-field="sale_order.amount_undiscounted"
-                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
-                                                style="text-decoration: line-through"
-                                                class="d-block mt-1"/>
-                                        </small>
                                         <h4 t-field="sale_order.amount_total" class="text-success"/>
                                     </t>
-                                    <t t-if="sale_order.amount_untaxed != sale_order.amount_total">
-                                        <small>
-                                            <strong t-field="sale_order.amount_undiscounted"
-                                                t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
-                                                style="text-decoration: line-through"
-                                                class="d-block mt-1"/>
-                                        </small>
+                                    <t t-else="">
                                         <h4 t-field="sale_order.amount_untaxed" class="text-success mb-0"/>
                                         <small>(<span t-field="sale_order.amount_total"/> Incl. tax)</small>
                                     </t>
@@ -222,34 +201,9 @@
                 <!-- Page content -->
                 <div id="quote_content" class="col-12 col-lg justify-content-end">
 
-                    <div class="alert alert-success alert-dismissable" t-if="message==1" role="status">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-                        Your message has been successfully sent!
-                    </div>
-                    <div class="alert alert-warning alert-dismissable" t-if="message==3" role="status">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-                        This order has been validated. Thanks for your trust
-                        and do not hesitate to <a href="#discussion">contact us</a> for
-                        any question.
-                    </div>
-                    <t t-if="sale_order.transaction_ids">
-                        <t t-call="payment.payment_confirmation_status">
-                            <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
-                        </t>
-                    </t>
-                    <div class="alert alert-warning alert-dismissable" t-if="message==4 and sale_order.state != 'sent'" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
-                        This order
-                        <t t-if="sale_order.state=='draft'">has not yet been sent!</t>
-                        <t t-if="sale_order.state=='cancel'">has already been cancelled!</t>
-                        <t t-if="sale_order.state not in ('cancel','draft')">has already been validated!</t>
-                        You can <a href="#discussion">contact us</a> for
-                        any questions.
-                    </div>
-
-                    <!-- modal relative to the actions Accept/Reject/Cancel -->
+                    <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept">
-                        <div class="modal-dialog" t-if="not sale_order.signature and sale_order.has_to_be_signed()">
+                        <div class="modal-dialog" t-if="sale_order.has_to_be_signed(True)">
                             <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
@@ -258,11 +212,12 @@
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
                                     <p>
-                                        <span>I agree that by signing this proposal, I accept it on the behalf of </span>
-                                        <b t-field="sale_order.partner_id.commercial_partner_id"/>
-                                        <span>, for an amount of </span>
-                                        <b data-id="total_amount" t-field="sale_order.amount_total"/>
-                                        <span>with payment terms: </span><b t-field="sale_order.payment_term_id"/>.
+                                        <span>By signing this proposal, I agree to the following terms:</span>
+                                        <ul>
+                                            <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
+                                            <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                        </ul>
                                     </p>
                                     <t t-call="portal.portal_signature">
                                         <t t-set="object" t-value="sale_order"/>
@@ -274,36 +229,36 @@
                             </form>
                         </div>
 
-                        <div class="modal-dialog modal-content" t-if="not (sale_order.has_to_be_signed() and not sale_order.signature) and (sale_order.has_to_be_paid() or need_payment)">
+                        <div class="modal-dialog modal-content" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
                             <header class="modal-header">
                                 <h4 class="modal-title">Validate Order</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <p>
-                                    <span>I agree that by paying this proposal, I accept it on the behalf of </span>
-                                    <b t-field="sale_order.partner_id.commercial_partner_id"/><span>
-                                    , for an amount of </span>
-                                    <b data-id="total_amount" t-field="sale_order.amount_total"/>
-                                    <span>with payment terms: </span><b t-field="sale_order.payment_term_id"/>.
+                                    <span>By paying this proposal, I agree to the following terms:</span>
+                                    <ul>
+                                        <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
+                                        <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
+                                        <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                    </ul>
                                 </p>
-                            </main>
-                            <footer class="modal-footer">
                                 <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left">
                                     <h3 class="mb24">Pay with</h3>
                                     <t t-call="payment.payment_tokens_list">
                                         <t t-set="mode" t-value="'payment'"/>
-                                        <t t-set="submit_txt" t-value="'Pay &amp; Confirm'"/>
+                                        <t t-set="submit_txt">Pay &amp; Confirm</t>
                                         <t t-set="icon_class" t-value="'fa-lock'"/>
                                         <t t-set="form_action" t-value="sale_order.get_portal_url(suffix='/transaction/token')"/>
                                         <t t-set="prepare_tx_url" t-value="sale_order.get_portal_url(suffix='/transaction/')"/>
                                         <t t-set="access_token" t-value="sale_order.access_token"/>
                                     </t>
                                 </div>
-                            </footer>
+                            </main>
                         </div>
                     </div>
 
+                    <!-- modal relative to the action reject -->
                     <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
                             <form id="decline" method="POST" t-attf-action="/my/orders/#{sale_order.id}/decline?access_token=#{sale_order.access_token}" class="modal-content">
@@ -316,7 +271,7 @@
                                     <p>
                                         Tell us why you are refusing this quotation, this will help us improve our services.
                                     </p>
-                                    <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
+                                    <textarea rows="4" name="decline_message" required="" placeholder="Your feedback..." class="form-control" />
                                 </main>
                                 <footer class="modal-footer">
                                     <button type="submit" t-att-id="sale_order.id" class="btn btn-danger"><i class="fa fa-times"></i> Reject</button>
@@ -326,41 +281,68 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-danger alert-dismissable d-print-none" t-if="sale_order.state == 'cancel'" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
-                        <strong>This quotation has been canceled.</strong> Contact us to get a new quotation.
+                    <!-- status messages -->
+                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                        <strong>Thank You!</strong><br/>
+                        <t t-if="message == 'sign_ok' and sale_order.state in ['sale', 'done']">Your order has been confirmed.</t>
+                        <t t-elif="message == 'sign_ok' and sale_order.has_to_be_paid()">Your order has been signed but still needs to be paid to be confirmed.</t>
+                        <t t-else="">Your order has been signed.</t>
                     </div>
 
+                    <div t-if="message == 'cant_reject' and sale_order.has_to_be_signed()" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                        Your order is not in a state to be rejected.
+                    </div>
+
+                    <t t-if="sale_order.transaction_ids">
+                        <t t-call="payment.payment_confirmation_status">
+                            <t t-set="payment_tx_id" t-value="sale_order.get_portal_last_transaction()"/>
+                        </t>
+                    </t>
+
+                    <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
+                        <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                    </div>
+
+                    <div t-if="sale_order.state == 'draft'" class="alert alert-warning alert-dismissable d-print-none" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
+                        <strong>This is a draft quotation.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get the final version.</a>
+                    </div>
+
+                    <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
+                        <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                    </div>
+
+                    <!-- main content -->
                     <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}">
                         <div t-call="sale.sale_order_portal_content"/>
                     </div>
 
-                    <t t-if="sale_order.team_id.team_type != 'website'">
-                        <t t-if="sale_order.state in ('draft', 'sent', 'waiting_date')">
-                            <t t-set="to_accept" t-value="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()"/>
-                            <t t-set="to_accept_and_pay" t-value="not sale_order.is_expired and not sale_order.signature and sale_order.has_to_be_signed()"/>
-                        </t>
-                        <t t-set="to_pay" t-value="need_payment or (sale_order.state in ('sale') and sale_order.has_to_be_paid() and tx_state != 'done')"/>
+                    <!-- bottom actions -->
+                    <div t-if="sale_order.has_to_be_signed(True) or sale_order.has_to_be_paid(True)" class="row justify-content-center text-center d-print-none pt-1 pb-4">
 
-                        <div t-if="to_accept or to_accept_and_pay or to_pay" class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                        <t t-if="sale_order.has_to_be_signed(True)">
                             <div class="col-sm-auto mt8">
-                                <a t-if="to_accept" role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept &amp; Sign</a>
-                                <a t-elif="to_accept_and_pay" role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay</a>
+                                <a role="button" t-attf-class="btn btn-{{ 'primary' if sale_order.has_to_be_paid() else 'success'}}" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept &amp; Sign</a>
                             </div>
-                            <t t-if="to_accept or to_accept_and_pay">
-                                <div class="col-sm-auto mt8">
-                                    <a role="button" class="btn btn-info" type="submit" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
-                                </div>
-                                <div class="col-sm-auto mt8">
-                                    <a role="button" class="btn btn-warning" data-toggle="modal" data-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
-                                </div>
-                            </t>
-                            <div t-if="to_pay" class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Pay Now</a>
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
                             </div>
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
+                            </div>
+                        </t>
+                        <div t-elif="sale_order.has_to_be_paid(True)" class="col-sm-auto mt8">
+                            <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" href="#">
+                                <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
+                            </a>
                         </div>
-                    </t>
+                    </div>
 
+                    <!-- chatter -->
                     <div id="sale_order_communication" class="mt-4">
                         <h2>Communication</h2>
                         <t t-call="portal.message_thread">
@@ -454,7 +436,7 @@
                 </div>
             </div>
 
-            <section id="details" style="page-break-inside: auto;">
+            <section id="details" style="page-break-inside: auto;" class="mt32">
                 <h3 id="details">Details</h3>
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
@@ -466,7 +448,7 @@
                             <th class="text-left">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
-                            <th t-if="display_discount" class="text-left">
+                            <th t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                 <span>Discount</span>
                                 <t t-set="colspan" t-value="colspan+1"/>
                             </th>
@@ -506,7 +488,7 @@
                                             <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'/>
                                         </div>
                                     </td>
-                                    <td t-if="display_discount" class="text-left">
+                                    <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <strong t-if="line.discount" class="text-info">
                                             <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
                                         </strong>

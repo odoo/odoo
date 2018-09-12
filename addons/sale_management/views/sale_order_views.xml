@@ -6,10 +6,6 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//header/button[@name='action_confirm'][1]" position="after">
-                <button name="preview_sale_order" type="object" string="Preview"/>
-            </xpath>
-
             <xpath expr="//page/field[@name='order_line']/.." position="after">
                 <page string="Optional Products">
                     <field name="sale_order_option_ids">
@@ -35,11 +31,6 @@
                     options="{'no_create': True, 'no_open': True}"
                     groups="sale_management.group_sale_order_template"
                 />
-            </xpath>
-
-            <xpath expr="//field[@name='client_order_ref']" position="after">
-                <field name="require_signature" attrs="{'invisible': [('sale_order_template_id', '=', False)]}"/>
-                <field name="require_payment" attrs="{'invisible': [('sale_order_template_id', '=', False)]}"/>
             </xpath>
 
         </field>

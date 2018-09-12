@@ -91,6 +91,13 @@ odoo.define('portal.signature_form', function (require){
                     var $success = qweb.render("portal.portal_signature_success", {widget: data});
                     self.$('#o_portal_sign_draw').parent().replaceWith($success);
                 }
+                if (data.force_refresh) {
+                    if (data.redirect_url) {
+                        window.location = data.redirect_url;
+                    } else {
+                        window.location.reload();
+                    }
+                }
             });
         },
 
