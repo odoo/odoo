@@ -62,6 +62,6 @@ class ProcurementRule(models.Model):
 
     def _get_date_planned(self, product_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
-        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay or 0.0)
-        date_planned = date_planned - relativedelta(days=values['company_id'].manufacturing_lead)
+        date_planned = format_date_planned + relativedelta(days=product_id.produce_delay or 0.0)
+        date_planned = date_planned + relativedelta(days=values['company_id'].manufacturing_lead)
         return date_planned
