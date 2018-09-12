@@ -272,14 +272,21 @@ class Project(models.Model):
         for project in self:
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
+    @api.model
+    def _map_tasks_default_valeus(self, task):
+        """ get the default value for the copied task on project duplication """
+        return {
+            'stage_id': task.stage_id.id,
+            'name': task.name,
+        }
+
     @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
         for task in self.tasks:
             # preserve task name and stage, normally altered during copy
-            defaults = {'stage_id': task.stage_id.id,
-                        'name': task.name}
+            defaults = self._map_tasks_default_valeus(task)
             tasks += task.copy(defaults)
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 

@@ -110,6 +110,12 @@ class Project(models.Model):
             },
         }
 
+    @api.model
+    def _map_tasks_default_valeus(self, task):
+        defaults = super(Project, self)._map_tasks_default_valeus(task)
+        defaults['sale_line_id'] = False
+        return defaults
+
 
 class ProjectTask(models.Model):
     _inherit = "project.task"

@@ -469,3 +469,28 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.sale_order.action_done()
         with self.assertRaises(UserError):
             sale_order_line.write({'product_uom_qty': 20})
+
+    def test_copy_billable_project_and_task(self):
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price
+        })
+        self.sale_order.action_confirm()
+        task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
+        project = sale_order_line.project_id
+
+        # copy the project
+        project_copy = project.copy()
+        self.assertFalse(project_copy.sale_line_id, "Duplicatinga project should erase its Sale line")
+        self.assertFalse(project_copy.sale_order_id, "Duplicatinga project should erase its Sale order")
+        self.assertEqual(project_copy.billable_type, 'no', "Duplicatinga project should reset its billable type to none billable")
+        self.assertEqual(len(project.tasks), len(project_copy.tasks), "Copied project must have the same number of tasks")
+        self.assertFalse(project_copy.tasks.mapped('sale_line_id'), "The tasks of the duplicated project should not have a Sale Line set.")
+
+        # copy the task
+        task_copy = task.copy()
+        self.assertEqual(task.sale_line_id, task_copy.sale_line_id, "Duplicatinga task should keep its Sale line")
