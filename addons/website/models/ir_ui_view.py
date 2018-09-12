@@ -63,8 +63,12 @@ class View(models.Model):
                                 # trigger COW on inheriting views
                                 inherit_child.write({'inherit_id': website_specific_view.id})
 
-                    return super(View, website_specific_view).write(vals)
-        return super(View, self).write(vals)
+                    super(View, website_specific_view).write(vals)
+                    continue
+                super(View, view).write(vals)
+        else:
+            super(View, self).write(vals)
+        return True
 
     @api.multi
     def unlink(self):
