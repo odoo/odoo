@@ -885,7 +885,10 @@ class GroupsView(models.Model):
                             xml3.append(E.field(name=field_name, **attrs))
 
             xml3.append({'class': "o_label_nowrap"})
-            user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
+            if user_type_field_name:
+                user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
+            else:
+                user_type_attrs = {}
 
             xml = E.field(
                 E.group(*(xml1), col="2"),
