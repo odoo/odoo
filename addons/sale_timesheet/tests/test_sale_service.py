@@ -287,6 +287,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         project_template2 = self.env['project.project'].create({
             'name': 'Second Project TEMPLATE for services',
             'allow_timesheets': True,
+            'active': False,  # this template is archived
         })
         Stage = self.env['project.task.type'].with_context(default_project_id=project_template2.id)
         stage1_tmpl2 = Stage.create({
@@ -366,6 +367,11 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertFalse(so_line4.project_id, "Line4 should not have create a project, since line1 already create an empty project")
         self.assertTrue(so_line4.task_id, "Line4 should have create a new task, even if no project created.")
         self.assertTrue(so_line5.project_id, "Line5 should have create a project based on template B")
+
+        # check all generated project should be active, even if the template is not
+        self.assertTrue(so_line1.project_id.active, "Project of Line1 should be active")
+        self.assertTrue(so_line2.project_id.active, "Project of Line2 should be active")
+        self.assertTrue(so_line5.project_id.active, "Project of Line5 should be active")
 
         # check generated stuff are correct
         self.assertTrue(so_line1.project_id in self.project_template_state.project_ids, "Stage 1 from template B should be part of project from so line 1")

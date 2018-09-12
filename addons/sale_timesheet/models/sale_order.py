@@ -223,6 +223,7 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
+            'active': True,
         }
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
