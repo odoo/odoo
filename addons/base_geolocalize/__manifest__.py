@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Partners Geolocation',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Sales',
     'description': """
 Partners Geolocation
