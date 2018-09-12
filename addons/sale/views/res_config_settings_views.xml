@@ -159,7 +159,7 @@
                                 <label for="portal_confirmation_pay"/>
                                 <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                 <div class="text-muted">
-                                    Request an electronic payment to confirm orders
+                                    Request an online payment to confirm orders
                                 </div>
                                 <div attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
                                     <button name='%(payment.action_payment_acquirer)d' icon="fa-arrow-right" type="action" string="Payment Acquirers" class="btn-link"/>
@@ -379,7 +379,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="automatic_invoice"/>
                                 <div class="text-muted">
-                                    Generate the invoice automatically when the electronic payment is confirmed
+                                    Generate the invoice automatically when the online payment is confirmed
                                 </div>
                                 <div  attrs="{'invisible': [('automatic_invoice','=',False)]}">
                                     <label for="template_id" class="o_light_label"/>
