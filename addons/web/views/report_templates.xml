@@ -81,9 +81,9 @@
                     <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'">
+            <body>
                 <div id="wrapwrap">
-                    <main>
+                    <main t-att-class="'container' if not full_width else 'container-fluid'">
                         <t t-raw="0"/>
                     </main>
                 </div>
