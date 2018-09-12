@@ -14,6 +14,8 @@ from odoo.tools import float_is_zero, float_compare
 
 from odoo.addons import decimal_precision as dp
 
+from werkzeug.urls import url_encode
+
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -27,6 +29,12 @@ class SaleOrder(models.Model):
             if days > 0:
                 return fields.Date.to_string(datetime.now() + timedelta(days))
         return False
+
+    def _get_default_require_signature(self):
+        return self.env.user.company_id.portal_confirmation_sign
+
+    def _get_default_require_payment(self):
+        return self.env.user.company_id.portal_confirmation_pay
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -136,6 +144,12 @@ class SaleOrder(models.Model):
     validity_date = fields.Date(string='Validity', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Validity date of the quotation, after this date, the customer won't be able to validate the quotation online.", default=_default_validity_date)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
+    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Request a online signature to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Request an online payment to the customer in order to confirm orders automatically.')
     remaining_validity_days = fields.Integer(compute='_compute_remaining_validity_days', string="Remaining Validity Days")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm", copy=False)
@@ -204,10 +218,7 @@ class SaleOrder(models.Model):
     def _compute_is_expired(self):
         today = fields.Date.today()
         for order in self:
-            if order.validity_date and order.validity_date < today:
-                order.is_expired = True
-            else:
-                order.is_expired = False
+            order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
     @api.multi
     @api.depends('order_line.customer_lead', 'confirmation_date', 'order_line.state')
@@ -728,19 +739,12 @@ class SaleOrder(models.Model):
 
         return report_pages
 
-    def get_portal_confirmation_action(self):
-        if self.company_id.portal_confirmation_sign and not self.signature:
-            return 'sign'
-        if self.company_id.portal_confirmation_pay:
-            return 'pay'
+    def has_to_be_signed(self, also_in_draft=False):
+        return (self.state == 'sent' or (self.state == 'draft' and also_in_draft)) and not self.is_expired and self.require_signature and not self.signature and self.team_id.team_type != 'website'
 
-        return 'none'
-
-    def has_to_be_signed(self):
-        return self.company_id.portal_confirmation_sign
-
-    def has_to_be_paid(self):
-        return self.company_id.portal_confirmation_pay
+    def has_to_be_paid(self, also_in_draft=False):
+        transaction = self.get_portal_last_transaction()
+        return (self.state == 'sent' or (self.state == 'draft' and also_in_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
     @api.multi
     def _notify_get_groups(self, message, groups):
@@ -824,6 +828,15 @@ class SaleOrder(models.Model):
 
         return transaction
 
+    @api.multi
+    def preview_sale_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
+
     def _force_lines_to_invoice_policy_order(self):
         for line in self.order_line:
             if self.state in ['sale', 'done']:
@@ -852,6 +865,33 @@ class SaleOrder(models.Model):
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
+
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online quote if it exists. """
+        self.ensure_one()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+
+        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
+            return super(SaleOrder, self).get_access_action(access_uid)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_portal_url(),
+            'target': 'self',
+            'res_id': self.id,
+        }
+
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+        self.ensure_one()
+        if self.state not in ['sale', 'done']:
+            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+            return self.get_portal_url(query_string='&%s' % auth_param)
+        return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
+
+    @api.multi
+    def _get_payment_type(self):
+        self.ensure_one()
+        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderLine(models.Model):

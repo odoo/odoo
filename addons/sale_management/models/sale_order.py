@@ -7,8 +7,6 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
-from werkzeug.urls import url_encode
-
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -21,12 +19,6 @@ class SaleOrder(models.Model):
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    require_signature = fields.Boolean('Online Signature',
-                                       states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
-                                       help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Online Payment',
-                                     states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
-                                     help='Request an online payment to the customer in order to confirm orders automatically.')
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -65,8 +57,8 @@ class SaleOrder(models.Model):
     @api.onchange('sale_order_template_id')
     def onchange_sale_order_template_id(self):
         if not self.sale_order_template_id:
-            self.require_signature = False
-            self.require_payment = False
+            self.require_signature = self._get_default_require_signature()
+            self.require_payment = self._get_default_require_payment()
             return
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
@@ -115,67 +107,12 @@ class SaleOrder(models.Model):
             self.note = template.note
 
     @api.multi
-    def preview_sale_order(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.get_portal_url(),
-        }
-
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to the online quote if it exists. """
-        self.ensure_one()
-        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
-
-        if not self.sale_order_template_id or (not user.share and not self.env.context.get('force_website')):
-            return super(SaleOrder, self).get_access_action(access_uid)
-        return {
-            'type': 'ir.actions.act_url',
-            'url': self.get_portal_url(),
-            'target': 'self',
-            'res_id': self.id,
-        }
-
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
-        self.ensure_one()
-        if self.state not in ['sale', 'done']:
-            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-            return self.get_portal_url(query_string='&%s' % auth_param)
-        return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
-
-    def get_portal_confirmation_action(self):
-        """ Template override default behavior of pay / sign chosen in sales settings """
-        if self.sale_order_template_id:
-            if self.require_signature and not self.signature:
-                return 'sign'
-            elif self.require_payment:
-                return 'pay'
-            else:
-                return 'none'
-        return super(SaleOrder, self).get_portal_confirmation_action()
-
-    def has_to_be_signed(self):
-        res = super(SaleOrder, self).has_to_be_signed()
-        return self.require_signature if self.sale_order_template_id else res
-
-    def has_to_be_paid(self):
-        res = super(SaleOrder, self).has_to_be_paid()
-        return self.require_payment if self.sale_order_template_id else res
-
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
                 self.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
-
-    @api.multi
-    def _get_payment_type(self):
-        self.ensure_one()
-        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderLine(models.Model):
