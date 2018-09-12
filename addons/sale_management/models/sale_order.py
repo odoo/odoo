@@ -24,9 +24,9 @@ class SaleOrder(models.Model):
     require_signature = fields.Boolean('Online Signature',
                                        states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
                                        help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Electronic Payment',
+    require_payment = fields.Boolean('Online Payment',
                                      states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
-                                     help='Request an electronic payment to the customer in order to confirm orders automatically.')
+                                     help='Request an online payment to the customer in order to confirm orders automatically.')
 
     @api.multi
     @api.returns('self', lambda value: value.id)
