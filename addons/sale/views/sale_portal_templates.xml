@@ -462,8 +462,7 @@
                 <table class="table table-sm" id="sales_order_table">
                     <thead class="bg-100">
                         <tr>
-                            <t t-set="colspan" t-value="7"/>
-                            <th class="d-none d-xl-table-cell"></th>
+                            <t t-set="colspan" t-value="6"/>
                             <th class="text-left">Products</th>
                             <th class="text-right">Quantity</th>
                             <th t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">Unit Price</th>
@@ -489,9 +488,6 @@
 
                             <tr t-attf-class="{{ 'o_is_' + line.display_type if line.display_type else '' }}">
                                 <t t-if="not line.display_type">
-                                    <td class="text-center d-none d-xl-table-cell" style="height:48px; vertical-align: middle">
-                                        <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'rounded', 'style':'max-width: 48px;max-height:48px'}" />
-                                    </td>
                                     <td id="product_name"><span t-field="line.name"/></td>
                                     <td class="text-right">
                                         <div id="quote_qty">
