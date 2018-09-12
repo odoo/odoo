@@ -123,9 +123,7 @@ class StockPicking(models.Model):
                 'view_id': view_id,
                 'views': [(view_id, 'form')],
                 'target': 'new',
-                'context': {
-                    'current_package_carrier_type': self.carrier_id.delivery_type,
-                }
+                'context': dict(self.env.context, current_package_carrier_type=self.carrier_id.delivery_type),
             }
         else:
             return self._put_in_pack()
