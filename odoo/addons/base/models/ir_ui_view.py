@@ -1400,10 +1400,12 @@ actual arch.
         if self.pool._init:
             # only validate the views that are still existing...
             xmlid_filter = "AND md.name IN %s"
+            prefix = module + '.'
+            prefix_len = len(prefix)
             names = tuple(
-                name
-                for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items()
-                if xmod == module and model == self._name
+                xmlid[prefix_len:]
+                for xmlid in self.pool.loaded_xmlids
+                if xmlid.startswith(prefix)
             )
             if not names:
                 # no views for this module, nothing to validate
