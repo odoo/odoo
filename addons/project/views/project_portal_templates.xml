@@ -69,13 +69,9 @@
             <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
 
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
-                <div t-ignore="true" class="text-center">
-                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
-                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)">
-                        <b>Back in edit mode</b>.
-                    </a>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)"/>
+                </t>
             </t>
 
             <t t-call="portal.portal_record_layout">
@@ -174,13 +170,9 @@
             <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
 
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
-                <div t-ignore="true" class="text-center">
-                    This is a preview of the customer portal <i class="fa fa-chevron-right"/>
-                    <a title="Edit in the backend" target="_blank" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)">
-                        <b>Back in edit mode</b>.
-                    </a>
-                </div>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">&#215;</button>
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)"/>
+                </t>
             </t>
 
             <t t-call="portal.portal_record_layout">
