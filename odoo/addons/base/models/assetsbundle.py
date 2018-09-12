@@ -537,7 +537,7 @@ class AssetsBundle(object):
                     ['rtlcss', '--version'], stdout=PIPE, stderr=PIPE
                 )
             except (OSError, IOError):
-                _logger.warning('You need rtlcss to convert css file to right to left compatiblity.')
+                _logger.warning('You need https://rtlcss.com/ to convert css file to right to left compatiblity. Use: npm install -g rtlcss')
                 return source
 
             msg = "Could not execute command %r" % cmd[0]
