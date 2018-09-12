@@ -354,26 +354,26 @@ class Website(Home):
         enable = []
         disable = []
         ids = self.get_view_ids(xml_ids)
-        for view in request.env['ir.ui.view'].with_context(active_test=True).browse(ids):
+        for view in request.env['ir.ui.view'].browse(ids):
             if view.active:
-                enable.append(view.xml_id)
+                enable.append(view.key)
             else:
-                disable.append(view.xml_id)
+                disable.append(view.key)
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
-        def set_active(ids, active):
-            if ids:
-                real_ids = self.get_view_ids(ids)
-                request.env['ir.ui.view'].with_context(active_test=True).browse(real_ids).write({'active': active})
+        def set_active(xml_ids, active):
+            if xml_ids:
+                real_ids = self.get_view_ids(xml_ids)
+                request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
         set_active(disable, False)
         set_active(enable, True)
 
         if get_bundle:
-            context = dict(request.context, active_test=True)
+            context = dict(request.context)
             return {
                 'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
                 'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),
