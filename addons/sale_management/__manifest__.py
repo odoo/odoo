@@ -6,7 +6,7 @@
     'version': '1.0',
     'category': 'Sales',
     'sequence': 17,
-    'summary': 'From quotes to invoices',
+    'summary': 'From quotations to invoices',
     'description': """
 Manage sales quotations and orders
 ==================================
@@ -39,7 +39,6 @@ The Dashboard for the Sales Manager will include
     'depends': ['sale', 'digest'],
     'data': [
         'security/sale_management_security.xml',
-        'data/sale_order_template_data.xml',
         'views/sale_portal_templates.xml',
         'views/sale_order_template_views.xml',
         'security/ir.model.access.csv',

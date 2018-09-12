@@ -13,39 +13,18 @@ from werkzeug.urls import url_encode
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _get_default_sale_order_template(self):
-        if not self.env.user.has_group('sale_management.group_sale_order_template'):
-            return False
-        template = self.env.ref('sale_management.sale_order_template_default', raise_if_not_found=False)
-        return template if template and template.active else False
-
-    def _get_default_require_signature(self):
-        default_template = self._get_default_sale_order_template()
-        if default_template:
-            return default_template.require_signature
-        else:
-            return False
-
-    def _get_default_require_payment(self):
-        default_template = self._get_default_sale_order_template()
-        if default_template:
-            return default_template.require_payment
-        else:
-            return False
-
     sale_order_template_id = fields.Many2one(
         'sale.order.template', 'Quotation Template',
         readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_get_default_sale_order_template)
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     sale_order_option_ids = fields.One2many(
         'sale.order.option', 'order_id', 'Optional Products Lines',
         copy=True, readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature,
+    require_signature = fields.Boolean('Online Signature',
                                        states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
                                        help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,
+    require_payment = fields.Boolean('Electronic Payment',
                                      states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
                                      help='Request an electronic payment to the customer in order to confirm orders automatically.')
 
