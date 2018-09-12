@@ -66,9 +66,9 @@ class RecruitmentStage(models.Model):
 
     @api.model
     def default_get(self, fields):
-        if self._context and self._context.get('default_job_id') and not self._context.get('hr_recruitment_stage_mono', False):
+        if self._context and self._context.get('search_default_job_id') and self._context.get('hr_recruitment_stage_mono', False):
             context = dict(self._context)
-            context.pop('default_job_id')
+            context.setdefault(context.get('search_default_job_id'))
             self = self.with_context(context)
         return super(RecruitmentStage, self).default_get(fields)
 
