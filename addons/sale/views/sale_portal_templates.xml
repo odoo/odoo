@@ -143,7 +143,7 @@
 
                                     <t t-if="to_accept or to_accept_and_pay or sale_order.is_expired">
                                         <a role="button" t-if="to_accept" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
-                                            <i class="fa fa-check"/> Accept
+                                            <i class="fa fa-check"/> Accept &amp; Sign
                                         </a>
                                         <a role="button" t-elif="to_accept_and_pay" class="btn btn-success btn-block" data-toggle="modal" data-target="#modalaccept" href="#">
                                             <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay
@@ -319,8 +319,8 @@
                                     <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
                                 </main>
                                 <footer class="modal-footer">
-                                    <button type="submit" t-att-id="sale_order.id" class="btn btn-primary">Reject</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" t-att-id="sale_order.id" class="btn btn-danger"><i class="fa fa-times"></i> Reject</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
                                 </footer>
                             </form>
                         </div>
@@ -344,7 +344,7 @@
 
                         <div t-if="to_accept or to_accept_and_pay or to_pay" class="row justify-content-center text-center d-print-none pt-1 pb-4">
                             <div class="col-sm-auto mt8">
-                                <a t-if="to_accept" role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept</a>
+                                <a t-if="to_accept" role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept &amp; Sign</a>
                                 <a t-elif="to_accept_and_pay" role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; </t>Pay</a>
                             </div>
                             <t t-if="to_accept or to_accept_and_pay">
