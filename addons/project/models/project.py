@@ -14,7 +14,7 @@ class ProjectTaskType(models.Model):
     _order = 'sequence, id'
 
     def _get_default_project_ids(self):
-        default_project_id = self.env.context.get('default_project_id')
+        default_project_id = self.env.context.get('search_default_project_id')
         return [default_project_id] if default_project_id else None
 
     name = fields.Char(string='Stage Name', required=True, translate=True)

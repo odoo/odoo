@@ -28,8 +28,8 @@ class Stage(models.Model):
             context should not create a stage for the current sales channel only
         """
         ctx = dict(self.env.context)
-        if ctx.get('default_team_id') and not ctx.get('crm_team_mono'):
-            ctx.pop('default_team_id')
+        if ctx.get('search_default_team_id') and ctx.get('crm_team_mono'):
+            ctx.setdefault('default_team_id', ctx.get('search_default_team_id'))
         return super(Stage, self.with_context(ctx)).default_get(fields)
 
     name = fields.Char('Stage Name', required=True, translate=True)
