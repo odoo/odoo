@@ -572,15 +572,7 @@ class AccountInvoice(models.Model):
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
 
-        rslt = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-
-        if view_id == supplier_form_view_id and self.env.user.company_id.account_simplified_bills:
-            lines_tree_data = rslt['fields']['invoice_line_ids']['views']['tree']
-            lines_tree_doc = etree.XML(lines_tree_data['arch'])
-            lines_tree_doc.remove(lines_tree_doc.find(".//field[@name='product_id']"))
-            lines_tree_data['arch'] = etree.tostring(lines_tree_doc, encoding='unicode')
-
-        return rslt
+        return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
     def invoice_print(self):
