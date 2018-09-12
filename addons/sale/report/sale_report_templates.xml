@@ -94,7 +94,7 @@
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
 
-                        <tr t-attf-class="{{ 'o_is_' + line.display_type if line.display_type else '' }}">
+                        <tr t-att-class="'bg-200 font-weight-bold' if line.display_type == 'line_section' else 'font-italic' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td><span t-field="line.name"/></td>
                                 <td class="text-right">
