@@ -220,16 +220,6 @@ class AccountAccount(models.Model):
             code_prefix = code_prefix[:-1]
         self.group_id = group
 
-    @api.onchange('user_type_id')
-    def _onchange_user_type_id(self):
-        income_type = self.env.ref('account.data_account_type_revenue')
-        expenses_type = self.env.ref('account.data_account_type_expenses')
-        cost_of_revenue_type = self.env.ref('account.data_account_type_direct_costs')
-        if self.user_type_id == income_type and self.company_id.account_sale_tax_id:
-            self.tax_ids = [(4, self.company_id.account_sale_tax_id.id)]
-        elif self.user_type_id in (expenses_type, cost_of_revenue_type) and self.company_id.account_purchase_tax_id:
-            self.tax_ids = [(4, self.company_id.account_purchase_tax_id.id)]
-
     @api.multi
     @api.depends('name', 'code')
     def name_get(self):

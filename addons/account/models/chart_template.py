@@ -443,8 +443,8 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account', 'account_sale_tax_id'),
-            ('property_account_payable_id', 'res.partner', 'account.account', 'account_purchase_tax_id'),
+            ('property_account_receivable_id', 'res.partner', 'account.account', None),
+            ('property_account_payable_id', 'res.partner', 'account.account', None),
             ('property_account_expense_categ_id', 'product.category', 'account.account', 'account_purchase_tax_id'),
             ('property_account_income_categ_id', 'product.category', 'account.account', 'account_sale_tax_id'),
             ('property_account_expense_id', 'product.template', 'account.account', 'account_purchase_tax_id'),
@@ -456,7 +456,7 @@ class AccountChartTemplate(models.Model):
                 account_id = acc_template_ref[account_template.id]
 
                 # Write the default tax on the account
-                default_tax = getattr(company, record[3])
+                default_tax = record[3] and getattr(company, record[3])
                 if default_tax:
                     account = self.env['account.account'].browse(account_id)
                     account.write({'tax_ids': [(4, default_tax.id)]})

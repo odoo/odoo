@@ -1719,10 +1719,6 @@ class AccountInvoiceLine(models.Model):
     def _get_invoice_line_name_from_product(self):
         """ Returns the automatic name to give to the invoice line depending on
         the product it is linked to.
-
-        This function can be overridden to return None when we don't want to
-        update the invoice line name (hence, when resolving the onchange event of
-        product_id field).
         """
         if not self.product_id:
             return ''
