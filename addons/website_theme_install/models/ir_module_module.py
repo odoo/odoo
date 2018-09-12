@@ -213,18 +213,23 @@ class IrModuleModule(models.Model):
     @api.multi
     def _remove_theme_on_website(self, website):
         self.ensure_one()
-        installed_deps = self + website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
-        for mod in installed_deps:
+        for mod in website.theme_id._theme_modules_to_load():
             mod._unload_one_theme_module(website)
 
     @api.multi
     def _add_theme_on_website(self, website):
         self.ensure_one()
-        mods_to_load = reversed(self + self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_')))
-        for mod in mods_to_load:
+        for mod in reversed(website.theme_id._theme_modules_to_load()):
             _logger.info('Load theme %s for website %s from template.' % (mod.name, website.id))
             mod._load_one_theme_module(website, with_update=False)
             self.env['theme.utils']._post_copy(mod)
+
+    def _theme_modules_to_load(self):
+        mods_to_load = self + self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
+        sub_mods = self.env['ir.module.module']
+        for mod in mods_to_load:
+            sub_mods += mod.downstream_dependencies().filtered(lambda x: x.name.startswith(mod.name))
+        return sub_mods + mods_to_load
 
     @api.multi
     def button_choose_theme(self):
