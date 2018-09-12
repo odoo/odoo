@@ -83,12 +83,28 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      * @override
      */
     start: function () {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
         this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
         if (!this.noAutohide) {
-            dom.initAutoMoreMenu(this.$el, {unfoldable: '.divider, .divider ~ li'});
+            var $navbar = this.$el.closest('.navbar');
+            _.each($navbar.find('img'), function (img) {
+                if (img.complete) {
+                    return; // Already loaded
+                }
+                var def = $.Deferred();
+                defs.push(def);
+                $(img).one('load', function () {
+                    def.resolve();
+                });
+            });
         }
-        this.$el.removeClass('o_menu_loading');
-        return this._super.apply(this, arguments);
+        return $.when.apply($, defs).then(function () {
+            if (!self.noAutohide) {
+                dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
+            }
+            self.$el.removeClass('o_menu_loading');
+        });
     },
     /**
      * @override

@@ -21,12 +21,6 @@ $o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
 $o-portal-bg: true; // Enable/Disable page custom bg.
 $o-portal-bg-color: desaturate($gray-200, 100%);
 
-// Resize and vertically align navbar’s items relative to navbar
-@mixin o-w-fill-navbar($ratio: 1) {
-    height: round($-navbar-height * $ratio * 100) / 100;
-    margin-top: round($-navbar-height * (1 - $ratio) / 2 * 100) / 100;
-}
-
 // Frontend general
 #wrapwrap {
     position: relative;
@@ -48,17 +42,12 @@ header {
         flex: 0 0 auto;
 
         &.logo {
-            // Width and height are fixed to prevent navbar flickering due to
-            // image loading
-            width: 4 * $-navbar-height;
-            height: $-navbar-height;
-
             padding-top: 0;
             padding-bottom: 0;
 
             img {
-                @include o-w-fill-navbar;
                 width: auto;
+                height: $-navbar-height;
                 max-width: none;
             }
         }
@@ -73,7 +62,7 @@ header {
     ul.nav > li {
         &.divider {
             display: none;
-            @include o-w-fill-navbar;
+            height: $-navbar-height;
             border-right: 1px solid $nav-divider-color;
         }
 
