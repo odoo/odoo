@@ -1308,14 +1308,6 @@ class IrModelData(models.Model):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
 
-    def __init__(self, pool, cr):
-        models.Model.__init__(self, pool, cr)
-        # also stored in pool to avoid being discarded along with this osv instance
-        if getattr(pool, 'model_data_reference_ids', None) is None:
-            self.pool.model_data_reference_ids = {}
-        # put loads on the class, in order to share it among all instances
-        type(self).loads = self.pool.model_data_reference_ids
-
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrModelData, self)._auto_init()
@@ -1501,9 +1493,8 @@ class IrModelData(models.Model):
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise
 
-        # update self.loads
-        for prefix, suffix, res_model, res_id, noupdate in rows:
-            self.loads[(prefix, suffix)] = (res_model, res_id)
+        # update loaded_xmlids
+        self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
 
     @api.model
     def _load_xmlid(self, xml_id):
@@ -1512,12 +1503,9 @@ class IrModelData(models.Model):
         """
         record = self.xmlid_to_object(xml_id)
         if record:
-            prefix, suffix = xml_id.split('.', 1)
-            self.loads[(prefix, suffix)] = (record._name, record.id)
+            self.pool.loaded_xmlids.add(xml_id)
             for parent_model, parent_field in record._inherits.items():
-                parent = record[parent_field]
-                puffix = suffix + '_' + parent_model.replace('.', '_')
-                self.loads[(prefix, puffix)] = (parent._name, parent.id)
+                self.pool.loaded_xmlids.add(xml_id + '_' + parent_model.replace('.', '_'))
         return record
 
     @api.model
@@ -1604,22 +1592,23 @@ class IrModelData(models.Model):
         It is meant to removed records that are no longer present in the
         updated data. Such records are recognised as the one with an xml id
         and a module in ir_model_data and noupdate set to false, but not
-        present in self.loads.
+        present in self.pool.loaded_xmlids.
         """
         if not modules or tools.config.get('import_partial'):
             return True
 
         bad_imd_ids = []
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
+        loaded_xmlids = self.pool.loaded_xmlids
 
-        query = """ SELECT id, name, model, res_id, module FROM ir_model_data
+        query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
                     WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC
                 """
         self._cr.execute(query, (tuple(modules), False))
-        for (id, name, model, res_id, module) in self._cr.fetchall():
-            if (module, name) not in self.loads:
+        for (id, xmlid, model, res_id) in self._cr.fetchall():
+            if xmlid not in loaded_xmlids:
                 if model in self.env:
-                    _logger.info('Deleting %s@%s (%s.%s)', res_id, model, module, name)
+                    _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():
                         record.unlink()
@@ -1627,7 +1616,7 @@ class IrModelData(models.Model):
                         bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
-        self.loads.clear()
+        loaded_xmlids.clear()
 
     @api.model
     def toggle_noupdate(self, model, res_id):
