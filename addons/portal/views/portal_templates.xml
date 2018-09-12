@@ -73,6 +73,13 @@
         </ol>
     </template>
 
+    <template id="portal_back_in_edit_mode" name="Back to edit mode">
+        <div t-ignore="true" class="text-center">
+            This is a preview of the customer portal. <a t-att-href="backend_url"><i class="fa fa-arrow-right"/> Back to edit mode</a>
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> &#215; </button>
+    </template>
+
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
