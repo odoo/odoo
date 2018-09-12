@@ -126,12 +126,14 @@ class ProductProduct(models.Model):
                         'line_ids': [(0, 0, {
                             'name': _('Standard Price changed'),
                             'account_id': debit_account_id,
+                            'product_id': product.id,
                             'debit': abs(diff * qty_available),
                             'credit': 0,
                             'product_id': product.id,
                         }), (0, 0, {
                             'name': _('Standard Price changed'),
                             'account_id': credit_account_id,
+                            'product_id': product.id,
                             'debit': 0,
                             'credit': abs(diff * qty_available),
                             'product_id': product.id,
