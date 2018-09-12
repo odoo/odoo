@@ -79,4 +79,10 @@
         </div>
     </xpath>
 </template>
+
+<template id="payment" name="Payment" inherit_id="website_sale.payment">
+    <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/child::*" position="attributes">
+        <attribute name="t-att-style">'display: None;' if line in free_shipping_lines else ''</attribute>
+    </xpath>
+</template>
 </odoo>
