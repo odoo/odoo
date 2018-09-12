@@ -3,7 +3,23 @@
 /// rules.
 ///
 
+// ======  Variables =========
 $-navbar-height: $nav-link-height !default;
+
+// Portal toolbar (filters, search bar)
+$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+$o-portal-mobile-toolbar-border: $border-color;
+$o-portal-mobile-toolbar-bg: $gray-200;
+
+// Portal Tables
+$o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
+$o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
+$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
+$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
+
+// Page custom bg (eg. 'Invoice')
+$o-portal-bg: true; // Enable/Disable page custom bg.
+$o-portal-bg-color: desaturate($gray-200, 100%);
 
 // Resize and vertically align navbar’s items relative to navbar
 @mixin o-w-fill-navbar($ratio: 1) {
@@ -158,6 +174,14 @@ hr {
     color: color-yiq($list-group-bg);
 }
 
+%o-portal-breadcrumbs {
+    background-color: transparent;
+
+    .breadcrumb-item {
+        display: inline-flex;
+    }
+}
+
 // Replaces old BS3 page-header class
 %o-page-header {
     margin-bottom: $headings-margin-bottom * 2;
@@ -165,6 +189,7 @@ hr {
     border-bottom-width: $border-width;
     border-bottom-style: solid;
     border-bottom-color: $border-color;
+    line-height: 2.1rem;
 }
 .o_page_header {
     @extend %o-page-header;
@@ -297,14 +322,19 @@ img.o_we_custom_image {
 }
 
 // Portal specific
+
+// ===  Page custom bg (eg. 'Invoice') ===
+// This could have been achieved easily using a class (eg. bg-200), but we
+// don't want to force the design because of themes.
+@if ($o-portal-bg) {
+    #wrapwrap.o_portal_bg_dark {
+        @include o-bg-color($o-portal-bg-color);
+    }
+}
+
 .o_portal {
     .breadcrumb {
-        background-color: rgba(0, 0, 0, 0);
-        margin-bottom: 0px;
-    }
-
-    .record_pager {
-        padding: 8px 0px;
+        @extend %o-portal-breadcrumbs;
     }
 
     > tbody.o_portal_report_tbody {
@@ -317,77 +347,83 @@ img.o_we_custom_image {
         text-decoration: none;
     }
 
-    .o_portal_my_doc_table {
-        td, th {
-            text-align: right;
-        }
-        tr > :first-child {
-            text-align: left;
+    .o_portal_navbar {
+        .breadcrumb {
+            padding-left: 0;
+            padding-right: 0;
+            @extend %o-portal-breadcrumbs;
+
+            .breadcrumb-item.active {
+                // In this context, active breadcrumb act as title
+                color:  $headings-color;
+                line-height: $h5-font-size/$font-size-base;
+                font: {size: $h5-font-size; weight: $headings-font-weight};
+
+                &:before {
+                    // Restore breadcrumb divider to default
+                    color: $breadcrumb-divider-color;
+                    line-height: $line-height-base;
+                    font: {size: $font-size-base; weight: $font-weight-base};
+                }
+            }
         }
     }
 
-    .o_portal_navbar {
-        .navbar-brand {
-            margin: 0;
-
-            @include media-breakpoint-up(md) {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
-            }
+    .o_portal_my_doc_table {
+        th {
+            padding-top: $o-portal-table-th-pt;
+            padding-bottom: $o-portal-table-th-pb;
         }
 
-        // ===== Default portal navbar design =====
-        &.o_portal_navbar_default {
-            margin-bottom: 8px;
+        td {
+            padding-top: $o-portal-table-td-pt;
+            padding-bottom: $o-portal-table-td-pb;
+        }
 
-            .navbar-brand {
-                padding: $navbar-padding-y $navbar-padding-x 0 0;
+        td, th {
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+    }
+
+    address {
+        span[itemprop="name"] {
+            font-weight: bold;
+            margin-bottom: 0.3em;
+        }
+
+        div[itemprop="address"] > div {
+            position: relative;
+
+            span[itemprop="streetAddress"] {
+                line-height: 1.2;
+                margin-bottom: 0.3em;
             }
 
-            .navbar-header .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
+            .fa {
+                @include o-position-absolute(0, $left: 0);
+                line-height: $line-height-base;
 
-            .navbar-toggle {
-                margin-right: 0;
-                margin-bottom: 0;
-                background-color: $table-active-bg;
-                padding: 6px 10px $navbar-padding-y;
-                border-width: 1px 1px 0 1px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                z-index: 1;
-
-                &.collapsed {
-                    padding:6px 10px;
-                    border-width: 1px;
-                    border-radius: $btn-border-radius;
-                    background-color: transparent;
+                + span {
+                    display: block;
+                    // FontAwesome '.fa-fw' fixed-with + margin
+                    padding-left: 1.28571429em + 0.5em;
                 }
             }
+        }
+    }
 
-            @include media-breakpoint-down(sm) {
-                .navbar-collapse {
-                    z-index: 0;
-                    background-color: $table-active-bg;
-                    border-radius: $btn-border-radius;
-                    border-top-right-radius: 0;
-                    transform: translateY(-2px);
+    .o_my_sidebar div[itemprop="address"] > div {
+        margin-top: 0.5em;
+    }
 
-                    &.in {
-                        overflow: visible;
-                    }
-                }
-            }
-
-            @include media-breakpoint-up(md) {
-                > .container-fluid {
-                    padding: 0;
-
-                    .navbar-form {
-                        padding-right: 0;
-                    }
-                }
+    @if ($o-portal-mobile-toolbar) {
+        #o_portal_navbar_content {
+            @include media-breakpoint-down(md) {
+                margin: $navbar-padding-y (-$navbar-padding-x) 0;
+                padding: $navbar-padding-y $navbar-padding-x ;
+                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                background-color: $o-portal-mobile-toolbar-bg;
             }
         }
     }
@@ -444,19 +480,31 @@ img.o_we_custom_image {
     font-weight: normal;
 }
 
+.o_portal_contact_img {
+    width: 2.3em;
+    height: 2.3em;
+}
+
 .o_portal_sidebar {
-    .bs-sidebar {
-        width: 100%;
-        border-radius: 5px;
-        background-color: $light;
+    .o_portal_contact_block {
+        @include media-breakpoint-down(md) {
+            border-left: $border-width solid $border-color;
+            border-bottom: 0;
+        }
     }
-    .o_portal_contact_img {
-        width: 3.7em;
-        height: 3.7em;
-    }
+
     .o_portal_html_view {
-        border: 1px solid gray('300');
-        border-radius: 5px;
-        padding-right: 1px;
+        overflow: hidden;
+        width: 100%;
+        max-width: 210mm; // A4 page's width
+        background: white;
+
+        .o_portal_html_loader {
+            @include o-position-absolute(45%, 0, auto, 0);
+        }
+
+        iframe {
+            position: relative;
+        }
     }
 }
