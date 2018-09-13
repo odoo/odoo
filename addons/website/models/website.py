@@ -676,10 +676,16 @@ class SeoMetadata(models.AbstractModel):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
+    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized')
     website_meta_title = fields.Char("Website meta title", translate=True)
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
+
+    @api.multi
+    def _compute_is_seo_optimized(self):
+        for record in self:
+            record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
 
     def _default_website_meta(self):
         """ This method will return default meta information. It return the dict

@@ -26,6 +26,7 @@
         }
 
         .modal-footer {
+            flex-wrap: wrap;
             text-align: left;
             justify-content: flex-start;
 
@@ -38,6 +39,10 @@
             footer {
                 > :not(:first-child) { margin-left: .25rem; }
                 > :not(:last-child) { margin-right: .25rem; }
+            }
+
+            button {
+                margin-bottom: .5rem;
             }
         }
     }
