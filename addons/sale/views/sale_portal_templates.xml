@@ -150,8 +150,8 @@
                                 </div>
                             </li>
 
-                            <li class="navspy list-group-item pl-0 d-none d-lg-block flex-grow-1" t-ignore="true" role="complementary">
-                                <ul class="nav flex-column bs-sidenav" data-id="quote_sidebar"></ul>
+                            <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true" role="complementary">
+                                <ul class="nav flex-column bs-sidenav"></ul>
                             </li>
 
                             <t t-if="not sale_order.is_expired and sale_order.state in ['draft', 'sent']">
