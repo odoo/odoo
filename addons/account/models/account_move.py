@@ -956,6 +956,7 @@ class AccountMoveLine(models.Model):
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
                     if vals.get('tax_exigible'):
                         temp['tax_exigible'] = True
+                        temp['account_id'] = tax.cash_basis_account.id or account_id
                     tax_lines_vals.append(temp)
 
         #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
