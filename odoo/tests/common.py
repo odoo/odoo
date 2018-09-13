@@ -678,11 +678,11 @@ class ChromeBrowser():
         self._logger.info('Ready code last try result: %s', last_bad_res or res)
         return False
 
-    def _wait_code_ok(self, code, timeout):
+    def _wait_code_ok(self, code, timeout, fail_on_log_error):
         self._logger.info('Evaluate test code "%s"', code)
         code_id = self._websocket_send('Runtime.evaluate', params={'expression': code})
         start_time = time.time()
-        logged_error = False
+        logged_errors = []
         while time.time() - start_time < timeout:
             try:
                 res = json.loads(self.ws.recv())
@@ -698,21 +698,27 @@ class ChromeBrowser():
                 log_type = res.get('params', {}).get('type')
                 content = " ".join([str(log.get('value', '')) for log in logs])
                 if log_type == 'error':
-                    self._logger.error(content)
-                    logged_error = True
+                    self._logger.info('console log error: %s', content)
+                    logged_errors.append(content)
                 else:
                     self._logger.info('console log: %s', content)
                 for log in logs:
-                    if log.get('type', '') == 'string' and log.get('value', '').lower() == 'ok':
+                    ended = False
+                    if log.get('type', '') == 'string' and log.get('value', '').lower().startswith('error'):
                         # it is possible that some tests returns ok while an error was shown in logs.
                         # since runbot should always be red in this case, better explicitly fail.
-                        if logged_error:
-                            return False
-                        return True
-                    elif log.get('type', '') == 'string' and log.get('value', '').lower().startswith('error'):
-                        self.take_screenshot()
-                        self._save_screencast()
-                        return False
+                        ended = True
+                        success = False
+                    elif log.get('type', '') == 'string' and log.get('value', '').lower() == 'ok':
+                        ended = True
+                        success = not logged_errors or not fail_on_log_error
+                    if ended:
+                        if success == False:
+                            self.take_screenshot()
+                            self._save_screencast()
+                            for error_content in logged_errors:
+                                self._logger.error('console error: %s', content)
+                        return success
             elif res and res.get('method') == 'Page.screencastFrame':
                 self.screencast_frames.append(res.get('params'))
             elif res:
@@ -842,7 +848,7 @@ class HttpCase(TransactionCase):
             self._logger.info('Setting session cookie in browser')
             self.browser.set_cookie('session_id', self.session_id, '/', '127.0.0.1')
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, fail_on_log_error=True, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -880,7 +886,7 @@ class HttpCase(TransactionCase):
                 message = 'The test code "%s" failed' % code
             else:
                 message = "Some js test failed"
-            self.assertTrue(self.browser._wait_code_ok(code, timeout), message)
+            self.assertTrue(self.browser._wait_code_ok(code, timeout, fail_on_log_error), message)
         finally:
             # clear browser to make it stop sending requests, in case we call
             # the method several times in a test method
