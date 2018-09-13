@@ -355,14 +355,6 @@ class Lead(models.Model):
         return self.write({'probability': 0, 'active': False})
 
     @api.multi
-    def action_set_active(self):
-        return self.write({'active': True})
-
-    @api.multi
-    def action_set_unactive(self):
-        return self.write({'active': False})
-
-    @api.multi
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
