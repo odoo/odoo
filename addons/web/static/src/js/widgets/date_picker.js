@@ -17,6 +17,7 @@ var DateWidget = Widget.extend({
         'click input.o_datepicker_input': '_onClick',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'blur input': '_onBlur',
     },
     /**
      * @override
@@ -201,6 +202,14 @@ var DateWidget = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onBlur: function () {
+        this.__libInput = true;
+        this.$input.datetimepicker('hide');
+        this.__libInput = false;
+    },
     /**
      * @private
      */

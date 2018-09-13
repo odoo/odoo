@@ -1835,6 +1835,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.only('editable list with date and datetime', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            debug: true,
+            arch: '<tree editable="bottom"><field name="date"/><field name="datetime"/></tree>',
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+        });
+
+        // edit the first row
+        list.$('.o_data_row:first td:nth(1)').click();
+        list.$('tbody tr:eq(0) td:eq(2)').find('.o_datepicker_input').click();
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        list.$('tbody tr:eq(0) td:eq(2)').find('.o_datepicker_input').blur();
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        list.$el.trigger('click');
+
+        // datetime picker close on keyboard navigation
+        list.$('.o_data_row:first td:nth(1)').click();
+        list.$('tbody tr:eq(0) td:eq(1)').find('.o_datepicker_input').click();
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        list.$('tbody tr:eq(0) td:eq(2)').find('.o_datepicker_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keycode: $.ui.keyCode.TAB,
+        }));
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        list.destroy();
+    });
+
     QUnit.test('edit a row by clicking on a readonly field', function (assert) {
         assert.expect(8);
 
