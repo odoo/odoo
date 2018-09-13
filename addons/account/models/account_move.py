@@ -274,11 +274,17 @@ class AccountMove(models.Model):
 
     @api.multi
     def write(self, vals):
+        # Prevent moving posted entry before lock period to after lock period
+        if 'date' in vals and self.state == 'posted':
+            self._check_lock_date_before()
         if 'line_ids' in vals:
             res = super(AccountMove, self.with_context(check_move_validity=False)).write(vals)
             self.assert_balanced()
         else:
             res = super(AccountMove, self).write(vals)
+        # Prevent moving posted entry before lock period
+        if 'date' in vals and self.state == 'posted':
+            self._check_lock_date()
         return res
 
     @api.multi
@@ -359,6 +365,15 @@ class AccountMove(models.Model):
         self.assert_balanced()
         return self._check_lock_date()
 
+    @api.multi
+    def _check_lock_date_before(self):
+        for move in self:
+            lock_date = max(move.company_id.period_lock_date or date.min, move.company_id.fiscalyear_lock_date or date.min)
+            if move.date <= (lock_date or date.min):
+                message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
+                raise UserError(message)
+        return True
+    
     @api.multi
     def _check_lock_date(self):
         for move in self:
