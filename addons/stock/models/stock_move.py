@@ -388,6 +388,11 @@ class StockMove(models.Model):
         return res
 
     def write(self, vals):
+        # Check that we do not modify a stock.move which is done
+        frozen_fields = ['product_uom', 'location_id', 'location_dest_id', 'product_id', 'state']
+        if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self):
+            raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+
         # FIXME: pim fix your crap
         receipt_moves_to_reassign = self.env['stock.move']
         if 'product_uom_qty' in vals:
