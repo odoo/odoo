@@ -76,14 +76,11 @@ class AccountReconcileModel(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
-    is_tax_price_included = fields.Boolean(string='Is Tax Included in Price', related='tax_id.price_include',
-        help='Technical field used inside the view to make the force_tax_included field readonly if the tax is already price included.')
-    tax_amount_type = fields.Selection(string='Tax Amount Type', related='tax_id.amount_type',
-        help='Technical field used inside the view to make the force_tax_included field invisible if the tax is a group.')
+    show_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
+    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
                                         relation='account_reconcile_model_analytic_tag_rel')
@@ -97,14 +94,11 @@ class AccountReconcileModel(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
-    is_second_tax_price_included = fields.Boolean(string='Is Second Tax Included in Price', related='second_tax_id.price_include',
-        help='Technical field used inside the view to make the force_second_tax_included field readonly if the tax is already price included.')
-    second_tax_amount_type = fields.Selection(string='Second Tax Amount Type', related='second_tax_id.amount_type',
-        help='Technical field used inside the view to make the force_second_tax_included field invisible if the tax is a group.')
+    show_second_force_tax_included = fields.Boolean(store=False, help='Technical field used to show the force tax included button')
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
-    second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
     second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
                                                relation='account_reconcile_model_second_analytic_tag_rel')
@@ -131,15 +125,21 @@ class AccountReconcileModel(models.Model):
     def onchange_name(self):
         self.label = self.name
 
-    @api.onchange('tax_id')
-    def _onchange_tax_id(self):
-        if self.tax_id:
-            self.force_tax_included = self.tax_id.price_include
+    @api.onchange('tax_ids')
+    def _onchange_tax_ids(self):
+        # Multiple taxes with force_tax_included results in wrong computation, so we
+        # only allow to set the force_tax_included field if we have one tax selected
+        self.show_force_tax_included = False if len(self.tax_ids) != 1 else True
+        if len(self.tax_ids) != 1:
+            self.force_tax_included = False
 
-    @api.onchange('second_tax_id')
-    def _onchange_second_tax_id(self):
-        if self.second_tax_id:
-            self.force_second_tax_included = self.second_tax_id.price_include
+    @api.onchange('second_tax_ids')
+    def _onchange_second_tax_ids(self):
+        # Multiple taxes with force_tax_included results in wrong computation, so we
+        # only allow to set the force_tax_included field if we have one tax selected
+        self.show_second_force_tax_included = False if len(self.second_tax_ids) != 1 else True
+        if len(self.second_tax_ids) != 1:
+            self.force_second_tax_included = False
 
     @api.onchange('match_total_amount_param')
     def _onchange_match_total_amount_param(self):
@@ -221,11 +221,13 @@ class AccountReconcileModel(models.Model):
         }
         new_aml_dicts.append(writeoff_line)
 
-        if self.tax_id:
-            writeoff_line['tax_ids'] = [(6, None, [self.tax_id.id])]
-            tax = self.tax_id
+        if self.tax_ids:
+            writeoff_line['tax_ids'] = [(6, None, self.tax_ids.ids)]
+            tax = self.tax_ids
+            # Multiple taxes with force_tax_included results in wrong computation, so we
+            # only allow to set the force_tax_included field if we have one tax selected
             if self.force_tax_included:
-                tax = tax.with_context(force_price_include=True)
+                tax = tax[0].with_context(force_price_include=True)
             new_aml_dicts += self._get_taxes_move_lines_dict(tax, writeoff_line)
 
         # Second write-off line.
@@ -241,11 +243,13 @@ class AccountReconcileModel(models.Model):
             }
             new_aml_dicts.append(second_writeoff_line)
 
-            if self.second_tax_id:
-                second_writeoff_line['tax_ids'] = [(6, None, [self.second_tax_id.id])]
-                tax = self.second_tax_id
+            if self.second_tax_ids:
+                second_writeoff_line['tax_ids'] = [(6, None, self.second_tax_ids.ids)]
+                tax = self.second_tax_ids
+                # Multiple taxes with force_tax_included results in wrong computation, so we
+                # only allow to set the force_tax_included field if we have one tax selected
                 if self.force_second_tax_included:
-                    tax = tax.with_context(force_price_include=True)
+                    tax = tax[0].with_context(force_price_include=True)
                 new_aml_dicts += self._get_taxes_move_lines_dict(tax, second_writeoff_line)
 
         return new_aml_dicts

@@ -17,7 +17,7 @@ class AccountingTestTemplConsistency(HttpCase):
         def get_fields(model, extra_domain=None):
             # Retrieve fields to compare
             domain = [('model', '=', model), ('state', '=', 'base'), ('related', '=', False),
-                      ('compute', '=', False)]
+                      ('compute', '=', False), ('store', '=', True)]
             if extra_domain:
                 domain += extra_domain
             return self.env['ir.model.fields'].search(domain)

@@ -885,14 +885,14 @@
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"
                                        attrs="{'required': ['|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id"
+                                <field name="tax_ids"
                                        domain="[('company_id', '=', company_id)]"
                                        options="{'no_create': True}"
-                                       context="{'append_type_to_tax_name': True}"/>
-                                <field name="is_tax_price_included" invisible="1"/>
-                                <field name="tax_amount_type" invisible="1"/>
+                                       context="{'append_type_to_tax_name': True}"
+                                       widget="many2many_tags"/>
+                                <field name="show_force_tax_included" invisible="1"/>
                                 <field name="force_tax_included"
-                                       attrs="{'invisible': ['|', ('tax_id', '=', False), ('tax_amount_type', '=', 'group')], 'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}" force_save="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -918,15 +918,14 @@
                                 <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"
                                        attrs="{'required': [('has_second_line', '=', True), '|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="second_amount_type" string="Amount type"/>
-                                <field name="second_tax_id"
-                                       string="Tax"
+                                <field name="second_tax_ids"
+                                       string="Taxes"
                                        domain="[('company_id', '=', company_id)]"
-                                       widget="selection"
+                                       widget="many2many_tags"
                                        context="{'append_type_to_tax_name': True}"/>
-                                <field name="is_second_tax_price_included" invisible="1"/>
-                                <field name="second_tax_amount_type" invisible="1"/>
+                                <field name="show_second_force_tax_included" invisible="1"/>
                                 <field name="force_second_tax_included"
-                                       attrs="{'invisible': ['|', ('second_tax_id', '=', False), ('second_tax_amount_type', '=', 'group')], 'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': [('show_second_force_tax_included', '=', False)]}" force_save="1"/>
                                 <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>

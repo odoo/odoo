@@ -684,13 +684,12 @@ class AccountChartTemplate(models.Model):
                 'amount_type': account_reconcile_model.amount_type,
                 'force_tax_included': account_reconcile_model.force_tax_included,
                 'amount': account_reconcile_model.amount,
-                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in account_reconcile_model.tax_ids],
                 'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
                 'second_label': account_reconcile_model.second_label,
                 'second_amount_type': account_reconcile_model.second_amount_type,
                 'force_second_tax_included': account_reconcile_model.force_second_tax_included,
                 'second_amount': account_reconcile_model.second_amount,
-                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
                 'rule_type': account_reconcile_model.rule_type,
                 'auto_reconcile': account_reconcile_model.auto_reconcile,
                 'match_journal_ids': [(6, None, account_reconcile_model.match_journal_ids.ids)],
@@ -706,6 +705,7 @@ class AccountChartTemplate(models.Model):
                 'match_partner': account_reconcile_model.match_partner,
                 'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
                 'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
+                'second_tax_ids': [[4, tax_template_ref[tax.id], 0] for tax in account_reconcile_model.second_tax_ids],
             }
 
     @api.multi
@@ -1041,10 +1041,9 @@ class AccountReconcileModelTemplate(models.Model):
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
-    tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
+    tax_ids = fields.Many2many('account.tax.template', string='Taxes', ondelete='restrict')
     second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
@@ -1054,6 +1053,5 @@ class AccountReconcileModelTemplate(models.Model):
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
-    second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+    second_tax_ids = fields.Many2many('account.tax.template', relation='account_reconcile_model_tmpl_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
