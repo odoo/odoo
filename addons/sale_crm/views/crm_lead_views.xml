@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
                     <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
+                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"
                         context="{'search_default_partner_id': partner_id,
                                   'default_partner_id': partner_id,
                                   'default_team_id': team_id,
