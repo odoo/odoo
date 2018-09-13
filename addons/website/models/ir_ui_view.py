@@ -244,19 +244,19 @@ class View(models.Model):
             if 'main_object' not in qcontext:
                 qcontext['main_object'] = self
 
-            domain_based_info = {'website_id': '', 'name': _('Domain Based')}
-            force_website_id = request.session.get('force_website_id', False)
-            if force_website_id:
-                selected_website = Website.browse(force_website_id)
-                qcontext['multi_website_selected_website'] = {'website_id': selected_website.id, 'name': selected_website.name}
-            else:
-                qcontext['multi_website_selected_website'] = domain_based_info
+            cur = Website.get_current_website()
+            qcontext['multi_website_websites_current'] = {'website_id': cur.id, 'name': cur.name, 'domain': cur.domain}
+            qcontext['multi_website_websites'] = [
+                {'website_id': website.id, 'name': website.name, 'domain': website.domain}
+                for website in Website.search([]) if website != cur
+            ]
 
-            qcontext['multi_website_websites'] = [{'website_id': website.id, 'name': website.name} for website in Website.search([])]
-            qcontext['multi_website_websites'] += [domain_based_info]
-
-            qcontext['multi_website_companies'] = [{'company_id': comp.id, 'name': comp.name} for comp in self.env.user.company_ids]
-            qcontext['multi_website_current_company'] = {'company_id': self.env.user.company_id.id, 'name': self.env.user.company_id.name}
+            cur_company = self.env.user.company_id
+            qcontext['multi_website_companies_current'] = {'company_id': cur_company.id, 'name': cur_company.name}
+            qcontext['multi_website_companies'] = [
+                {'company_id': comp.id, 'name': comp.name}
+                for comp in self.env.user.company_ids if comp != cur_company
+            ]
 
             qcontext.update(dict(
                 self._context.copy(),
