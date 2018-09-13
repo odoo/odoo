@@ -176,7 +176,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" archivable="false">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -313,7 +313,8 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
+                    archivable="false">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -342,8 +343,6 @@
                                     <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
                                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                        <a t-if="! record.active.value"  role="menuitem" name="action_set_active" type="object" class="dropdown-item">Restore</a>
-                                        <a t-if="record.active.value" role="menuitem" name="action_set_unactive" type="object" class="dropdown-item">Archive</a>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
                                 </div>
@@ -407,7 +406,7 @@
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
