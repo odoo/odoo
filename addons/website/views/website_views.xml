@@ -23,22 +23,24 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <form string="Website Settings">
-                    <div name="domain">
-                        <group name="domain">
-                            <group>
-                                <field name="name"/>
-                                <field name="domain"/>
+                    <sheet>
+                        <div name="domain">
+                            <group name="domain">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="domain"/>
+                                </group>
                             </group>
-                        </group>
-                    </div>
-                    <div name="other">
-                        <group name="other">
-                            <group>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                        </div>
+                        <div name="other">
+                            <group name="other">
+                                <group>
+                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                                </group>
                             </group>
-                        </group>
-                    </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>

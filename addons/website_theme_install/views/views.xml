@@ -111,10 +111,11 @@ action = {
         </xpath>
     </template>
 
-    <record id="view_website_form_inherit_view_themes" model="ir.ui.view">
+    <record id="view_website_form_view_themes_modal" model="ir.ui.view">
         <field name="name">website.form</field>
         <field name="model">website</field>
         <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//form" position='inside'>
                 <footer>
