@@ -41,14 +41,14 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
-        default='''Dear Sir/Madam,
+        default=lambda t: _('''Dear Sir/Madam,
 
 Our records indicate that some payments on your account are still due. Please find details below.
 If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.
 If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
-Best Regards,''')
+Best Regards,'''))
 
     @api.multi
     def _check_lock_dates(self, vals):
