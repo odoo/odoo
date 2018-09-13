@@ -24,9 +24,6 @@ odoo.define('sale.SalePortalSidebar', function (require) {
 var PortalSidebar = require('portal.PortalSidebar');
 
 var SalePortalSidebar = PortalSidebar.extend({
-    events: {
-        'click .o_portal_sale_print': '_onPrintSaleOrder',
-    },
     /**
      * @override
      * @param {Object} $watched_selector
@@ -97,7 +94,7 @@ var SalePortalSidebar = PortalSidebar.extend({
                     }
                     if (lastLI) {
                         if (!lastUL) {
-                            lastUL = $("<ul class='nav'>").appendTo(lastLI);
+                            lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
                         }
                         $("<li class='nav-item'>").append($('<a class="nav-link" href="#' + id + '"/>').text(text)).appendTo(lastUL);
                     }
@@ -125,20 +122,6 @@ var SalePortalSidebar = PortalSidebar.extend({
             }
         });
         return rawText.join(' ');
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPrintSaleOrder: function (ev) {
-        ev.preventDefault();
-        var href = $(ev.currentTarget).attr('href');
-        this._printIframeContent(href);
     },
 });
 
