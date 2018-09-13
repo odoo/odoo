@@ -604,7 +604,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     @api.multi
     def execute(self):
         self.ensure_one()
-        if not self.env.user._is_superuser() and not self.env.user.has_group('base.group_system'):
+        if not self.env.user._is_admin() and not self.env.user.has_group('base.group_system'):
             raise AccessError(_("Only administrators can change the settings"))
 
         self = self.with_context(active_test=False)
