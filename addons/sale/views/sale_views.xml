@@ -890,14 +890,15 @@
                                 <field name="product_uom_qty" readonly="1"/>
                                 <field name="qty_delivered" readonly="1"/>
                                 <field name="qty_invoiced"/>
+                                <field name="product_uom" readonly="1"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="order_partner_id" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
                                 <field name="product_updatable" invisible="1"/>
                             </group>
                             <group>
-                                <field name="product_uom" readonly="1"/>
-                                <field name="discount" readonly="1"/>
+                                <field name="price_unit" readonly="1"/>
+                                <field name="discount" groups="sale.group_discount_per_so_line" readonly="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="tax_id" widget="many2many_tags" readonly="1"/>
                                 <field name="price_tax" widget="monetary"/>
