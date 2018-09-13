@@ -220,7 +220,6 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             is_menu: this.$('#is_menu').prop('checked'),
             is_homepage: this.$('#is_homepage').prop('checked'),
             website_published: this.$('#is_published').prop('checked'),
-            share_page_info: this.$('#share_page_info').prop('checked'),
             create_redirect: this.$('#create_redirect').prop('checked'),
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
