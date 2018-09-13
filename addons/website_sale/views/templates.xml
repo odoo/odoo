@@ -1556,7 +1556,7 @@
     <template id="reduction_code" inherit_id="website_sale.total" active="True" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_coupon">
-                <td colspan="3" class='noborder text-right-lg text-center'>
+                <td colspan="3" class='noborder text-right-lg text-center-not-lg'>
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
