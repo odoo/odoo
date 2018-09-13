@@ -437,6 +437,11 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            self._check_company_location()
+            self._check_company_journal()
+            self._check_company_invoice_journal()
+            self._check_company_payment()
+            self._check_currencies()
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
