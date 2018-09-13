@@ -169,11 +169,15 @@ var BasicActivity = AbstractField.extend({
             context: this.record.getContext(),
         }).then(
             function (rslt_action) {
-                self.do_action(rslt_action, {
-                    on_close: function () {
-                        self.trigger_up('reload');
-                    },
-                });
+                if (rslt_action) {
+                    self.do_action(rslt_action, {
+                        on_close: function () {
+                            self.trigger_up('reload');
+                        },
+                    });
+                } else {
+                    self.trigger_up('reload');
+                }
             }
         );
     },
@@ -270,6 +274,7 @@ var BasicActivity = AbstractField.extend({
         var $popoverElement = $(ev.currentTarget);
         var activityID = $popoverElement.data('activity-id');
         var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
+        var forceNextActivity = $popoverElement.data('force-next-activity');
         if (!$popoverElement.data('bs.popover')) {
             $popoverElement.popover({
                 template: $(Popover.Default.template).addClass('o_mail_activity_feedback')[0].outerHTML, // Ugly but cannot find another way
@@ -279,7 +284,7 @@ var BasicActivity = AbstractField.extend({
                 trigger:'click',
                 placement: 'right', // FIXME: this should work, maybe a bug in the popper lib
                 content : function () {
-                    var $popover = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID }));
+                    var $popover = $(QWeb.render('mail.activity_feedback_form', { previous_activity_type_id: previousActivityTypeID, force_next: forceNextActivity}));
                     $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
                     $popover.on('click', '.o_activity_popover_done', function (ev) {
                         ev.stopPropagation();
