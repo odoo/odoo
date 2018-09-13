@@ -4,7 +4,6 @@ odoo.define('web.relational_fields_tests', function (require) {
 var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 var ListView = require('web.ListView');
@@ -13354,8 +13353,8 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
     QUnit.module('TabNavigation');
+
     QUnit.test('when Navigating to a many to one with tabs, it receives the focus on the add new line link', function (assert) {
          assert.expect(3);
 
@@ -13442,7 +13441,7 @@ QUnit.module('relational_fields', {
                            "after tab, the focus should be on the many2one"));
 
        form.destroy();
-   });
+    });
 
     QUnit.test('when Navigating to a many to one with tabs, not filling in the first field and hitting tab, we should not add a first line but navigate to the next control', function (assert) {
         assert.expect(3);
@@ -13567,6 +13566,73 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('navigating through an editable list with custom controls [REQUIRE FOCUS]', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<control>' +
+                                '<create string="Custom 1" context="{\'default_foo\': \'1\'}"/>' +
+                                '<create string="Custom 2" context="{\'default_foo\': \'2\'}"/>' +
+                            '</control>' +
+                            '<field name="foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                    '<field name="int_field"/>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="display_name"]')[0],
+            "first input should be focused by default");
+
+        // press tab to navigate to the list
+        form.$('.o_field_widget[name="display_name"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a:first')[0],
+            "first editable list control should now have the focus");
+
+        // press right to focus the second control
+        form.$('.o_field_x2many_list_row_add a:first').trigger($.Event('keydown', {
+            which: $.ui.keyCode.RIGHT,
+            keyCode: $.ui.keyCode.RIGHT,
+        }));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a:nth(1)')[0],
+            "second editable list control should now have the focus");
+
+        // press left to come back to first control
+        form.$('.o_field_x2many_list_row_add a:nth(1)').trigger($.Event('keydown', {
+            which: $.ui.keyCode.LEFT,
+            keyCode: $.ui.keyCode.LEFT,
+        }));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a:first')[0],
+            "first editable list control should now have the focus");
+
+        // press tab to leave the list
+        form.$('.o_field_x2many_list_row_add a:first').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+
+        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="int_field"]')[0],
+            "last input should now be focused");
+
+        form.destroy();
+    });
 });
 });
 });
