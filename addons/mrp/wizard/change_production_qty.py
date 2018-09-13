@@ -77,6 +77,8 @@ class ChangeProductionQty(models.TransientModel):
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
+                if wo.qty_produced == wo.qty_production and wo.state == 'progress':
+                    wo.state = 'done'
                 # assign moves; last operation receive all unassigned moves
                 # TODO: following could be put in a function as it is similar as code in _workorders_create
                 # TODO: only needed when creating new moves
