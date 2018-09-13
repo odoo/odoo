@@ -110,7 +110,7 @@ class MailThread(models.AbstractModel):
     message_has_error_counter = fields.Integer(
         'Number of error', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
-    related_attachment_count = fields.Integer('Attachment Count', compute='_compute_related_attachment_count')
+    message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count')
     message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment')
 
     @api.one
@@ -146,12 +146,6 @@ class MailThread(models.AbstractModel):
             ('channel_id', operator, operand)])
         # using read() below is much faster than followers.mapped('res_id')
         return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
-
-    @api.multi
-    def _compute_related_attachment_count(self):
-        for record in self:
-            domain = [('res_id', '=', record.id), ('res_model', '=', self._name)]
-            record.related_attachment_count = self.env['ir.attachment'].search_count(domain)
 
     @api.multi
     @api.depends('message_follower_ids')
@@ -243,6 +237,16 @@ class MailThread(models.AbstractModel):
     @api.model
     def _search_message_has_error(self, operator, operand):
         return [('message_ids.has_error', operator, operand)]
+
+    @api.multi
+    def _compute_message_attachment_count(self):
+        read_group_var = self.env['ir.attachment'].read_group([('res_model', '=', self._name)],
+                                                              fields=['res_id'],
+                                                              groupby=['res_id'])
+
+        attachment_count_dict = dict((d['res_id'], d['res_id_count']) for d in read_group_var)
+        for record in self:
+            record.message_attachment_count = attachment_count_dict.get(record.id, 0)
 
     # ------------------------------------------------------
     # CRUD overrides for automatic subscription and logging

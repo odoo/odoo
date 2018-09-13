@@ -4,7 +4,7 @@ odoo.define('mail.FormView', function (require) {
 var FormView = require('web.FormView');
 
 /**
- * This file is used to add "related_attachment_count" to fieldsInfo so we can fetch its value for the
+ * This file is used to add "message_attachment_count" to fieldsInfo so we can fetch its value for the
  * chatter's attachment button without having it explicitly declared in the form view template.
  *
  */
@@ -17,7 +17,7 @@ FormView.include({
         this._super.apply(this, arguments);
 
         if ('message_ids' in this.fieldsInfo[this.viewType]) {
-            this.fieldsInfo[this.viewType].related_attachment_count = {};
+            this.fieldsInfo[this.viewType].message_attachment_count = {};
         }
     },
 });
