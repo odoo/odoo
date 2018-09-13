@@ -62,11 +62,12 @@ tour.register('shop_wishlist', {
         },
         {
             content: "select desk cutomizable",
-            extra_trigger: '#product_detail',
+            extra_trigger: '#product_detail label:contains(Aluminium) input',
             trigger: 'label:contains(Aluminium) input',
         },
         {
-            content: "click on add to wishlist",
+            content: "Change variant, wait button enable and click on add to wishlist",
+            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(".disabled")',
             trigger: '#product_detail .o_add_wishlist_dyn',
         },
         {
