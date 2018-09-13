@@ -9,23 +9,17 @@ from pprint import pprint as pp
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.tools.parse_version import parse_version
 
 logger = logging.getLogger('openerp.manage')
 
 DEFAULT_OPENERP_CONF = '/srv/openerp-server.conf'
 
-COMMAND_SHELL = 'shell'
-COMMANDS = [
-    COMMAND_SHELL,
-]
-
-parser = ArgumentParser()
-parser.add_argument('command', choices=COMMANDS, help="A command to execute. For e.g: {}".format('|'.join(COMMANDS)), )
-parser.add_argument('-d', dest='dbname', required=True, help="REQUIRED: The database to execute against.")
-parser.add_argument('-c', dest='config_path', help="The config file to use.")
-
 
 def start_bootstrap(dbname, config_path=None):
+    """
+    Heavily copy/paste from default openerp-server script.
+    """
     os.environ["TZ"] = "UTC"
 
     conf_args = ['--debug']  # Maybe useless?
@@ -57,7 +51,7 @@ def start_bootstrap(dbname, config_path=None):
     cr = db.cursor()
     cr.autocommit(True)
 
-    return cr, pool
+    return db, cr, pool
 
 
 def end_bootstrap(cr):
@@ -65,29 +59,126 @@ def end_bootstrap(cr):
     logging.shutdown()
 
 
+def shell_subcommand(args):
+    locals = {
+        'cr': cr,
+        'pool': pool,
+        'uid': SUPERUSER_ID,
+        'pp': pp,
+    }
+    banner = """
+    Welcome to the OpenERP shell! Well, this is not Django but we try to make it better!
+
+    Available global variables: %s
+
+    Example usage:
+    >>> user_obj = pool.get('res.users')
+    >>> user_obj.write(cr, uid, 1, {'name': 'Jean Jass'})
+    >>> user_obj.browse(cr, uid, 1).name == 'Jean Jass'
+                    """ % ('\n- ' + '\n- '.join(locals.keys()))
+
+    code.interact(banner=banner, local=locals)
+
+
+def migrate_subcommand(args):
+    module = args.module
+    version = '{}.{}'.format(openerp.release.major_version, args.version)
+
+    cr.execute("""
+           SELECT latest_version
+           FROM ir_module_module
+           WHERE name = %s
+       """, (module,))
+    current_version = cr.fetchone()[0]
+
+    # Force installed version and state
+    cr.execute("""
+        UPDATE ir_module_module
+        SET latest_version = %s, state = %s
+        WHERE name = %s
+    """, (version, 'to upgrade', module))
+
+    # Needs to load all dependencies (of dependencies) and for this, much easier
+    # to load all modules installed...
+    cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(['installed', 'to upgrade']),))
+    module_list = [name for (name,) in cr.fetchall()]
+
+    graph = openerp.modules.graph.Graph()
+    graph.add_modules(cr, module_list, force=[module])
+    package = graph.get(module)  # Got our node graph.
+
+    migrate_manager = openerp.modules.migration.MigrationManager(cr, graph)
+
+    try:
+        migrate_manager.migrate_module(package, args.stage)
+    except Exception as exc:
+        cr.execute("""
+            UPDATE ir_module_module
+            SET latest_version = %s, state = %s
+            WHERE name = %s
+        """, (current_version, 'installed', module))
+        raise exc
+    else:
+        # Yes, the above method don't do this... We have to do it manually!
+        latest_version = '{}.{}'.format(openerp.release.major_version, package.data['version'])
+        cr.execute("""
+            UPDATE ir_module_module
+            SET latest_version = %s, state = %s
+            WHERE name = %s
+        """, (latest_version, 'installed', module))
+
+
+COMMAND_SHELL = 'shell'
+COMMAND_MIGRATE = 'migrate'
+COMMANDS = [
+    COMMAND_SHELL,
+    COMMAND_MIGRATE,
+]
+
+MIGRATE_STAGE_PRE = 'pre'
+MIGRATE_STAGE_POST = 'post'
+MIGRATE_STAGES = [
+    MIGRATE_STAGE_PRE,
+    MIGRATE_STAGE_POST,
+]
+MIGRATE_STAGE_DEFAULT = 'post'
+
+parser = ArgumentParser()
+parser.add_argument('-d', dest='dbname', required=True, help="REQUIRED: The database to execute against.")
+parser.add_argument('-c', dest='config_path', help="The config file to use.")
+subparsers = parser.add_subparsers(help='Available sub-commands are:\n-{}'.format('\n-'.join(COMMANDS)))
+
+parser_shell = subparsers.add_parser(COMMAND_SHELL, help='Start an interactive shell with an OpenERP bootstraped.')
+parser_shell.set_defaults(func=shell_subcommand)
+
+parser_migrate = subparsers.add_parser(
+    COMMAND_MIGRATE,
+    help='Alternative way to update modules. Better for debugging ONLY (no thread).',
+)
+parser_migrate.add_argument('module')
+parser_migrate.add_argument(
+    'version',
+    help='The previous version to force. For example, if the current '
+         'version is 2.11.2, you must enter 2.11.1 to play the migration 2.11.2'
+         '**ONLY**. Be careful, the migrations are not undo (OpenERP don\'t'
+         'implement it!)',
+)
+parser_migrate.add_argument(
+    '--stage',
+    default=MIGRATE_STAGE_DEFAULT,
+    choices=MIGRATE_STAGES,
+    help='The migration stage to apply. Possible values: {}. Default to {}.'.format(
+        ','.join(MIGRATE_STAGES),
+        MIGRATE_STAGE_DEFAULT,
+    ),
+)
+parser_migrate.set_defaults(func=migrate_subcommand)
+
 if __name__ == "__main__":
     args = parser.parse_args()
+    db, cr, pool = start_bootstrap(args.dbname, args.config_path)
 
-    cr, pool = start_bootstrap(args.dbname, args.config_path)
-
-    if args.command == 'shell':
-        locals = {
-            'cr': cr,
-            'pool': pool,
-            'uid': SUPERUSER_ID,
-            'pp': pp,
-        }
-        banner = """
-Welcome to the OpenERP shell! Well, this is not Django but we try to make it better!
-
-Available global variables: %s
-
-Example usage:
->>> user_obj = pool.get('res.users')
->>> user_obj.write(cr, uid, 1, {'name': 'Jean Jass'})
->>> user_obj.browse(cr, uid, 1).name == 'Jean Jass'
-                """ % ('\n- ' + '\n- '.join(locals.keys()))
-
-        code.interact(banner=banner, local=locals)
-
-    end_bootstrap(cr)
+    try:
+        args.func(args)
+    finally:
+        end_bootstrap(cr)
