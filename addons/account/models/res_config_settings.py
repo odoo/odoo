@@ -82,12 +82,27 @@ class ResConfigSettings(models.TransientModel):
                This is useful if you install accounting after having used invoicing for some time and
                don't want to reconcile all the past payments with bank statements.""")
     account_sanitize_invoice_ref = fields.Boolean(string="Sanitize Invoice References", related='company_id.account_sanitize_invoice_ref', help="If checked, customer invoices' and vendor bills' referneces will automatically correct their reference so that they are maximum 140 characters long, consist only of latin characters, contain no '//' sequence, and have no leading or trailing /.")
+    account_simplified_bills = fields.Boolean(string="Use bills without products", compute='_compute_account_simplified_bills', inverse='_set_account_simplified_bills', help="Enable this option to use a simplified versions of vendor bills, where products are hidden.")
 
     qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code')
     qr_code_payment_journal_id = fields.Many2one('account.journal', related='company_id.qr_code_payment_journal_id', string="Payment Journal", domain="['&',('type', '=', 'bank'), ('currency_id.name','=','EUR')]")
     qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
-    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print')	
+    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print')
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email')
+
+    @api.depends('qr_code')
+    def _compute_account_simplified_bills(self):
+        group_user = self.env.ref('base.group_user')
+        group_bills_use_products = self.env.ref('account.group_bills_use_products')
+        for record in self:
+            record.account_simplified_bills = group_bills_use_products not in group_user.implied_ids
+
+    def _set_account_simplified_bills(self):
+        bills_products_group = self.env.ref('account.group_bills_use_products')
+        simplified_bills = any(self.mapped('account_simplified_bills'))
+        self.env.ref('base.group_user').write({'implied_ids': [(simplified_bills and 3 or 4, bills_products_group.id)]})
+        if simplified_bills:
+            self.env['res.users'].search([]).write({'groups_id': [(3, bills_products_group.id)]})
 
     @api.multi
     def set_values(self):

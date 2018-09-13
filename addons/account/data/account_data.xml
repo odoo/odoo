@@ -182,5 +182,18 @@
             <field name="state">code</field>
             <field name="code">action = records.action_share()</field>
         </record>
+
+        <!-- Option groups-->
+        <record id="group_bills_use_products" model="res.groups">
+            <field name="name">Use products on vendor bills</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <!-- Enable products on bills by default at installation -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('account.group_bills_use_products'))]"/>
+        </record>
     </data>
 </odoo>
