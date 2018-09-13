@@ -13,10 +13,10 @@ function computeVariation (value, comparisonValue) {
     var signClass;
 
     if (!isNaN(value) && !isNaN(comparisonValue)) {
-    	if (comparisonValue === 0) {
-        	if (value === 0) {
-        		magnitude = 0;
-        	} else if (value > 0){
+        if (comparisonValue === 0) {
+            if (value === 0) {
+                magnitude = 0;
+            } else if (value > 0){
                 magnitude = 1;
             } else {
                 magnitude = -1;
@@ -24,7 +24,7 @@ function computeVariation (value, comparisonValue) {
         } else {
             magnitude = (value - comparisonValue) / Math.abs(comparisonValue);
         }
-	    if (magnitude > 0) {
+        if (magnitude > 0) {
             signClass = ' o_positive';
         } else if (magnitude < 0) {
             signClass = ' o_negative';
@@ -50,9 +50,9 @@ function renderVariation (variation, field, options) {
             fieldUtils.format.percentage(variation.magnitude, field, options
         ));
     } else {
-    	$variation = $('<div>', {class: 'o_variation'}).html('-');
+        $variation = $('<div>', {class: 'o_variation'}).html('-');
     }
-   	return $variation;
+    return $variation;
 }
 
 /**
@@ -66,7 +66,7 @@ function renderVariation (variation, field, options) {
  * @returns {Object}
  */
 function renderComparison ($node, value, comparisonValue, variation, formatter, field, options) {
-	var $variation = renderVariation(variation, field, options);
+    var $variation = renderVariation(variation, field, options);
 	$node.append($variation);
 	if (!isNaN(variation.magnitude)) {
 		$node.append(
