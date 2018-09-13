@@ -32,9 +32,10 @@
                             </div>
                         </group>
                         <group>
+                            <field name="force_next"/>
+                            <field name="default_next_type_id" attrs="{'required': [('force_next', '=', True)]}" context="{'default_res_model_id': res_model_id}"/>
                             <field name="next_type_ids" widget="many2many_tags"
-                                context="{'default_res_model_id': res_model_id}"/>
-                            <field name="default_next_type_id" context="{'default_res_model_id': res_model_id}"/>
+                                attrs="{'invisible': [('force_next', '=', True)]}" context="{'default_res_model_id': res_model_id}"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
@@ -100,6 +101,7 @@
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="force_next" invisible="1"/>
                         <field name="previous_activity_type_id"/>
                         <field name="has_recommended_activities"/>
                     </group>
@@ -125,10 +127,13 @@
                     <footer>
                         <button string="Schedule" name="action_close_dialog"
                             type="object" class="btn-primary"/>
-                        <button string="Mark as Done" name="action_done"
+                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Mark as Done" name="action_done"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button attrs="{'invisible': [('force_next', '=', False)]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" />

@@ -58,6 +58,7 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
+    force_next = fields.Boolean("Auto-launched next activity", default=False)
     next_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'activity_id', 'recommended_id',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
@@ -151,6 +152,7 @@ class MailActivity(models.Model):
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
+    force_next = fields.Boolean(related='activity_type_id.force_next')
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -371,24 +373,33 @@ class MailActivity(models.Model):
 
     @api.multi
     def action_feedback_schedule_next(self, feedback=False):
-        wizard_ctx = dict(
-            self.env.context,
-            default_previous_activity_type_id=self.activity_type_id.id,
-            activity_previous_deadline=self.date_deadline,
-            default_res_id=self.res_id,
-            default_res_model=self.res_model,
-        )
-        self.action_feedback(feedback)
-        return {
-            'name': _('Schedule an Activity'),
-            'context': wizard_ctx,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.activity',
-            'views': [(False, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
+        ctx = dict(
+                    self.env.context,
+                    default_previous_activity_type_id=self.activity_type_id.id,
+                    activity_previous_deadline=self.date_deadline,
+                    default_res_id=self.res_id,
+                    default_res_model=self.res_model,
+                )
+        force_next = self.force_next
+        self.action_feedback(feedback)  # will unlink activity, dont access self after that
+        if force_next:
+            Activity = self.env['mail.activity'].with_context(ctx)
+            res = Activity.new(Activity.default_get(Activity.fields_get()))
+            res._onchange_previous_activity_type_id()
+            res._onchange_activity_type_id()
+            Activity.create(res._convert_to_write(res._cache))
+            return False
+        else:
+            return {
+                'name': _('Schedule an Activity'),
+                'context': ctx,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.activity',
+                'views': [(False, 'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
 
     @api.multi
     def action_close_dialog(self):
