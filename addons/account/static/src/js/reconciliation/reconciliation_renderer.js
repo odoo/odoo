@@ -425,38 +425,51 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             Promise.resolve(createPromise).then(function(){
                 var data = self.model.get(self.handleCreateRecord).data;
-                self.model.notifyChanges(self.handleCreateRecord, state.createForm).then(function () {
+                return self.model.notifyChanges(self.handleCreateRecord, state.createForm)
+                    .then(function () {
                     // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
-                    self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                        return self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}})
+                    })
+                    .then(function (){
                         var defs = [];
                         _.each(state.createForm.analytic_tag_ids, function (tag) {
                             defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
                         });
-                        Promise.all(defs).then(function () {
-                            var record = self.model.get(self.handleCreateRecord);
-                            _.each(self.fields, function (field, fieldName) {
-                                if (self._avoidFieldUpdate[fieldName]) return;
-                                if (fieldName === "partner_id") return;
-                                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                                    field.reset(record);
-                                }
-                                if (fieldName === 'tax_id') {
-                                    if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
-                                        $('.create_force_tax_included').addClass('d-none');
-                                    }
-                                    else {
-                                        $('.create_force_tax_included').removeClass('d-none');
-                                    }
-                                }
-                            });
+                        return Promise.all(defs);
+                    })
+                    .then(function () {
+                        return self.model.notifyChanges(self.handleCreateRecord, {tax_ids: {operation: 'REPLACE_WITH', ids: []}})
+                    })
+                    .then(function (){
+                        var defs = [];
+                        _.each(state.createForm.tax_ids, function (tag) {
+                            defs.push(self.model.notifyChanges(self.handleCreateRecord, {tax_ids: {operation: 'ADD_M2M', ids: tag}}));
                         });
+                        return Promise.all(defs);
+                    })
+                    .then(function () {
+                        var record = self.model.get(self.handleCreateRecord);
+                        _.each(self.fields, function (field, fieldName) {
+                            if (self._avoidFieldUpdate[fieldName]) return;
+                            if (fieldName === "partner_id") return;
+                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                field.reset(record);
+                            }
+                            if (fieldName === 'tax_ids') {
+                                if (!state.createForm[fieldName].length || state.createForm[fieldName].length > 1) {
+                                    $('.create_force_tax_included').addClass('d-none');
+                                }
+                                else {
+                                    $('.create_force_tax_included').removeClass('d-none');
+                                    var price_include = state.createForm[fieldName][0].price_include;
+                                    self.$('.create_force_tax_included input').prop('checked', price_include);
+                                    self.$('.create_force_tax_included input').prop('disabled', price_include);
+                                }
+                            }
+                        });
+                        return true; 
                     });
                 });
-                if(state.createForm.tax_id){
-                    // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
-                    self.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
-                }
-            });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
@@ -510,7 +523,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
 
     /**
-     * create account_id, tax_id, analytic_account_id, analytic_tag_ids, label and amount fields
+     * create account_id, tax_ids, analytic_account_id, analytic_tag_ids, label and amount fields
      *
      * @private
      * @param {object} state - statement line
@@ -530,8 +543,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
-            type: 'many2one',
-            name: 'tax_id',
+            type: 'many2many',
+            name: 'tax_ids',
             domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
@@ -570,8 +583,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.journal_id = new relational_fields.FieldMany2One(self,
                 'journal_id', record, {mode: 'edit'});
 
-            self.fields.tax_id = new relational_fields.FieldMany2One(self,
-                'tax_id', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
+            self.fields.tax_ids = new relational_fields.FieldMany2ManyTags(self,
+                'tax_ids', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
 
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
@@ -598,7 +611,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.account_id.appendTo($create.find('.create_account_id .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.account_id));
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
-            self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
+            self.fields.tax_ids.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
             self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
             self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'));
