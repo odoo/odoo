@@ -79,7 +79,7 @@ var Chatter = Widget.extend({
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
         this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
-            count: this.record.data.related_attachment_count || 0,
+            count: this.record.data.message_attachment_count || 0,
         }));
         // render and append the buttons
         this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
@@ -270,7 +270,7 @@ var Chatter = Widget.extend({
                         if (self._reloadAfterPost(messageData)) {
                             self.trigger_up('reload');
                         } else if (messageData.attachment_ids.length) {
-                            self.trigger_up('reload', {fieldNames: ['related_attachment_count']});
+                            self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
                         }
                     });
                 });
@@ -364,7 +364,7 @@ var Chatter = Widget.extend({
      * @private
      */
      _updateAttachmentCounter: function () {
-        var count = this.record.data.related_attachment_count || 0;
+        var count = this.record.data.message_attachment_count || 0;
         this.$('.o_chatter_attachment_button_count').html(' ('+ count +')');
         this.$('.o_chatter_button_attachment').toggleClass('o_hidden', !count);
      },

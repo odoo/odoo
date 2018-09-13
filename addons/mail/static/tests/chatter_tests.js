@@ -54,14 +54,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
-                    related_attachment_count: {
+                    message_attachment_count: {
                         string: 'Attachment count',
                         type: 'integer',
                     },
                 },
                 records: [{
                     id: 2,
-                    related_attachment_count: 3,
+                    message_attachment_count: 3,
                     display_name: "first partner",
                     foo: "HELLO",
                     message_follower_ids: [],
