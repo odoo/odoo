@@ -91,6 +91,7 @@ class IrModel(models.Model):
     access_ids = fields.One2many('ir.model.access', 'model_id', string='Access')
     rule_ids = fields.One2many('ir.rule', 'model_id', string='Record Rules')
     transient = fields.Boolean(string="Transient Model")
+    ignore_database = fields.Boolean(string="Don't use database backend")
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
     count = fields.Integer(compute='_compute_count', string="Count (incl. archived)",
@@ -273,6 +274,7 @@ class IrModel(models.Model):
             _module = False
             _custom = True
             _transient = bool(model_data['transient'])
+            _auto = not bool(model_data['ignore_database'])
             __doc__ = model_data['info']
 
         return CustomModel
