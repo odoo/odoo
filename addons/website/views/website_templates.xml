@@ -483,10 +483,7 @@
 
         <!-- Layout Options -->
         <content string="Layout" title="Choose your layout">
-            <list string="Menu">
-                <opt string="Top Bar" data-xmlid="" data-reload="/"/>
-                <opt string="Hamburger" data-xmlid="website.option_hamburger_menu, website.no_autohide_menu" data-reload="/"/>
-            </list>
+            <!-- In a <more/> so that themes can easily add other options before -->
             <more data-depends="">
                 <list string="Body">
                     <opt string="Full" data-xmlid="website.option_layout_full_variables" data-enable="option_no_background" data-icon="/website/static/src/img/options/layout-full.png"/>
@@ -581,13 +578,6 @@
 <template id="option_navbar_dark" inherit_id="website.layout" active="False">
     <xpath expr="//header/nav" position="attributes">
         <attribute name="class" remove="navbar-light" add="navbar-dark" separator=" "/>
-    </xpath>
-</template>
-
-<!-- Menu options -->
-<template id="option_hamburger_menu" inherit_id="website.layout" active="False">
-    <xpath expr="//header/nav" position="attributes">
-        <attribute name="class" remove="navbar-expand-md" separator=" "/>
     </xpath>
 </template>
 
