@@ -304,14 +304,29 @@ var WebsiteRoot = BodyManager.extend({
      */
     _multiWebsiteSwitch: function (ev) {
         var website_id_to_switch_to = ev.currentTarget.getAttribute('website-id');
+
+        // need to force in each case, even if domain is set
+        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
+        // when you switch 3 <--> 1, you need to force the website
+
         this._rpc({
             route: '/website/force_website',
             params: {
                 website_id: website_id_to_switch_to || false,
             },
         }).then(function () {
-            window.location.reload(true);
+            var website_domain = ev.currentTarget.getAttribute('domain');
+            if (website_domain && window.location.hostname !== website_domain) {
+                // if domain unchanged, this line will do a nop while we need to refresh
+                // the page to load the new forced website.
+                window.location.hostname = website_domain;
+            }
+            else {
+                window.location.reload(true);
+            }
         });
+
+
     },
 
     _multiCompanySwitch: function (ev) {
