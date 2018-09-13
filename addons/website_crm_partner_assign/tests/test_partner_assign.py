@@ -16,7 +16,7 @@ class TestPartnerAssign(TransactionCase):
     def setUp(self):
         super(TestPartnerAssign, self).setUp()
 
-        def geo_find(addr):
+        def geo_find(addr, apikey):
             return {
                 'Wavre, Belgium': (50.7158956, 4.6128075),
                 'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),

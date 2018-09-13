@@ -779,7 +779,7 @@ var StatementModel = BasicModel.extend({
             }).then(function (result) {
                 if (result.length > 0) {
                     var line = self.getLine(handle);
-                    self.lines[handle].st_line.open_balance_account_id = line.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
+                    self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
                 }
             });
     },
@@ -836,6 +836,7 @@ var StatementModel = BasicModel.extend({
                                 '__focus': false
                             });
 
+                            prop.tax_exigible = tax.tax_exigibility === 'on_payment' ? true : undefined
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                             prop.invalid = !self._isValid(prop);
@@ -1129,6 +1130,7 @@ var StatementModel = BasicModel.extend({
             name : prop.label,
             debit : amount > 0 ? amount : 0,
             credit : amount < 0 ? -amount : 0,
+            tax_exigible: prop.tax_exigible,
             analytic_tag_ids: [[6, null, _.pluck(prop.analytic_tag_ids, 'id')]]
         };
         if (!isNaN(prop.id)) {
@@ -1191,7 +1193,15 @@ var ManualModel = StatementModel.extend({
                 self.accounts = _.object(self.account_ids, _.pluck(accounts, 'code'));
             });
 
-        return def_account.then(function () {
+        var def_reconcileModel = this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+            })
+            .then(function (reconcileModels) {
+                self.reconcileModels = reconcileModels;
+            });
+
+        return $.when(def_reconcileModel, def_account).then(function () {
             switch(context.mode) {
                 case 'customers':
                 case 'suppliers':
@@ -1391,7 +1401,7 @@ var ManualModel = StatementModel.extend({
             offset: 0,
             limitMoveLines: this.limitMoveLines,
             filter: "",
-            reconcileModels: [],
+            reconcileModels: this.reconcileModels,
             account_id: this._formatNameGet([data.account_id, data.account_name]),
             st_line: data,
             visible: true
