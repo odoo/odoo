@@ -802,6 +802,32 @@ Andrew</p>]]></field>
             <field name="stage_id" ref="crm.stage_lead3"/>
         </record>
 
+        <record id="crm_case_28" model="crm.lead">
+            <field name="create_date" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="type">opportunity</field>
+            <field name="name">Furnish a 60m² office</field>
+            <field name="planned_revenue">7500</field>
+            <field name="probability">20</field>
+            <field name="partner_name">Deco Addict</field>
+            <field name="email_from">info@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="zip">1300</field>
+            <field name="street">Rue de Namur 69</field>
+            <field name="priority">0</field>
+            <field name="tag_ids" eval="[(6, 0, [categ_oppor1, categ_oppor5])]"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=12)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+        </record>
+
+        <!-- Call Function to set dome opportunities as Lost -->
+        <function model="crm.lead" name="action_set_lost"
+            eval="[ref('crm_case_28')],
+                  {'install_mode': True}"/>
+
         <!-- Call Function to set some opportunities as Won -->
         <function model="crm.lead" name="action_set_won"
             eval="[ref('crm_case_20'), ref('crm_case_23'), ref('crm_case_27')],
