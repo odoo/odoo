@@ -45,7 +45,7 @@ class ResPartner(models.Model):
             except ValueError:
                 partner.l10n_co_verification_code = False
 
-    @api.constrains('vat', 'commercial_partner_country_id', 'l10n_co_document_type')
+    @api.constrains('vat', 'country_id', 'l10n_co_document_type')
     def check_vat(self):
         # check_vat is implemented by base_vat which this localization
         # doesn't directly depend on. It is however automatically

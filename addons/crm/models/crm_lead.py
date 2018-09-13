@@ -938,7 +938,7 @@ class Lead(models.Model):
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
             sub_title = _('or send an email to %s') % (email_link)
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>' % (help_title, sub_title)
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     @api.multi
     def log_meeting(self, meeting_subject, meeting_date, duration):

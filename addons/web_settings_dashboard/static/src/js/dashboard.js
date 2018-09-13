@@ -4,6 +4,7 @@ odoo.define('web_settings_dashboard', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var framework = require('web.framework');
+var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;

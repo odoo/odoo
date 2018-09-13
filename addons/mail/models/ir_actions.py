@@ -48,7 +48,11 @@ class ServerActions(models.Model):
         # TDE CLEANME: when going to new api with server action, remove action
         if not action.template_id or not self._context.get('active_id'):
             return False
-        action.template_id.send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
+        # Clean context from default_type to avoid making attachment
+        # with wrong values in subsequent operations
+        cleaned_ctx = dict(self.env.context)
+        cleaned_ctx.pop('default_type', None)
+        action.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
         return False
 
     @api.model

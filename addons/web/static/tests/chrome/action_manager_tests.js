@@ -1907,7 +1907,7 @@ QUnit.module('ActionManager', {
             start: function () {
                 var self = this;
                 return this._super.apply(this, arguments).then(function () {
-                    self.iframe.src = 'test: ' + self.iframe.getAttribute('src');
+                    self.iframe.src = 'test ' + self.iframe.getAttribute('src');
                 });
             }
         });
@@ -1926,7 +1926,7 @@ QUnit.module('ActionManager', {
                 if (route === '/report/check_wkhtmltopdf') {
                     return $.when('broken');
                 }
-                if (route === 'test: /report/html/some_report') {
+                if (route === 'test /report/html/some_report') {
                     return $.when();
                 }
                 return this._super.apply(this, arguments);
@@ -1947,7 +1947,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'notification',
-            'test: /report/html/some_report', // report client action's iframe
+            'test /report/html/some_report', // report client action's iframe
         ]);
 
         actionManager.destroy();
