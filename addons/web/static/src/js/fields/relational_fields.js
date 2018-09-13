@@ -402,7 +402,7 @@ var FieldMany2One = AbstractField.extend({
         var domain = this.record.getDomain(this.recordParams);
 
         // Add the additionalContext
-        _.extend(context, this.additionalContext)
+        _.extend(context, this.additionalContext);
 
         var blacklisted_ids = this._getSearchBlacklist();
         if (blacklisted_ids.length > 0) {
@@ -848,9 +848,8 @@ var FieldX2Many = AbstractField.extend({
 
     /**
      * @override
-     * @param {Object} [options]
      */
-    activate: function (options) {
+    activate: function () {
         if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
             return false;
         }
@@ -858,7 +857,7 @@ var FieldX2Many = AbstractField.extend({
             this.$buttons.find(".o-kanban-button-new").focus();
         }
         if (this.view.arch.tag === 'tree') {
-            this.renderer.$('.o_field_x2many_list_row_add a').focus();
+            this.renderer.$('.o_field_x2many_list_row_add a:first').focus();
         }
         return true;
     },
@@ -1164,6 +1163,31 @@ var FieldX2Many = AbstractField.extend({
                 }
             });
         }
+    },
+    /**
+     * Override to handle the navigation inside editable list controls
+     *
+     * @override
+     * @private
+     */
+    _onNavigationMove: function (ev) {
+        if (this.view.arch.tag === 'tree') {
+            var $curControl = this.renderer.$('.o_field_x2many_list_row_add a:focus');
+            if ($curControl.length) {
+                var $nextControl;
+                if (ev.data.direction === 'right') {
+                    $nextControl = $curControl.next('a');
+                } else if (ev.data.direction === 'left') {
+                    $nextControl = $curControl.prev('a');
+                }
+                if ($nextControl && $nextControl.length) {
+                    ev.stopPropagation();
+                    $nextControl.focus();
+                    return;
+                }
+            }
+        }
+        this._super.apply(this, arguments);
     },
     /**
      * Called when the user clicks on a relational record.
@@ -1660,7 +1684,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var attachment_ids = this.value.res_ids;
 
         // Don't create an attachment if the upload window is cancelled.
-        if(files.length == 0)
+        if(files.length === 0)
             return;
 
         _.each(files, function (file) {

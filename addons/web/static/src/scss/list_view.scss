@@ -112,6 +112,12 @@
         border-top: none;  // Override bootstrap for grouped list views
     }
 
+    tbody {
+        tr:focus-within {
+            background-color: $o-form-lightsecondary;
+        }
+    }
+
     // Values styling
     .o_list_number {
         text-align: right;
