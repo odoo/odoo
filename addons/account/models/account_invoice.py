@@ -893,9 +893,6 @@ class AccountInvoice(models.Model):
             raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
         if to_open_invoices.filtered(lambda inv: not inv.account_id):
             raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
-        for record in to_open_invoices:
-            if record.company_id.account_sanitize_invoice_ref and record.reference:
-                record.reference = self.env['account.payment']._sanitize_communication(record.reference)
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
