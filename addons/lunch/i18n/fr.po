@@ -397,6 +397,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
+"Cliquez sur <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> pour annoncer que la commande est passée.<br>\n"
+"                Cliquez sur <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> pour annoncer que la commande est reçue.<br>\n"
+"                Cliquez sur <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> pour annoncer que la commande n'est pas disponible."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -405,6 +408,9 @@ msgid ""
 "                Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "                Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> to announce that the order isn't available."
 msgstr ""
+"Clqiuez sur <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> pour annoncer que la commande est passée.<br>\n"
+"                Cliquez sur <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> pour annoncer que la commande est reçue.<br>\n"
+"                Cliquez sur <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> pour annoncer que la commande n'est pas disponible."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
@@ -440,7 +446,7 @@ msgstr "Créez une nouvelle catégorie Lunch"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Créez un nouveau paiement"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
@@ -548,6 +554,10 @@ msgid ""
 "                Time interval: from 00h00 am to 11h59 pm,<br>\n"
 "                Message: \"You must order before 10h30 am\"."
 msgstr ""
+"Exemple:<br>\n"
+"                Récurrence: Tous les jours,<br>\n"
+"                Intervalle de temps: de 00h00 à 23h59 pm,<br>\n"
+"                Message: \"Vous devez commander avant 10h30\"."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -592,6 +602,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Vous pouvez consulter ici vos mouvements de cash.<br> Un mouvement de cash peut être soit une note de frais soit un paiement,\n"
+"Une note de frais est automatiquement créée quand une commande est reçue puisqu'un paiement est un remboursement à la société, encodé par le manager."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -624,6 +636,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:lunch.field_lunch_alert__partner_id
 msgid "If specified, the selected vendor can be ordered only on selected days"
 msgstr ""
+"Si spécifié, les commandes chez le vendeur sélectionnés ne peuvent se faire "
+"que les jours sélectionnés"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__state
@@ -776,7 +790,7 @@ msgstr "Nouvelle commande"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Pas encore de mouvements de cash"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -786,7 +800,7 @@ msgstr "Pas de commande lunch pour l'instant"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action
 msgid "No previous order found"
-msgstr ""
+msgstr "Pas de commandes précédentes trouvées"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:39
@@ -809,7 +823,7 @@ msgstr "Note"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Rien à commander aujourd'hui"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:318
@@ -874,7 +888,7 @@ msgstr "Commandes par fournisseur"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for ${ctx['order']['company_name']}"
-msgstr ""
+msgstr "Commandes pour ${ctx['order']['company_name']}"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -888,6 +902,9 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
+"Les paiements sont utilisés pour enregistrer les mouvements de liquidité. "
+"Vous pouvez traiter ces paiements par vos propres moyens ou en utilisant les"
+" applications installées. "
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__previous_order_ids
@@ -1175,13 +1192,13 @@ msgstr "Fournisseur"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Commandes Vendeur par Date"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:192
 #, python-format
 msgid "Vendor(s) '%s' is not available today"
-msgstr ""
+msgstr "Le(s) vendeur(s) \"%s\" n'est/ne sont pas disponible(s) aujourd'hui"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wednesday

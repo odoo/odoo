@@ -5,23 +5,25 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# doutzen wei <weianqi1991@gmail.com>, 2018
 # Siyuan Gu <siyuancn@hotmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# zhiguo liu <if@openbpm.cn>, 2018
 # waveyeung <waveyeung@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
+# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# Jackie Zhang <jzh@odoo.com>, 2018
+# Felix Yuen <fyu@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 08:38+0000\n"
 "PO-Revision-Date: 2018-09-05 08:38+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"Last-Translator: Felix Yuen <fyu@odoo.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +40,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* “草稿状态”是指当用户生成了一个新的、但还未被确认的发票。\n"
+"* “未结清发票”是指当用户生成了一个发票、并生成了发票号码，此发票会一直停留在未结清状态，直至用户付清此发票。\n"
+"* “正在支付” 是指：仅为银行对账，某笔款项已被计入了其所在的某项总账之内，但是其中某些款项实际上还未进行实际银行对账。\n"
+"* “已支付”是指：某个发票被支付时，自动变更至此状态。它的关联账目可能未、可能被执行银行对账。\n"
+"* “已取消”是指：当用户已经取消了某个发票。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -47,18 +54,18 @@ msgstr "# 数字"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr "${(object.name 或'').replace('/','-')}"
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr "$ { object.company_id.name }发票(Ref $ {对象。数字或“n / a"
+msgstr "${object.company_id.name} 发票(号码${object.number or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} 付款收据(Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} 付款收据 (号码${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account.py:927
@@ -80,7 +87,7 @@ msgstr "%s (副本)"
 #: code:addons/account/models/account.py:679
 #, python-format
 msgid "%s Sequence"
-msgstr ""
+msgstr "%s 序列"
 
 #. module: account
 #: code:addons/account/models/account_move.py:399
@@ -101,12 +108,12 @@ msgstr "&amp;次数;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> 调节"
+msgstr "-> 银行对账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> 查看部分调节的分录"
+msgstr "-> 查看被银行对账过的分录"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
@@ -141,7 +148,7 @@ msgstr "45天"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid ": General ledger"
-msgstr ":总分类账"
+msgstr ":总账"
 
 #. module: account
 #: code:addons/account/models/account.py:677
@@ -174,6 +181,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        您好 ${object.partner_id.name}<br/><br/>\n"
+"        感谢您的支付.\n"
+"        这是您的付款收据 <strong>${(object.name or '').replace('/','-')}</strong> 金额\n"
+"        是 <strong>${format_amount(object.amount, object.currency_id)}</strong> 采购公司为 ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        如您有任何疑问，请随时联系我！\n"
+"        <br/><br/>\n"
+"        祝好！<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -207,6 +230,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的 ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        这是您的 \n"
+"        % if object.number:\n"
+"            invoice <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            发票\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        金额为 <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        采购公司为 ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            此发票已付清.\n"
+"        % else:\n"
+"            请您尽早支付发票.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        如有任何疑问，请您随时联系我！\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_page
@@ -235,7 +286,7 @@ msgstr "<i class=\"fa fa-print\"/> 打印"
 msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
-msgstr "你可以根据你所购买或收到的东西来控制你的供应商的发票。"
+msgstr "<p>您可以根据所采购、收到的物品，来管理供应商发票.</p>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -246,6 +297,11 @@ msgid ""
 "                                    </span>\n"
 "                                    <span>Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                        <strong>给此类别群发邮件</strong> on\n"
+"                                        <span>类别是</span>\n"
+"                                    </span>\n"
+"                                    <span>此文档跟随者</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -265,6 +321,9 @@ msgid ""
 "label=\"Paid\" title=\"Paid\" role=\"img\"/><span class=\"d-none d-md-"
 "inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-check\" aria-"
+"label=\"Paid\" title=\"Paid\" role=\"img\"/><span class=\"d-none d-md-"
+"inline\"> 已付清</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -273,6 +332,9 @@ msgid ""
 "label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span class=\"d-none d"
 "-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-remove\" aria-"
+"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span class=\"d-none d"
+"-md-inline\"> 已取消</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -283,6 +345,11 @@ msgid ""
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">Bill </span>\n"
 "                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">Credit Note </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}\">账单草稿</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': [('sequence_number_next_prefix','=',False)]}\">- 第一个数字:</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}\">应付草稿</span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}\">账单 </span>\n"
+"                        <span class=\"o_form_label\" attrs=\"{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}\">应付 </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -291,6 +358,8 @@ msgid ""
 "['|',('state','=','draft'), ('type','!=','out_refund')]}\">Credit "
 "Note</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"['|',('state','=','draft'), ('type','!=','out_refund')]}\">应付</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -301,13 +370,15 @@ msgid ""
 "analysis of creditors for the past month, past two months, and so on. "
 "</span>"
 msgstr ""
+"<span class=\"o_form_label\">伙伴历史余额是将你的应收按阶段呈现细节报告. Odoo按照你的开始日期自动计算一个应付余额表."
+" 所以如果当你需要获得一个以30天为间隔的债权人分析，比如针对过去一月的，或者针对过去两月的，等等</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">所有选定的账目条款都将被验证和发布，之后您将无法修改</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -315,6 +386,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">默认税</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -322,7 +395,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">财政本地化</span>\n"
+"<span class=\"o_form_label\">采用本地财务</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -354,7 +427,7 @@ msgstr "<span class=\"o_stat_text\">已开票</span>"
 msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
-msgstr "只有与银行账户没有关联的期刊才会被提出"
+msgstr "<span class=\"text-muted\">只显示没有与银行账户链接起来的账目</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -378,7 +451,7 @@ msgstr "<span role=\"separator\">新建</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">调节</span>"
+msgstr "<span role=\"separator\">对账</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -516,14 +589,14 @@ msgstr "<strong class=\"mr16\">小计</strong>"
 msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
-msgstr ""
+msgstr "<strong class=\"text-center\">请用您的记账应用扫描我.</strong><br/><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
-msgstr ""
+msgstr "<strong class=\"text-center\">SEPA二维码没有被正确设置.</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -690,7 +763,7 @@ msgstr "<strong>小计</strong>"
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Target Moves:</strong>"
-msgstr "<strong>目标分录：</strong>"
+msgstr "<strong>目标移位：</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -732,9 +805,11 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"现金出纳机按钮允许你在现金日记账中管理你的现金分录\n"
-"这个功能让你用一种简单的方式操作每天的业务，你可以输入钱箱中的硬币数额，\n"
-"然后当从钱箱中拿出或者放入金额的时候对分录进行过账"
+"现金出纳功能使您可以管理您现金日记账中的现金账目\n"
+"                此功能可以帮您实现每日轻松跟进现金支付情况\n"
+"                您可以键入在您现金盒子中的硬币数量\n"
+"               然后在现金从现金盒子中收入或者支出时候，生成账目进行记录\n"
+"             "
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1872
@@ -746,12 +821,12 @@ msgstr "付款条款应该只能有一行的类型是余额"
 #: code:addons/account/models/account.py:845
 #, python-format
 msgid "A bank account can belong to only one journal."
-msgstr "银行账户只能属于一份期刊。"
+msgstr "一个银行账户只能属于一个会计账目类型。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "A bank journal must be set to use the SEPA QR code"
-msgstr ""
+msgstr "为使用SEPA二维码，银行会计账目必须被设置好"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -760,27 +835,27 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"银行对账单是一段时期内一个银行账号发生的所有交易的汇总\n"
-"一般都是定期从银行收到"
+"银行对账单是针对一个固定时间段，某个银行账户的所有财务交易的总结\n"
+"     您会阶段性从您的银行收到这个信息"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
-msgstr "银行对账单行是银行科目的一次财政交易"
+msgstr "银行对账单上的一行是某银行账户的一条财务交易"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
-msgstr "一条日记账分录由几个日记账项目构成，每一条都是一条借或者贷的交易"
+msgstr "一条日记账分录由多个日记账项目构成，每一条都是一条借或者贷的交易"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
 msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
-msgstr "日记账用来记录日常业务活动的会计数据的交易事项"
+msgstr "日记账用来记录日常业务活动的交易事项会计数据"
 
 #. module: account
 #: code:addons/account/models/account_move.py:324
@@ -3116,7 +3191,7 @@ msgstr "配置"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_invoice_layout
 msgid "Configure your document layout"
-msgstr ""
+msgstr "配置您的文档布局"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
@@ -5268,7 +5343,7 @@ msgstr "如果勾选此项，有新消息会提醒你。"
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -5833,6 +5908,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
 "and '_draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
+"and '_draft' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6862,7 +6939,7 @@ msgstr "备忘录"
 #: model:ir.model.fields,field_description:account.field_account_invoice__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_payment__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "消息递送错误"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__record_name
@@ -7232,7 +7309,7 @@ msgstr "正常文本"
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Not done"
-msgstr ""
+msgstr "尚未完成"
 
 #. module: account
 #. openerp-web
@@ -7341,7 +7418,7 @@ msgstr "需要行动消息的数量"
 #: model:ir.model.fields,help:account.field_account_invoice__message_has_error_counter
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "递送错误的消息数量"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter

@@ -81,6 +81,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Bonjour ${object.partner_id.name},<br/>\n"
+"        Voici votre commande de réparation ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (référence: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Répondez à cet email pour toutes questions.\n"
+"        <br/><br/>\n"
+"        Merci,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -93,6 +111,8 @@ msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Cette opération annulera le processus de "
+"réparation, mais n'annulera pas sa facture. Voulez-vous continuer?</span>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
