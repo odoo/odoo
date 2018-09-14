@@ -242,9 +242,24 @@ class AccountChartTemplate(models.Model):
         # Create the current year earning account if it wasn't present in the CoA
         company.get_unaffected_earnings_account()
 
-        # set the default taxes on the company
+        # set the default taxes on the company and on the sale/purchase properties
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
+        todo_list = [
+            ('property_account_expense_categ_id', 'account_purchase_tax_id'),
+            ('property_account_expense_id', 'account_purchase_tax_id'),
+            ('property_account_income_categ_id', 'account_sale_tax_id'),
+            ('property_account_income_id', 'account_sale_tax_id'),
+        ]
+        last_acc = False
+        for record in todo_list:
+            account_template = getattr(self, record[0])
+            if account_template and account_template.id != last_acc:
+                account_id = acc_template_ref[account_template.id]
+                self.env['account.account'].browse(account_id).write({
+                    'tax_ids': [(4, getattr(company, record[1]).id)],
+                })
+                last_acc = account_id
         return {}
 
     @api.model
