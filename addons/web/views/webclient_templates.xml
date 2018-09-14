@@ -355,9 +355,9 @@
             <t t-set="body_classname" t-value="'bg-100'"/>
 
             <div class="container mb-5 pb-5">
-                <div class="row justify-content-center no-gutters">
-                    <div class="col-sm-8 col-md-6 col-lg-4 o_database_list">
-                        <div t-attf-class="mt-3 mt-lg-5 pt-3 pt-lg-4 px-2 px-sm-4 pb-3 {{login_box_classes}}">
+                <div class="row justify-content-center">
+                    <div t-attf-class="card border-0 o_database_list w-100 mt-5 bg-100 {{login_card_classes}}" style="max-width: 300px">
+                        <div class="card-body">
                             <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
                                 <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
                             </div>
