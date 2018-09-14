@@ -19,7 +19,7 @@
 <template id="index" name="Events">
     <t t-call="website.layout">
       <div id="wrap">
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_index_1"/>
         <div class="container">
             <div class="row mt8">
                 <div class="col-md-12">
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_index_2"/>
       </div>
     </t>
 </template>
@@ -229,14 +229,14 @@
             </div>
         </div>
         <t t-raw="0"/>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_layout_1"/>
       </div>
     </t>
 </template>
 
 <template id="template_location">
     <t t-call="website_event.layout">
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_location_1"/>
         <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
@@ -245,7 +245,7 @@
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile"]
             }'/>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_location_2"/>
     </t>
 </template>
 
@@ -254,7 +254,7 @@
         <section class="container">
             <h1 class="text-center">Event Introduction</h1>
         </section>
-        <div class="oe_structure oe_empty"/>
+        <div class="oe_structure oe_empty" id="oe_structure_website_event_intro_1"/>
     </t>
 </template>
 

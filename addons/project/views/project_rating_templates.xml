@@ -7,10 +7,10 @@
             <t t-call="portal.frontend_layout">
                 <t t-set="additional_title">Project Satisfaction</t>
                 <div id="wrap" class="row mt4">
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_index_1"/>
                     <div class="container o_portal_project_rating">
                         <h3>Projects</h3>
-                        <div class="oe_structure"/>
+                        <div class="oe_structure" id="oe_structure_project_rating_index_2"/>
                         <div class="row">
                             <t t-if="not projects">
                               <div class="mt64 text-center">
@@ -50,7 +50,7 @@
                             </t>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_index_3"/>
               </div>
             </t>
         </template>
@@ -147,7 +147,7 @@
         <template id="rating_project_rating_page" name="Project Rating Page">
             <t t-call="portal.frontend_layout">
                  <div id="wrap" class="row mt4">
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_page_1"/>
                     <div class="container o_project o_portal_project_rating">
                         <h2 t-esc="project.name"/>
                         <div class="row mb32">
@@ -193,7 +193,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_project_rating_page_2"/>
                 </div>
             </t>
         </template>
