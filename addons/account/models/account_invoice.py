@@ -1640,11 +1640,12 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
     def _set_taxes(self):
-        """ Used in on_change to set taxes and price."""
+        """ Used in on_change to set taxes and price"""
+        self.ensure_one()
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
-            taxes = self.product_id.taxes_id or self.account_id.tax_ids
+            taxes = self.product_id.taxes_id or self.account_id.tax_ids or self.invoice_id.company_id.account_sale_tax_id
         else:
-            taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids
+            taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids or self.invoice_id.company_id.account_purchase_tax_id
 
         # Keep only taxes of the company
         company_id = self.company_id or self.env.user.company_id
@@ -1734,9 +1735,11 @@ class AccountInvoiceLine(models.Model):
             return
         if not self.product_id:
             fpos = self.invoice_id.fiscal_position_id
-            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids, partner=self.partner_id).ids
+            default_tax = self.invoice_id.type in ('out_invoice', 'out_refund') and self.invoice_id.company_id.account_sale_tax_id or self.invoice_id.company_id.account_purchase_tax_id
+            self.invoice_line_tax_ids = fpos.map_tax(self.account_id.tax_ids or default_tax, partner=self.partner_id).ids
         elif not self.price_unit:
             self._set_taxes()
+
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
