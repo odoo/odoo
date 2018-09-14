@@ -20,20 +20,15 @@ class ProductTemplate(models.Model):
         [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
         string='Re-Invoice Policy',
         default='no',
-        help="Expenses registered in Expense app or in a vendor bill (with an analytic account set) "
-        "can be automatically re-invoiced to the customer. This is useful for customer projects. "
-        "With this option activated, the validated expense is added to the sales order linked to the "
-        "analytic account, in order to be invoiced. With Project Management, such an analytic account "
-        "can be automatically generated at the order confirmation, if set on the Service Tracking "
-        "option of one product item.")
+        help="Expenses and vendor bills can be re-invoiced to a customer."
+             "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
     hide_expense_policy = fields.Boolean(compute='_compute_hide_expense_policy')
-    invoice_policy = fields.Selection(
-        [('order', 'Ordered quantities'),
-         ('delivery', 'Delivered quantities'),
-        ], string='Invoicing Policy',
-        help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
-             'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
+    invoice_policy = fields.Selection([
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
+             'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
     @api.multi

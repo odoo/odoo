@@ -7,11 +7,11 @@ from odoo.exceptions import UserError
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale', default=False)
-    to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration")
+    available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
+    to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
     pos_categ_id = fields.Many2one(
         'pos.category', string='Point of Sale Category',
-        help="Those categories are used to group similar products for point of sale.")
+        help="Category used in the Point of Sale.")
 
     @api.multi
     def unlink(self):

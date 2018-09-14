@@ -15,14 +15,13 @@ class ProductTemplate(models.Model):
     property_account_creditor_price_difference = fields.Many2one(
         'account.account', string="Price Difference Account", company_dependent=True,
         help="This account is used in automated inventory valuation to "\
-            "record the price difference between a purchase order and its related vendor bill "\
-            "when validating this vendor bill.")
+             "record the price difference between a purchase order and its related vendor bill when validating this vendor bill.")
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased')
     purchase_method = fields.Selection([
         ('purchase', 'On ordered quantities'),
         ('receive', 'On received quantities'),
-    ], string="Control Policy", help="On ordered quantities: control bills based on ordered quantities.\n"
-        "On received quantities: control bills based on received quantity.", default="receive")
+    ], string="Control Policy", help="On ordered quantities: Control bills based on ordered quantities.\n"
+        "On received quantities: Control bills based on received quantities.", default="receive")
     purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
