@@ -534,39 +534,45 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="%(action_view_mail_mail_statistics_mailing_list)d" type="action"
+                            <button name="action_view_sent"
+                                type="object"
                                 context="{'search_default_filter_sent': True}"
                                 icon="fa-envelope-o" class="oe_stat_button o_mass_mailing_button"
                                 attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft','test'))]}" >
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
-                                    context="{'search_default_filter_received': True}"
-                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                    type="action" class="oe_stat_button">
+                            <button name="action_view_delivered"
+                                type="object"
+                                context="{'search_default_filter_received': True}"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                                class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
-                                    context="{'search_default_filter_opened': True}"
-                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                    type="action" class="oe_stat_button">
+                            <button name="action_view_opened"
+                                type="object"
+                                context="{'search_default_filter_opened': True}"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                                class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
-                                    context="{'search_default_filter_replied': True}"
-                                    attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                    type="action" class="oe_stat_button">
+                            <button name="action_view_replied"
+                                type="object"
+                                context="{'search_default_filter_replied': True}"
+                                attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                                class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mass_mailing_links_statistics)d"
+                            <button name="action_view_clicked"
+                                type="object"
                                 attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                type="action" class="oe_stat_button">
+                                class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicks" widget="percentpie"/>
                             </button>
-                            <button name="%(action_view_mail_mail_statistics_mailing_list)d"
+                            <button name="action_view_bounced"
+                                type="object"
                                 context="{'search_default_filter_bounced': True}"
                                 attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
-                                type="action" class="oe_stat_button">
+                                class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>
                             <button name="toggle_active" type="object"
