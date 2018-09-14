@@ -1297,9 +1297,6 @@ exports.Product = Backbone.Model.extend({
         // pricelist that have base == 'pricelist'.
         return price;
     }, 
-    get_discount_policy: function(pricelist){
-        return pricelist.discount_policy;
-    },
 });
 
 var orderline_id = 1;
@@ -1774,10 +1771,10 @@ exports.Orderline = Backbone.Model.extend({
         };
     },
     display_discount_policy: function(){
-        return this.product.get_discount_policy(this.order.pricelist);
+        return this.order.pricelist.discount_policy;
     },
-    get_list_price: function(){
-        return this.product.list_price;
+    get_lst_price: function(){
+        return this.product.lst_price;
     },
 });
 
@@ -2450,8 +2447,8 @@ exports.Order = Backbone.Model.extend({
     get_total_discount: function() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
             sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-            sum += ((orderLine.get_list_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
-            return sum
+            sum += ((orderLine.get_lst_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
+            return sum;
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
