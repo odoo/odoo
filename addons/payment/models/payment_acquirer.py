@@ -89,7 +89,6 @@ class PaymentAcquirer(models.Model):
     # Formerly associated to `authorize` option from auto_confirm
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
-    # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
@@ -197,9 +196,13 @@ class PaymentAcquirer(models.Model):
     def _check_required_if_provider(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>. """
+        empty_field = []
         for acquirer in self:
-            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
-                return False
+            for k, f in acquirer._fields.items():
+                if getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k]:
+                    empty_field.append(self.env['ir.model.fields'].search([('name', '=', k), ('model', '=', acquirer._name)]).field_description)
+        if empty_field:
+            raise ValidationError((', ').join(empty_field))
         return True
 
     _constraints = [

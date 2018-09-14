@@ -497,15 +497,15 @@ function addMockEnvironment(widget, params) {
     var services = {ajax: null}; // mocked ajax service already loaded
     intercept(widget, 'call_service', function (ev) {
         var args, result;
-        if (ev.data.service === 'ajax') {
+        if (services[ev.data.service]) {
+            var service = services[ev.data.service];
+            args = (ev.data.args || []);
+            result = service[ev.data.method].apply(service, args);
+        } else if (ev.data.service === 'ajax') {
             // ajax service is already mocked by the server
             var route = ev.data.args[0];
             args = ev.data.args[1];
             result = mockServer.performRpc(route, args);
-        } else if (services[ev.data.service]) {
-            var service = services[ev.data.service];
-            args = (ev.data.args || []);
-            result = service[ev.data.method].apply(service, args);
         }
         ev.data.callback(result);
     });

@@ -111,7 +111,16 @@ var MockServer = Class.extend({
             args = JSON.parse(JSON.stringify(args));
         }
         var def = this._performRpc(route, args);
-        var abort = def.abort;
+
+        var abort = def.abort || def.reject;
+        if (abort) {
+            abort = abort.bind(def);
+        } else {
+            abort = function () {
+                throw new Error("Can't abort this request");
+            };
+        }
+
         def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (debug) {
@@ -125,8 +134,10 @@ var MockServer = Class.extend({
             }
             return $.Deferred().reject(errorString, event || $.Event());
         });
-        def.abort = abort;
-        return def;
+
+        var promise = def.promise();
+        promise.abort = abort;
+        return promise;
     },
 
     //--------------------------------------------------------------------------

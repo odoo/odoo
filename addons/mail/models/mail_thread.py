@@ -380,7 +380,9 @@ class MailThread(models.AbstractModel):
                         'email_link': email_link
                     }
                 }
-            return "%(static_help)s<p>%(dyn_help)s</p>" % {
+            # do not add alias two times if it was added previously
+            if "oe_view_nocontent_alias" not in help:
+                return "%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
                     'static_help': help,
                     'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,

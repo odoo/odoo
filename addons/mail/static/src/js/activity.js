@@ -220,6 +220,28 @@ var BasicActivity = AbstractField.extend({
     // Handlers
     //------------------------------------------------------------
 
+    /** Binds a focusout handler on a bootstrap popover
+     *  Useful to do some operations on the popover's HTML,
+     *  like keeping the user's input for the feedback
+     *  @param {JQuery} $popover_el: the element on which
+     *    the popover() method has been called
+     */
+    _bindPopoverFocusout: function ($popover_el) {
+        var self = this;
+        // Retrieve the actual popover's HTML
+        var $popover = $popover_el.data("bs.popover").tip();
+        var activityID = $popover_el.data('activity-id');
+        $popover.off('focusout');
+        $popover.focusout(function (e) {
+            // outside click of popover hide the popover
+            // e.relatedTarget is the element receiving the focus
+            if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
+                self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
+                $popover.popover('hide');
+            }
+        });
+    },
+    
     /**
      * @private
      * @param {MouseEvent} ev
@@ -284,15 +306,7 @@ var BasicActivity = AbstractField.extend({
                 $(".o_mail_activity_feedback.popover").not($popover).popover("hide");
                 $popover.addClass('o_mail_activity_feedback').attr('tabindex', 0);
                 $popover.find('#activity_feedback').focus();
-                $popover.off('focusout');
-                $popover.focusout(function (e) {
-                    // outside click of popover hide the popover
-                    // e.relatedTarget is the element receiving the focus
-                    if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
-                        self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
-                        $popover.popover('hide');
-                    }
-                });
+                self._bindPopoverFocusout($(this));
             }).popover('show');
         }
     },
