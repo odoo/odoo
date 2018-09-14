@@ -72,12 +72,13 @@
                 {% else %}
                     {% for device in iot_device_status %}
                         <div class="device-status">
+                            <span class="device">{{ device['type'] }}</span>
                             <span class="device">{{ device['name'] }}</span>
                             <div class="message">{{ device['message'] }}</div>
                         </div>
                     {% endfor %}
                 {% endif %}
-                <a class="btn btn-sm float-right" href='/list_drivers'>drivers list</a>
+                <br><center><a class="btn btn-sm" href='/list_drivers'>drivers list</a></center>
             </td>
         </tr>
     </table>

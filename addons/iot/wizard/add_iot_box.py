@@ -3,7 +3,7 @@
 
 import datetime
 from datetime import timedelta
-import secrets
+import random
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -17,7 +17,7 @@ class AddIotBox(models.TransientModel):
     def _get_token(self):
 
         web_base_url = self.env['ir.config_parameter'].search([('key', '=', 'web.base.url')], limit=1)
-        token = secrets.token_urlsafe(10)
+        token = str(random.randint(1000000000,9999999999))
         iot_token = self.env['ir.config_parameter'].search([('key', '=', 'iot_token')], limit=1)
         
         if iot_token:

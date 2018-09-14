@@ -24,7 +24,6 @@
                 }).done(function (url) {
                     $('.loading-block').addClass('o_hide');
                     changePage('done');
-                    $('.progressbar li[data-key="done"').addClass('completed');
                     if(url) {
                         var cpt = 110;
                         setInterval(function(){
@@ -100,14 +99,15 @@
         }
         .progressbar li.active:before {
             border-color:#875A7B;
-            color: #875A7B;
-        }
-        .progressbar li.completed:before{
-            border-color:#875A7B;
             background-color:#875A7B;
             color: #fff;
         }
-        .progressbar li.completed + li:after{
+        .progressbar li.completed:before{
+            border-color:#875A7B;
+            background-color: #fff;
+            color: #875A7B;
+        }
+        .progressbar li.active + li:after{
             background-color:#875A7B;
         }
         .footer-buttons {
@@ -120,8 +120,8 @@
 {% block content %}
     <h2 class="text-center">Configure IoT Box</h2>
     <ul class="progressbar">
-        <li class="active" data-key="server">Configure Server</li>
-        <li data-key="wifi">Configure Wifi</li>
+        <li class="active" data-key="server">Connect to Odoo</li>
+        <li data-key="wifi">Connect to Internet</li>
         <li data-key="done">Done</li>
     </ul>
     <form id="config-form" style="margin-top: 20px;" action='/step_configure' method='POST'>
@@ -144,7 +144,7 @@
             <div class="config-steps wifi-step o_hide" data-key="wifi">
                 <table align="center">
                     <tr>
-                        <td>ESSID</td>
+                        <td>Wifi Network</td>
                         <td>
                             <select name="essid">
                                 {% for id in ssid -%}
@@ -155,13 +155,13 @@
                     </tr>
                     <tr>
                         <td>Password</td>
-                        <td><input type="password" name="password" placeholder="OPTIONAL"/></td>
+                        <td><input type="password" name="password" placeholder="Optional"/></td>
                     </tr>
                     <input type="hidden" name="persistent" value="True"/>
                 </table>
                 <div class="footer-buttons">
                     <a class="btn next-btn" data-key="server">Previous</a>
-                    <input class="btn" style="float: right" type="submit" value="Submit"/>
+                    <input class="btn" style="float: right" type="submit" value="Connect"/>
                 </div>
             </div>
             <div class="config-steps o_hide" data-key="done">

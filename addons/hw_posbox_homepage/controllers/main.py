@@ -100,27 +100,52 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
             network = 'Not Connected'
 
         pos_device = self.get_pos_device_status()
-        pos_device_status = []
+        iot_device = []
         for status in pos_device:
-            device = pos_device[status]
-            pos_device_status.append({
-                'name': status,
-                'message': ' '.join(device['messages'])
-            })
+            if pos_device[status]['status'] == 'connected':
+                iot_device.append({
+                    'name': status,
+                    'type': 'device',
+                    'message': ' '.join(device['messages'])
+                })
+
         hdmi_name = subprocess.check_output('tvservice -n', shell=True).decode('utf-8')
         if hdmi_name.find('=') != -1:
             hdmi_name = hdmi_name.split('=')[1]
             hdmi_message = subprocess.check_output('tvservice -s', shell=True).decode('utf-8')
-            pos_device_status.append({
+            iot_device.append({
                     'name': 'display : ' + hdmi_name,
+                    'type': 'device',
                     'message': hdmi_message
                 })
+
+        try:
+            f = open('/home/pi/devices', 'r')
+            for line in f:
+                iot_device.append({
+                                    'name': line,
+                                    'type': 'device',
+                                    })
+            f.close()
+        except:
+            pass
+
+        try:
+            f = open('/home/pi/printers', 'r')
+            for line in f:
+                iot_device.append({
+                                    'name': line,
+                                    'type': 'printer',
+                                    })
+            f.close()
+        except:
+            pass
 
         return {
             'hostname': hostname,
             'ip': self.get_ip_iotbox(),
             'mac': ":".join(i + next(h) for i in h),
-            'iot_device_status': pos_device_status,
+            'iot_device_status': iot_device,
             'server_status': self.get_server_status() or 'Not Configured',
             'network_status': network,
             }
@@ -190,7 +215,8 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
             for line in f:
                 line = line.rstrip()
                 line = misc.html_escape(line)
-                wifi_options.append(line)
+                if line not in wifi_options:
+                    wifi_options.append(line)
             f.close()
         except IOError:
             _logger.warning("No /tmp/scanned_networks.txt")

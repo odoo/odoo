@@ -34,7 +34,6 @@ class IoTController(http.Controller):
     @http.route('/iot/setup', type='json', auth='public')
     def update_box(self):
         data = request.jsonrequest
-        logging.warning(data)
         # Update or create box
         box = request.env['iot.box'].sudo().search([('identifier', '=', data['identifier'])])
         if box:
