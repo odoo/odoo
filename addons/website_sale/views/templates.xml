@@ -686,12 +686,12 @@
                                 <t t-set="step" t-value="30"/>
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="redirect">/shop/extra_info</t>
                             </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col">
                                     <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
@@ -999,12 +999,12 @@
                                 <t t-set="step" t-value="20" />
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="redirect">/shop/checkout</t>
                             </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <h3 class="o_page_header mt8">Billing Address</h3>
@@ -1109,12 +1109,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
+                        <div class="col-12 col-xl-4 order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="redirect">/shop/address</t>
                             </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
                                     <h2 class="o_page_header mt8">Your Address
@@ -1276,12 +1276,12 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="col-12 col-xl-auto order-xl-2">
+                        <div class="col-12 col-xl-4 order-xl-2">
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="redirect">/shop/payment</t>
                             </t>
                         </div>
-                        <div class="col-12 col-xl order-xl-1 oe_cart">
+                        <div class="col-12 col-xl-8 order-xl-1 oe_cart">
                             <div class="card">
                                 <div class="card-body" id="shipping_and_billing">
                                     <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
@@ -1360,9 +1360,9 @@
         We shouldn't display link to products or long descriptions.
     -->
     <template id="cart_summary" name="Cart right column">
-        <div class="card">
-            <div class="card-body p-xl-0">
-                <div class="toggle_summary d-xl-none">
+        <div class="card d-xl-inline-block mb16">
+            <div class="card-body p-0">
+                <div class="toggle_summary d-xl-none p-3">
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
@@ -1425,7 +1425,7 @@
                     <h1><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
 
                     <div class="row">
-                        <div class="col-12 col-xl">
+                        <div class="col-12 col-xl-8">
                             <div class="oe_cart">
                                 <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
                                 <t t-if="payment_tx_id.state == 'done'">
@@ -1471,7 +1471,7 @@
                                 <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-auto">
+                        <div class="col-12 col-xl-4">
                             <t t-set="website_sale_order" t-value="order"/>
                             <t t-call="website_sale.cart_summary">
                                 <t t-set="hide_coupon">1</t>
