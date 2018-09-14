@@ -196,20 +196,12 @@ class ProjectCreateSalesOrderLine(models.TransientModel):
     _name = 'project.create.sale.order.line'
     _order = 'id,create_date'
 
-    def _default_domain_employee_id(self):
-        active_id = self._context.get('active_id')
-        if active_id:
-            project = self.env['project.project'].browse(active_id)
-            employee_ids = [item['employee_id'][0] for item in self.env['account.analytic.line'].search_read([('task_id', 'in', project.tasks.ids)], ['employee_id'])]
-            return [('id', 'in', employee_ids)]
-        return []
-
     wizard_id = fields.Many2one('project.create.sale.order', required=True)
     product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", required=True,
         help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", default=1.0, help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id')
-    employee_id = fields.Many2one('hr.employee', string="Employee", domain=lambda self: self._default_domain_employee_id(), required=True, help="Employee that has timesheets on the project.")
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, help="Employee that has timesheets on the project.")
 
     _sql_constraints = [
         ('unique_employee_per_wizard', 'UNIQUE(wizard_id, employee_id)', "An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again."),
