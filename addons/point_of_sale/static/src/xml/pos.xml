@@ -1269,7 +1269,7 @@
                 <t t-if="line.get_product().tracking!=='none'">
                     <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
                        aria-label="Valid product lot" role="img" title="Valid product lot"/>
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!(line.has_valid_product_lot())"
+                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!line.has_valid_product_lot()"
                        aria-label="Invalid product lot" role="img" title="Invalid product lot"/>
                 </t>
             </span>
@@ -1285,10 +1285,10 @@
                         <t t-esc="line.get_unit().name" />
                         at
                         <t t-if="line.display_discount_policy() == 'without_discount' &amp;&amp; 
-                            line.get_unit_display_price() != line.get_list_price()">
-                            <strike>
-                                <t t-esc="widget.format_currency(line.get_list_price(),'Product List Price')" />
-                            </strike> 
+                            line.get_unit_display_price() != line.get_lst_price()">
+                            <s>
+                                <t t-esc="widget.format_currency(line.get_lst_price(),'Product Price')" />
+                            </s>
                             <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
                         </t>
                         <t t-else="">
@@ -1482,11 +1482,11 @@
                     <td>
                         <t t-esc="orderline.get_product().display_name"/>
                         <t t-if="orderline.display_discount_policy() == 'without_discount' &amp;&amp; 
-                            orderline.get_unit_display_price() != orderline.get_list_price()">
+                            orderline.get_unit_display_price() != orderline.get_lst_price()">
                             <div class="pos-disc-font">
-                                <strike>
-                                    <t t-esc="widget.format_currency(orderline.get_list_price(),'Product List Price')"/>
-                                </strike>
+                                <s>
+                                    <t t-esc="widget.format_currency(orderline.get_lst_price(),'Product Price')"/>
+                                </s>
                                    -> 
                                 <t t-esc="widget.format_currency(orderline.get_unit_display_price(),'Product Price')"/>
                             </div>
