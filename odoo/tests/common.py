@@ -390,7 +390,7 @@ class ChromeBrowser():
     def executable(self):
         system = platform.system()
         if system == 'Linux':
-            for bin_ in ['google-chrome', 'chromium']:
+            for bin_ in ['google-chrome', 'chromium-browser']:
                 try:
                     return find_in_path(bin_)
                 except IOError:
