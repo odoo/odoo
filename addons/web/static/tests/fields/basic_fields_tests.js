@@ -1902,6 +1902,45 @@ QUnit.module('basic_fields', {
         assert.verifySteps(['destroy']);
     });
 
+    QUnit.test('graph dashboard widget can be destroyed when nv is partially loaded', function (assert) {
+        // this test ensures that the JournalDashboardGraph widget doesn't crash
+        // when being destroyed before nv has been completely loaded
+        assert.expect(2);
+
+        testUtils.patch(basicFields.JournalDashboardGraph, {
+            destroy: function () {
+                assert.step('destroy');
+                // nv is fully loaded only when nvd3.js has been loaded
+                // which happens sequentially after nv.d3.js
+                // we simulate this race condition with:
+                var offWindowResize = window.nv.utils.offWindowResize;
+                window.nv.utils.offWindowResize = undefined;
+                this._super.apply(this, arguments);
+                window.nv.utils.offWindowResize = offWindowResize;
+            },
+        });
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+
+        kanban.destroy();
+        testUtils.unpatch(basicFields.JournalDashboardGraph);
+
+        assert.verifySteps(['destroy']);
+    });
+
     QUnit.module('AceEditor');
 
     QUnit.test('ace widget on text fields works', function (assert) {

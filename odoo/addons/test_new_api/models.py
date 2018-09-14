@@ -349,6 +349,7 @@ class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
 
     foo = fields.Char(company_dependent=True)
+    tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)
 
 class CompanyDependentAttribute(models.Model):
     _name = 'test_new_api.company.attr'
