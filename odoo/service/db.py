@@ -242,7 +242,8 @@ def exp_restore(db_name, data, copy=False):
         for chunk in chunks(data):
             data_file.write(base64.b64decode(chunk))
         data_file.close()
-        restore_db(db_name, data_file.name, copy=copy)
+        with open(data_file.name,"r") as tmpfile:
+            restore_db(db_name, tmpfile.read(), copy=copy)
     finally:
         os.unlink(data_file.name)
     return True
