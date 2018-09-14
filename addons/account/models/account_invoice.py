@@ -560,6 +560,7 @@ class AccountInvoice(models.Model):
                 return view.id
 
         context = self._context
+        supplier_form_view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
         if context.get('active_model') == 'res.partner' and context.get('active_ids'):
             partner = self.env['res.partner'].browse(context['active_ids'])[0]
             if not view_type:
@@ -567,9 +568,10 @@ class AccountInvoice(models.Model):
                 view_type = 'tree'
             elif view_type == 'form':
                 if partner.supplier and not partner.customer:
-                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
+                    view_id = supplier_form_view_id
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
+
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
@@ -1684,18 +1686,14 @@ class AccountInvoiceLine(models.Model):
             else:
                 product = self.product_id
 
-            self.name = product.partner_ref
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
                 self.account_id = account.id
             self._set_taxes()
 
-            if type in ('in_invoice', 'in_refund'):
-                if product.description_purchase:
-                    self.name += '\n' + product.description_purchase
-            else:
-                if product.description_sale:
-                    self.name += '\n' + product.description_sale
+            product_name = self._get_invoice_line_name_from_product()
+            if product_name != None:
+                self.name = product_name
 
             if not self.uom_id or product.uom_id.category_id.id != self.uom_id.category_id.id:
                 self.uom_id = product.uom_id.id
@@ -1706,6 +1704,24 @@ class AccountInvoiceLine(models.Model):
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id)
         return {'domain': domain}
+
+    def _get_invoice_line_name_from_product(self):
+        """ Returns the automatic name to give to the invoice line depending on
+        the product it is linked to.
+        """
+        self.ensure_one()
+        if not self.product_id:
+            return ''
+
+        rslt = self.product_id.partner_ref
+        if type in ('in_invoice', 'in_refund'):
+            if self.product_id.description_purchase:
+                rslt += '\n' + self.product_id.description_purchase
+        else:
+            if self.product_id.description_sale:
+                rslt += '\n' + self.product_id.description_sale
+
+        return rslt
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
