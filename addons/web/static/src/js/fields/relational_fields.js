@@ -1221,18 +1221,14 @@ var FieldX2Many = AbstractField.extend({
     _onSaveLine: function (ev) {
         var self = this;
         ev.stopPropagation();
-        this.trigger_up('mutexify', {
-            action: function () {
-                return self.renderer.commitChanges(ev.data.recordID).then(function () {
-                    self.trigger_up('mutexify', {
-                        action: function () {
-                            return self._saveLine(ev.data.recordID)
-                                .done(ev.data.onSuccess)
-                                .fail(ev.data.onFailure);
-                        },
-                    });
-                });
-            },
+        this.renderer.commitChanges(ev.data.recordID).then(function () {
+            self.trigger_up('mutexify', {
+                action: function () {
+                    return self._saveLine(ev.data.recordID)
+                        .done(ev.data.onSuccess)
+                        .fail(ev.data.onFailure);
+                },
+            });
         });
     },
     /**
