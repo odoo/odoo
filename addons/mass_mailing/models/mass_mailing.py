@@ -684,6 +684,42 @@ class MassMailing(models.Model):
         failed_mails.sudo().unlink()
         self.write({'state': 'in_queue'})
 
+    def action_view_sent(self):
+        return self._action_view_documents_filtered('sent')
+
+    def action_view_opened(self):
+        return self._action_view_documents_filtered('opened')
+
+    def action_view_replied(self):
+        return self._action_view_documents_filtered('replied')
+
+    def action_view_bounced(self):
+        return self._action_view_documents_filtered('bounced')
+
+    def action_view_clicked(self):
+        return self._action_view_documents_filtered('clicked')
+
+    def action_view_delivered(self):
+        return self._action_view_documents_filtered('delivered')
+
+    def _action_view_documents_filtered(self, view_filter):
+        if view_filter in ('sent', 'opened', 'replied', 'bounced', 'clicked'):
+            opened_stats = self.statistics_ids.filtered(lambda stat: stat[view_filter])
+        elif view_filter == ('delivered'):
+            opened_stats = self.statistics_ids.filtered(lambda stat: stat.sent and not stat.bounced)
+        else:
+            opened_stats = self.env['mail.mail.statistics']
+        res_ids = opened_stats.mapped('res_id')
+        model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
+        return {
+            'name': model_name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree',
+            'res_model': self.mailing_model_real,
+            'domain': [('id', 'in', res_ids)],
+            'context': self.env.context,
+        }
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
