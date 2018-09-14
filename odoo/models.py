@@ -1817,7 +1817,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
         empty_item.update({key: False for key in aggregated_fields})
-        empty_item.update({key: False for key in [group['field'] for group in annotated_groupbys[1:]]})
+        empty_item.update({key: False for key in [group['groupby'] for group in annotated_groupbys[1:]]})
 
         grouped_data = collections.defaultdict(list)
         for d in data:
