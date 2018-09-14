@@ -24,6 +24,7 @@
                         <group>
                             <field name="identifier" readonly="True"/>
                             <field name="ip"/>
+                            <field name="ip_url" widget="url"/>
                             <field name="screen_url"/>
                         </group>
                     </group>
@@ -72,7 +73,7 @@
         </field>
     </record>
     <record id="iot_box_action" model="ir.actions.act_window">
-        <field name="name">Iot Boxes</field>
+        <field name="name">IoT Boxes</field>
         <field name="res_model">iot.box</field>
         <field name="view_mode">kanban,list,form</field>
     </record>
@@ -99,7 +100,7 @@
                     </group>
                     <notebook>
                         <page string="Printer Reports" name="reports" attrs="{'invisible': [('type', '!=', 'printer')]}">
-                            <field name="report_ids" widget="many2many"/>
+                            <field name="report_ids" widget="many2many" context="{'tree_view_ref': 'iot.act_report_xml_view_tree_iot'}"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -175,6 +176,19 @@
                 <field name="device_id"/>
             </field>
          </field>
+    </record>
+
+    <record id="act_report_xml_view_tree_iot" model="ir.ui.view">
+        <field name="name">ir.actions.report.tree.iot</field>
+        <field name="model">ir.actions.report</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <tree string="Report xml">
+                <field name="name"/>
+                <field name="model"/>
+                <field name="report_type"/>
+            </tree>
+        </field>
     </record>
 
     <!-- JS assets -->

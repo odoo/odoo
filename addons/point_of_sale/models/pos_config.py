@@ -160,7 +160,7 @@ class PosConfig(models.Model):
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
-    is_posbox = fields.Boolean("PosBox")
+    is_posbox = fields.Boolean("IoTBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
 
     def _compute_is_installed_account_accountant(self):
@@ -272,7 +272,7 @@ class PosConfig(models.Model):
     def _onchange_use_pricelist(self):
         """
         If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
-        using a pricelist for this posbox. 
+        using a pricelist for this iotbox.
         """
         if not self.use_pricelist:
             self.pricelist_id = self._default_pricelist()

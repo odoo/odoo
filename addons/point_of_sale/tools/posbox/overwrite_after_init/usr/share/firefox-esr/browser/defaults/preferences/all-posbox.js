@@ -1,5 +1,5 @@
 // Preferences to allow unattended install of R-Kiosk extension
-// Needed for Odoo posbox Client display
+// Needed for Odoo iotbox Client display
 pref("app.update.checkInstallTime", false);
 pref("devtools.webide.widget.autoinstall", false);
 pref("xpinstall.customConfirmationUI", false);

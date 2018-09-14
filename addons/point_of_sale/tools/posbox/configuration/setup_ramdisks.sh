@@ -16,7 +16,7 @@ create_ramdisk () {
 }
 
 echo "Creating ramdisks..."
-create_ramdisk "/var" "128M"
+create_ramdisk "/var" "192M"
 create_ramdisk "/etc" "16M"
 create_ramdisk "/tmp" "16M"
 

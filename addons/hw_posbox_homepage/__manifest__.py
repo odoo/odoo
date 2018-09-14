@@ -2,17 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'PosBox Homepage',
+    'name': 'IoTBox Homepage',
     'category': 'Point of Sale',
     'sequence': 6,
     'website': 'https://www.odoo.com/page/point-of-sale-hardware',
-    'summary': 'A homepage for the PosBox',
+    'summary': 'A homepage for the IoTBox',
     'description': """
-PosBox Homepage
+IoTBox Homepage
 ===============
 
 This module overrides Odoo web interface to display a simple
-Homepage that explains what's the posbox and show the status,
+Homepage that explains what's the iotbox and show the status,
 and where to find documentation.
 
 If you activate this module, you won't be able to access the 

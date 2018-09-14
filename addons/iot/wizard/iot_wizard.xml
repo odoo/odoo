@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_add_iot_box" model="ir.ui.view">
+        <field name="name">Add IoT box</field>
+        <field name="model">add.iot.box</field>
+        <field name="arch" type="xml">
+            <form string="Add IoT Box">
+                <p>
+                    You can add an IoT box in several ways. <br/>
+
+                    If it is with the wifi, you can connect to it. <br/>
+
+                    If it is in the network, you can try this button: <br/>
+                    <widget name='iot_detect_button' string="Detect and Add IoT devices in the network"/><br/>
+                    Or manually and copy / paste this token to the field odoo server on IoTBox : <br/>
+                </p>
+                <group>
+                    <field name="token"/>
+                    <field name="view_token" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="Ok" string="Ok" special="cancel"/>
+                </footer> 
+            </form>
+        </field>
+    </record>
+    <record id="action_add_iot_box" model="ir.actions.act_window">
+        <field name="name">Add IoT box...</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">add.iot.box</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_add_iot_box"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem
+        id="iot_box_add_menu_action"
+        action="action_add_iot_box"
+        parent="iot_menu_root"
+        sequence="3"/>
+</odoo>

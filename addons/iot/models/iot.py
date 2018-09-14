@@ -13,7 +13,38 @@ class IotBox(models.Model):
     identifier = fields.Char(string='Identifier (Mac Address)', readonly=True)
     device_ids = fields.One2many('iot.device', 'iot_id', string="Devices", readonly=True)
     ip = fields.Char('IP Address', readonly=True)
+    ip_url = fields.Char('IoTBox Home Page', readonly=True, compute='_compute_ip_url')
     screen_url = fields.Char('Screen URL', help="Url of the page that will be displayed by hdmi port of the box.")
+
+    def _compute_ip_url(self):
+        for box in self:
+            box.ip_url = 'http://' + box.ip + ':8069'
+
+
+class IotTrigger(models.Model):
+    _name = 'iot.trigger'
+
+    device_id = fields.Many2one('iot.device', 'Device', required=True)
+    key = fields.Char('Key')
+    action = fields.Selection([('pass', 'Pass'),
+                               ('fail', 'Fail'),
+                               ('measure', 'Take Measure'),
+                               ('picture', 'Take Picture'),
+                               ('skip', 'Skip'),
+                               ('pause', 'Pause'),
+                               ('prev', 'Previous'),
+                               ('next', 'Next'),
+                               ('validate', 'Validate'),
+                               ('cloMO', 'Close MO'),
+                               ('cloWO', 'Close WO'),
+                               ('finish', 'Finish'),
+                               ('record', 'Record Production'),
+                               ('cancel', 'Cancel'),
+                               ('print-op', 'Print Operation'),
+                               ('print-slip', 'Print Delivery Slip'),
+                               ('print', 'Print Labels'),
+                               ('pack', 'Pack'),
+                               ('scrap', 'Scrap'),])
 
 
 class IotDevice(models.Model):

@@ -437,9 +437,9 @@ var SaleDetailsButton = PosBaseWidget.extend({
     },
 });
 
-/* User interface for distant control over the Client display on the posbox */
-// The boolean posbox_supports_display (in devices.js) will allow interaction to the posbox on true, prevents it otherwise
-// We don't want the incompatible posbox to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
+/* User interface for distant control over the Client display on the iotbox */
+// The boolean posbox_supports_display (in devices.js) will allow interaction to the iotbox on true, prevents it otherwise
+// We don't want the incompatible iotbox to be flooded with 404 errors on arrival of our many requests as it triggers losses of connections altogether
 var ClientScreenWidget = PosBaseWidget.extend({
     template: 'ClientScreenWidget',
 
@@ -460,7 +460,7 @@ var ClientScreenWidget = PosBaseWidget.extend({
             this.$('.js_disconnected').removeClass('oe_hidden');
             msg = _t('Disconnected')
             if (status === 'not_found') {
-                msg = _t('Client Screen Unsupported. Please upgrade the PosBox')
+                msg = _t('Client Screen Unsupported. Please upgrade the IoTBox')
             }
         }
 
@@ -921,4 +921,3 @@ return {
     UsernameWidget: UsernameWidget,
 };
 });
-

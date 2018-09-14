@@ -38,7 +38,8 @@ function connect () {
 
 	logger -t posbox_connect_to_wifi "Connecting to ${ESSID}"
 	sudo service hostapd stop
-	sudo service isc-dhcp-server stop
+	sudo service nginx stop
+	sudo service dnsmasq stop
 
 	sudo pkill wpa_supplicant
 	sudo ifconfig wlan0 down
@@ -62,6 +63,7 @@ function connect () {
 	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet " ; do sleep 0.1 ; done'
 	TIMEOUT_RETURN=$?
 
+
 	if [ ${TIMEOUT_RETURN} -eq 124 ] && [ -z "${NO_AP}" ] ; then
 		logger -t posbox_connect_to_wifi "Failed to connect, forcing Posbox AP"
 		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh "force" &
@@ -78,6 +80,7 @@ function connect () {
 		if [ ${WIFI_WAS_LOST} -eq 0 ] ; then
 			touch "${LOST_WIFI_FILE}"
 		fi
+		wget -q "http://localhost:8069/send_iot_box" -O /dev/null
 
 		logger -t posbox_connect_to_wifi "Starting wifi keep alive script"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/keep_wifi_alive.sh &

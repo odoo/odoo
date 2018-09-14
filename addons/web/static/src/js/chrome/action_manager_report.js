@@ -101,7 +101,6 @@ ActionManager.include({
      */
     _executeReportAction: function (action, options) {
         var self = this;
-
         if (action.report_type === 'qweb-html') {
             return this._executeReportClientAction(action, options);
         } else if (action.report_type === 'qweb-pdf') {

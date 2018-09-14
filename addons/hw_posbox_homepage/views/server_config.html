@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
+{% block head %}
+    <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#server-config').submit(function(e){
+                e.preventDefault();
+                $('.loading-block').removeClass('o_hide');
+                $.ajax({
+                    url: '/server_connect',
+                    type: 'post',
+                    data: $('#server-config').serialize(),
+                }).done(function (url) {
+                    $('.message-status').html('Configure Domain Server <br> Redirect to IoTBox');
+                    setTimeout(function () {
+                        window.location = url;
+                    }, 30000);
+                }).fail(function () {
+                    $('.error-message').text('Error in connecting to server');
+                    $('.loading-block').addClass('o_hide');
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center">Configure Odoo Server</h2>
+    <p>
+        Here you can configure how the still hidden IoT sauce on your IoT infiltrated iotbox
+        can connect with the Odoo server.
+    </p>
+    <form id="server-config" action='/server_connect' method='POST'>
+        <table align="center">
+            <tr>
+                <td>IoTBox Name</td>
+                <td><input type="text" name="iotname" value="{{ hostname }}"></td>
+            </tr>
+            <tr>
+                <td>Server Token</td>
+                <td><input type="text" name="token"></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><input class="btn" type="submit" value="Connect"/></td>
+            </tr>
+        </table>
+        <p class="text-center font-small">
+            Your current server <strong>{{ server_status }}</strong>
+        </p>
+        {{ loading_block_ui(loading_message) }}
+    </form>
+    <div class="text-center font-small" style="margin: 10px auto;">
+        You can clear the server configuration
+        <form style="display: inline-block;margin-left: 4px;" action='/server_clear'>
+            <input class="btn btn-sm" type="submit" value="Clear"/>
+        </form>
+    </div>
+{% endblock %}
