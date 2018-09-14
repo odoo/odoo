@@ -308,7 +308,7 @@
                             <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
-                                    <field name="product_id"
+                                    <field name="product_id" groups="account.group_products_in_bills"
                                         context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
