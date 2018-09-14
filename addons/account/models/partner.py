@@ -394,7 +394,7 @@ class ResPartner(models.Model):
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
+        help="The fiscal position determines the taxes/accounts used for this contact.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")

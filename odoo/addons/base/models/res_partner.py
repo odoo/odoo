@@ -150,8 +150,7 @@ class Partner(models.Model):
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contacts', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Internal Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
-                            help="If the selected language is loaded in the system, all documents related to "
-                                 "this contact will be printed in this language. If not, it will be English.")
+                            help="All the emails and documents sent to this contact will be translated in this language.")
     tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
                           help="The partner's timezone, used to output proper date and time values "
                                "inside printed reports. It is important to set a value for this field. "
@@ -159,24 +158,21 @@ class Partner(models.Model):
                                "render date and time values: your computer's timezone.")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user that is in charge of communicating with this contact if any.')
-    vat = fields.Char(string='Tax ID', help="Tax Identification Number. "
-                                         "Fill it if the company is subjected to taxes. "
-                                         "Used by the some of the legal statements.")
+      help='The internal user in charge of this contact.')
+    vat = fields.Char(string='Tax ID', help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
-    website = fields.Char(help="Website of Partner or Company")
+    website = fields.Char()
     comment = fields.Text(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     credit_limit = fields.Float(string='Credit Limit')
-    barcode = fields.Char(oldname='ean13')
+    barcode = fields.Char(oldname='ean13', help="Use a barcode to identify this contact from the Point of Sale.")
     active = fields.Boolean(default=True)
     customer = fields.Boolean(string='Is a Customer', default=True,
-                               help="Check this box if this contact is a customer.")
+                               help="Check this box if this contact is a customer. It can be selected in sales orders.")
     supplier = fields.Boolean(string='Is a Vendor',
-                               help="Check this box if this contact is a vendor. "
-                               "If it's not checked, purchase people will not see it when encoding a purchase order.")
+                               help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
     type = fields.Selection(
@@ -187,7 +183,7 @@ class Partner(models.Model):
          ("private", "Private Address"),
         ], string='Address Type',
         default='contact',
-        help="Used to select automatically the right address according to the context in sales and purchases documents.")
+        help="Used by Sales and Purchase Apps to select the relevant address depending on the context.")
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)

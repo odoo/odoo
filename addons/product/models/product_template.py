@@ -36,12 +36,9 @@ class ProductTemplate(models.Model):
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
-        'Description', translate=True,
-        help="A precise description of the Product, used only for internal information purposes.")
+        'Description', translate=True)
     description_purchase = fields.Text(
-        'Purchase Description', translate=True,
-        help="A description of the Product that you want to communicate to your vendors. "
-             "This description will be copied to every Purchase Order, Receipt and Vendor Bill/Credit Note.")
+        'Purchase Description', translate=True)
     description_sale = fields.Text(
         'Sale Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
@@ -49,11 +46,9 @@ class ProductTemplate(models.Model):
     type = fields.Selection([
         ('consu', 'Consumable'),
         ('service', 'Service')], string='Product Type', default='consu', required=True,
-        help='A storable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
-             'A consumable product, on the other hand, is a product for which stock is not managed.\n'
-             'A service is a non-material product you provide.\n'
-             'A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on '
-             'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.')
+        help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
+             'A consumable product is a product for which stock is not managed.\n'
+             'A service is a non-material product you provide.')
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
@@ -70,7 +65,7 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(
         'Sales Price', default=1.0,
         digits=dp.get_precision('Product Price'),
-        help="Base price to compute the customer price. Sometimes called the catalog price.")
+        help="Price at which the product is sold to customers.")
     lst_price = fields.Float(
         'Public Price', related='list_price',
         digits=dp.get_precision('Product Price'))
@@ -78,9 +73,7 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
-               "Also used as a base price for pricelists. "
-               "Expressed in the default unit of measure of the product. ")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
@@ -92,9 +85,7 @@ class ProductTemplate(models.Model):
     weight_uom_id = fields.Many2one('uom.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
     weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
-    sale_ok = fields.Boolean(
-        'Can be Sold', default=True,
-        help="Specify if the product can be selected in a sales order line.")
+    sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist', store=False,
@@ -102,19 +93,19 @@ class ProductTemplate(models.Model):
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default Unit of Measure used for all stock operation.")
+        help="Default unit of measure used for all stock operations.")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure.")
+        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
-    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
+    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', help="Define vendor pricelists.")
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
