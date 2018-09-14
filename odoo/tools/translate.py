@@ -1104,10 +1104,15 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             # discard the target from the POT targets.
             src = dic['src']
-            if src in pot_targets:
-                target = pot_targets[src]
-                target.value = dic['value']
-                target.targets.discard((dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0))
+            target_key = (dic['type'], dic['name'], dic['type'] != 'code' and dic['res_id'] or 0)
+            target = pot_targets.get(src)
+            if not target or target_key not in target.targets:
+                _logger.info("Translation '%s' (%s, %s, %s) not found in reference pot, skipping",
+                    src[:60], dic['type'], dic['name'], dic['res_id'])
+                return
+
+            target.value = dic['value']
+            target.targets.discard(target_key)
 
             # This would skip terms that fail to specify a res_id
             res_id = dic['res_id']
@@ -1142,7 +1147,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if target.value:
                 for type, name, res_id in target.targets:
                     pot_rows.append((type, name, res_id, src, target.value, target.comments))
-        pot_targets.clear()
         for row in pot_rows:
             process_row(row)
 
