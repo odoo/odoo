@@ -1,6 +1,34 @@
+#wrapwrap{
+    background-color: #f2f2f2;
+}
+
+.tag_post{
+    max-width: 20%;
+    span{
+        float:right;
+    }
+}
+.question-block .question-name{
+    max-width: 80%;
+}
+pre{
+    background-color: #616161;
+    color: white;
+    border-radius: 5px;
+    padding: 2rem;
+}
+blockquote{
+    border-left: 2px solid #B0B0B0;
+    padding-left: 3rem;
+    position: relative;
+    font-style: italic;
+    font-weight: lighter;
+}
+
 .vote {
     min-width: 38px;
     margin-right: 12px;
+    z-index: 10;
 
     .vote_count {
         font-size: 160%;
@@ -17,12 +45,12 @@
 .author-box {
     min-width: 200px;
     padding: 4px;
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
 }
 
-.question-block {
+/*.question-block {
     margin-left: 50px;
-}
+}*/
 
 .o_forum_tag_follow_box {
     display: none;
@@ -34,6 +62,7 @@
 
 .question {
     clear: left;
+    position: relative;
 }
 
 .question {
@@ -51,23 +80,89 @@
     }
 
     img {
+        width:100%;
         max-width: 600px;
+        margin:0 auto;
+        display: block;
         height: auto !important;
     }
 }
 
 .forum_answer {
+    position: relative;
     img {
         max-width: 600px;
         height: auto !important;
     }
 }
+.post_to_validate{
+    overflow: hidden;
+    .validate_answer{
+        display: none;
+    }
+    .offset-1{
+        margin: 0 !important;
+    }
+}
 
+.o_count_post_answer{
+    border-left: 3px solid;
+}
+.validate_answer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    .bg-success{
+        height:100%;
+        width:4px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    span{
+        position: absolute;
+        top: 10px;
+        left: -9px;
+        font-size: 20px;
+        i{
+            padding: 2px 3px;
+            border-radius: 100%;
+        }
+    }
+}
+.o_card_people{
+    padding-top: 200px;
+    position: relative;
+    /*width: 32%; */
+    /*margin-left: 1.3%;*/
+}
+
+.user_name_people{
+    font-weight: bold;
+    max-width: 60%;
+}
+
+.o_people_photo_over{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 180px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.o_profile_main{
+    overflow: hidden;
+}
 img.o_forum_avatar {
     max-height: 40px;
     margin-right: 10px;
 }
-
+#accordion button, #headingFour button{
+    text-decoration: none;
+}
 img.o_forum_avatar_big {
     max-width: 75px;
     margin-right: 10px;
@@ -77,16 +172,26 @@ img.o_forum_avatar_big {
     background-color: #eeeeee;
 }
 
+.rounded_badge{
+    border-radius: 15px;
+}
+
 .badge-gold {
     color: #ffcc00;
+}.bg-gold {
+    background-color: #ffcc00;
 }
 
 .badge-silver {
     color: #cccccc;
+}.bg-silver {
+    background-color: #cccccc;
 }
 
 .badge-bronze {
     color: #eea91e;
+}.bg-bronze {
+    background-color: #eea91e;
 }
 
 .oe_answer_true {
@@ -123,10 +228,10 @@ a.no-decoration {
     color: #428bca;
 }
 
-.oe_comment_grey {
+/*.oe_comment_grey {
     background-color: #f5f5f5;
     padding: 4px;
-}
+}*/
 
 .close.comment_delete {
     font-size: 16px;
@@ -134,9 +239,16 @@ a.no-decoration {
 }
 
 .country_flag {
-    max-height: 16px;
-    display: inline-block;
+    max-height: 13px;
+    width: auto !important;
+    display: inline-block !important;
     margin-left: 2px;
+}
+.country_flag_people{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    max-height: 40px;
 }
 
 .tag_text .text-core .text-wrap {
@@ -171,6 +283,16 @@ button.btn-link.text-muted {
     color: #999;
 }
 
+.nav-link{
+    color: #9e9e9e;
+    &:hover{
+        color: #212121;
+    }
+    &.active{
+        color: theme-color('primary');
+    }
+}
+
 .o_forum_user_bio_expand {
     position: absolute;
     z-index: 200;
@@ -193,12 +315,31 @@ button.btn-link.text-muted {
     line-height: 13px;
     font-size: 11px;
     word-wrap: break-word;
-
     .o_forum_tooltip_line {
         min-height: 13px;
     }
 
     .o_forum_tooltip_header {
         min-height: 75px;
+    }
+}
+
+/*TEXT AREA COMMENT*/
+.note-editor{
+    border: none !important;
+    .note-toolbar{
+        padding: .8rem 1rem !important;
+        background-color: theme-color('secondary');
+        .btn-group{
+            margin: 0 .2rem !important;
+            .btn-sm{
+                padding: .2rem .5rem;
+                background-color: white;
+                color: theme-color('secondary');
+            }
+        }
+    }
+    .note-resizebar{
+        background-color: theme-color('secondary');
     }
 }

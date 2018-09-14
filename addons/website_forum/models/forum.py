@@ -44,7 +44,7 @@ class Forum(models.Model):
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True, sanitize=False)
     description = fields.Text(
         'Description',
         translate=True,

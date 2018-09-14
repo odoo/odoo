@@ -12,7 +12,7 @@
                     <t t-if="target_type == 'question'" t-call="website_forum.social_message_question"/>
                     <t t-if="target_type == 'answer'" t-call="website_forum.social_message_answer"/>
                     <t t-if="target_type == 'default'" t-call="website_forum.social_message_default"/>
-                    <div class="share-icons text-center">
+                    <div class="share-icons text-center text-primary">
                         <t t-foreach="medias" t-as="media">
                             <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}" t-attf-aria-label="Share on #{media}" t-attf-title="Share on #{media}">
                                 <span class="fa fa-square fa-stack-2x"></span>
