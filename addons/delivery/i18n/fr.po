@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
+# Nathan Noël <nathan070@me.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 09:04+0000\n"
 "PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"Last-Translator: Nathan Noël <nathan070@me.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +59,29 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bonjour ${object.partner_id.name},<br/><br/>\n"
+"        Nous sommes ravis de vous informer que votre commande a été expédiée.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Votre référence de suivi est:\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Vous trouverez ci-joint votre commande pour plus de détails.<br/><br/>\n"
+"        Merci,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -95,7 +119,7 @@ msgstr "<strong>Transporteur</strong>"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong>Poids d'expédition</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -139,7 +163,7 @@ msgstr "Archivé"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Transporteurs disponibles"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -209,7 +233,7 @@ msgstr "Enregistrement de débogage"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Définir une nouvelle méthode de livraison"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -578,7 +602,7 @@ msgstr "Détails du colis"
 #: code:addons/delivery/wizard/choose_delivery_package.py:52
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Paquet trop lourd!"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
@@ -729,7 +753,7 @@ msgstr "Poids d'expéditio"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Poids de livraison:"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -748,6 +772,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Le poids de votre paquet est supérieur au poids maximal autorisé pour ce "
+"type de paquet. Veuillez choisir un autre type de paquet."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111

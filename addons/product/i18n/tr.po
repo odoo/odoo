@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:39+0000\n"
-"PO-Revision-Date: 2018-09-05 08:39+0000\n"
+"POT-Creation-Date: 2018-09-11 09:51+0000\n"
+"PO-Revision-Date: 2018-09-11 09:51+0000\n"
 "Last-Translator: tanerhasret <tanerhasret@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
 msgstr "<strong>Yazdırma tarihi:</strong>"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.report_packagingbarcode
+msgid "<strong>Qty: </strong>"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -314,6 +319,7 @@ msgstr "Nitelikler ve Varyantlar"
 #: model:ir.model.fields,field_description:product.field_product_packaging__barcode
 #: model:ir.model.fields,field_description:product.field_product_product__barcode
 #: model:ir.model.fields,field_description:product.field_product_template__barcode
+#: model:ir.ui.view,arch_db:product.report_packagingbarcode
 #: model:ir.ui.view,arch_db:product.report_simple_barcode
 #: model:ir.ui.view,arch_db:product.report_simple_label
 msgid "Barcode"
@@ -412,6 +418,11 @@ msgid "Child Categories"
 msgstr "Alt Kategoriler"
 
 #. module: product
+#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Choose the unit to measure weight"
+msgstr ""
+
+#. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
 msgstr "Kodlar"
@@ -468,6 +479,11 @@ msgstr "İletişim"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_packaging_form_view
+msgid "Contained quantity"
 msgstr ""
 
 #. module: product
@@ -593,6 +609,7 @@ msgid "Default %(currency)s pricelist for %(company)s"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default Unit of Measure used for all stock operation."
@@ -858,20 +875,15 @@ msgid "Import Template for Pricelists"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:498
+#: code:addons/product/models/product_template.py:501
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:648
+#: code:addons/product/models/product.py:649
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
-
-#. module: product
-#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
-msgid "In which unit of measure do you manage your weights"
 msgstr ""
 
 #. module: product
@@ -997,19 +1009,16 @@ msgid "Logistics"
 msgstr "Lojistik"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_users__has_group_pricelist_item
 #: model:res.groups,name:product.group_pricelist_item
 msgid "Manage Pricelist Items"
 msgstr "Fiyat Listesi Öğelerini Yönet"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_users__has_group_stock_packaging
 #: model:res.groups,name:product.group_stock_packaging
 msgid "Manage Product Packaging"
 msgstr "Ürün Paketleme Yönetimi"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_users__has_group_product_variant
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
 msgstr "Ürün Varyantlarını Yönet"
@@ -1308,7 +1317,6 @@ msgid "Pricelists"
 msgstr "Fiyat Listeleri"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_users__has_group_product_pricelist
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Pricelists On Product"
 msgstr "Ürün'de Fiyat Listeleri"
@@ -1417,6 +1425,11 @@ msgstr "Ürün Paketleri"
 #: model:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
 msgstr "Ürün Paketleme"
+
+#. module: product
+#: model:ir.actions.report,name:product.report_product_packaging
+msgid "Product Packaging (PDF)"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1589,7 +1602,6 @@ msgid "Sales Price"
 msgstr "Satış Fiyatı"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_res_users__has_group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Sales Pricelists"
 msgstr "Satış Fiyat Listeleri"
@@ -1940,6 +1952,7 @@ msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_uom
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
@@ -1973,11 +1986,6 @@ msgstr "Okunmamış Mesaj Sayacı"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr "Her müşteriye farklı fiyat ayarlaması için fiyat listeleri kullanın"
-
-#. module: product
-#: model:ir.model,name:product.model_res_users
-msgid "Users"
-msgstr "Kullanıcılar"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2088,22 +2096,15 @@ msgid "Volume"
 msgstr "Hacim"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Websitesi Mesajları"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Web Sitesi iletişim geçmişi"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 msgid "Weight"
 msgstr "Ağırlık"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.res_config_settings_view_form
+msgid "Weight Measurement"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_id
@@ -2240,7 +2241,7 @@ msgstr "Örn. Dolar Perakendeceliği"
 
 #. module: product
 #: code:addons/product/models/product.py:571
-#: code:addons/product/models/product_template.py:491
+#: code:addons/product/models/product_template.py:494
 #, python-format
 msgid "product"
 msgstr ""

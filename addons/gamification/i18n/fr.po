@@ -283,6 +283,16 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>Rappel ${object.name}</strong><br/>\n"
+"Vous n'avez pas mis à jour votre progression concernant ${object.definition_id.name} (actuellement rempli à ${object.completeness}%) depuis au moins ${object.remind_update_delay} jours. Ne l'oubliez pas.\n"
+"<br/><br/>\n"
+"Merci,\n"
+"    <br/>\n"
+"    % if object.challenge_id.manager_id and object.challenge_id.manager_id.signature:\n"
+"    ${object.challenge_id.manager_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1528,7 +1538,7 @@ msgstr "Date du prochain compte-rendu"
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
-msgstr ""
+msgstr "Pas d'objectifs trouvés"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2165,6 +2175,8 @@ msgid ""
 "There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Il n'y a pas d'objectif associé à ce challenge qui corresponde à votre recherche.\n"
+" Assurez-vous que votre challenge est actif et assigné à moins un utilisateur."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__closed
