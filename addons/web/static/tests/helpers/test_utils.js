@@ -494,7 +494,7 @@ function addMockEnvironment(widget, params) {
     // Dispatch service calls
     // Note: some services could call other services at init,
     // Which is why we have to init services after that
-    var services = {ajax: null}; // mocked ajax service already loaded
+    var services = {};
     intercept(widget, 'call_service', function (ev) {
         var args, result;
         if (services[ev.data.service]) {
@@ -502,7 +502,7 @@ function addMockEnvironment(widget, params) {
             args = (ev.data.args || []);
             result = service[ev.data.method].apply(service, args);
         } else if (ev.data.service === 'ajax') {
-            // ajax service is already mocked by the server
+            // use ajax service that is mocked by the server
             var route = ev.data.args[0];
             args = ev.data.args[1];
             result = mockServer.performRpc(route, args);
@@ -560,6 +560,9 @@ function addMockEnvironment(widget, params) {
     // Deploy services
     var done = false;
     var servicesToDeploy = _.clone(params.services);
+    if (!servicesToDeploy.ajax) {
+        services.ajax = null; // use mocked ajax from mocked server
+    }
     while (!done) {
         var serviceName = _.findKey(servicesToDeploy, function (Service) {
             return !_.some(Service.prototype.dependencies, function (depName) {
