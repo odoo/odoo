@@ -561,7 +561,6 @@
                                 <td class='col-due'> <t t-esc='widget.format_currency_no_symbol(order.get_due(line))' /> </td>
                                 <td class='col-tendered edit'>
                                     <t t-esc='widget.inputbuffer' />
-                                    <!-- <t t-esc='line.get_amount()' /> -->
                                 </td>
                                 <t t-if='order.get_change(line)'>
                                     <td class='col-change highlight' >
@@ -1247,12 +1246,12 @@
                 <img t-att-src='image_url' alt="Product image"/>
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
+                        <t t-esc="widget.format_currency(product.get_pricelist_discount(pricelist, product, 1).price_compute,'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
+                        <t t-esc="widget.format_currency(product.get_pricelist_discount(pricelist, product, 1).price_compute,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
@@ -1269,7 +1268,7 @@
                 <t t-if="line.get_product().tracking!=='none'">
                     <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
                        aria-label="Valid product lot" role="img" title="Valid product lot"/>
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="not(line.has_valid_product_lot())"
+                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="!(line.has_valid_product_lot())"
                        aria-label="Invalid product lot" role="img" title="Invalid product lot"/>
                 </t>
             </span>
@@ -1283,18 +1282,30 @@
                             <t t-esc="line.get_quantity_str()" />
                         </em>
                         <t t-esc="line.get_unit().name" />
-                        at
-                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+                        at 
+                        <t t-if="line.price_manually_set || line.display_view_pricelist_discount() != 'with_discount'">
+                            <t t-esc="widget.format_currency(line.get_unit_price(),'Product Price')" />
+                        </t>
+                        <t t-else="">
+                            <t t-esc="widget.format_currency(line.display_pricelist_discount().price_compute,'Product Price')" />
+                        </t>
                         /
                         <t t-esc="line.get_unit().name" />
                     </li>
                 </t>
-                <t t-if="line.get_discount_str() !== '0'">
+                <t t-if="line.get_discount_manually_set() || 
+                    (line.display_view_pricelist_discount() == 'without_discount' &amp;&amp; line.get_discount_str() > 0)">
                     <li class="info">
                         With a
                         <em>
                             <t t-esc="line.get_discount_str()" />%
                         </em>
+                        <t t-if="line.get_discount_manually_set()">
+                            manual 
+                        </t>
+                        <t t-else="">
+                            pricelist  
+                        </t>
                         discount
                     </li>
                 </t>
@@ -1472,7 +1483,10 @@
                 <tr t-foreach="orderlines" t-as="orderline">
                     <td>
                         <t t-esc="orderline.get_product().display_name"/>
-                         <t t-if="orderline.get_discount() > 0">
+                         <t t-if="
+                            orderline.get_discount() > 0 &amp;&amp; 
+                            (orderline.get_discount_manually_set() || orderline.display_view_pricelist_discount() == 'without_discount')
+                        ">
                             <div class="pos-disc-font">
                                 With a <t t-esc="orderline.get_discount()"/>% discount
                             </div>

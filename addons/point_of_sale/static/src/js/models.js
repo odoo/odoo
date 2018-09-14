@@ -294,7 +294,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name'],
+        fields: ['name', 'display_name', 'discount_policy'],
         domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
@@ -1233,42 +1233,54 @@ exports.Product = Backbone.Model.extend({
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price: function(pricelist, quantity){
-        var self = this;
-        var date = moment().startOf('day');
+    get_view_pricelist_discount: function(pricelist){
+        return pricelist.discount_policy;
+    },
+    get_pricelist_discount: function(pricelist, product, quantity){
 
+        var price = product.lst_price;
+        var pricelist_discount_detail = {}
+        pricelist_discount_detail.pricelist_discount = 0;
+        pricelist_discount_detail.price = price;
+        pricelist_discount_detail.price_compute = price;
         var category_ids = [];
-        var category = this.categ;
+        var date = moment().startOf('day');
+        var category = product.categ;
         while (category) {
             category_ids.push(category.id);
             category = category.parent;
         }
-
         var pricelist_items = _.filter(pricelist.items, function (item) {
-            return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
-                   (! item.product_id || item.product_id[0] === self.id) &&
+            return (! item.product_tmpl_id || item.product_tmpl_id[0] === product.product_tmpl_id) &&
+                   (! item.product_id || item.product_id[0] === product.id) &&
                    (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
                    (! item.date_start || moment(item.date_start).isSameOrBefore(date)) &&
                    (! item.date_end || moment(item.date_end).isSameOrAfter(date));
         });
 
-        var price = self.lst_price;
         _.find(pricelist_items, function (rule) {
             if (rule.min_quantity && quantity < rule.min_quantity) {
                 return false;
             }
-
             if (rule.base === 'pricelist') {
-                price = self.get_price(rule.base_pricelist, quantity);
+                price = product.get_pricelist_discount(rule.base_pricelist, product, quantity).price_compute;
+                pricelist_discount_detail.price = price;
+                pricelist_discount_detail.price_compute = price;
             } else if (rule.base === 'standard_price') {
-                price = self.standard_price;
+                price = product.standard_price;
+                pricelist_discount_detail.price = product.standard_price;
+                pricelist_discount_detail.price_compute = product.standard_price;
             }
-
+            
+            pricelist_discount_detail.compute_price = rule.compute_price;
             if (rule.compute_price === 'fixed') {
-                price = rule.fixed_price;
+                pricelist_discount_detail.compute_price = rule.compute_price;
+                pricelist_discount_detail.price = rule.fixed_price;
+                pricelist_discount_detail.price_compute = rule.fixed_price;
                 return true;
             } else if (rule.compute_price === 'percentage') {
-                price = price - (price * (rule.percent_price / 100));
+                pricelist_discount_detail.pricelist_discount = rule.percent_price;
+                pricelist_discount_detail.price_compute = price - (price * (rule.percent_price / 100));
                 return true;
             } else {
                 var price_limit = price;
@@ -1285,17 +1297,19 @@ exports.Product = Backbone.Model.extend({
                 if (rule.price_max_margin) {
                     price = Math.min(price, price_limit + rule.price_max_margin);
                 }
+                pricelist_discount_detail.pricelist_discount = 0;
+                pricelist_discount_detail.price = price;
+                pricelist_discount_detail.price_compute = price;
                 return true;
             }
 
-            return false;
         });
 
         // This return value has to be rounded with round_di before
         // being used further. Note that this cannot happen here,
         // because it would cause inconsistencies with the backend for
         // pricelist that have base == 'pricelist'.
-        return price;
+        return pricelist_discount_detail;
     },
 });
 
@@ -1316,6 +1330,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_product_lot(this.product);
         this.set_quantity(1);
         this.discount = 0;
+        this.discount_manually_set = false;
         this.discountStr = '0';
         this.type = 'unit';
         this.selected = false;
@@ -1325,7 +1340,7 @@ exports.Orderline = Backbone.Model.extend({
         if (options.price) {
             this.set_unit_price(options.price);
         } else {
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+            this.set_unit_price(this.product.get_pricelist_discount(this.order.pricelist, this.product, this.get_quantity()).price_compute);
         }
     },
     init_from_JSON: function(json) {
@@ -1338,6 +1353,8 @@ exports.Orderline = Backbone.Model.extend({
         this.price = json.price_unit;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
+        this.set_price_manually_set(json.price_manually_set);
+        this.set_discount_manually(json.discount_manually_set);
         this.id    = json.id;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -1375,12 +1392,28 @@ exports.Orderline = Backbone.Model.extend({
         this.discountStr = '' + disc;
         this.trigger('change',this);
     },
+    set_discount_manually: function(discount_manually_set){
+        if(this.discount != this.display_pricelist_discount().pricelist_discount){
+            this.discount_manually_set = true ;
+            this.trigger('change',this);
+        }
+    },
+    set_price_manually_set: function(price_manually_set){
+        if(this.price_manually_set){
+            this.price_manually_set = true ;
+            this.discount_manually_set = false ;
+            this.trigger('change',this);
+        }
+    },
     // returns the discount [0,100]%
     get_discount: function(){
         return this.discount;
     },
     get_discount_str: function(){
         return this.discountStr;
+    },
+    get_discount_manually_set: function(){
+        return this.discount_manually_set;
     },
     get_product_type: function(){
         return this.type;
@@ -1414,7 +1447,12 @@ exports.Orderline = Backbone.Model.extend({
 
         // just like in sale.order changing the quantity will recompute the unit price
         if(! keep_price && ! this.price_manually_set){
-            this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
+            if(this.discount_manually_set == false){
+                this.set_discount(this.product.get_pricelist_discount(this.order.pricelist, this.product, this.quantity).pricelist_discount);
+            }
+            if(this.price_manually_set == false){
+                this.set_unit_price(this.product.get_pricelist_discount(this.order.pricelist, this.product, this.quantity).price);
+            }
             this.order.fix_tax_included_price(this);
         }
         this.trigger('change', this);
@@ -1505,9 +1543,9 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if(this.get_product_type() !== orderline.get_product_type()){
             return false;
-        }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
+        }else if(this.get_discount() !== orderline.get_product().get_pricelist_discount(orderline.order.pricelist, orderline.product, this.get_quantity()).pricelist_discount){             // we don't merge orderlines where discount are different
             return false;
-        }else if(this.price !== orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity())){
+        }else if(this.price !== orderline.get_product().get_pricelist_discount(orderline.order.pricelist, orderline.product, this.get_quantity()).price){
             return false;
         }else if(this.product.tracking == 'lot') {
             return false;
@@ -1769,6 +1807,15 @@ exports.Orderline = Backbone.Model.extend({
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
+    },
+    display_view_pricelist_discount: function(){
+        return this.product.get_view_pricelist_discount(this.order.pricelist);
+    },
+    display_pricelist_discount: function(){
+        return this.product.get_pricelist_discount(this.order.pricelist, this.product, this.quantity);
+    },
+    get_origin_price: function(){
+        return this.product.lst_price;
     },
 });
 
@@ -2254,12 +2301,14 @@ exports.Order = Backbone.Model.extend({
     set_pricelist: function (pricelist) {
         var self = this;
         this.pricelist = pricelist;
-
+        
         var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
             return ! line.price_manually_set;
         });
         _.each(lines_to_recompute, function (line) {
-            line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity()));
+            line.set_unit_price(line.display_pricelist_discount().price);
+            line.set_discount(line.display_pricelist_discount().pricelist_discount);
+
             self.fix_tax_included_price(line);
         });
         this.trigger('change');
@@ -2308,15 +2357,19 @@ exports.Order = Backbone.Model.extend({
             line.set_quantity(options.quantity);
         }
 
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-        }
+        line.price = line.display_pricelist_discount().price;
 
         //To substract from the unit price the included taxes mapped by the fiscal position
         this.fix_tax_included_price(line);
 
         if(options.discount !== undefined){
             line.set_discount(options.discount);
+        }
+
+        var price_list_discount = line.display_pricelist_discount().pricelist_discount;
+        if(price_list_discount !== undefined){
+            line.discount = line.display_pricelist_discount().pricelist_discount;
+            line.discountStr =  '' + line.display_pricelist_discount().pricelist_discount;
         }
 
         if(options.extras !== undefined){
@@ -2440,7 +2493,11 @@ exports.Order = Backbone.Model.extend({
     },
     get_total_discount: function() {
         return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-            return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            var amount_manual_discount = 0;
+            if ((orderLine.get_discount_manually_set()) || (orderLine.display_view_pricelist_discount() == 'without_discount')){
+                return sum + (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            }
+            return sum;
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {

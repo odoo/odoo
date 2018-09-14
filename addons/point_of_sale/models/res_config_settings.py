@@ -8,7 +8,7 @@ class ResConfigSettings(models.TransientModel):
 
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments", help="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment journal.")
-    pos_sales_price = fields.Boolean("Multiple Product Prices", config_parameter='point_of_sale.pos_sales_price')
+    pos_sales_price = fields.Boolean("Multiple Sales Prices per product", config_parameter='point_of_sale.pos_sales_price')
     pos_pricelist_setting = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
