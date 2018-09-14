@@ -187,7 +187,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure" />
+                <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
                 <div class="container py-2 oe_website_sale">
                     <div class="products_pager form-inline justify-content-center">
                         <t t-call="website_sale.search">
@@ -241,7 +241,7 @@
                         <t t-call="website.pager"/>
                     </div>
                 </div>
-                <div class="oe_structure mb32" />
+                <div class="oe_structure mb32" id="oe_structure_website_sale_products_2"/>
             </div>
         </t>
     </template>
@@ -732,7 +732,7 @@
                     </div>
                 </div>
             </div>
-            <div class="oe_structure row" />
+            <div class="oe_structure" id="oe_structure_website_sale_extra_info_1"/>
         </t>
     </template>
 
@@ -873,7 +873,7 @@
                                         <span class="">Process Checkout</span>
                                         <span class="fa fa-chevron-right" />
                                     </a>
-                                    <div class="oe_structure" />
+                                    <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
                                 </div>
                             </div>
                         </div>
@@ -892,7 +892,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="oe_structure" />
+                <div class="oe_structure" id="oe_structure_website_sale_cart_2"/>
             </div>
         </t>
     </template>
@@ -1283,7 +1283,7 @@
                                 </div>
                             </div>
 
-                            <div class="oe_structure clearfix mt-3"/>
+                            <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
                             <div id="payment_method" class="mt-3" t-if="(acquirers or tokens) and website_sale_order.amount_total">
                                 <h3 class="mb24">Pay with </h3>
@@ -1324,7 +1324,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="oe_structure"/>
+                <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
             </div>
         </t>
     </template>
@@ -1435,7 +1435,7 @@
                                          to follow your order.
                                     </p>
                                 </t>
-                                <div class="oe_structure clearfix mt-3"/>
+                                <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
                                 <h3 class="text-left mt-3">
                                     <strong>Payment Information:</strong>
                                 </h3>
@@ -1462,7 +1462,7 @@
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
                                   </div>
                                 </div>
-                                <div class="oe_structure mt-3"/>
+                                <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
                             </div>
                         </div>
                         <div class="col-12 col-xl-auto">
@@ -1473,7 +1473,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="oe_structure"/>
+                <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
             </div>
         </t>
     </template>
@@ -1615,7 +1615,7 @@
     <template id="terms" name="Terms &amp; Conditions">
         <t t-call="website.layout">
           <div id="wrap">
-              <div class="oe_structure">
+              <div class="oe_structure" id="oe_structure_website_sale_terms_1">
                 <section class="s_title">
                   <div class="container">
                     <div class="row">
@@ -1648,7 +1648,7 @@
                   </div>
                 </section>
               </div>
-              <div class="oe_structure"/>
+              <div class="oe_structure" id="oe_structure_website_sale_terms_2"/>
           </div>
         </t>
     </template>

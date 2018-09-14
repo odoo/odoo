@@ -29,7 +29,7 @@
 <template id="latest_blogs" name="Latest Blogs">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_blog_latest_blogs_1"/>
             <section class="container">
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
@@ -94,7 +94,7 @@
                     </t>
                 </div>
             </section>
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_blog_latest_blogs_2"/>
         </div>
     </t>
 </template>
@@ -106,7 +106,7 @@
             <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
             <meta t-if="len(active_tag_ids) > 0" name="robots" t-attf-content="#{len(active_tag_ids) > 1 and 'noindex,'} nofollow"/>
         </t>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_blog_post_short_1"/>
         <div class="container">
             <t t-call="website.pager" >
                 <t t-set="classname">float-right</t>
@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_blog_post_short_2"/>
     </t>
 </template>
 

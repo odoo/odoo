@@ -42,7 +42,7 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_1"/>
         <section class="container">
             <h1 class="text-center" t-field="event.name"/>
             <div class="form-inline float-right">
@@ -108,14 +108,14 @@
             </tr>
             </table>
         </section>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_agenda_2"/>
     </t>
 </template>
 
 
 <template id="tracks">
     <t t-call="website_event.event_details">
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_tracks_1"/>
         <div id="left_column">
         </div>
         <div class="col-lg-9">
@@ -154,7 +154,7 @@
                 </div>
             </div>
         </div>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_tracks_2"/>
     </t>
 </template>
 
@@ -303,7 +303,7 @@
 
 <template id="event_track_proposal">
     <t t-call="website_event.layout">
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
         <div class="container">
             <section>
                 <h1 class="text-center mb0">Call for Proposals</h1>
@@ -397,7 +397,7 @@
                             </div>
                         </form>
                     </section>
-                    <div class="oe_structure"/>
+                    <div class="oe_structure" id="oe_structure_website_event_track_proposal_2"/>
                 </div><div class="col-lg-3 offset-lg-1">
                     <div class="card">
                         <h4 class="card-header">Talks Types</h4>
@@ -436,7 +436,7 @@
             </section>
 
         </div>
-        <div class="oe_structure"/>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_3"/>
     </t>
 </template>
 

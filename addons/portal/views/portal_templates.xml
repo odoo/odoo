@@ -146,12 +146,12 @@
         <t t-call="portal.portal_layout">
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
-                <div class="oe_structure"></div>
+                <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <h3>Your Documents</h3>
                 <div class="o_portal_docs list-group">
                 </div>
             </div>
-            <div class="col-lg-12 oe_structure"/>
+            <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
         </t>
     </template>
 
@@ -503,7 +503,7 @@
         <t t-call="portal.portal_layout">
             <body data-spy="scroll" data-target=".navspy" data-offset="50">
                 <div class="container o_portal_sidebar"></div>
-                <div class="oe_structure mb32"/>
+                <div class="oe_structure mb32" id="oe_structure_portal_sidebar_1"/>
             </body>
         </t>
     </template>
