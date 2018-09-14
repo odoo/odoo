@@ -748,7 +748,7 @@
                                 <div class="col">
                                     <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="client_order_ref">Your Reference</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -756,7 +756,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="Give us your feedback">Give us your feedback</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -764,7 +764,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="a_document">A document to provide</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -1536,19 +1536,19 @@
                   </tr>
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
-                      <td class="text-left-not-lg text-right-lg noborder" >
+                      <td class="text-xl-right noborder" >
                           <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
                       <td class="text-right noborder">Taxes:</td>
-                      <td class="text-left-not-lg text-right-lg  noborder">
+                      <td class="text-xl-right noborder">
                            <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
                       <td class="text-right"><strong>Total:</strong></td>
-                      <td class="text-left-not-lg text-right-lg">
+                      <td class="text-xl-right">
                           <strong t-field="website_sale_order.amount_total"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -1560,7 +1560,7 @@
     <template id="reduction_code" inherit_id="website_sale.total" active="True" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_coupon">
-                <td colspan="3" class='noborder text-right-lg text-center-not-lg'>
+                <td colspan="3" class="text-center text-xl-right noborder">
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">
