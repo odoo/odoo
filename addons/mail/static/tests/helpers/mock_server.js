@@ -13,8 +13,6 @@ MockServer.include({
      *
      * @override
      * @param {Object} [data.initMessaging] init messaging data
-     * @param {Object} [options.services] list of extra services to load for
-     *   the tests (e.g. MailService or BusService)
      * @param {Widget} [options.widget] mocked widget (use to call services)
      */
     init: function (data, options) {
