@@ -29,7 +29,7 @@
     <!-- Generic Field Layout -->
     <t t-name="website_form_editor.field">
         <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
-            <div class="col-md-4 text-right-not-xs">
+            <div class="col-md-4 text-md-right">
                 <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
