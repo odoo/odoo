@@ -99,7 +99,7 @@ class TestRecurrentEvent(common.TransactionCase):
         # I verify wether I find an event by date range when subsequent to a detached one.
         last_meeting = max(meetings, key=lambda m: m.start)
         meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
-            ('start', '<=', last_meeting.stop), ('stop', '>=', last_meeting.start)
+            ('start', '<=', str(last_meeting.stop)), ('stop', '>=', str(last_meeting.start))
         ])
         self.assertEqual(meetings.id, last_meeting.id, 'Last event should be found searching it by date range')
 

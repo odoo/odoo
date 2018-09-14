@@ -6,7 +6,6 @@ import babel.dates
 import collections
 import datetime
 from datetime import timedelta, MAXYEAR
-from dateutil import parser
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 import logging
@@ -600,13 +599,6 @@ class Meeting(models.Model):
         else:
             reference_date = self.start
 
-        def todate(date):
-            val = parser.parse(''.join((re.compile('\d')).findall(date)))
-            ## Dates are localized to saved timezone if any, else current timezone.
-            if not val.tzinfo:
-                val = pytz.UTC.localize(val)
-            return val.astimezone(timezone)
-
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
         event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
         if not event_date:
@@ -633,7 +625,9 @@ class Meeting(models.Model):
                 if use_naive_datetime:
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
-                    recurring_date = todate(meeting.recurrent_id_date)
+                    if not recurring_date.tzinfo:
+                        recurring_date = pytz.UTC.localize(recurring_date)
+                    recurring_date = recurring_date.astimezone(timezone)
                 if date_field == "stop":
                     recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
