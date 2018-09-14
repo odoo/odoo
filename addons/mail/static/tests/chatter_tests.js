@@ -168,6 +168,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
         View: FormView,
         model: 'partner',
         data: this.data,
+        services: this.services,
         res_id: 2,
         arch:'<form string="Partners">' +
                 '<div class="oe_chatter">' +
