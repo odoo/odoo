@@ -8,10 +8,10 @@ from odoo.exceptions import UserError, ValidationError
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Allow timesheets", default=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Enable timesheeting on the project.")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        help="Link this project to an analytic account if you need financial management on projects. "
-             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.")
+        help="Analytic account to which this project is linked for financial management."
+             "Use an analytic account to record cost and revenue on your project.")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
