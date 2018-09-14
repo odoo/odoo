@@ -29,7 +29,11 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         core.bus.trigger('rpc:result', data, result);
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
-                console.error("Server application error", JSON.stringify(result.error));
+                if (result.error.data.exception_type === "user_error") {
+                    console.log("Server application error", JSON.stringify(result.error));
+                } else {
+                    console.error("Server application error", JSON.stringify(result.error));
+                }
             }
             return $.Deferred().reject("server", result.error);
         } else {
