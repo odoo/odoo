@@ -547,23 +547,13 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
 
         // Retrieve the toggle proposition
-        var selected;
-        var targetLineAmount = line.st_line.amount;
-        line.reconciliation_proposition.every(function (prop) {
-            if (!prop.invalid) {
-                if (((line.balance.amount < 0 || !line.partial_reconcile) && prop.amount > 0 && targetLineAmount > 0 && targetLineAmount < prop.amount) ||
-                    ((line.balance.amount > 0 || !line.partial_reconcile) && prop.amount < 0 && targetLineAmount < 0 && targetLineAmount > prop.amount)) {
-                    selected = prop;
-                    return false;
-                }
-            targetLineAmount -= prop.amount;
-            }
-            return true;
-        });
+        var selected = _.filter(line.reconciliation_proposition, function(prop){return prop.display_triangle});
 
         // If no toggled proposition found, reject it
-        if (selected == null)
+        if(selected.length != 1)
             return $.Deferred().reject();
+
+        selected = selected[0];
 
         // Inverse partial_reconcile value
         selected.partial_reconcile = !selected.partial_reconcile;
@@ -989,22 +979,6 @@ var StatementModel = BasicModel.extend({
             self._formatLineProposition(line, line.reconciliation_proposition);
             if (!line.reconciliation_proposition.length) {
                 delete line.reconciliation_proposition;
-            }else{
-                // loop state propositions
-                var debit_props = _.filter(line.reconciliation_proposition, function(p){
-                    return p.amount > 0 && line.st_line.amount;
-                });
-                var credit_props = _.filter(line.reconciliation_proposition, function(p){
-                    return p.amount < 0 && line.st_line.amount < 0;
-                });
-                var sum_debit_props = debit_props.length > 0 ? debit_props.map(function(p){return p.amount}).reduce(function(p1, p2){return p1 + p2}) : 0;
-                var sum_credit_props = credit_props.length > 0 ? credit_props.map(function(p){return p.amount}).reduce(function(p1, p2){return p1 + p2}) : 0;
-
-                // Want to display the triangle for partial reconciliation or not.
-                if(line.st_line.amount_currency > 0 && line.st_line.amount_currency < sum_debit_props && debit_props.length == 1)
-                    debit_props[0].display_triangle = true;
-                else if(line.st_line.amount_currency < 0 && line.st_line.amount_currency > sum_credit_props && credit_props.length == 1)
-                    credit_props[0].display_triangle = true;
             }
 
             // No partner set on st_line and all matching amls have the same one: set it on the st_line.

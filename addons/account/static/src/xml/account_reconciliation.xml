@@ -218,7 +218,7 @@
 
 
 <t t-name="reconciliation.line.mv_line.triangle">
-    <t t-if="display_triangle || line.display_triangle">
+    <t t-if="line.display_triangle">
         <t t-if="line.partial_reconcile">
             <span t-att-class="'do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle'"
                   data-content="Undo the partial reconciliation."/>

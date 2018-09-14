@@ -366,38 +366,48 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         // reconciliation_proposition
         var $props = this.$('.accounting_view tbody').empty();
 
-        // loop state propositions
+        // Search propositions that could be a partial credit/debit.
         var props = [];
-        var partialDebitProps = 0;
-        var partialCreditProps = 0;
+        var partialDebitProp;
+        var partialCreditProp;
+        var balance = state.balance.amount_currency;
         _.each(state.reconciliation_proposition, function (prop) {
             if (prop.display) {
                 props.push(prop);
-                if (prop.amount > 0 && prop.amount > state.st_line.amount) {
-                    partialDebitProps++;
-                } else if (prop.amount < 0 && prop.amount < state.st_line.amount) {
-                    partialCreditProps++;
-                }
 
+                /*
+                Examples:
+                statement line      | 100   |       |
+                move line 1         |       | 200   | <- can be a partial of 100
+                balance: -100
+
+                statement line      | 100   |       |
+                move line 1         |       | 150   | <- is not a eligible to be a partial due to the second line.
+                move line 2         |       | 150   | <- can be a partial of 100
+                balance: -200
+
+                statement line      | 500   |       |
+                move line 1         |       | 700   | <- must not be a partial (debit = 800 > 700 = credit).
+                move line 2         | 300   |       |
+                balance: 100
+                */
+                if(!prop.display_new && balance < 0 && prop.amount > 0 && balance + prop.amount > 0)
+                    partialDebitProp = prop;
+                else if(!prop.display_new && balance > 0 && prop.amount < 0 && balance + prop.amount < 0)
+                    partialCreditProp = prop;
             }
         });
 
-        var targetLineAmount = state.st_line.amount;
-
         _.each(props, function (line) {
-            var display_triangle = (line.already_paid === false &&
-                ((state.balance.amount_currency < 0 || line.partial_reconcile)
-                    && line.amount > 0 && state.st_line.amount > 0 && targetLineAmount < line.amount && partialDebitProps <= 1) ||
-                ((state.balance.amount_currency > 0 || line.partial_reconcile)
-                    && line.amount < 0 && state.st_line.amount < 0 && targetLineAmount > line.amount && partialCreditProps <= 1));
-            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state, 'display_triangle': display_triangle}));
+            line.display_triangle = (line.already_paid === false &&
+                ((state.balance.amount_currency < 0 || line.partial_reconcile) && partialDebitProp && partialDebitProp === line) ||
+                ((state.balance.amount_currency > 0 || line.partial_reconcile) && partialCreditProp && partialCreditProp === line));
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-            targetLineAmount -= line.amount;
-
             $props.append($line);
         });
 

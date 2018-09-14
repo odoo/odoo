@@ -1773,8 +1773,7 @@ QUnit.module('account', {
 
         // Add first prop
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.notOk( widget.$('.cell_right .line_info_button').length,
-            "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.cell_right .line_info_button').length, 1, "should display the partial reconciliation alert");
 
         // Add second prop
         widget.$('.match .cell_account_code:first').trigger('click');
