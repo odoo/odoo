@@ -373,7 +373,7 @@ function patchDate(year, month, day, hours, minutes, seconds) {
  *   up in the init process of the view, because there are no other way to do it
  *   after this method returns. Some events ('call_service', "load_views",
  *   "get_session", "load_filters") have a special treatment beforehand.
- * @param {web.AbstractService[]} [params.services] list of services to load in
+ * @param {Object} [params.services={}] list of services to load in
  *   addition to the ajax service. For instance, if a test needs the local
  *   storage service in order to work, it can provide a mock version of it.
  * @param {boolean} [debounce=true] set to false to completely remove the
@@ -388,6 +388,7 @@ function patchDate(year, month, day, hours, minutes, seconds) {
  */
 function addMockEnvironment(widget, params) {
     var Server = MockServer;
+    params.services = params.services || {};
     if (params.mockRPC) {
         Server = MockServer.extend({_performRpc: params.mockRPC});
     }
@@ -403,7 +404,6 @@ function addMockEnvironment(widget, params) {
         archs: params.archs,
         currentDate: params.currentDate,
         debug: params.debug,
-        services: params.services,
         widget: widget,
     });
 
