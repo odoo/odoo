@@ -391,7 +391,9 @@ QUnit.module('core', {}, function () {
                     return def;
                 },
             },
-            services: [AjaxService],
+            services: {
+                ajax: AjaxService
+            },
         });
         var widget = new Widget(parent);
 
