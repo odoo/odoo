@@ -228,6 +228,7 @@ var FieldMany2One = AbstractField.extend({
             html: true,
             minLength: 0,
             delay: this.AUTOCOMPLETE_DELAY,
+            appendTo: this.$el
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;
