@@ -186,7 +186,8 @@
                     is_frontend: true,
                     translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
-                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
+                    user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                    website_name: '<t t-esc="request.website.name"/>',
                 };
                 <t groups="website.group_website_publisher">
                     odoo.snippetsURL = '/website/snippets';
@@ -1153,23 +1154,4 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
           </td>
       </tr>
 </template>
-
-<template id="default_homepage">
-    <div id="wrap" class="oe_structure oe_empty">
-        <div class="item image_text oe_img_bg active">
-            <div class="container">
-                <div class="row content">
-                    <div class="col-md-6 col-sm-12">
-                        <h2>Homepage of <t t-esc="website.name"/></h2>
-                        <h3>Click to customize this text</h3>
-                        <p>
-                            <a role="button" class="btn btn-success btn-large" href="/contactus">Contact us</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
 </odoo>
