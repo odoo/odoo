@@ -262,7 +262,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
     assert.strictEqual($activityEl.find('.o_thread_message .o_thread_message_note').text().trim(),
         'But I\'m talkin\' about Shaft', 'The activity should have the right note');
 
-    var $popoverEl = $activityEl.find('.o_thread_message_tools .o_activity_done');
+    var $popoverEl = $activityEl.find('.o_thread_message_tools .o_mark_as_done');
     $popoverEl.on('hidden.bs.popover', hiddenDef.resolve.bind(hiddenDef));
 
     // open popover
@@ -270,7 +270,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
 
     shownDef.then(function () {
         // write a feedback and focusout
-        var $feedbackPopover = $popoverEl.data('bs.popover').tip();
+        var $feedbackPopover = $($popoverEl.data('bs.popover').tip);
         $feedbackPopover.find('#activity_feedback').val('John Shaft').focusout();
 
         hiddenDef.then(function () {
@@ -280,7 +280,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
             $popoverEl.click();
 
             shownDef.then(function () {
-                var $feedbackPopover = $popoverEl.data('bs.popover').tip();
+                var $feedbackPopover = $($popoverEl.data('bs.popover').tip);
                 assert.strictEqual($feedbackPopover.find('#activity_feedback').val(), 'John Shaft',
                     "feedback should have been kept");
 

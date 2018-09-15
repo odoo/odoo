@@ -229,7 +229,7 @@ var BasicActivity = AbstractField.extend({
     _bindPopoverFocusout: function ($popover_el) {
         var self = this;
         // Retrieve the actual popover's HTML
-        var $popover = $popover_el.data("bs.popover").tip();
+        var $popover = $($popover_el.data("bs.popover").tip);
         var activityID = $popover_el.data('activity-id');
         $popover.off('focusout');
         $popover.focusout(function (e) {
@@ -241,7 +241,7 @@ var BasicActivity = AbstractField.extend({
             }
         });
     },
-    
+
     /**
      * @private
      * @param {MouseEvent} ev
