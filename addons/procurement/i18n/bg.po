@@ -7,7 +7,6 @@
 # kalatchev, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Martin Trigaux, 2016
-# Anton Vassilev, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Весел Карастоянов <vesel@abv.bg>, 2018
 msgid ""
@@ -80,7 +79,7 @@ msgstr "Отменете"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr "Отменете доставката"
+msgstr "Отменете доставка"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -198,23 +197,23 @@ msgstr "Фиксиран"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Фиксерана група за доставки"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
-msgstr "Общи"
+msgstr "Общ"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Групиране по"
+msgstr "Групирайте по"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Доставки на група"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_id
@@ -227,12 +226,14 @@ msgstr "ИН"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Ако маршрутът е глобален"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Ако не е отметнато, това ще ви позволи да скриете правилото, без да го "
+"премахнете."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -266,7 +267,7 @@ msgstr "Закъснял"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr "Остави празно"
+msgstr "Оставете празно"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -277,7 +278,7 @@ msgid ""
 msgstr ""
 "Най-често срещаните изключения са продукти за закупуване без\n"
 "                наличие на доставчик, определен за продукта, и продукти за\n"
-"                производство без наличие на списък с материали."
+"                производство без наличие на фактура за покупка на материали."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -288,7 +289,7 @@ msgstr "Име"
 #: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Няма правило, съответстващо на тази доставка"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -298,7 +299,7 @@ msgstr "Нормален"
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Not urgent"
-msgstr "Не е спешно"
+msgstr "Не е спешен"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -313,21 +314,21 @@ msgstr "Частичен"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
 msgid "Priority"
-msgstr "Важност"
+msgstr "Приоритет"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement"
-msgstr "Снабдаване"
+msgstr "Доставка"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
-msgstr ""
+msgstr "Изключения в доставките"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
@@ -337,40 +338,40 @@ msgstr "Група за доставки"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Procurement Lines"
-msgstr "Редове от снабдявания"
+msgstr "Редове на доставки"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
 msgid "Procurement Orders"
-msgstr ""
+msgstr "Поръчки на доставки"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Заявка за поръчка"
+msgstr "Заявка за доставка"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "Правило за поръчките"
+msgstr "Правило за доставка"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Правила за доставка"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Група на доставка"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
-msgstr ""
+msgstr "Доставката започна късно"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
@@ -389,22 +390,22 @@ msgstr "Продукт"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
 msgid "Product Unit of Measure"
-msgstr "Мерни единици на продукт"
+msgstr "Мерна единица на продукт"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Размножете"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Опции за размножаване"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Размножаване група за доставка"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
@@ -414,7 +415,7 @@ msgstr "Количество"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Потвърдете повторно поръчка"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
@@ -427,6 +428,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Референция на документа, създал тази поръчка. Това автоматично се попълва от"
+" Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -436,49 +439,49 @@ msgstr "Правило"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
-msgstr ""
+msgstr "Пуснете поръчка"
 
 #. module: procurement
 #: model:ir.actions.server,name:procurement.procurement_order_server_action
 msgid "Run Procurements"
-msgstr ""
+msgstr "Пуснете поръчки"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
-msgstr ""
+msgstr "Пуснете планьори"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr "Изпълнява се"
+msgstr "Пускане в ход"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_date_planned
 msgid "Scheduled Date"
-msgstr "Планирана дата"
+msgstr "Насрочена дата"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr "Планиран месец"
+msgstr "Насрочен месец"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr ""
+msgstr "Параметри на планьора"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Планиране"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Search Procurement"
-msgstr ""
+msgstr "Потърсете доставка"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
@@ -488,7 +491,7 @@ msgstr "Последователност"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
 msgid "Source Document"
-msgstr "Документ източник"
+msgstr "Документ-източник"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_state
@@ -500,6 +503,7 @@ msgstr "Състояние"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Това поле ще попълни произхода на опаковката и името на неговите движения"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -525,19 +529,22 @@ msgid ""
 "                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Когато поръчката за доставка е потвърдена, тя автоматично\n"
+"                създава необходимите операции, за да покрие нуждите: предложение\n"
+"                за поръчка за покупка, производствена поръчка и т.н."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:144
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
-msgstr ""
+msgstr "Не можете да изтриете доставките, които са в състояние 'отменени'."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "напр. купете"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
+msgstr "напр. SO005"

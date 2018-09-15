@@ -3,12 +3,11 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Martin Trigaux, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Martin Trigaux, 2016
 # kalatchev, 2016
 # preslav <hackerz99999@gmail.com>, 2016
-# Anton Vassilev, 2017
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
@@ -32,9 +31,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
-" * Статусът 'Отворен' се използва, когато даден потребител кодира нов и непотвърден график. \n"
-"* Статусът 'Чакащо одобрение' се използва, за да потвърди графика от потребител. \n"
-"* Статусът 'Одобрен' се използва, когато графикът на потребителя е приет от неговия началник."
+" * Състоянието 'Отворен' се използва, когато даден потребител кодира нов и непотвърден график. \n"
+"* Състоянието 'изчакващ одобрение' се използва, за да потвърди графика от потребител. \n"
+"* Състоянието 'Одобрен' се използва, когато графикът на потребителя е приет от неговия началник."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -68,7 +67,7 @@ msgstr "Одобрен"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr "Непредаден график не може да се одобри."
+msgstr "Невнесет график не може да се одобри."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -141,7 +140,7 @@ msgstr "Служител"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Employee's Name"
-msgstr "Име на Служители"
+msgstr "Име на служител"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -151,12 +150,12 @@ msgstr "Служители"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Extra features"
-msgstr ""
+msgstr "Допълнителни характеристики"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr "Групиране по"
+msgstr "Групирайте по"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -166,7 +165,7 @@ msgstr "Часове"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Отдел ЧР"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -188,6 +187,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
 msgstr ""
+"За да създадете график за този слежител, трябва да го/я свържете с "
+"потребител."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open___last_update
@@ -221,7 +222,7 @@ msgstr "Повече информация"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr ""
+msgstr "Моят настоящ график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
@@ -232,7 +233,7 @@ msgstr "Моят график"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
-msgstr "Моите часови листове"
+msgstr "Моите графици"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -242,7 +243,7 @@ msgstr "Нов"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Нов график за одобрение"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -254,6 +255,7 @@ msgstr "Бележка"
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
 msgstr ""
+"Единствено длъжностно лице  или мениджър ЧР могат да одобряват графици."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -261,8 +263,8 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
-"Само служител или мениджър човешки ресурси може да отхвърля графици или да "
-"ги пренастойва за чернова."
+"Единствено длъжностно лице или мениджър ЧР могат да отхвърлят графици или да"
+" ги пренастойват за чернова."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -273,18 +275,18 @@ msgstr "Отваряне"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:26
 #, python-format
 msgid "Open Timesheet"
-msgstr "Отваряне на график"
+msgstr "Отворен график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Периодичност на валидиране на графиците Ви."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Проект/аналитична сметка"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -294,29 +296,29 @@ msgstr "Отказ"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Свързан потребител, който управлява достъпът на този ресурс."
+msgstr "Име на свързан потребител с ресурса, който управлява достъпа му."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr ""
+msgstr "Потърсете сметка"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Потърсете график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Set to Draft"
-msgstr "Върнете в чернова"
+msgstr "Настройте за чернова"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_account_analytic_line_sheet_id_computed
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_sheet_id
 msgid "Sheet"
-msgstr "Лист"
+msgstr "График"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
@@ -326,7 +328,7 @@ msgstr "Състояние"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Внесете при мениджър"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -337,53 +339,53 @@ msgstr "Резюме"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet"
-msgstr "График с дейности"
+msgstr "График "
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Activities"
-msgstr "Дейности във времевите листове"
+msgstr "Дейности в график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
-msgstr ""
+msgstr "Период на график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Приложение за графици в Chrome/Android/iOS"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Timesheet approved"
-msgstr ""
+msgstr "Одобрен график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr ""
+msgstr "График по сметки"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_timesheet_ids
 msgid "Timesheet lines"
-msgstr ""
+msgstr "Редове в график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Timesheet range"
-msgstr ""
+msgstr "Диапазон на график"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Диапазон на график *"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
 msgid "Timesheet to Approve"
-msgstr ""
+msgstr "График за одобрение"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
@@ -393,17 +395,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Timesheets"
-msgstr "График"
+msgstr "Графици"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
 msgid "Timesheets Approved"
-msgstr ""
+msgstr "Одобрени графици"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 msgid "Timesheets by Period"
-msgstr "Графици по период"
+msgstr "Графици по периоди"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -412,6 +414,8 @@ msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
 msgstr ""
+"Графиците също могат да се фактурират за клиенти, в зависимост от\n"
+"               конфигурацията на всеки договор, свързан с проект."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -419,7 +423,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_confirmed
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "Графици за одобрение"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_to_approve
@@ -450,7 +454,7 @@ msgstr "Непрочетени съобщения"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
-msgstr ""
+msgstr "Невалидирани графици"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
@@ -461,7 +465,7 @@ msgstr "Потребител"
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "Waiting Approval"
-msgstr "Чака одобрение"
+msgstr "Изчакващ одобрение"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -478,13 +482,13 @@ msgstr "Седмица"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:154
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
+msgstr "Не можете да изтриете график, който вече е потвърден."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:100
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr ""
+msgstr "Не можете да дублирате график."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:85
@@ -493,12 +497,14 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
 msgstr ""
+"Не можете да имате 2 графика, които се припокриват!\n"
+"За да избегнете подобен проблем, моля, използвайте менюто 'Моят настоящ график'."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "Не можете да променяте запис в потвърден график."
+msgstr "Не можете да коригирате запис в потвърден график."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -508,23 +514,26 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
 msgstr ""
+"Можете да записвате графици всеки ден и да потвърждавате в края\n"
+"                на седмицата. След като сте потвърдили графика, той трябва\n"
+"                да се валидира от управител."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
+msgstr "Ще можете да регистрирате работните си часове и дейности."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
-msgstr ""
+msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
-msgstr ""
+msgstr "нов график."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
@@ -539,4 +548,4 @@ msgstr "до"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
-msgstr ""
+msgstr "изчакващ одобрение"

@@ -373,7 +373,7 @@ msgid ""
 msgstr ""
 "Цена на продуктов шаблон, използван за стандартно оценяване на стоката в "
 "счетоводството и използвана като базова цена за поръчки за покупки. Изразена"
-" в единица мярка по подразбиране за продукта."
+" в мерната единица по подразбиране за продукта."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -457,7 +457,7 @@ msgstr "Дата, до която членството остава активн
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Мерна единица по подразбиране, използвана за всяка стокова операция"
+msgstr "Стандартна мерна единица, използвана за всяка операция в склада"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_po_id
@@ -465,8 +465,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Мерна единица по подразбиране, използвана за поръчки за покупки. Трябва да е"
-" поставена в същата категория като мерната единица по подразбиране."
+"Стандартна мерна единица, използвана при поръчки за покупки. Трябва да е "
+"поставена в същата категория като стандартната мерна единица."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_deferred_revenue_category_id
@@ -1541,7 +1541,7 @@ msgstr "Стандартизиран код за международен шип
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
 msgid "States"
-msgstr "Щати"
+msgstr "Състояния"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_account_input
@@ -1830,7 +1830,7 @@ msgstr "Мерна единица"
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr "Единица мярка (единица мярка) е единицата за измерване на теглото"
+msgstr "Мерната единица (мерната единица) е единицата за измерване на теглото"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
@@ -1920,7 +1920,7 @@ msgstr "Тегло * Обем"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr "Единица мярка за тегло"
+msgstr "Мерна единица за тегло"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
@@ -1943,7 +1943,7 @@ msgid ""
 "goods may become dangerous and must not be consumed."
 msgstr ""
 "Когато се издаде нов сериен номер, това е броят дни преди стоките да станат "
-"опасни и до не трябва да се консумират."
+"опасни и да не трябва да се консумират."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
