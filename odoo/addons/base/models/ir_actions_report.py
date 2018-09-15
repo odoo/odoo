@@ -314,11 +314,11 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
-        for node in root.xpath(match_klass.format('page')):
+        for node in root.xpath(match_klass.format('article')):
             body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
             bodies.append(body)
-            if node.get('data-model') == self.model:
-                res_ids.append(int(node.get('data-id', 0)))
+            if node.get('data-oe-model') == self.model:
+                res_ids.append(int(node.get('data-oe-id', 0)))
             else:
                 res_ids.append(None)
 
