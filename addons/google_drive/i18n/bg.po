@@ -33,11 +33,11 @@ msgid ""
 "                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>За да създадете нов филтър:</b><br/>\n"
-"                                - Отидете на Odoo документа, който искате да филтрирате. Например, отидете на 'Възможности' и потърсете 'Търговски отдел'.<br/>\n"
+"                                - Влезте в Odoo документа, който искате да филтрирате. Например, влезте във 'Възможности' и потърсете 'Търговски отдел'.<br/>\n"
 "                                - В този изглед \"Потърсете\" изберете опцията \"Запазете настоящия филтър\", въведете името (напр.: Търговски отдел)<br/>\n"
-"                                - Ако изберете \"Споделете с всички потребители\", в опциите \"Повече\" ще се появи линк на google документ за всички потребители във 'Възможности' на Търговския отдел.<br/>\n"
-"                                - Ако не изберете \"Споделет с всички потребители\", няма да се появи линк на google документ за други потребители във 'Възможности' на Търговския отдел.<br/>\n"
-"                                - Ако филтърът не е уточнен, линк на google документ ще се появи в опцията \"Повече\" за всички потребители на всички възможности."
+"                                - Ако изберете \"Споделете с всички потребители\", в опциите \"Повече\" ще се появи линк на Google документ за всички потребители във 'Възможности' на Търговския отдел.<br/>\n"
+"                                - Ако не изберете \"Споделет с всички потребители\", няма да се появи линк на Google документ за други потребители във 'Възможности' на Търговския отдел.<br/>\n"
+"                                - Ако филтърът не е уточнен, линк на Google документ ще се появи в опцията \"Повече\" за всички потребители на всички възможности."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -62,8 +62,8 @@ msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
 msgstr ""
-"Изберете име за новия google drive, от страна на google. Пример: "
-"%(field_name)s"
+"Изберете име за новия Google Drive, от страна на Google. Пример: "
+"gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -127,19 +127,21 @@ msgstr "Google Drive"
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr "Google Drive Конфигурация"
+msgstr "Конфигурация Google Drive "
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
 msgid "Google Drive Name Pattern"
-msgstr "Google Drive Name Pattern"
+msgstr "Име на шаблон в Google Drive"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:61
 #: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr "Google Drive не е конфигуриран. Моля, свържете се с администратор."
+msgstr ""
+"Google Drive не все още не е конфигуриран. Моля, свържете се с "
+"администратора си."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -175,12 +177,12 @@ msgid ""
 "checklist for each order in a foreign country, ... Its very easy to manage "
 "them, link them to Odoo and use them to collaborate with your employees."
 msgstr ""
-"Свържете шаблоните си в google drive с всеки запис на Odoo. Ако имате "
-"наистина конкретни документи, които искате да попълни вашият сътрудник, "
-"напр. използвайте електронни таблици, за да контролирате качеството на "
-"продукта си или за да преглеждате контролния списък за доставки за всяка "
-"поръчка в чужда страна, ... е много лесно да ги управлявате, да ги свържете "
-"с Odoo и да ги използвате, за да си сътрудничите със служителите си."
+"Свържете шаблоните си в Google Drive с всеки запис на Odoo. Ако имате "
+"наистина конкретни документи, които искате да попълни сътрудникd Ви, напр. "
+"използвайте електронни таблици, за да контролирате качеството на продукта си"
+" или за да преглеждате контролния списък за доставки за всяка поръчка в "
+"чужда страна, ... е много лесно да ги управлявате, да ги свържете с Odoo и "
+"да ги използвате, за да си сътрудничите със служителите си."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
@@ -191,7 +193,7 @@ msgstr "Модел"
 #: code:addons/google_drive/models/google_drive.py:201
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr "Моля, въведете валиден URL документ в Google."
+msgstr "Моля, въведете валиден URL адрес в Google Document."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
@@ -210,8 +212,8 @@ msgid ""
 "Something went wrong during the token generation. Please request again an "
 "authorization code ."
 msgstr ""
-"Нещо се обърка по време на генерирането на тоукън. Моля, заявете отново код "
-"за оторизация."
+"В хода на съдаването на токена нещо се обърка. Моля, заявете отново код за "
+"упълномощаване."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
@@ -221,7 +223,7 @@ msgstr "Име на шаблон"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr "URL на шаблона"
+msgstr "URL адрес на шаблон"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
@@ -233,12 +235,12 @@ msgstr "Шаблони"
 #: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
-msgstr "Google шаблона не може да бъде открит. Може би е изтрит."
+msgstr "Google Template не може да бъде открит. Възможно е да е изтрит."
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_base_config_settings_google_drive_uri
 msgid "The URL to generate the authorization code from Google"
-msgstr "URL за генериране на код за оторизация от Google."
+msgstr "URL адресът за създаване код за упълномощаване от Google."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -248,6 +250,10 @@ msgid ""
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
 msgstr ""
+"Името на прикачения документ може да използва фиксирани или променливи данни. За да разграничавате документите в\n"
+"                                Google Drive, използвайте фиксирани думи и полета. Напр. в примера по-горе, ако сте написали Agrolait_%(name)s_Sales\n"
+"                                в полето за име на Google Drive, документът във Вашия Google Drive и прикачения файл на Odoo ще бъдат озаглавени\n"
+"                                'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -255,14 +261,12 @@ msgstr ""
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
 "the document"
-msgstr ""
-"The permission 'reader' for 'anyone with the link' has not been written on "
-"the document"
+msgstr "Разрешението \"четец\" за \"всеки с линка\" не е написано на документа"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_base_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "Унифициран идентификатор на ресурсите - URI"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:58
@@ -271,13 +275,13 @@ msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
 "generate and configure it ."
 msgstr ""
-"Не сте конфигурирали 'Код за оторизация' генериран от google. Моля "
-"генерирайте и го конфигурирайте."
+"Не сте конфигурирали 'Код за упълномощаване', създъден от Google. Моля, "
+"създайте и конфигурирайте такъв."
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.inherited_google_view_general_configuration
 msgid "and paste it here"
-msgstr ""
+msgstr "и го поставете тук"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_base_config_settings

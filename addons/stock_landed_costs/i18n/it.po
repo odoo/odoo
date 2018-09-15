@@ -10,13 +10,14 @@
 # Simone Bernini <simone@aperturelabs.it>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
 # Riccardo Di Maio <riccardodimaio11@gmail.com>, 2016
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Riccardo Di Maio <riccardodimaio11@gmail.com>, 2016\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
 #, python-format
 msgid " already out"
-msgstr ""
+msgstr "Già uscita"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
@@ -120,6 +121,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Le righe di costo e di aggiustamento non corrispondono. Dovresti forse "
+"ricalcolare i costi allo sbarco."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -188,6 +191,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Uguale: Il costo sarà diviso in parti uguali.\n"
+"Per quantità: Il costo sarà diviso in base alla quantità di prodotti.\n"
+"Per costo attuale: Il costo sarà diviso in base al costo attuale del prodotto.\n"
+"Per peso: Il costo sarà diviso in base al suo peso.\n"
+"Per volume: Il costo sarà diviso in base al suo volume. "
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -267,7 +275,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr ""
+msgstr "Costo allo sbarco convalidato"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost___last_update
@@ -307,6 +315,8 @@ msgstr "Nome"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Nessuna riga di aggiustamento della valorizzazione. Devi forse ricalcolare i"
+" costi allo sbarco. "
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
@@ -323,7 +333,7 @@ msgstr "Picking"
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
-msgstr ""
+msgstr "Configura il conto di spese dello stock del prodotto: %s."
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
@@ -420,6 +430,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"I costi allo sbarco convalidati non possono essere cancellati, ma puoi "
+"creare costi allo sbarco negativi per invertirli. "
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

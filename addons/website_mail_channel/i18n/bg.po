@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Привет,</p>\n"
-"<p>Пожелали сте да сте абонирани за пощенския списък <strong>${object.name}</strong></p>\n"
+"<p>Пожелали сте да сe абонирати за мейлинг списъка <strong>${object.name}</strong></p>\n"
 "<p>За да потвърдите, моля посетете следния линк:</p>\n"
 "<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
 "<p>Ако сте сгрешили или не сте поискали това действие, моля, игнорирайте съобщението.</p>\n"
@@ -54,7 +54,7 @@ msgid ""
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Привет,</p>\n"
-"<p>Заявили сте желание да бъдете отписани от пощенския списък <strong>${object.name}</strong></p>\n"
+"<p>Заявили сте желание да бъдете отписани от мейлинг списъка <strong>${object.name}</strong></p>\n"
 "<p>За да потвърдите, моля посетете следния линк:</p>\n"
 "<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
 "<p>В случай че това е било грешка или не сте заявявали това действие, молим да пренебрегнете съобщението.</p>\n"
@@ -140,19 +140,19 @@ msgstr "Невалиден или изтекъл линк за потвържд�
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
-msgstr "Пощенски списък"
+msgstr "Мейлинг списък"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Mailing Lists"
-msgstr ""
+msgstr "Мейлинг списъци"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:20
 #, python-format
 msgid "Mailing-List"
-msgstr ""
+msgstr "Мейлинг списък"
 
 #. module: website_mail_channel
 #: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
@@ -259,7 +259,7 @@ msgstr "от"
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
-msgstr ""
+msgstr "архиви на мейлинг списъци"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -302,7 +302,7 @@ msgstr ""
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "към мейлинг списъка."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -332,6 +332,8 @@ msgid ""
 "is already unsubscribed or was never subscribed to the mailing list, you may"
 " want to check that the address was correct."
 msgstr ""
+"вече се е отписал от абонамент или никога не е бил абониран за мейлинг "
+"списък, желаете ли да проверите дали това е правилният адрес."
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/controllers/main.py:238
@@ -340,3 +342,5 @@ msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
 msgstr ""
+"Адресатът %s вече се е отписал от абонамент или никога не е бил абониран за "
+"никакъв мейлинг списък"

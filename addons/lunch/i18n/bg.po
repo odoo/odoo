@@ -29,8 +29,8 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
-"- Натиснете на <span class=\"fa fa-phone text-success\"></span> за да обявите, че поръчката е поръчана <br>\n"
-"                - Натиснете на <span class=\"fa fa-check text-success\"></span> за да обявите, че поръчката е получена <br>\n"
+"- Натиснете на <span class=\"fa fa-phone text-success\"></span>, за да обявите, че поръчката е поръчана <br>\n"
+"                - Натиснете на <span class=\"fa fa-check text-success\"></span>, за да обявите, че поръчката е получена <br>\n"
 "                - Натиснете на <span class=\"fa fa-times-circle text-danger\"></span> червения X, за да обявите, че поръчката не е налична"
 
 #. module: lunch
@@ -63,14 +63,14 @@ msgid ""
 msgstr ""
 "Дадено движение в касата може да бъде или разход, или плащане.<br>\n"
 "                Разход се създава автоматично с касовата бележка на поръчката.<br>\n"
-"                Плащане ще рече възстановяването на пари на компанията от страна на служителя."
+"                Плащането представлява връщането на сл. аванс на компанията."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
 msgstr ""
-"Даден продукт е дефиниран според неговото име, категория, цена или "
-"доставчик."
+"Даден продукт се счита за определен според неговото име, категория, цена или"
+" доставчик."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
@@ -105,7 +105,7 @@ msgid ""
 "                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
 msgstr ""
 "Предупрежденията се използват, за да уведомят служителите за възможни грешки, свързани с поръчките за обяд.\n"
-"                За да създадете предупреждение за обяд, трябва да определите неговата повторяемост, времевият интервал, на който ще се изпълнява самото предупреждение, кактои съобщението, което ще се появява."
+"                За да създадете сигнал за обяд, трябва да определите неговата повторяемост, времевия интервал, на който ще се изпълнява самото предупреждение, както и съобщението, което ще се появява."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -141,22 +141,22 @@ msgstr "Между"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "By Employee"
-msgstr "По служител"
+msgstr "По служители"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "По поръчки"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "By User"
-msgstr "Чрез потребител"
+msgstr "По потребители"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr "От доставчик"
+msgstr "По доставчици"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
@@ -169,17 +169,19 @@ msgid ""
 "Can be positive (payment) or negative (order or payment if user wants to get"
 " his money back)"
 msgstr ""
+"Може да е положително (плащане) или отрицателно (поръчка или плащане, в "
+"случай че потребителят желае да получи парите си обратно)"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Cancel"
-msgstr "Отказ"
+msgstr "Откажете"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Cancel meals"
-msgstr ""
+msgstr "Отменете ястия"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -190,12 +192,12 @@ msgstr "Отменено"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_cashmove
 msgid "Cash Move"
-msgstr ""
+msgstr "Движение на парите в брой"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash move balance"
-msgstr "Парични движения"
+msgstr "Баланс на движението на пари в брой"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -207,27 +209,27 @@ msgstr "Категория"
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Click to create a lunch alert."
-msgstr ""
+msgstr "Натиснете, за да създадете сигнал за обяд."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Click to create a lunch category."
-msgstr ""
+msgstr "Натиснете, за да създадете категория за обяд."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_control_accounts
 msgid "Click to create a new payment."
-msgstr ""
+msgstr "Натиснете, за да създадете ново плащане."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Click to create a payment."
-msgstr ""
+msgstr "Натиснете, за да създадете плащане."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "Click to create a product for lunch."
-msgstr ""
+msgstr "Натиснете, за да създадете продукт за обяд."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_company_id
@@ -237,13 +239,13 @@ msgstr "Компания"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_config
 msgid "Configuration"
-msgstr "Настройка"
+msgstr "Конфигурация"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_control_accounts
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_control_accounts
 msgid "Control Accounts"
-msgstr ""
+msgstr "Контролирайте сметки"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_control_suppliers
@@ -300,7 +302,7 @@ msgstr "Описание"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_display
 msgid "Display"
-msgstr "Показване"
+msgstr "Покажете"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_display_name
@@ -318,27 +320,29 @@ msgstr "Покажете име"
 #: code:addons/lunch/static/src/xml/lunch.xml:7
 #, python-format
 msgid "Don't forget the alerts displayed in the reddish area"
-msgstr ""
+msgstr "Не забравяйте сигналите, показани в червеникавото поле"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
 msgid "Employee Payments"
-msgstr ""
+msgstr "Възнаграждения на служители"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "Enable this option to set a maximal budget for your lucky order."
 msgstr ""
+"Активирайте тази опция, за да настроите максимален бюджет за щастливата си "
+"поръчка."
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Every Day"
-msgstr ""
+msgstr "Всеки ден"
 
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Every Week"
-msgstr ""
+msgstr "Всяка седмица"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
@@ -348,11 +352,15 @@ msgid ""
 "                - Time interval: from 00h00 am to 11h59 pm<br>\n"
 "                - Message: \"You must order before 10h30 am\""
 msgstr ""
+"Пример: <br>\n"
+"                - Повторяемост: Всеки ден<br>\n"
+"                - Времеви интервал: от 00.00 до 23.59 ч.<br>\n"
+"                - Съобщение: \"Трябва да поръчате преди 10.30 ч.\""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Feeling Lucky"
-msgstr ""
+msgstr "Чувствам се щастлив"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_friday
@@ -364,7 +372,7 @@ msgstr "Петък"
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
-msgstr "Групиране по"
+msgstr "Групирайте по"
 
 #. module: lunch
 #: model:ir.module.category,description:lunch.module_lunch_category
@@ -372,11 +380,14 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+"Помага Ви да се справите с нуждата от обяд - ако сте мениджър, ще можете да "
+"създавате нови продукти, движение на парите в брой и да потвърждите или "
+"отменяте поръчки."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "Тук можете да получите достъп до всички категории продукти за обяд."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
@@ -384,6 +395,8 @@ msgid ""
 "Here you can see the employees' payment. A payment is a cash move from the "
 "employee to the company."
 msgstr ""
+"Тук можете да видите възнагражденията на служителите. Дадено възнаграждение "
+"е движение на парите в брой от служителя към компанията."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -396,22 +409,24 @@ msgid ""
 "Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Тук можете за видите двежението на парите си в брой.<br>Движението на тези пари може да представлява или разход, или плащане.\n"
+"                Разход се създава автоматично при получаване на поръчка, докато плащане е възстановяването на компанията, кодирано от мениджъра."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky"
-msgstr ""
+msgstr "Чувствам се щастлив"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_line_lucky
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "I'm feeling lucky today !"
-msgstr ""
+msgstr "Днес се чувствам щастлив!"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_is_max_budget
 msgid "I'm not feeling rich"
-msgstr ""
+msgstr "Не се чувствам богат"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_id
@@ -427,7 +442,7 @@ msgstr "ИН"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_state
 msgid "Is an order or a payment"
-msgstr ""
+msgstr "Е поръчка или възнаграждение"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert___last_update
@@ -476,13 +491,13 @@ msgstr "Обяд"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Сигнал за обяд"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:234
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "Движение на парите в брой, предназначени за обяд"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:63
@@ -491,18 +506,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
 msgid "Lunch Order"
-msgstr ""
+msgstr "Поръчка за обяд"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
 #: model:res.groups,name:lunch.group_lunch_manager
 msgid "Manager"
-msgstr "Управител"
+msgstr "Мениджър"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_max_budget
 msgid "Max Budget"
-msgstr ""
+msgstr "Максимален бюджет"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_message
@@ -518,22 +533,22 @@ msgstr "Понеделник"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "Моятя сметка, групирана"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "Моят обяд"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "My Orders"
-msgstr "Мои поръчки"
+msgstr "Моите поръчки"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 msgid "Name/Date"
-msgstr "Име/Дата"
+msgstr "Име/дата"
 
 #. module: lunch
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
@@ -544,18 +559,19 @@ msgstr "Нов"
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_form
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_form
 msgid "New Order"
-msgstr ""
+msgstr "Нова поръчка"
 
 #. module: lunch
 #: code:addons/lunch/wizard/lucky_order.py:39
 #, python-format
 msgid "No product is matching your request. Now you will starve to death."
 msgstr ""
+"Нито един проект не съвпада със заявката Ви. Сега ще си умрете от глад."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Not Received"
-msgstr ""
+msgstr "Неполучени"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_note
@@ -566,19 +582,20 @@ msgstr "Бележка"
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Единствено мениджърът обяд има право да отменя поръчките."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:163
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Единствено мениджърът обяд има право да обработва поръчките."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:183
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr ""
+"Единствено мениджърът обяд има право да настройва поръчките като получени."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -597,33 +614,33 @@ msgstr "Месец на поръчка"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Дървовидна графика на поръчките"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Order meals"
-msgstr ""
+msgstr "Поръчайте ястия"
 
 #. module: lunch
 #: selection:lunch.order.line,state:0
 msgid "Ordered"
-msgstr ""
+msgstr "Поръчани"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Orders Form"
-msgstr ""
+msgstr "Форма за поръчки"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Orders Tree"
-msgstr ""
+msgstr "Дървовидна графика на поръчките"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action_by_supplier
 #: model:ir.ui.menu,name:lunch.lunch_order_line_menu_control_suppliers
 msgid "Orders by Vendor"
-msgstr "Поръчки от доставчик"
+msgstr "Поръчки по доставчици"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -634,12 +651,12 @@ msgstr "Плащане"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "Previous Orders"
-msgstr ""
+msgstr "Предишни поръчки"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
 msgid "Previous order ids"
-msgstr ""
+msgstr "ИН на предишни поръчки"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_price
@@ -660,7 +677,7 @@ msgstr "Продукт"
 #: model:ir.actions.act_window,name:lunch.lunch_product_category_action
 #: model:ir.ui.menu,name:lunch.lunch_product_category_menu
 msgid "Product Categories"
-msgstr "Категории на продукта"
+msgstr "Продуктови категории"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_category_id
@@ -670,7 +687,7 @@ msgstr "Продуктова категория"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Category:"
-msgstr ""
+msgstr "Продуктова категория:"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_name
@@ -680,7 +697,7 @@ msgstr "Име на продукт"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
-msgstr ""
+msgstr "Търсене на продукт"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -693,38 +710,38 @@ msgstr "Продукти"
 #: model:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "Форма за продукти"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr ""
+msgstr "Дървовидна графика на продукти"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
-msgstr "Приета"
+msgstr "Приемете"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Receive meals"
-msgstr ""
+msgstr "Приемете ястия"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 #: selection:lunch.order,state:0 selection:lunch.order.line,state:0
 msgid "Received"
-msgstr "Получена"
+msgstr "Получен"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
 msgid "Recurrency"
-msgstr "Повторение"
+msgstr "Повторяемост"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "Регистрирайте движенията на парите в брой"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
@@ -734,18 +751,18 @@ msgstr "Събота"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule Date"
-msgstr ""
+msgstr "Назначете дата"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Schedule Hour"
-msgstr ""
+msgstr "Назначете час"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "Search"
-msgstr "Търсене"
+msgstr "Потърсете"
 
 #. module: lunch
 #. openerp-web
@@ -753,11 +770,12 @@ msgstr "Търсене"
 #, python-format
 msgid "Select a product and put your order comments on the note."
 msgstr ""
+"Изберете продукт и поставете коментарите си около поръчката в бележката."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Select your order"
-msgstr ""
+msgstr "Изберете поръчката си"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -767,7 +785,7 @@ msgstr "Изберете доставчика си"
 #. module: lunch
 #: selection:lunch.alert,alert_type:0
 msgid "Specific Day"
-msgstr ""
+msgstr "Конкретен ден"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_state
@@ -795,7 +813,7 @@ msgstr "Компанията, за която този потребител ра
 #: code:addons/lunch/models/lunch.py:99
 #, python-format
 msgid "The date of your order is in the past."
-msgstr ""
+msgstr "Датата на поръчката Ви е изтекла."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action
@@ -803,13 +821,15 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"Няма записана предишна поръчка. Натиснете върху \"Моят обяд\" и след това "
+"създайте нова поръчка за обяд."
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/xml/lunch.xml:4
 #, python-format
 msgid "This is the first time you order a meal"
-msgstr ""
+msgstr "Това е първият път, когато си поръчвате храна"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_thursday
@@ -875,16 +895,17 @@ msgstr "Сряда"
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "Write the message you want to display during the defined period..."
 msgstr ""
+"Напишете съобщението, което искате да се показва през определения период ..."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_account
 msgid "Your Account"
-msgstr ""
+msgstr "Вашата сметка"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_form
 msgid "Your Lunch Account"
-msgstr ""
+msgstr "Вашата сметка за обяд"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_line_action
@@ -896,30 +917,29 @@ msgstr "Вашите поръчки"
 #: code:addons/lunch/static/src/xml/lunch.xml:6
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
-msgstr ""
-"Вашите любими ястия ще бъдат саздадени на базата на воследните Ви поръчки."
+msgstr "Любимите Ви ястия ще бъдат създадени на база последните Ви поръчки."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "движение на парите в брой от"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
-msgstr ""
+msgstr "дървовидна графика на движението на парите в брой"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "движение на парите в брой, предназначени за обяд"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "плащане обяда на служителите"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
@@ -929,17 +949,17 @@ msgstr "Ред на поръчка за обяд"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "lunch product"
-msgstr ""
+msgstr "продукт за обяд"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "lunch product category"
-msgstr ""
+msgstr "категория продукт за обяд"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "lunch.order.line.lucky"
-msgstr ""
+msgstr "lunch.order.line.lucky"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
