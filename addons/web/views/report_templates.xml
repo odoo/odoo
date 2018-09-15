@@ -194,7 +194,7 @@
             <div class="clearfix mb8"/>
         </div>
 
-        <div class="article o_report_layout_background">
+        <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -234,7 +234,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_boxed">
+        <div class="article o_report_layout_boxed" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -273,7 +273,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_clean">
+        <div class="article o_report_layout_clean"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -321,7 +321,7 @@
             </div>
         </div>
 
-        <div class="article o_report_layout_standard">
+        <div class="article o_report_layout_standard"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
@@ -402,14 +402,14 @@
                 </div>
             </div>
         </div>
-        <div class="article">
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
           <t t-raw="0"/>
         </div>
     </template>
 
     <template id="basic_layout">
         <t t-call="web.html_container">
-            <div class="article">
+            <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                 <t t-raw="0"/>
             </div>
         </t>
