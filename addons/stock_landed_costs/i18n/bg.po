@@ -190,6 +190,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Равен: разходът ще бъде разделен по равно.\n"
+"По количество: разходът ще бъде разделен според количеството продукт.\n"
+"По настоящ разход: разходът ще бъде разделен според текущия разход на продукта.\n"
+"По тегло: разходът ще бъде разделен според собственото си тегло.\n"
+"По обем: разходът ще бъде разделен според собствения си обем."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -209,7 +214,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Групиране по"
+msgstr "Групирайте по"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_id
@@ -264,7 +269,8 @@ msgstr "Разтоварни разходи"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
-"Разтоварните разходи са изчислени въз основа на единицата мярка за покупка."
+"Разходите по разтоварването са изчислени въз основа на мерната единица на "
+"покупката."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -370,7 +376,7 @@ msgstr "Метод на разделяне"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
 msgid "State"
-msgstr "Щат/Провинция"
+msgstr "Състояние"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search

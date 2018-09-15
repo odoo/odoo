@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2016
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Maria Boyadjieva <marabo2000@gmail.com>, 2016
 # kalatchev, 2016
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
@@ -169,12 +169,12 @@ msgstr "Последно актуализирано на"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr "Потребителски Вход"
+msgstr "Потребителска регистрация"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr "Не-портални Групи"
+msgstr "Не-портални групи"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
@@ -187,12 +187,12 @@ msgstr "Портал"
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr "Контрол за достъп за Портала"
+msgstr "Управление на контрола за достъп"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Portal Groups"
-msgstr "Портални Групи"
+msgstr "Портални групи"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -207,26 +207,26 @@ msgid ""
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Изберете кои контакти принадлежат на портала в списъка по-долу.\n"
-"                        Емейлът на всеки избран контакт трябва да е валиден и уникален.\n"
-"                        Ако е неободимо, можете да емейл адресът на всеки контакт директно в списъка."
+"                        Имейлът на всеки избран контакт трябва да е валиден и уникален.\n"
+"                        Ако е неободимо, можете да прикрепите имейл адреса на всеки контакт директно в списъка."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr "Няколко контакта имат един и същ емейл адрес:"
+msgstr "Няколко контакта имат един и същ имейл адрес:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr "Някой контакти нямат валиден емейл адрес:"
+msgstr "Някои контакти нямат валиден имейл адрес:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "Няколко контакта имат един и същ емейл адрес с портални потребители:"
+msgstr "Някои контакти имат еднакъв имейл адрес с портални потребители:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -237,15 +237,13 @@ msgstr "Портални потребители, които могат да бъ
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Текстът съдържащ се в емейлите, които се изпращат към нови портални "
-"потребители."
+"Текстът, съдържащ се в имейлите, изпращани към нови портални потребители."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Този текст се съдържащ се в емейлите, които се изпращат към нови портални "
-"потребители."
+"Този текст се съдържа в имейлите, изпращани към нови портални потребители."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -256,8 +254,8 @@ msgid ""
 "- Grant access only to contacts with unique emails"
 msgstr ""
 "За да коригирате тази грешка, можете да: \n"
-"- Корегирате имейлите на съответните контакти\n"
-"- Предоставяне на достъп само на контакти с уникални имейли"
+"- Коригирате имейлите на съответните контакти\n"
+"- Предоставите достъп само на контакти с уникални имейли"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -275,10 +273,10 @@ msgstr "Помощник"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Трябва да имате емйл адрес в потребителските си референции, за да изпращате "
-"имейли."
+"За да изпращате имейли, трябва да имате имейл адрес в потребителските си "
+"референции. "
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr "Вашият акаунт ${user.company_id.name}"
+msgstr "Вашият Odoo профил в ${user.company_id.name}"
