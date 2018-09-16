@@ -149,7 +149,7 @@ class TestMailTemplate(TestMail):
 
         # assert scheduled date are correct
         self.assertEqual(bool(mail_now.scheduled_date), False)
-        scheduled_date = datetime.datetime.strptime(mail_in_2_days.scheduled_date, '%Y-%m-%d %H:%M')
+        scheduled_date = datetime.datetime.strptime(mail_in_2_days.scheduled_date, '%Y-%m-%d %H:%M:%S')
         date_in_2_days = datetime.datetime.today() + datetime.timedelta(days = 2)
         self.assertEqual(scheduled_date.day, date_in_2_days.day)
         self.assertEqual(scheduled_date.month, date_in_2_days.month)
