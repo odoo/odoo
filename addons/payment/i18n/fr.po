@@ -25,7 +25,7 @@
 # f5f0a0dac17dde787a1d812a6989680e, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
-# nthnnl <nathan070@me.com>, 2017
+# Nathan Noël <nathan070@me.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # Olivier Dony <odo@odoo.com>, 2018
@@ -114,6 +114,10 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Erreur,</i> veuillez noter qu'une erreur est survenue durant la "
+"transaction. La commande a été confirmée mais ne sera pas payée. N'hésitez "
+"pas à nous contacter si vous avez la moindre question sur le statut de votre"
+" commande."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -122,6 +126,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>En attente,</i> Votre paiement en ligne a été enregistré avec succès, "
+"mais votre commande n'est pas encore validée."
 
 #. module: payment
 #. openerp-web
@@ -234,6 +240,7 @@ msgstr ""
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
 msgstr ""
+"Un intermédiaire de paiement est nécessaire pour exécuter une transaction"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
@@ -264,6 +271,8 @@ msgstr ""
 #, python-format
 msgid "A transaction can't be linked to invoices having different currencies."
 msgstr ""
+"Une transcation ne peut pas être liée à des factures utilisant des devises "
+"différences."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:41
@@ -366,7 +375,7 @@ msgstr "Autorisé"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Transactions Autorisées"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -428,7 +437,7 @@ msgstr "Impossible de configurer le paiement"
 #: code:addons/payment/controllers/portal.py:128
 #, python-format
 msgid "Cannot setup the payment."
-msgstr ""
+msgstr "Impossible d'installer le paiement."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
@@ -515,7 +524,7 @@ msgstr ""
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "Create a new payment transaction"
-msgstr ""
+msgstr "Créez une nouvelle transaction de paiement"
 
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
@@ -671,7 +680,7 @@ msgstr "Frais fixes internationales "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "For Incoming Payments"
-msgstr ""
+msgstr "Pour les Paiements Entrants"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -772,7 +781,7 @@ msgstr "Facture"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Invoice(s)"
-msgstr ""
+msgstr "Facture(s)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:801
@@ -952,7 +961,7 @@ msgstr "Jamais"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Pas d'intermédiaires de paiement trouvés."
 
 #. module: payment
 #. openerp-web
@@ -996,25 +1005,26 @@ msgstr "Ok"
 #: code:addons/payment/models/payment_acquirer.py:708
 #, python-format
 msgid "Only draft transaction can be authorized."
-msgstr ""
+msgstr "Seules des transactions brouillon peuvent petre autorisées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:699
 #, python-format
 msgid "Only draft transaction can be processed."
-msgstr ""
+msgstr "Seules les transactions en état de brouillon peuvent être traitées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:745
 #, python-format
 msgid "Only draft/authorized transaction can be cancelled."
 msgstr ""
+"Seules des transactions en brouillon/autorisées peuvent être annulées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:717
 #, python-format
 msgid "Only draft/authorized transaction can be posted."
-msgstr ""
+msgstr "Seules des transactions en brouillon/autorisées peuvent être postées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:972
@@ -1131,7 +1141,7 @@ msgstr "Paiement d'Odoo"
 #: code:addons/payment/controllers/portal.py:154
 #, python-format
 msgid "Payment transaction failed."
-msgstr ""
+msgstr "La transaction de paiement a échoué."
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1183,7 +1193,7 @@ msgstr "Téléphone"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Veuillez configurer un intermédiaire de paiement."
 
 #. module: payment
 #. openerp-web
@@ -1232,7 +1242,7 @@ msgstr "Fournisseur"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Redirection vers le site de l'intermédiaire"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1424,12 +1434,14 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
+"La transaction %s avec %s pour %s a été confirmée. Le paiement suivant est "
+"posté: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:660
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "La transaction %s avec %s pour %s est en attente."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1551,7 +1563,7 @@ msgstr "Avertissement!"
 #: code:addons/payment/static/src/js/payment_form.js:136
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Nous ne pouvons ajouter votre méthode de paiement pour le moment."
 
 #. module: payment
 #. openerp-web
@@ -1577,14 +1589,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:176
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "Nous ne pouvons pas vous rediriger vers le formulaire de paiement."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:182
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Nous ne pouvons pas vous rediriger vers le formulaire de paiement."
 
 #. module: payment
 #. openerp-web

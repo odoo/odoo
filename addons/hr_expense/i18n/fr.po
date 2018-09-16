@@ -465,7 +465,7 @@ msgstr "Dépense"
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr ""
+msgstr "Approbation de Notes de Frais"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -550,7 +550,7 @@ msgstr "Notes de frais à Approuver"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 msgid "Expense Responsible"
-msgstr ""
+msgstr "Responsable de la Note de Frais"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -620,18 +620,20 @@ msgstr "Rapport de dépenses à approuver"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses by Date"
-msgstr ""
+msgstr "Notes de Frais par Date"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses in Draft"
-msgstr ""
+msgstr "Notes de Frais en Brouillon"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:567
 #, python-format
 msgid "Expenses must be paid by the same entity (Company or employee)."
 msgstr ""
+"Les notes de frais doivent être payées par la même entinté (Société ou "
+"employé)"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:622
@@ -901,7 +903,7 @@ msgstr "Nouveaux frais"
 #: code:addons/hr_expense/models/hr_expense.py:185
 #, python-format
 msgid "New Expense Report"
-msgstr ""
+msgstr "Nouveau rapport de notes de frais"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -946,7 +948,7 @@ msgstr "Adresse personnelle de l'employé %s inconnue, la définir SVP."
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_approved_expense
 msgid "No approved employee expenses"
-msgstr ""
+msgstr "Pas de notes de frais d'employé approuvées "
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:256
@@ -958,7 +960,7 @@ msgstr "Pas de compte de crédit pour le journal %s, en configurer un SVP."
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "No expense reports to approve"
-msgstr ""
+msgstr "Pas de rapports de notes de frais à approuver"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
@@ -1446,7 +1448,7 @@ msgstr "Total"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
 msgid "Total (Company Currency)"
-msgstr ""
+msgstr "Total (Devise de la Société)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
@@ -1487,6 +1489,8 @@ msgstr "Dépenses non incluses dans une Note de Frais"
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid "User responsible of expense approval. Should be Expense Manager."
 msgstr ""
+"L'utilisateur responsable de l'approbation des notes de frais. Il doit être "
+"Gestionnaire des Notes de Frais."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_users

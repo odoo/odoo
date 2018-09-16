@@ -44,13 +44,15 @@
 # Micky Jault <micky037@hotmail.fr>, 2018
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
+# Nathan Noël <nathan070@me.com>, 2018
+# Nathan Grognet <ngr@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
+"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -377,6 +379,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Selon la configuration du produit, la quantité livrée peut être automatiquement calculée par mécanisme:\n"
+"   - Manuel: la quantité est définie manuellement sur la ligne\n"
+"   - Analytique des dépenses: la quantité est la somme des dépenses enregistrées\n"
+"   - Feuilles de temps: la quantité est la somme des heures enregistrées sur les tâches liées à cette ligne de vente\n"
+"   - Mouvements de stock: la quantité provient des transferts confirmés\n"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -482,7 +489,7 @@ msgstr "Compte analytique"
 #. module: sale
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analytique des dépenses"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -803,7 +810,7 @@ msgstr "Livré"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "Livré Manuellement"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:846
@@ -1314,6 +1321,8 @@ msgstr "A expiré"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Est vrai si la ligne de la commande de vente vient d'une note de frais ou "
+"d'une facture fournisseur"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:866
@@ -1537,7 +1546,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Pas de commandes à facturer trouvée"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1608,6 +1617,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Une fois le devis confirmé par le client, il devient une commande de vente. "
+"<br>Vous pourrez créer une facture et collecter le paiement."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1615,6 +1626,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Une fois le devis confirmé, il devient une commande de vente. <br>Vous "
+"pourrez créer une facture et collecter le paiement."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation
@@ -2311,13 +2324,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "Sales by Channel"
-msgstr ""
+msgstr "Vente par Canal"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Sales by Channel Analysis"
-msgstr ""
+msgstr "Ventes par Analyse de Canal"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -2665,6 +2678,8 @@ msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
+"Termes et conditions... (note: vous pouvez définir ceux par défaut dans le "
+"menu Configuration)"
 
 #. module: sale
 #: code:addons/sale/models/analytic.py:111
@@ -2768,6 +2783,9 @@ msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
 "invoicing policy, please make sure that a quantity has been delivered."
 msgstr ""
+"Il n'y a pas de ligne facturable. Si un produit a pour politique de "
+"facturation \"sur base des quantités délivrées\", assurez-vous qu'une "
+"quantité ait été délivrée."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2894,7 +2912,7 @@ msgstr "Prix total"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Total des taxes"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -2916,7 +2934,7 @@ msgstr "Connecteur UPS"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "Connecteur USPS"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:612
@@ -3016,6 +3034,8 @@ msgid ""
 "Validity date of the quotation, after this date, the customer won't be able "
 "to validate the quotation online."
 msgstr ""
+"Date de validité du devis. Après cette date, le client ne pourra plus "
+"valider son devis en ligne. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -3074,6 +3094,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Vous ne pouvez pas supprimer un devis envoyé ou un bon de commande confirmé."
+" Vous devez l'annuler au préalable."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1197
@@ -3082,6 +3104,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Vous ne pouvez pas enlever une ligne du bon de commande lorsque celui-ci est confirmé.\n"
+"Essayez plutôt de modifier les quantités à 0."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -3089,6 +3113,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
+"Vous pouvez sélectionner toutes les commandes et les facturer en groupe,<br>\n"
+"ou vérifiez chaque commande et les facturer une par une."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:229
@@ -3126,7 +3152,7 @@ msgstr "res.config.settings"
 #: code:addons/sale/models/sale.py:93
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "bon de commande"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
