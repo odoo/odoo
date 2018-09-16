@@ -7,13 +7,15 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
+# Elise Carton <eca@odoo.com>, 2018
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-05 08:36+0000\n"
 "PO-Revision-Date: 2018-09-05 08:36+0000\n"
-"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
+"Last-Translator: Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,7 +393,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:26
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr ""
+msgstr "Cliquez ici <b>pour ajouter votre opportunité</b>."
 
 #. module: crm
 #. openerp-web
@@ -409,7 +411,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:54
 #, python-format
 msgid "Click on the opportunity to zoom in."
-msgstr ""
+msgstr "Cliquer sur un opportunité pour regarder à l'intérieur."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
@@ -578,7 +580,7 @@ msgstr "Créez une nouvelle piste"
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create a new tag for your opportunities"
-msgstr ""
+msgstr "Créez une nouvellle étiquette pour vos opportunités"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
@@ -589,13 +591,13 @@ msgstr "Créer une Opportunité"
 #. module: crm
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Create an new opportunity related to this customer"
-msgstr ""
+msgstr "Créez une nouvelle opportunité liée à ce client"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:928
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr ""
+msgstr "Créez une opportunité dans votre pipeline"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_tag_action
@@ -603,6 +605,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and tack your opportunities."
 msgstr ""
+"Créez des étiquettes qui correspondent à votre business (structure "
+"d'article, type de vente, etc.) pour mieux gérer et suivre vos opportunités."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -823,6 +827,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"Les emails reçus à cette adresse génèrent de nouvelles pistes qui ne sont "
+"assignées à aucune équipe commerciale. Ceci peut être effectué lors de leur "
+"conversion en opportunités. Les emails entrants peuvent être automatiquement"
+" assignés à des équipes commerciales spécifiques. Pour ce faire, définissez "
+"un email alias à l'équipe commerciale."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -846,7 +855,7 @@ msgstr "Évènement"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Exclude blacklisted"
-msgstr ""
+msgstr "Exclure la liste noire"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
@@ -943,7 +952,7 @@ msgstr "Forcer l'attribution"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
-msgstr ""
+msgstr "Formater les numéros de téléphone sur base des conventions nationales"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:599
@@ -963,6 +972,8 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
+"Générez des pistes à partir des emails entrants et assignez les\n"
+"                                    manuellement à des équipes commerciales"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -973,6 +984,8 @@ msgstr "Cause de l'échec"
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
+"Donnez les exigences à votre équipe pour passer une opportunité à l'étape "
+"suivante."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1003,7 +1016,7 @@ msgstr "Regrouper par"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
+msgstr "Méthode de groupement"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner_binding
@@ -1076,6 +1089,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Si défini, l'Equipe Commerciale sera utilisée pour les ventes et les "
+"attributions liées à ce partenaire."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1112,7 +1127,7 @@ msgstr "Inclure les archivés"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Initial Contact Information"
-msgstr ""
+msgstr "Informations initiales sur le Contact"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1289,7 +1304,7 @@ msgstr "Mes pistes"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that did ask to not receive mass mailing anymore"
-msgstr ""
+msgstr "Pistes qui ont demandé à ne plus recevoir d'emails marketing"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1374,7 +1389,7 @@ msgstr "Attribution manuelle d'e-mails"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr ""
+msgstr "Attribution Manuelle d'Emails Entrants"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -1847,7 +1862,7 @@ msgstr "Nom du contact chez le partenaire"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_phone
 msgid "Partner Contact Phone"
-msgstr ""
+msgstr "Numéro de Téléphone du Partenaire"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
@@ -1868,7 +1883,7 @@ msgstr "Téléphone"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_phone_validation
 msgid "Phone Formatting"
-msgstr ""
+msgstr "Formatage du Téléphone"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:154
@@ -1917,6 +1932,11 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the Sales Team."
 msgstr ""
+"L'analyse du Pipeline vous donne un accès instantané à\n"
+"vos opportunités, en vous offrant des informations telles que les recettes attendues, les coûts prévus,\n"
+"les dépassements de dates de fermeture prévues, le nombre d'interactions par opportunités. Ce rapport\n"
+"est principalement utilisé par le manager des ventes afin de vérifier le pipeline de manière périodique\n"
+"avec l'équipe des ventes."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:223
@@ -1981,7 +2001,7 @@ msgstr "Proposition"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "Revenu au prorata"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2067,7 +2087,7 @@ msgstr "Équipe commerciale"
 #: code:addons/crm/models/crm_lead.py:1118
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "Configuration de l'Equipe de Ventes"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -2411,6 +2431,8 @@ msgstr ""
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
+"Cette barre autorise à filtrer les opportunités basée sur les activités "
+"planifiées."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2590,6 +2612,8 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Utiliser les pistes si vous avez besoin d'une étape de qualification avant de créer une opportunité ou un client. Cela peut être une carte de visite reçue, un formulaire de contact rempli sur votre site internet, ou un fichier de prospects non qualifiés que vous importez, etc.  Une fois qualifiée, la piste pourra être convertie en \n"
+"opportunité et /ou en un nouveau client dans votre carnet d'adresse."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lost_reason_action
