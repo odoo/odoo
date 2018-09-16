@@ -93,7 +93,7 @@ msgstr "%s Séquence"
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "%sreversal of: "
-msgstr ""
+msgstr "%scontrepartie de: "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -181,6 +181,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Cher ${object.partner_id.name}<br/><br/>\n"
+"        Merci pour votre paiement.\n"
+"        Ci-joint votre reçu de paiement <strong>${(object.name or '').replace('/','-')}</strong>\n"
+"        en <strong>${format_amount(object.amount, object.currency_id)}</strong> pour ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Ne pas hésiter à nous contacter si vosu avez des questions.\n"
+"        <br/><br/>\n"
+"        Cordialement,<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -320,6 +336,11 @@ msgid ""
 "analysis of creditors for the past month, past two months, and so on. "
 "</span>"
 msgstr ""
+"<span class=\"o_form_label\">La Balance âgée du Partenaire est un rapport "
+"plus détaillé de vos créances par périodes. Odoo calcule un tableau de solde"
+" créditeur par date de début. Donc, si vous demandez une période de 30 jours"
+" alors Odoo génère une analyse des créanciers pour le mois passé, les deux "
+"derniers mois, et ainsi de suite. </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
@@ -327,6 +348,9 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
+"<span class=\"o_form_label\">Toutes les écritures sélectionnées seront "
+"directement validés et comptabilisées. Vous ne serez pas en mesure de les "
+"modifier par la suite.</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -334,6 +358,8 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Taxes par défaut</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -341,6 +367,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Résidence Fiscale</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -348,11 +376,13 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Devise principale</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Rounding Method</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Méthode d'arrondie</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -379,6 +409,8 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Montant</span>\n"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Prix Total</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -388,12 +420,12 @@ msgstr "<span name=\"button_import_placeholder\"/>États"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">New</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Nouveau</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr ""
+msgstr "<span role=\"separator\">Lettrage</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -403,7 +435,7 @@ msgstr "<span role=\"separator\">Voir</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Balance dans le Grand Livre</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -423,7 +455,7 @@ msgstr "<span> à </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
-msgstr ""
+msgstr "Montant payé"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -449,7 +481,7 @@ msgstr "<span>Rem.(%)</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Import Bills</span>"
-msgstr ""
+msgstr "<span>Importer les factures</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -541,6 +573,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">Les informations du QR Code SEPA ne sont pas "
+"correctement définies.</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -771,7 +805,7 @@ msgstr "Un compte bancaire ne peut appartenir qu'à un seul journal."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "A bank journal must be set to use the SEPA QR code"
-msgstr ""
+msgstr "Un journal de banque doit être choisi pour utiliser un QR Code SEPA"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -11868,6 +11902,8 @@ msgstr "Utilisez les paiements en groupe"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Utilisez les budgets pour comparer les revenus et coûts attendus à la "
+"situation actuelle"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
