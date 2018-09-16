@@ -1,0 +1,32 @@
+/* Generic report layouts*/
+.header {
+    height: 200px;
+}
+.article>.page {
+    > h1, > h2, > h3 {
+        width: 50%;
+    }
+}
+.article {
+    > .address.row {
+        padding-top: 95px;
+    }
+    > .page {
+        margin-top:-20px;
+    }
+}
+
+/*l10n_de_din layout*/
+.din {
+    .invoice_address {
+        top: 27.7mm !important;
+    }
+    &.article {
+        .page {
+            top: 18.46mm !important;
+        }
+    }
+    &.o_background_footer {
+        top: -8mm !important;
+    }
+}
