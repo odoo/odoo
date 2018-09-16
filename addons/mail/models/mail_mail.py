@@ -107,7 +107,7 @@ class MailMail(models.Model):
         filters = ['&',
                    ('state', '=', 'outgoing'),
                    '|',
-                   ('scheduled_date', '<', datetime.datetime.now()),
+                   ('scheduled_date', '<', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
                    ('scheduled_date', '=', False)]
         if 'filters' in self._context:
             filters.extend(self._context['filters'])
