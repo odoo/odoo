@@ -65,7 +65,7 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
-            pdf_bin, _ = report.render_qweb_pdf(self.res_id)
+            pdf_bin, _ = report.with_context(snailmail_layout=True).render_qweb_pdf(self.res_id)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
@@ -160,6 +160,11 @@ class SnailmailLetter(models.Model):
             if route == 'estimate' and batch:
                 document.update(pages=1)
             else:
+                # adding the web logo from the company for future possible customization
+                if route == 'print':
+                    document.update({
+                        'company_logo': letter.company_id.logo_web,
+                    })
                 attachment = letter._fetch_attachment()
                 if attachment:
                     document.update({
@@ -172,6 +177,10 @@ class SnailmailLetter(models.Model):
                         'state': 'error',
                         })
                     continue
+                if letter.report_template == self.env.ref('l10n_de.external_layout_din5008', False):
+                    document.update({
+                        'rightaddress': 0,
+                    })
             documents.append(document)
 
         return {

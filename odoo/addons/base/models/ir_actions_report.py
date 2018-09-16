@@ -196,6 +196,10 @@ class IrActionsReport(models.Model):
         return wkhtmltopdf_state
 
     @api.model
+    def get_paperformat(self):
+        return self.paperformat_id or self.env.user.company_id.paperformat_id
+
+    @api.model
     def _build_wkhtmltopdf_args(
             self,
             paperformat_id,
@@ -358,7 +362,7 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: Content of the pdf as a string
         '''
-        paperformat_id = self.paperformat_id or self.env.user.company_id.paperformat_id
+        paperformat_id = self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
@@ -666,7 +670,7 @@ class IrActionsReport(models.Model):
 
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
-                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname.") %  self.name)
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
         pdf_content = self._run_wkhtmltopdf(
             bodies,

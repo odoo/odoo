@@ -164,7 +164,7 @@
     <template id="address_layout">
         <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
         <t t-if="address">
-            <div class="row">
+            <div class="address row">
                 <t t-if="information_block">
                     <t t-set="colclass" t-value="'col-5 offset-1'"/>
                     <div name="information_block" class="col-6">
@@ -179,7 +179,8 @@
     </template>
 
     <template id="external_layout_background">
-        <div class="header o_background_header">
+        <div class="header">
+            <div class="o_background_header">
             <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
             </div>
@@ -192,6 +193,7 @@
                     t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
             </div>
             <div class="clearfix mb8"/>
+            </div>
         </div>
 
         <div class="article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
@@ -219,7 +221,8 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div class="header o_boxed_header">
+        <div class="header">
+            <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" alt="Logo"/>
@@ -231,6 +234,7 @@
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -256,7 +260,8 @@
     </template>
 
     <template id="external_layout_clean">
-        <div class="header o_clean_header">
+        <div class="header">
+            <div class="o_clean_header">
             <div class="row">
                 <div class="col-6">
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" alt="Logo"/>
@@ -270,6 +275,7 @@
                         <li t-if="company.website"><span t-field="company.website"/></li>
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
 
