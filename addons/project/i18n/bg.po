@@ -422,6 +422,10 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> Графици</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
@@ -734,6 +738,8 @@ msgstr ""
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
 msgstr ""
+"<strong>Нуждаете се от помщ при управлението на графиците? Свържете се с нас"
+" сега:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -915,6 +921,8 @@ msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
 msgstr ""
+"Активирайте 'Позволете фактуриране въз основа на графици' от <i>настройчите "
+"'Човешки ресурси'</i>."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -1088,6 +1096,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"На всеки етап служителите могат да блокират или да създават задача/грешка, готова за следващ етап.\n"
+"                                Тук можете да определите етикети, които ще бъдат показани за състоянието вместо\n"
+"                                стандартните етикети."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -1499,7 +1510,7 @@ msgstr "Валута"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Current Timesheet"
-msgstr ""
+msgstr "Настоящ график"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -1927,22 +1938,22 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
-msgstr ""
+msgstr "Съаздайте отчет на графици, за да прилагате клиентските си фактури"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr ""
+msgstr "Получете пълно синхронизиране с Odoo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr ""
+msgstr "Вземете го в Google Play"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get more apps"
-msgstr ""
+msgstr "Получавайте повече приложения"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
@@ -2047,7 +2058,7 @@ msgstr "Часове"
 #: code:addons/project/models/project.py:730
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Аз го поемам"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_id
@@ -2321,7 +2332,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state_label
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 msgid "Kanban State"
-msgstr ""
+msgstr "Състояние Канбан"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
@@ -2411,6 +2422,9 @@ msgid ""
 " projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
+"Свържете този проект с аналитична сметка, ако се нуждаете от финансово "
+"управление по проекти. Тя Ви позволява да свързвате проекти с бюджети, "
+"планиране, анализ на разходите и приходите, графици на проекти и пр."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2451,6 +2465,8 @@ msgstr ""
 msgid ""
 "Managing long projects that span over many months and/or need Timesheets."
 msgstr ""
+"Управление на дългосрочни проекти, които се простират в рамките на много "
+"месеци и/или се нуждаят от графици."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2619,7 +2635,7 @@ msgstr "Бележки"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "Уведомления"
 
 #. module: project
 #. openerp-web
@@ -2698,6 +2714,8 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
+"Организирайте дейностите си (планирайте задачи, проследявайте грешки, "
+"фактурирайте графици) за вътрешни, лични или клиентски проекти."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2761,7 +2779,7 @@ msgstr "Основна поредица записи - идентификаци�
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "Основна задача"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_model_id
@@ -2978,7 +2996,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Готови за следващ етап"
 
 #. module: project
 #. openerp-web
@@ -3195,14 +3213,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Задайте изображение за корица"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:61
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Настройте изображение за корица"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3319,7 +3337,7 @@ msgstr "Стадии"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr ""
+msgstr "Отбелязано със звездичка"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
@@ -3345,12 +3363,12 @@ msgstr "Начална дата"
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Проект с подзадачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Брой подзадачи"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3358,7 +3376,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Подзадачи"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3715,6 +3733,8 @@ msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
 msgstr ""
+"Това ще добави меню 'Фактурирайте задачи' в проектния мадул, който може да "
+"се използва за избиране на график за фактуриране."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
@@ -3725,6 +3745,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Това ще настрои единицата мярка, прилагана в проекти и задачи.\n"
+"Ако използвате графика, свързан с проекти, не забравяйте да настроите подходящата мерна единица за вашите служители."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3753,11 +3775,14 @@ msgid ""
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
 "                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
+"Графиците често са от съществено значение за управлението нададена компания.<br/>\n"
+"                    Те също допускат човешка грешка и имат свойството да се повтарят,  да бъдат досадни и понякога са стресови за служителите.<br/>\n"
+"                    За щастие, Odoo има няколко решения да ги направи възможно най-ефикасни и безболезнени!<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
+msgstr "Графиците могат да се използват за няколко цели:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
@@ -3789,7 +3814,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr ""
+msgstr "За да използвате графици, отидете във Вашия"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -3840,7 +3865,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr ""
+msgstr "Използвайте графици"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3953,7 +3978,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Имейли на наблюдатели"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3985,6 +4010,8 @@ msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
 msgstr ""
+"За да влезете в графиците си, сме разработили изключително просто и "
+"ефективно разширение за Chrome:<br/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4105,6 +4132,8 @@ msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
 msgstr ""
+"Можете да научите повече за графиците в раздела 'Използвайте графици' на "
+"този планьр."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -4191,7 +4220,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
-msgstr ""
+msgstr "oe_kanban_text_red"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_merge_wizard
@@ -4235,11 +4264,13 @@ msgid ""
 "view of the HR module is the main tool to check, modify and confirm "
 "Timesheets."
 msgstr ""
+"изгледът на модула ЧР е основният инструмент за проверка, коригиране и "
+"потвърждение на графици."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "with Timesheet"
-msgstr ""
+msgstr "с график"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
