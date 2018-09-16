@@ -189,7 +189,7 @@ msgstr "Отказанa"
 #: code:addons/mrp_repair/models/mrp_repair.py:249
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Не можете да отмените завършени поправки."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -200,7 +200,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr ""
+msgstr "Натиснете, за да създадете поръчка за поправка."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -227,6 +227,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Не се откри ценова листа, съответстваща на този продукт и количество.\n"
+"Трябва да промените или продукта и количеството, или ценовата листа."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -355,12 +357,12 @@ msgstr "Групирайте по адрес на фактурата на кон
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit Month"
-msgstr ""
+msgstr "Месец на гаранционен срок "
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit by Month"
-msgstr ""
+msgstr "Гаранционен срок по месеци"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -384,6 +386,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"В поръчката за ремонт можете да детайлизирате компонентите, които премахвате,\n"
+"                добавяте или заменяте, както и да записвате времето, прекерано в различните\n"
+"                операции."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:215
@@ -399,7 +404,7 @@ msgstr "Вътрешни бележки"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_move_id
 msgid "Inventory Move"
-msgstr ""
+msgstr "Движение на инвентар"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
@@ -506,7 +511,7 @@ msgstr "Преместване"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Движение, създадено от поръчката за поправка"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -536,20 +541,20 @@ msgstr "За контрагента не е определена сметка \"
 #: code:addons/mrp_repair/models/mrp_repair.py:366
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "За продукта не е определена сметка  \"%s\"."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:359
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Не е определен продукт за такси!"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:598
 #: code:addons/mrp_repair/models/mrp_repair.py:656
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "Не е открита валидна ценова листа!"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -615,12 +620,12 @@ msgstr "Продуктова мерна единица"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "Продукт за поправка"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "Поправените продукти все още принадлежат на тази партида"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
@@ -674,13 +679,13 @@ msgstr "Поправка"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Ред на такси за поправка"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Repair Line"
-msgstr ""
+msgstr "Ред на поправка"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
@@ -713,7 +718,7 @@ msgstr "Оферта за ремонт #:"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
 msgid "Repair Reference"
-msgstr ""
+msgstr "Референция за поправка"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:203
@@ -725,19 +730,20 @@ msgstr "Поправката маже да се отмени, за да се п�
 #: code:addons/mrp_repair/models/mrp_repair.py:408
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Поправката трябва да е потвърдена преди да началото наремонта."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:436
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
+"Поправката трябва да е извършена, за да се предизвикат продуктови движения."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:419
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Поправката трябва да е извършена, за да се сложи край на поправката."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:251
@@ -766,12 +772,12 @@ msgstr "Попоравка"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "Поръчка за поправки"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Потърсете поръчки за поправки"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -780,6 +786,9 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"Изборът 'Преди поправка' или 'След поправка' ще Ви позволи да създадете "
+"фактура респективно преди или след извършването на поправката. 'Без фактура'"
+" означава, че не желаете да създавате фактура за тази поръчка за поправка."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -790,7 +799,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:540
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "За операционния ред с продукта се изисква сериен номер '%s'"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -812,7 +821,7 @@ msgstr "Местонахождение източник"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Start Repair"
-msgstr ""
+msgstr "Започнете поправка"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
@@ -858,7 +867,7 @@ msgstr ""
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "Името на поръчката за поправка трябва да е уникално!"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -867,6 +876,9 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
+"Поръчката за поправка използва гаранционната дата на серийния номер, за да\n"
+"                се знае дали поправката трябва да бъде фактурирана за\n"
+"                клиента или не."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
@@ -874,6 +886,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Състоянието на реда на поправката се настройва автоматично към една от "
+"свързаните поръчки за поправка."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -881,6 +895,8 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"Тази операция ще отмени процеса по поправката, но няма да отмени нейната "
+"фактура. Желаете ли да продължите?"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -915,7 +931,7 @@ msgstr "Тип"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "В процес на поправка"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
@@ -937,7 +953,7 @@ msgstr "Необложена сума"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Необложена сума"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:175
@@ -948,7 +964,7 @@ msgstr "Внимание"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Изтичане на гаранция"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -970,11 +986,13 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Трябва да изберете ценова листа във формата за поправка!\n"
+"Моля, настройте една преди да изберете продукт."
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair

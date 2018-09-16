@@ -55,29 +55,29 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_holidays.py:123
 #, python-format
 msgid "%g remaining out of %g"
-msgstr ""
+msgstr "%g jäljellä / %g"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s : %.2f päivä(ä)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:335
 #, python-format
 msgid "%s on %s : %.2f day(s)"
-msgstr ""
+msgstr "%s - %s : %.2f päivä(ä)"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&lt;/td&gt;"
-msgstr ""
+msgstr "&lt;/td&gt;"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "&lt;/th&gt;"
-msgstr ""
+msgstr "&lt;/th&gt;"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -85,6 +85,8 @@ msgid ""
 "&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
 "color:"
 msgstr ""
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
+"color:"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -109,17 +111,17 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "<strong>Departments and Employees</strong>"
-msgstr ""
+msgstr "<strong>Osastot ja työntekijät</strong>"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_show_leaves
 msgid "Able to see Remaining Leaves"
-msgstr ""
+msgstr "Näkee jäljellä olevat poissaolopäivät"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 msgid "Absence"
-msgstr ""
+msgstr "Poissaolo"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_absence_of_today
@@ -136,13 +138,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
 msgid "Absent Employees"
-msgstr ""
+msgstr "Poissaolevat työntekijät"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_is_absent_totay
 #: model:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Absent Today"
-msgstr ""
+msgstr "Poissa tänään"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_active
@@ -152,7 +154,7 @@ msgstr "Aktiivinen"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Leaves and Allocations"
-msgstr ""
+msgstr "Aktiiviset poissaolot ja varaukset"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -167,7 +169,7 @@ msgstr "Lisää syy..."
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 msgid "All Leaves"
-msgstr ""
+msgstr "Kaikki poissaolot"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
@@ -220,17 +222,17 @@ msgstr "Varaus henkilölle  %s"
 #: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr "Varaus: %s - %.2f päivä(ä) %s:lle"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr ""
+msgstr "Hyväksyttyvät varaukset"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Allocations"
-msgstr ""
+msgstr "Varaukset"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -271,7 +273,7 @@ msgstr "Hyväksytty"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Approved Leaves"
-msgstr ""
+msgstr "Hyväksytyt"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
@@ -386,7 +388,7 @@ msgstr "Väri raportilla"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Comment by Manager"
-msgstr ""
+msgstr "Esimiehen kommentit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_company_id
@@ -459,7 +461,7 @@ msgstr "Osasto"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_department_holidays_approve
 msgid "Department Leaves"
-msgstr ""
+msgstr "Osaston poissaolot"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_department_holidays_allocation_approve
@@ -565,7 +567,7 @@ msgstr "Ryhmittely"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_report_note
 msgid "HR Comments"
-msgstr ""
+msgstr "HR:n kommentit"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
@@ -657,7 +659,7 @@ msgstr "Jätä yksityiskohdat"
 #: model:ir.actions.act_window,name:hr_holidays.open_employee_leaves
 #: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
 msgid "Leave Details"
-msgstr ""
+msgstr "Yksityiskohdat"
 
 #. module: hr_holidays
 #: selection:hr.holidays,type:0
@@ -670,7 +672,7 @@ msgstr "Pooissaolopyynnöt"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_action_request_from_department
 msgid "Leave Request to Approve"
-msgstr ""
+msgstr "Hyväksyttävät poissaolopyynnöt"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -735,7 +737,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
 msgid "Leave to Approve"
-msgstr ""
+msgstr "Hyväksyttävä poissaolo"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
@@ -768,13 +770,13 @@ msgstr "Poissaoloanalyysi"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Leaves Left"
-msgstr ""
+msgstr "Poissaol. jäljellä"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leaves Request"
-msgstr ""
+msgstr "Poissaolopyynnöt"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -815,12 +817,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
 msgid "Leaves to Approve"
-msgstr ""
+msgstr "Hyväksyttävät"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request_approved
 msgid "Leaves to be reported in Payslip"
-msgstr ""
+msgstr "Otettu huomioon palkanlaskennassa"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -850,7 +852,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2018"
-msgstr ""
+msgstr "Lakisääteiset lomat 2018"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1149,7 +1151,7 @@ msgstr "Pyynnöt hyväksyttäväksi"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 msgid "Reset to Draft"
-msgstr "Palauta ehdotuksesi"
+msgstr "Palauta luonnokseksi"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1356,7 +1358,7 @@ msgstr "Vahvista"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Validator"
-msgstr ""
+msgstr "Hyväksyjä"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1381,7 +1383,7 @@ msgstr "Odottaa toista hyväksyntää"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_first_validated
 msgid "Waiting Second Validation"
-msgstr ""
+msgstr "Odottaa toista hyväksyntää"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1457,7 +1459,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "report.hr_holidays.report_holidayssummary"
-msgstr ""
+msgstr "report.hr_holidays.report_holidayssummary"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
