@@ -315,7 +315,7 @@
     </record>
 
     <record id="open_account_journal_dashboard_kanban" model="ir.actions.act_window">
-        <field name="name">Accounting Dashboard</field>
+        <field name="name">Accounting Overview</field>
         <field name="res_model">account.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,form</field>
@@ -333,5 +333,5 @@
         </field>
     </record>
 
-    <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="account.group_account_user"/>
+    <menuitem id="menu_board_journal_1" name="Overview" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="account.group_account_user"/>
 </odoo>

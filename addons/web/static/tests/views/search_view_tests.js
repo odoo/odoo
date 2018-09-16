@@ -719,6 +719,31 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.test('time ranges initialization when context contains no default_search', function (assert) {
+        assert.expect(2);
+
+        var actions = this.actions;
+        actions[3].context = {time_ranges: {field: 'date_field', range: 'last_30_days'}};
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var timeRanges = args.kwargs.context.timeRangeMenuData.timeRange;
+                    assert.ok(!_.isEmpty(timeRanges), 'We should have something in time ranges');
+                    assert.strictEqual(timeRanges.length, 3, 'Time ranges should have 3 elements');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(4);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('time range menu in comparison mode', function (assert) {
         assert.expect(43);
 
