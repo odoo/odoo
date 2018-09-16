@@ -19,14 +19,17 @@
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
+# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# Emily JIA <eji@odoo.com>, 2018
+# Jackie Zhang <jzh@odoo.com>, 2018
+# gary chk <garychk@163.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"Last-Translator: gary chk <garychk@163.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +131,15 @@ msgid ""
 "<p/>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"<p>你好${object.name or ''},</p>\n"
+"<p>请查看以下指引 ${ctx['channel'].name} 渠道.</p>\n"
+"<p>\n"
+"${ctx['channel'].moderation_guidelines_msg}\n"
+"</p>\n"
+"<p/>\n"
+"</div>\n"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:892
@@ -148,6 +160,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s 邀请 %(new_partner)s 至 <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:798
@@ -259,7 +274,7 @@ msgstr ""
 msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
-msgstr ""
+msgstr "<span class=\"fa fa-info-circle\"/> 提示:这不会将邮件再次发送给未选中的收件者。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -305,7 +320,7 @@ msgstr "<strong> 反馈</strong>"
 msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
-msgstr ""
+msgstr "<strong>内部沟通</strong>: 回复会发布内部留言， 关注者不会收到邮件通知"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -348,7 +363,7 @@ msgstr "接受"
 #: code:addons/mail/static/src/xml/discuss.xml:148
 #, python-format
 msgid "Accept selected messages"
-msgstr ""
+msgstr "接受选中的信息"
 
 #. module: mail
 #. openerp-web
@@ -512,7 +527,7 @@ msgstr "添加频道"
 #: code:addons/mail/models/mail_thread.py:362
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr ""
+msgstr "新增 %(document)s 或发送邮件至%(email_link)s"
 
 #. module: mail
 #. openerp-web
@@ -537,7 +552,7 @@ msgstr "添加联系人到通知中  ..."
 #: code:addons/mail/static/src/xml/thread.xml:257
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr ""
+msgstr "把邮箱地址增加至白名单"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -614,7 +629,7 @@ msgstr "所有"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Allowed Emails"
-msgstr ""
+msgstr "允许的邮件"
 
 #. module: mail
 #: selection:ir.model.fields,track_visibility:0
@@ -624,14 +639,14 @@ msgstr "总是"
 #. module: mail
 #: selection:mail.moderation,status:0
 msgid "Always Allow"
-msgstr ""
+msgstr "总是允许"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:257
 #, python-format
 msgid "Always Allow |"
-msgstr ""
+msgstr "总是允许 |"
 
 #. module: mail
 #. openerp-web
@@ -674,7 +689,7 @@ msgstr "已归档"
 msgid ""
 "Are you sure you want to discard %s mail delivery failures. You won't be "
 "able to re-send these mails later!"
-msgstr ""
+msgstr "确定要放弃操作 %s 邮件发送失败. 之后无法重新发送这些邮件!"
 
 #. module: mail
 #. openerp-web
@@ -691,7 +706,7 @@ msgstr "分派给"
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
-msgstr ""
+msgstr "指定用户 %s 对文档无权限，无法处理这个活动 。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -781,12 +796,12 @@ msgstr "自动订阅"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr ""
+msgstr "自动活动"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
 msgid "Automatic notification"
-msgstr ""
+msgstr "自动通知"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
@@ -869,7 +884,7 @@ msgstr "取消电子邮件"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "取消失败通知"
 
 #. module: mail
 #: selection:mail.notification,email_status:0
@@ -900,7 +915,7 @@ msgstr "抄送收件人（可以在这里使用占位符）"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall
 msgid "Catchall Email"
-msgstr ""
+msgstr "预设邮件"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -952,14 +967,14 @@ msgstr "频道类型"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_moderation
 msgid "Channel black/white list"
-msgstr ""
+msgstr "渠道  黑/白名单"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:117
 #, python-format
 msgid "Channel settings"
-msgstr ""
+msgstr "频道设置"
 
 #. module: mail
 #. openerp-web
@@ -1149,13 +1164,13 @@ msgstr "创建日期"
 #: code:addons/mail/models/mail_thread.py:377
 #, python-format
 msgid "Create a new %(document)s"
-msgstr ""
+msgstr "创建一个新文档"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:369
 #, python-format
 msgid "Create a new %(document)s by sending an email to %(email_link)s"
-msgstr ""
+msgstr "新建%(document)s通过发送邮件至%(email_link)s"
 
 #. module: mail
 #: selection:ir.actions.server,state:0
@@ -1946,7 +1961,7 @@ msgstr "有附件"
 #: model:ir.model.fields,help:mail.field_mail_mail__has_error
 #: model:ir.model.fields,help:mail.field_mail_message__has_error
 msgid "Has error"
-msgstr ""
+msgstr "有误差"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -2055,7 +2070,7 @@ msgstr "如果勾选此项，有新消息会提醒你"
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__send_mail
@@ -2676,7 +2691,7 @@ msgstr "消息"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "消息递送错误"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -3211,7 +3226,7 @@ msgstr "需要行动消息的数量"
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "递送错误的消息数量"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__message_unread_counter

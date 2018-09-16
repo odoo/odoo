@@ -6,13 +6,16 @@
 # Martin Trigaux, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Marie Willemyns <mwi@odoo.com>, 2018
+# Nathan Noël <nathan070@me.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +31,7 @@ msgstr "Date d'engagement"
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Date d'exécution du premier ordre de livraison"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order__expected_date
@@ -56,7 +59,7 @@ msgstr "Devis"
 #: code:addons/sale_order_dates/models/sale_order.py:50
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "La date demandée est trop proche."
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -79,3 +82,6 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"C'est la date de livraison promise au client. Si elle est définie, le bon de"
+" livraison se basera sur cette date plutôt que celle définié grâce au délai "
+"indiqué sur l'article. "

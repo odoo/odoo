@@ -13,7 +13,7 @@
 # Benedicte HANET <hanetb@gmail.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Fred Gilson <fgi@odoo.com>, 2017
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2017
@@ -262,7 +262,7 @@ msgstr "Plus de places disponibles pour ce billet"
 #: code:addons/event_sale/models/event.py:152
 #, python-format
 msgid "No more available seats for this ticket type."
-msgstr ""
+msgstr "Il n'y a plus de place disponible pour ce type de billet."
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:224
@@ -418,6 +418,8 @@ msgstr "Type de billet"
 #, python-format
 msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
+"Les billets ne peuvent appartenir autant à la catégorie d'évènement qu'à "
+"l'évènement lui-même."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
@@ -471,9 +473,9 @@ msgstr "registration.editor.line"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "reserved +"
-msgstr ""
+msgstr "reservé +"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "unconfirmed"
-msgstr ""
+msgstr "non confirmé"

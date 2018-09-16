@@ -14,13 +14,15 @@
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Felix Yuen <fyu@odoo.com>, 2018
+# guohuadeng <guohuadeng@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:56+0000\n"
 "PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,13 +205,13 @@ msgstr "<span><i>待定</i>... 订单将在付款后被验证.</span>"
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "日记帐必须指定一个收单行 %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "如要创建交易，必须输入收单银行。"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
@@ -321,7 +323,7 @@ msgstr "金额"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
+msgstr "请问您是否确定要取消授权交易吗？此操作经确定后无法撤消。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -342,7 +344,7 @@ msgstr "授权"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "已授权的交易"
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -726,13 +728,13 @@ msgstr "该TX内部参考"
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Token错误！%s!=%s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Token错误！合作伙伴 Token %s!=%s"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_invoice
