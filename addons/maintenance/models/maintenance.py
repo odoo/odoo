@@ -23,7 +23,7 @@ class MaintenanceStage(models.Model):
 class MaintenanceEquipmentCategory(models.Model):
     _name = 'maintenance.equipment.category'
     _inherit = ['mail.alias.mixin', 'mail.thread']
-    _description = 'Asset Category'
+    _description = 'Maintenance Equipment Category'
 
     @api.one
     @api.depends('equipment_ids')
@@ -92,7 +92,7 @@ class MaintenanceEquipmentCategory(models.Model):
 class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Equipment'
+    _description = 'Maintenance Equipment'
 
     @api.multi
     def _track_subtype(self, init_values):
