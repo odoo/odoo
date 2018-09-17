@@ -101,6 +101,13 @@ QUnit.module('ActionManager', {
         }, {
             id: 10,
             type: 'ir.actions.act_window_close',
+        }, {
+            id: 11,
+            name: "Another Report",
+            report_name: 'another_report',
+            report_type: 'qweb-pdf',
+            type: 'ir.actions.report',
+            close_on_report_download: true,
         }];
 
         this.archs = {
@@ -1858,6 +1865,66 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('report actions can close modals and reload views', function (assert) {
+        assert.expect(8);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                report: ReportService,
+            },
+            mockRPC: function (route, args) {
+                if (route === '/report/check_wkhtmltopdf') {
+                    return $.when('ok');
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.success();
+                    params.complete();
+                    return true;
+                },
+            },
+        });
+
+        // load modal
+        actionManager.doAction(5, {
+            on_close: function () {
+                assert.step('on_close');
+            },
+        });
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+        "should have rendered a form view in a modal");
+
+        actionManager.doAction(7, {
+            on_close: function () {
+                assert.step('on_printed');
+            },
+        });
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 1,
+        "The modal should still exist");
+
+        actionManager.doAction(11);
+
+        assert.strictEqual($('.o_technical_modal .o_form_view').length, 0,
+        "the modal should have been closed after the action report");
+
+        assert.verifySteps([
+            '/report/download',
+            'on_printed',
+            '/report/download',
+            'on_close',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('should trigger a notification if wkhtmltopdf is to upgrade', function (assert) {
         assert.expect(6);
 
@@ -1913,7 +1980,7 @@ QUnit.module('ActionManager', {
             start: function () {
                 var self = this;
                 return this._super.apply(this, arguments).then(function () {
-                    self.iframe.src = 'test: ' + self.iframe.getAttribute('src');
+                    self.iframe.src = 'test ' + self.iframe.getAttribute('src');
                 });
             }
         });
@@ -1935,7 +2002,7 @@ QUnit.module('ActionManager', {
                 if (route === '/report/check_wkhtmltopdf') {
                     return $.when('broken');
                 }
-                if (route === 'test: /report/html/some_report') {
+                if (route === 'test /report/html/some_report') {
                     return $.when();
                 }
                 return this._super.apply(this, arguments);
@@ -1956,7 +2023,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'notification',
-            'test: /report/html/some_report', // report client action's iframe
+            'test /report/html/some_report', // report client action's iframe
         ]);
 
         actionManager.destroy();
@@ -3327,6 +3394,28 @@ QUnit.module('ActionManager', {
             type: 'ir.actions.act_window_close',
             infos: 'just for testing',
         }, options);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('history back calls on_close handler of dialog action', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        // open a new dialog form
+        actionManager.doAction(this.actions[4], {
+            on_close: function () {
+                assert.step('on_close');
+            },
+        });
+
+        actionManager.trigger_up('history_back');
+        assert.verifySteps(['on_close'], "should have called the on_close handler");
 
         actionManager.destroy();
     });

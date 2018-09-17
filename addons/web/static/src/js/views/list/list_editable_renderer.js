@@ -335,10 +335,12 @@ ListRenderer.include({
         // When switching to edit mode, force the dimensions of all cells to
         // their current value so that they won't change if their content
         // changes, to prevent the view from flickering.
+        // We need to use getBoundingClientRect instead of outerWidth to
+        // prevent a rounding issue on Firefox.
         if (editMode) {
             $tds.each(function () {
                 var $td = $(this);
-                $td.css({width: $td.outerWidth()});
+                $td.css({width: $td[0].getBoundingClientRect().width});
             });
         }
 
@@ -528,7 +530,7 @@ ListRenderer.include({
      */
     _renderBody: function () {
         var $body = this._super();
-        if (this.handleField) {
+        if (this.hasHandle) {
             $body.sortable({
                 axis: 'y',
                 items: '> tr.o_data_row',
@@ -564,6 +566,9 @@ ListRenderer.include({
      * If the editable list view has the parameter addCreateLine, we need to
      * add a last row with the necessary control.
      *
+     * If the list has a handleField, we want to left-align the first button
+     * on the first real column.
+     *
      * @override
      * @returns {jQueryElement}
      */
@@ -572,17 +577,27 @@ ListRenderer.include({
         var $rows = this._super();
 
         if (this.addCreateLine) {
+            var $tr = $('<tr>');
+            var colspan = self._getNumberOfCols();
+
+            if (this.handleField) {
+                colspan = colspan - 1;
+                $tr.append('<td>');
+            }
+
             var $td = $('<td>')
-                .attr('colspan', self._getNumberOfCols())
+                .attr('colspan', colspan)
                 .addClass('o_field_x2many_list_row_add');
-            var $tr = $('<tr>').append($td);
+            $tr.append($td);
             $rows.push($tr);
 
-            _.each(self.creates, function (create) {
+            _.each(self.creates, function (create, index) {
                 var $a = $('<a href="#" role="button">')
                     .attr('data-context', create.context)
-                    .addClass('ml16')
                     .text(create.string);
+                if (index > 0) {
+                    $a.addClass('ml16');
+                }
                 $td.append($a);
             });
         }

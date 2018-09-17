@@ -5,6 +5,7 @@ var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
+var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;

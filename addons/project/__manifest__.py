@@ -32,7 +32,6 @@
         'views/project_assets.xml',
         'views/project_portal_templates.xml',
         'views/project_rating_templates.xml',
-        'views/res_users_views.xml',
         'data/digest_data.xml',
         'data/project_mail_template_data.xml',
         'data/project_data.xml',

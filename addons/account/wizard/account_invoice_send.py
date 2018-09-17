@@ -53,7 +53,9 @@ class AccountInvoiceSend(models.TransientModel):
     def _print_document(self):
         """ to override for each type of models that will use this composer."""
         self.ensure_one()
-        return self.invoice_ids.invoice_print()
+        action = self.invoice_ids.invoice_print()
+        action.update({'close_on_report_download': True})
+        return action
 
     @api.multi
     def send_and_print_action(self):

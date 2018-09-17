@@ -55,15 +55,19 @@
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_controller.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/form_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
-                    <!-- systray -->
-                    <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
+                <!-- systray -->
+                <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
+                <!-- tools -->
+                <script type="text/javascript" src="/mail/static/src/js/tools/debug_manager.js"></script>
+                <!-- utils -->
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
                 <!-- Activity view type -->
@@ -71,6 +75,8 @@
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_controller.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/views/activity/activity_renderer.js"></script>
+                <!-- Attachment box -->
+                <script type="text/javascript" src="/mail/static/src/js/attachment_box.js"></script>
                 <!-- Others -->
                 <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
 
@@ -86,6 +92,7 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/mail_activity.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/activity_view.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/kanban_view.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/attachment_box.scss"/>
             </xpath>
         </template>
 
@@ -98,17 +105,23 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/thread_window_tests.js"></script>
+                <!-- thread window -->
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/basic_thread_window_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/blank_thread_window_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/thread_window/hidden_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/document_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/document_viewer_tests.js"></script>
                 <!-- systray -->
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_activity_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_mail_failure_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_typing_notification_tests.js"></script>
+                <!-- tools -->
+                <script type="text/javascript" src="/mail/static/tests/tools/debug_manager_tests.js"></script>
                 <!-- models -->
                     <script type="text/javascript" src="/mail/static/tests/models/cc_throttle_function_tests.js"></script>
                     <script type="text/javascript" src="/mail/static/tests/models/timer_tests.js"></script>

@@ -157,7 +157,7 @@
                             <p class="card-text">To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the column to create a new one as a copy.</p>
                         </div>
                         <div class="card-footer">
-                            <i class="fa fa-info-circle mr-1"/> <small>An additional information</small>
+                            <i class="fa fa-info-circle mr-1"/> <small>Additional information</small>
                         </div>
                     </div>
                 </div>
@@ -1062,7 +1062,8 @@
     </div>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
-    <div data-selector=":not(.o_gallery > .container) > .carousel">
+    <div data-js="carousel"
+        data-selector=":not(.o_gallery > .container) > .carousel">
         <div class="dropdown-submenu">
             <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clone"/>Transition</a>
             <div class="dropdown-menu" role="menu">
@@ -1082,10 +1083,6 @@
                 <a href="#" class="dropdown-item" role="menuitem" data-select-class="s_carousel_default">Default</a>
             </div>
         </div>
-    </div>
-
-    <div data-js="carousel"
-        data-selector=":not(.o_gallery > .container) > .carousel">
         <div class="dropdown-submenu">
             <a tabindex="-2" href="#" class="dropdown-item"><i class="fa fa-clock-o"/>Speed</a>
             <div class="dropdown-menu" role="menu">
@@ -1229,20 +1226,21 @@
 
     <!-- Background Image -->
     <div data-js="background"
-        data-selector="section, .parallax, [class*='s_'] .carousel-item"
+        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel"
         data-exclude=".s_hr, .s_image_gallery">
         <a tabindex="-1" href="#" class="dropdown-item" data-choose-image="true" data-no-preview="true"><i class="fa fa-picture-o"/>Background Image</a>
     </div>
 
     <!-- Background Image -->
     <div data-js="background_position"
-        data-selector="section, [class*='s_'] .carousel-item">
+        data-selector="section, .parallax, :not(.o_gallery > .container) > .carousel">
         <a tabindex="-1" href="#" class="dropdown-item background_position_li" data-background-position="true" data-no-preview="true"><i class="fa fa-arrows"/>Background Image Sizing</a>
     </div>
 
     <!-- Color | Section -->
-    <div data-js="colorpicker"
-        data-selector="section, [class*='s_'] .carousel-item"
+    <div id="so_main_colorpicker"
+        data-js="colorpicker"
+        data-selector="section, :not(.o_gallery > .container) > .carousel"
         data-exclude=".parallax">
         <div class="dropdown-submenu">
             <a tabindex="-1" href="#" class="dropdown-item"><i class="fa fa-eyedropper"/>Background Color</a>

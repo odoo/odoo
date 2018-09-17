@@ -111,6 +111,9 @@ return {
             position: 'absolute',
             opacity: 0,
             height: 10,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+            padding: 0,
             top: -10000,
         }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
@@ -409,7 +412,7 @@ return {
             }, 0);
 
             if (maxWidth - menuItemsWidth >= -0.001) {
-                return
+                return;
             }
 
             var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
@@ -422,7 +425,7 @@ return {
             menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
             do {
                 menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
-            } while (menuItemsWidth > maxWidth);
+            } while (!(maxWidth - menuItemsWidth >= -0.001));
 
             var $extraItems = $items.slice(nbItems).detach();
             $extraItems.removeClass('nav-item');

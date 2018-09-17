@@ -2,15 +2,12 @@
 # This file contains the translation of the following modules:
 # * sms
 # 
-# Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,28 +16,35 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
+
+#. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
-msgstr "Otkaži"
+msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
 msgid "Contact"
-msgstr "Kontakt"
+msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
-msgstr "Kreiran"
+msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_display_name
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_display_name
+#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -50,10 +54,10 @@ msgid "Email Thread"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_id
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_id
+#: model:ir.model.fields,field_description:sms.field_sms_api__id
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:53
@@ -62,28 +66,28 @@ msgid "Insufficient credit, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api___last_update
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms___last_update
+#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_message
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
-msgstr "Poruka"
+msgstr ""
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:48
+#: code:addons/sms/wizard/send_sms.py:81
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr ""
@@ -95,8 +99,15 @@ msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
+msgstr ""
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
 msgstr ""
 
 #. module: sms
@@ -108,11 +119,12 @@ msgstr ""
 #. module: sms
 #: model:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send"
-msgstr "Pošalji"
+msgstr ""
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr ""
 

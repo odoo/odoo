@@ -4,8 +4,8 @@ import base64
 
 import babel.dates
 import collections
-from datetime import datetime, timedelta, MAXYEAR
-from dateutil import parser
+import datetime
+from datetime import timedelta, MAXYEAR
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 import logging
@@ -41,7 +41,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
             real_id = res[0]
             if with_date:
                 real_date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT, time.strptime(res[1], VIRTUALID_DATETIME_FORMAT))
-                start = datetime.strptime(real_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                start = datetime.datetime.strptime(real_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 end = start + timedelta(hours=with_date)
                 return (int(real_id), real_date, end.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
             return int(real_id)
@@ -336,10 +336,10 @@ class AlarmManager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
+        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
                 if alarm.type == alarm_type and \
-                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                         alert = {
                             'alarm_id': alarm.id,
@@ -447,7 +447,7 @@ class AlarmManager(models.AbstractModel):
         if alarm.type == 'notification':
             message = meeting.display_time
 
-            delta = alert['notify_at'] - datetime.now()
+            delta = alert['notify_at'] - datetime.datetime.now()
             delta = delta.seconds + delta.days * 3600 * 24
 
             return {
@@ -599,17 +599,10 @@ class Meeting(models.Model):
         else:
             reference_date = self.start
 
-        def todate(date):
-            val = parser.parse(''.join((re.compile('\d')).findall(date)))
-            ## Dates are localized to saved timezone if any, else current timezone.
-            if not val.tzinfo:
-                val = pytz.UTC.localize(val)
-            return val.astimezone(timezone)
-
         timezone = pytz.timezone(self._context.get('tz') or 'UTC')
         event_date = pytz.UTC.localize(fields.Datetime.from_string(reference_date))  # Add "+hh:mm" timezone
         if not event_date:
-            event_date = datetime.now()
+            event_date = datetime.datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
         if use_naive_datetime:
@@ -632,7 +625,11 @@ class Meeting(models.Model):
                 if use_naive_datetime:
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
-                    recurring_date = todate(meeting.recurrent_id_date)
+                    if not recurring_date.tzinfo:
+                        recurring_date = pytz.UTC.localize(recurring_date)
+                    recurring_date = recurring_date.astimezone(timezone)
+                if date_field == "stop":
+                    recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
@@ -791,6 +788,9 @@ class Meeting(models.Model):
     res_model = fields.Char('Document Model Name', related='res_model_id.model', readonly=True, store=True)
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
 
+    #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
+    message_ids = fields.One2many(auto_join=False)
+
     # RECURRENCE FIELD
     rrule = fields.Char('Recurrent Rule', compute='_compute_rrule', inverse='_inverse_rrule', store=True)
     rrule_type = fields.Selection([
@@ -897,13 +897,16 @@ class Meeting(models.Model):
                 enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
                 enddate = enddate.astimezone(pytz.utc)
-                meeting.stop = enddate
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
                 startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                meeting.start = startdate
+
+                meeting.write({
+                    'start': startdate.replace(tzinfo=None),
+                    'stop': enddate.replace(tzinfo=None)
+                })
             else:
                 meeting.write({'start': meeting.start_datetime,
                                'stop': meeting.stop_datetime})
@@ -947,17 +950,17 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration)
+            self.stop = start + timedelta(hours=self.duration) - timedelta(seconds=1)
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
         if self.start_date:
-            self.start = self.start_date
+            self.start = datetime.datetime.combine(self.start_date, datetime.time.min)
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
         if self.stop_date:
-            self.stop = self.stop_date
+            self.stop = datetime.datetime.combine(self.stop_date, datetime.time.max)
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1111,10 +1114,11 @@ class Meeting(models.Model):
             order_fields.append('id')
 
         leaf_evaluations = None
+        recurrent_ids = [meeting.id for meeting in self if meeting.recurrency and meeting.rrule]
         #compose a query of the type SELECT id, condition1 as domain1, condition2 as domaine2
         #This allows to load leaf interpretation of the where clause in one query
         #leaf_evaluations is then used when running custom interpretation of domain for recuring events
-        if self:
+        if self and recurrent_ids:
             select_fields = ["id"]
             where_params_list = []
             for pos, arg in enumerate(domain):
@@ -1125,7 +1129,7 @@ class Meeting(models.Model):
                     where_params_list += where_params
             if len(select_fields) > 1:
                 query = "SELECT %s FROM calendar_event WHERE id in %%s" % (", ".join(select_fields))  # could be improved by only taking event with recurency ?
-                where_params_list += [tuple(self.ids)]
+                where_params_list += [tuple(recurrent_ids)]
                 self._cr.execute(query, where_params_list)
                 leaf_evaluations = dict([(row['id'], row) for row in self._cr.dictfetchall()])
         result_data = []
@@ -1788,8 +1792,6 @@ class Meeting(models.Model):
     def _fix_rrule(self, values):
         rule_str = values.get('rrule')
         if rule_str:
-            rule = rrule.rrulestr(rule_str)
-            if not rule._until and not rule._count:
-                rule._count = 100
-                rule_str = str(rule).split('RRULE:')[-1]
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
         return rule_str

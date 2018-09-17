@@ -14,7 +14,7 @@ class MrpWorkcenter(models.Model):
     _inherit = ['resource.mixin']
 
     # resource
-    name = fields.Char(related='resource_id.name', store=True)
+    name = fields.Char('Work Center', related='resource_id.name', store=True)
     time_efficiency = fields.Float('Time Efficiency', related='resource_id.time_efficiency', default=100, store=True)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
 
@@ -164,6 +164,13 @@ class MrpWorkcenter(models.Model):
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
         times.write({'date_end': fields.Datetime.now()})
         return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    @api.model
+    def create(self, vals):
+        # resource_type is 'human' by default. As we are not living in
+        # /r/latestagecapitalism, workcenters are 'material'
+        return super(MrpWorkcenter, self.with_context({
+            'default_resource_type': 'material'})).create(vals)
 
 
 class MrpWorkcenterProductivityLossType(models.Model):

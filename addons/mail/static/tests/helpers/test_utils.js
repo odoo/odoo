@@ -32,11 +32,10 @@ function createDiscuss(params) {
         do_push_state: function () {},
     });
     var parent = new Parent();
-    testUtils.addMockEnvironment(parent, _.extend(params, {
-        archs: {
-            'mail.message,false,search': '<search/>',
-        },
-    }));
+    params.archs = params.archs || {
+        'mail.message,false,search': '<search/>',
+    };
+    testUtils.addMockEnvironment(parent, params);
     var discuss = new Discuss(parent, params);
     discuss.set_cp_bus(new Widget());
     var selector = params.debug ? 'body' : '#qunit-fixture';

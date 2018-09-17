@@ -49,8 +49,15 @@ class Website(models.Model):
         def_lang = self.env['res.lang'].search([('code', '=', lang_code)], limit=1)
         return def_lang.id if def_lang else self._active_languages()[0]
 
-    def _default_social_twitter(self):
-        return self.env.ref('base.main_company').social_twitter
+    name = fields.Char('Website Name', required=True)
+    domain = fields.Char('Website Domain')
+    country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
+                                         string='Country Groups', help='Used when multiple websites have the same domain.')
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id, required=True)
+    language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
+    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
+    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
+    auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -67,15 +74,11 @@ class Website(models.Model):
     def _default_social_googleplus(self):
         return self.env.ref('base.main_company').social_googleplus
 
-    name = fields.Char('Website Name', required=True)
-    domain = fields.Char('Website Domain')
-    country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
-                                         string='Country Groups', help='Used when multiple websites have the same domain.')
-    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
-    language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
-    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
-    auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
+    def _default_social_instagram(self):
+        return self.env.ref('base.main_company').social_instagram
+
+    def _default_social_twitter(self):
+        return self.env.ref('base.main_company').social_twitter
 
     social_twitter = fields.Char('Twitter Account', default=_default_social_twitter)
     social_facebook = fields.Char('Facebook Account', default=_default_social_facebook)
@@ -83,6 +86,7 @@ class Website(models.Model):
     social_linkedin = fields.Char('LinkedIn Account', default=_default_social_linkedin)
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
+    social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -112,10 +116,6 @@ class Website(models.Model):
         for website in self:
             website.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', website.id)], order='id', limit=1).id
 
-    # cf. Wizard hack in website_views.xml
-    def noop(self, *args, **kwargs):
-        pass
-
     @api.model
     def create(self, vals):
         if 'user_id' not in vals:
@@ -139,15 +139,6 @@ class Website(models.Model):
             self.env['ir.qweb'].clear_caches()
         return result
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        self.social_twitter = self.company_id.social_twitter
-        self.social_facebook = self.company_id.social_facebook
-        self.social_github = self.company_id.social_github
-        self.social_linkedin = self.company_id.social_linkedin
-        self.social_youtube = self.company_id.social_youtube
-        self.social_googleplus = self.company_id.social_googleplus
-
     # ----------------------------------------------------------
     # Page Management
     # ----------------------------------------------------------
@@ -157,10 +148,11 @@ class Website(models.Model):
             return
 
         new_homepage_view = '''<t name="Homepage" t-name="website.homepage%s">
-    <t t-call="website.layout">
-%s
-    </t>
-</t>''' % (self.id, self.env['ir.ui.view'].render_template('website.default_homepage', values={'website': self}).decode())
+        <t t-call="website.layout">
+            <t t-set="pageName" t-value="'homepage'"/>
+            <div id="wrap" class="oe_structure oe_empty"/>
+            </t>
+        </t>''' % (self.id)
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
@@ -390,16 +382,6 @@ class Website(models.Model):
 
         return dependencies
 
-    # removed by 3c9e6c89e7207636c1bdab4ed8118c0c1089d43e
-    # @api.model
-    # def page_exists(self, name, module='website'):
-    #     try:
-    #         name = (name or "").replace("/website.", "").replace("/", "")
-    #         if not name:
-    #             return False
-    #         return self.env.ref('%s.%s' % module, name)
-    #     except Exception:
-    #         return False
 
     # ----------------------------------------------------------
     # Languages
@@ -694,10 +676,16 @@ class SeoMetadata(models.AbstractModel):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
 
+    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized')
     website_meta_title = fields.Char("Website meta title", translate=True)
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
+
+    @api.multi
+    def _compute_is_seo_optimized(self):
+        for record in self:
+            record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
 
     def _default_website_meta(self):
         """ This method will return default meta information. It return the dict
@@ -961,14 +949,10 @@ class Page(models.Model):
             'name': data['name'],
             'url': url,
             'is_published': data['website_published'],
-            'website_id': False if data['share_page_info'] else website.id,
             'website_indexed': data['website_indexed'],
             'date_publish': data['date_publish'] or None,
             'is_homepage': data['is_homepage'],
         }
-        # toggle is hidden to prevent user to unshare a page
-        if 'share_page_info' in data:
-            w_vals['website_id'] = False if data['share_page_info'] else website.id
         page.with_context(no_cow=True).write(w_vals)
 
         # Create redirect if needed
@@ -1021,7 +1005,7 @@ class Page(models.Model):
             pages_linked_to_iruiview = self.search(
                 [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
             )
-            if len(pages_linked_to_iruiview) == 0 and not page.view_id.inherit_children_ids:
+            if not pages_linked_to_iruiview and not page.view_id.inherit_children_ids:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
                 page.view_id.unlink()
         return super(Page, self).unlink()

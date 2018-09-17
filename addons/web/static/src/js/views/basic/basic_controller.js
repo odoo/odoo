@@ -173,18 +173,21 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // may have to validate them before notifying them, so we ask them to
         // commit their current value before saving. This has to be done outside
         // of the mutex protection of saving because commitChanges will trigger
-        // changes and these are also protected. So the actual saving has to be
+        // changes and these are also protected. However, we must wait for the
+        // mutex to be idle to ensure that onchange RPCs returned before asking
+        // field widgets to commit their value (and validate it, for instance
+        // for one2many with required fields). So the actual saving has to be
         // done after these changes. Also the commitChanges operation might not
         // be synchronous for other reason (e.g. the x2m fields will ask the
         // user if some discarding has to be made). This operation must also be
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
         var self = this;
-        return this.mutex
-            .exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle))
-            .then(function () {
+        return this.mutex.getUnlockedDef().then(function () {
+            return self.renderer.commitChanges(recordID || self.handle).then(function () {
                 return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
             });
+        });
     },
     /**
      * @override

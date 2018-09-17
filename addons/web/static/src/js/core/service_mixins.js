@@ -133,7 +133,7 @@ var ServicesMixin = {
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);
-        var def = this.call('ajax', 'rpc', query.route, query.params, options) || $.Deferred();
+        var def = this.call('ajax', 'rpc', query.route, query.params, options, this) || $.Deferred();
         var promise = def.promise();
         var abort = (def.abort ? def.abort : def.reject) || function () {};
         promise.abort = abort.bind(def);

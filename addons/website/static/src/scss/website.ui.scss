@@ -16,13 +16,14 @@ body.o_connected_user {
     z-index: $zindex-modal - 10;
 
     font-family: $o-we-font-family;
-    font-size: $o-font-size-base;
+    font-size: 14px;
     a:hover, a:focus {
         text-decoration: none;
     }
     .dropdown-menu {
         font-size: inherit;
         border-radius: 0;
+        color: $dropdown-link-active-color;
     }
 
     .o_menu_sections {
@@ -192,7 +193,6 @@ body .modal {
         #language-box {
             padding-right: 25px;
             background-color: white;
-            margin-left: -1px;
         }
         .o_seo_og_image {
             .o_meta_img {
@@ -258,121 +258,7 @@ body .modal {
             }
         }
 
-        .table {
-            td {
-                vertical-align: middle;
-
-                &:first-child {
-                    padding-right: 15px;
-                    border-width: 0;
-                    width: 35%;
-                }
-
-                &:last-child {
-                    visibility: hidden;
-                }
-            }
-
-            > tfoot {
-                display: none;
-            }
-
-            &.js_seo_has_content {
-                td {
-                    &:first-child {
-                        width: 55%;
-                        padding-right: 15px;
-                        border: 1px solid $o-we-color-text-light;
-                        text-align: right;
-                        background-color: $o-we-color-paper;
-
-                        @include media-breakpoint-up(lg) {
-                            width: 38%;
-                        }
-                    }
-
-                    &:last-child {
-                        border: none;
-                        visibility: visible;
-                        padding-left: 15px;
-
-                        @include media-breakpoint-up(lg) {
-                            padding-left: 50px;
-                        }
-                    }
-                }
-
-                tbody {
-                    td {
-                        padding: 5px;
-                        transition: padding .3s ease 0s;
-
-                        &:first-child {
-                            border-width: 0 1px;
-
-                            .label {
-                                position: relative;
-                                display: inline-block;
-                                padding: 7px 35px;
-                                font-size: 16px;
-                                font-weight: normal;
-
-                                .oe_remove {
-                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px); // FIXME
-                                    @include o-position-absolute(5px, 5px);
-                                }
-                            }
-                        }
-
-                        &:last-child {
-                            .label {
-                                display: block;
-                                font-size: 12px;
-                                font-weight: normal;
-                                opacity: 0.8;
-                                cursor: pointer;
-
-                                &:hover {
-                                    opacity: 1;
-                                }
-                            }
-                        }
-                    }
-
-                    tr {
-                        animation: fadeInDownSmall .3s ease 0s 1 normal none running;
-
-                        &:first-child {
-                            td:first-child {
-                                padding-top: 10px;
-                            }
-                        }
-
-                        &:last-child {
-                            td:first-child {
-                                padding-bottom: 10px;
-                                border-bottom-width: 1px;
-                            }
-                        }
-                    }
-                }
-
-                > tfoot {
-                    display: table-footer-group;
-
-                    hr {
-                        margin: 10px 0;
-                    }
-
-                    td, td:first-child {
-                        border: none;
-                        background: none;
-                    }
-                }
-            }
-        }
-
-        li.oe_seo_preview_g {
+        div.oe_seo_preview_g {
             list-style: none;
             font-family: arial, sans-serif;
 
@@ -394,9 +280,6 @@ body .modal {
                     color: #006621;
                     font-size: 14px;
                     line-height: 18px;
-                }
-                .st {
-                    height: 50px;
                 }
             }
         }

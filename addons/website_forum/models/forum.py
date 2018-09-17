@@ -929,7 +929,6 @@ class Tags(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     name = fields.Char('Name', required=True)
-    create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     post_ids = fields.Many2many(
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id',

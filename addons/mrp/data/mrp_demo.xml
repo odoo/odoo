@@ -472,6 +472,17 @@
             <field name="product_id" ref="product.product_product_27"/>
         </record>
 
+        <record id="lot_product_product_drawer_drawer_0" model="stock.production.lot">
+            <field name="name">0000000010001</field>
+            <field name="product_id" ref="product_product_drawer_drawer"/>
+        </record>
+
+        <record id="lot_product_product_drawer_case_0" model="stock.production.lot">
+            <field name="name">0000000020045</field>
+            <field name="product_id" ref="product_product_drawer_case"/>
+        </record>
+
+
         <!-- Initital Inventory -->
 
         <record id="stock_inventory_drawer" model="stock.inventory">
@@ -499,6 +510,7 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_product_drawer_drawer_0"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
         <record id="stock_inventory_line_product_drawer_case" model="stock.inventory.line">
@@ -506,8 +518,10 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_drawer"/>
             <field name="product_qty">50</field>
+            <field name="prod_lot_id" ref="lot_product_product_drawer_case_0"/>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
+
         <record id="stock_inventory_line_product_wood_panel" model="stock.inventory.line">
             <field name="product_id" ref="product_product_wood_panel"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
@@ -536,6 +550,10 @@
             <field name="product_qty">30</field>
             <field name="location_id" ref="stock.stock_location_14"/>
         </record>
+
+        <function model="stock.inventory" name="_action_done">
+            <function eval="[[('state','=','draft'), ('id', '=', ref('stock_inventory_drawer'))]]" model="stock.inventory" name="search"/>
+        </function>
 
         <!-- BoM -->
 
@@ -654,6 +672,10 @@
                     'lot_id': ref('mrp.lot_product_27_0'),
                 }
             )"/>
+        </function>
+
+        <function model="mrp.product.produce" name="_onchange_product_qty">
+            <value model="mrp.product.produce" search="[('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]"/>
         </function>
 
         <function model="mrp.product.produce" name="do_produce">

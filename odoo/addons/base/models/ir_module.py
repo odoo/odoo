@@ -648,6 +648,7 @@ class Module(models.Model):
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
             'url': terp.get('url') or terp.get('live_test_url', ''),
+            'to_buy': False
         }
 
     @api.model
@@ -680,7 +681,7 @@ class Module(models.Model):
             values = self.get_values_from_terp(terp)
 
             if mod:
-                updated_values = {'to_buy': False}
+                updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
                     updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]

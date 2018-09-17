@@ -172,7 +172,7 @@
 
     <!-- A page -->
     <template id="page" name="Page">
-        <div class="page-header">
+        <div class="o_page_header">
             <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
@@ -343,7 +343,7 @@
                         </div>
                         <div role="form" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
                             <t t-foreach="survey.page_ids" t-as="page">
-                                <div class="page-header">
+                                <div class="o_page_header">
                                     <h1 t-field='page.title' />
                                     <t t-if="page.description"><div t-field='page.description' class="oe_no_empty"/></t>
                                 </div>

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-from werkzeug.exceptions import NotFound
-
 from odoo import http, _
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.exceptions import AccessError, MissingError
@@ -31,11 +28,9 @@ class PortalAccount(CustomerPortal):
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
-
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
         AccountInvoice = request.env['account.invoice']
 
         domain = []
@@ -82,41 +77,17 @@ class PortalAccount(CustomerPortal):
         return request.render("account.portal_my_invoices", values)
 
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
-    def portal_my_invoice_detail(self, invoice_id, access_token=None, **kw):
+    def portal_my_invoice_detail(self, invoice_id, access_token=None, report_type=None, download=False, **kw):
         try:
             invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
+
+        if report_type in ('html', 'pdf', 'text'):
+            return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)
-
-    @http.route([
-        '/my/invoices/pdf/<int:invoice_id>',
-        '/my/invoices/html/<int:invoice_id>/<string:access_token>'
-    ], type='http', auth="public", website=True)
-    def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
-        try:
-            invoice_sudo = self._document_check_access('account.invoice', invoice_id, access_token)
-        except (AccessError, MissingError):
-            return request.redirect('/my')
-
-        # print report as sudo, since it require access to taxes, payment term, ... and portal
-        # does not have those access rights.
-        accountInvoiceReport = request.env.ref('account.account_invoices').sudo()
-        report_type = kw.get('report_type', 'pdf')
-        method_name = 'render_qweb_%s' % (report_type)
-        if hasattr(accountInvoiceReport, method_name):
-            invoice_report = getattr(accountInvoiceReport, method_name)([invoice_sudo.id], data={'report_type': report_type})[0]
-            reporthttpheaders = [
-                ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
-                ('Content-Length', len(invoice_report)),
-            ]
-            if report_type == 'pdf' and not kw.get('print'):
-                filename = "%s.pdf" % (re.sub('\W+', '-', invoice_sudo._get_printed_report_name()))
-                reporthttpheaders.append(('Content-Disposition', http.content_disposition(filename)))
-            return request.make_response(invoice_report, headers=reporthttpheaders)
-        raise NotFound()
 
     # ------------------------------------------------------------
     # My Home

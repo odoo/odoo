@@ -37,10 +37,10 @@
     <!-- ONBOARDING PANEL-->
     <template id="sale_quotation_onboarding_panel" name="sale.quotation.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes">o_onboarding_violet</t>
-            <t t-set="bg_image">/sale/static/src/img/sale_quotation_onboarding_bg.jpg</t>
-            <t t-set="close_method">action_close_sale_quotation_onboarding</t>
-            <t t-set="close_model">res.company</t>
+            <t t-set="classes" t-value="'o_onboarding_violet'" />
+            <t t-set="bg_image" t-value="'/sale/static/src/img/sale_quotation_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
+            <t t-set="close_model" t-value="'res.company'" />
             <t t-call="base.onboarding_company_step" name="company_step" />
             <t t-call="sale.onboarding_quotation_layout_step" name="quotation_layout_step" />
             <t t-call="sale.sale_onboarding_order_confirmation_step" name="payment_acquirer_step" />

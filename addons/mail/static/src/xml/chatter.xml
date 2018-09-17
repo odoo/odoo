@@ -2,10 +2,33 @@
 <templates>
 
     <!--
+        Chatter attachment tab
+    -->
+
+    <div t-name="mail.chatter.AttachmentBox" class="o_mail_chatter_attachments">
+        <div class="o_chatter_attachment">
+            <div class="o_border_dashed">
+                <span class="o_attach_title">Attachments</span>
+            </div>
+            <div t-if="widget.imageList.length > 0" class="o_attachments_previews">
+                <t t-foreach="widget.imageList" t-as="attachment">
+                    <t t-call="mail.AttachmentPreview"/>
+                </t>
+            </div>
+            <div t-if="widget.otherList.length > 0" class="o_attachments_list">
+                <t t-foreach="widget.otherList" t-as="attachment">
+                    <t t-call="mail.Attachment"/>
+                </t>
+            </div>
+        </div>
+    </div>
+
+    <!--
         Chatter composer
 
         @param {mail.composer.Chatter} widget
     -->
+
     <t t-name="mail.chatter.Composer" t-extend="mail.Composer">
         <!-- Insert information before the composer -->
         <t t-jquery=".o_composer_container" t-operation="before">
@@ -69,6 +92,18 @@
         <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
+
+    </t>
+
+    <t t-name="mail.chatter.Attachment.Button">
+        <button t-attf-class="btn btn-sm btn-link o_chatter_button_attachment #{!count and 'o_hidden' or ''}" title="View all the attachments of the current record">
+            <span>
+                <i class="fa fa-paperclip"/>
+                <span class="o_chatter_attachment_button_count">
+                    <t t-esc="' ('+count+')'"/>
+                </span>
+            </span>
+        </button>
     </t>
 
     <!--
@@ -76,7 +111,9 @@
     -->
     <t t-name="mail.Chatter">
         <aside class="o_chatter">
-            <div class="o_chatter_topbar"/>
+            <div class="o_chatter_topbar">
+                <div class="o_topbar_right_area"/>
+            </div>
         </aside>
     </t>
 

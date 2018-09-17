@@ -16,7 +16,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      * @param {Object} params.data
      * @param {integer|string} params.data.id the ID of this thread
      * @param {string} params.data.name the name of this thread
-     * @param {string} params.data.status the status of this thread
+     * @param {string} [params.data.status=''] the status of this thread
      * @param {Object} params.parent Object with the event-dispatcher mixin
      *   (@see {web.mixins.EventDispatcherMixin})
      */
@@ -27,7 +27,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         this._folded = false; // threads are unfolded by default
         this._id = params.data.id;
         this._name = params.data.name;
-        this._status = params.data.status;
+        this._status = params.data.status || '';
         this._unreadCounter = 0; // amount of messages not yet been read
     },
 

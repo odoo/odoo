@@ -955,7 +955,11 @@ class Environment(Mapping):
         recs_list = self.all.todo.setdefault(field, [])
         for i, recs in enumerate(recs_list):
             if recs.env == records.env:
-                recs_list[i] |= records
+                # only add records if not already in the recordset, much much
+                # cheaper in case recs is big and records is a singleton
+                # already present
+                if not records <= recs:
+                    recs_list[i] |= records
                 break
         else:
             recs_list.append(records)

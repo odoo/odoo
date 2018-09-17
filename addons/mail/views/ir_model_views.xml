@@ -8,7 +8,7 @@
             <field name="transient" position="after">
                 <field name="is_mail_thread" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
             </field>
-            <xpath expr="//field[@name='field_id']//field[@name='copy']" position="after">
+            <xpath expr="//field[@name='field_id']//field[@name='copied']" position="after">
                 <field name="track_visibility" attrs="{'readonly': [('state','!=', 'manual')]}"/>
             </xpath>
         </field>
@@ -28,7 +28,7 @@
         <field name="model">ir.model.fields</field>
         <field name="inherit_id" ref="base.view_model_fields_form"/>
         <field name="arch" type="xml">
-            <field name="copy" position="after">
+            <field name="copied" position="after">
                 <field name="track_visibility" attrs="{'readonly': [('state','!=', 'manual')]}"/>
             </field>
         </field>

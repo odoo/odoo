@@ -279,14 +279,14 @@
         <field name="model">resource.calendar</field>
         <field name="arch" type="xml">
             <tree string="Working Time">
-                <field name="name"/>
+                <field name="name" string="Working Time"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
     </record>
 
     <record id="action_resource_calendar_form" model="ir.actions.act_window">
-        <field name="name">Working Time</field>
+        <field name="name">Working Times</field>
         <field name="res_model">resource.calendar</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

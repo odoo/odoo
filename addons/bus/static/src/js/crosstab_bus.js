@@ -304,28 +304,26 @@ var CrossTabBus = Longpolling.extend({
 
         // last notification id changed
         if (key === this._generateKey('last')) {
-            this._lastNotificationID = value;
+            this._lastNotificationID = value || -1;
         }
         // notifications changed
-
-        if (key === this._generateKey('notification')) {
+        else if (key === this._generateKey('notification')) {
             if (!this._isMasterTab) {
                 this.trigger("notification", value);
             }
-            return;
         }
         // update channels
-        if (key === this._generateKey('channels')) {
+        else if (key === this._generateKey('channels')) {
             var channels = value;
             _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
             _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
         }
         // update options
-        if (key === this._generateKey('options')) {
+        else if (key === this._generateKey('options')) {
             this._options = value;
         }
         // update focus
-        if (key === this._generateKey('focus')) {
+        else if (key === this._generateKey('focus')) {
             this._isOdooFocused = value;
             this.trigger('window_focus', this._isOdooFocused);
         }

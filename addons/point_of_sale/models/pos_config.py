@@ -291,7 +291,7 @@ class PosConfig(models.Model):
     @api.onchange('barcode_scanner')
     def _onchange_barcode_scanner(self):
         if self.barcode_scanner:
-            self.barcode_nomenclature_id = self.env['barcode.nomenclature'].search([], limit=1)
+            self.barcode_nomenclature_id = self.env.user.company_id.nomenclature_id
         else:
             self.barcode_nomenclature_id = False
 

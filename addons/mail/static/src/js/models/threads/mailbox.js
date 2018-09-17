@@ -46,29 +46,26 @@ var Mailbox = SearchableThread.extend({
         this._mailboxCounter = Math.max(this._mailboxCounter - num, 0);
     },
     /**
-     * Get the local messages of the mailbox (by local messages, we mean
-     * messages that have already been fetched from the server).
+     * Override so that there are options to filter messages based on document
+     * model and ID.
      *
-     * It is possible to filter on local messages that are specific to a
-     * document with the `options` parameter.
-     *
+     * @override
      * @param {Object} [options]
      * @param {string} [options.documentModel] model of the document that the
      *   local messages of inbox must be linked to.
      * @param {integer} [options.documentID] ID of the document that the local
      *   messages of inbox must be linked to.
+     * @returns {mail.model.Message[]}
      */
-    getLocalMessages: function (options) {
-        var localMessages = this._cache['[]'].messages;
-        if (!options) {
-            return localMessages;
-        }
+    getMessages: function (options) {
+        var messages = this._super.apply(this, arguments);
         if (options.documentModel && options.documentID) {
-            return _.filter(localMessages, function (localMessage) {
-                return localMessage.getDocumentModel() === options.documentModel &&
-                        localMessage.getDocumentID() === options.documentID;
+            return _.filter(messages, function (message) {
+                return message.getDocumentModel() === options.documentModel &&
+                        message.getDocumentID() === options.documentID;
             });
         }
+        return messages;
     },
     /**
      * Get the mailbox counter of this mailbox.

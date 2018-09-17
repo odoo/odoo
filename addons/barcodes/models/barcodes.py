@@ -17,7 +17,7 @@ UPC_EAN_CONVERSIONS = [
 class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
 
-    name = fields.Char(string='Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature')
+    name = fields.Char(string='Barcode Nomenclature', size=32, required=True, help='An internal identification of the barcode nomenclature')
     rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
     upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")

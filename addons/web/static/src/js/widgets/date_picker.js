@@ -129,6 +129,22 @@ var DateWidget = Widget.extend({
         }
     },
     /**
+     * @returns {Moment|false} value
+     */
+    maxDate: function (date) {
+        this.__libInput = true;
+        this.$input.datetimepicker('maxDate', date || null);
+        this.__libInput = false;
+    },
+    /**
+     * @returns {Moment|false} value
+     */
+    minDate: function (date) {
+        this.__libInput = true;
+        this.$input.datetimepicker('minDate', date || null);
+        this.__libInput = false;
+    },
+    /**
      * @param {Moment|false} value
      */
     setValue: function (value) {

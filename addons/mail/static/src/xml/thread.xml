@@ -2,13 +2,22 @@
 <templates xml:space="preserve">
 
     <!--
+        extends the debug mode menu to allow access to the attachment list view of the current record.
+    -->
+    <t t-extend="WebClient.DebugManager.View">
+        <t t-jquery="a[data-action='get_metadata']" t-operation="after">
+            <a role="menuitem" href="#" data-action="getMailMessages" class="dropdown-item">Manage Messages</a>
+        </t>
+    </t>
+    <!--
         @param {mail.model.AbstractThread} thread
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
         @param {boolean} [options.displayNoMatchFound]
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="mail.widget.Thread">
-        <t t-if="thread.hasMessages()">
+        <t t-if="thread.hasMessages({ 'domain': options.domain || [] })">
             <t t-call="mail.widget.Thread.Content"/>
         </t>
         <t t-elif="options.displayEmptyThread">
@@ -32,6 +41,11 @@
                     <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'" role="img" aria-label="Video" title="Video"/>
                     <t t-esc="widget.activeAttachment.name"/>
                     <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                    <span t-if="widget.activeAttachment.type == 'application/pdf'" class="o_split_pdf_area">
+                        <label for="Indices">Extract pages:&amp;nbsp;</label><input class="o_page_number_input" name="Indices" placeholder="e.g. 1-5, 7, 8-9"/>
+                        <label for="remainder">All pages:&amp;nbsp;</label><input class="o_remainder_input" type="checkbox" name="remainder" value="remainder"/>
+                        <button class="btn btn-sm btn-primary o_split_btn" data-toggle="tooltip" title="Split">Split</button>
+                    </span>
                 </span>
                 <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
             </div>
@@ -40,8 +54,10 @@
                     <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
                     </div>
-                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1" alt="Viewer"/>
+                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1&amp;signature=#{widget.activeAttachment.checksum}" alt="Viewer"/>
                     <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_text" t-if="(widget.activeAttachment.type || '').indexOf('text') !== -1" t-attf-src="/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_text" t-if="widget.activeAttachment.type == 'youtu'" allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
@@ -129,6 +145,7 @@
         @param {Object} options
         @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
           the thread messages (from top to bottom)
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
         @param {Object} ORDER
         @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
         @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
@@ -145,7 +162,7 @@
 
     -->
     <t t-name="mail.widget.Thread.Content">
-        <t t-set="messages" t-value="thread.getMessages()"/>
+        <t t-set="messages" t-value="thread.getMessages({ 'domain': options.domain || [] })"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="mail.widget.Thread.Content.DESC"/>
     </t>
@@ -309,25 +326,13 @@
                     <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
                         (from <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.displayEmailIcons and message.hasCustomerEmailData()" class="o_thread_tooltip_container">
+                    <span t-if="options.displayEmailIcons and (message.hasCustomerEmailData() or ['exception', 'bounce'].indexOf(message._customerEmailStatus) > -1)" class="o_thread_tooltip_container">
+
                         <t t-set="fatype" t-value="''"/>
                         <t t-if="message.getCustomerEmailStatus() === 'sent' or message.getCustomerEmailStatus() === 'ready'">
                             <t t-set="fatype" t-value="'-o'"/>
                         </t>
                         <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'" t-att-data-message-id="message.getID()"/>
-                        <span class="o_thread_tooltip_content">
-                            <t t-foreach="message.getCustomerEmailData()" t-as="customerEmailData">
-                                <span>
-                                    <t t-if="customerEmailData[2] === 'sent'"><i class='fa fa-check' title="Sent" role="img" aria-label="Sent"/></t>
-                                    <t t-if="customerEmailData[2] === 'bounce'"><i class='fa fa-exclamation' title="Bounced" role="img" aria-label="Bounced"/></t>
-                                    <t t-if="customerEmailData[2] === 'exception'"><i class='fa fa-exclamation' title="Error" role="img" aria-label="Error"/></t>
-                                    <t t-if="customerEmailData[2] === 'ready'"><i class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/></t>
-                                    <t t-if="customerEmailData[2] === 'canceled'"><i class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/></t>
-                                    <t t-esc="customerEmailData[1]"/>
-                                </span>
-                                <br />
-                            </t>
-                        </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
                         <i t-if="options.displayStars and !message.isSystemNotification() and !message.needsModeration()"
@@ -379,6 +384,24 @@
         <t t-if="options.messagesSeparatorPosition == message.getID()">
             <t t-call="mail.MessagesSeparator"/>
         </t>
+    </t>
+
+    <!--
+        @param {Object[]|undefined} list of customer email data of a given message.
+           A customer email data is a list with the following format:
+           [partnerID, partnerName, emailStatus]
+    -->
+    <t t-name="mail.widget.Thread.Message.MailTooltip">
+        <div t-foreach="data" t-as="customerEmailData">
+            <span class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="customerEmailData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerEmailData[2] === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="customerEmailData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="customerEmailData[2] === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="customerEmailData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+            </span>
+            <span t-esc="customerEmailData[1]"/>
+        </div>
     </t>
 
     <!--

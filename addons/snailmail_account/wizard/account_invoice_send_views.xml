@@ -29,13 +29,13 @@
                     </div>
                 </xpath>
                 <xpath expr="//footer/button[hasclass('send_and_print')]" position='attributes'>
-                    <attribute name="attrs">{'invisible': ['|', ('printed', '=', True), '|', ('is_print', '=', False), '&amp;', '&amp;', ('is_print', '=', True), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|', ('is_print', '=', False), '&amp;', '&amp;', ('is_print', '=', True), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//footer/button[hasclass('send')]" position='attributes'>
                     <attribute name="attrs">{'invisible': ['|', ('is_print', '=', True), '&amp;', '&amp;', ('is_print', '=', False), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//footer/button[hasclass('print')]" position='attributes'>
-                    <attribute name="attrs">{'invisible': ['|', '|', '|', ('printed', '=', True), ('is_print', '=', False), ('snailmail_is_letter', '=', True), ('is_email', '=', True)]}</attribute>
+                    <attribute name="attrs">{'invisible': ['|', '|', ('is_print', '=', False), ('snailmail_is_letter', '=', True), ('is_email', '=', True)]}</attribute>
                 </xpath>
             </field>
         </record>

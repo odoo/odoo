@@ -707,6 +707,71 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field with type number option', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="qux" options="{\'type\': \'number\'}"/>' +
+            '</form>',
+            res_id: 4,
+            translateParameters: {  
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.ok(form.$('.o_field_widget')[0].hasAttribute('type'),
+            'Float field with option type must have a type attribute.');
+        assert.strictEqual(form.$('.o_field_widget').attr('type'), 'number',
+            'Float field with option type must have a type attribute equals to "number".');
+        form.$('input').val('123456.7890').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').val(), '123456.789',
+            'Float value must be not formatted if input type is number.');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text(), '123,456.8',
+            'Float value must be formatted in readonly view even if the input type is number.');
+
+        form.destroy();
+    });
+
+    QUnit.test('float field without type number option', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="qux"/>' +
+            '</form>',
+            res_id: 4,
+            translateParameters: {  
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').attr('type'), 'text',
+            'Float field with option type must have a text type (default type).');
+        
+        form.$('input').val('123456.7890').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').val(), '123,456.8',
+            'Float value must be formatted if input type isn\'t number.');
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldEmail');
 
     QUnit.test('email field in form view', function (assert) {
@@ -3359,6 +3424,72 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('integer field with type number option', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field" options="{\'type\': \'number\'}"/>' +
+            '</form>',
+            res_id: 4,
+            translateParameters: {  
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.ok(form.$('.o_field_widget')[0].hasAttribute('type'),
+            'Integer field with option type must have a type attribute.');
+        assert.strictEqual(form.$('.o_field_widget').attr('type'), 'number',
+            'Integer field with option type must have a type attribute equals to "number".');
+        
+        form.$('input').val('1234567890').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').val(), '1234567890',
+            'Integer value must be not formatted if input type is number.');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text(), '1,234,567,890',
+            'Integer value must be formatted in readonly view even if the input type is number.');
+        
+        form.destroy();
+    });
+
+    QUnit.test('integer field without type number option', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<field name="int_field"/>' +
+            '</form>',
+            res_id: 4,
+            translateParameters: {  
+                thousands_sep: ",",
+                grouping: [3, 0],
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').attr('type'), 'text',
+            'Integer field without option type must have a text type (default type).');
+        
+        form.$('input').val('1234567890').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget').val(), '1,234,567,890',
+            'Integer value must be formatted if input type isn\'t number.');
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldFloatTime');
 
     QUnit.test('float_time field in form view', function (assert) {
@@ -4603,6 +4734,33 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDomain');
 
+    QUnit.test('The domain editor should not crash the view when given a dynamic filter', function (assert) {
+        //dynamic filters (containing variables, such as uid, parent or today)
+        //are not handled by the domain editor, but it shouldn't crash the view
+        assert.expect(1);
+
+        this.data.partner.records[0].foo = '[["int_field", "=", uid]]';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                    '<field name="int_field" invisible="1"/>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                user_context: {uid: 14},
+            },
+        });
+
+        assert.strictEqual(form.$('.o_read_mode').text(), "This domain is not supported.",
+            "The widget should not crash the view, but gracefully admit its failure.");
+        form.destroy();
+    });
+
     QUnit.test('basic domain field usage is ok', function (assert) {
         assert.expect(6);
 
@@ -4749,6 +4907,43 @@ QUnit.module('basic_fields', {
             "field selector popover should contain two fields");
         assert.strictEqual($sampleLi.length, 1,
             "field selector popover should contain 'Color index' field");
+        form.destroy();
+    });
+
+    QUnit.test('domain field can be reset with a new domain (from onchange)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = '[]';
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.foo = '[["id", "=", 1]]';
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '5 record(s)',
+            "the domain being empty, there should be 5 records");
+
+        // update display_name to trigger the onchange and reset foo
+        form.$('.o_field_widget[name=display_name]').val('new value').trigger('input');
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '1 record(s)',
+            "the domain has changed, there should be only 1 record");
+
         form.destroy();
     });
 

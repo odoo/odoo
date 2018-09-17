@@ -111,7 +111,7 @@
 
     <record id="m_request_3" model="maintenance.request">
         <field name="name">Resolution is bad</field>
-        <field name="technician_user_id" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="equipment_id" ref="equipment_monitor6"/>
         <field name="color">7</field>
@@ -120,7 +120,7 @@
     </record>
     <record id="m_request_4" model="maintenance.request">
         <field name="name">Some keys are not working</field>
-        <field name="technician_user_id" ref="base.user_root"/>
+        <field name="user_id" ref="base.user_root"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="equipment_id" ref="equipment_computer3"/>
         <field name="stage_id" ref="stage_0"/>
@@ -128,7 +128,7 @@
     </record>
     <record id="m_request_6" model="maintenance.request">
         <field name="name">Motherboard failed</field>
-        <field name="technician_user_id" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="owner_user_id" ref="base.user_root"/>
         <field name="equipment_id" ref="equipment_computer5"/>
          <field name="stage_id" ref="stage_4"/>
@@ -136,7 +136,7 @@
     </record>
     <record id="m_request_7" model="maintenance.request">
         <field name="name">Battery drains fast</field>
-        <field name="technician_user_id" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="owner_user_id" ref="base.user_demo"/>
         <field name="equipment_id" ref="equipment_computer9"/>
         <field name="stage_id" ref="stage_1"/>
@@ -144,7 +144,7 @@
     </record>
     <record id="m_request_8" model="maintenance.request">
         <field name="name">Touchpad not working</field>
-        <field name="technician_user_id" ref="base.user_demo"/>
+        <field name="user_id" ref="base.user_demo"/>
         <field name="owner_user_id" ref="base.user_demo"/>
         <field name="equipment_id" ref="equipment_computer11"/>
         <field name="stage_id" ref="stage_1"/>

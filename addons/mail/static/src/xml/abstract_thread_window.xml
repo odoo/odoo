@@ -5,7 +5,7 @@
         @param {mail.AbstractThreadWindow} widget
     -->
     <t t-name="mail.AbstractThreadWindow">
-        <div class="o_thread_window o_in_home_menu">
+        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
             <div class="o_thread_window_header">
                 <t t-call="mail.AbstractThreadWindow.HeaderContent">
                     <t t-set="status" t-value="widget.getThreadStatus()"/>
