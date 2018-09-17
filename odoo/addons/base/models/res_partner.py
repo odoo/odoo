@@ -43,6 +43,7 @@ def _tz_get(self):
 
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
+    _description = 'Fomat Address'
 
     def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
@@ -121,6 +122,7 @@ class PartnerCategory(models.Model):
 class PartnerTitle(models.Model):
     _name = 'res.partner.title'
     _order = 'name'
+    _description = 'Partner Title'
 
     name = fields.Char(string='Title', required=True, translate=True)
     shortcut = fields.Char(string='Abbreviation', translate=True)

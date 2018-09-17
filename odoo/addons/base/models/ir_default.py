@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 class IrDefault(models.Model):
     """ User-defined default values for fields. """
     _name = 'ir.default'
+    _description = 'Default Values'
     _rec_name = 'field_id'
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
