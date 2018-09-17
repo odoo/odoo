@@ -137,6 +137,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
 class IapAccount(models.Model):
     _name = 'iap.account'
     _rec_name = 'service_name'
+    _description = 'IAP Account'
 
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
