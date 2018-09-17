@@ -6,6 +6,7 @@ from odoo import api, models
 
 class CouponReport(models.AbstractModel):
     _name = 'report.sale_coupon.report_coupon'
+    _description = 'Sales Coupon Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):
