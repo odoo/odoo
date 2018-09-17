@@ -58,6 +58,12 @@
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
     }
+    .custom-control-input:disabled:not(:checked) {
+        ~ .custom-control-label:before {
+            background: rgb(138, 138, 138);
+            opacity: 0.25;
+        }
+    }
 }
 
 .o_catch_attention {
