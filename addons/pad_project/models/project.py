@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ProjectTask(models.Model):
     _name = "project.task"
     _inherit = ["project.task", 'pad.common']
+    _description = 'Task'
 
     description_pad = fields.Char('Pad URL', pad_content_field='description', copy=False)
     use_pad = fields.Boolean(related="project_id.use_pads", string="Use collaborative pad", readonly=True)
