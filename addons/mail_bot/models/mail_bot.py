@@ -9,6 +9,7 @@ from odoo import models, _
 
 class MailBot(models.AbstractModel):
     _name = 'mail.bot'
+    _description = 'Mail Bot'
 
     def _apply_logic(self, record, values, command=None):
         """ Apply bot logic to generate an answer (or not) for the user

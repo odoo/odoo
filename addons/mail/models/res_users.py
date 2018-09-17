@@ -16,6 +16,7 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
+    _description = 'Users'
 
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
@@ -149,6 +150,7 @@ class res_groups_mail_channel(models.Model):
     """
     _name = 'res.groups'
     _inherit = 'res.groups'
+    _description = 'Access Groups'
 
     @api.multi
     def write(self, vals, context=None):
