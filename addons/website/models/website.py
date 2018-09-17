@@ -755,6 +755,7 @@ class SeoMetadata(models.AbstractModel):
 class WebsiteMultiMixin(models.AbstractModel):
 
     _name = 'website.multi.mixin'
+    _description = 'Multi Website Mixin'
 
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
 
@@ -771,6 +772,7 @@ class WebsiteMultiMixin(models.AbstractModel):
 class WebsitePublishedMixin(models.AbstractModel):
 
     _name = "website.published.mixin"
+    _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published')
     is_published = fields.Boolean('Is published')
@@ -803,6 +805,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 
     _name = 'website.published.multi.mixin'
     _inherit = ['website.published.mixin', 'website.multi.mixin']
+    _description = 'Multi Website Published Mixin'
 
     website_published = fields.Boolean(compute='_compute_website_published',
                                        inverse='_inverse_website_published',
