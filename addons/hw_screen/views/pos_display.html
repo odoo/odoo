@@ -11,12 +11,17 @@
         <script type="text/javascript" class="origin">
             {{ cust_js|safe }}
         </script>
+        <style class="origin">
+            html, body {
+                height: 100%;
+            }
+        </style>
         <style>
             body {
                 background: linear-gradient(to right bottom, #77717e, #c9a8a9);
                 height: 100vh;
             }
-            .container {
+            .pos-display-status {
                 padding: 10px 20px;
                 background: rgba(0, 0, 0, 0.17);
                 border: 1px solid rgba(0, 0, 0, 0.06);
@@ -34,11 +39,12 @@
         </style>
     </head>
     <body>
-        <div class="text-center pt-5">
-            <img style="width: 150px;" src="/web/static/src/img/logo_inverse_white_206px.png">
-            <p class="mt-3" style="color: #fff;font-size: 30px;">IoTBox</p>
-        </div>
         <div class="container">
+            <div class="text-center pt-5">
+                <img style="width: 150px;" src="/web/static/src/img/logo_inverse_white_206px.png">
+                <p class="mt-3" style="color: #fff;font-size: 30px;">IoTBox</p>
+            </div>
+            <div class="pos-display-status">
             <h4 class="text-center mb-3">POS Client display</h4>
             <table class="table table-hover table-sm">
                 <thead>
@@ -63,6 +69,7 @@
                 <i class="fa fa-info-circle mr-1"></i>Odoo version 11 or above is required.
             </p>
             <div class="error-message alert alert-danger mb-2 d-none" role="alert" />
+            </div>
         </div>
     </body>
 </html>
