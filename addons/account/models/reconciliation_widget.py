@@ -197,8 +197,12 @@ class AccountReconciliation(models.AbstractModel):
             for line in results:
                 Bank_statement_line.browse(line.get('id')).write({'partner_id': line.get('partner_id')})
 
+        # Keep the same order as the table.
+        sorted_st_lines = sorted(st_lines_left, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
+        sorted_st_lines_ids = [line.id for line in sorted_st_lines]
+
         return {
-            'st_lines_ids': st_lines_left.ids,
+            'st_lines_ids': sorted_st_lines_ids,
             'notifications': [],
             'statement_name': len(bank_statements) == 1 and bank_statements[0].name or False,
             'journal_id': bank_statements and bank_statements[0].journal_id.id or False,

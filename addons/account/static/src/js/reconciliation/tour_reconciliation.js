@@ -14,7 +14,7 @@ Tour.register('bank_statement_reconciliation', {
 
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:nth-child(1) .o_reconcile:visible',
         },
 
         // Reconciliation of 'First 2000 $ of INV/2018/0001'
