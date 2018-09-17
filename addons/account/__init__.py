@@ -14,7 +14,10 @@ def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
     env = api.Environment(cr, SUPERUSER_ID, {})
     country_code = env.user.company_id.country_id.code
-    if country_code:
+
+    l10n_to_install = env['ir.module.module'].search([
+        ('state', '=', 'to install'), ('name', '=like', 'l10n\_%')], limit=1)
+    if country_code and not l10n_to_install:
         #auto install localization module(s) if available
         module_list = []
         if country_code in SYSCOHADA_LIST:
