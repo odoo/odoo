@@ -5,6 +5,7 @@ from odoo import models, fields, api
 # We just create a new model
 class Unit(models.Model):
     _name = 'test.unit'
+    _description = 'Test Unit'
 
     name = fields.Char('Name', required=True)
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
@@ -21,6 +22,7 @@ class Unit(models.Model):
 class Box(models.Model):
     _name = 'test.box'
     _inherits = {'test.unit': 'unit_id'}
+    _description = 'Test Box'
 
     unit_id = fields.Many2one('test.unit', 'Unit', required=True,
                               ondelete='cascade')
@@ -31,6 +33,7 @@ class Box(models.Model):
 class Pallet(models.Model):
     _name = 'test.pallet'
     _inherits = {'test.box': 'box_id'}
+    _description = 'Test Pallet'
 
     box_id = fields.Many2one('test.box', 'Box', required=True,
                              ondelete='cascade')
