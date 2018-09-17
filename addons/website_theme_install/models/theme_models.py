@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.modules.module import get_resource_from_path
 
 _logger = logging.getLogger(__name__)
@@ -63,12 +63,28 @@ class Theme(models.AbstractModel):
     _auto = False
 
     def _post_copy(self, mod):
+        website = self.env['website'].get_current_website()
         theme_post_copy = '_%s_post_copy' % mod.name
         if hasattr(self, theme_post_copy):
             _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self, theme_post_copy)
-            return method()
+            method = getattr(self.with_context(website_id=website.id), theme_post_copy)
+            return method(mod)
 
+    @api.model
+    def _toggle_view(self, xml_id, active):
+        obj = self.env.ref(xml_id)
+        if obj._name == 'theme.ir.ui.view':
+            website = self.env['website'].get_current_website()
+            obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
+        obj.write({'active': active})
+
+    @api.model
+    def enable_view(self, xml_id):
+        self._toggle_view(xml_id, True)
+
+    @api.model
+    def disable_view(self, xml_id):
+        self._toggle_view(xml_id, False)
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'

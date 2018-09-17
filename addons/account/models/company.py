@@ -65,7 +65,6 @@ Best Regards,'''))
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
     invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
                                               default='invoice_number', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
-    account_sanitize_invoice_ref = fields.Boolean(string="Sanitize Invoice References", default=True, help="Whether or not customer invoices and vendor bills should automatically correct their reference they are maximum 140 characters long, consist only of latin characters, contain no '//' sequence, and have no leading or trailing /. (these are the SEPA criteria for payment communications)")
 
     qr_code = fields.Boolean(string='Display SEPA QR code')
     qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')

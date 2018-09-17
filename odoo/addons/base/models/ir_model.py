@@ -319,7 +319,8 @@ class IrModelFields(models.Model):
                             help="List of options for a selection field, "
                                  "specified as a Python expression defining a list of (key, label) pairs. "
                                  "For example: [('blue','Blue'),('yellow','Yellow')]")
-    copy = fields.Boolean(string='Copied', help="Whether the value is copied when duplicating a record.")
+    copied = fields.Boolean(string='Copied', oldname='copy',
+                            help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
     related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
                                        store=True, string="Related field", ondelete='cascade')
@@ -434,7 +435,7 @@ class IrModelFields(models.Model):
             self.ttype = field.type
             self.relation = field.comodel_name
             self.readonly = True
-            self.copy = False
+            self.copied = False
 
     @api.constrains('depends')
     def _check_depends(self):
@@ -460,7 +461,7 @@ class IrModelFields(models.Model):
     def _onchange_compute(self):
         if self.compute:
             self.readonly = True
-            self.copy = False
+            self.copied = False
 
     @api.one
     @api.constrains('relation_table')
@@ -481,7 +482,7 @@ class IrModelFields(models.Model):
 
     @api.onchange('ttype', 'model_id', 'relation')
     def _onchange_ttype(self):
-        self.copy = (self.ttype != 'one2many')
+        self.copied = (self.ttype != 'one2many')
         if self.ttype == 'many2many' and self.model_id and self.relation:
             if self.relation not in self.env:
                 return {
@@ -763,7 +764,7 @@ class IrModelFields(models.Model):
             'relation': field.comodel_name or None,
             'index': bool(field.index),
             'store': bool(field.store),
-            'copy': bool(field.copy),
+            'copied': bool(field.copy),
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
@@ -862,7 +863,7 @@ class IrModelFields(models.Model):
             'string': field_data['field_description'],
             'help': field_data['help'],
             'index': bool(field_data['index']),
-            'copy': bool(field_data['copy']),
+            'copy': bool(field_data['copied']),
             'related': field_data['related'],
             'required': bool(field_data['required']),
             'readonly': bool(field_data['readonly']),

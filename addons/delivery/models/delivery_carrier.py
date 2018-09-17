@@ -34,7 +34,7 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char('Delivery Method', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
@@ -210,6 +210,12 @@ class DeliveryCarrier(models.Model):
             carrier.product_id.list_price = carrier.fixed_price
 
     def fixed_rate_shipment(self, order):
+        carrier = self._match_address(order.partner_shipping_id)
+        if not carrier:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'warning_message': False}
         price = self.fixed_price
         if self.company_id.currency_id.id != order.currency_id.id:
             price = self.env['res.currency']._compute(self.company_id.currency_id, order.currency_id, price)

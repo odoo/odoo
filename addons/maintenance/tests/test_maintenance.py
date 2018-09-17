@@ -58,7 +58,7 @@ class TestEquipment(TransactionCase):
         # Create new maintenance request
         maintenance_request_01 = self.maintenance_request.sudo(self.user).create({
             'name': 'Resolution is bad',
-            'technician_user_id': self.user.id,
+            'user_id': self.user.id,
             'owner_user_id': self.user.id,
             'equipment_id': equipment_01.id,
             'color': 7,
@@ -92,7 +92,7 @@ class TestEquipment(TransactionCase):
 
         maintenance_request_cron = self.maintenance_request.create({
             'name': 'Need a special calibration',
-            'technician_user_id': self.user.id,
+            'user_id': self.user.id,
             'request_date': (datetime.datetime.now() + relativedelta.relativedelta(days=7)).strftime('%Y-%m-%d'),
             'maintenance_type': 'preventive',
             'owner_user_id': self.user.id,

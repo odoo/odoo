@@ -235,8 +235,8 @@ var PivotModel = AbstractModel.extend({
                 additionalHeaders = additionalHeaders.concat(
                         _.map(
                             [
-                                this.data.timeRangeDescription,
-                                this.data.comparisonTimeRangeDescription,
+                                this.data.timeRangeDescription.toString(),
+                                this.data.comparisonTimeRangeDescription.toString(),
                                 'Variation'
                             ],
                             makeMeasure
@@ -313,7 +313,12 @@ var PivotModel = AbstractModel.extend({
     get: function (options) {
         var isRaw = options && options.raw;
         if (!this.data.has_data) {
-            return {has_data: false};
+            return {
+                has_data: false,
+                colGroupBys: this.data.main_col.groupbys,
+                rowGroupBys:  this.data.main_row.groupbys,
+                measures: this.data.measures,
+            };
         }
         return {
             colGroupBys: this.data.main_col.groupbys,
@@ -791,10 +796,25 @@ var PivotModel = AbstractModel.extend({
         return header;
     },
     /**
-     * @param {Object} data
-     * @param {Object} comparisonData
-     * @param {(string[])[]} groupBys
-     * @returns {Object}
+     * Here data and comparisonData are arrays of arrays of objects.
+     * Each one of those objects is called a dataPoint and represents a group of records
+     * (determined by some groupbys values) together with measure values aggregated.
+     * An exception: if a many2one is selected as a measure and a groupby simultaneously,
+     * we have only the corresponding groupby value which is the of the form ['id', 'name_get']
+     * but the measure value can be inferred, it is indeed 1.
+     * In case 'this.data.compare' is true (a comparison is required),
+     * the dataPoint are transformed in such a way that the measures values become objects of the form
+     *
+     *      {'data': 'some value', 'comparisonData': 'other value', 'variation': 'yet another value'}.
+     *
+     * In case two dataPoints have the same associated group
+     * (they then come necessarily from 'data' and 'comparisonData'),
+     * they are merged into a single dataPoint of the form above.
+     *
+     * @param {Object[][]} data
+     * @param {Object[][]} comparisonData
+     * @param {string[][]} groupBys
+     * @returns {Object[][]}
      */
     _mergeData: function (data, comparisonData, groupBys) {
         if (!this.data.compare) {
@@ -805,6 +825,9 @@ var PivotModel = AbstractModel.extend({
         var value, groupIdentifier, dataPoint, m, measureName, measureValue, measureComparisonValue;
         for (var index = 0; index < groupBys.length; index++) {
             dataPoints = {};
+            // Consider dataPoints comming from 'data'. The dataPoint measure values are objects with
+            // zeros values for the 'comparisonData' key since we don't know at this stage
+            // if the group is represented in the 'comparisonData'.
             if (data.length) {
                 for (var k = 0; k < data[index].length; k++) {
                     dataPoint  = data[index][k];
@@ -815,6 +838,9 @@ var PivotModel = AbstractModel.extend({
                         measureValue = dataPoint[measureName];
                         if (typeof measureValue === 'boolean') {
                             measureValue = measureValue ? 1 : 0;
+                        }
+                        if (measureValue === null) {
+                            measureValue = 0;
                         }
                         if (!(measureValue instanceof Array) && measureName !== '__count') {
                             dataPoint[measureName] = {
@@ -831,11 +857,11 @@ var PivotModel = AbstractModel.extend({
                             };
                         }
                     }
-                    dataPoint.__count = {
+                    dataPoint.__count = dataPoint.__count ? {
                         data: dataPoint.__count,
                         comparisonData: 0,
                         variation: computeVariation(dataPoint.__count, 0)
-                    };
+                    } : undefined;
                     dataPoints[groupIdentifier] = dataPoint;
                 }
             }
@@ -845,11 +871,15 @@ var PivotModel = AbstractModel.extend({
                     value = this._getValue(dataPoint, groupBys[index]);
                     groupIdentifier = value.join();
                     if (!dataPoints[groupIdentifier]) {
+                        // Here we know that the group is not represented in 'data'.
                         for (m=0; m < this.data.measures.length; m++) {
                             measureName = this.data.measures[m];
                             measureComparisonValue = dataPoint[measureName];
                             if (typeof(measureComparisonValue) === 'boolean') {
                                 measureComparisonValue = measureComparisonValue ? 1 : 0;
+                            }
+                            if (measureComparisonValue === null) {
+                                measureComparisonValue = 0;
                             }
                             if (!(measureComparisonValue instanceof Array) && measureName !== '__count') {
                                 dataPoint[measureName] = {
@@ -866,20 +896,26 @@ var PivotModel = AbstractModel.extend({
                                 };
                             }
                         }
-                        dataPoint.__count = {
+                        dataPoint.__count = dataPoint.__count ? {
                             data: 0,
                             comparisonData: dataPoint.__count,
                             variation: computeVariation(0, dataPoint.__count)
-                        };
+                        } : undefined;
                         dataPoint.__comparisonCount = dataPoint.__count;
                         dataPoint.__comparisonDomain = dataPoint.__domain;
                         dataPoints[groupIdentifier] = _.omit(dataPoint, '__domain');
                     } else {
+                        // Here we know that the group is represented in 'data'.
+                        // Therefore we modify the corresonding dataPoint:
+                        // we modify the key 'comparisonData' and recompute 'variation'.
                         for (m=0; m < this.data.measures.length; m++) {
                             measureName = this.data.measures[m];
                             measureComparisonValue = dataPoint[measureName];
                             if (typeof(measureComparisonValue) === 'boolean') {
                                 measureComparisonValue = measureComparisonValue ? 1 : 0;
+                            }
+                            if (measureComparisonValue === null) {
+                                measureComparisonValue = 0;
                             }
                             if (!(measureComparisonValue instanceof Array) && measureName !== '__count') {
                                 dataPoints[groupIdentifier][measureName].comparisonData = measureComparisonValue;
@@ -897,11 +933,14 @@ var PivotModel = AbstractModel.extend({
 
                             }
                         }
-                        dataPoints[groupIdentifier].__count.comparisonData = dataPoint.__count;
-                        dataPoints[groupIdentifier].__count.variation = computeVariation(
-                            dataPoints[groupIdentifier].__count.data,
-                            dataPoint.__count
-                        );
+                        if (dataPoint.__count) {
+                            dataPoints[groupIdentifier].__count.data = dataPoints[groupIdentifier].__count.data || 0;
+                            dataPoints[groupIdentifier].__count.comparisonData = dataPoint.__count;
+                            dataPoints[groupIdentifier].__count.variation = computeVariation(
+                                dataPoints[groupIdentifier].__count.data,
+                                dataPoint.__count
+                            );
+                        }
                         dataPoints[groupIdentifier].__comparisonCount = dataPoint.__count;
                         dataPoints[groupIdentifier].__comparisonDomain = dataPoint.__domain;
                     }
@@ -912,7 +951,7 @@ var PivotModel = AbstractModel.extend({
         return allData;
     },
     /**
-     * @param {Object} data
+     * @param {Object[][]} data
      */
     _prepareData: function (data) {
         var self = this;
@@ -942,9 +981,11 @@ var PivotModel = AbstractModel.extend({
                         value: self._getValue(dataPoint, groupBys),
                         domain: dataPoint.__domain,
                         comparisonDomain: dataPoint.__comparisonDomain,
-                        length: dataPoint.__count.data ? dataPoint.__count.data : dataPoint.__count,
-                        comparisonLength: dataPoint.__count.comparisonData || 0
                     };
+                    if (dataPoint.__count) {
+                        attrs.length = dataPoint.__count instanceof Object ? dataPoint.__count.data : dataPoint.__count;
+                        attrs.comparisonLength = dataPoint.__comparisonCount;
+                    }
 
                     if (j === 0) {
                         row = this._makeHeader(attrs.value, attrs.domain, attrs.comparisonDomain, attrs.length, attrs.comparisonLength, main_row_header, 0, i);

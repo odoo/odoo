@@ -99,6 +99,7 @@ class Project(models.Model):
     @api.multi
     def action_make_billable(self):
         return {
+            "name": _("Create Sales Order"),
             "type": 'ir.actions.act_window',
             "res_model": 'project.create.sale.order',
             "views": [[False, "form"]],
@@ -108,6 +109,12 @@ class Project(models.Model):
                 'active_model': 'project.project',
             },
         }
+
+    @api.model
+    def _map_tasks_default_valeus(self, task):
+        defaults = super(Project, self)._map_tasks_default_valeus(task)
+        defaults['sale_line_id'] = False
+        return defaults
 
 
 class ProjectTask(models.Model):
@@ -181,7 +188,7 @@ class ProjectTask(models.Model):
         result = result or {}
         domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', '=', self.partner_id.id), ('state', 'in', ['sale', 'done'])]
         if self.project_id.sale_order_id:
-            domain += [('sale_order_id', '=', self.project_id.sale_order_id.id)]
+            domain += [('order_id', '=', self.project_id.sale_order_id.id)]
         result.setdefault('domain', {})['sale_line_id'] = domain
         return result
 

@@ -51,7 +51,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._autoswitch = 'autoswitch' in options ? options.autoswitch : true;
         this._commands = undefined;
         this._creatorUID = data.create_uid;
-        this._detached = data.is_minimized;
+        this._detached = data.is_minimized || false;
         this._directPartnerID = undefined;
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
@@ -66,7 +66,6 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         // number of messages in this channel that are in inbox.
         this._needactionCounter = data.message_needaction_counter || 0;
         this._serverType = data.channel_type;
-        this._status = undefined;
         this._throttleFetchSeen = _.throttle(this._fetchSeen.bind(this), 3000);
         // unique identifier for this channel, which is required for some rpc
         this._uuid = data.uuid;

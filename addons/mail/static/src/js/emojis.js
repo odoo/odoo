@@ -125,7 +125,8 @@ var data = {
     ":football":      "🏈",
     ":8ball":         "🎱",
     ":clapper":       "🎬",
-    ":microphone":    "🎤"
+    ":microphone":    "🎤",
+    ":cheese":        "🧀",
 };
 
 // list of emojis in a dictionary, indexed by emoji unicode

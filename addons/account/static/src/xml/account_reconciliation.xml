@@ -70,7 +70,7 @@
     <t t-set="state" t-value="widget._initialState"/>
     <div class="o_reconciliation_line" t-att-data-mode="state.mode">
         <table class="accounting_view">
-            <caption>
+            <caption style="caption-side: top;">
                 <div class="float-right o_buttons">
                     <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Validate</button>
                     <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>

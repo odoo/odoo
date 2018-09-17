@@ -177,7 +177,7 @@ def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', fi
 # ----------------------------------------
 # Crop Image
 # ----------------------------------------
-def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
+def crop_image(data, type='top', ratio=False, size=None, image_format=None):
     """ Used for cropping image and create thumbnail
         :param data: base64 data of image.
         :param type: Used for cropping position possible
@@ -206,6 +206,7 @@ def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
             new_h = h
             new_w = (h * w_ratio) // h_ratio
 
+    image_format = image_format or image_stream.format or 'JPEG'
     if type == "top":
         cropped_image = image_stream.crop((0, 0, new_w, new_h))
         cropped_image.save(output_stream, format=image_format)
@@ -219,6 +220,8 @@ def crop_image(data, type='top', ratio=False, size=None, image_format="PNG"):
         raise ValueError('ERROR: invalid value for crop_type')
     if size:
         thumbnail = Image.open(io.BytesIO(output_stream.getvalue()))
+        output_stream.truncate(0)
+        output_stream.seek(0)
         thumbnail.thumbnail(size, Image.ANTIALIAS)
         thumbnail.save(output_stream, image_format)
     return base64.b64encode(output_stream.getvalue())

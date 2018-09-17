@@ -160,7 +160,7 @@ class TestEquipmentMulticompany(TransactionCase):
         MaintenanceRequest.sudo(user).create({
             'name': 'Some keys are not working',
             'company_id': company_b.id,
-            'technician_user_id': user.id,
+            'user_id': user.id,
             'owner_user_id': user.id,
         })
 
@@ -168,7 +168,7 @@ class TestEquipmentMulticompany(TransactionCase):
         MaintenanceRequest.sudo(equipment_manager).create({
             'name': 'Battery drains fast',
             'company_id': company_a.id,
-            'technician_user_id': equipment_manager.id,
+            'user_id': equipment_manager.id,
             'owner_user_id': equipment_manager.id,
         })
 

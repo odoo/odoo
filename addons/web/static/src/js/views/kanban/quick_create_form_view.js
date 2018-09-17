@@ -6,8 +6,8 @@ odoo.define('web.QuickCreateFormView', function (require) {
  * is used by the RecordQuickCreate in Kanban views.
  */
 
-var FormController = require('web.FormController');
 var BasicModel = require('web.BasicModel');
+var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 
@@ -68,11 +68,14 @@ var QuickCreateFormController = FormController.extend({
      * Asks all field widgets to notify the environment with their current value
      * (useful for instance for input fields that still have the focus and that
      * could have not notified the environment of their changes yet).
+     * Synchronizes with the controller's mutex in case there would already be
+     * pending changes being applied.
      *
-     * @return {Deferred}
+     * @return {Promise}
      */
     commitChanges: function () {
-        return this.renderer.commitChanges(this.handle);
+        var mutexDef = this.mutex.getUnlockedDef();
+        return $.when(mutexDef, this.renderer.commitChanges(this.handle));
     },
     /**
      * @returns {Object} the changes done on the current record

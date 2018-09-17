@@ -54,6 +54,10 @@
             outline: 1px solid $o-main-text-color;
         }
     }
+    @media print {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
 }
 
 .o_catch_attention {

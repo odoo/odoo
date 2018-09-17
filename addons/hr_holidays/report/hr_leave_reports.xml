@@ -121,13 +121,6 @@
             'search_default_group_type': 1,
             'search_default_year': 1 ,
             'search_default_my_leaves': 1,
-            'needaction_menu_ref':
-            [
-                'hr_holidays.menu_open_ask_holidays_new',
-                'hr_holidays.menu_open_allocation_holidays',
-                'hr_holidays.menu_request_approve_allocation',
-                'hr_holidays.menu_open_employee_leave',
-            ]
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -145,15 +138,18 @@
         <field name="src_model">hr.employee</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_type': 1,
+        <field name="context">{
+            'search_default_employee_id': [active_id],
+            'default_employee_id': active_id,
+            'search_default_group_type': 1,
             'search_default_year': 1}</field>
-        <field name="domain">[('holiday_type','=','employee'), ('holiday_status_id.limit', '=', False), ('state','!=', 'refuse')]</field>
+        <field name="domain">[('holiday_type','=','employee')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
     </record>
 
     <menuitem
         id="menu_open_company_allocation"
-        name="Leaves Summary"
+        name="Summary"
         parent="menu_hr_holidays_my_leaves"
         action="open_company_allocation"
         sequence="21"/>

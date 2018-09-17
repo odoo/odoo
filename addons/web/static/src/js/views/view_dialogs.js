@@ -134,7 +134,7 @@ var FormViewDialog = ViewDialog.extend({
 
             if (!readonly) {
                 options.buttons.unshift({
-                    text: _t("Save") + ((multi_select)? " " + _t(" & Close") : ""),
+                    text: (multi_select ? _t("Save & Close") : _t("Save")),
                     classes: "btn-primary",
                     click: function () {
                         this._save().then(self.close.bind(self));

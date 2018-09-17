@@ -106,9 +106,11 @@ class Rating(models.Model):
             'parent_res_id': False,
         }
         if hasattr(current_record, 'rating_get_parent'):
-            parent_res_model = getattr(current_record, current_record.rating_get_parent())
-            data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model._name).id
-            data['parent_res_id'] = parent_res_model.id
+            current_record_parent = current_record.rating_get_parent()
+            if current_record_parent:
+                parent_res_model = getattr(current_record, current_record_parent)
+                data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model._name).id
+                data['parent_res_id'] = parent_res_model.id
         return data
 
     @api.multi

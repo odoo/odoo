@@ -55,7 +55,7 @@
         <section class="container" t-foreach="dayslist" t-as="day">
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
-            <h3 class="page-header mt0">
+            <h3 class="o_page_header mt0">
                 <span t-field="tracks_by_days[day][0].date" t-options="{'widget': 'date'}"/>
                 <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
             </h3>
@@ -191,7 +191,8 @@
                         <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                             <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu">
-                                    <t t-set="submenu_type" t-value="'breadcrumb'"/>
+                                    <t t-set="item_class" t-value="'breadcrumb-item'"/>
+                                    <t t-set="link_class" t-value="None"/>
                                 </t>
                             </t>
                         </ol>
@@ -318,7 +319,7 @@
                 <div class="col-lg-8">
                     <div class="oe_structure">
                         <section>
-                            <h3 class="page-header mt16">
+                            <h3 class="o_page_header mt16">
                                 Introduction
                             </h3>
                             <p>
@@ -332,7 +333,7 @@
                             </p>
                         </section>
                         <section>
-                            <h3 class="page-header">Application</h3>
+                            <h3 class="o_page_header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
 

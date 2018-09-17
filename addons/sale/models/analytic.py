@@ -14,7 +14,7 @@ class AccountAnalyticLine(models.Model):
         """
         return [('qty_delivered_method', '=', 'analytic')]
 
-    so_line = fields.Many2one('sale.order.line', string='Sales Order Line', domain=lambda self: self._default_sale_line_domain())
+    so_line = fields.Many2one('sale.order.line', string='Sales Order Item', domain=lambda self: self._default_sale_line_domain())
 
     @api.model
     def create(self, values):
@@ -108,7 +108,14 @@ class AccountAnalyticLine(models.Model):
                 continue
 
             if sale_order.state != 'sale':
-                raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
+                message_unconfirmed = _('The Sales Order %s linked to the Analytic Account %s must be validated before registering expenses.')
+                messages = {
+                    'draft': message_unconfirmed,
+                    'sent': message_unconfirmed,
+                    'done': _('The Sales Order %s linked to the Analytic Account %s is currently locked. You cannot register an expense on a locked Sales Order. Please create a new SO linked to this Analytic Account.'),
+                    'cancel': _('The Sales Order %s linked to the Analytic Account %s is cancelled. You cannot register an expense on a cancelled Sales Order.'),
+                }
+                raise UserError(messages[sale_order.state] % (sale_order.name, analytic_line.account_id.name))
 
             so_line = None
             price = analytic_line._sale_get_invoice_price(sale_order)

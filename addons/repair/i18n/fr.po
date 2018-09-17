@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 09:06+0000\n"
 "PO-Revision-Date: 2018-08-24 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,6 +81,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Bonjour ${object.partner_id.name},<br/>\n"
+"        Voici votre commande de réparation ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (référence: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Répondez à cet email pour toutes questions.\n"
+"        <br/><br/>\n"
+"        Merci,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -91,6 +111,8 @@ msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Cette opération annulera le processus de "
+"réparation, mais n'annulera pas sa facture. Voulez-vous continuer?</span>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -402,7 +424,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -542,7 +564,7 @@ msgstr "Créer une facture"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
@@ -602,7 +624,7 @@ msgstr "Pas de compte défini pour l'article \"%s\"."
 #: code:addons/repair/models/repair.py:658
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Pas de liste de prix trouvée"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:355
@@ -630,7 +652,7 @@ msgstr "Nombre d'actions"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
@@ -640,7 +662,7 @@ msgstr "Nombre de messages exigeant une action"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter

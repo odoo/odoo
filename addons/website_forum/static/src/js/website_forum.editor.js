@@ -40,7 +40,7 @@ WebsiteNewMenu.include({
                         '    <input type="checkbox" required="required"/> '+
                         '</label>'+
                     '</div>');
-                $add.find('label').append(_t("Add page in menu"));
+                $add.find('label').append(_t("Add to menu"));
                 $group.after($add);
             }
         }).then(function (forum_name, field, $dialog) {

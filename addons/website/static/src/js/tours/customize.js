@@ -11,7 +11,7 @@ tour.register('theme_customize', {
     url: '/',
     wait_for: base.ready(),
 }, [{
-    trigger: 'button.o_theme_customize_color_user_primary',
+    trigger: 'button.o_theme_customize_color_primary, button.o_theme_customize_color_alpha',
     content: _t("Click here to choose your main branding color.<br/>It will recompute the palette with suggested matching colors."),
     position: 'bottom',
 }]);

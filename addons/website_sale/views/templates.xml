@@ -212,7 +212,7 @@
                             </table>
                             <t t-if="not bins">
                                 <div class="text-center text-muted oe_product">
-                                    <h3 class="css_editable_display">No product defined.</h3>
+                                    <h3 class="css_editable_display mt8">No product defined.</h3>
                                     <t t-if="search">
                                         <p>
                                             No results found for "<strong t-esc='search'/>".
@@ -748,7 +748,7 @@
                                 <div class="col">
                                     <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="client_order_ref">Your Reference</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -756,7 +756,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="Give us your feedback">Give us your feedback</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -764,7 +764,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row form-field o_website_form_custom">
-                                            <div class="col-lg-3 col-md-4 text-right-not-xs">
+                                            <div class="col-lg-3 col-md-4 text-md-right">
                                                 <label class="col-form-label" for="a_document">A document to provide</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -930,7 +930,7 @@
                         </div>
                         <div class="col-12 col-xl-4">
                             <t t-call="website_sale.short_cart_summary"/>
-                            <div class="d-xl-none">
+                            <div class="d-xl-none mt8">
                                 <a role="button" href="/shop" class="btn btn-secondary mb32">
                                     <span class="fa fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
@@ -965,12 +965,12 @@
                                 <span class="h6" t-esc="line.name_short" />
                             </t>
                         </div>
-                        <small>Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" /></small>
+                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                     </div>
                 </div>
             </t>
             <div class="text-center">
-                <span class="h5">
+                <span class="h6">
                     <t t-call="website_sale.total">
                         <t t-set='hide_coupon'>True</t>
                     </t>
@@ -1054,7 +1054,7 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h3 class="page-header mt8">Billing Address</h3>
+                                    <h3 class="o_page_header mt8">Billing Address</h3>
                                 </div>
                                 <div class="col-lg-6 one_kanban">
                                     <t t-call="website_sale.address_kanban">
@@ -1067,7 +1067,7 @@
                             <t t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <h3 class="page-header mt16 mb4">Shipping Address</h3>
+                                        <h3 class="o_page_header mt16 mb4">Shipping Address</h3>
                                     </div>
                                 </div>
                                 <div class="row all_shipping">
@@ -1125,17 +1125,17 @@
             </form>
             <div t-attf-class="card #{selected and 'border_primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
-                    <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+                    <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" href="#" class="btn btn-link float-right p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='card-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
-                        <a role="button" class="btn btn-block btn-primary">
+                        <a role="button" href='#' class="btn btn-block btn-primary">
                             <i class='fa fa-check'></i> Ship to this address
                         </a>
                     </span>
                     <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
-                        <a role="button" class="btn btn-block btn-secondary">
+                        <a role="button" href='#' class="btn btn-block btn-secondary">
                             Select this address
                         </a>
                     </span>
@@ -1162,16 +1162,16 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="page-header mt8">Your Address
+                                    <h2 class="o_page_header mt8">Your Address
                                         <small> or </small>
                                         <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
-                                    <h2 class="page-header mt8">Your Address</h2>
+                                    <h2 class="o_page_header mt8">Your Address</h2>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
-                                    <h2 class="page-header mt8">Shipping Address </h2>
+                                    <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
@@ -1193,17 +1193,6 @@
                                             <label class="col-form-label" for="phone">Phone</label>
                                             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />
                                         </div>
-                                        <div class="w-100"/>
-                                        <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
-                                            <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
-                                                <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                                                <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
-                                            </div>
-                                            <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
-                                                <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                                                <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
-                                            </div>
-                                        </t>
                                         <div class="w-100"/>
                                         <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
                                             <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
@@ -1259,7 +1248,7 @@
                                             <div class="col-lg-12">
                                                 <div class="checkbox">
                                                   <label>
-                                                    <input type="checkbox" id='shipping_use_same'  name='use_same' value="1" checked='checked'/>Ship to the same address
+                                                    <input type="checkbox" id='shipping_use_same' class="mr8" name='use_same' value="1" checked='checked'/>Ship to the same address
                                                     <span class='ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
                                                     </label>
                                                 </div>
@@ -1293,6 +1282,21 @@
         </t>
     </template>
 
+    <template id="address_b2b" inherit_id="address" name="Show b2b fields" customize_show="True" active="True">
+        <xpath expr="//div[@id='div_phone']" position="after">
+            <div class="w-100"/>
+            <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
+                <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
+                    <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                </div>
+                <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
+                    <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
+                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                </div>
+            </t>
+        </xpath>
+    </template>
 
     <template id="payment" name="Payment">
         <t t-call="website.layout">
@@ -1409,7 +1413,7 @@
                     Your cart is empty!
                 </div>
                 <div class="toggle_summary_div d-none d-xl-block">
-                    <table class="table table-striped table-sm o_table_column_fit" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                    <table class="table table-striped table-sm w-xl-0" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                         <thead>
                             <tr>
                                 <th class="border-top-0 td-img">Product</th>
@@ -1532,19 +1536,19 @@
                   </tr>
                   <tr id="order_total_untaxed">
                       <td class="text-right noborder">Subtotal:</td>
-                      <td class="text-left-not-lg text-right-lg noborder" >
+                      <td class="text-xl-right noborder" >
                           <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total_taxes">
                       <td class="text-right noborder">Taxes:</td>
-                      <td class="text-left-not-lg text-right-lg  noborder">
+                      <td class="text-xl-right noborder">
                            <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
                       </td>
                   </tr>
                   <tr id="order_total">
                       <td class="text-right"><strong>Total:</strong></td>
-                      <td class="text-left-not-lg text-right-lg">
+                      <td class="text-xl-right">
                           <strong t-field="website_sale_order.amount_total"
                               t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                       </td>
@@ -1556,7 +1560,7 @@
     <template id="reduction_code" inherit_id="website_sale.total" active="True" customize_show="True" name="Promo Code">
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_coupon">
-                <td colspan="3" class='noborder text-right-lg text-center'>
+                <td colspan="3" class="text-center text-xl-right noborder">
                 <span class=''>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
                     <t t-if="not force_coupon">

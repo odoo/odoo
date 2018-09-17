@@ -300,27 +300,31 @@ class IrActionsReport(models.Model):
         bodies = []
         res_ids = []
 
+        body_parent = root.xpath('//main')
         # Retrieve headers
         for node in root.xpath(match_klass.format('header')):
+            body_parent = node.getparent()
+            node.getparent().remove(node)
             header_node.append(node)
 
         # Retrieve footers
         for node in root.xpath(match_klass.format('footer')):
+            body_parent = node.getparent()
+            node.getparent().remove(node)
             footer_node.append(node)
 
         # Retrieve bodies
-        for node in root.xpath(match_klass.format('article')):
-            if node.get('data-oe-model') == self.model:
-                body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
-                bodies.append(body)
-                res_ids.append(int(node.get('data-oe-id', False)))
+        for node in root.xpath(match_klass.format('page')):
+            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            bodies.append(body)
+            if node.get('data-model') == self.model:
+                res_ids.append(int(node.get('data-id', 0)))
             else:
-                _logger.warning("The report's template '%s' does not contains the attributes 'data-oe-model' and  'data-oe-id' on the container (with class 'article')", self.name)
-                raise UserError(_("The report's template is wrong, please contact your administrator"))
+                res_ids.append(None)
 
         if not bodies:
-            _logger.warning("The report's template '%s' does not contains the container with the class 'article'", self.name)
-            raise UserError(_("The report's template is wrong, please contact your administrator"))
+            body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
+            bodies.append(body)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
@@ -659,6 +663,10 @@ class IrActionsReport(models.Model):
         html = html.decode('utf-8')
 
         bodies, html_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+
+        if self.attachment and set(res_ids) != set(html_ids):
+            raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname.") %  self.name)
 
         pdf_content = self._run_wkhtmltopdf(
             bodies,

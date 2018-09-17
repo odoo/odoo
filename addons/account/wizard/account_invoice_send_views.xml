@@ -11,7 +11,6 @@
                     <!-- truly invisible fields for control and options -->
                     <field name="composition_mode" invisible="1"/>
                     <field name="composer_id" invisible="1"/>
-                    <field name="printed" invisible="1"/>
                     <field name="invoice_ids" invisible="1"/>
                     <div name="option_print">
                         <field name="is_print" />
@@ -55,18 +54,17 @@
 
                     <footer>
                         <button string="Send &amp; Print"
-                            attrs="{'invisible': ['|', '|', ('printed', '=', True), '|', ('is_email', '=', False), ('is_print', '=', False)]}"
+                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}"
                             name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
                         <button string="Send"
                             attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}"
                             name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
                         <button string="Print"
-                            attrs="{'invisible': ['|', '|', ('printed', '=', True), ('is_print', '=', False), ('is_email', '=', True)]}"
+                            attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}"
                             name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
-                        <button string="Done" attrs="{'invisible': [('printed', '=', False)]}" special="cancel" class="btn-primary"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" />
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
-                            attrs="{'invisible': ['|', '|', '|', ('composition_mode', '=', 'mass_mail'), ('printed', '=', True), ('is_email', '=', False)]}"
+                            attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}"
                             class="pull-right btn-secondary" help="Save as a new template" />
                     </footer>
                 </form>

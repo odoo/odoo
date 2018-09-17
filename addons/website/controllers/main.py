@@ -213,7 +213,7 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route(['/website/pages', '/website/pages/page/<int:page>'], type='http', auth="user", website=True)
-    def pages_management(self, page=1, sortby='name', search='', **kw):
+    def pages_management(self, page=1, sortby='url', search='', **kw):
         # only website_designer should access the page Management
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
@@ -224,14 +224,14 @@ class Website(Home):
             'name': {'label': _('Sort by Name'), 'order': 'name'},
         }
         # default sortby order
-        sort_order = searchbar_sortings.get(sortby, 'name')['order'] + ', website_id desc'
+        sort_order = searchbar_sortings.get(sortby, 'url')['order'] + ', website_id desc, id'
 
         domain = request.website.website_domain()
         if search:
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
         pages = Page.search(domain, order=sort_order)
-        if sortby != 'url':
+        if sortby != 'url' or not request.env.user.has_group('website.group_multi_website'):
             pages = pages.filtered(pages._is_most_specific_page)
         pages_count = len(pages)
 
@@ -343,7 +343,7 @@ class Website(Home):
                 record_id = View.search([
                     ("website_id", "=", request.website.id),
                     ("key", "=", xml_id),
-                ]).id or request.env.ref(xml_id).id
+                ], limit=1).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
             ids.append(record_id)
@@ -354,26 +354,26 @@ class Website(Home):
         enable = []
         disable = []
         ids = self.get_view_ids(xml_ids)
-        for view in request.env['ir.ui.view'].with_context(active_test=True).browse(ids):
+        for view in request.env['ir.ui.view'].browse(ids):
             if view.active:
-                enable.append(view.xml_id)
+                enable.append(view.key)
             else:
-                disable.append(view.xml_id)
+                disable.append(view.key)
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable, disable, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
-        def set_active(ids, active):
-            if ids:
-                real_ids = self.get_view_ids(ids)
-                request.env['ir.ui.view'].with_context(active_test=True).browse(real_ids).write({'active': active})
+        def set_active(xml_ids, active):
+            if xml_ids:
+                real_ids = self.get_view_ids(xml_ids)
+                request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
         set_active(disable, False)
         set_active(enable, True)
 
         if get_bundle:
-            context = dict(request.context, active_test=True)
+            context = dict(request.context)
             return {
                 'web.assets_common': request.env["ir.qweb"]._get_asset('web.assets_common', options=context),
                 'web.assets_frontend': request.env["ir.qweb"]._get_asset('web.assets_frontend', options=context),

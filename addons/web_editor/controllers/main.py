@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import time
+import uuid
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree, html
@@ -412,6 +413,7 @@ class Web_Editor(http.Controller):
             view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
             IrUiView.create(dict(
                 name = custom_url,
+                key='web_editor.scss_%s' % str(uuid.uuid4())[:6],
                 mode = "extension",
                 inherit_id = view_to_xpath.id,
                 arch = """

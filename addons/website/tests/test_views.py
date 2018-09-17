@@ -140,7 +140,6 @@ class TestViewSaving(common.TransactionCase):
 
     def test_save(self):
         Company = self.env['res.company']
-        View = self.env['ir.ui.view']
 
         # create an xmlid for the view
         imd = self.env['ir.model.data'].create({
@@ -225,19 +224,18 @@ class TestViewSaving(common.TransactionCase):
         node = html.tostring(h.SPAN(
             "Acme Corporation",
             attrs(model='res.company', id=company_id, field="name", expression='bob', type='char')),
-        encoding='unicode')
+            encoding='unicode')
         View = self.env['ir.ui.view']
         View.browse(company_id).save(value=node)
         self.assertEqual(company.name, "Acme Corporation")
 
     def test_field_tail(self):
-        View = self.env['ir.ui.view']
         replacement = ET.tostring(
             h.LI(h.SPAN("+12 3456789", attrs(
                         model='res.company', id=1, type='char',
                         field='phone', expression="edmund")),
                  "whop whop"
-        ), encoding="utf-8")
+                 ), encoding="utf-8")
         self.view_id.save(value=replacement, xpath='/div/div[2]/ul/li[3]')
 
         self.eq(
@@ -259,80 +257,131 @@ class TestViewSaving(common.TransactionCase):
             )
         )
 
-    def test_cow_leaf(self):
+
+class TestCowViewSaving(common.TransactionCase):
+    def setUp(self):
+        super(TestCowViewSaving, self).setUp()
         View = self.env['ir.ui.view']
 
-        base_view = View.create({
+        self.base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>base content</div>',
+            'key': 'website.base_view',
         }).with_context(load_all_views=True)
 
-        inherit_view = View.create({
+        self.inherit_view = View.create({
             'name': 'Extension',
             'mode': 'extension',
-            'inherit_id': base_view.id,
-            'arch': '<div position="replace"><div>extended content</div></div>',
+            'inherit_id': self.base_view.id,
+            'arch': '<div position="inside">, extended content</div>',
+            'key': 'website.extension_view',
         })
 
-        # edit on backend, regular write
-        inherit_view.write({'arch': '<div position="replace"><div>modified content</div></div>'})
-        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
-        self.assertEqual(View.search_count([('name', '=', 'Extension')]), 1)
+    def test_cow_on_base_after_extension(self):
+        View = self.env['ir.ui.view']
+        self.inherit_view.with_context(website_id=1).write({'name': 'Extension Specific'})
+        v1 = self.base_view
+        v2 = self.inherit_view
+        v3 = View.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
+        v4 = self.inherit_view.copy({'name': 'Second Extension'})
+        v5 = self.inherit_view.copy({'name': 'Third Extension (Specific)'})
+        v5.write({'website_id': 1})
 
-        arch = base_view.read_combined(['arch'])['arch']
+        # id | name                        | website_id | inherit  | key
+        # ------------------------------------------------------------------------
+        # 1  | Base                        |     /      |     /    |  website.base_view
+        # 2  | Extension                   |     /      |     1    |  website.extension_view
+        # 3  | Extension Specific          |     1      |     1    |  website.extension_view
+        # 4  | Second Extension            |     /      |     1    |  website.extension_view_a5f579d5 (generated hash)
+        # 5  | Third Extension (Specific)  |     1      |     1    |  website.extension_view_5gr87e6c (another generated hash)
+
+        self.assertEqual(v2.key == v3.key, True, "Making specific a generic inherited view should copy it's key (just change the website_id)")
+        self.assertEqual(v3.key != v4.key != v5.key, True, "Copying a view should generate a new key for the new view (not the case when triggering COW)")
+        self.assertEqual('website.extension_view' in v3.key and 'website.extension_view' in v4.key and 'website.extension_view' in v5.key, True, "The copied views should have the key from the view it was copied from but with an unique suffix")
+
+        total_views = View.search_count([])
+        v1.with_context(website_id=1).write({'name': 'Base Specific'})
+
+        # id | name                        | website_id | inherit  | key
+        # ------------------------------------------------------------------------
+        # 1  | Base                        |     /      |     /    |  website.base_view
+        # 2  | Extension                   |     /      |     1    |  website.extension_view
+        # 3 - DELETED
+        # 4  | Second Extension            |     /      |     1    |  website.extension_view_a5f579d5
+        # 5 - DELETED
+        # 6  | Base Specific               |     1      |     /    |  website.base_view
+        # 7  | Extension Specific          |     1      |     6    |  website.extension_view
+        # 8  | Second Extension            |     1      |     6    |  website.extension_view_a5f579d5
+        # 9  | Third Extension (Specific)  |     1      |     6    |  website.extension_view_5gr87e6c
+
+        v6 = View.search([('website_id', '=', 1), ('name', '=', 'Base Specific')])
+        v7 = View.search([('website_id', '=', 1), ('name', '=', 'Extension Specific')])
+        v8 = View.search([('website_id', '=', 1), ('name', '=', 'Second Extension')])
+        v9 = View.search([('website_id', '=', 1), ('name', '=', 'Third Extension (Specific)')])
+
+        self.assertEqual(total_views + 4 - 2, View.search_count([]), "It should have duplicated the view tree with a website_id, taking only most specific (only specific `b` key), and removing website_specific from generic tree")
+        self.assertEqual(len((v3 + v5).exists()), 0, "v3 and v5 should have been deleted as they were already specific and copied to the new specific base")
+        # Check generic tree
+        self.assertEqual((v1 + v2 + v4).mapped('website_id').ids, [])
+        self.assertEqual((v2 + v4).mapped('inherit_id'), v1)
+        # Check specific tree
+        self.assertEqual((v6 + v7 + v8 + v9).mapped('website_id').ids, [1])
+        self.assertEqual((v7 + v8 + v9).mapped('inherit_id'), v6)
+        # Check key
+        self.assertEqual(v6.key == v1.key, True)
+        self.assertEqual(v7.key == v2.key, True)
+        self.assertEqual(v4.key == v8.key, True)
+        self.assertEqual(View.search_count([('key', '=', v9.key)]), 1)
+
+    def test_cow_leaf(self):
+        View = self.env['ir.ui.view']
+
+        # edit on backend, regular write
+        self.inherit_view.write({'arch': '<div position="replace"><div>modified content</div></div>'})
+        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
+        self.assertEqual(View.search_count([('key', '=', 'website.extension_view')]), 1)
+
+        arch = self.base_view.read_combined(['arch'])['arch']
         self.assertEqual(arch, '<div>modified content</div>')
 
         # edit on frontend, copy just the leaf
-        inherit_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
-        inherit_views = View.search([('name', '=', 'Extension')])
-        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
+        self.inherit_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
+        inherit_views = View.search([('key', '=', 'website.extension_view')])
+        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
         self.assertEqual(len(inherit_views), 2)
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
         # read in backend should be unaffected
-        arch = base_view.read_combined(['arch'])['arch']
+        arch = self.base_view.read_combined(['arch'])['arch']
         self.assertEqual(arch, '<div>modified content</div>')
         # read on website should reflect change
-        arch = base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
         self.assertEqual(arch, '<div>website 1 content</div>')
 
         # website-specific inactive view should take preference over active generic one when viewing the website
         # this is necessary to make customize_show=True templates work correctly
         inherit_views.filtered(lambda v: v.website_id.id == 1).write({'active': False})
-        arch = base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
         self.assertEqual(arch, '<div>base content</div>')
 
     def test_cow_root(self):
         View = self.env['ir.ui.view']
 
-        base_view = View.create({
-            'name': 'Base',
-            'type': 'qweb',
-            'arch': '<div>content</div>',
-        })
-
-        View.create({
-            'name': 'Extension',
-            'mode': 'extension',
-            'inherit_id': base_view.id,
-            'arch': '<div position="inside">, extended content</div>',
-        })
-
         # edit on backend, regular write
-        base_view.write({'arch': '<div>modified base content</div>'})
-        self.assertEqual(View.search_count([('name', '=', 'Base')]), 1)
-        self.assertEqual(View.search_count([('name', '=', 'Extension')]), 1)
+        self.base_view.write({'arch': '<div>modified base content</div>'})
+        self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
+        self.assertEqual(View.search_count([('key', '=', 'website.extension_view')]), 1)
 
         # edit on frontend, copy the entire tree
-        base_view.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})
+        self.base_view.with_context(website_id=1).write({'arch': '<div>website 1 content</div>'})
 
-        generic_base_view = View.search([('name', '=', 'Base'), ('website_id', '=', False)])
-        website_specific_base_view = View.search([('name', '=', 'Base'), ('website_id', '=', 1)])
+        generic_base_view = View.search([('key', '=', 'website.base_view'), ('website_id', '=', False)])
+        website_specific_base_view = View.search([('key', '=', 'website.base_view'), ('website_id', '=', 1)])
         self.assertEqual(len(generic_base_view), 1)
         self.assertEqual(len(website_specific_base_view), 1)
 
-        inherit_views = View.search([('name', '=', 'Extension')])
+        inherit_views = View.search([('key', '=', 'website.extension_view')])
         self.assertEqual(len(inherit_views), 2)
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
@@ -341,3 +390,133 @@ class TestViewSaving(common.TransactionCase):
 
         arch = website_specific_base_view.with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
         self.assertEqual(arch, '<div>website 1 content, extended content</div>')
+
+    # # As there is a new SQL constraint that prevent QWeb views to have an empty `key`, this test won't work
+    # def test_cow_view_without_key(self):
+    #     # Remove key for this test
+    #     self.base_view.key = False
+    #
+    #     View = self.env['ir.ui.view']
+    #
+    #     # edit on backend, regular write
+    #     self.base_view.write({'arch': '<div>modified base content</div>'})
+    #     self.assertEqual(self.base_view.key, False, "Writing on a keyless view should not set a key on it if there is no website in context")
+    #
+    #     # edit on frontend, copy just the leaf
+    #     self.base_view.with_context(website_id=1).write({'arch': '<div position="replace"><div>website 1 content</div></div>'})
+    #     self.assertEqual('website.key_' in self.base_view.key, True, "Writing on a keyless view should set a key on it if there is a website in context")
+    #     total_views_with_key = View.search_count([('key', '=', self.base_view.key)])
+    #     self.assertEqual(total_views_with_key, 2, "It should have set the key on generic view then copy to specific view (with they key)")
+
+    def test_cow_generic_view_with_already_existing_specific(self):
+        """ Writing on a generic view should check if a website specific view already exists
+            (The flow of this test will happen when editing a generic view in the front end and changing more than one oe_structure)
+        """
+        # 1. Test with calling write directly
+        View = self.env['ir.ui.view']
+
+        base_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>content</div>',
+        })
+
+        total_views = View.search_count([])
+        base_view.with_context(website_id=1).write({'name': 'New Name'})  # This will not write on `base_view` but will copy it to a specific view on which the `name` change will be applied
+        base_view.with_context(website_id=1).write({'name': 'Another New Name'})
+        self.assertEqual(total_views + 1, View.search_count([]), "Second write should have wrote on the view copied during first write")
+
+        # 2. Test with calling save() from ir.ui.view
+        view_arch = '''<t name="Second View" t-name="website.second_view">
+                          <t t-call="website.layout">
+                            <div id="wrap">
+                              <div class="oe_structure"/>
+                              <div class="container">
+                                  <h1>Second View</h1>
+                              </div>
+                              <div class="oe_structure"/>
+                            </div>
+                          </t>
+                       </t>'''
+        second_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': view_arch,
+        })
+
+        total_views = View.search_count([])
+        second_view.with_context(website_id=1).save('<div class="oe_structure" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[1]" data-oe-field="arch" data-oe-model="ir.ui.view">First oe_structure</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[1]")
+        second_view.with_context(website_id=1).save('<div class="oe_structure" data-oe-id="%s" data-oe-xpath="/t[1]/t[1]/div[1]/div[3]" data-oe-field="arch" data-oe-model="ir.ui.view">Second oe_structure</div>' % second_view.id, "/t[1]/t[1]/div[1]/div[3]")
+        self.assertEqual(total_views + 1, View.search_count([]), "Second save should have wrote on the view copied during first save")
+
+        total_specific_view = View.search_count([('arch_db', 'like', 'First oe_structure'), ('arch_db', 'like', 'Second oe_structure')])
+        self.assertEqual(total_specific_view, 1, "both oe_structure should have been replaced on a created specific view")
+
+    def test_cow_complete_flow(self):
+        View = self.env['ir.ui.view']
+        total_views = View.search_count([])
+
+        self.base_view.write({'arch': '<div>Hi</div>'})
+        self.inherit_view.write({'arch': '<div position="inside"> World</div>'})
+
+        # id | name      | content | website_id | inherit  | key
+        # -------------------------------------------------------
+        # 1  | Base      |  Hi     |     /      |     /    |  website.base_view
+        # 2  | Extension |  World  |     /      |     1    |  website.extension_view
+
+        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual('Hi World' in arch, True)
+
+        self.base_view.write({'arch': '<div>Hello</div>'})
+
+        # id | name      | content | website_id | inherit  | key
+        # -------------------------------------------------------
+        # 1  | Base      |  Hello  |     /      |     /    |  website.base_view
+        # 2  | Extension |  World  |     /      |     1    |  website.extension_view
+
+        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual('Hello World' in arch, True)
+
+        self.base_view.with_context(website_id=1).write({'arch': '<div>Bye</div>'})
+
+        # id | name      | content | website_id | inherit  | key
+        # -------------------------------------------------------
+        # 1  | Base      |  Hello  |     /      |     /    |  website.base_view
+        # 3  | Base      |  Bye    |     1      |     /    |  website.base_view
+        # 2  | Extension |  World  |     /      |     1    |  website.extension_view
+        # 4  | Extension |  World  |     1      |     3    |  website.extension_view
+
+        base_specific = View.search([('key', '=', self.base_view.key), ('website_id', '=', 1)]).with_context(load_all_views=True)
+        extend_specific = View.search([('key', '=', self.inherit_view.key), ('website_id', '=', 1)])
+        self.assertEqual(total_views + 2, View.search_count([]), "Should have copied Base & Extension with a website_id")
+        self.assertEqual(self.base_view.key, base_specific.key)
+        self.assertEqual(self.inherit_view.key, extend_specific.key)
+
+        extend_specific.write({'arch': '<div position="inside"> All</div>'})
+
+        # id | name      | content | website_id | inherit  | key
+        # -------------------------------------------------------
+        # 1  | Base      |  Hello  |     /      |     /    |  website.base_view
+        # 3  | Base      |  Bye    |     1      |     /    |  website.base_view
+        # 2  | Extension |  World  |     /      |     1    |  website.extension_view
+        # 4  | Extension |  All    |     1      |     3    |  website.extension_view
+
+        arch = base_specific.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual('Bye All' in arch, True)
+
+        self.inherit_view.with_context(website_id=1).write({'arch': '<div position="inside"> Nobody</div>'})
+
+        # id | name      | content | website_id | inherit  | key
+        # -------------------------------------------------------
+        # 1  | Base      |  Hello  |     /      |     /    |  website.base_view
+        # 3  | Base      |  Bye    |     1      |     /    |  website.base_view
+        # 2  | Extension |  World  |     /      |     1    |  website.extension_view
+        # 4  | Extension |  Nobody |     1      |     3    |  website.extension_view
+
+        arch = base_specific.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual('Bye Nobody' in arch, True, "Write on generic `inherit_view` should have been diverted to already existing specific view")
+
+        base_arch = self.base_view.read_combined(['arch'])['arch']
+        base_arch_w1 = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        self.assertEqual('Hello World' in base_arch, True)
+        self.assertEqual(base_arch, base_arch_w1, "Reading a top level view with or without a website_id in the context should render that exact view..")  # ..even if there is a specific view for that one, as read_combined is supposed to render specific inherited view over generic but not specific top level instead of generic top level

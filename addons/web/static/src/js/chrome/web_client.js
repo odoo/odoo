@@ -47,11 +47,9 @@ return AbstractWebClient.extend({
         // Start the menu once both systray and user menus are rendered
         // to prevent overflows while loading
         return $.when(systray_menu_loaded, user_menu_loaded).then(function() {
-            self.menu.start();
             self.bind_hashchange();
-            setTimeout(function () {
-                self.menu.$el.removeClass('d-none');
-            }, 200)
+            self.menu.$el.removeClass('d-none');
+            self.menu.start();
         });
 
     },
@@ -109,7 +107,8 @@ return AbstractWebClient.extend({
                         args: [[session.uid], ['action_id']],
                     })
                     .done(function(result) {
-                        if (didHashChanged) {
+                        var amDef = self.action_manager.dp.current_def;
+                        if (didHashChanged || (amDef && amDef.state() === 'pending')) {
                             return;
                         }
                         var data = result[0];

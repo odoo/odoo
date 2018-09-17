@@ -21,6 +21,7 @@ class TestPage(common.TransactionCase):
             'mode': 'extension',
             'inherit_id': self.base_view.id,
             'arch': '<div position="inside">, extended content</div>',
+            'key': 'test.extension_view',
         })
 
         self.page_1 = Page.create({

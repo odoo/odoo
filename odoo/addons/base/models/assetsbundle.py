@@ -449,6 +449,7 @@ class AssetsBundle(object):
 
             if not self.css_errors and old_attachments:
                 old_attachments.unlink()
+                old_attachments = None
 
             fragments = self.rx_css_split.split(compiled)
             at_rules = fragments.pop(0)
@@ -515,6 +516,7 @@ class AssetsBundle(object):
         compiled = re.sub(r'(appearance: (\w+);)', r'-webkit-appearance: \2; -moz-appearance: \2; \1', compiled);
 
         compiled = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2box\3; display: -webkit-\2flex\3; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
+        compiled = re.sub(r'(justify-content: flex-(\w+)((?: ?!important)?);)', r'-webkit-box-pack: \2\3; \1', compiled)  # For wkhtmltopdf
         compiled = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', compiled) # For PhantomJS tests
         compiled = re.sub(r'(flex: ((\d)+ \d+ (?:\d+|auto));)', r'-webkit-box-flex: \3; -webkit-flex: \2; \1', compiled)  # For PhantomJS tests and wkhtmltopdf
 
@@ -535,7 +537,7 @@ class AssetsBundle(object):
                     ['rtlcss', '--version'], stdout=PIPE, stderr=PIPE
                 )
             except (OSError, IOError):
-                _logger.warning('You need rtlcss to convert css file to right to left compatiblity.')
+                _logger.warning('You need https://rtlcss.com/ to convert css file to right to left compatiblity. Use: npm install -g rtlcss')
                 return source
 
             msg = "Could not execute command %r" % cmd[0]

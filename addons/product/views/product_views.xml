@@ -65,24 +65,26 @@
                                 <field name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
                         </page>
-                        <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales" invisible="1">
+                        <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                             <group name="sale">
-                                <div name="pricelist_item" groups="product.group_product_pricelist">
-                                    <separator string="Pricing"/>
-                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
-                                        <tree string="Pricelist Items" editable="bottom">
-                                            <field name="pricelist_id" string="Pricelist" required='1'/>
-                                            <field name="fixed_price" string="Price" required='1'/>
-                                            <field name="min_quantity"/>
-                                            <field name="date_start"/>
-                                            <field name="date_end"/>
-                                            <field name="applied_on" invisible="1"/>
-                                        </tree>
-                                    </field>
-                                </div>
+                                <group groups="product.group_product_pricelist" name="pricelists">
+                                    <div name="pricelist_item" groups="product.group_product_pricelist">
+                                        <separator string="Pricing"/>
+                                        <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
+                                            <tree string="Pricelist Items" editable="bottom">
+                                                <field name="pricelist_id" string="Pricelist" required='1'/>
+                                                <field name="fixed_price" string="Price" required='1'/>
+                                                <field name="min_quantity"/>
+                                                <field name="date_start"/>
+                                                <field name="date_end"/>
+                                                <field name="applied_on" invisible="1"/>
+                                            </tree>
+                                        </field>
+                                    </div>
+                                </group>
                                 <group name="email_template_and_project" invisible="1"/>
                             </group>
-                            <group string="Description for Customers" name="description">
+                            <group string="Description for Customers" name="description" invisible="1">
                                 <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders &amp; invoices."/>
                             </group>
                         </page>
@@ -456,7 +458,7 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Product Categories">
-                    <field name="display_name"/>
+                    <field name="display_name" string="Product Category"/>
                 </tree>
             </field>
         </record>
@@ -479,6 +481,7 @@
                     <field name="product_id"/>
                     <field name="name" string="Packaging"/>
                     <field name="qty"/>
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -510,7 +513,11 @@
                                 <field name="product_id"  required='True' attrs="{'readonly': [('id', '!=', False)]}"/>
                             </group>
                             <group name="qty">
-                                <field name="qty"/>
+                                <label for="qty" string="Contained quantity"/>
+                                <div class="o_row">
+                                    <field name="qty"/>
+                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                </div>
                                 <field name="barcode"/>
                             </group>
                         </group>

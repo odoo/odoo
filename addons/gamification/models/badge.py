@@ -22,8 +22,6 @@ class BadgeUser(models.Model):
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge")
     comment = fields.Text('Comment')
     badge_name = fields.Char(related='badge_id.name', string="Badge Name")
-    create_date = fields.Datetime('Created', readonly=True)
-    create_uid = fields.Many2one('res.users', string='Creator', readonly=True)
 
     def _send_badge(self):
         """Send a notification to a user for receiving a badge

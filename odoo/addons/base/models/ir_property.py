@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from operator import itemgetter
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
+from odoo.tools import pycompat, ormcache
 
 TYPE2FIELD = {
     'char': 'value_text',
@@ -87,12 +85,43 @@ class Property(models.Model):
 
     @api.multi
     def write(self, values):
-        return super(Property, self).write(self._update_values(values))
+        # if any of the records we're writing on has a res_id=False *or*
+        # we're writing a res_id=False on any record
+        default_set = False
+        if self._ids:
+            self.env.cr.execute(
+                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s AND res_id IS NULL)', [self._ids])
+            default_set = self.env.cr.rowcount == 1 or any(
+                v.get('res_id') is False
+                for v in values
+            )
+        r = super(Property, self).write(self._update_values(values))
+        if default_set:
+            self.clear_caches()
+        return r
 
     @api.model_create_multi
     def create(self, vals_list):
         vals_list = [self._update_values(vals) for vals in vals_list]
-        return super(Property, self).create(vals_list)
+        created_default = any(not v.get('res_id') for v in vals_list)
+        r = super(Property, self).create(vals_list)
+        if created_default:
+            self.clear_caches()
+        return r
+
+    @api.multi
+    def unlink(self):
+        default_deleted = False
+        if self._ids:
+            self.env.cr.execute(
+                'SELECT EXISTS (SELECT 1 FROM ir_property WHERE id in %s)',
+                [self._ids]
+            )
+            default_deleted = self.env.cr.rowcount == 1
+        r = super().unlink()
+        if default_deleted:
+            self.clear_caches()
+        return r
 
     @api.multi
     def get_by_record(self):
@@ -122,14 +151,39 @@ class Property(models.Model):
 
     @api.model
     def get(self, name, model, res_id=False):
+        if not res_id:
+            t, v = self._get_default_property(name, model)
+            if not v or t != 'many2one':
+                return v
+            return self.env[v[0]].browse(v[1])
+
+        p = self._get_property(name, model, res_id=res_id)
+        if p:
+            return p.get_by_record()
+        return False
+
+    # only cache Property.get(res_id=False) as that's
+    # sub-optimally, we can only call _company_default_get without a field
+    # unless we want to create a more complete helper which does the
+    # returning-a-company-id-from-a-model-and-name
+    COMPANY_KEY = "self.env.context.get('force_company') or self.env['res.company']._company_default_get(model).id"
+    @ormcache(COMPANY_KEY, 'name', 'model')
+    def _get_default_property(self, name, model):
+        prop = self._get_property(name, model, res_id=False)
+        if not prop:
+            return None, False
+        v = prop.get_by_record()
+        if prop.type != 'many2one':
+            return prop.type, v
+        return 'many2one', v and (v._name, v.id)
+
+    def _get_property(self, name, model, res_id):
         domain = self._get_domain(name, model)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
             #make the search with company_id asc to make sure that properties specific to a company are given first
-            prop = self.search(domain, limit=1, order='company_id')
-            if prop:
-                return prop.get_by_record()
-        return False
+            return self.search(domain, limit=1, order='company_id')
+        return self.browse(())
 
     def _get_domain(self, prop_name, model):
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (prop_name, model))
@@ -170,7 +224,6 @@ class Property(models.Model):
         default_value = result.pop(False, False)
         for id in ids:
             result.setdefault(id, default_value)
-
         return result
 
     @api.model

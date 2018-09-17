@@ -53,7 +53,8 @@ class MailBlackList(models.Model):
         if len(record) > 0:
             record.write({'active': False})
         else:
-            raise UserError(_('This email does not belong to the blacklist.'))
+            record = record.create({'email': email, 'active': False})
+        return record
 
 
 class MailBlackListMixin(models.AbstractModel):

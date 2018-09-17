@@ -876,7 +876,7 @@
                                 <field name="is_tax_price_included" invisible="1"/>
                                 <field name="tax_amount_type" invisible="1"/>
                                 <field name="force_tax_included"
-                                       attrs="{'invisible': ['|', ('tax_id', '=', None), ('tax_amount_type', '=', 'group')], 'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': ['|', ('tax_id', '=', False), ('tax_amount_type', '=', 'group')], 'readonly': [('is_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -907,7 +907,7 @@
                                 <field name="is_second_tax_price_included" invisible="1"/>
                                 <field name="second_tax_amount_type" invisible="1"/>
                                 <field name="force_second_tax_included"
-                                       attrs="{'invisible': ['|', ('second_tax_id', '=', None), ('second_tax_amount_type', '=', 'group')], 'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
+                                       attrs="{'invisible': ['|', ('second_tax_id', '=', False), ('second_tax_amount_type', '=', 'group')], 'readonly': [('is_second_tax_price_included', '=', True)]}" force_save="1"/>
                                 <field name="second_analytic_account_id" string="Analytic Account" groups="analytic.group_analytic_accounting"/>
                                 <field name="second_analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                             </group>

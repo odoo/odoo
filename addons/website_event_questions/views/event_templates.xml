@@ -32,7 +32,7 @@
         <!-- Generic questions -->
         <xpath expr="//*[hasclass('modal-body')]/div/t[last()]" position="after">
             <t t-if="event.general_question_ids">
-                <h4 class="page-header mt8"><strong>Questions</strong></h4>
+                <h4 class="o_page_header mt8"><strong>Questions</strong></h4>
                 <div>
                     <div t-foreach='event.general_question_ids' t-as='question'>
                         <div class="row mb4">

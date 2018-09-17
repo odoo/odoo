@@ -82,6 +82,7 @@ class TestTimesheet(TestCommonTimesheet):
     def test_log_timesheet(self):
         """ Test when log timesheet : check analytic account, user and employee are correctly set. """
         Timesheet = self.env['account.analytic.line']
+        timesheet_uom = self.project_customer.analytic_account_id.company_id.project_time_mode_id
         # employee 1 log some timesheet on task 1
         timesheet1 = Timesheet.sudo(self.user_employee.id).create({
             'project_id': self.project_customer.id,
@@ -92,6 +93,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEquals(timesheet1.account_id, self.project_customer.analytic_account_id, 'Analytic account should be the same as the project')
         self.assertEquals(timesheet1.employee_id, self.empl_employee, 'Employee should be the one of the current user')
         self.assertEquals(timesheet1.partner_id, self.task1.partner_id, 'Customer of task should be the same of the one set on new timesheet')
+        self.assertEquals(timesheet1.product_uom_id, timesheet_uom, "The UoM of the timesheet should be the one set on the company of the analytic account.")
 
         # employee 1 cannot log timesheet for employee 2
         with self.assertRaises(AccessError):
@@ -113,6 +115,7 @@ class TestTimesheet(TestCommonTimesheet):
         })
         timesheet3._onchange_employee_id()
         self.assertEquals(timesheet3.user_id, self.user_employee2, 'Timesheet user should be the one linked to the given employee')
+        self.assertEquals(timesheet3.product_uom_id, timesheet_uom, "The UoM of the timesheet 3 should be the one set on the company of the analytic account.")
 
         # employee 1 log some timesheet on project (no task)
         timesheet4 = Timesheet.sudo(self.user_employee.id).create({

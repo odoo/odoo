@@ -113,6 +113,23 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot rendering with widget', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners">' +
+                        '<field name="foo" type="measure" widget="float_time"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32:00)').length, 1,
+                    "should contain a pivot cell with the sum of all records");
+        pivot.destroy();
+    });
+
     QUnit.test('pivot view without "string" attribute', function (assert) {
         assert.expect(1);
 
@@ -1225,8 +1242,8 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('rendering of pivot view with comparison active', function (assert) {
-        assert.expect(1);
+    QUnit.test('rendering of pivot view with comparison', function (assert) {
+        assert.expect(91);
 
         this.data.partner.records[0].date = '2016-12-15';
         this.data.partner.records[1].date = '2016-12-17';
@@ -1243,6 +1260,15 @@ QUnit.module('Views', {
 
         var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
 
+        var results, i, length;
+
+
+        function checkCellValues (results) {
+            length = results.length;
+            for (i = 0; i < length; i++) {
+                assert.strictEqual($('.o_pivot .o_pivot_cell_value div').eq(i).text().trim(), results.shift());
+            }
+        }
 
         // create an action manager to test the interactions with the search view
         var actionManager = createActionManager({
@@ -1260,14 +1286,160 @@ QUnit.module('Views', {
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'pivot']],
+            flags: {
+                pivot: {
+                    additionalMeasures: ['product_id'],
+                }
+            }
         });
 
+
+        // with no data
+
         $('.o_time_range_menu_button').click();
-        $('.o_time_range_menu .custom-control-label').click();
+        $('.o_time_range_menu .o_comparison_checkbox').click();
+        $('.o_time_range_selector').val('today');
         $('.o_time_range_menu .o_apply_range').click();
 
-        // Test to modify and extend
         assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1);
+
+        // with data, no row groupby
+        $('.o_time_range_menu_button').click();
+        $('.o_time_range_selector').val('this_month');
+        $('.o_time_range_menu .o_apply_range').click();
+        results = [
+            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%"
+        ];
+        checkCellValues(results);
+
+        // with data, with row groupby
+
+        $('.o_pivot .o_pivot_header_cell_closed').eq(2).click();
+        $('.o_pivot .o_field_selection a[data-field="product_id"]').click();
+        results = [
+            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%" ,
+            "12", "0", "100%",                     "12", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "19", "-100%", "1" , "19" , "-94.74%"
+        ];
+        checkCellValues(results);
+
+        $('.o_control_panel button.btn-primary').eq(0).click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="foo"').click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"').click();
+        results = [
+            "2", "0", "100%", "0", "1", "-100%", "2", "1", "100%" ,
+            "1", "0", "100%",                     "1", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "1", "-100%", "1" , "1" , "100%"
+        ];
+        checkCellValues(results);
+
+        $('.o_control_panel button.btn-primary').eq(0).click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="__count"').click();
+        $('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"').click();
+        results = [
+            "2", "0", "100%", "0", "2", "-100%", "2", "2", "0%" ,
+            "1", "0", "100%",                     "1", "0" , "100%"    ,
+            "1" , "0", "100%", "0", "2", "-100%", "1" , "2" , "-50%"
+        ];
+        checkCellValues(results);
+
+        $('.o_pivot .o_pivot_header_cell_opened').eq(0).click();
+        results = [
+            "2", "2", "0%"     ,
+            "1", "0", "100%"   ,
+            "1", "2", "-50%"
+        ];
+        checkCellValues(results);
+
+        unpatchDate();
+        actionManager.destroy();
+    });
+
+   QUnit.test('export data in excel with comparison', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.records[0].date = '2016-12-15';
+        this.data.partner.records[1].date = '2016-12-17';
+        this.data.partner.records[2].date = '2016-11-22';
+        this.data.partner.records[3].date = '2016-11-03';
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        // create an action manager to test the interactions with the search view
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,pivot': '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+                'partner,false,search': '<search></search>',
+            },
+            session: {
+                get_file: function (args) {
+                    var data = JSON.parse(args.data.data);
+                    _.each(data.headers, function (l) {
+                        assert.step(l.map(function (o) {return o.title;}));
+                    });
+                    assert.step(data.measure_row.map(function (o) {return o.measure;}));
+                    assert.step(data.nbr_measures);
+                    assert.step(data.rows.map(function (o) {return o.values.length;}));
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        actionManager.doAction({
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+        });
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // select 'Today' as range
+        $('.o_control_panel .o_time_range_selector').val('today');
+        // check checkbox 'Compare To'
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+
+        // the time range menu configuration is by now: Date, Today, checkbox checked, Previous Period
+        // With the data above, the time ranges contain no record.
+        assert.strictEqual($('.o_pivot p.o_view_nocontent_empty_folder').length, 1, "there should be no data");
+        // export data should be impossible since the pivot buttons
+        // are deactivated (exception: the 'Measures' button).
+        assert.ok($('.o_control_panel button.o_pivot_download').prop('disabled'));
+
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // select 'This Month' as date range
+        $('.o_control_panel .o_time_range_selector').val('this_month');
+
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+        // the time range menu configuration is by now: Date, This Month, checkbox checked, Previous Period
+        // With the data above, the time ranges contain some records.
+        // export data. Should execute 'get_file'
+        $('.o_control_panel button.o_pivot_download').click();
+
+        assert.verifySteps([
+            // Headers
+            ["Total", ""],
+            ["December 2016" , "November 2016"],
+            ["Foo", "Foo", "Foo"],
+            [
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation",
+                "This Month", "Previous Period", "Variation"
+            ],
+            // number of 'measures'
+            3,
+            // rows values length
+            [9]
+        ]);
 
         unpatchDate();
         actionManager.destroy();

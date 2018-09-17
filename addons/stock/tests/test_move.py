@@ -2997,11 +2997,11 @@ class StockMove(TransactionCase):
         """
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
-            'product_id': self.product1.id,
+            'product_id': self.product3.id,
         })
         lot2 = self.env['stock.production.lot'].create({
             'name': 'lot2',
-            'product_id': self.product1.id,
+            'product_id': self.product3.id,
         })
         package1 = self.env['stock.quant.package'].create({'name': 'test_edit_reserved_move_line_5'})
 

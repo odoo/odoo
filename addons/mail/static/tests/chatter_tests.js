@@ -1,6 +1,7 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
+var AttachmentBox = require('mail.AttachmentBox');
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
@@ -12,6 +13,7 @@ var testUtils = require('web.test_utils');
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 
+var Activity = require('mail.Activity');
 var _t = core._t;
 
 QUnit.module('mail', {}, function () {
@@ -34,7 +36,7 @@ QUnit.module('Chatter', {
                         string: "Followers",
                         type: "one2many",
                         relation: 'mail.followers',
-                        relation_field: "res_id"
+                        relation_field: "res_id",
                     },
                     message_ids: {
                         string: "messages",
@@ -53,9 +55,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
+                    related_attachment_count: {
+                        string: 'Attachment count',
+                        type: 'integer',
+                    },
                 },
                 records: [{
                     id: 2,
+                    related_attachment_count: 3,
                     display_name: "first partner",
                     foo: "HELLO",
                     message_follower_ids: [],
@@ -76,6 +83,7 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
+                    note : { string: "Note", type: "char" },
                 },
             },
             'mail.activity.type': {
@@ -134,6 +142,25 @@ QUnit.module('Chatter', {
                 },
                 records: [],
             },
+            'ir.attachment': {
+                fields:{
+                    name:{type:'char', string:"attachment name", required:true},
+                    res_model:{type:'char', string:"res model"},
+                    res_id:{type:'integer', string:"res id"},
+                    url:{type:'char', string:'url'},
+                    type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
+                    mimetype:{type:'char', string:"mimetype"},
+                    datas_fname:{type:'char', string:"filename"},
+                },
+                records:[
+                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                     res_id: 7, res_model: 'partner'},
+                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                     datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
+                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                     datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
+                ],
+            },
         };
     },
     afterEach: function () {
@@ -144,7 +171,7 @@ QUnit.module('Chatter', {
 });
 
 QUnit.test('basic rendering', function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     var count = 0;
     var unwanted_read_count = 0;
@@ -187,12 +214,128 @@ QUnit.test('basic rendering', function (assert) {
         "there should be a followers widget, moved inside the chatter's topbar");
     assert.ok(form.$('.o_chatter').length, "there should be a chatter widget");
     assert.ok(form.$('.o_mail_thread').length, "there should be a mail thread");
+    assert.strictEqual(form.$('.o_chatter_button_attachment').length, 1, "should have one attachment button");
     assert.ok(!form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should not be available");
 
     form.$buttons.find('.o_form_button_edit').click();
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
+    form.destroy();
+});
+
+QUnit.test('Activity Done keep feedback on blur', function (assert) {
+    assert.expect(3);
+    var done = assert.async();
+
+    this.data['mail.activity'].records = [
+        {activity_type_id: 1, id: 1, user_id: 2, state: 'today', note: 'But I\'m talkin\' about Shaft'},
+    ];
+    this.data.partner.records[0].activity_ids = [1];
+
+    var shownDef = $.Deferred();
+    var hiddenDef = $.Deferred();
+    testUtils.patch(Activity, {
+        _bindPopoverFocusout: function () {
+            this._super.apply(this, arguments);
+            shownDef.resolve();
+        },
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        res_id: 2,
+        arch:'<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+    });
+
+    // sanity checks
+    var $activityEl = form.$('.o_mail_activity[name=activity_ids]');
+    assert.strictEqual($activityEl.find('.o_thread_message').length, 1,
+        'There should be one activity');
+    assert.strictEqual($activityEl.find('.o_thread_message .o_thread_message_note').text().trim(),
+        'But I\'m talkin\' about Shaft', 'The activity should have the right note');
+
+    var $popoverEl = $activityEl.find('.o_thread_message_tools .o_mark_as_done');
+    $popoverEl.on('hidden.bs.popover', hiddenDef.resolve.bind(hiddenDef));
+
+    // open popover
+    $popoverEl.click();
+
+    shownDef.then(function () {
+        // write a feedback and focusout
+        var $feedbackPopover = $($popoverEl.data('bs.popover').tip);
+        $feedbackPopover.find('#activity_feedback').val('John Shaft').focusout();
+
+        hiddenDef.then(function () {
+            shownDef = $.Deferred();
+
+            // re-open popover
+            $popoverEl.click();
+
+            shownDef.then(function () {
+                var $feedbackPopover = $($popoverEl.data('bs.popover').tip);
+                assert.strictEqual($feedbackPopover.find('#activity_feedback').val(), 'John Shaft',
+                    "feedback should have been kept");
+
+                form.destroy();
+                testUtils.unpatch(Activity);
+                done();
+            });
+        });
+    });
+});
+
+QUnit.test('attachmentBox basic rendering', function (assert) {
+    assert.expect(11);
+    this.data.partner.records.push({
+        id: 7,
+        display_name: "attachment_test",
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                '</div>' +
+            '</form>',
+        res_id: 7,
+    });
+    var $button = form.$('.o_chatter_button_attachment');
+    assert.strictEqual($button.length, 1, "should have one attachment button");
+    $button.click();
+    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 1,
+        "attachment widget should exist after a first click on the button");
+    assert.strictEqual(form.$('.o_attachment_image').length, 1, "there should be an image preview");
+    assert.strictEqual(form.$('.o_attachments_previews').length, 1, "there should be a list of previews");
+    assert.strictEqual(form.$('.o_attachments_list').length, 1, "there should be a list of non previewable attachments");
+    assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
+        "the image name should be correct");
+    // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
+    // asserts both at the same time.
+    assert.strictEqual(form.$('a[title = "Download name2"]').text().trim(), 'name2txt',
+        "the attachment name should be correct");
+    assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
+        "the attachment image URL should be correct");
+    assert.strictEqual(form.$('.o_attachment_download').eq(0).attr('href'), '/web/content/1?download=true',
+        "the download URL of name1 must be correct");
+    assert.strictEqual(form.$('.o_attachment_download').eq(1).attr('href'), '/web/content/2?download=true',
+        "the download URL of name2 must be correct");
+    $button.click();
+    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 0,
+        "attachment widget should de destroyed after we reclick the button");
     form.destroy();
 });
 
@@ -447,7 +590,7 @@ QUnit.test('kanban activity widget popover test', function (assert) {
                     '</t></templates>' +
                 '</kanban>',
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 rpcCount++;
 
                 var current_ids = this.data.partner.records[0].activity_ids;
@@ -989,18 +1132,21 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         attachment_ids: [{
             filename: 'image1.jpg',
             id:1,
+            checksum: 999,
             mimetype: 'image/jpeg',
             name: 'Test Image 1',
             url: '/web/content/1?download=true'
         },{
             filename: 'image2.jpg',
             id:2,
+            checksum: 999,
             mimetype: 'image/jpeg',
             name: 'Test Image 2',
             url: '/web/content/2?download=true'
         },{
             filename: 'image3.jpg',
             id:3,
+            checksum: 999,
             mimetype: 'image/jpeg',
             name: 'Test Image 3',
             url: '/web/content/3?download=true'
@@ -1051,11 +1197,11 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     $('.modal .arrow.arrow-right.move_next span').click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1&signature=999"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
@@ -1224,8 +1370,8 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_done_schedule_next') {
-                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done_schedule_next' for id 1");
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback_schedule_next' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 return $.when('test_result');
@@ -1245,6 +1391,71 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
         "a feedback popover should be visible");
     $('.o_mail_activity_feedback.popover textarea').val('everything is ok'); // write a feedback
     form.$('.o_activity_popover_done_next').click(); // schedule next activity
+    form.destroy();
+});
+
+
+QUnit.test('form activity widget: edit next activity', function (assert) {
+    assert.expect(3);
+    var self = this;
+    this.data.partner.records[0].activity_ids = [1];
+    this.data.partner.records[0].activity_state = 'today';
+    this.data['mail.activity'].records = [{
+        id: 1,
+        display_name: "An activity",
+        date_deadline: moment().format("YYYY-MM-DD"), // now
+        state: "today",
+        user_id: 2,
+        create_user_id: 2,
+        activity_type_id: 2,
+    }];
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        intercepts: {
+            do_action: function (event) {
+                assert.deepEqual(event.data.action, {
+                    context: {
+                      default_res_id: 2,
+                      default_res_model: "partner"
+                    },
+                    res_id: 1,
+                    res_model: "mail.activity",
+                    target: "new",
+                    type: "ir.actions.act_window",
+                    view_mode: "form",
+                    view_type: "form",
+                    views: [
+                      [
+                        false,
+                        "form"
+                      ]
+                    ]
+                  },
+                  "should do a do_action with correct parameters");
+                self.data['mail.activity'].records[0].activity_type_id = 1;
+                event.data.options.on_close();
+            },
+        },
+    });
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 2", 
+        "Initial type should be Type 2");
+    form.$('.o_mail_activity .o_edit_activity[data-activity-id=1]').click();
+    assert.strictEqual(form.$('.o_mail_activity .o_mail_info strong:eq(1)').text(), " Type 1", 
+        "After edit type should be Type 1");
     form.destroy();
 });
 
@@ -1428,7 +1639,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
             } else if (route === '/web/dataset/call_kw/partner/read') {
                 nbReads++;
                 if (nbReads === 1) { // first read
-                    assert.strictEqual(args.args[1].length, 4, 'should read all fiels the first time');
+                    assert.strictEqual(args.args[1].length, 5, 'should read all fiels the first time');
                 } else if (nbReads === 2) { // second read: after the unlink
                     assert.ok(_.isEqual(args.args[1], ['activity_ids', 'display_name']),
                         'should only read the activities (+ display_name) after an unlink');
@@ -1916,9 +2127,9 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     }).then(function (form) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps([[12, 14], [14], [14]]);
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
             "two tags should be present");
-        var firstTag = form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').first();
+        var firstTag = form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').first();
         assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
             "tag should only show display_name");
         assert.strictEqual(firstTag.find('.o_badge_text').attr('title'), "coucou@petite.perruche",
@@ -1971,7 +2182,7 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     });
 
     assert.verifySteps([[12]]);
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 1,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 1,
         "should contain one tag");
 
     // add an other existing tag
@@ -1990,7 +2201,7 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
     $('.modal-footer .btn-primary').click();
 
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] .badge.o_tag_color_0').length, 2,
         "should contain the second tag");
     // should have read [14] three times: when opening the dropdown, when opening the modal, and
     // after the save

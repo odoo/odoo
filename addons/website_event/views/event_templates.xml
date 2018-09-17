@@ -220,7 +220,8 @@
                     <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                         <t t-foreach="event.menu_id.child_id" t-as="submenu">
                             <t t-call="website.submenu">
-                                <t t-set="submenu_type" t-value="'breadcrumb'"/>
+                                <t t-set="item_class" t-value="'breadcrumb-item'"/>
+                                <t t-set="link_class" t-value="None"/>
                             </t>
                         </t>
                     </ol>
@@ -267,7 +268,7 @@
 <template id="event_details">
     <t t-call="website_event.layout">
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
-            <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
+            <h1 itemprop="name" class="text-center mt-3 mb-2" t-field="event.name"></h1>
             <div class="text-center">
                 <small t-if="event.is_participating" class="badge badge-info">Participating</small>
             </div>
@@ -519,7 +520,7 @@
                             <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
                             <t t-foreach="tickets" t-as="ticket">
-                                <h4 class="page-header mt16">
+                                <h4 class="o_page_header mt16">
                                     <strong>
                                         Ticket Type #<t t-raw="counter_type"/>: <t t-esc="ticket['name']"/>
                                         <t t-if="ticket['price'] == 0">(Free)</t>

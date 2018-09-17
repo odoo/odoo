@@ -125,10 +125,10 @@ var CalendarView = AbstractView.extend({
             attrs.form_view_id ? parseInt(attrs.form_view_id, 10) : false;
         if (!this.controllerParams.formViewId && params.action) {
             var formViewDescr = _.find(params.action.views, function (v) {
-                return v[1] ===  'form';
+                return v.type ===  'form';
             });
             if (formViewDescr) {
-                this.controllerParams.formViewId = formViewDescr[0];
+                this.controllerParams.formViewId = formViewDescr.viewID;
             }
         }
 

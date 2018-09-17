@@ -15,7 +15,7 @@
         <field name="name">mail.blacklist.view.form</field>
         <field name="model">mail.blacklist</field>
         <field name="arch" type="xml">
-            <form string="Add Email Blacklist" duplicate="false">
+            <form string="Add Email Blacklist" duplicate="false" edit="false">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -27,7 +27,7 @@
                             <field name="email"/>
                         </group>
                         <group>
-                            <field name="create_date" readonly="1"  string="Blacklist Date"/>
+                            <field name="create_date" readonly="1"  string="Creation Date"/>
                         </group>
                     </group>
                 </sheet>

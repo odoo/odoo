@@ -83,26 +83,39 @@ class PaymentTransaction(models.Model):
             so.action_confirm()
 
     @api.multi
-    def _set_transaction_done(self):
+    def _reconcile_after_transaction_done(self):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
         sales_orders.force_quotation_send()
         sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
         sales_orders.action_confirm()
-        automatic_invoice = self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')
-        if automatic_invoice:
+        # invoice the sale orders if needed
+        self._invoice_sale_orders()
+        res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
+            default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
+            if default_template:
+                ctx_company = {'company_id': self.acquirer_id.company_id.id,
+                               'force_company': self.acquirer_id.company_id.id,
+                               'mark_invoice_as_sent': True,
+                               }
+                for trans in self.filtered(lambda t: t.sale_order_ids):
+                    trans = trans.with_context(ctx_company)
+                    for invoice in trans.invoice_ids:
+                        invoice.message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
+        return res
+
+    @api.multi
+    def _invoice_sale_orders(self):
+        if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice'):
+            ctx_company = {'company_id': self.acquirer_id.company_id.id,
+                           'force_company': self.acquirer_id.company_id.id}
             for trans in self.filtered(lambda t: t.sale_order_ids):
+                trans = trans.with_context(ctx_company)
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
                 invoices = trans.sale_order_ids.action_invoice_create()
                 trans.invoice_ids = [(6, 0, invoices)]
-        res = super(PaymentTransaction, self)._set_transaction_done()
-        if automatic_invoice:
-            default_template = self.env['ir.config_parameter'].sudo().get_param('sale.default_email_template')
-            if default_template:
-                for invoice in trans.invoice_ids:
-                    invoice.with_context(mark_invoice_as_sent=True).message_post_with_template(int(default_template), notif_layout="mail.mail_notification_paynow")
-        return res
 
     @api.model
     def _compute_reference_prefix(self, values):

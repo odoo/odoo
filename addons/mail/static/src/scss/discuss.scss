@@ -7,35 +7,6 @@
     height: 100%;
     overflow: hidden;
 
-    .o_mail_annoying_notification_bar {
-        height: 40px;
-        background-color: #DFA941;
-        color: white;
-        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-        display: flex;
-        border-bottom: 1px solid $o-main-color-muted;
-
-        .o_mail_request_permission {
-            display: flex;
-            justify-content: center;
-            flex: 1 1 auto;
-        }
-        > span {
-            font-size: 16px;
-            line-height: 40px;
-            > a {
-                color: white;
-                margin-left: 5px;
-                text-decoration: underline;
-            }
-
-            &.fa-close {
-                margin-right: 10px;
-                cursor: pointer;
-            }
-        }
-    }
-
     .o_mail_discuss_sidebar {
         width: $o-mail-chat-sidebar-width;
         height: 100%;
@@ -246,7 +217,7 @@
     font-size: 1em;
     position: relative;
     &.o_user_online {
-        color: $o-brand-primary;
+        color: $o-enterprise-primary-color;
     }
     &.o_user_idle {
         color: theme-color('warning');
@@ -356,8 +327,18 @@
         .o_preview_title {
             display: flex;
             .o_preview_name {
-                flex: 0 1 auto;
+                flex: 0 0 auto;
                 @include o-text-overflow;
+            }
+            .o_mail_activity_action_buttons {
+                display: flex;
+                flex: 1 1 auto;
+                flex-flow: row-reverse wrap;
+            }
+            .o_mail_activity_action {
+                padding-top: 0px;
+                padding-bottom: 0px;
+                padding-right: 0px;
             }
             .o_preview_counter {
                 flex: 1 1 auto;

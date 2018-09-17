@@ -220,7 +220,6 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             is_menu: this.$('#is_menu').prop('checked'),
             is_homepage: this.$('#is_homepage').prop('checked'),
             website_published: this.$('#is_published').prop('checked'),
-            share_page_info: this.$('#share_page_info').prop('checked'),
             create_redirect: this.$('#create_redirect').prop('checked'),
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
@@ -391,8 +390,8 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         // Remove style related elements
         this.$('.o_link_dialog_preview').remove();
         this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
-        this.$modal.find('.modal-lg').removeClass('modal-lg')
-                   .find('.col-lg-8').removeClass('col-lg-8').addClass('col-12');
+        this.$modal.find('.modal-lg').removeClass('modal-lg');
+        this.$('form.col-lg-8').removeClass('col-lg-8').addClass('col-12');
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));

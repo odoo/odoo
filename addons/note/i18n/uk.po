@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -312,11 +312,19 @@ msgstr "Тег нотатки"
 #. module: note
 #: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
+#: model:ir.ui.menu,name:note.menu_note_notes
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
 msgstr "Примітки"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -368,11 +376,6 @@ msgstr "Власник етапу нотатки"
 #: selection:note.note,activity_state:0
 msgid "Planned"
 msgstr "Заплановано"
-
-#. module: note
-#: model:ir.ui.menu,name:note.menu_note_notes
-msgid "Productivity"
-msgstr "Продуктивність"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
@@ -517,21 +520,6 @@ msgid "Unread Messages Counter"
 msgstr "Кількість непрочитаних повідомлень"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-"Використовуйте нотатки для організації особистих завдань або приміток. Всі\n"
-"             примітки приватні; ніхто інший не зможе їх побачити. Однак\n"
-"             ви можете поділитися деякими нотатками з іншими людьми, запросивши підписників\n"
-"             на нотатку. (Корисно для протоколу зустрічі, особливо якщо\n"
-"             ви активуєте функцію підказки для спільних записів)."
-
-#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Використовується для замовлення етапів нотатки"
@@ -540,12 +528,3 @@ msgstr "Використовується для замовлення етапі�
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Користувачі"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Ви можете налаштувати обробку ваших нотаток/завдань, додавши,\n"
-"             видалення або зміну стовпців."

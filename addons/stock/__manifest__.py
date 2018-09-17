@@ -64,7 +64,6 @@
         'views/report_stock_traceability.xml',
         'views/stock_template.xml',
         'views/stock_rule_views.xml',
-        'views/res_users_views.xml',
         'views/stock_package_level_views.xml',
 
         'data/default_barcode_patterns.xml',
@@ -78,4 +77,5 @@
     'application': True,
     'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': '_create_warehouse',
 }

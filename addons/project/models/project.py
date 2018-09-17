@@ -272,14 +272,21 @@ class Project(models.Model):
         for project in self:
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
+    @api.model
+    def _map_tasks_default_valeus(self, task):
+        """ get the default value for the copied task on project duplication """
+        return {
+            'stage_id': task.stage_id.id,
+            'name': task.name,
+        }
+
     @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
         for task in self.tasks:
             # preserve task name and stage, normally altered during copy
-            defaults = {'stage_id': task.stage_id.id,
-                        'name': task.name}
+            defaults = self._map_tasks_default_valeus(task)
             tasks += task.copy(defaults)
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
@@ -380,6 +387,7 @@ class Project(models.Model):
         action_context = safe_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_parent_res_name'] = self.name
+        action_context.pop('group_by', None)
         return dict(action, context=action_context)
 
     # ---------------------------------------------------
@@ -451,8 +459,8 @@ class Task(models.Model):
         ('blocked', 'Red')], string='Kanban State',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', track_visibility='onchange')
-    create_date = fields.Datetime(index=True)
-    write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_automation module (and it needs to be defined first for that)
+    create_date = fields.Datetime("Created On", readonly=True, index=True)
+    write_date = fields.Datetime("Last Updated On", readonly=True, index=True)
     date_start = fields.Datetime(string='Starting Date',
     default=fields.Datetime.now,
     index=True, copy=False)
@@ -513,7 +521,7 @@ class Task(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
-            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
@@ -810,7 +818,7 @@ class Task(models.Model):
     @api.multi
     def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
         """ Override to set alias of tasks to their project if any. """
-        aliases = self.mapped('project_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        aliases = self.sudo().mapped('project_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
         res = {task.id: aliases.get(task.project_id.id) for task in self}
         leftover = self.filtered(lambda rec: not rec.project_id)
         if leftover:

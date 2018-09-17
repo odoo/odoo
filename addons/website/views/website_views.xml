@@ -23,28 +23,24 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <form string="Website Settings">
-                    <div name="domain">
-                        <group name="domain">
-                            <group>
-                                <field name="name"/>
-                                <field name="domain"/>
-                                <field name="country_group_ids" widget="many2many_tags"/>
+                    <sheet>
+                        <div name="domain">
+                            <group name="domain">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="domain"/>
+                                </group>
                             </group>
-                        </group>
-                    </div>
-                    <div name="other">
-                        <group name="other">
-                            <group>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="language_ids" widget="many2many_tags"/>
-                                <field name="default_lang_id" widget="selection"/>
+                        </div>
+                        <div name="other">
+                            <group name="other">
+                                <group>
+                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                    <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                                </group>
                             </group>
-                        </group>
-                    </div>
-                    <div name="buttons">
-                        <button type="object" name="button_go_website" class="btn btn-primary" icon="fa-globe">Go to website</button>
-                        <button name="%(website.action_website_add_features)d" type="action"  class="btn btn-secondary ml-2" icon="fa-plus">Add Features</button>
-                    </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -277,7 +273,7 @@
             <field name="arch" type="xml">
                 <field name="name" position="after">
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                    <field name="key" readonly="1"/>
+                    <field name="key"/>
                     <field name="page_ids" invisible="1" />
                     <field name="first_page_id" attrs="{'invisible': [('page_ids', '=', [])]}" />
                 </field>

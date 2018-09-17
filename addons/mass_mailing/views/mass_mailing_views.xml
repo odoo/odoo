@@ -61,11 +61,13 @@
                     <field name="opt_out"/>
                     <field name="list_id"/>
                     <separator/>
+                    <filter string="Valid Recipients" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False), ('contact_id.is_email_valid', '=', True)]"/>
+                    <separator/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
                     <separator/>
                     <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('contact_id.is_blacklisted', '=', False)]"/>
                     <separator/>
-                    <filter string="Valid Recipents" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False)]"/>
+                    <filter string="Exclude Invalid Emails" name="valid_email" domain="[('contact_id.is_email_valid', '=', True)]"/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
@@ -866,7 +868,7 @@
 
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
             parent="menu_mass_mailing_configuration" sequence="1"
-            groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign"
+            groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
         <!--  MAILING CAMPAIGN TAGS !-->
@@ -953,7 +955,7 @@
                             </button>
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">
-                                <field name="received_ratio" widget="percentpie" string="Received"/>
+                                <field name="received_ratio" widget="percentpie" string="Delivered"/>
                             </button>
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">

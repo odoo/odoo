@@ -116,17 +116,6 @@
             </field>
         </record>
 
-        <record id="timesheet_view_calendar" model="ir.ui.view">
-            <field name="name">account.analytic.line.calendar</field>
-            <field name="model">account.analytic.line</field>
-            <field name="arch" type="xml">
-                <calendar string="Timesheets" date_start="date" color="employee_id">
-                    <field name="name"/>
-                    <field name="project_id"/>
-                </calendar>
-            </field>
-        </record>
-
         <record id="hr_timesheet_line_search" model="ir.ui.view">
             <field name="name">account.analytic.line.search</field>
             <field name="model">account.analytic.line</field>
@@ -237,13 +226,6 @@
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
-        <record id="timesheet_action_view_calendar" model="ir.actions.act_window.view">
-            <field name="sequence" eval="8"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="timesheet_view_calendar"/>
-            <field name="act_window_id" ref="act_hr_timesheet_line"/>
-        </record>
-
         <menuitem id="timesheet_menu_activity_mine"
             name="My Timesheets"
             parent="menu_hr_time_tracking"
@@ -273,13 +255,6 @@
             <field name="sequence" eval="5"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="timesheet_view_form_user"/>
-            <field name="act_window_id" ref="timesheet_action_all"/>
-        </record>
-
-        <record id="timesheet_action_view_all_calendar" model="ir.actions.act_window.view">
-            <field name="sequence" eval="8"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="timesheet_view_calendar"/>
             <field name="act_window_id" ref="timesheet_action_all"/>
         </record>
 

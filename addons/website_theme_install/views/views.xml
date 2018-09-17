@@ -73,13 +73,13 @@
 
     <!-- Actions to list themes with custom kanban (launched on module installation) -->
     <record id="theme_install_kanban_action" model="ir.actions.act_window">
-        <field name="name">Choose a theme for this website</field>
+        <field name="name">Choose a theme for your website</field>
         <field name="res_model">ir.module.module</field>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
         <field name="domain" eval="[
-            ('category_id', 'not in', [ref('base.module_category_theme_hidden', False)]),
+            ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]),
             '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
         ]"/>
     </record>
@@ -111,13 +111,17 @@ action = {
         </xpath>
     </template>
 
-    <record id="view_website_form_inherit_view_themes" model="ir.ui.view">
+    <record id="view_website_form_view_themes_modal" model="ir.ui.view">
         <field name="name">website.form</field>
         <field name="model">website</field>
         <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='button_go_website']" position='after'>
-                <button type="object" name="button_view_theme" class="btn btn-primary ml-2" icon="fa-paint-brush">Choose a theme</button>
+            <xpath expr="//form" position='inside'>
+                <footer>
+                    <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
             </xpath>
         </field>
     </record>

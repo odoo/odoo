@@ -7,13 +7,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
+# Cas Vissers <c.vissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "% discount"
 msgstr "% korting"
@@ -36,9 +37,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
-msgid "<span>Optional Products</span>"
+#: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "<span>Discount</span>"
 msgstr ""
+
+#. module: sale_management
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
+msgid "<span>Optional Products</span>"
+msgstr "<span>Optionele producten</span>"
 
 #. module: sale_management
 #: model:sale.order.template,website_description:sale_management.sale_order_template_default
@@ -59,12 +65,12 @@ msgstr "Voeg een notitie toe"
 #: model:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr ""
+msgstr "Product toevoegen"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr ""
+msgstr "Sectie toevoegen"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -149,7 +155,7 @@ msgstr "Standaard sjabloon"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "Omschrijving"
@@ -162,7 +168,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Verbruik"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -189,6 +195,7 @@ msgstr "Soort weergave"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
+"Heeft geen toegang, sla deze gegevens over de gebruikers overzicht e-mail"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__require_payment
@@ -398,7 +405,6 @@ msgstr "Prijs"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_id
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Product"
 msgstr "Product"
@@ -426,7 +432,7 @@ msgstr "Offerte"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Offerte bouwer"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -455,7 +461,7 @@ msgstr "Offertesjabloon regels"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr ""
+msgstr "Offerte sjabloon optie"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -486,7 +492,7 @@ msgstr "Verwijderen"
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr ""
+msgstr "Verwijder een"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order__require_signature
@@ -495,6 +501,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Vraag een online handtekening aan de klant in het order om automatisch de "
+"orders te bevestigen."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order__require_payment
@@ -555,7 +563,7 @@ msgstr "Handtekening ontbreekt."
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Technisch veld voor UI doeleinden."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -594,7 +602,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__price_unit
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Unit Price"
 msgstr "Prijs"
 

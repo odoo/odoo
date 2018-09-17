@@ -1,4 +1,5 @@
 # coding: utf-8
+from collections import defaultdict
 import hashlib
 import hmac
 import logging
@@ -88,7 +89,6 @@ class PaymentAcquirer(models.Model):
     # Formerly associated to `authorize` option from auto_confirm
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
-    # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
@@ -621,6 +621,13 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _prepare_account_payment_vals(self):
         self.ensure_one()
+
+        communication = []
+        for invoice in self.invoice_ids:
+            inv_communication = invoice.type in ('in_invoice', 'in_refund') and invoice.reference or invoice.number
+            if invoice.origin:
+                communication.append('%s (%s)' % (inv_communication, invoice.origin))
+
         return {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -633,6 +640,7 @@ class PaymentTransaction(models.Model):
             'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
             'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
             'payment_transaction_id': self.id,
+            'communication': ' / '.join(communication),
         }
 
     @api.multi
@@ -718,30 +726,35 @@ class PaymentTransaction(models.Model):
     @api.multi
     def _set_transaction_done(self):
         '''Move the transaction's payment to the done state(e.g. Paypal).'''
-        if any(trans.state not in ('draft', 'authorized') for trans in self):
+        if any(trans.state not in ('draft', 'authorized', 'pending') for trans in self):
             raise ValidationError(_('Only draft/authorized transaction can be posted.'))
 
+        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._reconcile_after_transaction_done()
+        self._log_payment_transaction_received()
+
+    @api.multi
+    def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
         invoices.action_invoice_open()
 
         # Create & Post the payments.
-        payments = self.env['account.payment']
+        payments = defaultdict(lambda: self.env['account.payment'])
         for trans in self:
             if trans.payment_id:
                 payments += trans.payment_id
                 continue
 
             payment_vals = trans._prepare_account_payment_vals()
-            payment = payments.create(payment_vals)
-            payments += payment
+            payment = self.env['account.payment'].create(payment_vals)
+            payments[trans.acquirer_id.company_id.id] += payment
 
             # Track the payment to make a one2one.
             trans.payment_id = payment
-        payments.post()
 
-        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-        self._log_payment_transaction_received()
+        for company in payments:
+            payments[company].with_context(force_company=company, company_id=company).post()
 
     @api.multi
     def _set_transaction_cancel(self):
@@ -786,11 +799,10 @@ class PaymentTransaction(models.Model):
         # Fetch the last reference
         # E.g. If the last reference is SO42-5, this query will return '-5'
         self._cr.execute('''
-                SELECT CAST(SUBSTRING(reference FROM '-\d+') AS INTEGER) AS suffix
+                SELECT CAST(SUBSTRING(reference FROM '-\d+$') AS INTEGER) AS suffix
                 FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
-            ''', [prefix + '%'])
+            ''', [prefix + '-%'])
         query_res = self._cr.fetchone()
-
         if query_res:
             # Increment the last reference by one
             suffix = '%s' % (-query_res[0] + 1)

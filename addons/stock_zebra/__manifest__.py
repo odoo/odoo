@@ -22,6 +22,7 @@
         'report/package_templates.xml',
         'report/picking_templates.xml',
         'report/product_templates.xml',
+        'report/product_packaging.xml',
         'report/stock_reports.xml',
     ],
 }

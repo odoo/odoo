@@ -229,17 +229,20 @@ class Employee(models.Model):
         if self.user_id:
             self.update(self._sync_user(self.user_id))
 
-    @api.onchange('user_id', 'resource_calendar_id')
+    @api.onchange('resource_calendar_id')
     def _onchange_timezone(self):
-        if self.user_id or self.resource_calendar_id:
-            self.tz = self.user_id.tz or self.resource_calendar_id.tz
+        if self.resource_calendar_id and not self.tz:
+            self.tz = self.resource_calendar_id.tz
 
     def _sync_user(self, user):
-        return dict(
+        vals = dict(
             name=user.name,
             image=user.image,
             work_email=user.email,
         )
+        if user.tz:
+            vals['tz'] = user.tz
+        return vals
 
     @api.model
     def create(self, vals):
@@ -254,6 +257,8 @@ class Employee(models.Model):
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+        if vals.get('user_id'):
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
         return super(Employee, self).write(vals)
 

@@ -33,11 +33,11 @@
                 </ul>
             </div>
             <div class="col-lg-8" id="ref_content">
-                <div class='navbar'>
+                <div class='d-flex m-2'>
                     <t t-call="website.pager">
                        <t t-set="classname">float-left</t>
                     </t>
-                    <form action="" method="get" class="navbar-search float-right pagination form-inline">
+                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
                         <t t-call="website.website_search_box">
                             <t t-set="search" t-value="post.get('search', '')"/>
                         </t>
@@ -55,7 +55,7 @@
                                 <div class="media mt-3">
                                     <a t-attf-href="/members/#{slug(partner)}"
                                        t-field="partner.image_small"
-                                       t-options='{"widget": "image", "class": "media-object"}'
+                                       t-options='{"widget": "image", "class": "media-object mr-3"}'
                                     ></a>
                                     <div class="media-body" style="min-height: 64px;">
                                         <a t-attf-href="/members/#{slug(partner)}">

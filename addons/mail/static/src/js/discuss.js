@@ -185,11 +185,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'blur .o_mail_add_thread input': '_onAddThreadBlur',
         'click .o_mail_channel_settings': '_onChannelSettingsClicked',
-        'click .o_mail_annoying_notification_bar .fa-close': '_onCloseNotificationBar',
         'click .o_mail_discuss_item': '_onDiscussItemClicked',
         'keydown': '_onKeydown',
         'click .o_mail_open_channels': '_onPublicChannelsClick',
-        'click .o_mail_request_permission': '_onRequestNotificationPermission',
         'click .o_mail_partner_unpin': '_onUnpinChannel',
     },
 
@@ -203,10 +201,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.action = action;
         this.action_manager = parent;
         this.dataset = new data.DataSetSearch(this, 'mail.message');
-        this.displayNotificationBar = (
-            window.Notification &&
-            window.Notification.permission === 'default'
-        );
         this.domain = [];
         this.options = options || {};
 
@@ -438,14 +432,16 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 this.messagesSeparatorPosition = messageID || 'top';
             }
         }
+        var hasThreadMessages = this._thread.hasMessages({domain: this.domain});
         return {
             displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
             displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
+            domain: this.domain,
             messagesSeparatorPosition: this.messagesSeparatorPosition,
             squashCloseMessages: this._thread.getType() !== 'mailbox' &&
                                     !this._thread.isMassMailing(),
-            displayEmptyThread: !this._thread.hasMessages() && !this.domain.length,
-            displayNoMatchFound: !this._thread.hasMessages() && this.domain.length,
+            displayEmptyThread: !hasThreadMessages && !this.domain.length,
+            displayNoMatchFound: !hasThreadMessages && !!this.domain.length,
             displaySubjectOnMessages: this._thread.isMassMailing() ||
                 this._thread.getID() === 'mailbox_inbox' ||
                 this._thread.getID() === 'mailbox_moderation',
@@ -665,7 +661,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
         return this.alive(this.searchview.appendTo($('<div>')))
             .then(function () {
-                self.$searchview_buttons = self.searchview.$buttons.contents();
+                self.$searchview_buttons = self.searchview.$buttons;
                 // manually call do_search to generate the initial domain and filter
                 // the messages in the default thread
                 self.searchview.do_search();
@@ -1165,12 +1161,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * @private
      */
-    _onCloseNotificationBar: function () {
-        this.$('.o_mail_annoying_notification_bar').slideUp();
-    },
-    /**
-     * @private
-     */
     _onComposerFocused: function () {
         var composer = this._thread.isMassMailing() ? this._extendedComposer : this._basicComposer;
         var commands = this._thread.getCommands();
@@ -1363,27 +1353,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }, {
             on_reverse_breadcrumb: this.on_reverse_breadcrumb,
         });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onRequestNotificationPermission: function (ev) {
-        var self = this;
-        ev.preventDefault();
-        this.$('.o_mail_annoying_notification_bar').slideUp();
-        var def = window.Notification && window.Notification.requestPermission();
-        if (def) {
-            def.then(function (value) {
-                if (value !== 'granted') {
-                    self.call('bus_service', 'sendNotification', _t("Permission denied"),
-                        _t("Odoo will not have the permission to send native notifications on this device."));
-                } else {
-                    self.call('bus_service', 'sendNotification', _t("Permission granted"),
-                        _t("Odoo has now the permission to send you native notifications on this device."));
-                }
-            });
-        }
     },
     /**
      * @private

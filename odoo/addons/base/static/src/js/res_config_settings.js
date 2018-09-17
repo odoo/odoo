@@ -33,6 +33,15 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     /**
+     * @override
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
+        // set default focus on searchInput
+        this.searchInput.focus();
+    },
+
+    /**
      * initialize modules list.
      * remove module that restricted in groups
      * data contains
@@ -213,6 +222,7 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     _onSettingTabClick: function (event) {
+        this.searchInput.focus();
         if (this.searchText.length > 0) {
             this.searchInput.val('');
             this.searchText = "";
@@ -341,6 +351,7 @@ var BaseSettingRenderer = FormRenderer.extend({
 var BaseSettingController = FormController.extend({
     init: function () {
         this._super.apply(this, arguments);
+        this.disableAutofocus = true;
         this.renderer.activeSettingTab = this.initialState.context.module;
     },
 });
