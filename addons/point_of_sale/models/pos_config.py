@@ -37,6 +37,7 @@ class AccountBankStmtCashWizard(models.Model):
 
 class PosConfig(models.Model):
     _name = 'pos.config'
+    _description = 'Point of Sale Configuration'
 
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
