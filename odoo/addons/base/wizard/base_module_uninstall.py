@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class BaseModuleUninstall(models.TransientModel):
     _name = "base.module.uninstall"
-    _description = "Module Uninstallation"
+    _description = "Module Uninstall"
 
     show_all = fields.Boolean()
     module_id = fields.Many2one(

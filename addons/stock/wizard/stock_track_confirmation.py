@@ -6,6 +6,7 @@ from odoo import api, models, fields, tools
 
 class StockTrackConfirmation(models.TransientModel):
     _name = 'stock.track.confirmation'
+    _description = 'Stock Track Confirmation'
 
     tracking_line_ids = fields.One2many('stock.track.line', 'wizard_id')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
@@ -16,6 +17,7 @@ class StockTrackConfirmation(models.TransientModel):
 
 class StockTrackingLines(models.TransientModel):
     _name = 'stock.track.line'
+    _description = 'Stock Track Line'
 
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     tracking = fields.Selection([('lot', 'Tracked by lot'), ('serial', 'Tracked by serial number')], readonly=True)

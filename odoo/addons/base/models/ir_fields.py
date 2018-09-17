@@ -34,6 +34,7 @@ class ConversionNotFound(ValueError):
 
 class IrFieldsConverter(models.AbstractModel):
     _name = 'ir.fields.converter'
+    _description = 'Fields Converter'
 
     @api.model
     def _format_import_error(self, error_type, error_msg, error_params=(), error_args=None):

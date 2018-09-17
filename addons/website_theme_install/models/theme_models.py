@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class ThemeView(models.Model):
     _name = 'theme.ir.ui.view'
+    _description = 'Theme UI View'
 
     def compute_arch_fs(self):
         path_info = get_resource_from_path(self._context['install_filename'])
@@ -30,6 +31,7 @@ class ThemeView(models.Model):
 
 class ThemeAttachment(models.Model):
     _name = 'theme.ir.attachment'
+    _description = 'Theme Attachments'
 
     name = fields.Char(required=True)
     key = fields.Char(required=True)
@@ -39,6 +41,7 @@ class ThemeAttachment(models.Model):
 
 class ThemeMenu(models.Model):
     _name = 'theme.website.menu'
+    _description = 'Website Theme Menu'
 
     name = fields.Char(required=True)
     url = fields.Char(default='')
@@ -51,6 +54,7 @@ class ThemeMenu(models.Model):
 
 class ThemePage(models.Model):
     _name = 'theme.website.page'
+    _description = 'Website Theme Page'
 
     url = fields.Char()
     view_id = fields.Many2one('theme.ir.ui.view', required=True, ondelete="cascade")
@@ -60,6 +64,7 @@ class ThemePage(models.Model):
 
 class Theme(models.AbstractModel):
     _name = 'theme.utils'
+    _description = 'Theme Utils'
     _auto = False
 
     def _post_copy(self, mod):

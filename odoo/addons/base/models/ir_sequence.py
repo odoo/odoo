@@ -82,6 +82,7 @@ class IrSequence(models.Model):
 
     """
     _name = 'ir.sequence'
+    _description = 'Sequence'
     _order = 'name'
 
     def _get_number_next_actual(self):
@@ -311,6 +312,7 @@ class IrSequence(models.Model):
 
 class IrSequenceDateRange(models.Model):
     _name = 'ir.sequence.date_range'
+    _description = 'Sequence Date Range'
     _rec_name = "sequence_id"
 
     def _get_number_next_actual(self):

@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class ReportTrialBalance(models.AbstractModel):
     _name = 'report.account.report_trialbalance'
+    _description = 'Trial Balance Report'
 
     def _get_accounts(self, accounts, display_account):
         """ compute the balance, debit and credit for the provided accounts

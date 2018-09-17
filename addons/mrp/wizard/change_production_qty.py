@@ -9,7 +9,7 @@ from odoo.tools import float_is_zero, float_round
 
 class ChangeProductionQty(models.TransientModel):
     _name = 'change.production.qty'
-    _description = 'Change Quantity of Products'
+    _description = 'Change Production Qty'
 
     # TDE FIXME: add production_id field
     mo_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True)

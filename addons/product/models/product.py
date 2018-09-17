@@ -64,6 +64,7 @@ class ProductPriceHistory(models.Model):
     _name = 'product.price.history'
     _rec_name = 'datetime'
     _order = 'datetime desc'
+    _description = 'Product Price List History'
 
     def _get_default_company_id(self):
         return self._context.get('force_company', self.env.user.company_id.id)
@@ -585,7 +586,7 @@ class ProductProduct(models.Model):
 
 class ProductPackaging(models.Model):
     _name = "product.packaging"
-    _description = "Packaging"
+    _description = "Product Packaging"
     _order = 'sequence'
 
     name = fields.Char('Package Type', required=True)
@@ -598,7 +599,7 @@ class ProductPackaging(models.Model):
 
 class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
-    _description = "Information about a product vendor"
+    _description = "Supplier Pricelist"
     _order = 'sequence, min_qty desc, price'
 
     name = fields.Many2one(

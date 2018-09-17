@@ -31,6 +31,7 @@ dateutil = wrap_module(dateutil, mods | attribs)
 
 class IrActions(models.Model):
     _name = 'ir.actions.actions'
+    _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
 
@@ -126,6 +127,7 @@ class IrActions(models.Model):
 
 class IrActionsActWindow(models.Model):
     _name = 'ir.actions.act_window'
+    _description = 'Window Action'
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -269,6 +271,7 @@ VIEW_TYPES = [
 
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
+    _description = 'View Window Action'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
     _order = 'sequence,id'
@@ -289,6 +292,7 @@ class IrActionsActWindowView(models.Model):
 
 class IrActionsActWindowclose(models.Model):
     _name = 'ir.actions.act_window_close'
+    _description = 'Close Window Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
 
@@ -297,6 +301,7 @@ class IrActionsActWindowclose(models.Model):
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
+    _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -741,6 +746,7 @@ class IrActionsTodo(models.Model):
 
 class IrActionsActClient(models.Model):
     _name = 'ir.actions.client'
+    _description = 'Client Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _sequence = 'ir_actions_id_seq'

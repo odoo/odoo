@@ -9,7 +9,7 @@ from odoo.tools import pycompat
 class UtmMedium(models.Model):
     # OLD crm.case.channel
     _name = 'utm.medium'
-    _description = 'Channels'
+    _description = 'UTM Medium'
     _order = 'name'
 
     name = fields.Char(string='Channel Name', required=True)
@@ -19,14 +19,14 @@ class UtmMedium(models.Model):
 class UtmCampaign(models.Model):
     # OLD crm.case.resource.type
     _name = 'utm.campaign'
-    _description = 'Campaign'
+    _description = 'UTM Campaign'
 
     name = fields.Char(string='Campaign Name', required=True, translate=True)
 
 
 class UtmSource(models.Model):
     _name = 'utm.source'
-    _description = 'Source'
+    _description = 'UTM Source'
 
     name = fields.Char(string='Source Name', required=True, translate=True)
 
@@ -35,6 +35,7 @@ class UtmMixin(models.AbstractModel):
 
     """Mixin class for objects which can be tracked by marketing. """
     _name = 'utm.mixin'
+    _description = 'UTM Mixin'
 
     campaign_id = fields.Many2one('utm.campaign', 'Campaign',
                                   help="This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special")

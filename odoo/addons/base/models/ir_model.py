@@ -60,6 +60,7 @@ def query_update(cr, table, values, selectors):
 class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
     _name = 'base'
+    _description = 'Base'
 
 
 class Unknown(models.AbstractModel):
@@ -68,6 +69,7 @@ class Unknown(models.AbstractModel):
     comodel.
     """
     _name = '_unknown'
+    _description = 'Unknown'
 
 
 class IrModel(models.Model):
@@ -928,6 +930,7 @@ class IrModelConstraint(models.Model):
     models.
     """
     _name = 'ir.model.constraint'
+    _description = 'Model Constraint'
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1049,6 +1052,7 @@ class IrModelRelation(models.Model):
     relations.
     """
     _name = 'ir.model.relation'
+    _description = 'Relation Model'
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1106,6 +1110,7 @@ class IrModelRelation(models.Model):
 
 class IrModelAccess(models.Model):
     _name = 'ir.model.access'
+    _description = 'Model Access'
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1278,6 +1283,7 @@ class IrModelData(models.Model):
              update them seamlessly.
     """
     _name = 'ir.model.data'
+    _description = 'Model Data'
     _order = 'module, model, name'
 
     name = fields.Char(string='External Identifier', required=True,
@@ -1634,6 +1640,7 @@ class IrModelData(models.Model):
 
 class WizardModelMenu(models.TransientModel):
     _name = 'wizard.ir.model.menu.create'
+    _description = 'Create Menu Wizard'
 
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')
     name = fields.Char(string='Menu Name', required=True)

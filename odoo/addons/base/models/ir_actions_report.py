@@ -72,6 +72,7 @@ else:
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
+    _description = 'Report Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'

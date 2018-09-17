@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
+    _description = 'Holidays Summary Report'
 
     def _get_header_info(self, start_date, holiday_type):
         st_date = fields.Date.from_string(start_date)

@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 class ServerActions(models.Model):
     """ Add email option in server actions. """
     _name = 'ir.actions.server'
+    _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
     state = fields.Selection(selection_add=[

@@ -206,6 +206,7 @@ class MrpBomLine(models.Model):
     _name = 'mrp.bom.line'
     _order = "sequence, id"
     _rec_name = "product_id"
+    _description = 'Bill of Material Line'
 
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id

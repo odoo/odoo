@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class MassMailingListMerge(models.TransientModel):
     _name = 'mass.mailing.list.merge'
-    _description = 'Merge Mass Mailing Lists'
+    _description = 'Merge Mass Mailing List'
 
     src_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing Lists')
     dest_list_id = fields.Many2one('mail.mass_mailing.list', string='Destination Mailing List')

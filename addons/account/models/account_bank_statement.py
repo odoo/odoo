@@ -34,7 +34,7 @@ class AccountBankStmtCashWizard(models.Model):
     Account Bank Statement popup that allows entering cash details.
     """
     _name = 'account.bank.statement.cashbox'
-    _description = 'Account Bank Statement Cashbox Details'
+    _description = 'Bank Statement Cashbox'
 
     cashbox_lines_ids = fields.One2many('account.cashbox.line', 'cashbox_id', string='Cashbox Lines')
 
@@ -59,7 +59,7 @@ class AccountBankStmtCloseCheck(models.TransientModel):
     Account Bank Statement wizard that check that closing balance is correct.
     """
     _name = 'account.bank.statement.closebalance'
-    _description = 'Account Bank Statement closing balance'
+    _description = 'Bank Statement Closing balance'
 
     @api.multi
     def validate(self):

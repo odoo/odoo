@@ -10,6 +10,7 @@ from odoo.tools import float_is_zero
 
 class ProductStyle(models.Model):
     _name = "product.style"
+    _description = 'Product Style'
 
     name = fields.Char(string='Style Name', required=True)
     html_class = fields.Char(string='HTML Classes')
@@ -234,6 +235,7 @@ class ProductAttributeValue(models.Model):
 
 class ProductImage(models.Model):
     _name = 'product.image'
+    _description = 'Product Image'
 
     name = fields.Char('Name')
     image = fields.Binary('Image', attachment=True)

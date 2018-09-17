@@ -1001,6 +1001,7 @@ class PaymentTransaction(models.Model):
 class PaymentToken(models.Model):
     _name = 'payment.token'
     _order = 'partner_id, id desc'
+    _description = 'Payment Token'
 
     name = fields.Char('Name', help='Name of the payment token')
     short_name = fields.Char('Short name', compute='_compute_short_name')

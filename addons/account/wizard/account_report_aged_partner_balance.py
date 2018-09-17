@@ -11,7 +11,7 @@ class AccountAgedTrialBalance(models.TransientModel):
 
     _name = 'account.aged.trial.balance'
     _inherit = 'account.common.partner.report'
-    _description = 'Account Aged Trial balance Report'
+    _description = 'Aged Trial Balance Report'
 
     period_length = fields.Integer(string='Period Length (days)', required=True, default=30)
     journal_ids = fields.Many2many('account.journal', string='Journals', required=True)
