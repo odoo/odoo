@@ -11,9 +11,22 @@ var QWeb = core.qweb;
 
 CrashManager.include({
     /**
+     * Change button string depending if it's Enterprise and trial available
+     * (Only change the text message in the button, doesn't change IAP side validation)
+     *
+     * @param {boolean} isTrial
+     * @returns {string}
+     * @private
+     */
+    _getButtonMessage: function (isTrial){
+        var isEnterprise = _.last(odoo.session_info.server_version_info) === 'e';
+        return isTrial && isEnterprise ? _t('Start a Trial at Odoo') : _t('Buy credits at Odoo');
+    },
+    /**
      * @override
      */
     rpc_error: function (error) {
+        var self = this;
         if (error.data.name === "odoo.addons.iap.models.iap.InsufficientCreditError") {
             var error_data = JSON.parse(error.data.message);
             ajax.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -29,7 +42,7 @@ CrashManager.include({
             }).then(function (url) {
                 var content = $(QWeb.render('iap.redirect_to_odoo_credit', {
                         data: error_data,
-                    }))
+                    }));
                 if (error_data.body) {
                     content.css('padding', 0);
                 }
@@ -37,12 +50,17 @@ CrashManager.include({
                     size: 'large',
                     title: error_data.title || _t("Insufficient Balance"),
                     $content: content,
-                    buttons: [
-                        {text: error_data.trial ? _t('Start a Trial at Odoo'):_t('Buy credits at Odoo'), classes : "btn-primary", click: function() {
+                    buttons: [{
+                        text: self._getButtonMessage(error_data.trial),
+                        classes: "btn-primary",
+                        click: function () {
                             window.open(url, '_blank');
-                        }, close:true},
-                        {text: _t("Cancel"), close: true}
-                    ],
+                        },
+                        close: true,
+                    }, {
+                        text: _t("Cancel"),
+                        close: true,
+                    }],
                 }).open();
             });
         } else {
