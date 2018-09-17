@@ -35,12 +35,7 @@
                             </div>
                             <field name="company_id" placeholder="Select company" groups="base.group_multi_company"></field>
                         </group>
-                        <group name="validity" string="Validity">
-                            <label for="website_id" groups="website.group_multi_website"/>
-                            <div>
-                                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
-                            </div>
-                        </group>
+                        <group name="validity" string="Validity"/>
                     </group>
                     <group string="Rewards">
                         <group name='reward'>
@@ -118,7 +113,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="website_id" groups="website.group_multi_website"/>
                 <field name="active"/>
             </tree>
         </field>
