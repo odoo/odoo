@@ -1234,7 +1234,7 @@ class Lead(models.Model):
 class Tag(models.Model):
 
     _name = "crm.lead.tag"
-    _description = "Category of lead"
+    _description = "Lead Tag"
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
@@ -1246,7 +1246,7 @@ class Tag(models.Model):
 
 class LostReason(models.Model):
     _name = "crm.lost.reason"
-    _description = 'Reason for loosing leads'
+    _description = 'Opp. Lost Reason'
 
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
