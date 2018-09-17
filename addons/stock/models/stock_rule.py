@@ -277,7 +277,7 @@ class ProcurementGroup(models.Model):
     sequence computed if created manually.
     """
     _name = 'procurement.group'
-    _description = 'Procurement Requisition'
+    _description = 'Procurement Group'
     _order = "id desc"
 
     partner_id = fields.Many2one('res.partner', 'Partner')

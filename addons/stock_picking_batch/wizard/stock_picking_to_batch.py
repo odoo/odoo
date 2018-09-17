@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class StockPickingToBatch(models.TransientModel):
     _name = 'stock.picking.to.batch'
-    _description = 'Add pickings to a batch picking'
+    _description = 'Batch Picking Lines'
 
     batch_id = fields.Many2one('stock.picking.batch', string='Batch Picking', required=True, oldname="wave_id")
 

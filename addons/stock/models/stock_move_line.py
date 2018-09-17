@@ -12,7 +12,7 @@ from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
 class StockMoveLine(models.Model):
     _name = "stock.move.line"
-    _description = "Packing Operation"
+    _description = "Product Moves (Stock Move Line)"
     _rec_name = "product_id"
     _order = "result_package_id desc, id"
 

@@ -10,6 +10,7 @@ from odoo.tools.float_utils import float_round
 class ReturnPickingLine(models.TransientModel):
     _name = "stock.return.picking.line"
     _rec_name = 'product_id'
+    _description = 'Return Picking Line'
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits=dp.get_precision('Product Unit of Measure'), required=True)

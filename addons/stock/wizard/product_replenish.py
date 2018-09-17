@@ -8,6 +8,7 @@ from odoo.exceptions import UserError
 
 class ProductReplenish(models.TransientModel):
     _name = 'product.replenish'
+    _description = 'Product Replenish'
 
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', String='Product Template', required=True)

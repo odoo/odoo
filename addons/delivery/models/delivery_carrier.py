@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Carrier"
+    _description = "Delivery Methods"
     _order = 'sequence, id'
 
     ''' A Shipping Provider
