@@ -396,7 +396,7 @@ class AccountVoucher(models.Model):
 
 class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
-    _description = 'Voucher Lines'
+    _description = 'Accounting Voucher Line'
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(default=10,

@@ -248,7 +248,7 @@ class account_abstract_payment(models.AbstractModel):
 class account_register_payments(models.TransientModel):
     _name = "account.register.payments"
     _inherit = 'account.abstract.payment'
-    _description = "Register payments on multiple invoices"
+    _description = "Register Payments"
 
     group_invoices = fields.Boolean(string="Group Invoices", help="""If enabled, groups invoices by commercial partner, invoice account,
                                                                     type and recipient bank account in the generated payments. If disabled,

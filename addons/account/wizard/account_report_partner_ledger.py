@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class AccountPartnerLedger(models.TransientModel):
     _inherit = "account.common.partner.report"
     _name = "account.report.partner.ledger"
-    _description = "Account Partner Ledger"
+    _description = "Account Partner Ledger Report"
 
     amount_currency = fields.Boolean("With Currency", help="It adds the currency column on report if the currency differs from the company currency.")
     reconciled = fields.Boolean('Reconciled Entries')
