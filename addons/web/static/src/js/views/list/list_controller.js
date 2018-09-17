@@ -104,6 +104,11 @@ var ListController = BasicController.extend({
         });
     },
     /**
+    * This key contains the name of the buttons template to render on top of
+    * the form view. It can be overridden to add buttons in specific child views.
+    */
+    buttons_template: 'ListView.buttons',
+    /**
      * Display and bind all buttons in the control panel
      *
      * Note: clicking on the "Save" button does nothing special. Indeed, all
@@ -115,7 +120,7 @@ var ListController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (!this.noLeaf && this.hasButtons) {
-            this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
+            this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
 
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));

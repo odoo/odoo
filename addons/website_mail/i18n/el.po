@@ -3,17 +3,14 @@
 # * website_mail
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# George Tarasidis <george_tarasidis@yahoo.com>, 2017
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-03-22 14:11+0000\n"
+"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,13 +56,6 @@ msgid ""
 "                                    </p>\n"
 "                                </li>\n"
 "                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">Website planner</span></a></span>\n"
-"                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_website')}% done)</span>\n"
-"                            </p>\n"
 "                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
 "                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
@@ -120,17 +110,17 @@ msgid ""
 msgstr ""
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_description
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail_description
-#: model:ir.model.fields,field_description:website_mail.field_mail_message_description
-#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_description
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__description
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
+#: model:ir.model.fields,field_description:website_mail.field_mail_message__description
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__description
 msgid "Description"
 msgstr "Περιγραφή"
 
 #. module: website_mail
 #: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
-msgstr "Ομάδα Συζήτησης"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
@@ -138,28 +128,28 @@ msgid "Message"
 msgstr "Μήνυμα"
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_compose_message_description
-#: model:ir.model.fields,help:website_mail.field_mail_mail_description
-#: model:ir.model.fields,help:website_mail.field_mail_message_description
-#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_description
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message__description
+#: model:ir.model.fields,help:website_mail.field_mail_mail__description
+#: model:ir.model.fields,help:website_mail.field_mail_message__description
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Περιγραφή μηνύματος: είτε το θέμα, ή την αρχή του κείμενου"
+msgstr ""
 
 #. module: website_mail
 #. openerp-web
 #: code:addons/website_mail/static/src/xml/website_mail.xml:7
-#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_mail_website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
-#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message__website_published
 #, python-format
 msgid "Published"
-msgstr "Δημοσιεύτηκε"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
-msgstr "Εγγραφή"
+msgstr ""
 
 #. module: website_mail
 #: code:addons/website_mail/models/mail_message.py:57
@@ -178,32 +168,32 @@ msgstr ""
 #: code:addons/website_mail/static/src/xml/website_mail.xml:6
 #, python-format
 msgid "Unpublished"
-msgstr "Μη Δημοσιευμένο"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "Unsubscribe"
-msgstr "Κατάργηση εγγραφής"
+msgstr ""
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_mail_compose_message_website_published
-#: model:ir.model.fields,help:website_mail.field_mail_mail_website_published
-#: model:ir.model.fields,help:website_mail.field_mail_message_website_published
-#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_website_published
+#: model:ir.model.fields,help:website_mail.field_mail_compose_message__website_published
+#: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
+#: model:ir.model.fields,help:website_mail.field_mail_message__website_published
+#: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message__website_published
 msgid "Visible on the website as a comment"
-msgstr "Ορατό στον ιστότοπο ως ένα σχόλιο"
+msgstr ""
 
 #. module: website_mail
 #: model:mail.template,subject:website_mail.mail_template_data_module_install_website_mail
 msgid "Your business is reachable from anywhere, anytime !"
-msgstr "Η επιχείρησή σας είναι προσβάσιμη από οπουδήποτε, οποτεδήποτε!"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr "publisher_warranty.contract"
+msgstr ""
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
-msgstr "το emails σας..."
+msgstr ""

@@ -3,20 +3,21 @@
 # * note
 # 
 # Translators:
-# Mateus Lopes <mateus1@gmail.com>, 2016
-# Martin Trigaux, 2016
-# grazziano <gra.negocia@gmail.com>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
-# Silmar <pinheirosilmar@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
 # Adriel Kotviski <kotviski@gmail.com>, 2018
 # falexandresilva <falexandresilva@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -101,6 +102,13 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:10
+#, python-format
+msgid "Channel"
+msgstr "Canal"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
@@ -140,12 +148,22 @@ msgstr "Excluir"
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
-msgstr "Nome para Exibição"
+msgstr "Nome exibido"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Dobrado por Padrão"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -204,7 +222,7 @@ msgstr "É um seguidor"
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
-msgstr "Última Modificação em"
+msgstr "Última modificação em"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -308,6 +326,13 @@ msgid "Notes"
 msgstr "Observações"
 
 #. module: note
+#: model:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Número de ações"
@@ -395,6 +420,13 @@ msgid "Sequence"
 msgstr "Seqüência"
 
 #. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:18
+#, python-format
+msgid "Set date and time"
+msgstr ""
+
+#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -464,7 +496,7 @@ msgstr "Marcadores"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray.js:90
+#: code:addons/note/static/src/js/systray_activity_menu.js:93
 #: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"
@@ -491,21 +523,6 @@ msgid "Unread Messages Counter"
 msgstr "Contador de Mensagens Não Lidas"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-"Use notas para organizar tarefas pessoais ou notas. Todas\n"
-"as notas são particulares; ninguém será capaz de vê-las. Entretanto\n"
-"você pode compartilhar algumas notas com outras pessoas, convidando seguidores\n"
-"sobre a nota. (Útil para atas de reuniões, especialmente se\n"
-"você ativar o recurso de bloco para os escritos de colaboração)."
-
-#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Usado para ordenar os estágios das notas"
@@ -514,12 +531,3 @@ msgstr "Usado para ordenar os estágios das notas"
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "Usuários"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Você pode personalizar a forma como você processa suas notas/tarefas, acrescentando,\n"
-"removendo ou modificando colunas."

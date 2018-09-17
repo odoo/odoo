@@ -409,7 +409,7 @@ var ActionManager = Widget.extend({
                 size: action.context.dialog_size,
             }));
             /**
-             * @param {Object} [options]
+             * @param {Object} [options={}]
              * @param {Object} [options.infos] if provided and `silent` is
              *   unset, the `on_close` handler will pass this information,
              *   which gives some context for closing this dialog.
@@ -417,9 +417,10 @@ var ActionManager = Widget.extend({
              *   `on_close` handler.
              */
             dialog.on('closed', self, function (options) {
+                options = options || {};
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
-                if (options && options.silent !== true) {
+                if (options.silent !== true) {
                     controller.onClose(options.infos);
                 }
             });

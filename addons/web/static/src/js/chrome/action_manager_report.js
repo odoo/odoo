@@ -81,16 +81,15 @@ ActionManager.include({
      */
     _triggerDownload: function (action, options, type){
         var self = this;
-        var processedActions = [];
-        var currentAction = action;
-        var defs = [];
-        do {
-            var reportUrls = self._makeReportUrls(currentAction);
-            defs.push(self._downloadReport(reportUrls[type]));
-            processedActions.push(currentAction);
-            currentAction = currentAction.next_report_to_generate;
-        } while (currentAction && !_.contains(processedActions, currentAction));
-        return $.when.apply($, defs).done(options.on_close);
+        var reportUrls = this._makeReportUrls(action);
+        return this._downloadReport(reportUrls[type]).then(function () {
+            if (action.close_on_report_download) {
+                var closeAction = { type: 'ir.actions.act_window_close' };
+                return self.doAction(closeAction, _.pick(options, 'on_close'));
+            } else {
+                return options.on_close();
+            }
+        });
     },
     /**
      * Executes actions of type 'ir.actions.report'.

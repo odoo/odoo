@@ -58,11 +58,12 @@ class Project(models.Model):
 
     @api.multi
     def write(self, values):
-        result = super(Project, self).write(values)
         # create the AA for project still allowing timesheet
-        for project in self:
-            if project.allow_timesheets and not project.analytic_account_id:
-                project._create_analytic_account()
+        if values.get('allow_timesheets'):
+            for project in self:
+                if not project.analytic_account_id and not values.get('analytic_account_id'):
+                    project._create_analytic_account()
+        result = super(Project, self).write(values)
         return result
 
     @api.multi

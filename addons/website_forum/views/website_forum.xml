@@ -389,7 +389,7 @@
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
-        <h2 class="page-header mt0">
+        <h2 class="o_page_header mt0">
             <t t-esc="question_count"/>
                 <span t-if="post_type not in ('link','question','discussion')"> Posts </span>
                 <span t-if="post_type == 'question'"> Questions</span>
@@ -1178,7 +1178,7 @@
 
 <template id="moderation_queue">
     <t t-call="website_forum.header">
-        <h2 class="page-header mt0">
+        <h2 class="o_page_header mt0">
             <t t-set="count_posts" t-value="len(posts_ids)"/>
             <span id='count_post' t-esc="count_posts"/>
             <span class="dropdown">
@@ -1352,9 +1352,9 @@
 
 <template id="user_detail_full">
     <t t-call="website_forum.header">
-        <h1 class="mt0 page-header">
+        <h1 class="o_page_header mt0">
             <span t-field="user.name"/>
-            <small>profile</small>
+            <small class="text-muted">profile</small>
         </h1>
         <div class="row">
             <div class="col-md-2">

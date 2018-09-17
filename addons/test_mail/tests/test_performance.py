@@ -271,7 +271,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=31, emp=42):  # com runbot 30 - 41 // test_mail only: 31 - 42
+        with self.assertQueryCount(__system__=31, emp=43):  # com runbot 30 - 42 // test_mail only: 31 - 43
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -504,7 +504,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=155, emp=190):  # com runbot: 155 - 190 // test_mail only: 155 - 190
+        with self.assertQueryCount(__system__=156, emp=190):  # com runbot: 156 - 190 // test_mail only: 156 - 190
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,

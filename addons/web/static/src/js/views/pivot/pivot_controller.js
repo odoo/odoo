@@ -192,6 +192,10 @@ var PivotController = AbstractController.extend({
             self.$buttons.find('.dropdown-item[data-field="' + name + '"]')
                          .toggleClass('selected', isSelected);
         });
+        var noDataDisplayed = !state.has_data || !state.measures.length;
+        this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
+        this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
     },
 
     //--------------------------------------------------------------------------

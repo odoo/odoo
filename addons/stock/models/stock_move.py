@@ -731,6 +731,10 @@ class StockMove(models.Model):
             'location_dest_id': self.location_dest_id.id,
         }
 
+    def _should_be_assigned(self):
+        self.ensure_one()
+        return bool(not self.picking_id and self.picking_type_id)
+
     def _action_confirm(self, merge=True, merge_into=False):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
@@ -750,7 +754,7 @@ class StockMove(models.Model):
                     move_create_proc |= move
                 else:
                     move_to_confirm |= move
-            if not move.picking_id and move.picking_type_id:
+            if move._should_be_assigned():
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
                 if key not in to_assign:
                     to_assign[key] = self.env['stock.move']
@@ -1233,3 +1237,36 @@ class StockMove(models.Model):
             return result
         else:
             return [(self.picking_id, self.product_id.responsible_id, visited)]
+
+    def _set_quantity_done(self, qty):
+        """
+        Set the given quantity as quantity done on the move through the move lines. The method is
+        able to handle move lines with a different UoM than the move (but honestly, this would be
+        looking for trouble...).
+        @param qty: quantity in the UoM of move.product_uom
+        """
+        for ml in self.move_line_ids:
+            # Convert move line qty into move uom
+            ml_qty = ml.product_uom_qty - ml.qty_done
+            if ml.product_uom_id != self.product_uom:
+                ml_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
+
+            taken_qty = min(qty, ml_qty)
+            # Convert taken qty into move line uom
+            if ml.product_uom_id != self.product_uom:
+                taken_qty = self.product_uom._compute_quantity(ml_qty, ml.product_uom_id, round=False)
+
+            # Assign qty_done and explicitly round to make sure there is no inconsistency between
+            # ml.qty_done and qty.
+            taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
+            ml.qty_done += taken_qty
+            if ml.product_uom_id != self.product_uom:
+                taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
+            qty -= taken_qty
+
+            if float_compare(qty, 0.0,  precision_rounding=self.product_uom.rounding) <= 0:
+                break
+        if float_compare(qty, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
+            vals = self._prepare_move_line_vals(quantity=0)
+            vals['qty_done'] = qty
+            ml = self.env['stock.move.line'].create(vals)

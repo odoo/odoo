@@ -6,8 +6,14 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
 @if $-theme-font {
     @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
 }
-@if $o-theme-font-number != $o-theme-headings-font-number {
+@if $o-theme-headings-font-number != $o-theme-font-number {
     $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
+    @if $-theme-font {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+    }
+}
+@if $o-theme-buttons-font-number != $o-theme-font-number and $o-theme-buttons-font-number != $o-theme-headings-font-number {
+    $-theme-font: nth($o-theme-font-urls, $o-theme-buttons-font-number);
     @if $-theme-font {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
     }
@@ -18,10 +24,25 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+
+    @if ($o-theme-layout == 'boxed') {
+        @include media-breakpoint-up(md) {
+            padding: 0 7.5%;
+        }
+    }
 }
 
 .navbar {
     @include o-bg-color(color('menu'));
+
+    .nav-item {
+        transition: opacity 1000ms ease 0s;
+    }
+    .o_menu_loading .nav-item {
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+    }
 }
 .o_footer {
     @include o-bg-color(color('footer'));
@@ -46,6 +67,11 @@ h5, h6 {
 }
 h6 {
     color: color('h6');
+}
+.btn {
+    @if ($o-theme-buttons-font-number != $o-theme-font-number) {
+        font-family: nth($o-theme-fonts, $o-theme-buttons-font-number);
+    }
 }
 
 // Texts
@@ -245,8 +271,7 @@ table.table_desc tr td {
         &:after  { margin: 0 -100% 0 $grid-gutter-width/2; }
     }
     .s_title_underlined {
-        padding-bottom: $grid-gutter-width/3;
-        border-bottom: 1px solid;
+        @extend %o-page-header;
     }
     .s_title_small_caps {
         font-variant: small-caps;

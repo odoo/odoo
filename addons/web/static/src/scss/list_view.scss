@@ -18,12 +18,6 @@
         }
     }
 
-    &.table {
-        td, th {
-           vertical-align: middle;
-        }
-    }
-
     thead {
         color: $o-main-text-color;
         border-bottom: 1px solid #cacaca;
@@ -117,18 +111,6 @@
     tbody + tbody {
         border-top: none;  // Override bootstrap for grouped list views
     }
-
-    tbody {
-        tr:focus-within {
-            background-color: $o-form-lightsecondary;
-        }
-        tr{
-            .focussed {
-                background-color: $o-form-lightsecondary;
-            }
-        }
-    }
-
 
     // Values styling
     .o_list_number {

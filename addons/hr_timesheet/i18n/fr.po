@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Nathan Grognet <ngr@odoo.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 msgid ""
 msgstr ""
@@ -32,27 +34,27 @@ msgstr "<span class=\"o_stat_text\"/>"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span> planned hours</span>"
-msgstr ""
+msgstr "<span> heures planifiées</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Date</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>Description</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Responsible</span>"
-msgstr ""
+msgstr "<span>Responsable</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Time</span>"
-msgstr ""
+msgstr "<span>Temps</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -85,7 +87,7 @@ msgstr "Toutes les feuilles de temps"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr "Permettre les feuilles de temps"
+msgstr "Autoriser les feuilles de temps"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
@@ -181,7 +183,7 @@ msgstr "Description"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
 msgid "Display progress of current task."
-msgstr ""
+msgstr "Affiche la progression de la tâche actuelle."
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -192,7 +194,7 @@ msgstr "Durée"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:95
 #, python-format
 msgid "Duration (%s)"
-msgstr ""
+msgstr "Durée (%s)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -209,7 +211,7 @@ msgstr "Employé"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
-msgstr ""
+msgstr "Unité d'encodage"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -359,7 +361,7 @@ msgstr "Heures restantes"
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
-msgstr "Rapport"
+msgstr "Analyse"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -369,7 +371,7 @@ msgstr "Responsable"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set time unit used to record your timesheets"
-msgstr ""
+msgstr "Définissez l'unité de temps pour encoder vos feuilles de temps"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -385,12 +387,12 @@ msgstr "Heures consommées"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sub-tasks Hours Spent"
-msgstr ""
+msgstr "Heures passées sur les sous-tâches"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sum of actually spent hours on the subtask(s)"
-msgstr ""
+msgstr "Somme des heures réellement passées sur le(s) sous-tâche(s)"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -417,6 +419,8 @@ msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
 "account. Set one on the project configuration."
 msgstr ""
+"Le projet sur lequel vous encoder du temps n'est pas lié à un compte "
+"analytique actif. Définissez-en un sur la configuration du projet."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:146
@@ -425,6 +429,8 @@ msgid ""
 "This task must be part of a project because they some timesheets are linked "
 "to it."
 msgstr ""
+"Cette tâche doit faire partie d'un projet car certaines feuilles de temps y "
+"sont liées."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account__company_uom_id
@@ -444,11 +450,13 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Cela définira l'unité de mesure utilisée pour encoder les feuilles de temps. Cela fournira simplement des outils\n"
+"        et des widgets pour faciliter l'encodage. Tous les rapports seront toujours exprimés en heures (valeur par défaut)."
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr ""
+msgstr "Encodage de temps"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -472,12 +480,12 @@ msgstr "Coût de la feuille de temps"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Date"
-msgstr ""
+msgstr "Date de la feuille de temps"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Unité d'encodage des feuilles de temps"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
@@ -488,7 +496,7 @@ msgstr "Entrés de la feuille de temps"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr ""
+msgstr "Feuilles de temps par date"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -507,7 +515,7 @@ msgstr "Feuilles de temps"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr ""
+msgstr "Des feuilles de temps peuvent être encodées sur cette tâche."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:32
@@ -515,6 +523,8 @@ msgstr ""
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
+"Pour autoriser les feuilles de temps, votre projet %s doit avoir un compte "
+"analytique défini."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -534,7 +544,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:51
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "Compte analytique inconnu"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
@@ -562,6 +572,8 @@ msgid ""
 "Widget used in the webclient when this unit is the one used to encode "
 "timesheets."
 msgstr ""
+"Widget utilisé dans le client web lorsque cette unité est celle utilisée "
+"pour l'encodage des feuilles de temps."
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -570,6 +582,9 @@ msgid ""
 "analytic account. Please change it, or reactivate the current one to "
 "timesheet on the project."
 msgstr ""
+"Vous ne pouvez pas encoder de feuilles de temps sur ce projet car il est lié"
+" à un compte analytique inactif. Changez-le, ou réactiver le compte actuel "
+"afin d'encoder des feuilles de temps sur le projet."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line

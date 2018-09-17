@@ -1,4 +1,4 @@
-odoo.define('mail.document_thread_window_tests', function (require) {
+odoo.define('mail.documentThreadWindowTests', function (require) {
 "use strict";
 
 var mailTestUtils = require('mail.testUtils');
@@ -7,8 +7,8 @@ var MessagingMenu = require('mail.systray.MessagingMenu');
 var testUtils = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
-
-QUnit.module('ThreadWindow (Document Thread)', {
+QUnit.module('Thread Window', {}, function () {
+QUnit.module('Document Thread', {
     beforeEach: function () {
         var partnerID = 44;
         this.data = {
@@ -84,12 +84,7 @@ QUnit.module('ThreadWindow (Document Thread)', {
             partner_id: partnerID, // so that needaction messages are treated as needactions
         };
         this.services = mailTestUtils.getMailServices();
-        this.MailService = this.services.mail_service;
-        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = false;
     },
-    afterEach: function () {
-        this.MailService.prototype.IS_STATIC_PREVIEW_ENABLED = true;
-    }
 });
 
 QUnit.test('open a document thread in a thread window', function (assert) {
@@ -277,5 +272,5 @@ QUnit.test('open, fold, unfold and close a document thread window', function (as
 });
 
 });
-
+});
 });

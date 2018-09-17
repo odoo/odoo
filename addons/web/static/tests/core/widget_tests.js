@@ -1,10 +1,12 @@
 odoo.define('web.widget_tests', function (require) {
 "use strict";
 
+var AjaxService = require('web.AjaxService');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var QWeb = require('web.QWeb');
 var Widget = require('web.Widget');
+var testUtils = require('web.test_utils');
 
 QUnit.module('core', {}, function () {
 
@@ -377,16 +379,49 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("calling _rpc on destroyed widgets", function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
-        var widget = new Widget();
-        widget.destroy();
+        var def;
+        var parent = new Widget();
+        testUtils.addMockEnvironment(parent, {
+            session: {
+                rpc: function () {
+                    def = $.Deferred();
+                    def.abort = def.reject;
+                    return def;
+                },
+            },
+            services: {
+                ajax: AjaxService
+            },
+        });
+        var widget = new Widget(parent);
+
+        widget._rpc({route: '/a/route'}).then(function () {
+            assert.ok(true, "The ajax call should be resolve");
+        });
+        def.resolve();
+        def = null;
+
         widget._rpc({route: '/a/route'}).always(function () {
             throw Error("Calling _rpc on a destroyed widget should return a " +
                 "deferred that is never resolved nor rejected");
         });
+        widget.destroy();
+        def.resolve();
+        def = null;
+
+        widget._rpc({route: '/a/route'}).always(function () {
+            throw Error("Calling _rpc on a destroyed widget should return a " +
+                "deferred that is never resolved nor rejected");
+        });
+        assert.ok(!def,
+            "The trigger_up is not performed and the call returns a deferred "+
+                "never resolved nor rejected");
+
         assert.ok(true,
             "there should be no crash when calling _rpc on a destroyed widget");
+        parent.destroy();
     });
 
     QUnit.test('start is not called when widget is destroyed', function (assert) {

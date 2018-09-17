@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-05 08:39+0000\n"
+"PO-Revision-Date: 2018-09-05 08:39+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -75,11 +75,6 @@ msgstr "&amp;times;"
 msgid ""
 ",\n"
 "                an awesome"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "/sale/static/src/img/sale_quotation_onboarding_bg.jpg"
 msgstr ""
 
 #. module: sale
@@ -201,7 +196,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 
 #. module: sale
@@ -246,14 +241,15 @@ msgid "<span>Pro-Forma Invoice # </span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<span>Taxes</span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>with payment terms: </span>"
 msgstr "<span>дараах төлбөрийн нэр томъёотой: </span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -321,12 +317,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong>Subtotal:</strong>"
-msgstr "<strong>Дэд дүн:</strong>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Дэд дүн</strong>"
 
@@ -366,13 +356,13 @@ msgid "<strong>Your Reference:</strong>"
 msgstr "<strong>Таны код:</strong>"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:783
+#: code:addons/sale/models/sale.py:794
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:776
+#: code:addons/sale/models/sale.py:787
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
 msgstr ""
@@ -383,14 +373,14 @@ msgid "A single sales price per product"
 msgstr "Бараа тутамд нэг борлуулах үнэ"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:747
+#: code:addons/sale/models/sale.py:758
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:752
+#: code:addons/sale/models/sale.py:763
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
@@ -601,11 +591,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Back to Sales Order"
 msgstr ""
 
 #. module: sale
@@ -998,7 +983,7 @@ msgid "Delivered Manually"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:999
+#: code:addons/sale/models/sale.py:1007
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
@@ -1178,6 +1163,11 @@ msgid "Edit Quotation"
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Edit Sales Order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 msgid "Electronic Payment"
@@ -1217,7 +1207,7 @@ msgid "Extended Filters"
 msgstr "Өргөтгөсөн Шүүлтүүр"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:973
+#: code:addons/sale/models/sale.py:981
 #, python-format
 msgid "Extra line with %s "
 msgstr "%s-тэй нэмэлт мөр"
@@ -1387,13 +1377,13 @@ msgid "Insert your terms & conditions here..."
 msgstr "Энд өөрийн худалдааны нөхцөл & тавигдах шаардлагыг бичнэ үү..."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:766
+#: code:addons/sale/models/sale.py:777
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:769
+#: code:addons/sale/models/sale.py:780
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
 msgstr ""
@@ -1498,7 +1488,7 @@ msgid "Invoiced"
 msgstr "Нэхэмжилсэн"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1000
+#: code:addons/sale/models/sale.py:1008
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
@@ -1600,7 +1590,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1022
+#: code:addons/sale/models/sale.py:1030
 #, python-format
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
@@ -1796,8 +1786,8 @@ msgid "Name of the person that signed the SO."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:118 code:addons/sale/models/sale.py:342
-#: code:addons/sale/models/sale.py:344 code:addons/sale/models/sale.py:346
+#: code:addons/sale/models/sale.py:118 code:addons/sale/models/sale.py:351
+#: code:addons/sale/models/sale.py:353 code:addons/sale/models/sale.py:355
 #: selection:sale.report,state:0
 #, python-format
 msgid "New"
@@ -1914,6 +1904,7 @@ msgstr "Уншаагүй зурвасын тоо"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1962,7 +1953,6 @@ msgid "Open Source CRM"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
 msgstr "Захиалга"
@@ -2034,7 +2024,7 @@ msgid "Ordered Qty"
 msgstr "Захиалсан Тоо хэмжээ"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:996
+#: code:addons/sale/models/sale.py:1004
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
@@ -2215,14 +2205,14 @@ msgid "Planned"
 msgstr "Төлөвлөсөн"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:425
+#: code:addons/sale/models/sale.py:434
 #, python-format
 msgid "Please define an accounting sales journal for this company."
 msgstr ""
 "Энэ компаний нягтлан бодох бүртгэлийн борлуулалтын журналыг тодорхойлно уу."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1253
+#: code:addons/sale/models/sale.py:1261
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2243,6 +2233,7 @@ msgstr "Батлагдсан"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Powered by"
 msgstr "Дэмжсэн"
 
@@ -2430,12 +2421,12 @@ msgid "Quantity:"
 msgstr "Тоо хэмжээ:"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:246
 #: model:ir.model,name:sale.model_sale_order
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
+#, python-format
 msgid "Quotation"
 msgstr "Үнийн санал"
 
@@ -2489,7 +2480,7 @@ msgid "Quotation sent"
 msgstr "Үнийн санал илгээгдсэн"
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:160
+#: code:addons/sale/controllers/portal.py:158
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Үнийн саналыг захиалагч үзсэн"
@@ -2581,7 +2572,7 @@ msgid "Request an online signature to confirm orders"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:335
+#: code:addons/sale/models/sale.py:343
 #, python-format
 msgid "Requested date is too soon."
 msgstr ""
@@ -2653,12 +2644,13 @@ msgid "Sales Information"
 msgstr "Борлуулалтын Мэдээлэл"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:246
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
+#, python-format
 msgid "Sales Order"
 msgstr "Борлуулалтын Захиалга"
 
@@ -3106,13 +3098,14 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
-msgid "Taxe amount by group"
+msgid "Tax amount by group"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Taxes"
 msgstr "Татварууд"
 
@@ -3178,14 +3171,12 @@ msgid "The analytic account related to a sales order."
 msgstr "Борлуулалтын захиалгатай холбогдсон шинжилгээний данс."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:336
+#: code:addons/sale/models/sale.py:344
 #, python-format
 msgid ""
-"The date requested by the customer is sooner than the commitment date. You "
-"may be unable to honor the customer's request."
+"The commitment date is sooner than the expected date.You may be unable to "
+"honor the commitment date."
 msgstr ""
-"Захиалагчийн шаардсан огноо амласан огноогоос эрт байна. Та захиалагчийн "
-"шаардлагыг хангах боломжгүй байх магадлалтай."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__dashboard_graph_model
@@ -3276,7 +3267,7 @@ msgstr ""
 "бүртгэлийн модулийн тохиргоо цэсээс дансны график суулгана уу."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:524 code:addons/sale/models/sale.py:528
+#: code:addons/sale/models/sale.py:533 code:addons/sale/models/sale.py:537
 #, python-format
 msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
@@ -3442,6 +3433,11 @@ msgid "Transactions"
 msgstr "Гүйлгээ"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__type_name
+msgid "Type Name"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
 msgstr ""
@@ -3452,7 +3448,7 @@ msgid "USPS Connector"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:699
+#: code:addons/sale/models/sale.py:710
 #, python-format
 msgid "Uncategorized"
 msgstr "Ангилагдаагүй"
@@ -3531,7 +3527,7 @@ msgid "Untaxed Total"
 msgstr "Татваргүй Нийт дүн"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:377
+#: code:addons/sale/models/sale.py:386
 #, python-format
 msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
@@ -3609,7 +3605,7 @@ msgid "Warning"
 msgstr "Анхааруулга"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1343
+#: code:addons/sale/models/sale.py:1351
 #, python-format
 msgid "Warning for %s"
 msgstr "%s-д зориулсан анхааруулга"
@@ -3673,7 +3669,7 @@ msgid "You can"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:244
+#: code:addons/sale/models/sale.py:252
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
@@ -3681,7 +3677,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1401
+#: code:addons/sale/models/sale.py:1409
 #, python-format
 msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
@@ -3724,11 +3720,6 @@ msgstr "Таны санал хүсэлт....."
 #: model:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your message has been successfully sent!"
 msgstr "Таны зурвасыг амжилттай илгээлээ!"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "action_close_sale_quotation_onboarding"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -3787,19 +3778,9 @@ msgid "has not yet been sent!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "o_onboarding_violet"
-msgstr ""
-
-#. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "report.sale.report_saleproforma"
 msgstr "report.sale.report_saleproforma"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_quotation_onboarding_panel
-msgid "res.company"
-msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings

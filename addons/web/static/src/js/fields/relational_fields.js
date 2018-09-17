@@ -137,6 +137,12 @@ var FieldMany2One = AbstractField.extend({
         // coming by an onchange on another field)
         this.isDirty = false;
         this.lastChangeEvent = undefined;
+
+        // use a DropPrevious to properly handle related record quick creations,
+        // and store a createDef to be able to notify the environment that there
+        // is pending quick create operation
+        this.dp = new concurrency.DropPrevious();
+        this.createDef = undefined;
     },
     start: function () {
         // booleean indicating that the content of the input isn't synchronized
@@ -154,6 +160,18 @@ var FieldMany2One = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Override to make the caller wait for potential ongoing record creation.
+     * This ensures that the correct many2one value is set when the main record
+     * is saved.
+     *
+     * @override
+     * @returns {Deferred} resolved as soon as there is no longer record being
+     *   (quick) created
+     */
+    commitChanges: function () {
+        return $.when(this.createDef);
+    },
+    /**
      * @override
      * @returns {jQuery}
      */
@@ -166,7 +184,7 @@ var FieldMany2One = AbstractField.extend({
     reinitialize: function (value) {
         this.isDirty = false;
         this.floating = false;
-        this._setValue(value);
+        return this._setValue(value);
     },
     /**
      * Re-renders the widget if it isn't dirty. The widget is dirty if the user
@@ -291,29 +309,40 @@ var FieldMany2One = AbstractField.extend({
     _quickCreate: function (name) {
         var self = this;
         var def = $.Deferred();
+        this.createDef = this.createDef || $.Deferred();
+        // called when the record has been quick created, or when the dialog has
+        // been closed (in the case of a 'slow' create), meaning that the job is
+        // done
+        var createDone = function () {
+            def.resolve();
+            self.createDef.resolve();
+            self.createDef = undefined;
+        };
+        // called if the quick create is disabled on this many2one, or if the
+        // quick creation failed (probably because there are mandatory fields on
+        // the model)
         var slowCreate = function () {
             var dialog = self._searchCreatePopup("form", false, self._createContext(name));
-            dialog.on('closed', self, def.resolve.bind(def));
+            dialog.on('closed', self, createDone);
         };
         if (this.nodeOptions.quick_create) {
-            this.trigger_up('mutexify', {
-                action: function () {
-                    return self._rpc({
-                        model: self.field.relation,
-                        method: 'name_create',
-                        args: [name],
-                        context: self.record.getContext(self.recordParams),
-                    }).then(function (result) {
-                        if (self.mode === "edit") {
-                            self.reinitialize({id: result[0], display_name: result[1]});
-                        }
-                        def.resolve();
-                    }).fail(function (error, event) {
-                        event.preventDefault();
-                        slowCreate();
-                    });
-                },
+            var nameCreateDef = this._rpc({
+                model: this.field.relation,
+                method: 'name_create',
+                args: [name],
+                context: this.record.getContext(this.recordParams),
+            }).fail(function (error, ev) {
+                ev.preventDefault();
+                slowCreate();
             });
+            this.dp.add(nameCreateDef)
+                .then(function (result) {
+                    if (self.mode === "edit") {
+                        self.reinitialize({id: result[0], display_name: result[1]});
+                    }
+                    createDone();
+                })
+                .fail(def.reject.bind(def));
         } else {
             slowCreate();
         }
@@ -587,10 +616,11 @@ var FieldMany2One = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onInputKeyup: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER) {
-            // If we pressed enter, we want to prevent _onInputFocusout from
+        if (ev.which === $.ui.keyCode.ENTER || ev.which === $.ui.keyCode.TAB) {
+            // If we pressed enter or tab, we want to prevent _onInputFocusout from
             // executing since it would open a M2O dialog to request
             // confirmation that the many2one is not properly set.
+            // It's a case that is already handled by the autocomplete lib.
             return;
         }
         this.isDirty = true;
@@ -1841,6 +1871,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onDeleteTag: function (event) {
+        event.preventDefault();
         event.stopPropagation();
         this._removeTag($(event.target).parent().data('id'));
     },
@@ -1886,10 +1917,9 @@ var FieldMany2ManyTags = AbstractField.extend({
 
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .badge': '_onOpenColorPicker',
+        'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
-        'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
     //--------------------------------------------------------------------------
@@ -1898,17 +1928,12 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
     /**
      * @private
-     */
-    _onCloseColorPicker: function () {
-        this.$color_picker.remove();
-    },
-    /**
-     * @private
      * @param {MouseEvent} ev
      */
     _onOpenColorPicker: function (ev) {
-        var tagID = $(ev.currentTarget).data('id');
-        var tagColor = $(ev.currentTarget).data('color');
+        ev.preventDefault();
+        var tagID = $(ev.currentTarget).parent().data('id');
+        var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
@@ -1937,8 +1962,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var $target = $(ev.currentTarget);
         var color = $target.data('color');
         var id = $target.data('id');
-        var tag = this.$("button.badge[data-id='" + id + "']");
-        var currentColor = tag.data('color');
+        var $tag = this.$(".badge[data-id='" + id + "']");
+        var currentColor = $tag.data('color');
         var changes = {};
 
         if ($target.is('.o_hide_in_kanban')) {
@@ -1946,7 +1971,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {
-                this.prevColors[id] = currentColor
+                this.prevColors[id] = currentColor;
             } else {
                 color = this.prevColors[id] ? this.prevColors[id] : 1;
             }

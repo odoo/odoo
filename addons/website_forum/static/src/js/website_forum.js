@@ -182,7 +182,7 @@ odoo.define('website_forum.website_forum', function (require) {
             })
             .done(function() {
                 var left = $('.o_js_validation_queue:visible').length;
-                var type = $('h2.page-header li.active a').data('type');
+                var type = $('h2.o_page_header a.active').data('type');
                 $('#count_post').text(left);
                 $('#moderation_tools a[href*="/'+type+'_"]').find('strong').text(left);
             });

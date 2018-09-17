@@ -13,6 +13,7 @@ var DocumentViewer = Widget.extend({
     template: "DocumentViewer",
     events: {
         'click .o_download_btn': '_onDownload',
+        'click .o_split_btn': '_onSplitPDF',
         'click .o_viewer_img': '_onImageClicked',
         'click .o_viewer_video': '_onVideoClicked',
         'click .move_next': '_onNext',
@@ -43,10 +44,25 @@ var DocumentViewer = Widget.extend({
     init: function (parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.mimetype.match("(image|video|application/pdf|text)");
+        var match = attachment.type == 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
 
             if (match) {
                 attachment.type = match[1];
+                if (match[1].match("(.png|.jpg|.gif)")) {
+                    attachment.type = 'image';
+                }
+                if (match[1] === 'youtu') {
+                    var youtube_array = attachment.url.split('/');
+                    var youtube_token = youtube_array[youtube_array.length-1];
+                    if (youtube_token.indexOf('watch') !== -1) {
+                        youtube_token = youtube_token.split('v=')[1];
+                        var amp = youtube_token.indexOf('&')
+                        if (amp !== -1){
+                            youtube_token = youtube_token.substring(0, amp);
+                        }
+                    }
+                    attachment.youtube = youtube_token;
+                }
                 return true;
             }
         });
@@ -63,6 +79,18 @@ var DocumentViewer = Widget.extend({
         this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
+        this.trigger_up('document_viewer_closed');
+        this.$el.modal('hide');
+        this.$el.remove();
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -156,19 +184,15 @@ var DocumentViewer = Widget.extend({
      */
     _onClose: function (e) {
         e.preventDefault();
-        this.$el.modal('hide');
-        this.trigger_up('document_viewer_closed');
+        this.destroy();
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
+     *
      * @private
      */
     _onDestroy: function () {
-        if (this.isDestroyed()) {
-            return;
-        }
-        this.$el.modal('hide');
-        this.$el.remove();
+        this.destroy();
     },
     /**
      * @private
@@ -300,6 +324,24 @@ var DocumentViewer = Widget.extend({
             scale = this.scale - SCROLL_ZOOM_STEP;
             this._zoom(scale);
         }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onSplitPDF: function (e) {
+        e.stopPropagation();
+        var self = this;
+        var indices = $("input[name=Indices]").val();
+        var remainder = $("input[type=checkbox][name=remainder]").is(":checked");
+        this._rpc({
+            model: 'ir.attachment',
+            method: 'split_pdf',
+            args: [this.activeAttachment.id, indices, remainder],
+        }).always(function () {
+            self.trigger_up('document_viewer_attachment_changed');
+            self.destroy();
+        });
     },
     /**
      * @private

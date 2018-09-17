@@ -3,25 +3,27 @@
 # * account_voucher
 # 
 # Translators:
-# salmemik <salmemik@gmail.com>, 2017
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Tommi Rintala <tommi.rintala@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Kari Lindgren <karisatu@gmail.com>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
-# Marko Happonen <marko.happonen@sprintit.fi>, 2017
-# Timo Koukkari <ti.ko@netikka.fi>, 2017
-# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2017
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
+# Tommi Rintala <tommi.rintala@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
+# Jussi Lehto <jussi@gulfeo.com>, 2018
+# Mikko Salmela <salmemik@gmail.com>, 2018
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
+# Kari Lindgren <karisatu@gmail.com>, 2018
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
+# Marko Happonen <marko.happonen@sprintit.fi>, 2018
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
+# Timo Koukkari <ti.ko@netikka.fi>, 2018
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Svante Suominen <svante.suominen@web-veistamo.fi>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +32,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
@@ -39,8 +41,8 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_id
 msgid "Account"
 msgstr "Tili"
 
@@ -50,7 +52,7 @@ msgid "Account Date"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
 msgid "Accounting Date"
 msgstr "Kirjauspäivä"
 
@@ -60,14 +62,24 @@ msgid "Accounting Voucher"
 msgstr "Kirjanpitotosite"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimenpiteitä"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
 msgid "Amount"
 msgstr "Määrä"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_analytic_id
 msgid "Analytic Account"
 msgstr "Analyyttinen tili"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Analyyttiset tunnisteet"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -76,7 +88,7 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Oletko varma että haluat peruuttaa tämän kuitin?"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
@@ -88,14 +100,14 @@ msgid "Bill Information"
 msgstr "Laskun tiedot"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
 msgstr "Laskun viite"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Cancel"
-msgstr "Peru"
+msgstr "Peruuta"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -108,48 +120,43 @@ msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Avattua tai maksettua tositetta ei voi poistaa!"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
-msgid "Click to create a sale receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
-msgid "Click to register a purchase receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__company_id
 msgid "Company"
 msgstr "Yritys"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
 msgstr "Päiväkirjaan liittyvä yritys"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Create a new sale receipt"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_uid
 msgid "Created by"
 msgstr "Luonut"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_date
 msgid "Created on"
 msgstr "Luotu"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__currency_id
 msgid "Currency"
 msgstr "Valuutta"
 
@@ -166,13 +173,13 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__name
 msgid "Description"
 msgstr "Kuvaus"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
@@ -192,17 +199,32 @@ msgid "Draft Vouchers"
 msgstr "Tositeluonnokset"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
 msgid "Due Date"
 msgstr "Eräpäivä"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
 msgstr "Kirjanpitovientien arvopäivä"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Seuraajat (kanavat)"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr ""
 
@@ -214,13 +236,28 @@ msgid "Group By"
 msgstr "Ryhmittely"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__id
 msgid "ID"
 msgstr "Tunniste (ID)"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
@@ -232,7 +269,12 @@ msgid "Internal Notes"
 msgstr "Sisäiset kommentit"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -240,7 +282,7 @@ msgid "Journal"
 msgstr "Päiväkirja"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
 msgstr "Päiväkirjan kirjaus"
 
@@ -251,45 +293,92 @@ msgid "Journal Items"
 msgstr "Päiväkirjan tapahtumat"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line____last_update
 msgid "Last Modified on"
 msgstr "Viimeksi muokattu"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_uid
 msgid "Last Updated by"
 msgstr "Viimeksi päivittänyt"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:109
+#, python-format
+msgid "Missing Company"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:111
+#, python-format
+msgid "Missing Currency"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
 msgid "Notes"
 msgstr "Muistiinpanot"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
 msgid "Number"
 msgstr "Numero"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Lukemattomia viestejä"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
 msgstr "Maksettu"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
 msgstr "Kumppani"
@@ -305,23 +394,28 @@ msgid "Pay Later"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
 msgstr "Maksu"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
-msgid "Payment Reference"
-msgstr "Maksun viite"
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
+msgid "Payment Memo"
+msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
+msgid "Payment Method"
+msgstr "Maksutapa"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:211
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Määrittele päiväkirjaan järjestys."
@@ -347,7 +441,7 @@ msgid "Pro-forma"
 msgstr "Proforma"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
 msgid "Product"
 msgstr "Tuote"
 
@@ -362,20 +456,27 @@ msgid "Purchase Receipt"
 msgstr "Ostokuitti"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
-msgid "Purchase Receipts"
-msgstr "Ostokuitit"
-
-#. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
 msgstr "Ostotosite"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "Määrä"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Receipts"
+msgstr "Vastaanotot"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Register a new purchase receipt"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -393,12 +494,6 @@ msgid "Sales Receipt"
 msgstr "Myyntikuitti"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipts"
-msgstr "Myyntikuitit"
-
-#. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -406,7 +501,7 @@ msgid "Search Vouchers"
 msgstr "Hae tositteet"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
 msgid "Sequence"
 msgstr "Järjestys"
 
@@ -417,7 +512,7 @@ msgid "Set to Draft"
 msgstr "Aseta luonnokseksi"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -435,32 +530,32 @@ msgid "Status changed"
 msgstr "Tila muutettu"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
 msgid "Tax"
 msgstr "Vero"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
 msgstr "Verotili"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
 msgstr "Tosite on kokonaan maksettu"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
 msgid "The income or expense account related to the selected product."
 msgstr "Tulo -tai Kustannustili koskien tätä tuotetta."
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
 msgstr ""
 
@@ -470,7 +565,7 @@ msgid "To Review"
 msgstr "Tarkastettavaksi"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
 msgid "Total"
 msgstr "Yhteensä"
 
@@ -481,14 +576,24 @@ msgid "Total Amount"
 msgstr "Yhteensä"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__voucher_type
 msgid "Type"
 msgstr "Tyyppi"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_unit
 msgid "Unit Price"
 msgstr "Yksikköhinta"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
+msgid "Unread Messages"
+msgstr "Lukemattomat viestit"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Lukemattomien viestien laskuri"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -509,8 +614,8 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: code:addons/account_voucher/models/account_voucher.py:116
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -527,7 +632,7 @@ msgstr "Tositteen viennit"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
@@ -546,6 +651,16 @@ msgid "Vouchers Entries"
 msgstr "Tositteiden viennit"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -560,7 +675,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
-msgid "You must first select a partner!"
-msgstr "Ensin täytyy valita kumppani!"
+msgid "You must first select a partner."
+msgstr ""

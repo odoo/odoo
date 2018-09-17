@@ -223,6 +223,7 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
             'sale_order_id': self.order_id.id,
+            'active': True,
         }
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
@@ -325,4 +326,5 @@ class SaleOrderLine(models.Model):
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
                     else:
                         project = map_so_project[so_line.order_id.id]
-                so_line._timesheet_create_task(project=project)
+                if not so_line.task_id:
+                    so_line._timesheet_create_task(project=project)

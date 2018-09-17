@@ -101,15 +101,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this._focusInput();
     },
     /**
-     * Get the ID of the thread window, which is equivalent to the ID of the
-     * thread related to this window
-     *
-     * @returns {integer|string}
-     */
-    getID: function () {
-        return this._getThreadID();
-    },
-    /**
      * Overrides so that if this thread window is not linked to any thread
      * (= "blank" thread window), displays "New message" as its title.
      *
@@ -157,14 +148,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
         this._passive = false;
     },
     /**
-     * Set the thread window in passive mode, so that new received message will
-     * keep the thread window as unread until there is focus on the thread
-     * window.
-     */
-    setPassive: function () {
-        this._passive = true;
-    },
-    /**
      * Update this thread window
      *
      * @param {Object} options
@@ -172,12 +155,12 @@ var ThreadWindow = AbstractThreadWindow.extend({
      *   should scroll to the bottom if it was at the bottom before update
      * @param {boolean} [options.passively=false] if set, this thread window
      *   becomes passive, so that it is marked as read only when the focus is
-     *   on it.
+     *   on it. Ignore this option if the focus is already on the thread window.
      */
     update: function (options) {
         var self = this;
-        if (options.passively) {
-            this.setPassive();
+        if (options.passively && !this._hasFocus()) {
+            this._setPassive();
         }
         var bottomVisible = !this.isFolded() &&
                             !this.isHidden() &&
@@ -230,6 +213,16 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     _open: function () {
         this.call('mail_service', 'openThreadWindow', this.getID());
+    },
+    /**
+     * Set the thread window in passive mode, so that new received message will
+     * keep the thread window as unread until there is focus on the thread
+     * window.
+     *
+     * @private
+     */
+    _setPassive: function () {
+        this._passive = true;
     },
     /**
      * @private

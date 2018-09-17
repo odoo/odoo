@@ -55,7 +55,7 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, pycompat, groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
@@ -336,10 +336,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             compute='_compute_display_name'))
 
         if self._log_access:
-            add('create_uid', fields.Many2one('res.users', string='Created by', automatic=True))
-            add('create_date', fields.Datetime(string='Created on', automatic=True))
-            add('write_uid', fields.Many2one('res.users', string='Last Updated by', automatic=True))
-            add('write_date', fields.Datetime(string='Last Updated on', automatic=True))
+            add('create_uid', fields.Many2one(
+                'res.users', string='Created by', automatic=True, readonly=True))
+            add('create_date', fields.Datetime(
+                string='Created on', automatic=True, readonly=True))
+            add('write_uid', fields.Many2one(
+                'res.users', string='Last Updated by', automatic=True, readonly=True))
+            add('write_date', fields.Datetime(
+                string='Last Updated on', automatic=True, readonly=True))
             last_modified_name = 'compute_concurrency_field_with_access'
         else:
             last_modified_name = 'compute_concurrency_field'
@@ -1811,37 +1815,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # assumption: existing data is sorted by field 'groupby_name'
         first, last = existing[0], existing[-1]
 
-        expected = collections.deque(date_utils.date_range(first, last, interval))
+        empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
+        empty_item.update({key: False for key in aggregated_fields})
+        empty_item.update({key: False for key in [group['groupby'] for group in annotated_groupbys[1:]]})
 
-        if len(existing) < len(expected):
-            empty_data = dict.fromkeys(aggregated_fields, False)
-            empty_data['id'] = False
-            empty_data[groupby_name.split(':')[0] + '_count'] = 0
+        grouped_data = collections.defaultdict(list)
+        for d in data:
+            grouped_data[d[groupby_name]].append(d)
 
-            data = collections.deque(data)
+        result = []
 
-            new_data = []
+        for dt in date_utils.date_range(first, last, interval):
+            result.extend(grouped_data[dt] or [dict(empty_item, **{groupby_name: dt})])
 
-            # Note: the list 'expected' contains the the dates that should be
-            # represented inside data when it is returned. Notice that 'expected'
-            # is sorted like data, so what we do is empty data progressivly by
-            # popping its elements from first to last. To do this properly, we
-            # need to compare dates together.
-            while expected or data:
-                if not data[0][groupby_name]:
-                    new_data.append(data.popleft())
-                    continue
-                dt = expected.popleft()
-                if data[0][groupby_name] == dt:
-                    new_data.append(data.popleft())
-                else:
-                    new_data.append(dict(empty_data, **{groupby_name: dt}))
+        if False in grouped_data:
+            result.extend(grouped_data[False])
 
-            assert not data
-            return new_data
-
-        return data
-
+        return result
 
     @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
@@ -3225,7 +3215,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
-            bad_names.update(LOG_ACCESS_COLUMNS)
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.update(LOG_ACCESS_COLUMNS)
 
         # distribute fields into sets for various purposes
         store_vals = {}
@@ -3343,10 +3335,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 other_fields.append(field)
 
         if self._log_access:
-            columns.append(('write_uid', '%s', self._uid))
-            columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
-            updated.append('write_uid')
-            updated.append('write_date')
+            if 'write_uid' not in vals:
+                columns.append(('write_uid', '%s', self._uid))
+                updated.append('write_uid')
+            if 'write_date' not in vals:
+                columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
+                updated.append('write_date')
 
         # mark fields to recompute (the ones that depend on old values)
         self.modified(vals)
@@ -3390,11 +3384,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # set the value of non-column fields
         if other_fields:
             # discard default values from context
-            other = self.with_context({
-                key: val
-                for key, val in self._context.items()
-                if not key.startswith('default_')
-            })
+            other = self.with_context(clean_context(self._context))
 
             for field in sorted(other_fields, key=attrgetter('_sequence')):
                 field.write(other, vals[field.name])
@@ -3446,7 +3436,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
-            bad_names.update(LOG_ACCESS_COLUMNS)
+            # the superuser can set log_access fields while loading registry
+            if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
+                bad_names.update(LOG_ACCESS_COLUMNS)
         unknown_names = set()
 
         # classify fields for each record
@@ -3531,7 +3523,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # If a field is not stored, its inverse method will probably
                 # write on its dependencies, which will invalidate the field on
                 # all records. We therefore inverse the field record by record.
-                if all(field.store for field in fields):
+                if all(field.store or field.company_dependent for field in fields):
                     batches = [rec_vals]
                 else:
                     batches = [[rec_data] for rec_data in rec_vals]
@@ -3583,13 +3575,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         for data in data_list:
             # determine column values
-            columns = list(columns0)
-            for name, val in sorted(data['stored'].items()):
+            stored = data['stored']
+            columns = [column for column in columns0 if column[0] not in stored]
+            for name, val in sorted(stored.items()):
                 field = self._fields[name]
                 assert field.store
 
                 if field.column_type:
-                    col_val = field.convert_to_column(val, self, data['stored'])
+                    col_val = field.convert_to_column(val, self, stored)
                     columns.append((name, field.column_format, col_val))
                     if field.translate is True:
                         translated_fields.add(field)
@@ -3623,11 +3616,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             if other_fields:
                 # discard default values from context for other fields
-                others = records.with_context({
-                    key: val
-                    for key, val in self._context.items()
-                    if not key.startswith('default_')
-                })
+                others = records.with_context(clean_context(self._context))
                 for field in sorted(other_fields, key=attrgetter('_sequence')):
                     field.create([
                         (other, data['stored'][field.name])
@@ -4985,6 +4974,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def __le__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s <= %s" % (self, other))
+        # these are much cheaper checks than a proper subset check, so
+        # optimise for checking if a null or singleton are subsets of a
+        # recordset
+        if not self or self in other:
+            return True
         return set(self._ids) <= set(other._ids)
 
     def __gt__(self, other):
@@ -4995,6 +4989,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def __ge__(self, other):
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise TypeError("Mixing apples and oranges: %s >= %s" % (self, other))
+        if not other or other in self:
+            return True
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):
@@ -5123,9 +5119,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if path == 'id':
                     target0 = self
                 else:
-                    env = self.env(user=SUPERUSER_ID, context={'active_test': False})
-                    target0 = env[model_name].search([(path, 'in', self.ids)])
-                    target0 = target0.with_env(self.env)
+                    Model = self.env[model_name]
+                    f = Model._fields.get(path)
+                    if f and f.store and f.type not in ('one2many', 'many2many'):
+                        # path is direct (not dotted), stored, and inline -> optimise to raw sql
+                        self.env.cr.execute("SELECT id FROM %s WHERE %s in %%s" % (Model._table, path), [tuple(self.ids)])
+                        target0 = Model.browse(i for [i] in self.env.cr.fetchall())
+                    else:
+                        env = self.env(user=SUPERUSER_ID, context={'active_test': False})
+                        target0 = env[model_name].search([(path, 'in', self.ids)])
+                        target0 = target0.with_env(self.env)
                 # prepare recomputation for each field on linked records
                 for field in stored:
                     # discard records to not recompute for field

@@ -3,22 +3,20 @@
 # * hr_attendance
 # 
 # Translators:
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# İlknur Püskül <ilknurpuskull@gmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# İlknur Püskül <ilknurpuskull@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -28,19 +26,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:56
+#: code:addons/hr_attendance/models/hr_attendance.py:52
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
 msgstr "\"Check Out\" zamanı \"Check In\" zamanından önce olamaz."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:30
+#: code:addons/hr_attendance/models/hr_attendance.py:27
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:35
+#: code:addons/hr_attendance/models/hr_attendance.py:32
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr ""
@@ -52,6 +50,11 @@ msgstr ""
 msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
 "right, please contact Human Resource staff"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Employee PIN</span>"
 msgstr ""
 
 #. module: hr_attendance
@@ -114,12 +117,20 @@ msgid "Attendances"
 msgstr "Katılımcılar"
 
 #. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:4
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+#, python-format
+msgid "Available"
+msgstr "Uygun"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__barcode
 msgid "Badge ID"
 msgstr "Rozet ID"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:86
+#: code:addons/hr_attendance/models/hr_attendance.py:82
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
@@ -127,8 +138,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:73
-#: code:addons/hr_attendance/models/hr_attendance.py:99
+#: code:addons/hr_attendance/models/hr_attendance.py:69
+#: code:addons/hr_attendance/models/hr_attendance.py:95
 #, python-format
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
@@ -161,6 +172,11 @@ msgid "Check In / Check Out"
 msgstr "Giriş/Çıkış"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check In Date"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 msgid "Check Out"
 msgstr "Çıkış"
@@ -177,10 +193,10 @@ msgstr "Giriş Yapıldı"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:124
 #, python-format
 msgid "Checked in at"
-msgstr "Kayıt yapıldı"
+msgstr "Giriş kaydı yapıldı"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -189,15 +205,15 @@ msgstr "Çıkış Yapıldı"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:115
 #, python-format
 msgid "Checked out at"
 msgstr "Çıkış kaydı yapıldı"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
 #, python-format
 msgid "Click to"
 msgstr ""
@@ -208,7 +224,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
 #, python-format
 msgid "Company Logo"
-msgstr "Firma Logosu"
+msgstr "Şirket Logosu"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
@@ -232,11 +248,6 @@ msgstr "Oluşturulma"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Current Month"
-msgstr "Geçerli Ay"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Date"
 msgstr "Tarih"
 
@@ -256,7 +267,7 @@ msgstr "Görünüm Adı"
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
-"Erken yatmak ve erken kalkmak insanı sağlıklı, zengin ve akıllı yapar."
+"Erken yatmak ve erken kalkmak insanı sağlıklı, varlıklı ve akıllı yapar."
 
 #. module: hr_attendance
 #. openerp-web
@@ -271,6 +282,7 @@ msgstr ""
 #: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+#: model:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid "Employee"
 msgstr "Personel"
 
@@ -281,7 +293,6 @@ msgstr "Personel Resmi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__group_attendance_use_pin
-#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr "Personel PIN"
 
@@ -310,31 +321,17 @@ msgstr "PIN kullanımını etkinleştir"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/my_attendances.js:29
-#, python-format
-msgid "Error : Could not find employee linked to user"
-msgstr "Hata: Kullanıcıya bağlı personel bulunamadı"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:48
-#, python-format
-msgid "Error : Could not find employee linked to user."
-msgstr "Hata: Kullanıcıya bağlı personel bulunamadı"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:96
 #, python-format
 msgid "Error: could not find corresponding employee."
-msgstr "Hata: Personel uyuşması bulunamadı"
+msgstr "Hata: ilgili personel bulunamadı."
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:77
 #, python-format
 msgid "First come, first served"
-msgstr "İlk geliş, ilk hizmet."
+msgstr "İlk gelen, ilk hizmet edilen."
 
 #. module: hr_attendance
 #. openerp-web
@@ -345,8 +342,9 @@ msgstr "Geri döndüğüne sevindim, uzun zaman olmuştu!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:62
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:135
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:63
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:64
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:137
 #, python-format
 msgid "Go back"
 msgstr ""
@@ -356,7 +354,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:83
 #, python-format
 msgid "Good afternoon"
-msgstr "İyi Günler"
+msgstr "İyi günler"
 
 #. module: hr_attendance
 #. openerp-web
@@ -382,8 +380,8 @@ msgstr "İyi geceler"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:111
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:129
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:113
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:131
 #, python-format
 msgid "Goodbye"
 msgstr "Hoşçakal"
@@ -445,7 +443,7 @@ msgstr "Bir iş yapmaya değer ise, iyi yapmaya değer!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:134
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:136
 #, python-format
 msgid "Invalid request, please return to the main menu."
 msgstr "Geçersiz talep, lütfen ana menüye geri dönün."
@@ -524,8 +522,13 @@ msgid "No employee corresponding to barcode %(barcode)s"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "Not available"
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:130
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:132
 #, python-format
 msgid "OK"
 msgstr "Tamam"
@@ -533,7 +536,7 @@ msgstr "Tamam"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Memur"
+msgstr "Yetkili"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__pin
@@ -548,14 +551,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "Please enter your PIN to"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:94
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:96
 #, python-format
 msgid "Please return to the main menu."
 msgstr "Lütfen anam menüye geri dönün."
@@ -593,6 +596,23 @@ msgstr "Personel detay formunda PIN kodlarını ayarla (İK Ayarları sekmesinde
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Ayarlar"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:74
+#, python-format
+msgid "Sign in"
+msgstr "Oturum aç"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:45
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:98
+#, python-format
+msgid "Sign out"
+msgstr "Çıkış"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
@@ -660,11 +680,6 @@ msgstr ""
 "için PIN kodunu girmelidir."
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Today"
-msgstr "Bugün"
-
-#. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
 msgstr "Kiosk Modu'nda giriş için PIN kodu kullanın"
@@ -677,14 +692,23 @@ msgstr "Kullanıcılar"
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:44
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:71
 #, python-format
 msgid "Want to check out?"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:120
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:49
+#, python-format
+msgid ""
+"Warning : Your user should be linked to an employee to use attendance. "
+"Please contact your administrator."
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:122
 #, python-format
 msgid "Welcome"
 msgstr "Hoş Geldiniz"
@@ -699,7 +723,7 @@ msgstr "Hoşgeldiniz"
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:44
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:70
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:71
 #, python-format
 msgid "Welcome!"
 msgstr ""
@@ -713,28 +737,33 @@ msgstr "Çalışılan Saatler"
 #: code:addons/hr_attendance/models/hr_employee.py:80
 #, python-format
 msgid "Wrong PIN"
-msgstr "nlış PIN"
+msgstr "Yanlış PIN"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_attendance.py:107
+#: code:addons/hr_attendance/models/hr_attendance.py:103
 #, python-format
 msgid "You cannot duplicate an attendance."
 msgstr "Bir katılımı çoğaltamazsınız."
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.print_employee_badge
+msgid "barcode"
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "check in"
 msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:46
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:73
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:76
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:47
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:75
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:78
 #, python-format
 msgid "check out"
 msgstr ""

@@ -87,6 +87,11 @@
             <span class="fa fa-twitter"></span>
         </a>
     </t>
+    <t t-if="website.social_instagram">
+        <a t-att-href="website.social_instagram" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+            <span class="fa fa-instagram"></span>
+        </a>
+    </t>
 </template>
 
 <template id="s_mail_block_header_social" inherit_id="mass_mailing.s_mail_block_header_social">

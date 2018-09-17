@@ -73,7 +73,7 @@ class CustomerPortal(CustomerPortal):
         )
         # search the count to display, according to the pager data
         quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_quotes_history'] = quotations.ids[:100]
+        request.session['my_quotations_history'] = quotations.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -139,16 +139,14 @@ class CustomerPortal(CustomerPortal):
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
-    def portal_order_page(self, order_id, pdf=None, access_token=None, message=False, **kw):
+    def portal_order_page(self, order_id, report_type=None, access_token=None, message=False, download=False, **kw):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if pdf:
-            pdf = request.env.ref('sale.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-            return request.make_response(pdf, headers=pdfhttpheaders)
+        if report_type in ('html', 'pdf', 'text'):
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.report_web_quote', download=download)
 
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
@@ -162,18 +160,16 @@ class CustomerPortal(CustomerPortal):
 
         transaction = order_sudo.get_portal_last_transaction()
 
-        # TODO SEB fix breadcrumbs -> should always be visible (or at least no home alone)
         values = {
             'sale_order': order_sudo,
             'message': int(message) if message else False,
-            'action': request.env.ref('sale.action_quotations').id,
-            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
             'tx_state': transaction.state if transaction else False,
             'need_payment': order_sudo.invoice_status == 'to invoice' and transaction.state in ['draft', 'cancel'],
             'token': access_token,
             'return_url': '/shop/payment/validate',
             'bootstrap_formatting': True,
             'partner_id': order_sudo.partner_id.id,
+            'report_type': 'html',
         }
 
         if order_sudo.has_to_be_paid() or values['need_payment']:
@@ -189,7 +185,10 @@ class CustomerPortal(CustomerPortal):
                 [('partner_id', '=', order_sudo.partner_id.id),
                 ('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
 
-        history = request.session.get('my_quotes_history', [])
+        if order_sudo.state in ('draft', 'sent', 'cancel'):
+            history = request.session.get('my_quotations_history', [])
+        else:
+            history = request.session.get('my_orders_history', [])
         values.update(get_records_pager(history, order_sudo))
 
         return request.render('sale.sale_order_portal_template', values)

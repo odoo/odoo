@@ -98,13 +98,5 @@
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
-
-        <record id="base.main_company" model="res.company">
-            <field name="social_twitter">https://twitter.com/Odoo</field>
-            <field name="social_facebook">https://www.facebook.com/Odoo</field>
-            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
-            <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
-        </record>
-
     </data>
 </odoo>

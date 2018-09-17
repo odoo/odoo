@@ -3,7 +3,7 @@
     <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
         <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
         <p class="lead d-none d-md-block">Let's start designing.</p>
-        <div class="o_tooltip_container d-none d-md-block">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
+        <div class="o_tooltip_container d-none d-md-block fade">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
     </div>
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
@@ -29,7 +29,7 @@
             <div t-if="colorPalette" class="o_theme_customize_color_previews" t-att-data-depends="id">
                 <div>
                     <h6>Main colors</h6>
-                    <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'gamma': _t('Extra Color 1'), 'delta': _t('Extra Color 2'), 'epsilon': _t('Extra Color 3')}" t-as="color">
+                    <t t-foreach="{'primary': _t('Primary'), 'secondary': _t('Secondary'), 'alpha': _t('Primary'), 'beta': _t('Secondary'), 'gamma': _t('Extra Color'), 'delta': _t('Extra Color'), 'epsilon': _t('Extra Color')}" t-as="color">
                         <t t-call="website.theme_customize_color_palette_button">
                             <t t-set="color_type" t-value="'theme'"/>
                         </t>
@@ -62,12 +62,11 @@
     </t>
     <t t-name="website.theme_customize_color_palette_button">
         <button type="button"
-            t-att-disabled="colorPalette != 'user' ? 'disabled' : undefined"
-            t-attf-class="btn btn-sm btn-secondary d-flex align-items-center w-100 mt-2 justify-content-between o_theme_customize_color o_theme_customize_color_#{colorPalette}_#{color}"
+            t-attf-class="btn btn-sm btn-secondary d-flex align-items-center w-100 mt-2 justify-content-between o_theme_customize_color o_theme_customize_color_#{color}"
             t-att-data-color="color"
             t-att-data-color-type="color_type">
-            <t t-esc="color_value"/>
-            <span/>
+            <span class="o_color_name"><t t-esc="color_value"/></span>
+            <span t-attf-class="o_color_preview bg-#{color}"/>
         </button>
     </t>
 </templates>

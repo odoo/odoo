@@ -48,13 +48,15 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2018
 # Julián Andrés Osorio López <mcjulian1107@gmail.com>, 2018
 # David Vidal <david.vidal@trespinos.es>, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
+# Cristina Martín Rodríguez <cristina.marrod@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 11:06+0000\n"
-"PO-Revision-Date: 2018-08-24 11:06+0000\n"
-"Last-Translator: David Vidal <david.vidal@trespinos.es>, 2018\n"
+"POT-Creation-Date: 2018-09-11 12:52+0000\n"
+"PO-Revision-Date: 2018-09-11 12:52+0000\n"
+"Last-Translator: Cristina Martín Rodríguez <cristina.marrod@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4549,14 +4551,6 @@ msgstr ""
 "  "
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_forum_doc
-msgid ""
-"\n"
-"Push the most relevant questions published on the forum to a documentation index/FAQ.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_quality
 msgid ""
 "\n"
@@ -6840,7 +6834,7 @@ msgstr ""
 "Funciona con claves Worldline versión 2.0, contiene la implementación del proveedor de pagos Worldline SIPS."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1081
+#: code:addons/base/models/ir_ui_view.py:1105
 #, python-format
 msgid " - %r in %s=%r"
 msgstr ""
@@ -6931,9 +6925,9 @@ msgstr "%p - Equivalente a AM o a PM.\""
 #. module: base
 #: code:addons/base/models/ir_filters.py:38
 #: code:addons/base/models/res_partner.py:330
-#: code:addons/base/models/res_users.py:138
-#: code:addons/base/models/res_users.py:510
-#: code:addons/base/models/res_users.py:512
+#: code:addons/base/models/res_users.py:163
+#: code:addons/base/models/res_users.py:506
+#: code:addons/base/models/res_users.py:508
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -7276,7 +7270,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Name</span>"
-msgstr ""
+msgstr "Nombre"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -7704,7 +7698,7 @@ msgid "A AGRICULTURE, FORESTRY AND FISHING"
 msgstr "A. AGRICULTURA, FORESTAL Y PESCA"
 
 #. module: base
-#: code:addons/models.py:2992
+#: code:addons/models.py:2978
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -7757,6 +7751,11 @@ msgstr "Un módulo para probar la API."
 #: model:ir.module.module,description:base.module_test_uninstall
 msgid "A module to test the uninstall feature."
 msgstr "Un módulo para probar la función de desinstalación."
+
+#. module: base
+#: model:ir.module.module,description:base.module_test_translation_import
+msgid "A module to test translation import."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
@@ -7881,6 +7880,7 @@ msgstr "Acceso a menús"
 #: model:ir.ui.view,arch_db:base.view_model_form
 #: model:ir.ui.view,arch_db:base.view_rule_form
 #: model:ir.ui.view,arch_db:base.view_users_form
+#: model:ir.ui.view,arch_db:base.view_users_simple_form
 #: model:ir.ui.view,arch_db:base.view_view_form
 #: model:res.groups,name:base.group_erp_manager
 msgid "Access Rights"
@@ -7892,7 +7892,6 @@ msgid "Access Token"
 msgstr "Token de acceso"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__has_group_private_addresses
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
 msgstr ""
@@ -7925,7 +7924,7 @@ msgstr "Titular"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Nombre del titular de la cuenta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -8358,7 +8357,6 @@ msgstr ""
 "**Atención:** si usted establece una contraseña para la plantilla de usuario, esta será asignada como contraseña local para cada nuevo usuario LDAP, asignando una *contraseña maestra* para aquellos usuarios (hasta que sea cambiado manualmente). Normalmente no querrá eso. Una forma fácil de configurar una plantilla de usuario es conectarse una vez con un usuario LDAP valido, esto permite a Odoo crear un usuario local en blanco con el mismo login (y una contraseña en blanco), entonces renombra este usuario a un usuario que no exista en la LDAP, y configura sus grupos.\n"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__group_administration_user
 #: model:ir.module.category,name:base.module_category_administration
 msgid "Administration"
 msgstr "Administración"
@@ -8385,9 +8383,9 @@ msgid "Administrator access is required to uninstall a module"
 msgstr "Se requiere acceso como administrador para desinstalar un módulo"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:609
+#: code:addons/base/models/ir_qweb_fields.py:613
 #, python-format
-msgid "Adresse separator"
+msgid "Adress separator"
 msgstr ""
 
 #. module: base
@@ -8671,7 +8669,9 @@ msgid "Application"
 msgstr "Aplicación"
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.view_users_form
+#: code:addons/base/models/res_users.py:970
+#: model:ir.ui.view,arch_db:base.user_groups_view
+#, python-format
 msgid "Application Accesses"
 msgstr "Permisos de aplicaciones"
 
@@ -9072,7 +9072,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: base
-#: code:addons/translate.py:1073
+#: code:addons/translate.py:1076
 #, python-format
 msgid "Bad file format: %s"
 msgstr "Formato erróneo de archivo: %s"
@@ -9173,13 +9173,13 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:583
+#: code:addons/base/models/ir_qweb_fields.py:587
 #, python-format
 msgid "Barcode type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:583
+#: code:addons/base/models/ir_qweb_fields.py:587
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
 msgstr ""
@@ -9289,7 +9289,7 @@ msgid "Before Amount"
 msgstr "Antes de la cantidad"
 
 #. module: base
-#: code:addons/base/models/res_users.py:1052
+#: code:addons/base/models/res_users.py:1239
 #, python-format
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
@@ -9379,7 +9379,6 @@ msgstr ""
 
 #. module: base
 #: selection:ir.property,type:0
-#: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Binary"
 msgstr "Binario"
 
@@ -9517,11 +9516,6 @@ msgid "Budget Management"
 msgstr "Administración de presupuesto"
 
 #. module: base
-#: model:ir.module.module,summary:base.module_website_forum_doc
-msgid "Build a documentation/FAQ from forum questions"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
 msgstr ""
@@ -9559,7 +9553,7 @@ msgstr "Por"
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:273
 #, python-format
-msgid "By default the widget use the field informations"
+msgid "By default the widget uses the field informations"
 msgstr ""
 
 #. module: base
@@ -9696,12 +9690,8 @@ msgid "Cancel Journal Entries"
 msgstr "Cancelar asientos"
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.module_view_kanban
-msgid "Cancel UnInstall"
-msgstr ""
-
-#. module: base
 #: model:ir.ui.view,arch_db:base.module_form
+#: model:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Cancel Uninstall"
 msgstr "Cancelar desinstalación"
 
@@ -9711,7 +9701,7 @@ msgid "Cancel Upgrade"
 msgstr "Cancelar actualización"
 
 #. module: base
-#: code:addons/models.py:2126
+#: code:addons/models.py:2112
 #, python-format
 msgid "Cannot aggregate field %r."
 msgstr ""
@@ -9980,7 +9970,7 @@ msgid "China - Standard CoA"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:727
+#: code:addons/base/models/ir_actions_report.py:735
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Elija el diseño de tu documento"
@@ -10452,7 +10442,6 @@ msgid "Contact / Address"
 msgstr "Contacto/dirección"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__has_group_partner_manager
 #: model:res.groups,name:base.group_partner_manager
 msgid "Contact Creation"
 msgstr "Creación de contactos"
@@ -10866,6 +10855,7 @@ msgstr "Vistas creadas"
 #: model:ir.model.fields,field_description:base.field_res_users__create_uid
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__create_uid
+#: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Created by"
 msgstr "Creado por"
 
@@ -11235,7 +11225,7 @@ msgid "Database Structure"
 msgstr "Estructura de la base de datos"
 
 #. module: base
-#: code:addons/models.py:2923
+#: code:addons/models.py:2909
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -11273,25 +11263,25 @@ msgid "Date format"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:548
+#: code:addons/base/models/ir_qweb_fields.py:552
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:493
+#: code:addons/base/models/ir_qweb_fields.py:497
 #, python-format
 msgid "Date unit"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:493
+#: code:addons/base/models/ir_qweb_fields.py:497
 #, python-format
 msgid "Date unit used for comparison and formatting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:494
+#: code:addons/base/models/ir_qweb_fields.py:498
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
@@ -11547,7 +11537,7 @@ msgid "Digital Products"
 msgstr "Productos digitales"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:492
+#: code:addons/base/models/ir_qweb_fields.py:496
 #, python-format
 msgid "Digital formating"
 msgstr ""
@@ -11761,31 +11751,31 @@ msgid "Display only the time"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:613
+#: code:addons/base/models/ir_qweb_fields.py:617
 #, python-format
 msgid "Display the country image if the field is present on the record"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:612
+#: code:addons/base/models/ir_qweb_fields.py:616
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:613
+#: code:addons/base/models/ir_qweb_fields.py:617
 #, python-format
 msgid "Displayed contry image"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:608
+#: code:addons/base/models/ir_qweb_fields.py:612
 #, python-format
 msgid "Displayed fields"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:612
+#: code:addons/base/models/ir_qweb_fields.py:616
 #, python-format
 msgid "Displayed phone icons"
 msgstr ""
@@ -11843,11 +11833,6 @@ msgid "Document model"
 msgstr "Modelo de documento"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_forum_doc
-msgid "Documentation"
-msgstr "Documentación"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
 msgid "Documentation examples test"
 msgstr "Test de ejemplos de documentación"
@@ -11901,7 +11886,7 @@ msgid "Dominican Republic - Accounting"
 msgstr "República Dominicana - Contabilidad"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:610
+#: code:addons/base/models/ir_qweb_fields.py:614
 #, python-format
 msgid "Don't display the font awsome marker"
 msgstr ""
@@ -11967,6 +11952,24 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi
 msgid "EDI for Mexico"
 msgstr "EDI para México"
+
+#. module: base
+#: code:addons/base/models/ir_attachment.py:543
+#, python-format
+msgid "ERROR: Invalid PDF file!"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_attachment.py:584
+#, python-format
+msgid "ERROR: Invalid list of pages to split. Example: 1,5-9,10"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_attachment.py:580
+#, python-format
+msgid "ERROR: the file must be a PDF"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -12072,8 +12075,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:593
-#: code:addons/base/models/ir_ui_view.py:674
+#: code:addons/base/models/ir_ui_view.py:611
+#: code:addons/base/models/ir_ui_view.py:692
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "El elemento '%s' no puede ser localizado en la vista padre"
@@ -12123,6 +12126,7 @@ msgstr "Contratos de los empleados"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
+#: model:ir.module.category,name:base.module_category_human_resources
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employees"
 msgstr "Empleados"
@@ -12187,7 +12191,7 @@ msgid "Error"
 msgstr "Error"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:500
+#: code:addons/base/models/ir_ui_view.py:518
 #, python-format
 msgid ""
 "Error context:\n"
@@ -12655,7 +12659,8 @@ msgid "Extra"
 msgstr "Extra"
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.view_users_form
+#: model:ir.module.category,name:base.module_category_usability
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Extra Rights"
 msgstr "Permisos extra"
 
@@ -12838,7 +12843,7 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "El campo \"Tipo\" no se puede modificar en los modelos."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1080
+#: code:addons/base/models/ir_ui_view.py:1104
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
@@ -12872,7 +12877,7 @@ msgid "Field Type"
 msgstr "Tipo de campo"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1074
+#: code:addons/base/models/ir_ui_view.py:1098
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "El campo `%(field_name)s` no existe"
@@ -13119,7 +13124,7 @@ msgstr ""
 "¡Para campos de tipo selección debe indicar las opciones de selección!"
 
 #. module: base
-#: code:addons/models.py:3052
+#: code:addons/models.py:3038
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created yourself.\n"
@@ -13731,7 +13736,6 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_res_groups
 #: model:ir.ui.view,arch_db:base.view_groups_form
 #: model:ir.ui.view,arch_db:base.view_groups_search
-#: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Groups"
 msgstr "Grupos"
 
@@ -13876,7 +13880,7 @@ msgid "Heard Island and McDonald Islands"
 msgstr "Islas Heard y McDonald"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:585
+#: code:addons/base/models/ir_qweb_fields.py:589
 #, python-format
 msgid "Height"
 msgstr "Altura"
@@ -13975,6 +13979,11 @@ msgid "Helps you manage your contracts."
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_human_resources
+msgid "Helps you manage your employees."
+msgstr "Le ayuda a gestionar sus trabajadores."
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_hr_expense
 msgid "Helps you manage your expenses."
 msgstr "Le ayuda a gestionar sus gastos."
@@ -14056,12 +14065,7 @@ msgid "Here is the exported translation file:"
 msgstr "Aquí está el archivo de traducción exportado:"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_hidden
-msgid "Hidden"
-msgstr "Oculto"
-
-#. module: base
-#: code:addons/base/models/ir_qweb_fields.py:610
+#: code:addons/base/models/ir_qweb_fields.py:614
 #, python-format
 msgid "Hide marker"
 msgstr ""
@@ -14153,7 +14157,7 @@ msgid "Human  Resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:586
+#: code:addons/base/models/ir_qweb_fields.py:590
 #, python-format
 msgid "Human Readable"
 msgstr ""
@@ -14162,11 +14166,6 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resource
 msgid "Human Resource"
 msgstr "Recursos humanos"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_human_resources
-msgid "Human Resources"
-msgstr "Recursos Humanos"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_survey
@@ -14958,7 +14957,7 @@ msgid "Introspection report on objects"
 msgstr "Informe detallado de objetos"
 
 #. module: base
-#: code:addons/models.py:3843
+#: code:addons/models.py:3821
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -14970,13 +14969,13 @@ msgstr ""
 "(opcionalmente seguidos por asc/desc para indicar el tipo de orden)"
 
 #. module: base
-#: code:addons/base/models/res_users.py:414
+#: code:addons/base/models/res_users.py:410
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Parametro 'group by' no valido"
 
 #. module: base
-#: code:addons/models.py:2128
+#: code:addons/models.py:2114
 #, python-format
 msgid "Invalid aggregation function %r."
 msgstr ""
@@ -15004,7 +15003,7 @@ msgid "Invalid field %s.%s"
 msgstr "Campo no válido %s.%s"
 
 #. module: base
-#: code:addons/models.py:2118
+#: code:addons/models.py:2104
 #, python-format
 msgid "Invalid field specification %r."
 msgstr ""
@@ -15019,6 +15018,11 @@ msgstr ""
 "extender otra vista"
 
 #. module: base
+#: sql_constraint:ir.ui.view:0
+msgid "Invalid key: QWeb view should have a key"
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_actions.py:138
 #: code:addons/base/models/ir_actions.py:140
 #, python-format
@@ -15026,7 +15030,7 @@ msgid "Invalid model name %r in action definition."
 msgstr "Nombre de modelo %r no valido en la definición de la acción."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:665
+#: code:addons/base/models/ir_ui_view.py:683
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Atributo de posición no válido: '%s'"
@@ -15038,13 +15042,13 @@ msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Prefijo o sufijo no válido para la secuencia '%s'"
 
 #. module: base
-#: code:addons/base/models/res_users.py:422
+#: code:addons/base/models/res_users.py:418
 #, python-format
 msgid "Invalid search criterion"
 msgstr "Criterio de búsqueda no valido"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:586
+#: code:addons/base/models/ir_ui_view.py:604
 #, python-format
 msgid "Invalid specification for moved nodes: '%s'"
 msgstr ""
@@ -15062,13 +15066,13 @@ msgid "Invalid value for %s.%s: %s"
 msgstr "Valor no válido para %s.%s:%s"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:343
+#: code:addons/base/models/ir_ui_view.py:345
 #, python-format
 msgid "Invalid view %s definition in %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:345
+#: code:addons/base/models/ir_ui_view.py:347
 #, python-format
 msgid ""
 "Invalid view %s definition in %s \n"
@@ -15313,6 +15317,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_si
 msgid "Kontni načrt za gospodarske družbe"
 msgstr "Plan contable para las empresas"
+
+#. module: base
+#: model:res.country,name:base.xk
+msgid "Kosovo"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -15854,7 +15863,7 @@ msgid "Link using field"
 msgstr "Campo usando un enlace"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:608
+#: code:addons/base/models/ir_qweb_fields.py:612
 #, python-format
 msgid "List of contact fields to display in the widget"
 msgstr ""
@@ -16611,19 +16620,19 @@ msgid "Missing SMTP Server"
 msgstr "Servidor SMTP ausente"
 
 #. module: base
-#: code:addons/models.py:3021
+#: code:addons/models.py:3007
 #, python-format
 msgid "Missing document(s)"
 msgstr "Falta documento(s)"
 
 #. module: base
-#: code:addons/models.py:5481
+#: code:addons/models.py:5459
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Falta el valor requerido para el campo '%s' (%s)"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:390
+#: code:addons/base/models/ir_ui_view.py:395
 #, python-format
 msgid "Missing view architecture."
 msgstr "Falta la vista de la arquitectura."
@@ -16734,8 +16743,8 @@ msgid "Model name of the object to open in the view window"
 msgstr "Nombre del modelo del objeto a abrir en la ventana de la vista."
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:804
-#: code:addons/base/models/ir_ui_view.py:1020
+#: code:addons/base/models/ir_ui_view.py:822
+#: code:addons/base/models/ir_ui_view.py:1044
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Modelo no encontrado: %(model)s"
@@ -16905,14 +16914,12 @@ msgid "Mrs."
 msgstr "Sra."
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__has_group_multi_company
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:res.groups,name:base.group_multi_company
 msgid "Multi Companies"
 msgstr "Multicompañía"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__has_group_multi_currency
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
 msgstr "Multimoneda"
@@ -17113,15 +17120,6 @@ msgid "Niue"
 msgstr "Niue"
 
 #. module: base
-#: code:addons/base/models/res_users.py:809
-#: code:addons/base/models/res_users.py:841
-#, python-format
-msgid ""
-"No 'group_xml_id' or 'category_xml_id' is set on the computed field %s "
-"linked to the method _compute_groups_id"
-msgstr ""
-
-#. module: base
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "No Record Found"
 msgstr "No se ha encontrado ningún registro"
@@ -17138,13 +17136,13 @@ msgid "No gap"
 msgstr "Sin hueco"
 
 #. module: base
-#: code:addons/fields.py:2351
+#: code:addons/fields.py:2353
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "No se encontró ningún campo inverso %r para %r"
 
 #. module: base
-#: code:addons/base/wizard/base_update_translations.py:26
+#: code:addons/base/wizard/base_update_translations.py:25
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "No existe un idioma con código \"%s\""
@@ -17268,6 +17266,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
 #: model:ir.model.fields,field_description:base.field_res_users__comment
+#: model:ir.module.module,shortdesc:base.module_note
 #: model:ir.ui.view,arch_db:base.view_groups_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
@@ -18659,7 +18658,7 @@ msgid "On delete property for many2one fields"
 msgstr "Propiedad 'On delete' (al eliminar) para campos many2one"
 
 #. module: base
-#: code:addons/models.py:3021
+#: code:addons/models.py:3007
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -18669,7 +18668,7 @@ msgstr ""
 "favor inténtelo de nuevo tras actualizar."
 
 #. module: base
-#: code:addons/models.py:3364
+#: code:addons/models.py:3350
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -18725,7 +18724,7 @@ msgid "Only administrators can change the settings"
 msgstr "Sólo los administradores pueden cambiar la configuración"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:67
+#: code:addons/base/models/ir_attachment.py:68
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Solo los administradores pueden ejecutar esta acción."
@@ -19089,6 +19088,19 @@ msgid "Original currency"
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_users.py:997
+#: code:addons/base/models/res_users.py:1177
+#: model:ir.ui.view,arch_db:base.user_groups_view
+#, python-format
+msgid "Other"
+msgstr "Otro"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_extra
+msgid "Other Extra Rights"
+msgstr "Otros derechos adicionales"
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "Other OSI Approved Licence"
 msgstr "Otra licencia aprobada por OSI"
@@ -19151,7 +19163,7 @@ msgid "Output DPI"
 msgstr "Resolución (PPP) de salida"
 
 #. module: base
-#: code:addons/models.py:2140
+#: code:addons/models.py:2126
 #, python-format
 msgid "Output name %r is used twice."
 msgstr ""
@@ -19557,7 +19569,7 @@ msgid "Please specify a valid model for the object relation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:336
+#: code:addons/base/models/res_users.py:332
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -19761,7 +19773,6 @@ msgstr "Gestión del ciclo de vida del producto (PLM)"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
-#: model:ir.module.module,shortdesc:base.module_note
 msgid "Productivity"
 msgstr "Productividad"
 
@@ -20100,7 +20111,7 @@ msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
 msgstr "Presupuesto, pedidos de ventas, entregas y control de facturas"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:352
+#: code:addons/base/models/ir_ui_view.py:354
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -20198,7 +20209,7 @@ msgstr ""
 "unos minutos"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:248 code:addons/models.py:4244
+#: code:addons/base/models/ir_actions.py:248 code:addons/models.py:4222
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "El registro no existe o ha sido eliminado."
@@ -20227,7 +20238,7 @@ msgid "Recursion found in child server actions"
 msgstr "Recurrencia encontrada en las acciones de servidor derivadas"
 
 #. module: base
-#: code:addons/models.py:3709
+#: code:addons/models.py:3687
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Se ha detectado recursividad."
@@ -20239,7 +20250,7 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:548
+#: code:addons/base/models/ir_qweb_fields.py:552
 #, python-format
 msgid "Reference date"
 msgstr ""
@@ -20528,7 +20539,7 @@ msgid "Rounding precision"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:494
+#: code:addons/base/models/ir_qweb_fields.py:498
 #, python-format
 msgid "Rounding unit"
 msgstr ""
@@ -21087,9 +21098,9 @@ msgid "Separator Format"
 msgstr "Formato del separador"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:609
+#: code:addons/base/models/ir_qweb_fields.py:613
 #, python-format
-msgid "Separator use to split the addresse from the display_name."
+msgid "Separator use to split the address from the display_name."
 msgstr ""
 
 #. module: base
@@ -21211,7 +21222,7 @@ msgstr ""
 "lateral del modelo."
 
 #. module: base
-#: code:addons/base/models/res_users.py:662
+#: code:addons/base/models/res_users.py:658
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
@@ -21426,7 +21437,7 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Algunas veces llamado BIC o Swift"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:386
+#: code:addons/base/models/ir_attachment.py:382
 #: code:addons/base/models/ir_model.py:1214
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
@@ -21456,7 +21467,7 @@ msgid "Sort"
 msgstr "Ordenar"
 
 #. module: base
-#: code:addons/models.py:3984
+#: code:addons/models.py:3962
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "Campo de ordenamiento %s no encontrado en el modelo %s"
@@ -21640,6 +21651,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Notas pegables, colaborativas"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Stock"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr "Código de barras de las existencias en el móvil"
@@ -21666,6 +21682,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
+#: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Stored"
 msgstr "Almacenado"
 
@@ -21993,7 +22010,6 @@ msgid "Technical Data"
 msgstr "Datos técnicos"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__has_group_no_one
 #: model:res.groups,name:base.group_no_one
 msgid "Technical Features"
 msgstr "Características técnicas"
@@ -22005,8 +22021,8 @@ msgid "Technical Name"
 msgstr "Nombre técnico"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Technical Settings"
 msgstr "Configuración técnica"
 
@@ -22103,7 +22119,7 @@ msgid "Thailand - Accounting Reports"
 msgstr "Tailandia - Informes contables"
 
 #. module: base
-#: code:addons/base/models/res_users.py:389
+#: code:addons/base/models/res_users.py:385
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "La acción \"App Switcher\" no se puede seleccionar como acción de inicio."
@@ -22178,7 +22194,7 @@ msgstr ""
 "El campo activo le permite ocultar la categoría sin tener que eliminarla."
 
 #. module: base
-#: code:addons/base/models/res_users.py:382
+#: code:addons/base/models/res_users.py:378
 #, python-format
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
@@ -22382,7 +22398,7 @@ msgid "The name of the country must be unique !"
 msgstr "¡El nombre del país debe ser único!"
 
 #. module: base
-#: code:addons/base/models/res_users.py:146
+#: code:addons/base/models/res_users.py:171
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "El nombre del grupo no puede empezar con \"-\""
@@ -22490,14 +22506,16 @@ msgid "The record id this is attached to."
 msgstr "El id. de registro está adjuntado a."
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:319
-#: code:addons/base/models/ir_actions_report.py:323
+#: code:addons/base/models/ir_actions_report.py:668
 #, python-format
-msgid "The report's template is wrong, please contact your administrator"
+msgid ""
+"The report's template '%s' is wrong, please contact your administrator. \n"
+"\n"
+"Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2930
+#: code:addons/models.py:2916
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to record rules: Document "
@@ -22507,8 +22525,8 @@ msgstr ""
 "registro: Tipo de documento: %s; Operación: %s; Registros: %s; Usuario: %s"
 
 #. module: base
-#: code:addons/models.py:2725 code:addons/models.py:2934
-#: code:addons/models.py:3011
+#: code:addons/models.py:2711 code:addons/models.py:2920
+#: code:addons/models.py:2997
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -22580,7 +22598,7 @@ msgstr ""
 "público y accesible a todos los usuarios."
 
 #. module: base
-#: code:addons/models.py:5513
+#: code:addons/models.py:5491
 #, python-format
 msgid ""
 "The value for the field '%s' already exists (this is probably '%s' in the "
@@ -22596,7 +22614,7 @@ msgid "The value send to monetary field is not a number."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5519
+#: code:addons/models.py:5497
 #, python-format
 msgid ""
 "The values for the fields '%s' already exist (they are probably '%s' in the "
@@ -22893,7 +22911,7 @@ msgid "Tonga"
 msgstr "Tonga"
 
 #. module: base
-#: code:addons/base/models/res_users.py:901
+#: code:addons/base/models/res_users.py:792
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
@@ -23284,7 +23302,7 @@ msgid "Ukraine"
 msgstr "Ucrania"
 
 #. module: base
-#: code:addons/models.py:3087
+#: code:addons/models.py:3073
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -23293,7 +23311,7 @@ msgstr ""
 " por defecto"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:654
+#: code:addons/base/models/ir_actions_report.py:658
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
@@ -23431,7 +23449,7 @@ msgstr ""
 "Valor desconocido '%s' para el campo booleano '%%(field)s', se asume '%s'"
 
 #. module: base
-#: code:addons/translate.py:715
+#: code:addons/translate.py:718
 #, python-format
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
@@ -23555,13 +23573,13 @@ msgid "Use barcode scanners to process logistics operations"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:611
+#: code:addons/base/models/ir_qweb_fields.py:615
 #, python-format
 msgid "Use comma"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:611
+#: code:addons/base/models/ir_qweb_fields.py:615
 #, python-format
 msgid "Use comma instead of the <br> tag to display the address"
 msgstr ""
@@ -23675,7 +23693,9 @@ msgid "User Login"
 msgstr "Nombre de usuario"
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.view_users_form
+#: code:addons/base/models/res_users.py:969
+#: model:ir.ui.view,arch_db:base.user_groups_view
+#, python-format
 msgid "User Type"
 msgstr "Tipo de Usuario"
 
@@ -23683,11 +23703,6 @@ msgstr "Tipo de Usuario"
 #: model:ir.model.fields,field_description:base.field_res_users__log_ids
 msgid "User log entries"
 msgstr "Registros de entrada de usuarios"
-
-#. module: base
-#: model:ir.model.fields,field_description:base.field_res_users__group_base_user
-msgid "User type"
-msgstr "Tipo de Usuario"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
@@ -24071,7 +24086,7 @@ msgid "Warning!"
 msgstr "¡Alerta!"
 
 #. module: base
-#: code:addons/models.py:5257
+#: code:addons/models.py:5235
 #, python-format
 msgid "Warnings"
 msgstr "Avisos"
@@ -24310,7 +24325,7 @@ msgid "Wholesale/Retail"
 msgstr "Mayorista/Minorista"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:584
+#: code:addons/base/models/ir_qweb_fields.py:588
 #, python-format
 msgid "Width"
 msgstr "Ancho"
@@ -24334,7 +24349,7 @@ msgid "Wizards to be Launched"
 msgstr "Asistentes pendientes de lanzamiento"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:401
+#: code:addons/base/models/ir_actions_report.py:405
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
@@ -24344,7 +24359,7 @@ msgstr ""
 "alcanzado el límite de archivos máximos del subproceso. Mensaje : %s"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:404
+#: code:addons/base/models/ir_actions_report.py:408
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf falló (error code: %s). Mensaje: %s"
@@ -24437,7 +24452,7 @@ msgid "You can not have two users with the same login !"
 msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: base
-#: code:addons/base/models/res_users.py:487
+#: code:addons/base/models/res_users.py:483
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -24473,19 +24488,19 @@ msgid "You cannot create recursive companies."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:359
+#: code:addons/base/models/ir_ui_view.py:361
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr "No puede crear vistas heredadas recursivas."
 
 #. module: base
-#: code:addons/base/models/res_users.py:440
+#: code:addons/base/models/res_users.py:436
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr "No puede desactivar el usuario administrador."
 
 #. module: base
-#: code:addons/base/models/res_users.py:442
+#: code:addons/base/models/res_users.py:438
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "No puede desactivar el usuario que está usando ahora mismo."
@@ -24544,6 +24559,15 @@ msgstr ""
 "Pero este módulo no está disponible en su sistema."
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.view_users_simple_form
+msgid ""
+"You will be able to define additional access rights by editing the newly "
+"created user under the Settings / Users menu."
+msgstr ""
+"Podrá definir reglas de acceso adicionales editando el usuario recién creado"
+" bajo el menú Configuración / Usuarios."
+
+#. module: base
 #: code:addons/base/models/ir_mail_server.py:247
 #, python-format
 msgid ""
@@ -24579,6 +24603,11 @@ msgstr "C.P."
 #: model:res.country,name:base.zm
 msgid "Zambia"
 msgstr "Zambia"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_mrp_zebra
+msgid "Zebra printers integration for MRP"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.zw
@@ -25143,12 +25172,7 @@ msgid "mrp"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_mrp_zebra
-msgid "mrp_workorder_zebra"
-msgstr ""
-
-#. module: base
-#: code:addons/base/models/ir_ui_view.py:497
+#: code:addons/base/models/ir_ui_view.py:515
 #, python-format
 msgid "n/a"
 msgstr "n/a"
@@ -25236,11 +25260,6 @@ msgid "social_media"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "stock"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra
 msgid "stock_zebra"
 msgstr ""
@@ -25299,6 +25318,11 @@ msgstr "test-inherits"
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
 msgstr "test-limits"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_translation_import
+msgid "test-translation-import"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall

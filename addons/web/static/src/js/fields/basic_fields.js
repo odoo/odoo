@@ -346,6 +346,64 @@ var InputField = DebouncedField.extend({
     },
 });
 
+var NumericField = InputField.extend({
+    tagName: 'span',
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * For numeric fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Format numerical value (integer or float)
+     *
+     * Note: We have to overwrite this method to skip the format if we are into
+     * edit mode on a input type number.
+     *
+     * @override
+     * @private
+     */
+    _formatValue: function (value) {
+        if (this.mode === 'edit' && this.nodeOptions.type === 'number') {
+            return value;
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    /**
+     * Formats an input element for edit mode. This is in a separate function so
+     * extending widgets can use it on their input without having input as tagName.
+     *
+     * Note: We have to overwrite this method to set the input's type to number if
+     * option setted into the field.
+     * 
+     * @override
+     * @private
+     */
+    _prepareInput: function ($input) {
+        var result = this._super.apply(this, arguments);
+        if (this.nodeOptions.type === 'number') {
+            this.$input.attr({type: 'number'});
+        }
+        if (this.nodeOptions.step) {
+            this.$input.attr({step: this.nodeOptions.step});
+        }
+        return result;
+    }
+});
+
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_char',
     tagName: 'span',
@@ -454,7 +512,7 @@ var FieldDate = InputField.extend({
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
                 var value = this._getValue();
-                if ((!value && this.value) || (value && !value.isSame(this.value))) {
+                if ((!value && this.value) || (value && !this._isSameValue(value))) {
                     this._setValue(value);
                 }
             });
@@ -811,23 +869,9 @@ var FieldBoolean = AbstractField.extend({
     },
 });
 
-var FieldInteger = InputField.extend({
+var FieldInteger = NumericField.extend({
     className: 'o_field_integer o_field_number',
-    tagName: 'span',
     supportedFieldTypes: ['integer'],
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * For integer fields, 0 is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return this.value === 0 || this._super.apply(this, arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -858,9 +902,8 @@ var FieldInteger = InputField.extend({
     },
 });
 
-var FieldFloat = InputField.extend({
+var FieldFloat = NumericField.extend({
     className: 'o_field_float o_field_number',
-    tagName: 'span',
     supportedFieldTypes: ['float'],
 
     /**
@@ -874,19 +917,6 @@ var FieldFloat = InputField.extend({
         if (this.attrs.digits) {
             this.nodeOptions.digits = JSON.parse(this.attrs.digits);
         }
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * For float fields, 0 is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return this.value === 0 || this._super.apply(this, arguments);
     },
 });
 
@@ -1079,7 +1109,9 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     reset: function () {
         var self = this;
         return $.when(this._super.apply(this, arguments)).then(function () {
-            self.$input.trigger('change');
+            if (self.mode === 'edit') {
+                self.$input.trigger('change');
+            }
         });
     },
     //--------------------------------------------------------------------------
@@ -2607,19 +2639,18 @@ var FieldDomain = AbstractField.extend({
 
         // Convert char value to array value
         var value = this.value || "[]";
-        var domain = Domain.prototype.stringToArray(value);
 
         // Create the domain selector or change the value of the current one...
         var def;
         if (!this.domainSelector) {
-            this.domainSelector = new DomainSelector(this, this._domainModel, domain, {
+            this.domainSelector = new DomainSelector(this, this._domainModel, value, {
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
                 debugMode: session.debug,
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
-            def = this.domainSelector.setDomain(domain);
+            def = this.domainSelector.setDomain(value);
         }
         // ... then replace the other content (matched records, etc)
         return def.then(this._replaceContent.bind(this));
@@ -2882,6 +2913,7 @@ return {
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,
+    NumericField: NumericField,
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,

@@ -18,5 +18,4 @@ from . import stock_traceability
 from . import stock_warehouse
 from . import stock_scrap
 from . import product
-from . import res_users
 from . import stock_package_level

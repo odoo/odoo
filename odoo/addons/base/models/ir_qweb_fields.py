@@ -270,7 +270,7 @@ class SelectionConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(SelectionConverter, self).get_available_options()
         options.update(
-            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget use the field informations'), required=True)
+            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field informations'), required=True)
         )
         return options
 
@@ -401,7 +401,11 @@ class MonetaryConverter(models.AbstractModel):
 
         if options.get('from_currency'):
             date = options.get('date') or fields.Date.today()
-            company = options.get('company_id') or self.env.user.company_id
+            company_id = options.get('company_id')
+            if company_id:
+                company = self.env['res.company'].browse(company_id)
+            else:
+                company = self.env.user.company_id
             value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()
@@ -606,7 +610,7 @@ class Contact(models.AbstractModel):
         options = super(Contact, self).get_available_options()
         options.update(
             fields=dict(type='array', params=dict(type='selection', params=["name", "address", "city", "country_id", "phone", "mobile", "email", "fax", "karma", "website"]), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=["name", "address", "phone", "mobile", "email"]),
-            separator=dict(type='string', string=_('Adresse separator'), description=_('Separator use to split the addresse from the display_name.'), default_value="\\n"),
+            separator=dict(type='string', string=_('Adress separator'), description=_('Separator use to split the address from the display_name.'), default_value="\\n"),
             no_marker=dict(type='boolean', string=_('Hide marker'), description=_("Don't display the font awsome marker")),
             no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
             phone_icons=dict(type='boolean', string=_('Displayed phone icons'), description=_("Display the phone icons even if no_marker is True")),

@@ -20,6 +20,7 @@ var ActivityView = AbstractView.extend({
         Renderer: ActivityRenderer,
     }),
     viewType: 'activity',
+    groupable: false,
 });
 
 view_registry.add('activity', ActivityView);

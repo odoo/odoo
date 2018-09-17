@@ -17,16 +17,17 @@
 # Shark McGnark <peculiarcheese@gmail.com>, 2018
 # Xavier Belmere <Info@cartmeleon.com>, 2018
 # Fred Gilson <fgi@odoo.com>, 2018
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2018
+# f5f0a0dac17dde787a1d812a6989680e, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 09:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +54,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Cher(e) ${object.partner_name or ''}<br/>\n"
+"    Nous sommes ravis de vous annoncer que votre proposition ${object.name} a été acceptée et confirmée pour l'évènement ${object.event_id.name}.\n"
+"    <br/>\n"
+"    Vous trouverez plus de détails ici:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Voir l'évènement\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Merci,\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -176,13 +192,13 @@ msgstr "Status de l'Activité"
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
-msgstr ""
+msgstr "Ajoutez une nouvelle étape dans le pipeline de tâches"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Add a new track"
-msgstr ""
+msgstr "Ajoutez une nouvelle session"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:96
@@ -325,7 +341,7 @@ msgstr "Documents"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Menu déroulant"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
@@ -521,7 +537,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Si actif, certains messages ont une erreur de livraison."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -550,7 +566,7 @@ msgstr "Est un abonné"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Est publié"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -635,12 +651,12 @@ msgstr "Menu"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "Type de Menu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erreur d'envoi du message"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
@@ -695,7 +711,7 @@ msgstr "Nombre d'actions"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Nombre d'erreurs"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
@@ -705,7 +721,7 @@ msgstr "Nombre de messages exigeant une action"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
@@ -1151,7 +1167,7 @@ msgstr "Voir la Session"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Visible sur le site web actuel"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1259,4 +1275,4 @@ msgstr "Non publié"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "website.event.menu"
-msgstr ""
+msgstr "website.event.menu"

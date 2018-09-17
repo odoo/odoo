@@ -200,6 +200,7 @@ var ListRenderer = BasicRenderer.extend({
                 reject = columnInvisibleFields[c.attrs.name];
             }
             if (!reject && c.attrs.widget === 'handle') {
+                self.hasHandle = true;
                 self.handleField = c.attrs.name;
             }
             return reject;

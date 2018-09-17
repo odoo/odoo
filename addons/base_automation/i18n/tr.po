@@ -3,16 +3,18 @@
 # * base_automation
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
+# MESUT TAVUKÇU <mesut@data-net.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:55+0000\n"
-"PO-Revision-Date: 2018-08-02 09:55+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +58,16 @@ msgstr "İşlem Türü"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
 msgstr "Etkin"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Activity"
+msgstr "Aktivite"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
+msgid "Activity User Type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -153,7 +165,7 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Closed"
-msgstr "Sonlanmış (Closed)"
+msgstr "Kapanma"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
@@ -187,7 +199,7 @@ msgstr "Gün"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__deadline
 msgid "Deadline"
-msgstr "Son Tarih"
+msgstr "Zaman Sınırı"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
@@ -218,6 +230,16 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
+msgid "Due Date In"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
+msgid "Due type"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
 msgid "Email Template"
 msgstr "E-posta Şablonu"
@@ -230,7 +252,7 @@ msgstr "Harici Kimlik"
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
-msgstr "Saatl "
+msgstr "Saat"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
@@ -258,7 +280,7 @@ msgstr "Varsa, kayıt güncelleştirilmeden önce bu koşula uyulmalıdır."
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "In Progress"
-msgstr "Sürüyor..."
+msgstr "Devam Eden"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__customer
@@ -275,7 +297,7 @@ msgstr "Son İşlem"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr "Son Değiştiren"
+msgstr "Son Güncelleme"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -299,7 +321,7 @@ msgstr "Son Güncelleme"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
 msgid "Lead"
-msgstr "Talep"
+msgstr "Aday"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
@@ -353,12 +375,17 @@ msgstr "Ay"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__name
 msgid "Name"
-msgstr "Adı"
+msgstr "İsim"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "New"
 msgstr "Yeni"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
+msgid "Note"
+msgstr "Not"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
@@ -434,6 +461,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr "Bu sunucu eylemiyle ilgili bağlamsal eylemi kaldır"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "Sorumlu"
@@ -483,6 +511,16 @@ msgid "Subject"
 msgstr "Konu"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Summary"
+msgstr "Özet"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
+msgid "Technical name of the user on the record"
+msgstr ""
+
+#. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:87
 #, python-format
 msgid ""
@@ -527,6 +565,14 @@ msgid "Usage"
 msgstr "Kullanımı"
 
 #. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
 msgstr "Takvim'i kullanın"
@@ -536,20 +582,20 @@ msgstr "Takvim'i kullanın"
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales channel, or an\n"
+"                be automatically set to a specific Sales Team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"\\ N Çeşitli ekranlarda otomatik olarak eylemleri tetiklemek için otomatik "
-"eylemler kullanın. Örnek: Belirli bir kullanıcı tarafından oluşturulan bir "
-"yol, \\ n belirli bir satış kanalına otomatik olarak ayarlanabilir veya 14 "
-"gün sonra durumu hala bekleyen bir \\ n fırsat otomatik hatırlatma "
-"e-postasını tetikleyebilir. \\ N"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
 msgid "User"
 msgstr "Kullanıcı"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
+msgid "User field name"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -598,10 +644,8 @@ msgstr "İşaretlenmemişse kural gizlidir ve yürütülmez."
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
-" for use; help about pyhon expression is given in the help tab."
+" for use; help about python expression is given in the help tab."
 msgstr ""
-"Eylemin yürüteceği Python kodunu yazın. Bazı değişkenler kullanıma hazırdır;"
-" Pyhon ifadesi ile ilgili yardım, yardım sekmesinde verilir."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

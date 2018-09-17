@@ -3,21 +3,22 @@
 # * event_sale
 # 
 # Translators:
-# grazziano <gra.negocia@gmail.com>, 2016
-# falexandresilva <falexandresilva@gmail.com>, 2016
-# Martin Trigaux, 2016
-# danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Mateus Lopes <mateus1@gmail.com>, 2016
-# Adriel Kotviski <kotviski@gmail.com>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
-# Fábio Novais <fabionovais@aptu.com.br>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# danimaribeiro <danimaribeiro@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# Adriel Kotviski <kotviski@gmail.com>, 2018
+# falexandresilva <falexandresilva@gmail.com>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+# Fábio Novais <fabionovais@aptu.com.br>, 2018
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
 "Last-Translator: Diego Bittencourt <diegomb86@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -108,7 +109,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "Nome para Exibição"
+msgstr "Nome exibido"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -171,11 +172,12 @@ msgstr "Ticket do Evento"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "Eventos"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
 msgstr "Livre"
@@ -209,7 +211,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
-msgstr "Última Modificação em"
+msgstr "Última modificação em"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
@@ -236,7 +238,7 @@ msgid "Maximum Available Seats"
 msgstr "Máximo de Assentos Disponíveis"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:249
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -244,7 +246,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:179
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Não há mais assentos disponíveis para este ticket"
@@ -256,7 +258,7 @@ msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "Nenhum"
@@ -272,13 +274,13 @@ msgid "Original Registration"
 msgstr "Registro Original"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:233
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "Pago"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:234
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "Pagamento"
@@ -387,13 +389,13 @@ msgid "Source Sales Order"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "Ticket"
@@ -423,7 +425,7 @@ msgid "Tickets"
 msgstr "Tíquete"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:230
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
 msgstr "A pagar"
@@ -432,6 +434,12 @@ msgstr "A pagar"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Reservas não Confirmadas"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "UN"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0

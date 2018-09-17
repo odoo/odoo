@@ -18,11 +18,11 @@
                     <div class="col-lg-3 mb32" id="ref_left_column">
                     </div>
                     <div class="col-lg-8 offset-lg-1" id="ref_content">
-                        <div class='navbar mb0'>
+                        <div class='d-flex m-2'>
                             <t t-call="website.pager">
                                <t t-set="classname" t-value="'float-left'"/>
                             </t>
-                            <form action="" method="get" class="navbar-search float-right pagination form-inline"><!-- FIXME -->
+                            <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
                                 <div class="form-group">
                                     <input type="text" name="search" class="search-query form-control"
                                         placeholder="Search" t-att-value="post.get('search', '')"/>
@@ -36,8 +36,8 @@
                     <t t-foreach="partners" t-as="partner">
                         <div class="media mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
-                               t-field="partner.image_small"
-                               t-options='{"widget": "image"}'
+                               t-field="partner.image_medium"
+                               t-options='{"widget": "image", "class": "mr-3"}'
                             ></a>
                             <div class="media-body" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
@@ -218,7 +218,7 @@
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
+                    <span t-field="reference.image_medium" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">

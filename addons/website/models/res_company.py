@@ -26,7 +26,7 @@ class Company(models.Model):
         if public_users_for_website:
             return public_users_for_website[0]
         else:
-            return self.env.ref('base.public_user').copy({
+            return self.env.ref('base.public_user').sudo().copy({
                 'name': 'Public user for %s' % self.name,
                 'login': 'public_company_%s' % self.id,
                 'company_id': self.id,

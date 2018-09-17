@@ -12,7 +12,7 @@ class ProductAttribute(models.Model):
     _description = "Product Attribute"
     _order = 'sequence, name'
 
-    name = fields.Char('Name', required=True, translate=True)
+    name = fields.Char('Attribute', required=True, translate=True)
     value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
     attribute_line_ids = fields.One2many('product.attribute.line', 'attribute_id', 'Lines')
@@ -23,7 +23,7 @@ class ProductAttributevalue(models.Model):
     _name = "product.attribute.value"
     _order = 'sequence, attribute_id, id'
 
-    name = fields.Char('Value', required=True, translate=True)
+    name = fields.Char('Attribute Value', required=True, translate=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
     attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='cascade', required=True)
     product_ids = fields.Many2many('product.product', string='Variants', readonly=True)

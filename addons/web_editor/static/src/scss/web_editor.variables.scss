@@ -101,8 +101,10 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 }
 
 @mixin o-w-preserve-forms {
-    .form-control {
+    :not(.input-group):not(.form-group):not(.input-group-append):not(.input-group-prepend) > .form-control {
         height: 34px;
+    }
+    .form-control {
         padding: 6px 12px;
         font-size: 14px;
         line-height: 1.5;
@@ -171,6 +173,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
     .btn:not(.o_btn_preview) {
         border-radius: 0;
         font-weight: normal;
+        text-transform: none;
         @include button-size(.375rem, .75rem, 1rem, 1.5, 0);
 
         &.btn-primary {
@@ -230,25 +233,31 @@ $o-color-palette-number: 1;
 // Theme colors
 $o-theme-color-palettes: (
     (
-        primary: $o-enterprise-primary-color,
-        secondary: $o-enterprise-color,
-        gamma: #5C5B80,
-        delta: #5B899E,
-        epsilon: #E46F78,
+        'alpha': $o-enterprise-primary-color,
+        'beta': $o-enterprise-color,
+        'gamma': #5C5B80,
+        'delta': #5B899E,
+        'epsilon': #E46F78,
     ),
 ) !default;
 $o-theme-color-palette-number: 1;
 
 // Greyscale transparent colours
 $o-transparent-grays: (
-    black-25: rgba(black, 0.25),
-    black-50: rgba(black, 0.5),
-    black-75: rgba(black, 0.75),
-    white-25: rgba(white, 0.25),
-    white-50: rgba(white, 0.5),
-    white-75: rgba(white, 0.75),
+    'black-25': rgba(black, 0.25),
+    'black-50': rgba(black, 0.5),
+    'black-75': rgba(black, 0.75),
+    'white-25': rgba(white, 0.25),
+    'white-50': rgba(white, 0.5),
+    'white-75': rgba(white, 0.75),
 ) !default;
-
+$o-gray-color-palettes: (
+    (
+        'white': #FFFFFF, // Those two will enforce the creation of bg-white
+        'black': #000000, // and bg-black classes.
+    ),
+) !default;
+$o-gray-color-palette-number: 1;
 
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;

@@ -28,7 +28,6 @@ Preferences
         'views/res_config_settings_views.xml',
         'views/account_invoice_views.xml',
         'views/sale_stock_portal_template.xml',
-        'views/res_users_views.xml',
         'views/stock_production_lot_views.xml',
         'report/sale_order_report_templates.xml',
         'report/stock_report_deliveryslip.xml',

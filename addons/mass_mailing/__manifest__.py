@@ -10,6 +10,7 @@
     'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing',
     'depends': [
+        'contacts',
         'mail',
         'utm',
         'link_tracker',
@@ -36,7 +37,6 @@
         'views/themes_templates.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
-        'views/res_users_views.xml',
         'views/mass_mailing_blacklist_views.xml',
         'views/unsubscribe_templates.xml',
     ],

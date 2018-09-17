@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Clo <clo@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-24 09:05+0000\n"
 "PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: Clo <clo@odoo.com>, 2018\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +25,14 @@ msgstr ""
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"Une erreur est survenue lors de l'envoi du document par la poste. <br> "
+"Erreur: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:197
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "Une erreur inconnue est survenue. Contactez le support. "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -39,12 +42,12 @@ msgstr "Pièce jointe"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "recto-verso"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Recto-verso"
 
 #. module: snailmail
 #: model:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -59,12 +62,12 @@ msgstr "Annulé"
 #. module: snailmail
 #: model:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Choisissez l'encre utilisée pour imprimer des documents"
 
 #. module: snailmail
 #: model:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Choisissez le layout  pour imprimer des documents "
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -147,7 +150,7 @@ msgstr "Dernière mise à jour le"
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 #: model:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Lettres"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -158,7 +161,7 @@ msgstr "Modèle"
 #: code:addons/snailmail/models/snailmail_letter.py:195
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Un ou plusieurs champs requis sont vides."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -169,7 +172,7 @@ msgstr "Rapport facultatif à imprimer et à joindre"
 #: code:addons/snailmail/models/snailmail_letter.py:234
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Lettre par la poste: une erreur est survenue."
 
 #. module: snailmail
 #: model:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -179,12 +182,12 @@ msgstr "Impressions postales"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
 msgid "Print Both sides"
-msgstr ""
+msgstr "Imprimer sur les deux côtés"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Imprimer en couleur"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -204,14 +207,14 @@ msgstr "Envoyé"
 #. module: snailmail
 #: model:mail.activity.type,name:snailmail.mail_activity_data_snailmail
 msgid "Snailmail"
-msgstr ""
+msgstr "Envoi postal"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snaimail: process letters queue"
-msgstr ""
+msgstr "Envoi postal: traiter la file d'attente de lettres"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
@@ -222,7 +225,7 @@ msgstr "État"
 #: code:addons/snailmail/models/snailmail_letter.py:193
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Le pays du partenaire n'est pas couvert par Snailmail."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:224
@@ -251,6 +254,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
+"Vous n'avez pas assez de crédits pour réaliser cette opération.<br>Veuillez "
+"vous rendre sur votre <a href=%s target=\"new\">compte iap</a>."
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_config_settings
@@ -260,4 +265,4 @@ msgstr "res.config.settings"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "snailmail.letter"
-msgstr ""
+msgstr "snailmail.letter"

@@ -32,7 +32,9 @@ var AccountPortalSidebar = PortalSidebar.extend({
         var self = this;
         this._super.apply(this, arguments);
         var $invoiceHtml = this.$el.find('iframe#invoice_html');
-        $invoiceHtml.on('load', self._onLoadIframe.bind(self, $invoiceHtml));
+        var updateIframeSize = self._updateIframeSize.bind(self, $invoiceHtml);
+        $invoiceHtml.on('load', updateIframeSize);
+        $(window).on('resize', updateIframeSize);
     },
 
     //--------------------------------------------------------------------------
@@ -40,17 +42,17 @@ var AccountPortalSidebar = PortalSidebar.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the iframe is load on custome portal
-     * here we set height and width of html preview (iframe)
+     * Called when the iframe is loaded or the window is resized on customer portal.
+     * The goal is to expand the iframe height to display the full report without scrollbar.
      *
      * @private
+     * @param {object} $el: the iframe
      */
-    _onLoadIframe: function ($el) {
+    _updateIframeSize: function ($el) {
         var $body = $el.contents().find('body');
-        // expand iframe height for display full report on the custome portal (no scrollbar in iframe)
-        $el.height($body.scrollParent().height());
-        // removed extra space in html preview (specially left and right margin)
-        $body.width('100%');
+        // Set it to 0 first to handle the case where scrollHeight is too big for its content.
+        $el.height(0);
+        $el.height($body[0].scrollHeight);
     },
     /**
      * @private

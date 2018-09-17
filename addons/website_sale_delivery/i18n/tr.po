@@ -3,22 +3,20 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Martin Trigaux, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Umur Akın <umura@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018\n"
+"POT-Creation-Date: 2018-08-24 09:05+0000\n"
+"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,9 +26,14 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+msgid "<b>Shipping Method: </b>"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid ""
-"<span class=\"badge pull-right o_delivery_compute\">Select to compute "
-"delivery rate</span>"
+"<span class=\"float-right badge badge-secondary o_delivery_compute\">Select "
+"to compute delivery rate</span>"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -88,7 +91,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
-msgstr "Tanım"
+msgstr "Açıklama"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -98,7 +101,7 @@ msgstr "Açıklama eTicaret ve online sorularda görüntülenir."
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Çevrimiçi Teklifler için Açıklama"
+msgstr "Online Teklifler için Açıklama"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -111,7 +114,7 @@ msgid "FedEx Delivery Methods"
 msgstr "FedEx Teslimat Yöntemi"
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Free"
 msgstr "Ücretsiz"
 
@@ -124,6 +127,11 @@ msgstr "Teslimat için belirlenmiş bir sipariş kalemi vardır"
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
 msgid "Has delivery"
 msgstr "Teslimat var"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
@@ -152,12 +160,17 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr "Yayımlandı"
+msgstr "Yayınlandı"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Quotation"
 msgstr "Teklif"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43
@@ -176,7 +189,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: website_sale_delivery
-#: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
+#: model:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "İzleme:"
 
@@ -187,8 +200,13 @@ msgstr "USPS Teslimat Yöntemleri"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible in Website"
-msgstr "Web Sitesinde Görünür"
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "Websitesi"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url

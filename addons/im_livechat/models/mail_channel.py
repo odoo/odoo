@@ -32,7 +32,6 @@ class MailChannel(models.Model):
     _inherit = ['mail.channel', 'rating.mixin']
 
     anonymous_name = fields.Char('Anonymous Name')
-    create_date = fields.Datetime('Create Date', required=True)
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
 

@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-05 08:38+0000\n"
+"PO-Revision-Date: 2018-09-05 08:38+0000\n"
 "Last-Translator: Lucas Deliege <lud@openerp.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "% discount"
 msgstr "% de remise"
@@ -45,11 +45,19 @@ msgid ""
 "[('module_sale_quotation_builder','=',False)]}\">Warning: this option will "
 "install the Website app.</em>"
 msgstr ""
+"<em attrs=\"{'invisible': "
+"[('module_sale_quotation_builder','=',False)]}\">Attention: cette option "
+"installera l'application Site Web.</em>"
 
 #. module: sale_management
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+msgid "<span>Discount</span>"
+msgstr "<span>Réduction</span>"
+
+#. module: sale_management
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Optional Products</span>"
-msgstr ""
+msgstr "<span>Produits optionnels</span>"
 
 #. module: sale_management
 #: model:sale.order.template,website_description:sale_management.sale_order_template_default
@@ -64,18 +72,18 @@ msgstr "Actif"
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr ""
+msgstr "Ajouter une note"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
-msgstr ""
+msgstr "Ajouter un produit"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr ""
+msgstr "Ajouter une section"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -95,7 +103,7 @@ msgstr "Ajouter aux lignes de commande"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
 msgid "All Sales"
-msgstr ""
+msgstr "Toutes les ventes"
 
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -128,12 +136,12 @@ msgstr "Créer une facture"
 #. module: sale_management
 #: model:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr ""
+msgstr "Créez des offres standardisées avec des articles par défaut"
 
 #. module: sale_management
 #: model:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Créer votre modèle de devis"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -160,7 +168,7 @@ msgstr "Modèle par défaut"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "Description"
@@ -173,7 +181,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Digest"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -406,7 +414,6 @@ msgstr "Prix"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_id
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
 #: model:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Product"
 msgstr "Article"
@@ -503,6 +510,8 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
+"Demander une signature électronique au client pour confirmer les commandes "
+"automatiquement."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order__require_payment
@@ -563,7 +572,7 @@ msgstr "La signature est manquante."
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Champ technique utilisé à des fins ergonomiques"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
@@ -602,7 +611,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__price_unit
-#: model:ir.ui.view,arch_db:sale_management.report_saleorder_validity_date
+#: model:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Unit Price"
 msgstr "Prix unitaire"
 
@@ -658,7 +667,7 @@ msgstr "Vous ne pouvez pas ajouter d'option sur une commande validée"
 #: code:addons/sale_management/controllers/portal.py:31
 #, python-format
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Votre commande a été confirmée."
 
 #. module: sale_management
 #: code:addons/sale_management/controllers/portal.py:27

@@ -36,7 +36,7 @@ class IrModuleModule(models.Model):
 
         for module in self:
             imd_ids = IrModelData.search([('module', '=', module.name), ('model', '=', model_name)]).mapped('res_id')
-            records |= self.env[model_name].browse(imd_ids)
+            records |= self.env[model_name].with_context(active_test=False).browse(imd_ids)
         return records
 
     @api.multi
@@ -48,6 +48,7 @@ class IrModuleModule(models.Model):
         for attach in self._get_module_data('theme.ir.attachment'):
             already_create = loaded['attachments'].filtered(lambda x: x.key == attach.key)
             new_attach = {
+                'key': attach.key,
                 'public': True,
                 'res_model': 'ir.ui.view',
                 'type': 'url',
@@ -110,20 +111,22 @@ class IrModuleModule(models.Model):
 
         for module in self:
             menus = module._get_module_data('theme.website.menu')
-            menu_todel = menus.mapped('copy_ids').filtered(lambda m: m.website_id == website)
+            menu_todel = menus.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
             menu_todel.unlink()
 
             pages = module._get_module_data('theme.website.page')
-            pages_todel = pages.mapped('copy_ids').filtered(lambda p: p.website_id == website)
+            pages_todel = pages.with_context(active_test=False).mapped('copy_ids').filtered(lambda p: p.website_id == website)
             pages_todel.unlink()
 
             attachs = module._get_module_data('theme.ir.attachment')
-            atachs_todel = attachs.mapped('copy_ids').filtered(lambda a: a.website_id == website)
+            atachs_todel = attachs.with_context(active_test=False).mapped('copy_ids').filtered(lambda a: a.website_id == website)
             atachs_todel.unlink()
 
             views = module._get_module_data('theme.ir.ui.view')
-            views_todel = views.mapped('copy_ids').filtered(lambda v: v.website_id == website)
-            views_todel.unlink()
+            views_todel = views.with_context(active_test=False).mapped('copy_ids').filtered(lambda v: v.website_id == website)
+            # double check - Some records that can be orpahns or no more in the template view.
+            views_todel2 = self.env['ir.ui.view'].with_context(active_test=False).search([('key', '=like', self.name + '_%'), ('website_id', '=', website.id)])
+            (views_todel + views_todel2).unlink()
 
     def _remove_theme_on_website(self, website):
         installed_deps = self + website.theme_id.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_'))
@@ -144,6 +147,7 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def button_choose_theme(self):
+        self.ensure_one()
         website = self.env['website'].get_current_website()
 
         # Unload previous theme
@@ -156,6 +160,9 @@ class IrModuleModule(models.Model):
         next_action = False
         if self.state != 'installed':
             next_action = self.button_immediate_install()
+            # reload registry to check if 'theme.utils'._<theme_name>_post_copy exists e.g.
+            self.env.reset()
+            self = self.env()[self._name].browse(self.id)
 
         # Copy new theme from template table to real table
         self._copy_theme_on_website(website)
