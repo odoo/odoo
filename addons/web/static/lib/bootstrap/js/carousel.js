@@ -564,4 +564,3 @@
   return Carousel;
 
 })));
-//# sourceMappingURL=carousel.js.map
