@@ -25,8 +25,8 @@ tour.register('stock', {
         },
         {
             content: "list of product variants",
-            trigger: '.o_sub_menu .oe_secondary_submenu [data-menu-xmlid="stock.menu_product_variant_config_stock"]',
-            extra_trigger: '.o_sub_menu .oe_secondary_submenu:has(a[data-menu-xmlid="stock.menu_routes_config"])',
+            trigger: '.o_menu_sections [data-menu-xmlid="stock.menu_product_variant_config_stock"]',
+            extra_trigger: '.o_menu_sections:has(a[data-menu-xmlid="stock.menu_routes_config"])',
             timeout: 5000,
         },
         {
