@@ -11,7 +11,7 @@ from odoo.tools import float_compare, float_round
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
     _name = 'mrp.production'
-    _description = 'Manufacturing Order'
+    _description = 'Production Order'
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
