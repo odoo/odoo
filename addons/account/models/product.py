@@ -22,9 +22,9 @@ class ProductCategory(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
+    taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
         domain=[('type_tax_use', '=', 'sale')], default=lambda self: self.env.user.company_id.account_sale_tax_id)
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes',
+    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
         domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.user.company_id.account_purchase_tax_id)
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account", oldname="property_account_income",
@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
     property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense",
         domain=[('deprecated', '=', False)],
-        help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation. If the field is empty, it uses the one defined in the product category.")
+        help="Keep this field empty to use the default value from the product category.If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.")
 
     @api.multi
     def _get_product_accounts(self):

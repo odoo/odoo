@@ -433,7 +433,10 @@ class ProductTemplate(models.Model):
     purchase_requisition = fields.Selection(
         [('rfq', 'Create a draft purchase order'),
          ('tenders', 'Propose a call for tenders')],
-        string='Procurement', default='rfq')
+        string='Procurement', default='rfq',
+        help="Create a draft purchase order: Based on your product configuration, the system will create a draft "
+            "purchase order.Propose a call for tender : If the 'purchase_requisition' module is installed and this option "
+            "is selected, the system will create a draft call for tender.")
 
 class StockMove(models.Model):
     _inherit = "stock.move"
@@ -446,7 +449,6 @@ class ProcurementGroup(models.Model):
     @api.model
     def _get_exceptions_domain(self):
         return super(ProcurementGroup, self)._get_exceptions_domain() + [('requistion_line_ids', '=', False)]
-
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
