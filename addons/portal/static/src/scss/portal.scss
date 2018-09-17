@@ -166,7 +166,7 @@ hr {
 }
 
 %o-portal-breadcrumbs {
-    background-color: transparent;
+    background-color: inherit;
 
     .breadcrumb-item {
         display: inline-flex;
@@ -336,20 +336,6 @@ img.o_we_custom_image {
             padding-left: 0;
             padding-right: 0;
             @extend %o-portal-breadcrumbs;
-
-            .breadcrumb-item.active {
-                // In this context, active breadcrumb act as title
-                color:  $headings-color;
-                line-height: $h5-font-size/$font-size-base;
-                font: {size: $h5-font-size; weight: $headings-font-weight};
-
-                &:before {
-                    // Restore breadcrumb divider to default
-                    color: $breadcrumb-divider-color;
-                    line-height: $line-height-base;
-                    font: {size: $font-size-base; weight: $font-weight-base};
-                }
-            }
         }
 
         @if ($o-portal-use-default-colors) {
