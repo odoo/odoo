@@ -551,14 +551,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         """
         Set values for the fields other that `default`, `group` and `module`
         """
-        pass
-
-    @api.multi
-    def execute(self):
-        self.ensure_one()
-        if not self.env.user._is_superuser() and not self.env.user.has_group('base.group_system'):
-            raise AccessError(_("Only administrators can change the settings"))
-
         self = self.with_context(active_test=False)
         classified = self._get_classified_fields()
 
@@ -608,6 +600,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         for method in dir(self):
             if method.startswith('set_') and method is not 'set_values':
                 _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
+
+    @api.multi
+    def execute(self):
+        self.ensure_one()
+        if not self.env.user._is_superuser() and not self.env.user.has_group('base.group_system'):
+            raise AccessError(_("Only administrators can change the settings"))
+
+        self = self.with_context(active_test=False)
+        classified = self._get_classified_fields()
+
         self.set_values()
 
         # module fields: install/uninstall the selected modules
