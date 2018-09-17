@@ -588,7 +588,7 @@ action = model.activate_sample_project()
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('project_id', 'child_of', [active_id])]</field>
+            <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
         </record>
 
