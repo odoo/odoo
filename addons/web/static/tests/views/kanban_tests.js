@@ -2297,6 +2297,138 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('o2m loaded in only one batch', function (assert) {
+        assert.expect(9);
+
+        this.data.subtask = {
+            fields: {
+                name: {string: 'Name', type: 'char'}
+            },
+            records: [
+                {id: 1, name: "subtask #1"},
+                {id: 2, name: "subtask #2"},
+            ]
+        };
+        this.data.partner.fields.subtask_ids = {
+            string: 'Subtasks',
+            type: 'one2many',
+            relation: 'subtask'
+        };
+        this.data.partner.records[0].subtask_ids = [1];
+        this.data.partner.records[1].subtask_ids = [2];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="subtask_ids" widget="many2many_tags"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.reload();
+        assert.verifySteps([
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read',
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read',
+        ]);
+        kanban.destroy();
+    });
+
+    QUnit.test('m2m loaded in only one batch', function (assert) {
+        assert.expect(9);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="category_ids" widget="many2many_tags"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.reload();
+        assert.verifySteps([
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read',
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read',
+        ]);
+        kanban.destroy();
+    });
+
+    QUnit.test('fetch reference in only one batch', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[0].ref_product = 'product,3';
+        this.data.partner.records[1].ref_product = 'product,5';
+        this.data.partner.fields.ref_product = {
+            string: "Reference Field",
+            type: 'reference',
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div class="oe_kanban_global_click">' +
+                                '<field name="ref_product"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.reload();
+        assert.verifySteps([
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'name_get',
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'name_get',
+        ]);
+        kanban.destroy();
+    });
+
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
         assert.expect(9);
 
