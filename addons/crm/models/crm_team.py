@@ -11,6 +11,7 @@ from odoo.exceptions import ValidationError
 class Team(models.Model):
     _name = 'crm.team'
     _inherit = ['mail.alias.mixin', 'crm.team']
+    _description = 'Sales Channels'
 
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', help="Check this box to manage a presales process with opportunities.")
