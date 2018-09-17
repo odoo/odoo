@@ -29,7 +29,7 @@ __base="$(basename ${__file} .sh)"
 MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
-VERSION=master-iot
+VERSION=saas-11.5-iot
 REPO=https://github.com/odoo-dev/odoo.git
 
 if [ ! -f kernel-qemu ] || ! file_exists *raspbian*.img ; then
