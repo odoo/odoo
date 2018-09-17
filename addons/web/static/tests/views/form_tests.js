@@ -2280,8 +2280,12 @@ QUnit.module('Views', {
             },
         });
 
-        form.$buttons.find('.o_form_button_cancel').click();
-        form.$buttons.find('.o_form_button_save').click();
+        // focus the buttons before clicking on them to precisely reproduce what
+        // really happens (mostly because the datepicker lib need that focus
+        // event to properly focusout the input, otherwise it crashes later on
+        // when the 'blur' event is triggered by the re-rendering)
+        form.$buttons.find('.o_form_button_cancel').focus().click();
+        form.$buttons.find('.o_form_button_save').focus().click();
         assert.strictEqual(form.$('span:contains(2017)').length, 1,
             "should have a span with the year somewhere");
 
