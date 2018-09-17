@@ -13646,6 +13646,12 @@ QUnit.module('relational_fields', {
             keyCode: $.ui.keyCode.TAB,
         }));
 
+        // press ESC to cancel 1st control click (create)
+        form.$('.o_data_cell input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+            keyCode: $.ui.keyCode.ESCAPE,
+        }));
+
         assert.strictEqual(document.activeElement, form.$('.o_field_x2many_list_row_add a:first')[0],
             "first editable list control should now have the focus");
 
