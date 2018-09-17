@@ -559,3 +559,69 @@ class TestFillTemporal(common.TransactionCase):
         groups = model_fill.read_group([], fields=['datetime', 'value'], groupby=['datetime'])
 
         self.assertEqual(groups, expected)
+
+    def test_multiple_levels(self):
+        """
+            Test if we get the right result when sending multiple
+            levels of groupby.
+        """
+        self.Model.create({'date': '2018-01-01', 'datetime': '2018-01-06 15:30:20', 'value': 1})
+        self.Model.create({'date': '2018-03-06', 'datetime': '2018-03-06 18:50:23', 'value': 2})
+        self.Model.create({'date': '2018-05-06', 'datetime': '2018-05-06 03:00:55', 'value': 3})
+
+        expected = [{'__count': 1,
+                      '__domain': ['&',
+                       '&',
+                       ('datetime', '>=', '2018-01-01 00:00:00'),
+                       ('datetime', '<', '2018-02-01 00:00:00'),
+                       '&',
+                       ('date', '>=', '2018-01-01'),
+                       ('date', '<', '2018-02-01')],
+                      'date': 'January 2018',
+                      'datetime': 'January 2018',
+                      'value': 1},
+                    {'__domain': ['&',
+                       '&',
+                       ('datetime', '>=', '2018-02-01 00:00:00'),
+                       ('datetime', '<', '2018-03-01 00:00:00'),
+                       ('date', '=', False)],
+                      'date': False,
+                      'datetime': 'February 2018',
+                      'datetime_count': 0,
+                      'value': False},
+                    {'__count': 1,
+                      '__domain': ['&',
+                       '&',
+                       ('datetime', '>=', '2018-03-01 00:00:00'),
+                       ('datetime', '<', '2018-04-01 00:00:00'),
+                       '&',
+                       ('date', '>=', '2018-03-01'),
+                       ('date', '<', '2018-04-01')],
+                      'date': 'March 2018',
+                      'datetime': 'March 2018',
+                      'value': 2},
+                    {'__domain': ['&',
+                       '&',
+                       ('datetime', '>=', '2018-04-01 00:00:00'),
+                       ('datetime', '<', '2018-05-01 00:00:00'),
+                       ('date', '=', False)],
+                      'date': False,
+                      'datetime': 'April 2018',
+                      'datetime_count': 0,
+                      'value': False},
+                    {'__count': 1,
+                      '__domain': ['&',
+                       '&',
+                       ('datetime', '>=', '2018-05-01 00:00:00'),
+                       ('datetime', '<', '2018-06-01 00:00:00'),
+                       '&',
+                       ('date', '>=', '2018-05-01'),
+                       ('date', '<', '2018-06-01')],
+                      'date': 'May 2018',
+                      'datetime': 'May 2018',
+                      'value': 3}]
+
+        model_fill = self.Model.with_context(fill_temporal=True)
+        groups = model_fill.read_group([], ['value'], ['datetime', 'date'], lazy=False)
+
+        self.assertEqual(groups, expected)
