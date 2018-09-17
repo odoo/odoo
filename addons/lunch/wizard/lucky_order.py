@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class LunchOrderLineLucky(models.TransientModel):
     _name = 'lunch.order.line.lucky'
+    _description = 'Lunch Order Line Lucky'
 
     def _default_supplier(self):
         suppliers_obj = self.env['lunch.product'].search([]).mapped("supplier")

@@ -160,7 +160,7 @@ class LunchOrder(models.Model):
 
 class LunchOrderLine(models.Model):
     _name = 'lunch.order.line'
-    _description = 'lunch order line'
+    _description = 'Lunch Order Line'
     _order = 'date desc, id desc'
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
@@ -321,7 +321,7 @@ class LunchOrderLine(models.Model):
 class LunchProduct(models.Model):
     """ Products available to order. A product is linked to a specific vendor. """
     _name = 'lunch.product'
-    _description = 'lunch product'
+    _description = 'Lunch Product'
 
     name = fields.Char('Product', required=True)
     category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
@@ -369,7 +369,7 @@ class LunchProduct(models.Model):
 class LunchProductCategory(models.Model):
     """ Category of the product such as pizza, sandwich, pasta, chinese, burger... """
     _name = 'lunch.product.category'
-    _description = 'lunch product category'
+    _description = 'Lunch Product Category'
 
     name = fields.Char('Product Category', required=True)
 
@@ -377,7 +377,7 @@ class LunchProductCategory(models.Model):
 class LunchCashMove(models.Model):
     """ Two types of cashmoves: payment (credit) or order (debit) """
     _name = 'lunch.cashmove'
-    _description = 'lunch cashmove'
+    _description = 'Lunch Cashmove'
 
     user_id = fields.Many2one('res.users', 'User',
                               default=lambda self: self.env.uid)
