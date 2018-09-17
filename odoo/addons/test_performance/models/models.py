@@ -6,6 +6,7 @@ from odoo import models, fields, api
 
 class BaseModel(models.Model):
     _name = 'test_performance.base'
+    _description = 'Test Performance Base'
 
     name = fields.Char()
     value = fields.Integer()
@@ -29,6 +30,7 @@ class BaseModel(models.Model):
 
 class LineModel(models.Model):
     _name = 'test_performance.line'
+    _description = 'Test Performance Line'
 
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
@@ -36,5 +38,6 @@ class LineModel(models.Model):
 
 class TagModel(models.Model):
     _name = 'test_performance.tag'
+    _description = 'Test Performance Tag'
 
     name = fields.Char()
