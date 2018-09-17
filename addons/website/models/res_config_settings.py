@@ -73,8 +73,6 @@ class ResConfigSettings(models.TransientModel):
             config.language_count = len(self.language_ids)
 
     def set_values(self):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
         super(ResConfigSettings, self).set_values()
 
     @api.multi

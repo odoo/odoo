@@ -13,7 +13,7 @@ class BarcodeRule(models.Model):
     _inherit = 'barcode.rule'
 
     type = fields.Selection(selection_add=[
-        ('credit', _('Credit Card'))
+        ('credit', 'Credit Card')
     ])
 
 

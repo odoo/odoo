@@ -55,5 +55,5 @@ class AccountAccountTag(models.Model):
     _inherit = 'account.account.tag'
 
     nature = fields.Selection([
-        ('D', _('Debitable Account')), ('A', _('Creditable Account'))],
+        ('D', 'Debitable Account'), ('A', 'Creditable Account')],
         help='Used in Mexican report of electronic accounting (account nature).')
