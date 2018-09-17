@@ -8,11 +8,17 @@ var _t = core._t;
 
 tour.register('sale_tour', {
     url: "/web",
-}, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
+}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
+    position: 'right',
+    edition: 'community'
+}, {
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
     position: 'bottom',
-},  {
+    edition: 'enterprise'
+}, {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order",
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),

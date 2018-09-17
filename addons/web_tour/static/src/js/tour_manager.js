@@ -373,17 +373,11 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * Tour predefined steps
      */
     STEPS: {
-        MENU_MORE: {
-            edition: "community",
-            trigger: "body > header > nav",
-            position: "bottom",
+        SHOW_APPS_MENU_ITEM: {
+            edition: 'community',
+            trigger: '.o_menu_apps a',
             auto: true,
-            run: function (actions) {
-                var $more = $('.o_extra_menu_items > .dropdown-toggle');
-                if ($more.length) {
-                    actions.auto($more);
-                }
-            },
+            position: "bottom",
         },
 
         TOGGLE_HOME_MENU: {

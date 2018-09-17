@@ -330,22 +330,11 @@ odoo.define('web.test.x2many', function (require) {
 
     {
         content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
-        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:containsExact(Discussions)',
-        extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
-        edition: 'community'
-    }, {
-        content: "switch to the second form view to test one2many with editable list (toggle menu dropdown)",
         trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions)',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
-        edition: 'enterprise'
-    }, {
-        content: "switch to the second form view to test one2many with editable list (open submenu)",
-        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:contains(Discussions 2)',
-        edition: 'community'
     }, {
         content: "switch to the second form view to test one2many with editable list (open submenu)",
         trigger: 'nav .o_menu_sections .dropdown-item:contains(Discussions 2)',
-        edition: 'enterprise'
     }, {
         content: "select previous created record",
         trigger: 'td:contains(test_trigger):last',
@@ -458,22 +447,11 @@ odoo.define('web.test.x2many', function (require) {
 
     {
         content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
-        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:containsExact(Discussions)',
-        extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
-        edition: 'community'
-    }, {
-        content: "switch to the third form view to test onchange changing one2many (toggle menu dropdown)",
         trigger: 'nav .o_menu_sections .dropdown-toggle:containsExact(Discussions)',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody .o_data_row:eq(2)',
-        edition: 'enterprise'
-    }, {
-        content: "switch to the thied form view to test onchange changing one2many (open submenu)",
-        trigger: '.o_sub_menu .oe_secondary_submenu .oe_menu_leaf .oe_menu_text:contains(Discussions 3)',
-        edition: 'community'
     }, {
         content: "switch to the thied form view to test onchange changing one2many (open submenu)",
         trigger: 'nav .o_menu_sections .dropdown-item:contains(Discussions 3)',
-        edition: 'enterprise'
     }, {
         content: "wait web client",
         trigger: '.breadcrumb:contains(Discussions 3)',
