@@ -66,8 +66,6 @@
 
     <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.project&amp;id=%s&amp;view_type=form' % (project.id)"/>
@@ -167,8 +165,6 @@
 
     <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
                     <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)"/>
