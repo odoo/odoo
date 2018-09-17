@@ -25,7 +25,7 @@ class Channel(models.Model):
     allowing to configure slide upload and access. Slides can be promoted in
     channels. """
     _name = 'slide.channel'
-    _description = 'Channel for Slides'
+    _description = 'Slide Channel'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
     _order_by_strategy = {
