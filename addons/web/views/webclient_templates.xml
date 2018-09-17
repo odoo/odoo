@@ -235,6 +235,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/user_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/apps_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_view_mobile.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_filters.js"></script>
@@ -315,6 +316,7 @@
 
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
     </template>
@@ -412,65 +414,6 @@
                 </div>
             </form>
         </t>
-    </template>
-
-    <template id="web.menu">
-        <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
-            <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link">
-                    <t t-set="_classes" t-value="'nav-link'"/>
-                </t>
-            </li>
-        </ul>
-
-        <ul class="nav navbar-nav flex-nowrap ml-auto oe_systray" style="display: none;"/>
-        <ul class="nav navbar-nav flex-nowrap oe_user_menu_placeholder" style="display: none;"/>
-    </template>
-    <template id="web.menu_secondary">
-        <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
-            <span class="oe_logo_edit">Edit Company data</span>
-            <img src='/web/binary/company_logo' alt="Logo"/>
-        </a>
-        <div class="o_sub_menu_content">
-            <t t-foreach="menu_data['children']" t-as="menu">
-                <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                    <t t-foreach="menu['children']" t-as="menu">
-                        <div class="oe_secondary_menu_section" t-att-data-menu-xmlid="menu.get('xmlid')">
-                            <t t-if="menu['children']"><t t-esc="menu['name']"/></t>
-                            <t t-if="not menu['children']"><t t-call="web.menu_link"/></t>
-                        </div>
-                        <t t-call="web.menu_secondary_submenu"/>
-                    </t>
-                </div>
-            </t>
-        </div>
-        <div class="o_sub_menu_footer">
-            Powered by <a href="http://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank"><span>Odoo</span></a>
-        </div>
-    </template>
-    <template id="web.menu_secondary_submenu">
-        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
-            <li t-foreach="menu['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link">
-                    <t t-set="_classes" t-value="'nav-link'"/>
-                </t>
-                <t t-call="web.menu_secondary_submenu"/>
-            </li>
-        </ul>
-    </template>
-    <template id="web.menu_link">
-        <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
-        <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
-            role="menuitem"
-            t-attf-class="#{_classes} #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
-            t-att-data-menu="menu['id']"
-            t-att-data-menu-xmlid="menu.get('xmlid')"
-            t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
-            t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None">
-            <span class="oe_menu_text">
-                <t t-esc="menu['name']"/>
-            </span>
-        </a>
     </template>
 
     <template id="web.js_tests_assets">
@@ -760,21 +703,7 @@
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
-
-            <header id="oe_main_menu_navbar">
-                <nav class="navbar navbar-expand-md navbar-dark bg-dark" groups="base.group_user,base.group_portal">
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="navbar-toggler-icon"/>
-                    </button>
-                    <div class="navbar-collapse collapse">
-                        <t t-call="web.menu"/>
-                    </div>
-                </nav>
-            </header>
             <div class="o_main">
-                <aside class="o_sub_menu" groups="base.group_user,base.group_portal" aria-label="Submenu">
-                    <t t-call="web.menu_secondary"/>
-                </aside>
                 <main class="o_main_content"/>
             </div>
         </t>
