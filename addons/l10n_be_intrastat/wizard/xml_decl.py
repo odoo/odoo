@@ -176,7 +176,7 @@ class XmlDeclaration(models.TransientModel):
             if inv_line.invoice_id.intrastat_country_id:
                 excnt = inv_line.invoice_id.intrastat_country_id.code
             else:
-                excnt = inv_line.invoice_id.partner_id.country_id.code
+                excnt = inv_line.invoice_id.partner_shipping_id.country_id.code or inv_line.invoice_id.partner_id.country_id.code
 
             #Check region
             #If purchase, comes from purchase order, linked to a location,

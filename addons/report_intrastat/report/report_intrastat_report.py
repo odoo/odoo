@@ -66,7 +66,7 @@ class ReportIntrastat(models.Model):
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
                     left join (res_partner inv_address
                         left join res_country inv_country on (inv_country.id = inv_address.country_id))
-                    on (inv_address.id = inv.partner_id)
+                    on (inv_address.id = coalesce(inv.partner_shipping_id, inv.partner_id))
                 where
                     inv.state in ('open','paid')
                     and inv_line.product_id is not null
