@@ -18,7 +18,7 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billable Time'),
         ('billable_fixed', 'Billable Fixed'),
         ('non_billable', 'Non Billable'),
-        ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', store=True, readonly=True)
+        ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
 
     @api.multi
