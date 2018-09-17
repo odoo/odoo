@@ -47,7 +47,7 @@
         <field name="name">iot.box.view.kanban</field>
         <field name="model">iot.box</field>
         <field name="arch" type="xml">
-            <kanban create="false">
+            <kanban create="false" js_class="box_kanban_view">
                 <field name="name"/>
                 <field name="identifier"/>
                 <templates>
@@ -66,7 +66,7 @@
         <field name="name">iot.box.view.list</field>
         <field name="model">iot.box</field>
         <field name="arch" type="xml">
-            <tree create="false">
+            <tree create="false" js_class="box_list_view">
                 <field name="name"/>
                 <field name="identifier"/>
             </tree>
@@ -196,6 +196,7 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/iot/static/src/css/iot.css"/>
             <script type="text/javascript" src="/iot/static/src/js/iot.js"></script>
+            <script type="text/javascript" src="/iot/static/src/js/iot_wizard.js"></script>
         </xpath>
     </template>
 
