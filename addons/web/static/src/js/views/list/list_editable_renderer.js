@@ -907,10 +907,12 @@ ListRenderer.include({
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
                 // prevent from closing the potential dialog containing this list
+                // also auto-focus the 1st control, if any.
                 ev.data.originalEvent.stopPropagation();
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                 });
+                this.$('.o_field_x2many_list_row_add a:first').focus();
                 break;
         }
     },
