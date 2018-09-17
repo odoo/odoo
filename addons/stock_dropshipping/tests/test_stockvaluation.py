@@ -284,7 +284,7 @@ class TestStockValuation(AccountingTestCase):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
-        return_pick.do_transfer()
+        return_pick.action_done()
         self.assertEqual(return_pick.move_lines._is_dropshipped_returned(), True)
 
         all_amls_return = self.vendor_bill1.move_id.line_ids + self.customer_invoice1.move_id.line_ids
