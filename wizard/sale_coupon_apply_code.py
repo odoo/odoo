@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 class SaleCouponApplyCode(models.TransientModel):
     _name = 'sale.coupon.apply.code'
     _rec_name = 'coupon_code'
+    _description = 'Sales Coupon Apply Code'
 
     coupon_code = fields.Char(string="Coupon", required=True)
 
