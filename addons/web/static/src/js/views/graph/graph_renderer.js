@@ -34,6 +34,7 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.isComparison = !!state.comparisonData;
+        this.isEmbedded = params.isEmbedded;
         this.stacked = this.isComparison ? false : params.stacked;
         this.title = params.title || '';
     },
@@ -94,7 +95,7 @@ return AbstractRenderer.extend({
                 title: _t('Invalid mode for chart'),
                 message: _t('Cannot render chart with mode : ') + this.state.mode
             });
-        } else if (!this.state.data.length) {
+        } else if (!this.state.data.length &&  this.state.mode !== 'pie') {
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
@@ -252,23 +253,32 @@ return AbstractRenderer.extend({
             return;
         }
         if (all_zero) {
-            this.$el.append(qweb.render('GraphView.error', {
-                title: _t("Invalid data"),
-                description: _t("Pie chart cannot display all zero numbers.. " +
-                    "Try to change your domain to display positive results"),
-            }));
-            return;
-        }
-        if (this.state.groupedBy.length) {
-            data = stateData.map(function (datapt) {
-                return {x:datapt.labels.join("/"), y: datapt.value};
+            if (this.isEmbedded) {
+                // add fake data to display an empty pie chart
+                data = [{
+                    x : "No data" ,
+                    y : 1
+                }];
+            } else {
+                this.$el.append(qweb.render('GraphView.error', {
+                    title: _t("Invalid data"),
+                    description: _t("Pie chart cannot display all zero numbers.. " +
+                        "Try to change your domain to display positive results"),
+                }));
+                return;
+            }
+        } else {
+            if (this.state.groupedBy.length) {
+                data = stateData.map(function (datapt) {
+                    return {x:datapt.labels.join("/"), y: datapt.value};
+                });
+            }
+
+            // We only keep groups where count > 0
+            data  = _.filter(data, function (elem, index) {
+                return stateData[index].count > 0;
             });
         }
-
-        // We only keep groups where count > 0
-        data  = _.filter(data, function (elem, index) {
-            return stateData[index].count > 0;
-        });
 
         var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
         this.$el.append($svgContainer);
@@ -277,15 +287,27 @@ return AbstractRenderer.extend({
 
         svg.transition().duration(100);
 
+        var color;
         var legend_right = config.device.size_class > config.device.SIZES.VSM;
+        if (all_zero) {
+            color = (['lightgrey']);
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", "50%")
+                .attr("y", "50%")
+                .text(_t("No data to display"));
+        } else {
+            color = d3.scale.category10().range();
+        }
 
         var chart = nv.models.pieChart().labelType('percent');
         chart.options({
           delay: 250,
-          showLegend: legend_right || _.size(data) <= MAX_LEGEND_LENGTH,
+          showLegend: !all_zero && (legend_right || _.size(data) <= MAX_LEGEND_LENGTH),
           legendPosition: legend_right ? 'right' : 'top',
           transition: 100,
-          color: d3.scale.category10().range(),
+          color: color,
+          showLabels: all_zero ? false: true,
         });
 
         chart(svg);
