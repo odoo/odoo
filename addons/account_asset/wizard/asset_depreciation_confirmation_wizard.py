@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 class AssetDepreciationConfirmationWizard(models.TransientModel):
     _name = "asset.depreciation.confirmation.wizard"
-    _description = "asset.depreciation.confirmation.wizard"
+    _description = "Assets Depreciation Confirmation wizard"
 
     date = fields.Date('Account Date', required=True, help="Choose the period for which you want to automatically post the depreciation lines of running assets", default=fields.Date.context_today)
 

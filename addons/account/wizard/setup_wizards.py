@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class FinancialYearOpeningWizard(models.TransientModel):
     _name = 'account.financial.year.op'
+    _description = 'Opening Balance of Financial Year'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)
     opening_move_posted = fields.Boolean(string='Opening Move Posted', compute='_compute_opening_move_posted')
@@ -30,6 +31,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
+    _description = 'Bank setup manual config'
 
     res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     create_or_link_option = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
