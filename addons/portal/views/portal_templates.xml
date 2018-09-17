@@ -23,7 +23,7 @@
             <t t-set="head" t-value="head_website + (head or '')"/>
 
             <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
-            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{wrapwrap_classes or ''}">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
@@ -75,6 +75,8 @@
 
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
+            <t t-set="is_portal" t-value="True"/>
+
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                 <div class="container">
                     <t t-raw="o_portal_fullwidth_alert"/>

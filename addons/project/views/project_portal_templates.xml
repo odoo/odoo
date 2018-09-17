@@ -66,8 +66,6 @@
 
     <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <div t-ignore="true" class="text-center">
                     This is a preview of the customer portal <i class="fa fa-chevron-right"/>
@@ -171,8 +169,6 @@
 
     <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <div t-ignore="true" class="text-center">
                     This is a preview of the customer portal <i class="fa fa-chevron-right"/>

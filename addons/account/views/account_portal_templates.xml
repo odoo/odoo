@@ -74,8 +74,6 @@
 
     <template id="portal_invoice_page" name="Invoice Portal Template" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
