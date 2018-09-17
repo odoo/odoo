@@ -462,6 +462,12 @@ class PosOrder(models.Model):
                 # for debugging and support purposes
                 _logger.exception('Reconciliation did not work for order %s', order.name)
 
+    def _filtered_for_reconciliation(self):
+        filter_states = ['invoiced', 'done']
+        if self.env['ir.config_parameter'].get_param('point_of_sale.order_reconcile_mode', 'all') == 'partner_only':
+            return self.filtered(lambda order: order.state in filter_states and order.partner_id)
+        return self.filtered(lambda order: order.state in filter_states)
+
     def _default_session(self):
         return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
 
