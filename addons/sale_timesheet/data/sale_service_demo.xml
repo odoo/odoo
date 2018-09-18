@@ -103,16 +103,7 @@
             <field name="service_tracking">no</field>
         </record>
 
-        <!-- Employee -->
-        <record id="hr.employee_admin" model="hr.employee">
-            <field name="timesheet_cost">100</field>
-        </record>
-
-        <record id="hr.employee_qdp" model="hr.employee">
-            <field name="timesheet_cost">75</field>
-            <field name="parent_id" ref="hr.employee_admin"/>
-        </record>
-
+        <!-- Sales orders -->
         <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="client_order_ref">AGR</field>
