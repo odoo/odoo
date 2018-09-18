@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 class TestUi(odoo.tests.HttpCase):
 
     def test_01_admin_bank_statement_reconciliation(self):
-        bank_stmt = self.env['account.bank.statement'].search([('name', '=', 'BNK/2014/001')])
+        bank_stmt = self.env['account.bank.statement'].search([('name', '=', 'BNK/2018/0001')])
         if not bank_stmt:
              _logger.exception('Could not find bank statement BNK/2014/001')
 
