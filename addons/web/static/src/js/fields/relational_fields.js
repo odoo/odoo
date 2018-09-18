@@ -2337,8 +2337,8 @@ var FieldReference = FieldMany2One.extend({
      */
     _reset: function () {
         var value = this.$('select').val();
-        this._setState();
         this._super.apply(this, arguments);
+        this._setState();
         this.$('select').val(this.value && this.value.model || value);
     },
     /**
