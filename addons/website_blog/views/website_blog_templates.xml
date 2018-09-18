@@ -546,8 +546,9 @@
 
 <!-- User Navbar -->
 <template id="content_new_blogpost" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@t-module='website_blog']" position="attributes">
+        <attribute name="t-module"/>
+        <attribute name="groups">website.group_website_designer</attribute>
     </xpath>
 </template>
 

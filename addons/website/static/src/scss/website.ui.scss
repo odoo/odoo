@@ -290,42 +290,32 @@ body .modal {
 #o_new_content_menu_choices {
     @include o-position-absolute($o-navbar-height, 0, 0, 0);
     position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: $o-we-font-family;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto;
+    display: flex;
 
     &::before {
         content: " ";
         @include o-position-absolute(0, 0, 0, 0);
         z-index: -1;
         pointer-events: none;
-        background-color: black;
-        opacity: 0.8;
     }
 
-    > ul {
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-around;
-        width: auto;
-        max-width: 60%;
-        max-height: 100%;
-        margin: 0;
-        padding: 0;
-        list-style: none;
+    .container {
+        max-width: 720px;
+        margin: auto;
+    }
 
-        li {
-            display: block;
+    > div {
+
+        > div {
             opacity: 0;
             animation: fadeInDownSmall 1s forwards;
-            margin: 2em 32px;
-            padding: 0 15px;
 
             a {
                 display: block;
                 font-size: 34px;
-                margin: auto;
                 text-align: center;
 
                 i {
@@ -347,6 +337,7 @@ body .modal {
 
                 &:hover, &:focus {
                     text-decoration: none;
+                    outline: none; // remove ugly dotted border on Firefox
                     i {
                         border-color: #1cc1a9;
                         box-shadow: 0 0 10px rgba(28, 193, 169, 0.46);

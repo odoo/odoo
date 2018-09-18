@@ -6,8 +6,7 @@ from collections import OrderedDict
 from odoo import models
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-
-
+from odoo.tools import html_escape as escape
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
@@ -36,6 +35,34 @@ class QWeb(models.AbstractModel):
 
     def get_asset_bundle(self, xmlid, files, remains=None, env=None):
         return AssetsBundleMultiWebsite(xmlid, files, remains=remains, env=env)
+
+    def _compile_directive_module(self, el, options):
+        """
+            Compile the directive t-module. Its goal is to suggest to the user a module to install.
+            This method will add the relevant data-module- fields on the current element.
+            The actual display will be done in JavaScript.
+            Expected value: the technical name of the module to install.
+
+            - If the module does not exist (developer error): raise
+            - If the module is installed: show the element normally
+            - If the module is not installed: add the module data to the element
+        """
+        module_name = el.attrib.pop('t-module')
+        module = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
+        if not module:
+            raise Exception("t-module must contain a valid module name instead of: %s" % module_name)
+
+        if module.state != 'installed':
+            el.set('data-module-id', str(module.id))
+            el.set('data-module-shortdesc', escape(module.shortdesc))
+            el.set('data-module-can-install', "1" if self.user_has_groups('base.group_system') else "0")
+
+        return self._compile_directives(el, options)
+
+    def _directives_eval_order(self):
+        directives = super(QWeb, self)._directives_eval_order()
+        directives.insert(directives.index('call'), 'module')
+        return directives
 
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):

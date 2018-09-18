@@ -430,6 +430,13 @@ class Website(Home):
 
         return request.redirect('/')
 
+    @http.route(['/website/module/<model("ir.module.module"):module>/install'], type='json', auth='user', methods=['POST'])
+    def action_module_install(self, module, **post):
+        if not module.user_has_groups('base.group_system'):
+            return False
+
+        module.button_immediate_install()
+        return True
 
 # ------------------------------------------------------
 # Retrocompatibility routes
