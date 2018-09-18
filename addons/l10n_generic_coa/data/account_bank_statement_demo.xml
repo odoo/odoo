@@ -6,7 +6,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="name">BNK/2018/0001</field>
+            <field name="name" eval="'BNK/%s/0001' % time.strftime('%Y')"/>
             <field name="balance_end_real">8998.2</field>
             <field name="balance_start">5103.0</field>
         </record>
@@ -15,7 +15,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">1</field>
-            <field name="name">INV/2018/0002 and INV/2018/0003</field>
+            <field name="name" eval="'INV/%s/0002 and INV/%s/0003' % (time.strftime('%Y'), time.strftime('%Y'))"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
@@ -53,7 +53,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">4</field>
-            <field name="name">First 2000 $ of invoice 2018/0001</field>
+            <field name="name" eval="'First 2000 $ of invoice %s/0001' % time.strftime('%Y')"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>

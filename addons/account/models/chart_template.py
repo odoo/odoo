@@ -928,22 +928,23 @@ class AccountReconcileModelTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', _('Create manually journal items on clicked button.')),
-        ('writeoff_suggestion', _('Suggest an automatic write-off.')),
-        ('invoice_matching', _('Suggest a matching with existing invoices/bills.'))
+        ('writeoff_button', _('Manually create a write-off on clicked button.')),
+        ('writeoff_suggestion', _('Suggest a write-off.')),
+        ('invoice_matching', _('Match existing invoices/bills.'))
     ], string='Type', default='writeoff_button', required=True)
-    auto_reconcile = fields.Boolean(string='Reconcile Automatically',
-        help='Reconcile the statement line with propositions automatically.')
+    auto_reconcile = fields.Boolean(string='Auto-validate',
+        help='Validate the statement line automatically (reconciliation based on your rule).')
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash'))]",
-        help='Restrict model to some journals.')
+        help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),
         ('amount_paid', 'Amount Paid'),
         ('both', 'Amount Paid/Received')
-    ], string='Amount Nature', required=True, default='both', help='''Restrict model on amount nature:
+    ], string='Amount Nature', required=True, default='both',
+        help='''The reconciliation model will only be applied to the selected transaction type:
         * Amount Received: Only applied when receiving an amount.
         * Amount Paid: Only applied when paying an amount.
         * Amount Paid/Received: Applied in both cases.''')
@@ -951,15 +952,15 @@ class AccountReconcileModelTemplate(models.Model):
         ('lower', 'Is Lower Than'),
         ('greater', 'Is Greater Than'),
         ('between', 'Is Between'),
-    ], string='Line Amount',
-        help='Restrict to statement line amount being lower than, greater than or between specified amount(s).')
+    ], string='Amount',
+        help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
     match_amount_min = fields.Float(string='Amount Min Parameter')
     match_amount_max = fields.Float(string='Amount Max Parameter')
     match_label = fields.Selection(selection=[
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
         ('match_regex', 'Match Regex'),
-    ], string='Line Label', help='''Restrict reconciliation propositions label on:
+    ], string='Label', help='''The reconciliation model will only be applied when the label:
         * Contains: The proposition label must contains this string (case insensitive).
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
@@ -970,11 +971,12 @@ class AccountReconcileModelTemplate(models.Model):
         help='The sum of total residual amount propositions matches the statement line amount.')
     match_total_amount_param = fields.Float(string='Amount Matching %', default=100,
         help='The sum of total residual amount propositions matches the statement line amount under this percentage.')
-    match_partner = fields.Boolean(string='Partner Matching', help='Apply only when partner statement line is set.')
+    match_partner = fields.Boolean(string='Partner Is Set',
+        help='The reconciliation model will only be applied when a customer/vendor is set.')
     match_partner_ids = fields.Many2many('res.partner', string='Restrict Partners to',
-        help='Restrict to some statement line partners.')
+        help='The reconciliation model will only be applied to the selected customers/vendors.')
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Restrict Partner Categories to',
-        help='Restrict to some statement line partner categories.')
+        help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
     # First part fields.
     account_id = fields.Many2one('account.account.template', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
@@ -983,7 +985,7 @@ class AccountReconcileModelTemplate(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
-    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
@@ -996,7 +998,7 @@ class AccountReconcileModelTemplate(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
-    second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
