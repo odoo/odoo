@@ -75,6 +75,7 @@ class Theme(models.AbstractModel):
         obj = self.env.ref(xml_id)
         if obj._name == 'theme.ir.ui.view':
             website = self.env['website'].get_current_website()
+            obj = obj.with_context(active_test=False)
             obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
         obj.write({'active': active})
 
