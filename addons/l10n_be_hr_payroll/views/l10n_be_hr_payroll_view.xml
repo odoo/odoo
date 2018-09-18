@@ -41,6 +41,11 @@
                     <field name="commission_on_target" nolabel="1"/>
                     <span>/ month</span>
                 </div>
+                <field name="ip_wage_rate"/>
+                <label for="ip" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}"/>
+                <div class="o_row" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}">
+                    <field name="ip" nolabel="1"/>
+                </div>
             </xpath>
             <xpath expr="//group[@name='salary_and_advantages']" position="after">
                 <group string="Employee Costs" groups="hr.group_hr_manager">
@@ -118,13 +123,6 @@
                         <span>/ year</span>
                     </div>
                     <field name="holidays_compensation" invisible="1"/>
-                </group>
-                <group name="salary_and_advantages" position="inside">
-                    <field name="ip_wage_rate"/>
-                    <label for="ip" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}"/>
-                    <div class="o_row" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}">
-                        <field name="ip" nolabel="1"/>
-                    </div>
                 </group>
             </xpath>
         </field>
