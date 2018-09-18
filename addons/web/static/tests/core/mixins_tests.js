@@ -52,7 +52,7 @@ QUnit.module('core', {}, function () {
         // parent widget instance
         var parentInstance = new parentWidget();
         // child widget instance
-        var childInstance = new childWidget(parent);
+        var childInstance = new childWidget(parentInstance);
 
         // intercept the w_event in parent instance
         testUtils.intercept(parentInstance, 'w_event', function (ev) {
