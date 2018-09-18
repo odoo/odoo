@@ -593,7 +593,7 @@ class ProductPackaging(models.Model):
     product_id = fields.Many2one('product.product', string='Product')
     qty = fields.Float('Contained Quantity', help="The total number of products you can have per pallet or box.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
-    product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
 
 
 class SupplierInfo(models.Model):
