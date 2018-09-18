@@ -241,7 +241,7 @@ class Registry(Mapping):
 
         return self.descendants(model_names, '_inherit', '_inherits')
 
-    def setup_models(self, cr):
+    def setup_models(self, cr, include_manual_models=True):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
@@ -249,7 +249,7 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
         # add manual models
-        if self._init_modules:
+        if self._init_modules and include_manual_models:
             env['ir.model']._add_manual_models()
 
         # prepare the setup on all models

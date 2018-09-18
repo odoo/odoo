@@ -160,6 +160,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
     models_updated = set()
 
     for index, package in enumerate(graph, 1):
+        is_last_graph = index == len(graph)
         module_name = package.name
         module_id = package.id
 
@@ -175,7 +176,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         )
         if needs_update:
             if package.name != 'base':
-                registry.setup_models(cr)
+                registry.setup_models(cr, is_last_graph)
             migrations.migrate_module(package, 'pre')
 
         load_openerp_module(package.name)
@@ -193,7 +194,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
-            registry.setup_models(cr)
+            registry.setup_models(cr, is_last_graph)
             registry.init_models(cr, model_names, {'module': package.name})
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
