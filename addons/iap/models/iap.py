@@ -145,7 +145,7 @@ class IapAccount(models.Model):
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
-    insufficient_credit= fields.Boolean('Insufficient credits', default=False)
+    insufficient_credit = fields.Boolean('Insufficient credits', default=False)
 
     @api.model
     def get(self, service_name):

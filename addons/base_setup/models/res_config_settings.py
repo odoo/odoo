@@ -31,6 +31,7 @@ class ResConfigSettings(models.TransientModel):
     module_pad = fields.Boolean("Collaborative Pads")
     module_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
+    module_partner_autocomplete = fields.Boolean("Auto-populate company data")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
