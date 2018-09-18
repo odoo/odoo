@@ -15,6 +15,7 @@ from odoo.tools import float_compare, pycompat
 class ProductCategory(models.Model):
     _name = "product.category"
     _description = "Product Category"
+    _inherit = ['mail.thread']
     _parent_name = "parent_id"
     _parent_store = True
     _rec_name = 'complete_name'
