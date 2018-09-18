@@ -406,6 +406,7 @@
                                     <field name="display_type" invisible="1"/>
 
                                     <field name="product_updatable" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <field
                                         name="product_id"
                                         attrs="{
@@ -453,6 +454,7 @@
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field
                                         name="product_uom"
+                                        domain="[('category_id', '=', product_uom_category_id)]"
                                         attrs="{
                                             'readonly': [('state', 'in', ('sale','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
