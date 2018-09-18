@@ -4,8 +4,10 @@
 import unittest
 
 from odoo.tools import pycompat
+from odoo.tools import mute_logger
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
 from odoo.tests.common import TransactionCase, tagged
+from psycopg2 import IntegrityError
 
 
 @tagged('standard', 'at_install')
@@ -286,21 +288,23 @@ class TestTranslation(TransactionCase):
         })
         # change name and insert a duplicate manually
         padawans.write({'name': 'Padawans'})
-        self.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'res.partner.category,name',
-            'module':'base',
-            'lang': 'fr_FR',
-            'res_id': padawans.id,
-            'value': 'Apprentis',
-            'state': 'translated',
-        })
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
+            with self.env.cr.savepoint():
+                self.env['ir.translation'].create({
+                    'type': 'model',
+                    'name': 'res.partner.category,name',
+                    'module':'base',
+                    'lang': 'fr_FR',
+                    'res_id': padawans.id,
+                    'value': 'Apprentis',
+                    'state': 'translated',
+                })
         self.env['ir.translation'].translate_fields('res.partner.category', padawans.id, 'name')
         translations = self.env['ir.translation'].search([
             ('res_id', '=', padawans.id), ('name', '=', 'res.partner.category,name')
         ])
-        self.assertEqual(len(translations), 1, "Translations were not merged after `translate_fields` call")
-        self.assertEqual(translations.value, "Apprentis", "The most recent translation must stay")
+        self.assertEqual(len(translations), 1, "Translations were not duplicated after `translate_fields` call")
+        self.assertEqual(translations.value, "Apprenti", "The first translation must stay")
 
 
 class TestXMLTranslation(TransactionCase):
@@ -323,7 +327,7 @@ class TestXMLTranslation(TransactionCase):
         })
         for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
-                'type': 'model',
+                'type': 'model_terms',
                 'name': 'ir.ui.view,arch_db',
                 'lang': 'fr_FR',
                 'res_id': view0.id,
@@ -363,7 +367,7 @@ class TestXMLTranslation(TransactionCase):
         })
         for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
-                'type': 'model',
+                'type': 'model_terms',
                 'name': 'ir.ui.view,arch_db',
                 'lang': 'fr_FR',
                 'res_id': view0.id,
