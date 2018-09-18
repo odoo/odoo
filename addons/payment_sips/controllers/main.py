@@ -23,7 +23,7 @@ class SipsController(http.Controller):
             Tx = request.env['payment.transaction']
             data = Tx._sips_data_to_object(post.get('Data'))
             custom = json.loads(data.pop('returnContext', False) or '{}')
-            return_url = custom.get('return_url', '/')
+            return_url = werkzeug.urls.url_unquote(custom.get('return_url', '/'))
         return return_url
 
     def sips_validate_data(self, **post):
