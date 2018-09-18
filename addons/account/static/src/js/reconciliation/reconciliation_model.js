@@ -344,22 +344,65 @@ var StatementModel = BasicModel.extend({
      */
     load: function (context) {
         var self = this;
-        var statement_ids = context.statement_ids;
-        if (!statement_ids) {
+        // var statement_ids = context.statement_ids;
+        this.statement_ids = context.statement_ids;
+        if (!this.statement_ids) {
             return $.when();
         }
         this.context = context;
-
+        return self.reload();
+        
+    },
+    /**
+     * Load more bank statement line
+     *
+     * @param {integer} qty quantity to load
+     * @returns {Deferred}
+     */
+    loadMore: function(qty) {
+        if (qty === undefined) {
+            qty = this.defaultDisplayQty;
+        }
+        var ids = _.pluck(this.lines, 'id');
+        ids = ids.splice(this.pagerIndex, qty);
+        this.pagerIndex += qty;
+        return this.loadData(ids, this._getExcludedIds());
+    },
+    /**
+     * RPC method to load informations on lines
+     * 
+     * @param {Array} ids ids of bank statement line passed to rpc call
+     * @param {Array} excluded_ids list of move_line ids that needs to be excluded from search
+     * @returns {Deferred}
+     */
+    loadData: function(ids, excluded_ids) {
+        var self = this;
+        return self._rpc({
+            model: 'account.reconciliation.widget',
+            method: 'get_bank_statement_line_data',
+            args: [ids, excluded_ids],
+            context: self.context,
+        })
+        .then(self._formatLine.bind(self));
+    },
+    /**
+     * Reload all data
+     */
+    reload: function() {
+        var self = this;
+        self.alreadyDisplayed = [];
+        self.lines = {};
+        self.pagerIndex = 0;
         var def_statement = this._rpc({
                 model: 'account.reconciliation.widget',
                 method: 'get_bank_statement_data',
-                args: [statement_ids],
+                args: [self.statement_ids],
             })
             .then(function (statement) {
                 self.statement = statement;
-                self.bank_statement_id = statement_ids.length === 1 ? {id: statement_ids[0], display_name: statement.statement_name} : false;
-                self.valuenow = statement.value_min;
-                self.valuemax = statement.value_max;
+                self.bank_statement_id = self.statement_ids.length === 1 ? {id: self.statement_ids[0], display_name: statement.statement_name} : false;
+                self.valuenow = self.valuenow || statement.value_min;
+                self.valuemax = self.valuemax || statement.value_max;
                 self.context.journal_id = statement.journal_id;
                 _.each(statement.lines, function (res) {
                     var handle = _.uniqueId('rline');
@@ -378,11 +421,11 @@ var StatementModel = BasicModel.extend({
                 });
             });
         var domainReconcile = [];
-        if (context && context.company_ids) {
-            domainReconcile.push(['company_id', 'in', context.company_ids]);
+        if (self.context && self.context.company_ids) {
+            domainReconcile.push(['company_id', 'in', self.context.company_ids]);
         }
-        if (context && context.active_model === 'account.journal' && context.active_ids) {
-            domainReconcile.push(['journal_id', 'in', [false].concat(context.active_ids)]);
+        if (self.context && self.context.active_model === 'account.journal' && self.context.active_ids) {
+            domainReconcile.push(['journal_id', 'in', [false].concat(self.context.active_ids)]);
         }
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
@@ -427,40 +470,6 @@ var StatementModel = BasicModel.extend({
                 }
             })
         });
-    },
-    /**
-     * Load more bank statement line
-     *
-     * @param {integer} qty quantity to load
-     * @returns {Deferred}
-     */
-    loadMore: function(qty) {
-        if (qty === undefined) {
-            qty = this.defaultDisplayQty;
-        }
-        var ids = _.pluck(this.lines, 'id');
-        ids = ids.splice(this.pagerIndex, qty);
-        this.pagerIndex += qty;
-        return this.loadData(ids, this._getExcludedIds());
-    },
-    /**
-     * RPC method to load informations on lines
-     * 
-     * @param {Array} ids ids of bank statement line passed to rpc call
-     * @param {Array} excluded_ids list of move_line ids that needs to be excluded from search
-     * @returns {Deferred}
-     */
-    loadData: function(ids, excluded_ids) {
-        var self = this;
-        return self._rpc({
-            model: 'account.reconciliation.widget',
-            method: 'get_bank_statement_line_data',
-            args: [ids, excluded_ids],
-            context: self.context,
-        })
-        .then(function(res){
-            return self._formatLine(res['lines']);
-        })
     },
     /**
      * Add lines into the propositions from the reconcile model
