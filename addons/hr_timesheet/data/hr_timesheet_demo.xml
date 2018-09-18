@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Employee -->
+    <record id="hr.employee_admin" model="hr.employee">
+        <field name="timesheet_cost">100</field>
+    </record>
+
+    <record id="hr.employee_qdp" model="hr.employee">
+        <field name="timesheet_cost">75</field>
+        <field name="parent_id" ref="hr.employee_admin"/>
+    </record>
+
+    <!-- Projects -->
     <record id="account_analytic_account_project_2" model="account.analytic.account">
         <field name="name">Research &amp; Development Project</field>
         <field name="code">RD</field>
