@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2017
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 msgid ""
@@ -40,7 +40,7 @@ msgstr "Yritykset"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company_leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
-msgstr ""
+msgstr "Vakioprojekti generoiduille poissaolojen tuntikirjauksille."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/hr_holidays.py:30
@@ -49,11 +49,13 @@ msgid ""
 "For the leaves to generate timesheet, the internal project and task are "
 "requried."
 msgstr ""
+"Mahdollistaaksesi tuntikirjausten automaattisen generoinnin ovat projekti ja"
+" tehtävä pakollisia"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
 msgid "Generate Timesheet"
-msgstr ""
+msgstr "Generoi tuontikortit"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_holidays_status_timesheet_generate
@@ -61,6 +63,8 @@ msgid ""
 "If checked, when validating a leave, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
+"Jos valittuna, kun poissaoloa hyväksytään, tuntikirjaukset generoidaan "
+"yrityksen poissaoloprojektille."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:30
@@ -69,12 +73,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings_leave_timesheet_project_id
 #, python-format
 msgid "Internal Project"
-msgstr ""
+msgstr "Sisäinen projekti"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_holidays_status_timesheet_task_id
 msgid "Internal Task for timesheet"
-msgstr ""
+msgstr "Sisäinen tehtävä tuntikorteille"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_holidays
@@ -90,7 +94,7 @@ msgstr "Pooissaolopyynnöt"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company_leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings_leave_timesheet_task_id
 msgid "Leave Task"
-msgstr ""
+msgstr "Poissaolon tehtävä"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_holidays_status
@@ -117,7 +121,7 @@ msgstr "Tehtävä"
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_holidays_status_timesheet_project_id
 msgid ""
 "The project will contain the timesheet generated when a leave is validated."
-msgstr ""
+msgstr "Projektille generoidaan tuntikirjaukset, kun poissaolo hyväksytään."
 
 #. module: project_timesheet_holidays
 #: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -131,6 +135,8 @@ msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
+"Et voi poistaa poissaoloon kytkettyjä tuntikirjauksia. Peruuta halutut "
+"poissaolot sen sijaan."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings

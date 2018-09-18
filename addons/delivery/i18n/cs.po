@@ -6,7 +6,7 @@
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# Jiří P., 2018
+# trendspotter, 2018
 # Ladislav Tomm <tomm@helemik.cz>, 2018
 msgid ""
 msgstr ""
@@ -178,7 +178,7 @@ msgstr "Archivováno"
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 msgid "Based on Rules"
-msgstr ""
+msgstr "Na základě pravidel"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
@@ -370,6 +370,13 @@ msgstr "Prostředí"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
 msgstr ""
 
 #. module: delivery
@@ -680,7 +687,7 @@ msgstr "Šablona výrobku"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Poskytovatel"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0

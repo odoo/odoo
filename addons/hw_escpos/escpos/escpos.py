@@ -358,7 +358,7 @@ class Escpos:
             else:
                 self._raw(string)
        
-        raw += S_RASTER_N
+        raw += S_RASTER_N.encode('utf-8')
         buffer = "%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
         raw += codecs.decode(buffer, 'hex')
         buffer = ""

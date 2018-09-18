@@ -76,4 +76,4 @@ class WebsiteSaleDelivery(WebsiteSale):
         lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
 
         return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
-            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')

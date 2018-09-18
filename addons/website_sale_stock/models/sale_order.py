@@ -32,6 +32,13 @@ class SaleOrder(models.Model):
         return values
 
     @api.multi
+    def _website_product_id_change(self, order_id, product_id, qty=0):
+        res = super(SaleOrder, self)._website_product_id_change(order_id, product_id, qty=qty)
+        product = self.env['product.product'].browse(product_id)
+        res['customer_lead'] = product.sale_delay
+        return res
+
+    @api.multi
     def _get_stock_warning(self, clear=True):
         self.ensure_one()
         warn = self.warning_stock

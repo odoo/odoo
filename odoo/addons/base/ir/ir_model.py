@@ -546,22 +546,32 @@ class IrModelFields(models.Model):
             This method prevents the modification/deletion of many2one fields
             that have an inverse one2many, for instance.
         """
+        failed_dependencies = []
+        for rec in self:
+            model = self.env[rec.model]
+            if rec.name in model._fields:
+                field = model._fields[rec.name]
+            else:
+                # field hasn't been loaded (yet?)
+                continue
+            for dependant, path in model._field_triggers.get(field, ()):
+                if dependant.manual:
+                    failed_dependencies.append((field, dependant))
+            for inverse in model._field_inverses.get(field, ()):
+                if inverse.manual and inverse.type == 'one2many':
+                    failed_dependencies.append((field, inverse))
+
+        if not self._context.get(MODULE_UNINSTALL_FLAG) and failed_dependencies:
+            msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
+            raise UserError(msg % failed_dependencies[0])
+        elif failed_dependencies:
+            dependants = {rel[1] for rel in failed_dependencies}
+            to_unlink = [self._get(field.model_name, field.name) for field in dependants]
+            self.browse().union(*to_unlink).unlink()
+
         self = self.filtered(lambda record: record.state == 'manual')
         if not self:
             return
-
-        for record in self:
-            model = self.env[record.model]
-            field = model._fields[record.name]
-            if field.type == 'many2one' and model._field_inverses.get(field):
-                if self._context.get(MODULE_UNINSTALL_FLAG):
-                    # automatically unlink the corresponding one2many field(s)
-                    inverses = self.search([('relation', '=', field.model_name),
-                                            ('relation_field', '=', field.name)])
-                    inverses.unlink()
-                    continue
-                msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
-                raise UserError(msg % (field, model._field_inverses[field][0]))
 
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
@@ -740,6 +750,7 @@ class IrModelFields(models.Model):
             'readonly': bool(field.readonly),
             'required': bool(field.required),
             'selectable': bool(field.search or field.store),
+            'size': getattr(field, 'size', None),
             'translate': bool(field.translate),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
             'relation_table': field.relation if field.type == 'many2many' else None,

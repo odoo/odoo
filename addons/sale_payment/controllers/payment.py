@@ -27,7 +27,10 @@ class PaymentPortal(http.Controller):
         except:
             return False
 
-        if request.env.user == request.env.ref('base.public_user'):
+        # we check if the order need to create a payment token
+        save_token = save_token or order_sudo._get_payment_type() == "form_save"
+
+        if request.env.user._is_public():
             save_token = False
 
         token = request.env['payment.token'].sudo()  # currently no support of payment tokens
@@ -71,7 +74,7 @@ class PaymentPortal(http.Controller):
         except (ValueError, TypeError):
             token = False
 
-        token_owner = order_sudo.partner_id if request.env.user == request.env.ref('base.public_user') else request.env.user.partner_id
+        token_owner = order_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
         if not token or token.partner_id != token_owner:
             params['error'] = 'pay_sale_invalid_token'
             return request.redirect(_build_url_w_params(error_url, params))

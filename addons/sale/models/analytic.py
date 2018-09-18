@@ -126,7 +126,14 @@ class AccountAnalyticLine(models.Model):
                 continue
 
             if sale_order.state != 'sale':
-                raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
+                message_unconfirmed = _('The Sales Order %s linked to the Analytic Account %s must be validated before registering expenses.')
+                messages = {
+                    'draft': message_unconfirmed,
+                    'sent': message_unconfirmed,
+                    'done': _('The Sales Order %s linked to the Analytic Account %s is currently locked. You cannot register an expense on a locked Sales Order. Please create a new SO linked to this Analytic Account.'),
+                    'cancel': _('The Sales Order %s linked to the Analytic Account %s is cancelled. You cannot register an expense on a cancelled Sales Order.'),
+                }
+                raise UserError(messages[sale_order.state] % (sale_order.name, analytic_line.account_id.name))
 
             price = analytic_line._sale_get_invoice_price(sale_order)
             so_line = None
@@ -139,8 +146,6 @@ class AccountAnalyticLine(models.Model):
 
             if not so_line:
                 # generate a new SO line
-                if sale_order.state != 'sale':
-                    raise UserError(_('The Sales Order %s linked to the Analytic Account must be validated before registering expenses.') % sale_order.name)
                 so_line_values = analytic_line._sale_prepare_sale_order_line_values(sale_order, price)
                 so_line = self.env['sale.order.line'].create(so_line_values)
                 so_line._compute_tax_id()

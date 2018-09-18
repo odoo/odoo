@@ -764,6 +764,23 @@ var MockServer = Class.extend({
         return data;
     },
     /**
+     * Simulates a 'resequence' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {string} field
+     * @param {Array} ids
+     */
+    _mockResequence: function (args) {
+        var offset = args.offset ? Number(args.offset) : 0;
+        var field = args.field ? args.field : 'sequence';
+        var records = this.data[args.model].records;
+        for (var i in args.ids) {
+            var record = _.findWhere(records, {id: args.ids[i]});
+            record[field] = Number(i) + offset;
+        }
+    },
+    /**
      * Simulate a 'search_count' operation
      *
      * @private
@@ -922,7 +939,7 @@ var MockServer = Class.extend({
                 return $.when(this._mockSearchReadController(args));
 
             case '/web/dataset/resequence':
-                return $.when();
+                return $.when(this._mockResequence(args));
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();

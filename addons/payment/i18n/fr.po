@@ -20,7 +20,7 @@
 # Fred Gilson <fgi@odoo.com>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
 # leemannd <denis.leemann@camptocamp.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
@@ -73,7 +73,7 @@ msgstr "<i class=\"fa fa-trash\"/>Supprimer"
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Annulé,</i> votre paiement a été annulé."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -82,6 +82,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Fait,</i> votre paiement en ligne a été enregistré. Merci de votre "
+"commande."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -91,6 +93,10 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Erreur,</i> veuillez noter qu'une erreur est survenue durant la "
+"transaction. La commande a été confirmée mais ne sera pas payée. N'hésitez "
+"pas à nous contacter si vous avez la moindre question sur le statut de votre"
+" commande."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:104
@@ -99,6 +105,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>En attente,</i> Votre paiement en ligne a été enregistré avec succès, "
+"mais votre commande n'est pas encore validée."
 
 #. module: payment
 #. openerp-web
@@ -974,7 +982,7 @@ msgstr "Transactions de paiement"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Payment from Odoo"
-msgstr ""
+msgstr "Paiement d'Odoo"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:59
@@ -1076,7 +1084,7 @@ msgstr "Fournisseur"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Redirection vers le site de l'intermédiaire"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1363,7 +1371,7 @@ msgstr "Avertissement!"
 #: code:addons/payment/static/src/js/payment_form.js:134
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Nous ne pouvons ajouter votre méthode de paiement pour le moment."
 
 #. module: payment
 #. openerp-web
@@ -1371,6 +1379,8 @@ msgstr ""
 #, python-format
 msgid "We are not able to add your payment method at the moment.</p>"
 msgstr ""
+"Nous ne sommes pas en mesure d'ajouter votre méthode de paiement pour le "
+"moment.</p>"
 
 #. module: payment
 #. openerp-web
@@ -1379,13 +1389,15 @@ msgstr ""
 #, python-format
 msgid "We are not able to delete your payment method at the moment."
 msgstr ""
+"Nous ne sommes pas en mesure de supprimer votre méthode de paiement pour le "
+"moment."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:173
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "Nous ne pouvons pas vous rediriger vers le formulaire de paiement."
 
 #. module: payment
 #. openerp-web
@@ -1399,7 +1411,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:188
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Impossible de traiter votre paiement."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1524,6 +1536,7 @@ msgstr ""
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
 msgstr ""
+"e.g. Les détails de votre carte de crédit sont faux. Veuillez vérifier."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

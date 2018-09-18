@@ -9,20 +9,20 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Arminas Grigonis <arminas@versada.lt>, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # Anatolij, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 14:51+0000\n"
 "PO-Revision-Date: 2018-04-27 14:51+0000\n"
-"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
+"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +124,7 @@ msgstr "# pirkimo užsakymo"
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} Užsakymas (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Užsakymas (Nr ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.mail_template_data_notification_email_purchase_order
@@ -216,6 +216,77 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -371,7 +442,7 @@ msgstr "Pirkimų analitinė apskaita"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Analitinė žymė"
+msgstr "Analitinės žymos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_analytic_account_for_purchases
@@ -394,11 +465,13 @@ msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
 msgstr ""
+"Susijęs pirkimo užsakymas. Automatiškai užpildoma, kai tiekėjo apmokėjime "
+"pasirenkamas PU."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr "Vidutinis pristatymo laikotarpis"
+msgstr "Vidutinis pristatymo laikas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
@@ -408,7 +481,7 @@ msgstr "Vidutinė kaina"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
 msgid "Bill Control"
-msgstr "Sąskaitų valdymas"
+msgstr "Mokėjimų valdymas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
@@ -423,17 +496,17 @@ msgstr "Mokėjimų kiekis "
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "Kiekis, už kurį pateiktos sąskaitos:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
 msgid "Billing Status"
-msgstr "Mokėjimo statusas"
+msgstr "Mokėjimo būsena"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_ids
 msgid "Bills"
-msgstr "Sąskaitos"
+msgstr "Mokėjimai"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -465,6 +538,10 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"Standartiškai tiekėjo kainos gali būti rankiniu būdu nustatomos produkto "
+"informacijos formoje. Jei jūsų tiekėjas jums pateikia kainoraščių failus, "
+"šis pasirinkimas leidžia jums lengvai importuoti juos į sistemą iš "
+"\"Pirkimas > Tiekėjo kainoraščiai\" meniu."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -479,6 +556,11 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Kvietimai pateikti pasiūlymą yra naudojami, kai norite sugeneruoti užklausas"
+" komerciniams pasiūlymams iš kelių tiekėjų tam tikram produktų rinkiniui. "
+"Galite nustatyti kiekvienam produktui, jei darote tiesioginę komercinio "
+"pasiūlymo užklausą tiekėjui, arba, jei norite, palyginti pasiūlymus iš kelių"
+" tiekėjų."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:76
@@ -507,31 +589,31 @@ msgstr "Negalima ištrinti pirkimo užsakymo, kuris yra '%s' būsenos."
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
 msgid "Click here to record a vendor bill."
-msgstr "Paspauskite čia, norėdami įrašyti tiekėjo sąskaitą"
+msgstr "Paspauskite čia, norėdami įrašyti tiekėjo mokėjimą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "Click to create a quotation that will be converted into a purchase order."
 msgstr ""
-"Paspauskite čia, norėdami sukurti kainą, kuri bus konvertuota į pirkimo "
-"užsakymą. "
+"Paspauskite čia, norėdami sukurti komercinį pasiūlymą, kuris bus paverstas "
+"pirkimo užsakymu."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr "Paspauskite čia, norėdami paklausti kainos."
+msgstr "Paspauskite čia, norėdami sukurti komercinio pasiūlymo užklausą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a vendor bill."
-msgstr "Paspauskite čia, norėdami sukurti tiekėjo sąskaitą."
+msgstr "Paspauskite čia, norėdami sukurti tiekėjo mokėjimą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid "Click to define a new product."
-msgstr "Paspauskite čia, norėdami sukurti naują produktą."
+msgstr "Paspauskite čia, norėdami nustatyti naują produktą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -591,7 +673,7 @@ msgstr "Kontaktas"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
 msgid "Control"
-msgstr "Kontrolė"
+msgstr "Valdymas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
@@ -602,7 +684,7 @@ msgstr "Valdymo politika"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_move_created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr ""
+msgstr "Sukurta pirkimo užsakymo eilutė"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_create_uid
@@ -670,8 +752,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
-"Parodo datą, kada komercinis pasiūlymas turėtų būti patvirtintas ir "
-"paverstas į pirkimo užsakymą."
+"Parodo datą, kai komercinis pasiūlymas turėtų būti patvirtintas ir paverstas"
+" į pirkimo užsakymą."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -693,17 +775,17 @@ msgstr "Pristatymo vietos tipas"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Atlikti"
+msgstr "Atlikta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr "Dvigumo patvirtinimo suma"
+msgstr "Dvigumo patvirtinimo kiekis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_dest_ids
@@ -736,11 +818,13 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Kodavimo pagalba. Kai pasirinkta, susijusios pirkimo užsakymo eilutės yra "
+"pridedamos prie tiekėjo mokėjimo. Gali būti pasirinkti keli PU."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Expected Date"
-msgstr "Numanoma pristatymo data"
+msgstr "Planuojama pristatymo data"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -751,7 +835,7 @@ msgstr "Išplėstiniai filtrai"
 #: code:addons/purchase/models/purchase.py:577
 #, python-format
 msgid "Extra line with %s "
-msgstr "Pradinė įmoka su %s "
+msgstr "Papildoma eilutė su %s "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -773,7 +857,7 @@ msgstr "Gauti 2 lygių patikrinimus užsakymo patvirtinimui"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr "Gauti perspėjimus dėl produktų ar pardavėjų užsakymuose"
+msgstr "Užsakymuose gauti perspėjimus dėl produktų ar tiekėjų"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -810,13 +894,13 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"Jei įjungta, aktyvuoja 3 dalių sutapimą pardavėjo sąskaitose: prekės turi "
+"Jei įjungta, aktyvuoja 3 dalių sutapimą tiekėtjų sąskaitose: prekės turi "
 "būti gautos, kad būtų galima apmokėti sąskaitą."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Import vendor pricelists"
-msgstr "Importuoti pardavėjo kainoraščius"
+msgstr "Importuoti tiekėjo kainoraščius"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:206
@@ -952,6 +1036,8 @@ msgstr "Valdyti tiekėjo kainą"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
+"Valdykite savo pirkimo susitarimus (ilgalaikiai užsakymai, pasiūlymų "
+"kvietimas)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -976,6 +1062,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Tiekėjų laiko paklaida. Kai sistema sugeneruoja pirkimo užsakymus "
+"įsigyjamiems produktams, jie bus suplanuoti tiek dienų anksčiau, kad būtų "
+"išvengta neplanuotų tiekėjų vėlavimų."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_use_po_lead
@@ -985,6 +1074,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Tiekėjų laiko paklaida. Kai sistema sugeneruoja pirkimo užsakymus "
+"pakartotinai užsakomiems produktams, jie bus suplanuoti tiek dienų anksčiau,"
+" kad būtų išvengta neplanuotų tiekėjų vėlavimų."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1059,7 +1151,7 @@ msgstr "Gautinų sąskaitų nėra"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr "Jokios žinutės"
+msgstr "Nėra žinučių"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1072,6 +1164,8 @@ msgid ""
 "Non-stored related field to allow portal user to see the image of the "
 "product he has ordered"
 msgstr ""
+"Nesaugomas susijęs laukas, leidžiantis portalo vartotojams pamatyti "
+"produkto, kurį jis užsisakė, paveikslėlį."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1081,7 +1175,7 @@ msgstr "Pastabos"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
-msgstr "Nėra kam išrašyti sąskaitą"
+msgstr "Nėra už ką išrašyti sąskaitą"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1095,11 +1189,13 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Užsakytiems kiekiams: valdykite mokėjimus, remiantis užsakytais kiekiais.\n"
+"Gautiems kiekiams: valdykite mokėjimus, remiantis gautais kiekiais."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
-msgstr ""
+msgstr "Gautiems kiekiams"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_order_approval
@@ -1155,7 +1251,7 @@ msgstr "Užsakyti kiekiai"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Apatinė riba"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1166,7 +1262,7 @@ msgstr "Pirkimai"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr "Pirkimo užsakymas_${(object.name or '').replace('/','_')}"
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_partner_id
@@ -1244,7 +1340,7 @@ msgstr "Produkto kategorija"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
 msgid "Product Image"
-msgstr "Produkto vaizdas"
+msgstr "Produkto paveikslėlis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
@@ -1314,7 +1410,7 @@ msgid ""
 msgstr ""
 "Pirkimų analizė leidžia jums lengvai patikrinti ir analizuoti jūsų "
 "kompanijos pirkimo istoriją ir planų įvykdymą. Iš šio meniu galite sekti "
-"savo derybų sėkmę, jūsų pardavėjų pristatymo sėkmę ir kt."
+"savo derybų sėkmę, jūsų tiekėjų pristatymo sėkmę ir kt."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
@@ -1429,12 +1525,13 @@ msgstr "Pirkimo užsakymai, kuriems buvo išrašytas važtaraštis."
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Pirkimo užsakymai, kurie turi bent vieną neužpajamuotą eilutę."
+msgstr ""
+"Pirkimo užsakymai, kurie turi eilučių, už kurias nebuvo pateiktos sąskaitos."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
 msgid "Purchase to resupply this warehouse"
-msgstr "Pirkite, kad užpildytumėte šį sandėlį"
+msgstr "Pirkite, kad papildytumėte šį sandėlį"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
@@ -1467,7 +1564,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Quantities billed by vendors"
-msgstr ""
+msgstr "Kiekiai, už kuriuos tiekėjai pateikė sąskaitas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1503,7 +1600,7 @@ msgstr "Pirkimo užklausa atlikta"
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "RFQ Sent"
-msgstr "Išsiųstas pasiūlymas"
+msgstr "Pirkimo užklausa išsiųsta"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
@@ -1569,6 +1666,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"Pardavimo užsakymo arba pasiūlymo numeris, atsiųstas tiekėjo. Jis naudojamas"
+" susiejimu, kai gaunate produktus. Šis numeris įprastai užrašomas ant "
+"tiekėjo atsiųsto pristatymo užsakymo."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1580,23 +1680,23 @@ msgstr "Ataskaitos"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Kainos paklausimas"
+msgstr "Komercinio pasiūlymo užklausa"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Kainos paklausimas #"
+msgstr "Komercinio pasiūlymo užklausa #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr "Reikalauti pardavėjų pristatymo klientams"
+msgstr "Reikalauti tiekėjų pristatymo klientams"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Kainos paklausimas "
+msgstr "Komercinio pasiūlymo užklausos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1635,7 +1735,7 @@ msgstr "Ieškoti pirkimo užsakymo "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Saugus gaminimo laikas pirkimams"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
@@ -1654,12 +1754,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr "Siųsti PO el. paštu "
+msgstr "Siųsti PU el. paštu "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr "Siųsti RFQ el. paštu "
+msgstr "Siųsti pirkimo užklausą el. paštu "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_sequence
@@ -1679,7 +1779,7 @@ msgstr "Visoms užsakymo eilutėms nustatyti datą "
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "Atstatyti į juodraštį"
+msgstr "Nustatyti kaip juodraštį"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
@@ -1701,7 +1801,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
 msgid "Source Document"
-msgstr "Susijęs dokumentas"
+msgstr "Šaltinio dokumentas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_state
@@ -1762,7 +1862,7 @@ msgstr "Sąlygos"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_url
 msgid "The full URL to access the document through the website."
-msgstr "Pilna nuoroda pasiekti dokumentą per tinklalapį."
+msgstr "Pilna nuoroda dokumento pasiekimui per svetainę."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1773,7 +1873,7 @@ msgid ""
 msgstr ""
 "Produkto formoje yra detali informacija pirkimo proceso\n"
 "pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
-"galimi pardavėjai ir kt."
+"galimi tiekėjai ir kt."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1784,7 +1884,7 @@ msgid ""
 msgstr ""
 "Produkto formoje yra detali informacija pirkimo proceso\n"
 "pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
-"galimi pardavėjai ir kt."
+"galimi tikėjai ir kt."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1803,6 +1903,9 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Komercinis pasiūlymas turi diskusijos/derybų su tiekėjų istoriją.\n"
+"Kai patvirtinama, komercinio pasiūlymo užklausa yra paverčiama\n"
+"į pirkimo užsakymą."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1811,6 +1914,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Komercinio pasiūlymo užklausa yra pirmas žingsnis pirkimo procese.\n"
+"Kai jis paverčiamas į pirkimo užsakymą, jūs galėsite valdyti produktų\n"
+"kvitus ir tiekėjo mokėjimą."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:878
@@ -1819,7 +1925,7 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
-"Su produktu %s nėra susieta jokių pardavėjų. Nustatykite pardavėją šiam "
+"Su produktu %s nėra susieta jokių tiekėjų. Nustatykite pardavėją šiam "
 "produktui."
 
 #. module: purchase
@@ -1850,11 +1956,17 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Tai prideda tiesioginio pristatymo maršrutą, pritaikomą produktams, kad "
+"tiekėjas pristatytų produktus tiesiai jūsų klientams. Tiesioginis produkto "
+"pristatymas sugeneruos pirkimo užklausą komerciniam pasiūlymui po pardavimo "
+"užsakymo patvirtinimo. Šis procesas vyksta pagal pareikalavimą. Prašomas "
+"pristatymo adresas bus kliento pristatymo adresas, o ne jūsų sandėlis."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
 msgstr ""
+"Tai pakeičia suplanuotą datą visoms užsakymo eilutėms nustatytai datai"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1908,7 +2020,7 @@ msgstr "Tai nustatys įeinančio pristatymo operacijos tipą"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
-msgstr "Patvirtinta"
+msgstr "Patvirtinimui"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1967,7 +2079,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
 msgid "Unit Price"
-msgstr "Kaina"
+msgstr "Vieneto kaina"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -1992,7 +2104,7 @@ msgstr "Neskaityti pranešimai"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr "Suma be PVM"
+msgstr "Suma be mokesčių"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
@@ -2012,6 +2124,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Naudokite šį meniu sąskaitų, gautų iš jūsų tiekėjo, valdymui.\n"
+"Kai registruojate naują mokėjimą, nustatykite pirkimo užsakymą\n"
+"ir \"Odoo\" užpildys mokėjimą automatiškai pagal užsakytus\n"
+"ir gautus kiekius."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -2021,6 +2137,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Naudokite šį meniu paieškai jūsų pirkimo užsakymuose pagal\n"
+"numerius, tiekėjus, produktus ir t.t. Kiekvienam pirkimo užsakymui\n"
+"galite sekti diskusiją su tiekėju, valdyti gautus produktus ir \n"
+"valdyti tiekėjo mokėjimus."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2030,7 +2150,7 @@ msgstr "Vartotojas"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Pagalbinis laukas išreiškiantis sumą valiuta"
+msgstr "Pagalbinis laukas, išreiškiantis sumą valiuta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_id
@@ -2040,7 +2160,7 @@ msgstr "Pagalbinis laukas išreiškiantis sumą valiuta"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr "Pardavėjas"
+msgstr "Tiekėjas"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
@@ -2050,7 +2170,7 @@ msgstr "Pardavėjas"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 msgid "Vendor Bills"
-msgstr "Pardavėjų sąskaitos"
+msgstr "Tiekėjų sąskaitos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_manage_vendor_price
@@ -2067,7 +2187,7 @@ msgstr "Tiekėjo numeris"
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Vendors"
-msgstr "Pardavėjai"
+msgstr "Tiekėjai"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2077,6 +2197,10 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Tiekėjo mokėjimai gali būti iš anksto sugeneruojami pagal\n"
+"pirkimo užsakymus ir kvitus. Tai leidžia jums valdyti mokėjimus,\n"
+"kuriuos gaunate iš savo tiekėjo pagal \"Odoo\" esantį dokumento\n"
+"juodraštį."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -2087,7 +2211,7 @@ msgstr "Tūris"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr "Laukiama sąskaitų"
+msgstr "Laukiančios sąskaitos"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -2116,7 +2240,7 @@ msgstr "Pirkimo užsakymo įspėjimas "
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr "Įspėjimas kai perkate šį produktą"
+msgstr "Įspėjimas, kai perkate šį produktą"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_warning_purchase
@@ -2126,7 +2250,7 @@ msgstr "Įspėjimai"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url
 msgid "Website URL"
-msgstr "Tinklalapio nuoroda"
+msgstr "Svetainės nuoroda"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply

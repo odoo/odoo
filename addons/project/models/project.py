@@ -197,9 +197,9 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', _('On invitation only')),
-            ('employees', _('Visible by all employees')),
-            ('portal', _('Visible by following customers')),
+            ('followers', 'On invitation only'),
+            ('employees', 'Visible by all employees'),
+            ('portal', 'Visible by following customers'),
         ],
         string='Privacy', required=True,
         default='employees',
@@ -473,7 +473,7 @@ class Task(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
-            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi

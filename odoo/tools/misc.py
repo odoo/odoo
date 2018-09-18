@@ -1069,7 +1069,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
             digits = decimal_precision_obj.precision_get(dp)
         elif currency_obj:
             digits = currency_obj.decimal_places
-        elif (hasattr(value, '_field') and isinstance(value._field, (float_field, function_field)) and value._field.digits):
+        elif (hasattr(value, '_field') and getattr(value._field, 'digits', None)):
                 digits = value._field.digits[1]
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
@@ -1078,10 +1078,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_objs = env['res.lang'].search([('code', '=', lang)])
-    if not lang_objs:
-        lang_objs = env['res.lang'].search([], limit=1)
-    lang_obj = lang_objs[0]
+    lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1151,3 +1148,23 @@ pickle.load = _pickle_load
 pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

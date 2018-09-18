@@ -36,6 +36,9 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Nếu ô này được đánh dấu, bạn sẽ không thể lưu các liên hệ mà có mã số thuế "
+"không thể thẩm định được bởi dịch vụ European VIES (một hệ thống trao đổi "
+"thông tin VAT của châu Âu)"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:134
@@ -44,6 +47,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] dường như không hợp lệ.\n"
+"Lưu ý: định dạng được mong đợi là %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -52,6 +57,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"Mã số thuế GTGT [%s] của đối tác [%s] hoặc không thẩm định thành công được "
+"với VIES hoặc không thoả mãn định dạng mong đợi %s."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -63,12 +70,12 @@ msgstr "Thuế GTGT"
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Thẩm định Mã số Thuế GTGT"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "Thẩm định Mã số Thuế GTGT sử dụng dịch vụ European VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings

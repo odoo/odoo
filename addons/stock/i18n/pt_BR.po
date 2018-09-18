@@ -19,13 +19,14 @@
 # Hendrix Costa <hendrixcosta@gmail.com>, 2017
 # Danilo Rodrigues, 2017
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Diego Bittencourt <diegomb86@gmail.com>, 2018\n"
+"Last-Translator: Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,6 +132,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Aqui está seu inventário atual: </strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -216,7 +219,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Detalhes</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -935,7 +938,7 @@ msgstr "Movimentos Atribuídos"
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "Em uma data especifica"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
@@ -3255,7 +3258,7 @@ msgstr "Configurações de Inventário"
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "Valorização de Inventário"
+msgstr "Valoração de Inventário"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -3824,7 +3827,7 @@ msgstr "Operação Manual"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr ""
+msgstr "Manualmente ou baseado em agendamentos automáticos"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -4544,7 +4547,7 @@ msgstr "Transferências de Pacote"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr ""
+msgstr "Tipo de embalagem"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
@@ -4987,7 +4990,7 @@ msgstr "Nome do Produto"
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packages"
-msgstr ""
+msgstr "Packages de Produtos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -5632,12 +5635,12 @@ msgstr "Regras"
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 msgid "Run Scheduler"
-msgstr ""
+msgstr "Executar Agendador"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
 msgid "Run Scheduler Manually"
-msgstr ""
+msgstr "Executar Agendadores Manualmente"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
@@ -7428,6 +7431,9 @@ msgid ""
 "When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
 "                and verify if some reordering rules should be triggered."
 msgstr ""
+"Quando você executa  o agendadores, o Odoo tenta reservar o estoque "
+"disponível para satisfazer os pickings existentes e verifica se existem "
+"regras de recompra."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity

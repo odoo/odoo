@@ -60,6 +60,10 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _clean_merged(self):
+        super(StockMove, self)._clean_merged()
+        self.write({'created_purchase_line_id': False})
+
     def _action_cancel(self):
         for move in self:
             if move.created_purchase_line_id:
@@ -184,3 +188,12 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        res = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        res['purchase_line_id'] = None
+        return res

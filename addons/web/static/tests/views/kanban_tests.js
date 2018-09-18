@@ -1203,7 +1203,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record & column in grouped on m2o', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         var kanban = createView({
             View: KanbanView,
@@ -1230,6 +1230,13 @@ QUnit.module('Views', {
 
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
             "the last column should be the newly created one");
+
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 1,
+            "the quick create column should still be opened for mass creation");
+        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', { keyCode: $.ui.keyCode.ESCAPE }));
+        assert.strictEqual(kanban.$('.o_kanban_quick_create:visible button.o_kanban_add').length, 0,
+            "the quick create column should now be closed");
+
         kanban.destroy();
     });
 
@@ -2546,6 +2553,37 @@ QUnit.module('Views', {
         var lastCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
         assert.strictEqual(lastCount, initialCount + 1,
             "kanban counters should have updated on quick create");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars are working with load more', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                '<kanban limit="1">' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="id"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        // we have 1 record shown, load 2 more and check it worked
+        kanban.$('.o_kanban_group').find('.o_kanban_load_more').click();
+        kanban.$('.o_kanban_group').find('.o_kanban_load_more').click();
+        var shownIDs = _.map(kanban.$('.o_kanban_record'), function(record) {
+            return parseInt(record.innerText);
+        });
+        assert.deepEqual(shownIDs, [1, 2, 3], "intended records are loaded");
 
         kanban.destroy();
     });

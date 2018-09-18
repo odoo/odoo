@@ -524,7 +524,7 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
         var groupBys = [];
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
 
@@ -600,7 +600,7 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
+        var rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var datapt, row, col, attrs, cell_value;
         var main_row_header, main_col_header;

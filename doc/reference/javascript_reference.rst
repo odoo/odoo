@@ -446,7 +446,7 @@ of them in the new class.
         },
     };
 
-    var Hamster = Hamster.extend(DanceMixin, {
+    var Hamster = Animal.extend(DanceMixin, {
         sleep: function () {
             console.log('sleeping');
         },

@@ -1902,6 +1902,45 @@ QUnit.module('basic_fields', {
         assert.verifySteps(['destroy']);
     });
 
+    QUnit.test('graph dashboard widget can be destroyed when nv is partially loaded', function (assert) {
+        // this test ensures that the JournalDashboardGraph widget doesn't crash
+        // when being destroyed before nv has been completely loaded
+        assert.expect(2);
+
+        testUtils.patch(basicFields.JournalDashboardGraph, {
+            destroy: function () {
+                assert.step('destroy');
+                // nv is fully loaded only when nvd3.js has been loaded
+                // which happens sequentially after nv.d3.js
+                // we simulate this race condition with:
+                var offWindowResize = window.nv.utils.offWindowResize;
+                window.nv.utils.offWindowResize = undefined;
+                this._super.apply(this, arguments);
+                window.nv.utils.offWindowResize = offWindowResize;
+            },
+        });
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+
+        kanban.destroy();
+        testUtils.unpatch(basicFields.JournalDashboardGraph);
+
+        assert.verifySteps(['destroy']);
+    });
+
     QUnit.module('AceEditor');
 
     QUnit.test('ace widget on text fields works', function (assert) {
@@ -4001,6 +4040,40 @@ QUnit.module('basic_fields', {
 
     QUnit.module('StatInfo');
 
+    QUnit.test('statinfo widget formats decimal precision', function (assert) {
+        // sometimes the round method can return numbers such as 14.000001
+        // when asked to round a number to 2 decimals, as such is the behaviour of floats.
+        // we check that even in that eventuality, only two decimals are displayed
+        assert.expect(2);
+
+        this.data.partner.fields.monetary = {string: "Monetary", type: 'monetary'};
+        this.data.partner.records[0].monetary = 9.999999;
+        this.data.partner.records[0].currency_id = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<button class="oe_stat_button" name="items" icon="fa-gear">' +
+                            '<field name="qux" widget="statinfo"/>' +
+                        '</button>' +
+                        '<button class="oe_stat_button" name="money" icon="fa-money">' +
+                            '<field name="monetary" widget="statinfo"/>' +
+                        '</button>' +
+                  '</form>',
+            res_id: 1,
+        });
+
+        // formatFloat renders according to this.field.digits
+        assert.strictEqual(form.$('.oe_stat_button .o_field_widget.o_stat_info .o_stat_value').eq(0).text(),
+            '0.4', "Default precision should be [16,1]");
+        assert.strictEqual(form.$('.oe_stat_button .o_field_widget.o_stat_info .o_stat_value').eq(1).text(),
+            '10.00', "Currency decimal precision should be 2");
+
+        form.destroy();
+    });
+
     QUnit.test('statinfo widget in form view', function (assert) {
         assert.expect(9);
 
@@ -4311,6 +4384,33 @@ QUnit.module('basic_fields', {
 
     QUnit.module('FieldDomain');
 
+    QUnit.test('The domain editor should not crash the view when given a dynamic filter', function (assert) {
+        //dynamic filters (containing variables, such as uid, parent or today)
+        //are not handled by the domain editor, but it shouldn't crash the view
+        assert.expect(1);
+
+        this.data.partner.records[0].foo = '[["int_field", "=", uid]]';
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                    '<field name="int_field" invisible="1"/>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                user_context: {uid: 14},
+            },
+        });
+
+        assert.strictEqual(form.$('.o_read_mode').text(), "This domain is not supported.",
+            "The widget should not crash the view, but gracefully admit its failure.");
+        form.destroy();
+    });
+
     QUnit.test('basic domain field usage is ok', function (assert) {
         assert.expect(6);
 
@@ -4457,6 +4557,43 @@ QUnit.module('basic_fields', {
             "field selector popover should contain two fields");
         assert.strictEqual($sampleLi.length, 1,
             "field selector popover should contain 'Color index' field");
+        form.destroy();
+    });
+
+    QUnit.test('domain field can be reset with a new domain (from onchange)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = '[]';
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.foo = '[["id", "=", 1]]';
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '5 record(s)',
+            "the domain being empty, there should be 5 records");
+
+        // update display_name to trigger the onchange and reset foo
+        form.$('.o_field_widget[name=display_name]').val('new value').trigger('input');
+
+        assert.equal(form.$('.o_domain_show_selection_button').text().trim(), '1 record(s)',
+            "the domain has changed, there should be only 1 record");
+
         form.destroy();
     });
 

@@ -3,8 +3,9 @@
 # * hr_gamification
 # 
 # Translators:
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -26,6 +27,8 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"Tikslas yra nustatomas pagal vartotoją ir tikslo tipą.\n"
+"Tikslai gali būti sukuriami automatiškai, naudojant iššūkius."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
@@ -33,6 +36,8 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
+"Visi darbuotojo ženkleliai, susieti su darbuotoju tiesiogiai arba per "
+"vartotoją"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -41,23 +46,28 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"Kad galėtumėte juos įvertinti, pasirinktiems vartotojams priskirkite tikslų sąrašą.\n"
+"Iššūkis gali naudoti laiko tarpą (savaitė, mėnuo...) automatiniam tikslų kūrimui.\n"
+"Tikslai yra sukuriami konkretiems nariams arba grupės nariams."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
-msgstr "Pažymėjimai"
+msgstr "Ženkleliai"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
+"ženkleliai yra apdovanojimas už gerą darbą. Duokite juos žmonėms, kurie jų "
+"nusipelno."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "Pažymėjimai, tiesiogiai susieti su darbuotoju"
+msgstr "Ženkleliai, tiesiogiai susiję su darbuotoju"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -85,6 +95,7 @@ msgstr "Paspausti, norint sukurti tikslą"
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Click to grant this employee his first badge"
 msgstr ""
+"Norėdami suteikti vartotojui suteikti pirmąjį jo ženklelį, paspauskite čia."
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -94,7 +105,7 @@ msgstr "Apibūdinkite, ką jie padarė ir kodėl tai svarbu (bus paviešinta)"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "Tiesioginis ženklelis"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -106,27 +117,27 @@ msgstr "Darbuotojas"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_badge_ids
 msgid "Employee Badges"
-msgstr "Darbuotojo pažymėjimai"
+msgstr "Darbuotojo ženkleliai"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "Darbuotojo tikslai"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr "Sužaidybinimo pasiekimas"
+msgstr "Sužaidybinimo ženklelis"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr "Sužaidybinimo vartotojo pasiekimas"
+msgstr "Vartotojo sužaidybinimo ženklelis"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
 msgid "Goal"
-msgstr ""
+msgstr "Tikslas"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
@@ -137,7 +148,7 @@ msgstr "Tikslų istorija"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr "Suteikti pažymėjimą"
+msgstr "Suteikti ženklelį"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
@@ -147,17 +158,17 @@ msgstr "Suteikta"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "Apdovanotų darbuotojų kiekis"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "Turi ženklelių"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr "Gauti pažymėjimai"
+msgstr "Gauti ženkleliai"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
@@ -190,13 +201,13 @@ msgstr "Už ką esi dėkingas?"
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
 #, python-format
 msgid "You can not send a badge to yourself"
-msgstr "Negalite siųsti pažymėjimo sau"
+msgstr "Negalite siųsti ženklelio sau"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr "Galite siųsti pažymėjimus tik darbuotojams, susietiems su vartotoju."
+msgstr "Galite siųsti ženklelius tik darbuotojams, susietiems su vartotoju."
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
@@ -206,4 +217,4 @@ msgstr "gamification.badge.user.wizard"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "apdovanoti šį darbuotoją už gerą darbą"

@@ -40,11 +40,11 @@ msgid ""
 msgstr ""
 "* 當薪資單創建時狀態為「草稿」 \n"
 " \n"
-" * 如果薪資單待驗證，狀態為「正在等待」。\n"
+" * 如果薪資單待驗證，狀態為「等待」。\n"
 " \n"
 " * 如果薪資單被確認，狀態設定為「完成」。\n"
 " \n"
-" * 當使用者取消薪資單時狀態為「已拒絕」。"
+" * 當使用者取消薪資單時狀態為「拒絕」。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -223,7 +223,7 @@ msgstr "基本"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
 msgid "Basic Salary"
-msgstr ""
+msgstr "基本薪金"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
@@ -421,7 +421,7 @@ msgstr "繳納登記冊"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
 msgid "Conveyance Allowance"
-msgstr ""
+msgstr "交通津貼"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
@@ -565,7 +565,7 @@ msgstr "已完成的薪資單批次處理"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done Slip"
-msgstr "已付款的薪資條"
+msgstr "薪資單已完成"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
@@ -582,7 +582,7 @@ msgstr "草稿薪資單批次"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft Slip"
-msgstr "薪資條草稿"
+msgstr "薪資單草稿"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
@@ -695,7 +695,7 @@ msgstr "為已選的所有員工生成薪資單"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
-msgstr ""
+msgstr "獲得銷售額的1%"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -713,7 +713,7 @@ msgstr "分組按"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
 msgid "House Rent Allowance"
-msgstr ""
+msgstr "住屋津貼"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -739,7 +739,7 @@ msgstr "ID"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr "如果勾選它，表示這裡生成的所有薪資條都是退款薪資單。"
+msgstr "如果勾選它，表示這裡生成的所有薪資單都是退款薪資單。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -889,7 +889,7 @@ msgstr "最大範圍"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
 msgid "Meal Voucher"
-msgstr ""
+msgstr "膳食津貼"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
@@ -929,7 +929,7 @@ msgstr "淨"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "淨薪金"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:199
@@ -1141,7 +1141,7 @@ msgstr "薪資單批處理"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Payslips by Employees"
-msgstr "按員工分組的薪資條"
+msgstr "按員工分組的薪資單"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1176,12 +1176,12 @@ msgstr "列印"
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
 msgid "Professional Tax"
-msgstr ""
+msgstr "專業稅"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
 msgid "Provident Fund"
-msgstr ""
+msgstr "公積金"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1267,7 +1267,7 @@ msgstr "記錄明細"
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr "已拒絕"
+msgstr "拒絕"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
@@ -1329,7 +1329,7 @@ msgstr "薪資規則"
 #: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
-msgstr "薪資條為%s為 %s"
+msgstr "%s於 %s 的薪資單"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
@@ -1359,7 +1359,7 @@ msgstr "搜尋薪資單批次"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Search Payslip Lines"
-msgstr "搜尋薪資條明細"
+msgstr "搜尋薪資單明細"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -1505,7 +1505,7 @@ msgstr "用於薪資單顯示薪資規則."
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr "正在等待"
+msgstr "等待"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0

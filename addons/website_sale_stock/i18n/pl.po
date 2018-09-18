@@ -7,6 +7,7 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
+# Maja Stawicka <mjstwck@wp.pl>, 2017
 # Martin Trigaux, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
 msgid ""
@@ -57,7 +58,7 @@ msgid ""
 "clock-o\"/> Partially Available</span>"
 msgstr ""
 "<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> częściowo dostępny</span>"
+"clock-o\"/> Częściowo dostępny</span>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
@@ -81,7 +82,7 @@ msgstr "Dodaje stan dostępności zasobów na stronie internetowej produktu."
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template_available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "Próg dostępności"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product_cart_qty
@@ -92,7 +93,7 @@ msgstr "Ilość w koszyku"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product_custom_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template_custom_message
 msgid "Custom Message"
-msgstr ""
+msgstr "Niestandardowa wiadomość"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -105,11 +106,13 @@ msgid ""
 "Default availability mode set on newly created stockable products. This can "
 "be changed at the product level."
 msgstr ""
+"Domyślny tryb dostępności ustawiony dla nowo utworzonych produktów z "
+"możliwością blokowania. Można to zmienić na poziomie produktu."
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default threshold"
-msgstr ""
+msgstr "Domyślny próg"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -135,6 +138,8 @@ msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+"Zarządzaj inwentarzem swoich produktów i wyświetlaj ich stan dostępności na "
+"stronie internetowej."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -160,25 +165,29 @@ msgstr "Pozycja zamówienia sprzedaży"
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Sell regardless of inventory"
-msgstr ""
+msgstr "Sprzedawaj niezależnie od zasobów"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
+"Pokaż zasoby poniżej progu i zapobiegnij sprzedaży, jeśli nie ma "
+"wystarczającej ilości zasobów"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
+"Pokaż zasoby na stronie i zapobiegnij sprzedaży, jeśli nie masz "
+"wystarczającej ilości zasobów"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show product-specific notifications"
-msgstr ""
+msgstr "Pokaż powiadomienia dotyczące określonego produktu"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:28
@@ -241,7 +250,7 @@ msgstr "Dostępny"
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "in your cart."
-msgstr "w Twoim koszyku"
+msgstr "w Twoim koszyku."
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings

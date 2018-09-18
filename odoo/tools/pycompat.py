@@ -13,7 +13,7 @@ PY2 = sys.version_info[0] == 2
 
 _Writer = collections.namedtuple('_Writer', 'writerow writerows')
 if PY2:
-    # pylint: disable=long-builtin,unichr-builtin,unicode-builtin
+    # pylint: disable=long-builtin,unichr-builtin,unicode-builtin,undefined-variable
     unichr = unichr
     text_type = unicode
     string_types = (str, unicode)

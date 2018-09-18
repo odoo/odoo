@@ -21,7 +21,8 @@ if pycompat.PY2:
         fp, fname = tools.file_open(path, pathinfo=True)
         fp2 = None
 
-        if not isinstance(fp, file):    # pylint: disable=file-builtin
+        # pylint: disable=file-builtin,undefined-variable
+        if not isinstance(fp, file):
             # imp.load_source need a real file object, so we create
             # one from the file-like object we get from file_open
             fp2 = os.tmpfile()

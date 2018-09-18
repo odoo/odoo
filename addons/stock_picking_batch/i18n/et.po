@@ -6,6 +6,7 @@
 # Martin Trigaux, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2018
@@ -74,7 +75,7 @@ msgstr "Komplektnope ei ole lõpetatud"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_id_8938
 msgid "Batch associated to this picking"
-msgstr "Komplekt seostatud selle noppega"
+msgstr "Batch associated to this picking"
 
 #. module: stock_picking_batch
 #: model:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -193,13 +194,13 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_uid
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch_write_date
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch_picking_ids
@@ -319,6 +320,10 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
+"The goal of the batch picking is to group operations that may\n"
+"            (needs to) be done together in order to increase their efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) or\n"
+"            help the timing management of operations (tasks to be done at 1pm)."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking

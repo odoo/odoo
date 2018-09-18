@@ -894,8 +894,14 @@ var BasicModel = AbstractModel.extend({
                 params: params,
             })
             .then(function () {
+                var offset = options.offset ? options.offset : 0;
+                var old_data = data.data.slice();
                 data.data = _.sortBy(data.data, function (d) {
-                    return _.indexOf(resIDs, self.localData[d].res_id);
+                    if (_.contains(resIDs, self.localData[d].res_id)) {
+                        return _.indexOf(resIDs, self.localData[d].res_id) + offset;
+                    } else {
+                        return _.indexOf(old_data, d);
+                    }
                 });
                 data.res_ids = [];
                 _.each(data.data, function (d) {
@@ -2423,11 +2429,11 @@ var BasicModel = AbstractModel.extend({
         }
 
         var def = $.Deferred();
-
+        var evalContext = this._getEvalContext(record);
         this._rpc({
                 model: domainModel,
                 method: 'search_count',
-                args: [Domain.prototype.stringToArray(domainValue)],
+                args: [Domain.prototype.stringToArray(domainValue, evalContext)],
                 context: context
             })
             .then(_.identity, function (error, e) {

@@ -42,7 +42,7 @@ msgstr "Nazwa akcji"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Test linii reguł działania"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
@@ -83,7 +83,7 @@ msgstr "Zastosuj do"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
 msgid "Assigned to admin user"
-msgstr ""
+msgstr "Przypisany użytkownikowi administratora"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -106,7 +106,7 @@ msgstr "Automatyzacja"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Zasada działania podstawowego: sprawdź i wykonaj"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_recursive
@@ -118,31 +118,32 @@ msgstr "Automatyzacja Bazowa: przetestuj regułę rekursywną"
 #: model:base.automation,name:base_automation.test_rule_on_create
 #: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
 msgid "Base Automation: test rule on create"
-msgstr ""
+msgstr "Podstawowa automatyzacja: testuj regułę przy tworzeniu"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_recompute
 #: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
 msgid "Base Automation: test rule on recompute"
-msgstr ""
+msgstr "Podstawowa automatyzacja: testuj regułę w przeliczeniu"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_line
 #: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
 msgid "Base Automation: test rule on secondary model"
-msgstr ""
+msgstr "Podstawowa automatyzacja: testuj regułę na modelu pomocniczym"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
 msgid "Base Automation: test rule on write"
-msgstr ""
+msgstr "Podstawowa automatyzacja: testuj regułę przy zapisie"
 
 #. module: base_automation
 #: model:base.automation,name:base_automation.test_rule_on_write_check_context
 #: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
 msgid "Base Automation: test rule on write check context"
 msgstr ""
+"Podstawowa automatyzacja: testuj regułę w kontekście sprawdzania zapisu"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -197,7 +198,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Click to setup a new automated automation."
-msgstr ""
+msgstr "Kliknij, aby skonfigurować nową zautomatyzowaną automatyzację."
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -207,7 +208,7 @@ msgstr "Zamknięte"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Rozdzielana przecinkami lista nazw pól, które wyzwalają zmianę."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
@@ -245,6 +246,9 @@ msgid ""
 "                                    You can put a negative number if you need a delay before the\n"
 "                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
+"Opóźnienie po dacie uruchomienia.\n"
+"                                    Możesz wprowadzić liczbę ujemną, jeśli potrzebujesz opóźnienia przed\n"
+"                                    datą uruchomienia, np. Wysłanie przypomnienia na 15 minut przed spotkaniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_range
@@ -407,7 +411,7 @@ msgstr "Nowy"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Wyzwalacz pól onchange"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -422,7 +426,7 @@ msgstr "Przy tworzeniu i zapisie"
 #. module: base_automation
 #: selection:base.automation,trigger:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Po usunięciu"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -459,6 +463,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Podaj pole używane do łączenia nowo utworzonego rekordu na rekordzie "
+"używanego przez działanie serwera."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_code
@@ -468,12 +474,12 @@ msgstr "Kod Python"
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
-msgstr ""
+msgstr "Usuń akcję"
 
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
-msgstr ""
+msgstr "Usuń działanie kontekstowe związane z tym działaniem serwera"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_user_id
@@ -496,6 +502,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Ustawienie wartości powoduje, że ta czynność jest dostępna na pasku bocznym "
+"dla danego modelu."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -510,7 +518,7 @@ msgstr "Temat"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
 msgid "Trigger Condition"
-msgstr ""
+msgstr "Stan wyzwalania"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
@@ -528,6 +536,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ działania serwera. Dostępne są następujące wartości:\n"
+"- 'Wykonaj kod Pythona': blok kodu Pythona, który zostanie wykonany\n"
+"- \"Utwórz lub skopiuj nowy rekord\": utwórz nowy rekord z nowymi wartościami lub skopiuj istniejący rekord do bazy danych\n"
+"- \"Zapisz w rekordzie\": zaktualizuj wartości rekordu\n"
+"- \"Wykonaj kilka działań\": zdefiniuj akcję, która uruchamia kilka innych działań serwera\n"
+"- \"Dodaj obserwujących\": dodaj obserwujących do rekordu (dostępne w Dyskusja)\n"
+"- \"Wyślij wiadomość e-mail\": automatycznie wysyła e-mail (dostępny w email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
@@ -548,6 +563,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Użyj automatycznych działań, aby automatycznie uruchamiać akcje dla\n"
+"                różnych ekranów. Przykład: potencjalny klient utworzony przez określonego użytkownika może\n"
+"                automatycznie zostać przypisany do określonego kanału sprzedaży lub\n"
+"                szansa, która nadal ma status oczekujący po 14 dniach, może\n"
+"                wywołać automatyczny e-mail z przypomnieniem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
@@ -565,6 +585,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Przy obliczaniu warunku opartego na dniu można użyć kalendarza do obliczenia"
+" daty na podstawie dni roboczych."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_sequence
@@ -572,6 +594,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"W przypadku wielu akcji kolejność wykonywania zależy od sekwencji. Niski "
+"numer oznacza wysoki priorytet."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
@@ -579,6 +603,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Kiedy powinien zostać uruchomiony warunek.\n"
+"                                  Jeśli jest obecny, zostanie sprawdzony przez program planujący. Jeśli jest pusty, zostanie sprawdzony przy tworzeniu i aktualizacji."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active
@@ -592,6 +618,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Napisz kod Pythona, który wykona akcja. Niektóre zmienne są dostępne do "
+"użycia; pomoc dotycząca wyrażenia Python jest podana w zakładce pomocy."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

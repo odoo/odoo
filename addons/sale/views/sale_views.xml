@@ -67,6 +67,11 @@
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
         <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
         <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant" active="False"/>
+        <menuitem id="menu_product_category_config_sale"
+                  action="product.product_category_action_form"
+                  parent="sale.prod_config_main"
+                  sequence="1"
+                  groups="base.group_no_one"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
         <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom" active="False"/>
@@ -381,7 +386,7 @@
                                     <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': ['|',('analytic_account_id','!=',False),('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': ['|',('analytic_account_id','!=',False),('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
                                 </group>
                                 <group name="sale_pay" string="Invoicing">
                                     <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>

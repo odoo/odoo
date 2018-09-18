@@ -564,6 +564,7 @@ class TestFields(common.TransactionCase):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
         company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+
         # create one user per company
         user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
                                               'company_id': company0.id, 'company_ids': []})
@@ -571,24 +572,44 @@ class TestFields(common.TransactionCase):
                                               'company_id': company1.id, 'company_ids': []})
         user2 = self.env['res.users'].create({'name': 'Baz', 'login': 'baz',
                                               'company_id': company2.id, 'company_ids': []})
-        # create a default value for the company-dependent field
-        field = self.env['ir.model.fields'].search([('model', '=', 'test_new_api.company'),
-                                                    ('name', '=', 'foo')])
-        self.env['ir.property'].create({'name': 'foo', 'fields_id': field.id,
+
+        # create values for many2one field
+        tag0 = self.env['test_new_api.multi.tag'].create({'name': 'Qux'})
+        tag1 = self.env['test_new_api.multi.tag'].create({'name': 'Quux'})
+        tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
+
+        # create default values for the company-dependent fields
+        field_foo = self.env['ir.model.fields']._get('test_new_api.company', 'foo')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_foo.id,
                                         'value': 'default', 'type': 'char'})
+        field_tag_id = self.env['ir.model.fields']._get('test_new_api.company', 'tag_id')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
+                                        'value': tag0, 'type': 'many2one'})
 
         # create/modify a record, and check the value for each user
-        record = self.env['test_new_api.company'].create({'foo': 'main'})
+        record = self.env['test_new_api.company'].create({'foo': 'main', 'tag_id': tag1})
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'default')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
 
-        record.sudo(user1).foo = 'alpha'
+        record.sudo(user1).write({'foo': 'alpha', 'tag_id': tag2.id})
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag2)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        # unlink value of a many2one (tag2), and check again
+        tag2.unlink()
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
 
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})

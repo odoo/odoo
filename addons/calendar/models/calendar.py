@@ -630,6 +630,8 @@ class Meeting(models.Model):
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
                     recurring_date = todate(meeting.recurrent_id_date)
+                if date_field == "stop":
+                    recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
@@ -946,11 +948,13 @@ class Meeting(models.Model):
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
-        self.start = self.start_date
+        if self.start_date:
+            self.start = self.start_date
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
-        self.stop = self.stop_date
+        if self.stop_date:
+            self.stop = self.stop_date
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1470,6 +1474,10 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         # compute duration, only if start and stop are modified
         if not 'duration' in values and 'start' in values and 'stop' in values:
             values['duration'] = self._get_duration(values['start'], values['stop'])
@@ -1538,6 +1546,10 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
 
@@ -1742,3 +1754,11 @@ class Meeting(models.Model):
                 activity_values['user_id'] = values['user_id']
             if activity_values.keys():
                 self.mapped('activity_ids').write(activity_values)
+
+    @api.model
+    def _fix_rrule(self, values):
+        rule_str = values.get('rrule')
+        if rule_str:
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
+        return rule_str

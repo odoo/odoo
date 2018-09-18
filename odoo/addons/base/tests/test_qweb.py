@@ -5,7 +5,6 @@ import collections
 import json
 import os.path
 import re
-import sys
 
 from lxml import etree
 
@@ -481,11 +480,15 @@ class TestQWebNS(TransactionCase):
                 </t>
             """
         })
-        error_msg = "Can't convert 'int' object to str implicitly"
-        if sys.version_info >= (3, 6):
-            error_msg = "must be str, not int"
-        with self.assertRaisesRegexp(QWebException, error_msg):
+
+        try:
+            "" + 0
+        except TypeError as e:
+            error_msg = e.args[0]
+
+        with self.assertRaises(QWebException, msg=error_msg):
             view1.render()
+
 
 from copy import deepcopy
 class FileSystemLoader(object):
