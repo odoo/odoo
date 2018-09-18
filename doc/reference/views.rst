@@ -1437,6 +1437,11 @@ There are 5 possible type of tags in a dashboard view:
         Clicking on a clickable aggregate will change the measures used by the subviews
         and add the value of the domain attribute (if any) to the search view.
 
+    - ``value_label`` (optional)
+        A string put on the right of the aggregate value.
+        For example, it can be useful to indicate the unit of measure
+        of the aggregate value.
+
 ``formula``
     declares a derived value.  Formulas are values computed from aggregates.
 
@@ -1467,6 +1472,11 @@ There are 5 possible type of tags in a dashboard view:
 
     - ``help`` (optional)
         A help message to dipslay in a tooltip (equivalent of help for a field in python)
+
+    - ``value_label`` (optional)
+        A string put on the right of the formula value.
+        For example, it can be useful to indicate the unit of measure
+        of the formula value.
 
 ``widget``
     Declares a specialized widget to be used to display the information. This is
