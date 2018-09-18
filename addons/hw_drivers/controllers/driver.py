@@ -64,8 +64,9 @@ class StatusController(http.Controller):
                 ping_dict[dev] = 'STOP'
         return ping_dict
 
-    @http.route('/box/connect', type='http', auth='none', cors='*', csrf=False)
-    def connect_box(self, url):
+    @http.route('/box/connect', type='json', auth='none', cors='*', csrf=False)
+    def connect_box(self):
+        data = httprequest.jsonrequest
         server = ""  # read from file
         try:
             f = open('/home/pi/odoo-remote-server.conf', 'r')
@@ -78,7 +79,8 @@ class StatusController(http.Controller):
         if server:
             return 'This IoTBox had already been connected'
         else:
-            subprocess.call("/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh " + url, shell=True)
+            iotname = ''
+            subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh',data['url'], iotname, data['token']])
             return 'IoTBox connected'
 
     @http.route('/drivers/status', type='http', auth='none', cors='*')

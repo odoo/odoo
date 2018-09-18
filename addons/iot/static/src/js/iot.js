@@ -99,14 +99,59 @@ ActionManager.include({
     }
 });
 
-
-
 var IotDetectButton = Widget.extend({
     tagName: 'button',
-    className: 'o_iot_detect_button',
+    className: 'o_iot_detect_button btn btn-primary',
     events: {
         'click': '_onButtonClick',
     },
+    init: function(parent, record){
+        this._super.apply(this, arguments);
+        this.token = record.data.token;
+    },
+
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$el.text('SCAN');
+    },
+
+    getUserIP: function(onNewIP) {
+            //  onNewIp - your listener function for new IPs
+            //compatibility for firefox and chrome
+            var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+            var pc = new myPeerConnection({
+                iceServers: []
+            }),
+            noop = function() {},
+            localIPs = {},
+            ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+            key;
+
+            function iterateIP(ip) {
+                if (!localIPs[ip]) onNewIP(ip);
+                localIPs[ip] = true;
+            }
+
+             //create a bogus data channel
+            pc.createDataChannel("");
+
+            // create offer and set local description
+            pc.createOffer().then(function(sdp) {
+                sdp.sdp.split('\n').forEach(function(line) {
+                    if (line.indexOf('candidate') < 0) return;
+                    line.match(ipRegex).forEach(iterateIP);
+                });
+                
+                pc.setLocalDescription(sdp, noop, noop);
+            });
+
+            //listen for candidate events
+            pc.onicecandidate = function(ice) {
+                if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+                ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+            };
+            
+        },
 
     find_proxy: function(options){
         options = options || {};
@@ -119,68 +164,77 @@ var IotDetectButton = Widget.extend({
         var threads  = [];
         var progress = 0;
 
-        urls.push('http://localhost'+port);
-        for(var i = 0; i < 256; i++){
-            urls.push('http://192.168.0.'+i+port);
-            urls.push('http://192.168.1.'+i+port);
-            urls.push('http://10.0.0.'+i+port);
-        }
+        this.getUserIP(function(ip){
+                var ip_local = ip.replace(ip.split('.')[3],'')
+                urls.push('http://localhost'+port);
+                if(ip){
+                    for(var i = 0; i < 256; i++){
+                            urls.push('http://'+ip_local+i+port);
+                        }
+                }
+                else{
+                    for(var i = 0; i < 256; i++){
+                            urls.push('http://192.168.0.'+i+port);
+                            urls.push('http://192.168.1.'+i+port);
+                            urls.push('http://10.0.0.'+i+port);
+                        }
+                }
+            var prog_inc = 1/urls.length;
 
-        var prog_inc = 1/urls.length;
-
-        function update_progress(){
-            progress = found ? 1 : progress + prog_inc;
-            if(options.progress){
-                options.progress(progress);
+            function update_progress(){
+                progress = found ? 1 : progress + prog_inc;
+                if(options.progress){
+                    options.progress(progress);
+                }
             }
-        }
 
-        function thread(done){
-            var url = urls.shift();
+            function thread(done){
+                var url = urls.shift();
 
-            done = done || new $.Deferred();
+                done = done || new $.Deferred();
 
-            if( !url || found || !self.searching_for_proxy ){
-                done.resolve();
+                if( !url || found || !self.searching_for_proxy ){
+                    done.resolve();
+                    return done;
+                }
+
+                $.ajax({
+                        url: url + '/hw_proxy/hello',
+                        method: 'GET',
+                        timeout: 400,
+                    }).done(function(){
+                        //found = true;
+                        update_progress();
+                        done.resolve(url);
+                    })
+                    .fail(function(){
+                        update_progress();
+                        thread(done);
+                    });
+
                 return done;
             }
 
-            $.ajax({
-                    url: url + '/hw_proxy/hello',
-                    method: 'GET',
-                    timeout: 400,
-                }).done(function(){
-                    //found = true;
-                    update_progress();
-                    done.resolve(url);
-                })
-                .fail(function(){
-                    update_progress();
-                    thread(done);
-                });
+            self.searching_for_proxy = true;
 
-            return done;
-        }
-
-        this.searching_for_proxy = true;
-
-        var len  = Math.min(parallel,urls.length);
-        for(i = 0; i < len; i++){
-            threads.push(thread());
-        }
-
-        $.when.apply($,threads).then(function(){
-            var urls = [];
-            for(var i = 0; i < arguments.length; i++){
-                if(arguments[i]){
-                    urls.push(arguments[i]);
-                }
+            var len  = Math.min(parallel,urls.length);
+            for(i = 0; i < len; i++){
+                threads.push(thread());
             }
-            console.log(urls);
-            done.resolve(urls);
-        });
 
-        return done;
+            $.when.apply($,threads).then(function(){
+                var urls = [];
+                for(var i = 0; i < arguments.length; i++){
+                    if(arguments[i]){
+                        urls.push(arguments[i]);
+                    }
+                }
+                console.log(urls);
+                done.resolve(urls);
+            });
+
+            });
+            return done;
     },
 
     _onButtonClick: function(ev) {
@@ -199,9 +253,10 @@ var IotDetectButton = Widget.extend({
                         //send url to iotbox and check if the iotbox has already been connected or not
                         var full_url = self.url + '/box/connect';
                         $.ajax({
+                            header : {'Content-type': 'application/json', 'Accept': 'text/plain'},
                             url: full_url,
-                            data: {url: result},
-                            method: 'GET',
+                            data: {token: self.token,url: result},
+                            method: 'POSt',
                             //timeout: 400,
                         }).done(function (result2){
                             //something
