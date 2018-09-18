@@ -252,11 +252,13 @@ var IotDetectButton = Widget.extend({
                         console.log("Connecting to URL", self.url);
                         //send url to iotbox and check if the iotbox has already been connected or not
                         var full_url = self.url + '/box/connect';
+                        var json_data = {token: self.token,url: result};
                         $.ajax({
-                            header : {'Content-type': 'application/json', 'Accept': 'text/plain'},
+                            beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/json');},
                             url: full_url,
-                            data: {token: self.token,url: result},
-                            method: 'POSt',
+                            dataType: 'json',
+                            data: JSON.stringify(json_data),
+                            type: 'POSt',
                             //timeout: 400,
                         }).done(function (result2){
                             //something
