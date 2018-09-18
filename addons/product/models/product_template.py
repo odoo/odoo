@@ -55,7 +55,7 @@ class ProductTemplate(models.Model):
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id,
-        required=True, help="Select category for the current product")
+        required=True, track_visibility='onchange', help="Select category for the current product")
 
     currency_id = fields.Many2one(
         'res.currency', 'Currency', compute='_compute_currency_id')
