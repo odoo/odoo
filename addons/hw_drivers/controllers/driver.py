@@ -133,6 +133,7 @@ class StatusController(http.Controller):
 # Driver common interface
 #----------------------------------------------------------
 class Driver(Thread):
+    ping_value = ""
 
     def supported(self):
         pass

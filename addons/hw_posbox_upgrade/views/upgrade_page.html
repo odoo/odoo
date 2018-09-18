@@ -30,7 +30,7 @@
                         setInterval(function(){
                             --cpt;
                             if(cpt==0){location.reload();}
-                            $('.message-status').text('Restarting the IoTBox in ' + cpt);
+                            $('.message-status').text('Restarting the IoTBox.  Available in ' + cpt);
                         } , 1000);
                     }).fail(function(){
                         $('.error-message').text('Upgrade Failed');
