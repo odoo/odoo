@@ -208,6 +208,31 @@ MailManager.include({
         }
     },
     /**
+     * Called when receiving a join and left channel notification:
+     *
+     * @private
+     * @param {Object} channelData
+     * @param {integer} channelData.channel_partner_id
+     * @param {string} channelData.channel_partner_name
+     * @param {string} channelData.name
+     */
+    _handlePartnerJoinNotification: function (channelData) {
+        var content;
+        if (session.partner_id === channelData.channel_partner_id) {
+            content = _.str.sprintf(
+                _t("You have joined channel : <b>%s</b>"),
+                _.escape(channelData.name)
+            );
+        } else {
+            content = _.str.sprintf(
+                _t("%s has joined channel : <b>%s</b>"),
+                _.escape(channelData.channel_partner_name),
+                _.escape(channelData.name)
+            );
+        }
+        this.do_notify(_t("Joined"), content);
+    },
+    /**
      * Add or remove failure when receiving a failure update message
      *
      * @private
@@ -341,6 +366,8 @@ MailManager.include({
     _handlePartnerNotification: function (data) {
         if (data.info === 'unsubscribe') {
             this._handlePartnerUnsubscribeNotification(data);
+        } else if (data.info === 'join') {
+            this._handlePartnerJoinNotification(data);
         } else if (data.type === 'toggle_star') {
             this._handlePartnerToggleStarNotification(data);
         } else if (data.type === 'mark_as_read') {
@@ -429,25 +456,38 @@ MailManager.include({
      *
      * @private
      * @param {Object} data
-     * @param {Object} data.id ID of the unsubscribed channel
+     * @param {integer} data.id ID of the unsubscribed channel
+     * @param {string} data.channel_partner_id
+     * @param {string} data.name
      */
     _handlePartnerUnsubscribeNotification: function (data) {
         var channel = this.getChannel(data.id);
+        var isOnMyself = !data.channel_partner_id || (session.partner_id === data.channel_partner_id);
         if (channel) {
             var message;
             if (_.contains(['public', 'private'], channel.getType())) {
-                message = _.str.sprintf(
-                    _t("You unsubscribed from <b>%s</b>."),
-                    channel.getName()
-                );
+                if (isOnMyself) {
+                    message = _.str.sprintf(
+                        _t("You unsubscribed from <b>%s</b>."),
+                        _.escape(channel.getName())
+                    );
+                } else {
+                    message = _.str.sprintf(
+                        _t("%s has left channel : <b>%s</b>"),
+                        _.escape(data.channel_partner_name),
+                        _.escape(channel.getName())
+                    );
+                }
             } else {
                 message = _.str.sprintf(
                     _t("You unpinned your conversation with <b>%s</b>."),
-                    channel.getName()
+                    _.escape(channel.getName())
                 );
             }
-            this._removeChannel(channel);
-            this._mailBus.trigger('unsubscribe_from_channel', data.id);
+            if (isOnMyself) {
+                this._removeChannel(channel);
+                this._mailBus.trigger('unsubscribe_from_channel', data.id);
+            }
             this.do_notify(_("Unsubscribed"), message);
         }
     },

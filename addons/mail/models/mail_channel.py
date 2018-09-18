@@ -286,12 +286,15 @@ class Channel(models.Model):
     @api.multi
     def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
+        channel_info.update({
+            'channel_partner_name': partner.name,
+            'channel_partner_id': partner.id,
+        })
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
         if not self.email_send:
-            notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-            # post 'channel left' message as root since the partner just unsubscribed from the channel
-            self.sudo().message_post(body=notification, message_type="notification", subtype="mail.mt_comment", author_id=partner.id)
+            notifications = [[(self._cr.dbname, 'res.partner', partner.id), channel_info] for partner in self.channel_partner_ids]
+            self.env['bus.bus'].sendmany(notifications)
         return result
 
     @api.multi
@@ -796,15 +799,21 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
+        channel_info = self.channel_info('join')[0]
         if self.channel_type == 'channel' and not self.email_send:
-            notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
-            self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+            channel_info.update({
+                'channel_partner_name': self.env.user.partner_id.name,
+                'channel_partner_id': self.env.user.partner_id.id,
+            })
+            notif_partners = self.channel_partner_ids - self.env.user.partner_id
+            notifications = [[(self._cr.dbname, 'res.partner', partner.id), channel_info] for partner in notif_partners]
+            self.env['bus.bus'].sendmany(notifications)
+
         self.action_follow()
 
         if self.moderation_guidelines:
             self._send_guidelines(self.env.user.partner_id)
 
-        channel_info = self.channel_info('join')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
 
