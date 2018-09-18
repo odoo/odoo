@@ -18,6 +18,7 @@ import zipfile
 import io
 import os
 from odoo.tools import misc
+import urllib3
 
 from uuid import getnode as get_mac
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
@@ -185,23 +186,26 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
 
     @http.route('/load_drivers', type='http', auth='none', website=True)
     def load_drivers(self):
-        #récupérer fichier uuid
-        db_uuid = ""
-        try:
-            f = open('/home/pi/uuid', 'r')
-            for line in f:
-                db_uuid += line
-            f.close()
-        except:
-            return False
-
         subprocess.call("sudo mount -o remount,rw /", shell=True)
         subprocess.call("sudo mount -o remount,rw /root_bypass_ramdisks", shell=True)
-        url = 'https://nightly.odoo.com/trunk/posbox/iotbox_drivers.zip'
-        username = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
-        response = requests.get(url, auth=(username, db_uuid.split('\n')[0]), stream=True)
-        zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-        zip_file.extractall("/home/pi/odoo/addons/hw_drivers")
+
+        mac = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
+
+        #response = requests.get(url, auth=(username, db_uuid.split('\n')[0]), stream=True)
+        server = self.get_server_status()
+        if server:
+            pm = urllib3.PoolManager()
+            resp = False
+            server = server + '/iot/get_drivers'
+            try:
+                resp = pm.request('POST',
+                                   server,
+                                   fields={'mac': mac})
+            except:
+                _logger.warning('Could not reach configured server')
+            if resp and resp.data:
+                zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
+                zip_file.extractall("/home/pi/odoo/addons/hw_drivers/drivers")
         subprocess.call("sudo service odoo restart")
         subprocess.call("sudo mount -o remount,ro /", shell=True)
         subprocess.call("sudo mount -o remount,ro /root_bypass_ramdisks", shell=True)

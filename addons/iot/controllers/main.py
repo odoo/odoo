@@ -2,8 +2,31 @@
 from odoo import http
 import logging
 from odoo.http import request
+import odoo
+import os
+import zipfile
+import io
+import base64
 
 class IoTController(http.Controller):
+
+    @http.route('/iot/get_drivers', type='http', auth='public', csrf=False)
+    def download_drivers(self, mac):
+        zip_list = []
+        for addons_path in odoo.modules.module.ad_paths:
+            for module in sorted(os.listdir(str(addons_path))):
+                if os.path.isdir(addons_path + '/' + module) and os.path.isdir(str(addons_path + '/' + module + '/drivers')):
+                    for file in os.listdir(str(addons_path + '/' + module + '/drivers')):
+                        # zip it
+                        full_path_file = str(addons_path + '/' + module + '/drivers/' + file)
+                        zip_list.append((full_path_file, file))
+        file_like_object = io.BytesIO()
+        zipfile_ob = zipfile.ZipFile(file_like_object, 'w')
+        for zip in zip_list:
+            zipfile_ob.write(zip[0], zip[1]) # In order to remove the absolute path
+        zipfile_ob.close()
+        return file_like_object.getvalue() #could remove base64.encodebytes(base64.encodebytes(
+
     #get base url (might be used for authentication feature too)
     @http.route('/iot/base_url', type='json', auth='user')
     def get_base_url(self):
