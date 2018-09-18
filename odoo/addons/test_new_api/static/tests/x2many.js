@@ -62,15 +62,15 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.tab-pane:eq(2).active .o_field_x2many_list_row_add a'
     }, {
         content: "select Admin",
-        trigger: 'tr:has(td:containsExact(Mitchell Stephens)) .o_list_record_selector input[type="checkbox"]'
+        trigger: 'tr:has(td:containsExact(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]'
     }, {
         content: "save selected participants",
         trigger: '.o_select_button',
-        extra_trigger: 'tr:has(td:containsExact(Mitchell Stephens)) .o_list_record_selector input[type="checkbox"]:propChecked',
+        extra_trigger: 'tr:has(td:containsExact(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]:propChecked',
     }, { // save
         content: "save discussion",
         trigger: 'button.o_form_button_save',
-        extra_trigger: '.tab-pane:eq(2) .o_field_widget tbody tr:has(td:containsExact(Mitchell Stephens))',
+        extra_trigger: '.tab-pane:eq(2) .o_field_widget tbody tr:has(td:containsExact(Mitchell Admin))',
     }, { // edit
         content: "edit discussion",
         trigger: 'button.o_form_button_edit',
@@ -91,7 +91,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message b
         content: "create new message b",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: '.o_web_client:has(textarea[name="message_concat"]:propValue([test] Mitchell Stephens:a))',
+        extra_trigger: '.o_web_client:has(textarea[name="message_concat"]:propValue([test] Mitchell Admin:a))',
     }, {
         content: "insert body b",
         trigger: 'textarea[name="body"]:first',
@@ -103,7 +103,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // change content to trigger on change
         content: "insert content",
         trigger: 'input.o_required_modifier',
-        extra_trigger: 'textarea[name="message_concat"]:first:propValue([test] Mitchell Stephens:a\n[test] Mitchell Stephens:b)',
+        extra_trigger: 'textarea[name="message_concat"]:first:propValue([test] Mitchell Admin:a\n[test] Mitchell Admin:b)',
         run: 'text test_trigger',
     }, {
         content: "blur the content field",
@@ -111,7 +111,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text test_trigger',
     }, {
         content: "check onchange",
-        trigger: 'textarea[name="message_concat"]:first:propValue([test_trigger] Mitchell Stephens:a\n[test_trigger] Mitchell Stephens:b)',
+        trigger: 'textarea[name="message_concat"]:first:propValue([test_trigger] Mitchell Admin:a\n[test_trigger] Mitchell Admin:b)',
         run: function () {},
     }, { // change message b
         content: "edit message b",
@@ -128,7 +128,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message c
         content: "create new message c",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: 'textarea[name="message_concat"]:propValue([test_trigger] Mitchell Stephens:a\n[test_trigger] Mitchell Stephens:bbb)',
+        extra_trigger: 'textarea[name="message_concat"]:propValue([test_trigger] Mitchell Admin:a\n[test_trigger] Mitchell Admin:bbb)',
     }, {
         content: "insert body",
         trigger: 'textarea[name="body"]:first',
@@ -146,11 +146,11 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.tab-pane:eq(2).active .o_field_x2many_list_row_add a',
     }, {
         content: "select Demo User",
-        trigger: 'tr:has(td:containsExact(Marc Brown)) .o_list_record_selector input[type="checkbox"]',
+        trigger: 'tr:has(td:containsExact(Marc Demo)) .o_list_record_selector input[type="checkbox"]',
     }, {
         content: "save selected participants",
         trigger: '.o_select_button',
-        extra_trigger: 'tr:has(td:containsExact(Marc Brown)) .o_list_record_selector input[type="checkbox"]:propChecked',
+        extra_trigger: 'tr:has(td:containsExact(Marc Demo)) .o_list_record_selector input[type="checkbox"]:propChecked',
     }, { // save
         content: "save discussion",
         trigger: 'button.o_form_button_save',
@@ -162,7 +162,7 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "check data 2",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Mitchell Stephens)))',
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tr:has(td:containsExact(bbb)):has(td:containsExact([test_trigger] Mitchell Admin)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 3",
@@ -222,15 +222,15 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text Marc',
     }, {
         content: "select another user",
-        trigger: '.ui-autocomplete li:contains(Marc Brown)',
+        trigger: '.ui-autocomplete li:contains(Marc Demo)',
         in_modal: false,
     }, {
         content: "test one2many's line onchange after many2one",
-        trigger: '.o_field_widget:contains([test_trigger] Marc Brown)',
+        trigger: '.o_field_widget:contains([test_trigger] Marc Demo)',
         run: function () {}, // it's a check
     }, {
         content: "test one2many field not triggered onchange",
-        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger] Mitchell Stephens:e)',
+        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger] Mitchell Admin:e)',
         in_modal: false,
         run: function () {}, // don't change texarea content
     }, {
@@ -238,11 +238,11 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.modal-footer button:contains(Save):contains(Close)'
     }, {
         content: "test one2many triggered the onchange on save for the line",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tbody tr td.o_readonly_modifier:contains([test_trigger] Marc Brown))',
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tbody tr td.o_readonly_modifier:contains([test_trigger] Marc Demo))',
         run: function () {}, // it's a check
     }, {
         content: "test one2many triggered the onchange on save",
-        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger] Marc Brown:e)',
+        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger] Marc Demo:e)',
         run: function () {}, // don't change texarea content
     }, { // remove
         content: "remove b",
@@ -266,7 +266,7 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "check data 6",
-        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact([test_trigger] Mitchell Stephens)):has(td:containsExact(aaa)))',
+        trigger: '.o_content:has(.tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact([test_trigger] Mitchell Admin)):has(td:containsExact(aaa)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 7",
@@ -287,11 +287,11 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text Marc',
     }, {
         content: "select demo user",
-        trigger: '.ui-autocomplete li a:contains(Marc Brown)',
+        trigger: '.ui-autocomplete li a:contains(Marc Demo)',
         in_modal: false,
     }, {
         content: "test one2many's line onchange after many2one",
-        trigger: '.o_field_widget:contains([test_trigger] Marc Brown)',
+        trigger: '.o_field_widget:contains([test_trigger] Marc Demo)',
         run: function () {}, // it's a check
     }, {
         content: "insert body",
@@ -307,7 +307,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody:has(tr td:containsExact(ddd))',
     }, { // check onchange data
         content: "check data 8",
-        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Mitchell Stephens:aaa\n[test_trigger] Mitchell Stephens:c\n[test_trigger] Mitchell Stephens:d\n[test_trigger] Marc Brown:ddd)',
+        trigger: 'textarea[name="message_concat"]:propValueContains([test_trigger] Mitchell Admin:aaa\n[test_trigger] Mitchell Admin:c\n[test_trigger] Mitchell Admin:d\n[test_trigger] Marc Demo:ddd)',
         run: function () {}, // don't change texarea content
     }, {
         content: "check data 9",
@@ -372,10 +372,10 @@ odoo.define('web.test.x2many', function (require) {
         run: 'text Marc',
     }, {
         content: "select an other user",
-        trigger: '.ui-autocomplete li a:contains(Marc Brown)',
+        trigger: '.ui-autocomplete li a:contains(Marc Demo)',
     }, {
         content: "test one2many's line onchange after many2one",
-        trigger: '.o_list_view td:contains([test_trigger2] Marc Brown)',
+        trigger: '.o_list_view td:contains([test_trigger2] Marc Demo)',
         run: function () {}, // don't blur the many2one
     }, {
         content: "change text value",
@@ -387,7 +387,7 @@ odoo.define('web.test.x2many', function (require) {
         run: 'click'
     }, {
         content: "test one2many onchange",
-        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger2] Marc Brown:ccccc)',
+        trigger: 'textarea[name="message_concat"]:first:propValueContains([test_trigger2] Marc Demo:ccccc)',
         run: function () {}, // don't change texarea content
     }, {
         content: "click outside to trigger one2many onchange",
@@ -400,7 +400,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_list_view .o_data_row td.o_list_record_remove button:visible:last',
     }, {
         content: "test one2many onchange after delete",
-        trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(Mitchell Stephens:d)))',
+        trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(Mitchell Admin:d)))',
         run: function () {},
     }, { // save
         content: "save discussion",
@@ -408,7 +408,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
     }, { // check saved data
         content: "check data 10",
-        trigger: '.o_field_text:containsExact([test_trigger2] Mitchell Stephens:aaa\n[test_trigger2] Marc Brown:ccccc)',
+        trigger: '.o_field_text:containsExact([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc)',
         run: function () {}, // don't change texarea content
     }, {
         content: "check data 11",
@@ -432,7 +432,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: 'textarea[name="body"]:first:propValueContains(eee)',
     }, { // check saved data
         content: "check data 12",
-        trigger: '.o_field_text[name="message_concat"]:containsExact([test_trigger2] Mitchell Stephens:aaa\n[test_trigger2] Marc Brown:ccccc\n[test_trigger2] Mitchell Stephens:eee)',
+        trigger: '.o_field_text[name="message_concat"]:containsExact([test_trigger2] Mitchell Admin:aaa\n[test_trigger2] Marc Demo:ccccc\n[test_trigger2] Mitchell Admin:eee)',
         run: function () {}, // it's a check
     }, {
         content: "check data 13",
