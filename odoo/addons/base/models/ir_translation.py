@@ -13,12 +13,9 @@ from odoo.tools import pycompat
 _logger = logging.getLogger(__name__)
 
 TRANSLATION_TYPE = [
-    ('field', 'Field'),                         # deprecated
-    ('model', 'Object'),
-    ('report', 'Report/Template'),
+    ('model', 'Model Field'),
+    ('model_terms', 'Structured Model Field'),
     ('selection', 'Selection'),
-    ('view', 'View'),                           # deprecated
-    ('help', 'Help'),                           # deprecated
     ('code', 'Code'),
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
@@ -43,6 +40,7 @@ class IrTranslationImport(object):
         self._model_table = model._table
         self._overwrite = model._context.get('overwrite', False)
         self._debug = False
+        self._rows = []
 
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
@@ -88,18 +86,23 @@ class IrTranslationImport(object):
             params['name'] = 'ir.ui.view,arch_db'
             params['imd_model'] = "ir.ui.view"
 
-        query = """ INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
-                    VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
-                            %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s) """ % self._table
-        self._cr.execute(query, params)
+        self._rows.append((params['name'], params['lang'], params['res_id'],
+                           params['src'], params['type'], params['imd_model'],
+                           params['module'], params['imd_name'], params['value'],
+                           params['state'], params['comments']))
 
     def finish(self):
         """ Transfer the data from the temp table to ir.translation """
         cr = self._cr
-        if self._debug:
-            cr.execute("SELECT count(*) FROM %s" % self._table)
-            count = cr.fetchone()[0]
-            _logger.debug("ir.translation.cursor: We have %d entries to process", count)
+
+        # Step 0: insert rows in batch
+        query = """ INSERT INTO %s (name, lang, res_id, src, type, imd_model,
+                                    module, imd_name, value, state, comments)
+                    VALUES """ % self._table
+        for rows in cr.split_for_in_conditions(self._rows):
+            cr.execute(query + ", ".join(["%s"] * len(rows)), rows)
+
+        _logger.debug("ir.translation.cursor: We have %d entries to process", len(self._rows))
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute(""" UPDATE %s AS ti
@@ -129,54 +132,56 @@ class IrTranslationImport(object):
                 if hasattr(field, 'translate') and callable(field.translate):
                     src_relevant_fields.append("%s,%s" % (model, field_name))
 
-        find_expr = """
-                irt.lang = ti.lang
-            AND irt.type = ti.type
-            AND irt.name = ti.name
-            AND (
-                    (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name IN %s AND irt.src = ti.src)
-                 OR (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name NOT IN %s)
-                 OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
-                 OR (ti.type = 'field')
-                 OR (ti.type = 'help')
-                 OR (ti.type NOT IN ('model', 'view', 'field', 'help') AND irt.src = ti.src)
-            )
-        """
-
-        # Step 2: update existing (matching) translations
+        # Step 2: insert new or upsert translations
         if self._overwrite:
-            cr.execute(""" UPDATE ONLY %s AS irt
-                           SET value = ti.value,
-                               src = ti.src,
-                               state = 'translated'
-                           FROM %s AS ti
-                          WHERE %s
-                            AND ti.value IS NOT NULL
-                            AND ti.value != ''
-                            AND noupdate IS NOT TRUE
-                       """ % (self._model_table, self._table, find_expr),
-                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
-
-        # Step 3: insert new translations
-        cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
-                       SELECT name, lang, res_id, src, type, value, module, state, comments
-                       FROM %s AS ti
-                       WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s)
-                       ON CONFLICT DO NOTHING;
-                   """ % (self._model_table, self._table, self._model_table, find_expr),
-                   (tuple(src_relevant_fields), tuple(src_relevant_fields)))
+            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+                           SELECT name, lang, res_id, src, type, value, module, state, comments
+                           FROM %s
+                           WHERE type = 'code'
+                           ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                       """ % (self._model_table, self._table))
+            count = cr.rowcount
+            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+                           SELECT name, lang, res_id, src, type, value, module, state, comments
+                           FROM %s
+                           WHERE type = 'model'
+                           ON CONFLICT (type, lang, name, res_id) WHERE type = 'model'
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                       """ % (self._model_table, self._table))
+            count += cr.rowcount
+            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+                           SELECT name, lang, res_id, src, type, value, module, state, comments
+                           FROM %s
+                           WHERE type IN ('selection', 'constraint', 'sql_constraint')
+                           ON CONFLICT (type, lang, name, md5(src)) WHERE type IN ('selection', 'constraint', 'sql_constraint')
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                       """ % (self._model_table, self._table))
+            count += cr.rowcount
+            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+                           SELECT name, lang, res_id, src, type, value, module, state, comments
+                           FROM %s
+                           WHERE type = 'model_terms'
+                           ON CONFLICT (type, name, lang, res_id, md5(src))
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                       """ % (self._model_table, self._table))
+            count += cr.rowcount
+        else:
+            cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+                           SELECT name, lang, res_id, src, type, value, module, state, comments
+                           FROM %s
+                           ON CONFLICT DO NOTHING;
+                       """ % (self._model_table, self._table))
+            count = cr.rowcount
 
         if self._debug:
             cr.execute("SELECT COUNT(*) FROM ONLY %s" % self._model_table)
             total = cr.fetchone()[0]
-            cr.execute("SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s" % \
-                       (self._model_table, self._table, find_expr),
-                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
-            count = cr.fetchone()[0]
             _logger.debug("ir.translation.cursor: %d entries now in ir.translation, %d common entries with tmp", total, count)
 
-        # Step 4: cleanup
+        # Step 3: cleanup
         cr.execute("DROP TABLE %s" % self._table)
+        self._rows.clear()
         return True
 
 
@@ -262,8 +267,15 @@ class IrTranslation(models.Model):
         res = super(IrTranslation, self)._auto_init()
         # Add separate md5 index on src (no size limit on values, and good performance).
         tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
+        # Cover 'model_terms' type
         tools.create_unique_index(self._cr, 'ir_translation_unique', self._table,
                                   ['type', 'name', 'lang', 'res_id', 'md5(src)'])
+        if not tools.index_exists(self._cr, 'ir_translation_code_unique'):
+            self._cr.execute("CREATE UNIQUE INDEX ir_translation_code_unique ON ir_translation (type, lang, md5(src)) WHERE type = 'code'")
+        if not tools.index_exists(self._cr, 'ir_translation_model_unique'):
+            self._cr.execute("CREATE UNIQUE INDEX ir_translation_model_unique ON ir_translation (type, lang, name, res_id) WHERE type = 'model'")
+        if not tools.index_exists(self._cr, 'ir_translation_selection_unique'):
+            self._cr.execute("CREATE UNIQUE INDEX ir_translation_selection_unique ON ir_translation (type, lang, name, md5(src)) WHERE type IN ('selection', 'constraint', 'sql_constraint')")
         return res
 
     @api.model
@@ -403,7 +415,7 @@ class IrTranslation(models.Model):
         query = """ SELECT * FROM ir_translation
                     WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
         name = "%s,%s" % (field.model_name, field.name)
-        params = (records.env.lang, 'model', name, tuple(records.ids))
+        params = (records.env.lang, 'model_terms', name, tuple(records.ids))
         return query, params
 
     @api.model
@@ -448,7 +460,7 @@ class IrTranslation(models.Model):
             value = record[field.name]
             terms = set(field.get_trans_terms(value))
             record_trans = trans.search([
-                ('type', '=', 'model'),
+                ('type', '=', 'model_terms'),
                 ('name', '=', "%s,%s" % (field.model_name, field.name)),
                 ('res_id', '=', record.id),
             ])
@@ -591,12 +603,13 @@ class IrTranslation(models.Model):
         if callable(field.translate):
             # insert missing translations for each term in src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
+                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
                         FROM res_lang l
                         WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
                             WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
-                        );
+                        )
+                        ON CONFLICT DO NOTHING;
                     """
             for record in records:
                 module = external_ids[record.id].split('.')[0]
