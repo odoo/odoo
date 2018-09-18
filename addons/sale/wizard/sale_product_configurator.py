@@ -6,6 +6,7 @@ from odoo import models, fields
 
 class SaleProductConfigurator(models.TransientModel):
     _name = 'sale.product.configurator'
+    _description = 'Sale Product Configurator'
 
     product_template_id = fields.Many2one(
         'product.template', string="Product",

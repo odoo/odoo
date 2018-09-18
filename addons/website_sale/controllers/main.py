@@ -321,7 +321,7 @@ class WebsiteSale(ProductConfiguratorController):
             'main_object': product,
             'product': product,
             'optional_product_ids': [p.with_context({'active_id': p.id}) for p in product.optional_product_ids],
-            'get_attribute_value_ids': self._get_attribute_value_ids,
+            'get_attribute_exclusions': self._get_attribute_exclusions,
         }
         return request.render("website_sale.product", values)
 
@@ -398,13 +398,9 @@ class WebsiteSale(ProductConfiguratorController):
             product_id=int(product_id),
             add_qty=add_qty,
             set_qty=set_qty,
-            attributes=self._filter_attributes(**kw),
             product_custom_variant_values=json.loads(kw.get('product_custom_variant_values'))
         )
         return request.redirect("/shop/cart")
-
-    def _filter_attributes(self, **kw):
-        return {k: v for k, v in kw.items() if "attribute" in k}
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
@@ -1082,9 +1078,7 @@ class WebsiteSale(ProductConfiguratorController):
             if "optional-product-" in k and int(kw.get(k.replace("product", "add"))):
                 optional_product_ids.append(int(v))
 
-        attributes = self._filter_attributes(**kw)
-
-        product_custom_variant_values = json.loads(kw.get('product_custom_variant_values'))
+        custom_values = json.loads(kw.get('custom_values'))
 
         value = {}
         if add_qty or set_qty:
@@ -1092,9 +1086,17 @@ class WebsiteSale(ProductConfiguratorController):
                 product_id=int(product_id),
                 add_qty=add_qty,
                 set_qty=set_qty,
-                attributes=attributes,
                 optional_product_ids=optional_product_ids,
-                product_custom_variant_values=self._get_custom_variant_value(int(product_id), product_custom_variant_values)
+                product_custom_variant_values=self._get_product_custom_value(
+                    int(product_id),
+                    custom_values,
+                    'product_custom_variant_values'
+                ),
+                no_variant_attribute_values=self._get_product_custom_value(
+                    int(product_id),
+                    custom_values,
+                    'no_variant_attribute_values'
+                )
             )
 
         # options have all time the same quantity
@@ -1102,29 +1104,37 @@ class WebsiteSale(ProductConfiguratorController):
             order._cart_update(
                 product_id=option_id,
                 set_qty=value.get('quantity'),
-                attributes=attributes,
                 linked_line_id=value.get('line_id'),
-                product_custom_variant_values=self._get_custom_variant_value(option_id, product_custom_variant_values)
+                product_custom_variant_values=self._get_product_custom_value(
+                    option_id,
+                    custom_values,
+                    'product_custom_variant_values'
+                ),
+                no_variant_attribute_values=self._get_product_custom_value(
+                    option_id,
+                    custom_values,
+                    'no_variant_attribute_values'
+                )
             )
 
         return str(order.cart_quantity)
 
-    def _get_custom_variant_value(self, product_id, product_custom_variant_values):
-        if product_custom_variant_values:
-            for product_custom_variant_value in product_custom_variant_values:
-                if product_custom_variant_value['product_id'] == product_id:
-                    return product_custom_variant_value['product_custom_variant_values']
+    def _get_product_custom_value(self, product_id, custom_values, field):
+        if custom_values:
+            for custom_value in custom_values:
+                if custom_value['product_id'] == product_id:
+                    return custom_value[field]
 
         return None
 
     @http.route(['/product_configurator/show_optional_products_website'], type='json', auth="public", methods=['POST'], website=True)
-    def show_optional_products_website(self, product_id, **kw):
-        return self._show_optional_products(product_id, request.website.get_current_pricelist(), True, **kw)
+    def show_optional_products_website(self, product_id, variant_values, **kw):
+        return self._show_optional_products(product_id, variant_values, request.website.get_current_pricelist(), True, **kw)
 
     @http.route(['/product_configurator/optional_product_items_website'], type='json', auth="public", methods=['POST'], website=True)
     def optional_product_items_website(self, product_id, **kw):
         return self._optional_product_items(product_id, request.website.get_current_pricelist(), **kw)
 
-    @http.route(['/product_configurator/get_unit_price_website'], type='json', auth="public", methods=['POST'], website=True)
-    def get_unit_price_website(self, product_ids, add_qty, **kw):
-        return self._get_unit_price(product_ids, add_qty, request.website.get_current_pricelist())
+    @http.route(['/product_configurator/get_combination_info_website'], type='json', auth="public", methods=['POST'], website=True)
+    def get_combination_info_website(self, product_template_id, product_id, combination, add_qty, **kw):
+        return self._get_combination_info(product_template_id, product_id, combination, add_qty, request.website.get_current_pricelist())

@@ -234,6 +234,7 @@ class MrpBomLine(models.Model):
     bom_id = fields.Many2one(
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
+    parent_product_tmpl_id = fields.Many2one('product.template', 'Parent Product Template', related='bom_id.product_tmpl_id')
     attribute_value_ids = fields.Many2many(
         'product.attribute.value', string='Apply on Variants',
         help="BOM Product Variants needed form apply this line.")
@@ -293,6 +294,13 @@ class MrpBomLine(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+
+    @api.onchange('parent_product_tmpl_id')
+    def onchange_parent_product(self):
+        return {'domain': {'attribute_value_ids': [
+            ('id', 'in', self.parent_product_tmpl_id.mapped('attribute_line_ids.value_ids.id')),
+            ('attribute_id.create_variant', '!=', 'never')
+        ]}}
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -20,7 +20,7 @@ var ProductConfiguratorFormController = FormController.extend({
     /**
      * We need to override the default click behavior for our "Add" button
      * because there is a possibility that this product has optional products.
-     * If so, we need to display an extra modal to choose the options
+     * If so, we need to display an extra modal to choose the options.
      *
      * @override
      */
@@ -43,7 +43,7 @@ var ProductConfiguratorFormController = FormController.extend({
     /**
      * This is overridden to allow catching the "select" event on our product template select field.
      * This will not work anymore if more fields are added to the form.
-     * TODO: Find a better way to catch that event.
+     * TODO awa: Find a better way to catch that event.
      *
      * @override
      */
@@ -71,32 +71,76 @@ var ProductConfiguratorFormController = FormController.extend({
 
     /**
     * When the user adds a product that has optional products, we need to display
-    * a window to allow the user to choose these extra options
+    * a window to allow the user to choose these extra options.
+    *
+    * This will also create the product if it's in "dynamic" mode
+    * (see product_attribute.create_variant)
     *
     * @private
+    * @param {$.Element} $modal
     */
     _handleAdd: function ($modal) {
+        var self = this;
         var productSelector = [
             'input[type="hidden"][name="product_id"]',
             'input[type="radio"][name="product_id"]:checked'
         ];
 
-        this.rootProduct = {
-            product_id: parseInt($modal.find(productSelector.join(', ')).first().val(), 10),
-            quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
-            product_custom_variant_values: this.renderer.getCustomVariantValues($modal.find('.js_product'))
-        };
+        var productId = parseInt($modal.find(productSelector.join(', ')).first().val(), 10);
+        var productReady = $.Deferred();
+        if (productId){
+            productReady.resolve(productId);
+        } else {
+            productReady = this._rpc({
+                model: 'product.template',
+                method: 'create_product_variant',
+                args: [
+                    $modal.find('.product_template_id').val(),
+                    JSON.stringify(self.renderer.getSelectedVariantValues($modal))
+                ],
+            });
+        }
 
-        this.optionalProductsModal = new OptionalProductsModal($('body'), {
-            rootProduct: this.rootProduct,
-            pricelistId: $('.js_sale_order_pricelist_id').html(),
-            okButtonText: _t('Confirm'),
-            cancelButtonText: _t('Back'),
-            title: _t('Configure')
-        }).open();
+        productReady.done(function (productId){
+            $modal.find(productSelector.join(', ')).val(productId);
 
-        this.optionalProductsModal.on('options_empty', null, this._onModalOptionsEmpty.bind(this));
-        this.optionalProductsModal.on('confirm', null, this._onModalConfirm.bind(this));
+            var variantValues = self
+                .renderer
+                .getSelectedVariantValues($modal.find('.js_product'));
+
+            var productCustomVariantValues = self
+                .renderer
+                .getCustomVariantValues($modal.find('.js_product'));
+
+            var noVariantAttributeValues = self
+                .renderer
+                .getNoVariantAttributeValues($modal.find('.js_product'));
+
+            self.rootProduct = {
+                product_id: productId,
+                quantity: parseFloat($modal.find('input[name="add_qty"]').val() || 1),
+                variant_values: variantValues,
+                product_custom_variant_values: productCustomVariantValues,
+                no_variant_attribute_values: noVariantAttributeValues
+            };
+
+            self.optionalProductsModal = new OptionalProductsModal($('body'), {
+                rootProduct: self.rootProduct,
+                pricelistId: $('.js_sale_order_pricelist_id').html(),
+                okButtonText: _t('Confirm'),
+                cancelButtonText: _t('Back'),
+                title: _t('Configure')
+            }).open();
+
+            self.optionalProductsModal.on('options_empty', null,
+                self._onModalOptionsEmpty.bind(self));
+
+            self.optionalProductsModal.on('update_quantity', null,
+                self._onOptionsUpdateQuantity.bind(self));
+
+            self.optionalProductsModal.on('confirm', null,
+                self._onModalConfirm.bind(self));
+        });
     },
 
     /**
@@ -118,14 +162,33 @@ var ProductConfiguratorFormController = FormController.extend({
     },
 
     /**
+     * Update product configurator form
+     * when quantity is updated in the optional products window
+     *
+     * @private
+     * @param {integer} quantity
+     */
+    _onOptionsUpdateQuantity: function (quantity) {
+        this.$el
+            .find('input[name="add_qty"]')
+            .val(quantity)
+            .trigger('change');
+    },
+
+    /**
     * This triggers the close action for the window and
     * adds the product as the "infos" parameter.
-    * It will allow the caller of this window to handle the added products.
+    * It will allow the caller (typically the SO line form) of this window
+    * to handle the added products.
     *
     * @private
     * @param {Array} products the list of added products
     *   {integer} products.product_id: the id of the product
     *   {integer} products.quantity: the added quantity for this product
+    *   {Array} products.product_custom_variant_values:
+    *     see product_configurator_mixin.getCustomVariantValues
+    *   {Array} products.no_variant_attribute_values:
+    *     see product_configurator_mixin.getNoVariantAttributeValues
     */
     _addProducts: function (products) {
         this.do_action({type: 'ir.actions.act_window_close', infos: products});

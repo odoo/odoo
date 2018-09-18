@@ -16,13 +16,19 @@ class ProductAttribute(models.Model):
     value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
     attribute_line_ids = fields.One2many('product.attribute.line', 'attribute_id', 'Lines')
-    create_variant = fields.Boolean(default=True, help="Check this if you want to create multiple variants for this attribute.")
+    create_variant = fields.Selection([
+        ('never', 'Never'),
+        ('always', 'Always'),
+        ('dynamic', 'Only when the product is added to a sales order')],
+        default='always',
+        string="Create Variants",
+        help="Check this if you want to create multiple variants for this attribute.", required=True)
 
 
 class ProductAttributeValue(models.Model):
     _name = "product.attribute.value"
     _order = 'attribute_id, sequence, id'
-    _description = 'Product Attribute Value'
+    _description = 'Attribute Value'
 
     name = fields.Char(string='Value', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', help="Determine the display order")
@@ -53,6 +59,7 @@ class ProductAttributeValue(models.Model):
 class ProductProductAttributeValue(models.Model):
     _name = "product.product.attribute.value"
     _order = 'sequence, attribute_id, id'
+    _description = 'Product Attribute Value'
 
     name = fields.Char('Value', related="product_attribute_value_id.name")
     product_attribute_value_id = fields.Many2one('product.attribute.value', string='Attribute Value', required=True, ondelete='cascade', index=True)
@@ -64,8 +71,7 @@ class ProductProductAttributeValue(models.Model):
         help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.")
     exclude_for = fields.Many2many(
         'product.attribute.filter.line', string="Exclude for", relation="product_attribute_value_exclusion",
-        help="""A list of product and attribute values that you want to exclude for this product's attribute value.
-        Also applies on optional and accessory products.""")
+        help="Make this attribute value not compatible with other values of the product or some attribute values of optional and accessory products.")
 
     @api.multi
     def name_get(self):
@@ -76,11 +82,12 @@ class ProductProductAttributeValue(models.Model):
 
 class ProductAttributeFilterLine(models.Model):
     _name = "product.attribute.filter.line"
+    _description = 'Product Attribute Filter Line'
 
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', ondelete='cascade', required=True)
     value_ids = fields.Many2many(
         'product.product.attribute.value', relation="product_attr_filter_line_value_ids_rel",
-        string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id), ('attribute_id.create_variant', '=', True)]")
+        string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id)]")
 
 
 class ProductAttributeLine(models.Model):

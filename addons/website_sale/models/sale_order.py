@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
 
         # split lines with the same product if it has untracked attributes
-        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant) and not line_id:
+        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant == 'always') and not line_id:
             return self.env['sale.order.line']
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
@@ -118,10 +118,7 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def _get_line_description(self, order_id, product_id, attributes=None, custom_values=None):
-        if not attributes:
-            attributes = {}
-
+    def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -129,18 +126,12 @@ class SaleOrder(models.Model):
 
         name = product.display_name
 
-        # add untracked attributes in the name
-        untracked_attributes = []
-        for k, v in attributes.items():
-            # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
-            attribute_value = self.env['product.product.attribute.value'].sudo().browse(int(v))
-            if attribute_value and not attribute_value.attribute_id.create_variant:
-                untracked_attributes.append(attribute_value.name)
-        if untracked_attributes:
-            name += '\n%s' % (', '.join(untracked_attributes))
-
         if product.description_sale:
             name += '\n%s' % (product.description_sale)
+
+        if no_variant_attribute_values:
+            name += ''.join(['\n%s: %s' % (attribute_value['attribute_name'], attribute_value['attribute_value_name'])
+                for attribute_value in no_variant_attribute_values])
 
         if custom_values:
             name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
@@ -148,7 +139,7 @@ class SaleOrder(models.Model):
         return name
 
     @api.multi
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None, **kwargs):
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
@@ -183,7 +174,13 @@ class SaleOrder(models.Model):
                     'custom_value': custom_value['custom_value']
                 }) for custom_value in custom_values]
 
-            values['name'] = self._get_line_description(self.id, product_id, attributes=attributes, custom_values=custom_values)
+            no_variant_attribute_values = kwargs.get('no_variant_attribute_values')
+            if no_variant_attribute_values:
+                values['product_no_variant_attribute_values'] = [
+                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
+                ]
+
+            values['name'] = self._get_line_description(self.id, product_id, no_variant_attribute_values=no_variant_attribute_values, custom_values=custom_values)
             order_line = SaleOrderLineSudo.create(values)
 
             try:
