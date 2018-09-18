@@ -126,7 +126,7 @@ class StatusController(http.Controller):
 
     @http.route('/send_iot_box', type='http', auth='none', cors='*')
     def send_iot_box(self):
-        send_iot_box_device()
+        send_iot_box_device(False)
         return 'ok'
 
 #----------------------------------------------------------
