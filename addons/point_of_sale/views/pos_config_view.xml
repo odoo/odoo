@@ -109,22 +109,19 @@
                             </div>
                         </div>
                     </div>
-                    <h2>IoTBox / Hardware Proxy</h2>
+                    <h2>IotBox / Hardware Proxy</h2>
                     <div class="row mt16 o_settings_container" id="posbox_reference">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="is_posbox"/>
+                                <field name="module_iot"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="is_posbox"/>
+                                <label for="module_iot"/>
                                 <div class="text-muted">
                                     Use an integrated hardware setup like <a href="https://www.odoo.com/documentation/user/online/point_of_sale/overview/setup.html" target="_blank">IoTBox</a>
                                 </div>
-                                <div class="content-group" attrs="{'invisible' : [('is_posbox', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label string="IP Address" for="proxy_ip" class="col-lg-3 o_light_label"/>
-                                        <field name="proxy_ip"/>
-                                    </div>
+                                <div class="content-group mt16" attrs="{'invisible' : [('module_iot', '=', False)]}">
+                                    <field name="iot_box_id"/>
                                     <div class="row">
                                         <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-3 o_light_label"/>
                                         <field name="iface_scan_via_proxy"/>
@@ -384,7 +381,7 @@
                                 <div class="text-muted">
                                     Print receipts automatically once the payment is registered
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('is_posbox', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('module_iot', '=', False)]}">
                                     <div>
                                         <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                     </div>

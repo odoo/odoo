@@ -110,7 +110,8 @@ class PosConfig(models.Model):
     cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
-    proxy_ip = fields.Char(string='IP Address', size=45,
+    iot_box_id = fields.Many2one('iot.box', string="IotBox")
+    proxy_ip = fields.Char(string='IP Address', related="iot_box_id.ip",
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()),
@@ -160,7 +161,7 @@ class PosConfig(models.Model):
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
-    is_posbox = fields.Boolean("IoTBox")
+    module_iot = fields.Boolean(string="IotBox integration")
     is_header_or_footer = fields.Boolean("Header & Footer")
 
     def _compute_is_installed_account_accountant(self):
@@ -296,10 +297,10 @@ class PosConfig(models.Model):
         else:
             self.barcode_nomenclature_id = False
 
-    @api.onchange('is_posbox')
-    def _onchange_is_posbox(self):
-        if not self.is_posbox:
-            self.proxy_ip = False
+    @api.onchange('module_iot')
+    def _onchange_module_iot(self):
+        if not self.module_iot:
+            self.iot_box_id = False
             self.iface_scan_via_proxy = False
             self.iface_electronic_scale = False
             self.iface_cashdrawer = False
@@ -340,7 +341,7 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('is_posbox') and values.get('iface_customer_facing_display'):
+        if values.get('module_iot') and values.get('iface_customer_facing_display'):
             if values.get('customer_facing_display_html') and not values['customer_facing_display_html'].strip():
                 values['customer_facing_display_html'] = self._compute_default_customer_html()
         IrSequence = self.env['ir.sequence'].sudo()
@@ -366,7 +367,7 @@ class PosConfig(models.Model):
     def write(self, vals):
         result = super(PosConfig, self).write(vals)
 
-        config_display = self.filtered(lambda c: c.is_posbox and c.iface_customer_facing_display and not (c.customer_facing_display_html or '').strip())
+        config_display = self.filtered(lambda c: c.module_iot and c.iface_customer_facing_display and not (c.customer_facing_display_html or '').strip())
         if config_display:
             super(PosConfig, config_display).write({'customer_facing_display_html': self._compute_default_customer_html()})
 
