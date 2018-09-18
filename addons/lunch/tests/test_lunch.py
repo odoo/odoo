@@ -13,7 +13,7 @@ class Test_Lunch(common.TransactionCase):
         """*****setUp*****"""
         super(Test_Lunch, self).setUp()
 
-        self.demo_user = self.env['res.users'].search([('name', '=', 'Marc Brown')])
+        self.demo_user = self.env['res.users'].search([('name', '=', 'Marc Demo')])
         self.product_Bolognese_id = self.env.ref('lunch.product_Bolognese')
         self.new_id_order = self.env['lunch.order'].create({
             'user_id': self.demo_user.id,

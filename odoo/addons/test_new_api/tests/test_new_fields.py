@@ -922,7 +922,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Marc Brown')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
