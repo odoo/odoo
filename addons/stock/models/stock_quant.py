@@ -450,7 +450,7 @@ class QuantPackage(models.Model):
            package)
         '''
         for pack in self:
-            locations = pack.get_content().filtered(lambda quant: quant.qty > 0.0).mapped('location_id')
+            locations = pack._get_contained_quants().filtered(lambda quant: quant.qty > 0.0).mapped('location_id')
             if len(locations) != 1:
                 raise UserError(_('Everything inside a package should be in the same location'))
         return True
