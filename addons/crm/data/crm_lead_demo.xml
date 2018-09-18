@@ -53,7 +53,7 @@
             <field name="tag_ids" eval="[(6, 0, [categ_oppor6])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -64,7 +64,7 @@
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_1"/>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="email_from">jdunagan@leclub.example.com</field>
             <field name="body"><![CDATA[<p>Hello,<br />
             I am Jacques from Le Club SARL. I am interested to attend a training organized in your company.<br />
@@ -89,7 +89,7 @@
             <field name="tag_ids" eval="[(6, 0, [categ_oppor2])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_christmas_special"/>
@@ -120,7 +120,7 @@
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor5])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -142,7 +142,7 @@
             <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="date_open" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -166,7 +166,7 @@
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref=""/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description"></field>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -177,7 +177,7 @@
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_5"/>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="email_from">helle@stonageit.example.com</field>
             <field name="body"><![CDATA[<p>Hi,<br />
 Can you send me a quotation for 20 computers with speakers?<br />
@@ -205,7 +205,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3, categ_oppor4])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref=""/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -227,7 +227,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
             <field name="priority">0</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -248,7 +248,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4, categ_oppor8])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -258,7 +258,7 @@ Contact: +1 813 494 5005</p>]]></field>
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_8"/>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="email_from">logan_expert@gmail.example.com</field>
             <field name="body"><![CDATA[<p>Hi,<br />
 Could you send me your product catalogue please ?<br />
@@ -314,7 +314,7 @@ ESM Expert<br />]]></field>
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_10"/>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="email_from">jga@solar.example.com</field>
             <field name="body"><![CDATA[<p>Hi,<br />
 I would like to know more about specification and cost of laptops of your company.<br />
@@ -339,7 +339,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref=""/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -359,7 +359,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref=""/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
@@ -388,7 +388,7 @@ Andrew</p>]]></field>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=2)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
@@ -437,7 +437,7 @@ Andrew</p>]]></field>
             <field name="priority">1</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -452,7 +452,7 @@ Andrew</p>]]></field>
 
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="email_from">virginie@agrolait.fr</field>
             <field name="body"><![CDATA[<div>
             <p>Hello,</p>
@@ -480,7 +480,7 @@ Andrew</p>]]></field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
             <field name="email_from">virginie@agrolait.fr</field>
-            <field name="author_id" eval="False"/>
+            <field name="author_id" ref="base.partner_admin"/>
             <field name="body"><![CDATA[<p>Thanks for the information!<br />I asked a precise specification to our technical expert. Here is what we precisely need:</p>
             <ul>
                 <li>weekly backups, every Monday</li>
@@ -524,7 +524,7 @@ Andrew</p>]]></field>
             <field name="priority">2</field>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(weeks=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -653,7 +653,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4,categ_oppor8])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_mailing"/>
@@ -672,7 +672,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_phone"/>
@@ -691,7 +691,7 @@ Andrew</p>]]></field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">1</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_email"/>
@@ -727,7 +727,7 @@ Andrew</p>]]></field>
             <field name="priority">0</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="medium_id" ref="utm.utm_medium_website"/>
@@ -751,7 +751,7 @@ Andrew</p>]]></field>
             <field name="priority">2</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
             <field name="team_id" ref="sales_team.team_sales_department"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
             <field name="source_id" ref="utm.utm_source_search_engine"/>
