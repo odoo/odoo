@@ -61,7 +61,7 @@
             $listOfAppMenuItems = $(".o_app, .o_menuitem")
         } else {
             console.log("Odoo flavor: Community")
-            $listOfAppMenuItems = $('#oe_main_menu_navbar a.oe_menu_leaf, #oe_main_menu_navbar a.o_app');
+            $listOfAppMenuItems = $('a.o_app');
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
 
@@ -260,9 +260,9 @@
      * @returns : the chained deferred
      */
     function chainDeferred($elements, deferred, f) {
-        _.each($elements, function($el) {
+        _.each($elements, function(el) {
             deferred = deferred.then(function () {
-                return f($el);
+                return f(el);
             });
         });
         return deferred;
