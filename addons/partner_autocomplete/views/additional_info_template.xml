@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="additional_info_template">
+        <p t-if="description">
+            <b>Description</b><br/>
+            <t t-esc="description"/><br/>
+        </p>
+        <p>
+            <t t-if="employees">
+                <b>Employees:</b> <t t-esc="employees"/><br/>
+            </t>
+            <t t-if="annual_revenue">
+                <b>Annual revenue:</b> <t t-esc="annual_revenue"/><br/>
+            </t>
+            <t t-if="estimated_annual_revenue">
+                <b>Estimated annual revenue:</b> <t t-esc="estimated_annual_revenue"/><br/>
+            </t>
+            <t t-if="sector">
+                <b>Sector:</b> <t t-esc="sector"/><br/>
+            </t>
+            <t t-if="tech">
+                <b>Tech:</b> <t t-esc="tech"/><br/>
+            </t>
+        </p>
+        <p>
+            <b>Social networks</b><br/>
+            &amp;nbsp;&amp;nbsp;&amp;nbsp; <b>Facebook:</b> <a t-att-href="facebook" target="_blank"><t t-esc="facebook"/></a><br/>
+            &amp;nbsp;&amp;nbsp;&amp;nbsp; <b>Linkedin:</b> <a t-att-href="linkedin" target="_blank"><t t-esc="linkedin"/></a><br/>
+            &amp;nbsp;&amp;nbsp;&amp;nbsp; <b>Crunchbase:</b> <a t-att-href="crunchbase" target="_blank"><t t-esc="crunchbase"/></a><br/>
+            &amp;nbsp;&amp;nbsp;&amp;nbsp; <b>Twitter:</b> <a t-att-href="twitter" target="_blank"><t t-esc="twitter"/></a><br/>
+        </p>
+        <p t-if="emails">
+            <b>Email addresses</b><br/>
+            <t t-foreach="emails" t-as="email">
+                &amp;nbsp;&amp;nbsp;&amp;nbsp; <a t-att-href="'mailto:%s' % email"><t t-esc="email"/></a><br/>
+            </t>
+        </p>
+        <p t-if="phones">
+            <b>Phone numbers</b><br/>
+            <t t-foreach="phones" t-as="phone">
+                &amp;nbsp;&amp;nbsp;&amp;nbsp; <t t-esc="phone"/><br/>
+            </t>
+        </p>
+    </template>
+</odoo>
