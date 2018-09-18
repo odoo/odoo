@@ -113,6 +113,9 @@ class StockPicking(models.Model):
 
     @api.multi
     def put_in_pack(self):
+        res = super(StockPicking, self).put_in_pack()
+        if isinstance(res, dict) and res.get('type'):
+            return res
         if self.carrier_id and self.carrier_id.delivery_type not in ['base_on_rule', 'fixed']:
             view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
             return {
@@ -123,10 +126,14 @@ class StockPicking(models.Model):
                 'view_id': view_id,
                 'views': [(view_id, 'form')],
                 'target': 'new',
-                'context': dict(self.env.context, current_package_carrier_type=self.carrier_id.delivery_type),
+                'context': dict(
+                    self.env.context,
+                    current_package_carrier_type=self.carrier_id.delivery_type,
+                    default_stock_quant_package_id=res.id
+                ),
             }
         else:
-            return self._put_in_pack()
+            return res
 
     @api.multi
     def action_send_confirmation_email(self):

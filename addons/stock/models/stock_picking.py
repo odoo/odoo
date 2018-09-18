@@ -986,6 +986,26 @@ class Picking(models.Model):
 
         return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
+    def check_destinations(self):
+        if len(self.move_line_ids.filtered(lambda l: l.qty_done > 0 and not l.result_package_id).mapped('location_dest_id')) > 1:
+            view_id = self.env.ref('stock.stock_package_destination_form_view').id
+            wiz = self.env['stock.package.destination'].create({
+                'picking_id': self.id,
+                'location_dest_id': self.move_line_ids[0].location_dest_id.id,
+            })
+            return {
+                'name': _('Choose destination location'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'stock.package.destination',
+                'view_id': view_id,
+                'views': [(view_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wiz.id,
+                'target': 'new'
+            }
+        else:
+            return {}
 
     def _put_in_pack(self):
         package = False
@@ -994,8 +1014,6 @@ class Picking(models.Model):
             if move_line_ids:
                 move_lines_to_pack = self.env['stock.move.line']
                 package = self.env['stock.quant.package'].create({})
-                if len(move_line_ids.mapped('location_dest_id')) > 1:
-                    raise UserError('You cannot put in the same pack move lines having different destination locations')
                 for ml in move_line_ids:
                     if float_compare(ml.qty_done, ml.product_uom_qty,
                                      precision_rounding=ml.product_uom_id.rounding) >= 0:
@@ -1027,6 +1045,9 @@ class Picking(models.Model):
         return package
 
     def put_in_pack(self):
+        res = self.check_destinations()
+        if res.get('type'):
+            return res
         return self._put_in_pack()
 
     def button_scrap(self):
