@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:39+0000\n"
-"PO-Revision-Date: 2018-09-05 08:39+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Antonio Trueba, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -26,12 +26,12 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: uom
-#: model:ir.actions.act_window,help:uom.product_uom_form_action
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
 msgstr ""
 
 #. module: uom
-#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
 msgstr ""
 
@@ -152,7 +152,6 @@ msgid "Liter(s)"
 msgstr "Litro(s)"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_res_users__has_group_uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
 msgstr "Gestionar múltiples unidades de medida"
@@ -280,18 +279,18 @@ msgstr ""
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
-#: model:ir.ui.view,arch_db:uom.product_uom_form_view
-#: model:ir.ui.view,arch_db:uom.product_uom_tree_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
 msgstr "Unidades de medida"
 
 #. module: uom
-#: model:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Units of Measure categories"
 msgstr "Categorías de unidades de medida"
 
 #. module: uom
-#: model:ir.actions.act_window,help:uom.product_uom_categ_form_action
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid ""
 "Units of measure belonging to the same category can be\n"
 "            converted between each others. For example, in the category\n"
@@ -316,11 +315,6 @@ msgstr ""
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
-
-#. module: uom
-#: model:ir.model,name:uom.model_res_users
-msgid "Users"
-msgstr "Usuarios"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -359,7 +353,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: model:ir.actions.act_window,help:uom.product_uom_form_action
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
@@ -373,12 +367,12 @@ msgid "cm"
 msgstr "cm"
 
 #. module: uom
-#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
 msgstr "Por ejemplo: 1* (unidad de referencia) = ratio * (esta unidad)"
 
 #. module: uom
-#: model:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "Por ejemplo: 1 * (esta unidad) = ratio * (unidad de referencia)"
 

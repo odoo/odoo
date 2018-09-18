@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,37 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:189
+#: code:addons/web_editor/static/src/xml/editor.xml:35
+#, python-format
+msgid ""
+"'Alt tag' specifies an alternate text for an image, if the image cannot be "
+"displayed (slow connection, missing image, screen reader ...)."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:44
+#, python-format
+msgid "'Title tag' is shown as a tooltip when you hover the picture."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:36
+#, python-format
+msgid "(ALT Tag)"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:45
+#, python-format
+msgid "(TITLE Tag)"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/xml/editor.xml:195
 #, python-format
 msgid "(URL or Embed)"
 msgstr "（網址或嵌入）"
@@ -35,7 +65,7 @@ msgid "(YouTube, Vimeo, Vine, Instagram, DailyMotion or Youku)"
 msgstr "(YouTube, Vimeo, Vine, Instagram, DailyMotion 或 優酷)"
 
 #. module: web_editor
-#: model:ir.ui.view,arch_db:web_editor.snippets
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "<i class=\"fa fa-th-large\"/> First Panel"
 msgstr "<i class=\"fa fa-th-large\"/> 首個面板"
 
@@ -50,7 +80,7 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Accepts"
 msgstr " 接受"
@@ -64,20 +94,20 @@ msgstr "動作"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:106
+#: code:addons/web_editor/static/src/xml/editor.xml:112
 #, python-format
 msgid "Add"
 msgstr "添加"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:102
+#: code:addons/web_editor/static/src/xml/editor.xml:108
 #, python-format
 msgid "Add an image URL"
 msgstr "添加圖像網址"
 
 #. module: web_editor
-#: model:ir.ui.view,arch_db:web_editor.snippets
+#: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "Add blocks"
 msgstr "添加區塊"
 
@@ -104,21 +134,21 @@ msgstr "居右"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:95
+#: code:addons/web_editor/static/src/xml/editor.xml:101
 #, python-format
 msgid "Alternate Upload"
 msgstr "替代上傳"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:326
+#: code:addons/web_editor/static/src/xml/editor.xml:331
 #, python-format
 msgid "Aspect Ratio"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:365
+#: code:addons/web_editor/static/src/xml/editor.xml:370
 #, python-format
 msgid "Assign a focal point that will always be visible"
 msgstr "指定一個總是可見的焦點"
@@ -130,14 +160,14 @@ msgstr "附件網址"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:191
+#: code:addons/web_editor/static/src/xml/editor.xml:197
 #, python-format
 msgid "Attention"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:200
+#: code:addons/web_editor/static/src/xml/editor.xml:206
 #, python-format
 msgid "Autoplay"
 msgstr "自動播放"
@@ -159,35 +189,35 @@ msgstr "背景圖像尺寸"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:406
+#: code:addons/web_editor/static/src/xml/editor.xml:411
 #, python-format
 msgid "Background height"
 msgstr "背景高度"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:418
+#: code:addons/web_editor/static/src/xml/editor.xml:423
 #, python-format
 msgid "Background position"
 msgstr "背景位置"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:444
+#: code:addons/web_editor/static/src/xml/editor.xml:449
 #, python-format
 msgid "Background repeat"
 msgstr "背景重複"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:392
+#: code:addons/web_editor/static/src/xml/editor.xml:397
 #, python-format
 msgid "Background size"
 msgstr "背景尺寸"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:395
+#: code:addons/web_editor/static/src/xml/editor.xml:400
 #, python-format
 msgid "Background width"
 msgstr "背景寬度"
@@ -229,7 +259,7 @@ msgstr "更改媒體說明和工具提示"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:191
+#: code:addons/web_editor/static/src/xml/editor.xml:197
 #, python-format
 msgid "Checked"
 msgstr ""
@@ -238,7 +268,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:1073
 #: code:addons/web_editor/static/src/js/editor/translator.js:56
-#: code:addons/web_editor/static/src/js/widgets/widgets.js:1615
+#: code:addons/web_editor/static/src/js/widgets/widgets.js:1630
 #: code:addons/web_editor/static/src/xml/ace.xml:36
 #, python-format
 msgid "Close"
@@ -260,7 +290,7 @@ msgstr "代碼視圖"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:273
+#: code:addons/web_editor/static/src/xml/editor.xml:278
 #, python-format
 msgid "Color"
 msgstr "顏色"
@@ -281,7 +311,7 @@ msgstr "通用顏色"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:360
+#: code:addons/web_editor/static/src/xml/editor.xml:365
 #, python-format
 msgid "Contain"
 msgstr "包含"
@@ -295,14 +325,14 @@ msgstr "待翻譯的內容"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:190
+#: code:addons/web_editor/static/src/xml/editor.xml:196
 #, python-format
 msgid "Copy-paste your URL or embed code here"
 msgstr "複製粘貼您的網址或在這裡嵌入代碼"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:359
+#: code:addons/web_editor/static/src/xml/editor.xml:364
 #, python-format
 msgid "Cover"
 msgstr "封面"
@@ -320,14 +350,14 @@ msgstr "創建時間"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:198
-#: code:addons/web_editor/static/src/js/widgets/widgets.js:1613
+#: code:addons/web_editor/static/src/js/widgets/widgets.js:1628
 #, python-format
 msgid "Crop Image"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:361
+#: code:addons/web_editor/static/src/xml/editor.xml:366
 #, python-format
 msgid "Custom"
 msgstr "自定義"
@@ -348,22 +378,22 @@ msgstr "客製化"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Dailymotion"
 msgstr "Dailymotion"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/editor/summernote.js:2007
-#: code:addons/web_editor/static/src/xml/editor.xml:264
+#: code:addons/web_editor/static/src/js/editor/summernote.js:2021
+#: code:addons/web_editor/static/src/xml/editor.xml:269
 #, python-format
 msgid "Default"
 msgstr "預設"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:445
+#: code:addons/web_editor/static/src/xml/editor.xml:450
 #, python-format
 msgid "Define if/how the background image will be repeated"
 msgstr "定義背景圖像是否／如何重複"
@@ -371,24 +401,18 @@ msgstr "定義背景圖像是否／如何重複"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:208
+#: code:addons/web_editor/static/src/xml/editor.xml:35
 #, python-format
 msgid "Description"
 msgstr "描述"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:34
-#, python-format
-msgid "Description (alt tag)"
-msgstr "描述(ALT標籤)"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:951
 #: code:addons/web_editor/static/src/js/widgets/widgets.js:38
-#: code:addons/web_editor/static/src/js/widgets/widgets.js:1622
+#: code:addons/web_editor/static/src/js/widgets/widgets.js:1637
 #: code:addons/web_editor/static/src/xml/editor.xml:12
-#: code:addons/web_editor/static/src/xml/editor.xml:132
+#: code:addons/web_editor/static/src/xml/editor.xml:138
 #, python-format
 msgid "Discard"
 msgstr "放棄"
@@ -400,7 +424,7 @@ msgstr "顯示名稱"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:51
+#: code:addons/web_editor/static/src/xml/editor.xml:57
 #, python-format
 msgid "Document"
 msgstr "文件"
@@ -457,13 +481,6 @@ msgstr "預期"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:253
-#, python-format
-msgid "Extra Small"
-msgstr "特小"
-
-#. module: web_editor
-#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:998
 #, python-format
 msgid "File / Image"
@@ -471,21 +488,21 @@ msgstr "文件 / 圖像"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:268
+#: code:addons/web_editor/static/src/xml/editor.xml:273
 #, python-format
 msgid "Flat"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:343
+#: code:addons/web_editor/static/src/xml/editor.xml:348
 #, python-format
 msgid "Flip Horizontal"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:344
+#: code:addons/web_editor/static/src/xml/editor.xml:349
 #, python-format
 msgid "Flip Vertical"
 msgstr ""
@@ -541,7 +558,7 @@ msgstr "格式"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/js/widgets/widgets.js:1599
+#: code:addons/web_editor/static/src/js/widgets/widgets.js:1614
 #, python-format
 msgid "Free"
 msgstr "免費"
@@ -623,42 +640,42 @@ msgstr "這是用來幫助您提高翻譯效率的可視化工具："
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:215
+#: code:addons/web_editor/static/src/xml/editor.xml:221
 #, python-format
 msgid "Hide Dailymotion logo"
 msgstr "隱藏Dailymotion標誌"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:212
+#: code:addons/web_editor/static/src/xml/editor.xml:218
 #, python-format
 msgid "Hide Youtube logo"
 msgstr "隱藏Youtube標誌"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:209
+#: code:addons/web_editor/static/src/xml/editor.xml:215
 #, python-format
 msgid "Hide fullscreen button"
 msgstr "隱藏全螢幕按鈕"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:206
+#: code:addons/web_editor/static/src/xml/editor.xml:212
 #, python-format
 msgid "Hide player controls"
 msgstr "隱藏播放器控件"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:218
+#: code:addons/web_editor/static/src/xml/editor.xml:224
 #, python-format
 msgid "Hide sharing button"
 msgstr "隱藏分享按鈕"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:421
+#: code:addons/web_editor/static/src/xml/editor.xml:426
 #, python-format
 msgid "Horizontal"
 msgstr "水平"
@@ -688,7 +705,7 @@ msgstr "如果您重置此文件，您的所有自定義將丟失，因為它將
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:317
+#: code:addons/web_editor/static/src/xml/editor.xml:322
 #, python-format
 msgid ""
 "If you want to crop it, please first download it from the original source "
@@ -697,7 +714,7 @@ msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:50
+#: code:addons/web_editor/static/src/xml/editor.xml:56
 #, python-format
 msgid "Image"
 msgstr "圖像"
@@ -771,7 +788,7 @@ msgstr "插入視頻"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Instagram"
 msgstr "Instagram"
@@ -807,7 +824,7 @@ msgstr "鍵盤快捷鍵"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:147
-#: code:addons/web_editor/static/src/xml/editor.xml:256
+#: code:addons/web_editor/static/src/xml/editor.xml:261
 #, python-format
 msgid "Large"
 msgstr "大的"
@@ -843,7 +860,7 @@ msgstr "鏈接"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:238
+#: code:addons/web_editor/static/src/xml/editor.xml:244
 #, python-format
 msgid "Link Label"
 msgstr "連接標籤"
@@ -857,7 +874,7 @@ msgstr "連接到"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:203
+#: code:addons/web_editor/static/src/xml/editor.xml:209
 #, python-format
 msgid "Loop"
 msgstr "循環"
@@ -865,7 +882,7 @@ msgstr "循環"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:146
-#: code:addons/web_editor/static/src/xml/editor.xml:255
+#: code:addons/web_editor/static/src/xml/editor.xml:260
 #, python-format
 msgid "Medium"
 msgstr "媒體"
@@ -877,14 +894,14 @@ msgstr "名稱"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:63
+#: code:addons/web_editor/static/src/xml/editor.xml:69
 #, python-format
 msgid "Next"
 msgstr "下一個"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:447
+#: code:addons/web_editor/static/src/xml/editor.xml:452
 #, python-format
 msgid "No repeat"
 msgstr "不重複"
@@ -923,14 +940,14 @@ msgstr "好了, 別再給我看這個"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:1018
-#: code:addons/web_editor/static/src/xml/editor.xml:294
+#: code:addons/web_editor/static/src/xml/editor.xml:299
 #, python-format
 msgid "Open in new window"
 msgstr "在新窗口中打開"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:197
+#: code:addons/web_editor/static/src/xml/editor.xml:203
 #, python-format
 msgid "Options"
 msgstr "選項"
@@ -951,14 +968,14 @@ msgstr "減少縮進"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:265
+#: code:addons/web_editor/static/src/xml/editor.xml:270
 #, python-format
 msgid "Outline"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:267
+#: code:addons/web_editor/static/src/xml/editor.xml:272
 #, python-format
 msgid "Outline-Rounded"
 msgstr ""
@@ -986,23 +1003,23 @@ msgstr "段落格式"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:52
+#: code:addons/web_editor/static/src/xml/editor.xml:58
 #, python-format
 msgid "Pictogram"
 msgstr "小圖片"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:224
-#: code:addons/web_editor/static/src/xml/editor.xml:302
-#: code:addons/web_editor/static/src/xml/editor.xml:304
+#: code:addons/web_editor/static/src/xml/editor.xml:230
+#: code:addons/web_editor/static/src/xml/editor.xml:307
+#: code:addons/web_editor/static/src/xml/editor.xml:309
 #, python-format
 msgid "Preview"
 msgstr "預覽"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:62
+#: code:addons/web_editor/static/src/xml/editor.xml:68
 #, python-format
 msgid "Previous"
 msgstr "以前"
@@ -1058,28 +1075,28 @@ msgstr "刪除圖像"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:379
+#: code:addons/web_editor/static/src/xml/editor.xml:384
 #, python-format
 msgid "Repeat"
 msgstr "重複"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:448
+#: code:addons/web_editor/static/src/xml/editor.xml:453
 #, python-format
 msgid "Repeat both"
 msgstr "都重複"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:449
+#: code:addons/web_editor/static/src/xml/editor.xml:454
 #, python-format
 msgid "Repeat x"
 msgstr "重複 x"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:450
+#: code:addons/web_editor/static/src/xml/editor.xml:455
 #, python-format
 msgid "Repeat y"
 msgstr "重複 y"
@@ -1093,7 +1110,7 @@ msgstr "重置"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:347
+#: code:addons/web_editor/static/src/xml/editor.xml:352
 #, python-format
 msgid "Reset Image"
 msgstr ""
@@ -1128,21 +1145,21 @@ msgstr "調整大小為四分之一"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:339
+#: code:addons/web_editor/static/src/xml/editor.xml:344
 #, python-format
 msgid "Rotate Left"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:340
+#: code:addons/web_editor/static/src/xml/editor.xml:345
 #, python-format
 msgid "Rotate Right"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:266
+#: code:addons/web_editor/static/src/xml/editor.xml:271
 #, python-format
 msgid "Rounded"
 msgstr ""
@@ -1164,7 +1181,7 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/widgets/widgets.js:37
-#: code:addons/web_editor/static/src/js/widgets/widgets.js:1618
+#: code:addons/web_editor/static/src/js/widgets/widgets.js:1633
 #: code:addons/web_editor/static/src/xml/ace.xml:35
 #: code:addons/web_editor/static/src/xml/editor.xml:13
 #, python-format
@@ -1173,7 +1190,7 @@ msgstr "保存"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:57
+#: code:addons/web_editor/static/src/xml/editor.xml:63
 #: code:addons/web_editor/static/src/xml/snippets.xml:44
 #, python-format
 msgid "Search"
@@ -1202,7 +1219,7 @@ msgstr "選擇一個媒體"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:124
+#: code:addons/web_editor/static/src/xml/editor.xml:130
 #, python-format
 msgid "Select a Picture"
 msgstr "選擇一張圖片"
@@ -1223,14 +1240,14 @@ msgstr "伺服器錯誤"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:419
+#: code:addons/web_editor/static/src/xml/editor.xml:424
 #, python-format
 msgid "Set the starting position of the background image."
 msgstr "設定背景圖像的起始位置。"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:393
+#: code:addons/web_editor/static/src/xml/editor.xml:398
 #, python-format
 msgid ""
 "Sets the width and height of the background image in percent of the parent "
@@ -1246,7 +1263,7 @@ msgstr "陰影"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:250
+#: code:addons/web_editor/static/src/xml/editor.xml:256
 #, python-format
 msgid "Size"
 msgstr "尺寸："
@@ -1255,7 +1272,7 @@ msgstr "尺寸："
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:145
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:1038
-#: code:addons/web_editor/static/src/xml/editor.xml:254
+#: code:addons/web_editor/static/src/xml/editor.xml:259
 #, python-format
 msgid "Small"
 msgstr "小"
@@ -1277,7 +1294,7 @@ msgstr "刪除線"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:1034
-#: code:addons/web_editor/static/src/xml/editor.xml:261
+#: code:addons/web_editor/static/src/xml/editor.xml:266
 #, python-format
 msgid "Style"
 msgstr "風格"
@@ -1326,7 +1343,7 @@ msgstr "要顯示的文字"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:151
+#: code:addons/web_editor/static/src/xml/editor.xml:157
 #, python-format
 msgid ""
 "The image could not be deleted because it is used in the\n"
@@ -1366,28 +1383,28 @@ msgstr "本文檔沒有被保存！"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:142
+#: code:addons/web_editor/static/src/xml/editor.xml:148
 #, python-format
 msgid "This file is a public view attachment"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:143
+#: code:addons/web_editor/static/src/xml/editor.xml:149
 #, python-format
 msgid "This file is attached to the current record"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:315
+#: code:addons/web_editor/static/src/xml/editor.xml:320
 #, python-format
 msgid "This image is an external image"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:316
+#: code:addons/web_editor/static/src/xml/editor.xml:321
 #, python-format
 msgid "This type of image is not supported for cropping."
 msgstr ""
@@ -1401,7 +1418,7 @@ msgstr "此網址鏈接指向哪裡？"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:40
+#: code:addons/web_editor/static/src/xml/editor.xml:44
 #, python-format
 msgid "Tooltip"
 msgstr "工具提示"
@@ -1443,7 +1460,7 @@ msgstr "透明"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:244
+#: code:addons/web_editor/static/src/xml/editor.xml:250
 #, python-format
 msgid "URL or Email"
 msgstr "網址或電子信件"
@@ -1485,21 +1502,21 @@ msgstr "無序列表"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:93
+#: code:addons/web_editor/static/src/xml/editor.xml:99
 #, python-format
 msgid "Upload an image"
 msgstr "上傳圖像"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:98
+#: code:addons/web_editor/static/src/xml/editor.xml:104
 #, python-format
 msgid "Upload image without optimization"
 msgstr "上傳圖像不優化"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:432
+#: code:addons/web_editor/static/src/xml/editor.xml:437
 #, python-format
 msgid "Vertical"
 msgstr "豎直"
@@ -1507,7 +1524,7 @@ msgstr "豎直"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/rte.summernote.js:1021
-#: code:addons/web_editor/static/src/xml/editor.xml:53
+#: code:addons/web_editor/static/src/xml/editor.xml:59
 #, python-format
 msgid "Video"
 msgstr "影片"
@@ -1528,21 +1545,21 @@ msgstr "視頻網址?"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:189
+#: code:addons/web_editor/static/src/xml/editor.xml:195
 #, python-format
 msgid "Video code"
 msgstr "視頻代碼"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Vimeo"
 msgstr "Vimeo"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Vine.co"
 msgstr "Vine.co"
@@ -1571,52 +1588,52 @@ msgstr "您將進入翻譯模式。"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Youku"
 msgstr "Youku"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "Youtube"
 msgstr "Youtube"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:335
+#: code:addons/web_editor/static/src/xml/editor.xml:340
 #, python-format
 msgid "Zoom In"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:336
+#: code:addons/web_editor/static/src/xml/editor.xml:341
 #, python-format
 msgid "Zoom Out"
 msgstr ""
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "and"
 msgstr "與"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:398
-#: code:addons/web_editor/static/src/xml/editor.xml:409
-#: code:addons/web_editor/static/src/xml/editor.xml:424
-#: code:addons/web_editor/static/src/xml/editor.xml:435
+#: code:addons/web_editor/static/src/xml/editor.xml:403
+#: code:addons/web_editor/static/src/xml/editor.xml:414
+#: code:addons/web_editor/static/src/xml/editor.xml:429
+#: code:addons/web_editor/static/src/xml/editor.xml:440
 #, python-format
 msgid "auto"
 msgstr "自動"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:104
+#: code:addons/web_editor/static/src/xml/editor.xml:110
 #, python-format
 msgid "https://www.odoo.com/logo.png"
 msgstr "https://www.odoo.com/logo.png"
@@ -1718,7 +1735,7 @@ msgstr "ir.ui.view"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:194
+#: code:addons/web_editor/static/src/xml/editor.xml:200
 #, python-format
 msgid "videos"
 msgstr "視頻"
@@ -1735,7 +1752,7 @@ msgstr "web_editor.converter.test.sub"
 
 #. module: web_editor
 #. openerp-web
-#: code:addons/web_editor/static/src/xml/editor.xml:101
+#: code:addons/web_editor/static/src/xml/editor.xml:107
 #, python-format
 msgid "— or —"
 msgstr "— 或者 —"
