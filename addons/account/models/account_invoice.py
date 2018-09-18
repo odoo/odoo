@@ -1525,6 +1525,8 @@ class AccountInvoice(models.Model):
             'url': self.get_portal_url(),
         }
 
+    def _get_intrastat_country_id(self):
+        return self.partner_id.country_id.id
 
 class AccountInvoiceLine(models.Model):
     _name = "account.invoice.line"
