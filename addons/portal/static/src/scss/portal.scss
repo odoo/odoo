@@ -487,11 +487,15 @@ form label {
         }
     }
 
-    .o_portal_html_view {
-        overflow: hidden;
+    .o_portal_page_size {
         width: 100%;
         max-width: 210mm; // A4 page's width
+    }
+
+    .o_portal_html_view {
+        overflow: hidden;
         background: white;
+        position: relative;
 
         .o_portal_html_loader {
             @include o-position-absolute(45%, 0, auto, 0);
