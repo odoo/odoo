@@ -634,7 +634,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
      */
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
-        $('.toggle_summary_div').removeClass('d-none d-xl-block');
+        $('.toggle_summary_div').removeClass('d-xl-block');
     },
 });
 
