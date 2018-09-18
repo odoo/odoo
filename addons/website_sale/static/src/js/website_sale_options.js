@@ -22,6 +22,11 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
         this._super.apply(this, arguments);
 
         this._handleAdd = _.debounce(this._handleAdd.bind(this), 200, true);
+        this.isWebsite = true;
+
+        delete this.events['change [data-attribute_exclusions]'];
+        delete this.events['change input.js_quantity'];
+        delete this.events['click button.js_add_cart_json'];
     },
 
     //--------------------------------------------------------------------------
@@ -48,36 +53,61 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      * @param {$.Element} $form the related webshop form
      */
     _handleAdd: function ($form) {
+        var self = this;
         this.$form = $form;
+        this.isWebsite = true;
 
         var productSelector = [
             'input[type="hidden"][name="product_id"]',
             'input[type="radio"][name="product_id"]:checked'
         ];
 
-        this.rootProduct = {
-            product_id: parseInt($form.find(productSelector.join(', ')).first().val(), 10),
-            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-            product_custom_variant_values: this.getCustomVariantValues($form.find('.js_product'))
-        };
+        var productId = parseInt($form.find(productSelector.join(', ')).first().val(), 10);
 
-        this.isWebsite = true;
-        this.optionalProductsModal = new OptionalProductsModal($form, {
-            rootProduct: this.rootProduct,
-            isWebsite: true,
-            okButtonText: _t('Proceed to Checkout'),
-            cancelButtonText: _t('Continue Shopping'),
-            title: _t('Add to cart')
-        }).open();
+        var productReady = $.Deferred();
+        if (productId){
+            productReady.resolve(productId);
+        } else {
+            productReady = self._rpc({
+                model: 'product.template',
+                method: 'create_product_variant',
+                args: [
+                    $form.find('.product_template_id').val(),
+                    JSON.stringify(self.getSelectedVariantValues($form))
+                ],
+            });
+        }
 
-        this.optionalProductsModal.on('options_empty', null, this._onModalOptionsEmpty.bind(this));
-        this.optionalProductsModal.on('confirm', null, this._onModalConfirm.bind(this));
-        this.optionalProductsModal.on('back', null, this._onModalBack.bind(this));
+        productReady.done(function (productId){
+            $form.find(productSelector.join(', ')).val(productId);
+
+            self.rootProduct = {
+                product_id: productId,
+                quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+                product_custom_variant_values: self.getCustomVariantValues($form.find('.js_product')),
+                variant_values: self.getSelectedVariantValues($form.find('.js_product')),
+                no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
+            };
+
+            self.optionalProductsModal = new OptionalProductsModal($form, {
+                rootProduct: self.rootProduct,
+                isWebsite: true,
+                okButtonText: _t('Proceed to Checkout'),
+                cancelButtonText: _t('Continue Shopping'),
+                title: _t('Add to cart')
+            }).open();
+
+            self.optionalProductsModal.on('options_empty', null, self._onModalOptionsEmpty.bind(self));
+            self.optionalProductsModal.on('update_quantity', null, self._onOptionsUpdateQuantity.bind(self));
+            self.optionalProductsModal.on('confirm', null, self._onModalConfirm.bind(self));
+            self.optionalProductsModal.on('back', null, self._onModalBack.bind(self));
+        });
     },
 
     /**
      * No optional products found for this product
-     * Add custom variant values in the form data and trigger submit
+     * Add custom variant values and attribute values that do not generate variants
+     * in the form data and trigger submit
      *
      * @private
      */
@@ -88,7 +118,30 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             value: JSON.stringify(this.rootProduct.product_custom_variant_values)
         });
         this.$form.append($productCustomVariantValues);
+
+        var $productNoVariantAttributeValues = $('<input>', {
+            name: 'no_variant_attribute_values',
+            type: "hidden",
+            value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
+        });
+        this.$form.append($productNoVariantAttributeValues);
+
         this.$form.trigger('submit', [true]);
+    },
+
+    /**
+     * Update web shop base form quantity
+     * when quantity is updated in the optional products window
+     *
+     * @private
+     * @param {integer} quantity
+     */
+    _onOptionsUpdateQuantity: function (quantity) {
+        this.$form
+            .find('input[name="add_qty"]')
+            .first()
+            .val(quantity)
+            .trigger('change');
     },
 
     /**
@@ -118,7 +171,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
      * @param {Boolean} goToShop Triggers a page refresh to the url "shop/cart"
      */
     _onModalSubmit: function (goToShop){
-        var productCustomVariantValues = JSON.stringify(
+        var customValues = JSON.stringify(
             this.optionalProductsModal.getSelectedProducts()
         );
 
@@ -126,7 +179,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             url:  '/shop/cart/update_option',
             data: {
                 lang: weContext.get().lang,
-                product_custom_variant_values: productCustomVariantValues
+                custom_values: customValues
             },
             success: function (quantity) {
                 if (goToShop) {

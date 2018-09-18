@@ -293,7 +293,7 @@ class ProductProduct(models.Model):
             for value in product.attribute_value_ids:
                 if value.attribute_id in attributes:
                     raise ValidationError(_('Error! It is not allowed to choose more than one value for a given attribute.'))
-                if value.attribute_id.create_variant:
+                if value.attribute_id.create_variant == 'always':
                     attributes |= value.attribute_id
         return True
 
@@ -327,9 +327,10 @@ class ProductProduct(models.Model):
             # Check if product still exists, in case it has been unlinked by unlinking its template
             if not product.exists():
                 continue
-            # Check if the product is last product of this template
+            # Check if the product is last product of this template...
             other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
-            if not other_products:
+            # ... and do not delete product template if it's configured to be created "on demand"
+            if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
                 unlink_templates |= product.product_tmpl_id
             unlink_products |= product
         res = super(ProductProduct, unlink_products).unlink()
@@ -532,6 +533,11 @@ class ProductProduct(models.Model):
             prices[product.id] = product[price_type] or 0.0
             if price_type == 'list_price':
                 prices[product.id] += product.price_extra
+                # we need to add the price from the attributes that do not generate variants
+                # (see field product.attribute create_variant)
+                if self._context.get('no_variant_attributes_price_extra'):
+                    # we have a list of price_extra that comes from the attribute values, we need to sum all that
+                    prices[product.id] += sum(self._context.get('no_variant_attributes_price_extra'))
 
             if uom:
                 prices[product.id] = product.uom_id._compute_price(prices[product.id], uom)
@@ -584,6 +590,7 @@ class ProductProduct(models.Model):
         name = self.display_name
         if self.description_sale:
             name += '\n' + self.description_sale
+
         return name
 
 

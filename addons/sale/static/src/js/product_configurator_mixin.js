@@ -6,22 +6,13 @@ var utils = require('web.utils');
 var ajax = require('web.ajax');
 var _t = core._t;
 
-var variantsSelectors = [
-    'input.js_variant_change',
-    'select.js_variant_change',
-    'input.js_product_change',
-    '[data-attribute_value_ids]'
-];
-var variantChangeEvent = 'change ' + variantsSelectors.join(', ');
-var events = {
-    'click .css_attribute_color input': '_onChangeColorAttribute',
-    'change input.js_quantity': 'onChangeAddQuantity',
-    'click button.js_add_cart_json': 'onClickAddCartJSON',
-};
-events[variantChangeEvent] = 'onChangeVariant';
-
 var ProductConfiguratorMixin = {
-    events: events,
+    events: {
+        'click .css_attribute_color input': '_onChangeColorAttribute',
+        'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
+        'click button.js_add_cart_json': 'onClickAddCartJSON',
+        'change [data-attribute_exclusions]': 'onChangeVariant'
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -30,7 +21,7 @@ var ProductConfiguratorMixin = {
     /**
      * When a product is added or when the quantity is changed,
      * we need to refresh the total price row
-     * TODO (awa): add a container context to avoid global selectors ?
+     * TODO awa: add a container context to avoid global selectors ?
      *
      */
     computePriceTotal: function () {
@@ -54,161 +45,62 @@ var ProductConfiguratorMixin = {
      * - The display name of the product ("Customizable desk (White, Steel)")
      * - The new total price
      * - The need of adding a "custom value" input
-     * TODO (awa): change ugly [0], [1], [2], ... to a dict
      *
      * @param {MouseEvent}
-     * @param {string} params.imagesSize "small" or "medium" or ""
      */
-    onChangeVariant: function (ev, imagesSize) {
+    onChangeVariant: function (ev) {
         var self = this;
 
-        var $parent = $(ev.target).closest('.js_product');
-        var $ul = $parent.find('.js_add_cart_variants');
-        var $product_id = $parent.find('.product_id').first();
-        var $product_display_name = $parent.find('.product_display_name').first();
-        var $product_raw_price = $parent.find('.js_raw_price').first();
-        var $price = $parent.find(".oe_price:first .oe_currency_value");
-        var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
-        var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
-        var variant_ids = $ul.data("attribute_value_ids");
-        var values = [];
-        var unchanged_values = $parent
-            .find('div.oe_unchanged_value_ids')
-            .data('unchanged_value_ids') || [];
-
-        var variantsValuesSelectors = [
-            'input.js_variant_change:checked',
-            'select.js_variant_change'
-        ];
-        _.each($parent.find(variantsValuesSelectors.join(', ')), function (el) {
-            values.push(+$(el).val());
-        });
-        values = values.concat(unchanged_values);
-        var list_variant_id = parseInt($parent.find('input.js_product_change:checked').val());
-
-        $parent.find("label").removeClass('text-muted css_not_available');
-
-        var product_id = false;
-        var display_name = false;
-        var product_raw_price = false;
-        for (var k in variant_ids) {
-            if (_.isEmpty(_.difference(variant_ids[k][1], values))
-                    || variant_ids[k][0] === list_variant_id) {
-                $price.html(self._priceToStr(variant_ids[k][2]));
-                $default_price.html(self._priceToStr(variant_ids[k][3]));
-                if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
-                    $default_price
-                        .closest('.oe_website_sale')
-                        .addClass("discount");
-                    $optional_price
-                        .closest('.oe_optional')
-                        .show()
-                        .css('text-decoration', 'line-through');
-                    $default_price.parent().removeClass('d-none');
-                } else {
-                    $optional_price.closest('.oe_optional').hide();
-                    $default_price.parent().addClass('d-none');
-                }
-                product_id = variant_ids[k][0];
-                product_raw_price = variant_ids[k][2];
-                display_name = variant_ids[k][4];
-                var rootComponentSelectors = [
-                    'tr.js_product',
-                    '.oe_website_sale',
-                    '.o_product_configurator'
-                ];
-                self._updateProductImage(
-                    $(ev.currentTarget).closest(rootComponentSelectors.join(', ')),
-                    product_id,
-                    imagesSize);
-                break;
-            }
-        }
-
-        var variantsSelectors = [
-            'input.js_variant_change:radio',
-            'select.js_variant_change'
-        ];
-
-        _.each($parent.find(variantsSelectors.join(', ')), function (elem) {
-            var $input = $(elem);
-            var id = +$input.val();
-            var values = [id];
-
-            variantsValuesSelectors = ['select.js_variant_change'];
-            var checkedVariantSelector = "ul:not(:has(input.js_variant_change[value='" + id + "']))";
-            checkedVariantSelector += " input.js_variant_change:checked";
-            variantsValuesSelectors.unshift(checkedVariantSelector);
-
-            _.each($parent.find(variantsValuesSelectors.join(', ')), function (elem) {
-                values.push(+$(elem).val());
-            });
-
-            for (var k in variant_ids) {
-                if (!_.difference(values, variant_ids[k][1]).length) {
-                    return;
-                }
-            }
-            $input.closest("label").addClass("css_not_available");
-            $input.find("option[value='" + id + "']").addClass("css_not_available");
-        });
-
-        if (product_id) {
-            $parent.removeClass("css_not_available");
-            $product_id.val(product_id);
-            $product_display_name.val(display_name);
-            $product_raw_price.html(product_raw_price);
-            $parent
-                .parents('.modal')
-                .find('.o_sale_product_configurator_add')
-                .removeClass("disabled");
-
-            var $add_to_cart_button = $parent.find("#add_to_cart");
-            if (!$add_to_cart_button.hasClass('out_of_stock')) {
-                $add_to_cart_button.removeClass("disabled");
-            }
+        var $component;
+        if ($(ev.currentTarget).closest('form').length > 0){
+            $component = $(ev.currentTarget).closest('form');
+        } else if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
+            $component = $(ev.currentTarget).closest('.oe_optional_products_modal');
         } else {
-            $parent.addClass("css_not_available");
-            $product_id.val(0);
-            $product_display_name.val('');
-            $parent.find("#add_to_cart").addClass("disabled");
-            $parent
-                .parents('.modal')
-                .find('.o_sale_product_configurator_add')
-                .addClass("disabled");
+            $component = $(ev.currentTarget).closest('.o_product_configurator');
         }
+        var qty = $component.find('input[name="add_qty"]').val();
 
-        this.computePriceTotal();
-        this.handleCustomValues(ev);
+        var $parent = $(ev.target).closest('.js_product');
+        var combination = this.getSelectedVariantValues($parent);
+
+        self._checkExclusions($parent, combination);
+
+        ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
+            product_template_id: parseInt($parent.find('.product_template_id').val()),
+            product_id: parseInt($parent.find('.product_id').val()),
+            combination: combination,
+            add_qty: parseInt(qty),
+            pricelist_id: this.pricelistId
+        }).then(function (combinationData) {
+            self._onChangeCombination(ev, $parent, combinationData);
+        });
     },
 
     /**
-     * Will add the "custom value" input for this attribute value if necessary
+     * Will add the "custom value" input for this attribute value if
+     * the attribute value is configured as "custom" (see product_attribute_value.is_custom)
      *
      * @private
      * @param {MouseEvent} ev
      */
-    handleCustomValues: function (ev){
+    handleCustomValues: function ($target){
         var $variantContainer;
-        var addCustomValueField = false;
-        var attributeValueId = false;
-        var attributeValueName = false;
-        if ($(ev.target).is('input[type=radio]') && $(ev.target).is(':checked')) {
-            $variantContainer = $(ev.target).closest('ul').closest('li');
-            addCustomValueField = $(ev.target).data('is_custom');
-            attributeValueId = $(ev.target).data('value_id');
-            attributeValueName = $(ev.target).data('value_name');
-        } else if ($(ev.target).is('select')){
-            $variantContainer = $(ev.target).closest('li');
-            var $selectedOption = $(ev.target)
-                .find('option[value="' + $(ev.target).val() + '"]');
-            addCustomValueField = $selectedOption.data('is_custom');
-            attributeValueId = $selectedOption.data('value_id');
-            attributeValueName = $selectedOption.data('value_name');
+        var $customInput = false;
+        if ($target.is('input[type=radio]') && $target.is(':checked')) {
+            $variantContainer = $target.closest('ul').closest('li');
+            $customInput = $target;
+        } else if ($target.is('select')){
+            $variantContainer = $target.closest('li');
+            $customInput = $target
+                .find('option[value="' + $target.val() + '"]');
         }
 
         if ($variantContainer) {
-            if (addCustomValueField && attributeValueId && attributeValueName) {
+            if ($customInput && $customInput.data('is_custom')) {
+                var attributeValueId = $customInput.data('value_id');
+                var attributeValueName = $customInput.data('value_name');
+
                 if ($variantContainer.find('.variant_custom_value').length === 0
                         || $variantContainer
                               .find('.variant_custom_value')
@@ -245,19 +137,12 @@ var ProductConfiguratorMixin = {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.closest('.input-group').find("input");
-        var product_id = +$input
-            .closest('*:has(input[name="product_id"])')
-            .find('input[name="product_id"]')
-            .val();
         var min = parseFloat($input.data("min") || 0);
         var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val() || 0, 10);
-        var new_qty = quantity > min ? (quantity < max ? quantity : max) : min;
-        // if they are more of one input for this product (eg: option modal)
-        $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
-            var $prod = $(this).closest('*:has(input[name="product_id"])');
-            return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
-        }).val(new_qty).trigger('change', [false]);
+        var newQty = quantity > min ? (quantity < max ? quantity : max) : min;
+
+        $input.val(newQty).trigger('change');
         return false;
     },
 
@@ -267,44 +152,18 @@ var ProductConfiguratorMixin = {
      *
      * @param {MouseEvent} ev
      */
-    onChangeAddQuantity: function (ev, noStockCheck) {
-        var self = this;
+    onChangeAddQuantity: function (ev) {
         var $parent;
-        if ($(ev.currentTarget).closest('form').length > 0){
-            $parent = $(ev.currentTarget).closest('form');
-        } else if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
+
+        if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
             $parent = $(ev.currentTarget).closest('.oe_optional_products_modal');
-        } else {
+        } else if ($(ev.currentTarget).closest('form').length > 0){
+            $parent = $(ev.currentTarget).closest('form');
+        }  else {
             $parent = $(ev.currentTarget).closest('.o_product_configurator');
         }
 
-        var qty = $parent.find('input[name="add_qty"]').val();
-        var productIDs = [];
-        $parent.find(".js_product .js_add_cart_variants").each(function () {
-            _.each($(this).data("attribute_value_ids"), function (entry){
-                productIDs.push(entry[0]);
-            });
-        });
-
-        var getPriceUrl = '/product_configurator/get_unit_price' + (this.isWebsite ? '_website' : '');
-        if (productIDs.length) {
-            ajax.jsonRpc(getPriceUrl, 'call', {
-                product_ids: productIDs,
-                add_qty: parseInt(qty),
-                pricelist_id: this.pricelistId
-            }).then(function (data) {
-                $parent.find(".js_product .js_add_cart_variants").each(function () {
-                    var currentAttributesData = $(this).data("attribute_value_ids");
-                    for (var j = 0 ; j < currentAttributesData.length ; j++) {
-                        // update the price of the product (index "2") based on its id (index "0")
-                        currentAttributesData[j][2] = data[currentAttributesData[j][0]];
-                    }
-                    $(this).trigger('change', [noStockCheck]);
-
-                    self.computePriceTotal();
-                });
-            });
-        }
+        this.triggerVariantChange($parent);
     },
 
     /**
@@ -313,11 +172,10 @@ var ProductConfiguratorMixin = {
      * @param {$.Element} $container
      */
     triggerVariantChange: function ($container) {
-        $container.find('.js_add_cart_variants li[data-attribute_id]').each(function () {
-            $(this)
-                .find('input.js_variant_change, select.js_variant_change')
-                .first()
-                .trigger('change');
+        var self = this;
+        $container.find('ul[data-attribute_exclusions]').trigger('change');
+        $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
+            self.handleCustomValues($(this));
         });
     },
 
@@ -347,9 +205,204 @@ var ProductConfiguratorMixin = {
         return variantCustomValues;
     },
 
+    /**
+     * Will look for attribute values that do not create product variant
+     * (see product_attribute.create_variant "dynamic")
+     *
+     * @param {$.Element} $container
+     * @returns {Array} array of attribute values with the following format
+     *   {integer} attribute_value_id
+     *   {string} attribute_value_name
+     *   {integer} value
+     *   {string} attribute_name
+     *   {boolean} is_custom
+     */
+    getNoVariantAttributeValues: function ($container) {
+        var noVariantAttributeValues = [];
+        var variantsValuesSelectors = [
+            'input.never.js_variant_change:checked',
+            'select.never.js_variant_change'
+        ];
+
+        $container.find(variantsValuesSelectors.join(',')).each(function (){
+            var $variantValueInput = $(this);
+
+            if ($variantValueInput.is('select')){
+                $variantValueInput = $variantValueInput.find('option[value=' + $variantValueInput.val() + ']');
+            }
+
+            if ($variantValueInput.length !== 0){
+                noVariantAttributeValues.push({
+                    'attribute_value_id': $variantValueInput.data('value_id'),
+                    'attribute_value_name': $variantValueInput.data('value_name'),
+                    'value': $variantValueInput.val(),
+                    'attribute_name': $variantValueInput.data('attribute_name'),
+                    'is_custom': $variantValueInput.data('is_custom')
+                });
+            }
+        });
+
+        return noVariantAttributeValues;
+    },
+
+    /**
+     * Will return the list of selected product.product.attribute.value ids
+     * For the modal, the "main product"'s attribute values are stored in the
+     * "unchanged_value_ids" data
+     *
+     * @param {$.Element} $container the container to look into
+     */
+    getSelectedVariantValues: function ($container) {
+        var values = [];
+        var unchangedValues = $container
+            .find('div.oe_unchanged_value_ids')
+            .data('unchanged_value_ids') || [];
+
+        var variantsValuesSelectors = [
+            'input.js_variant_change:checked',
+            'select.js_variant_change'
+        ];
+        _.each($container.find(variantsValuesSelectors.join(', ')), function (el) {
+            values.push(+$(el).val());
+        });
+
+        return values.concat(unchangedValues);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Will disable attribute value's inputs based on combination exclusions
+     * and will disable the "add" button if the selected combination
+     * is not available
+     *
+     * This will check both the exclusions within the product itself and
+     * the exclusions coming from the parent product (meaning that this product
+     * is an option of the parent product)
+     *
+     * @private
+     * @param {$.Element} $parent the parent container to apply exclusions
+     * @param {Array} combination the selected combination of product attribute values
+     */
+    _checkExclusions: function ($parent, combination) {
+        var self = this;
+        var combinationData = $parent
+            .find('ul[data-attribute_exclusions]')
+            .data('attribute_exclusions');
+
+        $parent.find('option, input, label').removeClass('css_not_available');
+
+        var disable = false;
+        if (combinationData.exclusions) {
+            _.each(combination, function (combinationValue){
+                if (combinationData.exclusions &&
+                    combinationData.exclusions.hasOwnProperty(combinationValue)){
+                    // check that the selected combination is in the exclusions
+                    _.each(combinationData.exclusions[combinationValue], function (exclusion) {
+                        if (!disable && combination.indexOf(exclusion) > -1) {
+                            disable = true;
+                        }
+
+                        self._disableInput($parent, exclusion);
+                    });
+                }
+            });
+        }
+
+        if (combinationData.parent_exclusions){
+            _.each(combinationData.parent_exclusions, function (exclusion){
+                if (!disable && combination.indexOf(exclusion) > -1) {
+                    disable = true;
+                }
+                self._disableInput($parent, exclusion);
+            });
+        }
+
+        $parent.toggleClass('css_not_available', disable);
+        $parent.find("#add_to_cart").toggleClass('disabled', disable);
+        $parent
+            .parents('.modal')
+            .find('.o_sale_product_configurator_add')
+            .toggleClass('disabled', disable);
+    },
+
+    /**
+     * Will disable the input/option that refers to the passed attributeValueId.
+     * This is used for showing the user that some combinations are not available.
+     *
+     * @private
+     * @param {$.Element} $parent
+     * @param {integer} attributeValueId
+     */
+    _disableInput: function ($parent, attributeValueId) {
+        var $input = $parent
+            .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
+        $input.addClass('css_not_available');
+        $input.closest('label').addClass('css_not_available');
+    },
+
+    /**
+     * @see onChangeVariant
+     *
+     * @private
+     * @param {MouseEvent} ev
+     * @param {$.Element} $parent
+     * @param {Array} combination
+     */
+    _onChangeCombination: function (ev, $parent, combination) {
+        var self = this;
+        var $price = $parent.find(".oe_price:first .oe_currency_value");
+        var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+        var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
+        $price.html(self._priceToStr(combination.price));
+        $default_price.html(self._priceToStr(combination.list_price));
+        if (combination.list_price - combination.price > 0.01) {
+            $default_price
+                .closest('.oe_website_sale')
+                .addClass("discount");
+            $optional_price
+                .closest('.oe_optional')
+                .removeClass('d-none')
+                .css('text-decoration', 'line-through');
+            $default_price.parent().removeClass('d-none');
+        } else {
+            $optional_price.closest('.oe_optional').addClass('d-none');
+            $default_price.parent().addClass('d-none');
+        }
+
+        var rootComponentSelectors = [
+            'tr.js_product',
+            '.oe_website_sale',
+            '.o_product_configurator'
+        ];
+
+        self._updateProductImage(
+            $parent.closest(rootComponentSelectors.join(', ')),
+            combination.product_id,
+            combination.product_template_id
+        );
+
+        $parent
+            .find('.product_id')
+            .first()
+            .val(combination.product_id || 0)
+            .trigger('change');
+
+        $parent
+            .find('.product_display_name')
+            .first()
+            .val(combination.display_name);
+
+        $parent
+            .find('.js_raw_price')
+            .first()
+            .html(combination.price);
+
+        this.computePriceTotal();
+        this.handleCustomValues($(ev.target));
+    },
 
     /**
      * returns the formatted price
@@ -370,28 +423,33 @@ var ProductConfiguratorMixin = {
     },
 
     /**
-     * Updates the product image
+     * Updates the product image.
+     * This will use the productId if available or will fallback to the productTemplateId.
      *
      * @private
      * @param {$.Element} $productContainer
      * @param {integer} product_id
-     * @param {string} imagesSize
+     * @param {integer} productTemplateId
      */
-    _updateProductImage: function ($productContainer, product_id, imagesSize) {
+    _updateProductImage: function ($productContainer, productId, productTemplateId) {
         var $img;
-        var imageSrc = '/web/image?model=product.product&id={0}&field={1}'
-            .replace("{0}", product_id)
-            .replace("{1}", _.isEmpty(imagesSize) ? 'image' : ('image_' + imagesSize));
+        var model = productId ? 'product.product' : 'product.template';
+        var modelId = productId || productTemplateId;
+        var imageSrc = '/web/image?model={0}&id={1}&field=image'
+            .replace("{0}", model)
+            .replace("{1}", modelId);
 
         if ($productContainer.find('#o-carousel-product').length) {
             $img = $productContainer.find('img.js_variant_img');
             $img.attr("src", imageSrc);
-            $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product').data('oe-id', product_id);
+            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
+                .data('oe-model', model).data('oe-id', modelId);
 
             var $thumbnail = $productContainer.find('img.js_variant_img_small');
             if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
+                $thumbnail.attr("src", "/web/image/{0}/{1}/image/90x90"
+                    .replace('{0}', model)
+                    .replace('{1}', modelId));
                 $('.carousel').carousel(0);
             }
         }
@@ -405,10 +463,10 @@ var ProductConfiguratorMixin = {
             $img = $productContainer.find(imagesSelectors.join(', '));
             $img.attr('src', imageSrc);
             $img.parent()
-                .attr('data-oe-model', 'product.product')
-                .attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product')
-                .data('oe-id', product_id);
+                .attr('data-oe-model', model)
+                .attr('data-oe-id', modelId)
+                .data('oe-model', model)
+                .data('oe-id', modelId);
         }
         // reset zooming constructs
         $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
@@ -429,6 +487,21 @@ var ProductConfiguratorMixin = {
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+    },
+
+    /**
+     * Website behavior is slightly different from backend so we append
+     * "_website" to URLs to lead to a different route
+     *
+     * @private
+     * @param {string} uri The uri to adapt
+     */
+    _getUri: function (uri) {
+        if (this.isWebsite){
+            return uri + '_website';
+        } else {
+            return uri;
+        }
     }
 };
 

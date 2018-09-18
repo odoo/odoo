@@ -38,7 +38,7 @@
         <field name="name">Product Variant Values</field>
         <field name="res_model">product.product.attribute.value</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('product_tmpl_id', '=', active_id), ('attribute_id.create_variant', '=', True)]</field>
+        <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
         <field name="view_ids"
                 eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('product.product_product_attribute_value_view_tree')}),

@@ -7,7 +7,8 @@
     </template>
 
     <template id="product_configurator_configure" name="Configure">
-        <div class="js_product">
+        <div class="js_product main_product">
+            <input type="hidden" class="product_template_id" t-att-value="product.id"/>
             <input type="hidden" class="product_id" t-attf-name="product_id" t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'"/>
             <div class="col-lg-12 text-center mt-5">
                 <div class="col-lg-5 d-inline-block align-top text-left">
@@ -15,9 +16,7 @@
                 </div>
                 <div class="col-lg-1 d-inline-block"></div>
                 <div class="col-lg-5 d-inline-block text-left">
-                    <t t-if="len(product.product_variant_ids) > 1">
-                        <t t-call="sale.variants" />
-                    </t>
+                    <t t-call="sale.variants" />
                     <h2 class="oe_price product_id mt-3" style="white-space: nowrap;"
                         t-att-data-product-id="product.id"
                         t-esc="product.price if product.price else product.lst_price"
@@ -55,6 +54,8 @@
         </thead>
         <tbody>
             <tr class="js_product in_cart main_product">
+                <input type="hidden" class="product_template_id" t-att-value="product.product_tmpl_id.id"/>
+                <input type="hidden" class="product_id" t-att-value="product.id"/>
                 <td class='td-img'>
                 <span t-field="product.image_medium" t-options='{"widget": "image" }'/>
                 </td>
@@ -81,8 +82,8 @@
                 </div>
                 </td>
                 <td class="text-center td-price" name="price">
-                <ul class="d-none js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(main_product_attr_ids)"></ul>
-                <div class="d-none oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
+                <ul class="d-none js_add_cart_variants" t-att-data-attribute_exclusions="{'exclusions: []'}"></ul>
+                <div class="d-none oe_unchanged_value_ids" t-att-data-unchanged_value_ids="variant_values" ></div>
                 <div t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.price) &lt; 0.01 and 'd-none' }}"
                     t-field="product.lst_price"
                     t-options='{
@@ -172,19 +173,23 @@
 
 
     <template id="variants">
-      <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product, reference_product, pricelist)"/>
-      <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)">
+      <t t-set="attribute_exclusions" t-value="get_attribute_exclusions(product, reference_product)"/>
+      <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)">
         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
-          <li t-if="len(variant_id.product_value_ids) > 1" t-att-data-attribute_id="variant_id.attribute_id.id" t-att-data-attribute_name="variant_id.attribute_id.name">
+          <li t-att-data-attribute_id="variant_id.attribute_id.id" t-att-data-attribute_name="variant_id.attribute_id.name">
 
             <strong t-field="variant_id.attribute_id.name"/>
 
             <t t-if="variant_id.attribute_id.type == 'select'">
-              <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
+              <select
+                    t-att-data-attribute_id="variant_id.attribute_id.id"
+                    t-attf-class="form-control js_variant_change #{variant_id.attribute_id.create_variant}"
+                    t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
                 <t t-foreach="variant_id.product_value_ids" t-as="value_id">
                   <option t-att-value="value_id.id"
                     t-att-data-value_id="value_id.product_attribute_value_id.id"
                     t-att-data-value_name="value_id.name"
+                    t-att-data-attribute_name="value_id.attribute_id.name"
                     t-att-data-is_custom="value_id.is_custom">
                       <span t-field="value_id.name"/>
                       <span t-if="value_id.price_extra">
@@ -200,18 +205,19 @@
             </t>
 
             <t t-if="variant_id.attribute_id.type == 'radio'">
-              <ul class="list-unstyled">
+              <ul t-att-data-attribute_id="variant_id.attribute_id.id" class="list-unstyled">
                   <t t-set="inc" t-value="0"/>
                   <t t-foreach="variant_id.product_value_ids" t-as="value_id">
                       <li class="form-group js_attribute_value" style="margin: 0;">
                           <label class="col-form-label" style="margin: 0 20px;">
                               <input type="radio"
-                                t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"
+                                t-attf-class="js_variant_change  #{variant_id.attribute_id.create_variant}"
                                 t-att-checked="'checked' if not inc else None"
                                 t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
                                 t-att-value="value_id.id"
                                 t-att-data-value_id="value_id.product_attribute_value_id.id"
                                 t-att-data-value_name="value_id.name"
+                                t-att-data-attribute_name="value_id.attribute_id.name"
                                 t-att-data-is_custom="value_id.is_custom"
                                 style="vertical-align: top; margin-right: 10px;"/>
                               <span t-field="value_id.name"/>
@@ -230,18 +236,20 @@
             </t>
 
             <t t-if="variant_id.attribute_id.type == 'color'">
-              <ul class="list-inline">
+              <ul t-att-data-attribute_id="variant_id.attribute_id.id" class="list-inline">
                   <t t-set="inc" t-value="0"/>
                   <li t-foreach="variant_id.product_value_ids" t-as="value_id" class="list-inline-item">
                       <label t-attf-style="background-color:#{value_id.html_color or value_id.name if not value_id.is_custom else ''}"
                           t-attf-class="css_attribute_color #{'active' if not inc else ''} #{'custom_value' if value_id.is_custom else ''}">
-                        <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"
+                        <input type="radio"
+                          t-attf-class="js_variant_change  #{variant_id.attribute_id.create_variant}"
                           t-att-checked="'checked' if not inc else None"
                           t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
                           t-att-value="value_id.id"
                           t-att-title="value_id.name"
                           t-att-data-value_id="value_id.product_attribute_value_id.id"
                           t-att-data-value_name="value_id.name"
+                          t-att-data-attribute_name="value_id.attribute_id.name"
                           t-att-data-is_custom="value_id.is_custom"/>
                       </label>
                       <t t-set="inc" t-value="inc+1"/>

@@ -146,7 +146,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'change .css_attribute_color input': '_onChangeColorAttribute',
-        'change form .js_main_product input.js_variant_change, form .js_main_product select.js_variant_change, form .js_main_product input.js_product_change, form .js_main_product [data-attribute_value_ids]': '_onChangeVariant',
         'click .show_coupon': '_onClickShowCoupon',
         'submit .o_website_sale_search': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
@@ -345,8 +344,8 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      * @private
      * @param {Event} ev
      */
-    _onChangeAddQuantity: function (ev, no_stock_check) {
-        this.onChangeAddQuantity(ev, no_stock_check);
+    _onChangeAddQuantity: function (ev) {
+        this.onChangeAddQuantity(ev);
     },
     /**
      * @private
@@ -441,13 +440,6 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         $('.css_attribute_color').removeClass("active")
                                  .filter(':has(input:checked)')
                                  .addClass("active");
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onChangeVariant: function (ev) {
-        this.onChangeVariant(ev, false);
     },
     /**
      * @private

@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
+import json
 
 
 class ProductTemplate(models.Model):
@@ -53,6 +54,22 @@ class ProductTemplate(models.Model):
             'search_default_team_id': 1
         }
         return action
+
+    def create_product_variant(self, product_attribute_value_ids):
+        self.ensure_one()
+
+        attribute_value_ids = \
+            self.env['product.product.attribute.value'] \
+                .browse(json.loads(product_attribute_value_ids)) \
+                .mapped('product_attribute_value_id') \
+                .filtered(lambda attribute_value_id: attribute_value_id.attribute_id.create_variant != 'never')
+
+        product_variant = self.env['product.product'].create({
+            'product_tmpl_id': self.id,
+            'attribute_value_ids': [(6, 0, attribute_value_ids.ids)]
+        })
+
+        return product_variant.id
 
     @api.onchange('type')
     def _onchange_type(self):
