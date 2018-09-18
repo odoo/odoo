@@ -292,7 +292,7 @@ def split_context(method, args, kwargs):
         Return a triple ``context, args, kwargs``.
     """
     pos = len(getargspec(method).args) - 1
-    if pos < len(args):
+    if len(args) > 0 and pos < len(args):
         return args[pos], args[:pos], kwargs
     else:
         return kwargs.pop('context', None), args, kwargs

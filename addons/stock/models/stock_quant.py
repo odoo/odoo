@@ -219,9 +219,6 @@ class StockQuant(models.Model):
                         'quantity': quant.quantity + quantity,
                         'in_date': in_date,
                     })
-                    # cleanup empty quants
-                    if float_is_zero(quant.quantity, precision_rounding=rounding) and float_is_zero(quant.reserved_quantity, precision_rounding=rounding):
-                        quant.unlink()
                     break
             except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
@@ -323,6 +320,11 @@ class StockQuant(models.Model):
                 self.env.cr.execute(query)
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
+
+    @api.model
+    def delete_empty_quants(self):
+        self.sudo().search([('quantity', '=', 0),
+                            ('reserved_quantity', '=', 0)]).unlink()
 
 
 class QuantPackage(models.Model):
@@ -490,5 +492,5 @@ class QuantPackage(models.Model):
         for quant in self._get_contained_quants():
             if quant.product_id not in res:
                 res[quant.product_id] = 0
-            res[quant.product_id] += quant.qty
+            res[quant.product_id] += quant.quantity
         return res

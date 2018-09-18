@@ -161,6 +161,8 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
+        Quant = self.env['stock.quant']
+
         vals['ordered_qty'] = vals.get('product_uom_qty')
 
         # If the move line is directly create on the picking view.
@@ -186,7 +188,6 @@ class StockMoveLine(models.Model):
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
             if ml.product_id.type == 'product':
-                Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
                 in_date = None
                 available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
@@ -201,6 +202,8 @@ class StockMoveLine(models.Model):
             next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
             next_moves._do_unreserve()
             next_moves._action_assign()
+
+        Quant.delete_empty_quants()
         return ml
 
     def write(self, vals):
@@ -330,6 +333,8 @@ class StockMoveLine(models.Model):
                 move.product_uom_qty = move.quantity_done
         next_moves._do_unreserve()
         next_moves._action_assign()
+
+        Quant.delete_empty_quants()
         return res
 
     def unlink(self):
@@ -361,7 +366,7 @@ class StockMoveLine(models.Model):
         intended to be called when editing a `done` move (that's what the override of `write` here
         is done.
         """
-
+        Lot = self.env['stock.production.lot']
         # First, we loop over all the move lines to do a preliminary check: `qty_done` should not
         # be negative and, according to the presence of a picking type or a linked inventory
         # adjustment, enforce some rules on the `lot_id` field. If `qty_done` is null, we unlink
@@ -388,10 +393,25 @@ class StockMoveLine(models.Model):
                             # the fly before assigning it to the move line if the user checked both
                             # `use_create_lots` and `use_existing_lots`.
                             if ml.lot_name and not ml.lot_id:
-                                lot = self.env['stock.production.lot'].create(
-                                    {'name': ml.lot_name, 'product_id': ml.product_id.id}
-                                )
-                                ml.write({'lot_id': lot.id})
+                                lot = None
+                                # If the product is tracked by lots, allow
+                                # to reuse an existing lot number
+                                if ml.product_id.tracking == 'lot':
+                                    lot = Lot.search([
+                                        ('name', '=', ml.lot_name),
+                                        ('product_id', '=', ml.product_id.id),
+                                    ])
+                                if not lot:
+                                    lot = Lot.create({
+                                        'name': ml.lot_name,
+                                        'product_id': ml.product_id.id,
+                                    })
+                                # find all the move lines with the same product
+                                # and lot_name and update them in batch
+                                mls = self.filtered(
+                                    lambda x: x.product_id == ml.product_id \
+                                              and x.lot_name == ml.lot_name)
+                                mls.write({'lot_id': lot.id})
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked

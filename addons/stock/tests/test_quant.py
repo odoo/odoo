@@ -315,6 +315,7 @@ class StockQuant(TransactionCase):
     def test_decrease_available_quantity_2(self):
         """ Decrease the available quantity when multiple quants are already in a location.
         """
+        Quant = self.env['stock.quant']
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -329,6 +330,7 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 2.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 2)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
+        Quant.delete_empty_quants()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 1)
 
@@ -356,6 +358,7 @@ class StockQuant(TransactionCase):
         """ Decrease the available quantity that delete the quant. The active user should have
         read,write and unlink rights
         """
+        Quant = self.env['stock.quant']
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
@@ -368,6 +371,7 @@ class StockQuant(TransactionCase):
         })
         self.env = self.env(user=self.demo_user)
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
+        Quant.delete_empty_quants()
         self.assertEqual(len(self.env['stock.quant']._gather(product1, stock_location)), 0)
 
     def test_increase_reserved_quantity_1(self):
