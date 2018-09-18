@@ -2155,8 +2155,12 @@ class _RelationalMulti(_Relational):
         cache = records.env.cache
         for record in records:
             if cache.contains(record, self):
-                val = self.convert_to_cache(record[self.name] | value, record, validate=False)
-                cache.set(record, self, val)
+                try:
+                    val = self.convert_to_cache(record[self.name] | value, record, validate=False)
+                    cache.set(record, self, val)
+                except Exception as exc:
+                    # delay the failure until the field is necessary
+                    cache.set_failed(record, [self], exc)
             else:
                 cache.set_special(record, self, self._update_getter(record, value))
 
