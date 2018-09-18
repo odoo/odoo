@@ -32,21 +32,11 @@ var AppsMenu = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Object}
-     */
-    getActiveApp: function () {
-        return this._activeApp || {};
-    },
-    /**
      * @returns {Object[]}
      */
     getApps: function () {
         return this._apps;
     },
-    /**
-     * Open the given app
-     */
-    openApp: function () {},
     /**
      * Open the first app in the list of apps
      */
@@ -75,8 +65,10 @@ var AppsMenu = Widget.extend({
      * @param {Object} app
      */
     _setActiveApp: function (app) {
-        this._activeApp = app;
-        this.renderElement();
+        var $oldActiveApp = this.$('.o_app.active');
+        $oldActiveApp.removeClass('active');
+        var $newActiveApp = this.$('.o_app[data-action-id="' + app.actionID + '"]');
+        $newActiveApp.addClass('active');
     },
 
     //--------------------------------------------------------------------------
