@@ -386,13 +386,13 @@ def send_iot_box_device(send_printer):
                                 subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
                         except:
                             subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-
-        subprocess.call('sudo mount -o remount,rw /', shell=True)
-        if printerList:
+            subprocess.call('sudo mount -o remount,rw /', shell=True)
             subprocess.call('> /home/pi/printers', shell=True)
             for printer in printerList:
                 subprocess.call('echo "' + printerList[printer]['name'] + '" >> /home/pi/printers', shell=True)
-                
+            subprocess.call('sudo mount -o remount,ro /', shell=True)
+
+        subprocess.call('sudo mount -o remount,rw /', shell=True)
         if devicesList:
             subprocess.call('> /home/pi/devices', shell=True)
             for device in devicesList:
