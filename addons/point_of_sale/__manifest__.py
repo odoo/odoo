@@ -8,7 +8,7 @@
     'sequence': 20,
     'summary': 'Tablet POS: shops and restaurants',
     'description': "",
-    'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
+    'depends': ['stock_account', 'barcodes', 'web_editor', 'digest', 'iot'],
     'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
