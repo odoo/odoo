@@ -345,14 +345,14 @@ FormController.include({
      * @param {KeyEvent} event
      */
     _quantityListener: function (event) {
-        var character = String.fromCharCode(event.which);
+        var character = String.fromCharCode(event.data.which);
 
-        if (! $.contains(event.target, this.el)) {
+        if (! $.contains(event.data.target, this.el)) {
             return;
         }
         // only catch the event if we're not focused in
         // another field and it's a number
-        if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
+        if (!$(event.data.target).is('body, .modal') || !/[0-9]/.test(character)) {
             return;
         }
 

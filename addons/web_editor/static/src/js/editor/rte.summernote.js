@@ -1128,23 +1128,24 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
      * Called when a demand to open a alt dialog is received on the bus.
      *
      * @private
-     * @param {Object} data
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data.data
      */
-    _onAltDialogDemand: function (data) {
-        if (ev.data.__alreadyDone) {
+    _onAltDialogDemand: function (ev) {
+        if (ev.data.data.__alreadyDone) {
             return;
         }
-        ev.data.__alreadyDone = true;
+        ev.data.data.__alreadyDone = true;
         var altDialog = new weWidgets.AltDialog(this,
-            ev.data.options || {},
-            ev.data.$editable,
-            ev.data.media
+            ev.data.data.options || {},
+            ev.data.data.$editable,
+            ev.data.data.media
         );
-        if (ev.data.onSave) {
-            altDialog.on('save', this, ev.data.onSave);
+        if (ev.data.data.onSave) {
+            altDialog.on('save', this, ev.data.data.onSave);
         }
-        if (ev.data.onCancel) {
-            altDialog.on('cancel', this, ev.data.onCancel);
+        if (ev.data.data.onCancel) {
+            altDialog.on('cancel', this, ev.data.data.onCancel);
         }
         altDialog.open();
     },

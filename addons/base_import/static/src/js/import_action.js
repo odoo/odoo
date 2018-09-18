@@ -447,6 +447,7 @@ var DataImport = AbstractAction.extend({
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             }).on('change', function (e) {
+                e.stopPropagation();
                 bind(item_finder(e.currentTarget.value));
             });
         });
