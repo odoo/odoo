@@ -30,6 +30,13 @@ class View(models.Model):
         for view in self:
             view.first_page_id = self.env['website.page'].search([('view_id', '=', view.id)], limit=1)
 
+    @api.model
+    def create(self, vals):
+        website = self.env['website'].get_current_website(fallback=False)
+        if website and 'website_id' not in vals and 'not_force_website_id' not in self.env.context:
+            vals['website_id'] = website.id
+        return super(View, self).create(vals)
+
     @api.multi
     def write(self, vals):
         '''COW for ir.ui.view. This way editing websites does not impact other

@@ -17,7 +17,7 @@ class Attachment(models.Model):
 
     @api.model
     def create(self, vals):
-        website = self.env['website'].get_current_website()
+        website = self.env['website'].get_current_website(fallback=False)
         if website and 'website_id' not in vals and 'not_force_website_id' not in self.env.context:
             vals['website_id'] = website.id
         return super(Attachment, self).create(vals)
