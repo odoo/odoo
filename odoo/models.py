@@ -4098,6 +4098,7 @@ class BaseModel(object):
 
         # apply main rules on the object
         Rule = self.env['ir.rule']
+        Rule.clear_caches()
         where_clause, where_params, tables = Rule.domain_get(self._name, mode)
         apply_rule(where_clause, where_params, tables)
 
