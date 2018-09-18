@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid "%s (copy)"
 msgstr "%s (копия)"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
@@ -53,13 +53,13 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
-#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr "<i>до</i>"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                        to\n"
@@ -67,7 +67,7 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
@@ -249,7 +249,7 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        Sent by <a target=\"_blank\" href=\"object.company_id.website\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
+"        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
@@ -436,7 +436,7 @@ msgid ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        Sent by <a target=\"_blank\" href=\"object.company_id.website\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
+"        Sent by <a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
 "        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
@@ -460,19 +460,19 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,help:event.act_event_registration_from_event
+#: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
 msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
+#: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
 msgstr ""
 
@@ -489,50 +489,56 @@ msgid "After the event"
 msgstr "После события "
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
 msgstr "Архивировано"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
+#: model:ir.model.fields,field_description:event.field_event_registration__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
 msgstr "Присутствие"
 
 #. module: event
 #: selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
 msgstr "Посещено"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended Date"
 msgstr "Дата посещения"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
 msgstr "Посещённое событие"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
 msgstr "Участник"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
-#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
 msgstr "Имя слушателя"
 
@@ -541,8 +547,8 @@ msgstr "Имя слушателя"
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.model.fields,field_description:event.field_event_event__registration_ids
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.view,arch_db:event.view_event_form
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
 msgstr "Участники"
 
@@ -598,18 +604,18 @@ msgid "Before the event"
 msgstr "До события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
 msgstr "Отменить"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
 msgstr "Отменить событие"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
 msgstr "Отменить регистрацию"
 
@@ -624,7 +630,7 @@ msgid "Category"
 msgstr "Категория"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
 msgstr "Общение"
 
@@ -646,39 +652,39 @@ msgid "Configuration"
 msgstr "Настройка"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
 msgstr "Всё равно подтвердить"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
 msgstr "Подтвердить событие"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
 msgstr "Подтвердить регистрацию"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Confirmed"
 msgstr "Подтверждено"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
 msgstr "Подтвержденные участники"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
 msgstr "Подтвержденные события"
 
@@ -734,7 +740,7 @@ msgid "Day(s)"
 msgstr "День (дни)"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
 msgstr "Удалить"
 
@@ -765,7 +771,7 @@ msgid "Done"
 msgstr "Сделано"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Dropdown menu"
 msgstr ""
 
@@ -775,8 +781,8 @@ msgid "Email"
 msgstr "Email"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
 msgstr "Почтовый планировщик"
 
@@ -801,8 +807,8 @@ msgstr "Расположенная дата окончания"
 #: model:ir.model.fields,field_description:event.field_event_event__name
 #: model:ir.model.fields,field_description:event.field_event_mail__event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__event_id
-#: model:ir.ui.view,arch_db:event.event_event_view_pivot
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.event_event_view_pivot
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
 msgstr "Событие"
 
@@ -825,15 +831,15 @@ msgstr "Категории событий"
 #. module: event
 #: model:ir.model,name:event.model_event_type
 #: model:ir.model.fields,field_description:event.field_event_type__name
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_event_type_form
-#: model:ir.ui.view,arch_db:event.view_event_type_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Category"
 msgstr "Категория события"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
-#: model:ir.ui.view,arch_db:event.view_event_confirm
+#: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
 msgstr "Подтверждение события"
 
@@ -843,7 +849,7 @@ msgid "Event End Date"
 msgstr "Окончание события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Event Information"
 msgstr "Информация о событии"
 
@@ -853,29 +859,29 @@ msgid "Event Logo"
 msgstr "Логотип события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_mail_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
 msgstr "Планировщик почтового события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_mail_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
 msgstr "Планировщики почтового события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Event Name"
 msgstr "Название события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_calendar
+#: model_terms:ir.ui.view,arch_db:event.view_event_calendar
 msgid "Event Organization"
 msgstr "Организация события"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_calendar
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_calendar
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
 msgstr "Регистрация события"
 
@@ -899,7 +905,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
 msgstr "Дата начала события"
 
@@ -917,15 +923,16 @@ msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
-#: model:ir.model.fields,field_description:event.field_res_users__group_event_user
+#: model:ir.model.fields,field_description:event.field_res_partner__event_count
+#: model:ir.model.fields,field_description:event.field_res_users__event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:event.res_partner_view_tree
-#: model:ir.ui.view,arch_db:event.view_event_form
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_event_tree
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
 msgstr "События"
 
@@ -935,18 +942,12 @@ msgid "Events Analysis"
 msgstr "Анализ мероприятий"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_res_partner__event_count
-#: model:ir.model.fields,field_description:event.field_res_users__event_count
-msgid "Events Count"
-msgstr ""
-
-#. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
 msgstr "Мероприятия: планировщики почты"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
@@ -960,22 +961,22 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Events in New state"
 msgstr "События в новом статусе"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
 msgstr "Ожидается"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_kanban
+#: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
 msgstr "Ожидаемые участники"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
 msgstr "Конечное событие"
 
@@ -1018,8 +1019,8 @@ msgstr ""
 "будет отменено (оставьте \"0\", чтобы не применять это правило)"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
 msgstr "Группировать"
 
@@ -1153,13 +1154,13 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
 msgstr "Место"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.event_event_report_template_badge
-#: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "Logo"
 msgstr "Логотип"
 
@@ -1200,7 +1201,13 @@ msgid "Mail Sent on Event"
 msgstr "Отправка по событию"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model:ir.model.fields,field_description:event.field_event_event__message_main_attachment_id
+#: model:ir.model.fields,field_description:event.field_event_registration__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
 msgstr ""
 
@@ -1260,7 +1267,7 @@ msgid "Month(s)"
 msgstr "Месяц(ы)"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "My Events"
 msgstr "Мои события"
 
@@ -1324,7 +1331,7 @@ msgstr "Количество непрочитанных сообщений"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online"
 msgstr "Онлайн"
 
@@ -1340,7 +1347,7 @@ msgid "Online Ticketing"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
@@ -1359,12 +1366,12 @@ msgid "Organizer"
 msgstr "Организатор"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Participant"
 msgstr "Участник"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
 msgstr "Партнёр"
 
@@ -1386,16 +1393,16 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
 msgstr "Зарегистрироваться в этом событии"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
-#: model:ir.ui.view,arch_db:event.view_event_registration_graph
-#: model:ir.ui.view,arch_db:event.view_event_registration_pivot
-#: model:ir.ui.view,arch_db:event.view_event_registration_tree
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_graph
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_pivot
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
 msgstr "Регистрация"
 
@@ -1406,12 +1413,12 @@ msgstr "бэйдж участника"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_open
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
 msgstr "Дата регистрации"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration ID"
 msgstr "Регистрация ID"
 
@@ -1421,7 +1428,7 @@ msgid "Registration Mail Scheduler"
 msgstr "Планировщик регистрационных писем"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_mail_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration Mails"
 msgstr "Заявки на регистрацию"
 
@@ -1431,7 +1438,7 @@ msgid "Registration Survey"
 msgstr "Регистрация опроса"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_mail_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Registration mail"
 msgstr "Регистрационное письмо"
 
@@ -1447,22 +1454,22 @@ msgstr "Забронированные посадочные места"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__user_id
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
 msgstr "Ответственный"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Scan badges to confirm attendances"
 msgstr "Сканировать бейдж для подтверждения посещений"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
 msgstr ""
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
+#: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid ""
 "Schedule and organize your events efficiently:\n"
 "                track registrations and participations, automate the confirmation emails, sell tickets, etc."
@@ -1479,17 +1486,17 @@ msgid "Scheduled Time"
 msgstr "Запланированное время"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
 msgstr ""
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
 msgstr "Отправить по Email"
 
@@ -1499,12 +1506,12 @@ msgid "Sent"
 msgstr "Отправлено"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Set To Draft"
 msgstr "Установть в 'Черновик'"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_registration_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
 msgstr "Установлено на \"Не подтверждено\""
 
@@ -1521,7 +1528,7 @@ msgstr "Документ-источник"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Start Date"
 msgstr "Дата начала"
 
@@ -1533,8 +1540,8 @@ msgstr "Дата начала события"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__state
 #: model:ir.model.fields,field_description:event.field_event_registration__state
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
 msgstr "Статус"
 
@@ -1593,8 +1600,8 @@ msgstr "Хэштег Твиттера"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
 msgstr "Неподтверждённый"
 
@@ -1617,8 +1624,8 @@ msgstr "Неограничено"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_unread
 #: model:ir.model.fields,field_description:event.field_event_registration__message_unread
-#: model:ir.ui.view,arch_db:event.view_event_search
-#: model:ir.ui.view,arch_db:event.view_registration_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Непрочитанные Сообщения"
 
@@ -1629,12 +1636,12 @@ msgid "Unread Messages Counter"
 msgstr "Счетчик непрочитанных сообщений"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
 msgstr "Ближайшие события на сегодня"
 
 #. module: event
-#: model:ir.ui.view,arch_db:event.view_event_search
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
 msgstr ""
 
@@ -1654,12 +1661,7 @@ msgid "User"
 msgstr "Пользователь"
 
 #. module: event
-#: model:ir.model,name:event.model_res_users
-msgid "Users"
-msgstr "Пользователи"
-
-#. module: event
-#: model:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Visibility"
 msgstr "Видимость"
 
