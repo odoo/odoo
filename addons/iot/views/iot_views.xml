@@ -145,6 +145,7 @@
             <search string="IoT Device">
                 <group expand="0" string="Group By">
                     <filter name="group_by_type" string="Device type" context="{'group_by': 'type'}"/>
+                    <filter name="group_by_iot_id" string="IoT Box" context="{'group_by':'iot_id'}"/>
                 </group>
             </search>
         </field>
@@ -156,13 +157,13 @@
         <field name="context">{'search_default_group_by_type': 1}</field>
     </record>
     <menuitem
-        id="iot_device_menu_action"
-        action="iot_device_action"
+        id="iot_box_menu_action"
+        action="iot_box_action"
         parent="iot_menu_root"
         sequence="1"/>
     <menuitem
-        id="iot_box_menu_action"
-        action="iot_box_action"
+        id="iot_device_menu_action"
+        action="iot_device_action"
         parent="iot_menu_root"
         sequence="2"/>
 

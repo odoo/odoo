@@ -5,15 +5,22 @@
         <field name="model">add.iot.box</field>
         <field name="arch" type="xml">
             <form string="Add IoT Box">
-                <p>
-                    You can add an IoT box in several ways. <br/>
+                <p><h2>
+                    1. Power on the IoT Box <br/>
 
-                    If it is with the wifi, you can connect to it. <br/>
+                    2. If you connected the network cable, use the 
+                    "Scan" button to detect connected IoT Boxes. <br/>
 
-                    If it is in the network, you can try this button: <br/>
-                    <hr/>
-                    Or manually and copy / paste this token to the field odoo server on IoTBox : <br/>
-                </p>
+                    3. If it does not work or you want to connect wirelessly: <br/>
+                    
+                    4. Power on the IoT Box without ethernet cable if not already done so.<br/>
+
+                    5. Copy this token in your clipboard.<br/>
+
+                    6. Connect to the "IoT Box" wifi network.<br/>
+
+                    7. Paste the token into the "server token" field.<br/>
+                </h2></p>
                 <group>
                     <field name="token" widget="CopyClipboardChar"/>
                     <field name="view_token" invisible="1"/>
@@ -34,9 +41,4 @@
         <field name="view_id" ref="view_add_iot_box"/>
         <field name="target">new</field>
     </record>
-    <menuitem
-        id="iot_box_add_menu_action"
-        action="action_add_iot_box"
-        parent="iot_menu_root"
-        sequence="3"/>
 </odoo>
