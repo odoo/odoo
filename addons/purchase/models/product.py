@@ -89,5 +89,5 @@ class ProductCategory(models.Model):
 
     property_account_creditor_price_difference_categ = fields.Many2one(
         'account.account', string="Price Difference Account",
-        company_dependent=True,
+        company_dependent=True, track_visibility='onchange',
         help="This account will be used to value price difference between purchase price and accounting cost.")

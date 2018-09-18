@@ -9,11 +9,11 @@ class ProductCategory(models.Model):
 
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account", oldname="property_account_income_categ",
-        domain=[('deprecated', '=', False)],
+        domain=[('deprecated', '=', False)], track_visibility='onchange',
         help="This account will be used when validating a customer invoice.")
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense_categ",
-        domain=[('deprecated', '=', False)],
+        domain=[('deprecated', '=', False)], track_visibility='onchange',
         help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.")
 
 #----------------------------------------------------------
