@@ -5,6 +5,45 @@ var FormView = require('web.FormView');
 var testUtils = require("web.test_utils");
 
 var createView = testUtils.createView;
+var cleanUrl = require('website.helpers').cleanUrl;
+
+QUnit.module('website > utils', {}, function () {
+    QUnit.test("cleanUrl", function (assert) {
+        assert.expect(18);
+
+        var baseUrl = 'http://127.0.0.1:8069/page';
+
+        // remove ? and #
+        var removeQueryString = true;
+        var removeAnchor = true;
+        assert.strictEqual(cleanUrl(baseUrl, removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '#home', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '#home?editor=1', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home?ok=1', removeQueryString, removeAnchor), baseUrl);
+
+        // remove ? only
+        removeQueryString = true;
+        removeAnchor = false;
+        assert.strictEqual(cleanUrl(baseUrl, removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '#home', removeQueryString, removeAnchor), baseUrl + '#home');
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '#home?editor', removeQueryString, removeAnchor), baseUrl + '#home?editor');
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home', removeQueryString, removeAnchor), baseUrl + '#home');
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home?ok=1', removeQueryString, removeAnchor), baseUrl + '#home?ok=1');
+
+        // remove # only
+        removeQueryString = false;
+        removeAnchor = true;
+        assert.strictEqual(cleanUrl(baseUrl, removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '#home', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1', removeQueryString, removeAnchor), baseUrl + '?editor=1');
+        assert.strictEqual(cleanUrl(baseUrl + '#home?editor=1', removeQueryString, removeAnchor), baseUrl);
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home', removeQueryString, removeAnchor), baseUrl + '?editor=1');
+        assert.strictEqual(cleanUrl(baseUrl + '?editor=1#home?ok=1', removeQueryString, removeAnchor), baseUrl + '?editor=1');
+    });
+});
 
 QUnit.module('website', {
     before: function () {
