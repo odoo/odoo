@@ -80,7 +80,7 @@ class StatusController(http.Controller):
             return 'This IoTBox had already been connected'
         else:
             iotname = ''
-            token = data['token'].split('|')[0]
+            token = data['token'].split('|')[1]
             subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh',data['url'], iotname, token])
             return 'IoTBox connected'
 
