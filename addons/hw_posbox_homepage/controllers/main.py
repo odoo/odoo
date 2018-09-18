@@ -106,7 +106,7 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
                 iot_device.append({
                     'name': status,
                     'type': 'device',
-                    'message': ' '.join(device['messages'])
+                    'message': ' '.join(pos_device[status]['messages'])
                 })
 
         hdmi_name = subprocess.check_output('tvservice -n', shell=True).decode('utf-8')
