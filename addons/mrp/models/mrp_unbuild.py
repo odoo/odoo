@@ -85,8 +85,7 @@ class MrpUnbuild(models.Model):
     @api.multi
     def unlink(self):
         if 'done' in self.mapped('state'):
-            raise UserError(_('You cannot delete an unbuild order if the state'
-            'is "Done"'))
+            raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
         return super(MrpUnbuild, self).unlink()
 
     @api.multi
