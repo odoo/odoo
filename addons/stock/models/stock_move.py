@@ -658,6 +658,18 @@ class StockMove(models.Model):
         self.product_uom = product.uom_id.id
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
+    @api.onchange('quantity_done')
+    def onchange_quantity_done(self):
+        """ Hack in order to avoid conflict between stock move and stock move
+        line write. Since the ORM returns all values present in the view after
+        an onchange, it could happens that the system write the quantity done
+        and update the stock move line in _set_quantity_done but the write on
+        stock move line is perform after an reset the quantity done to its
+        initial value.
+        """
+        if len(self.move_line_ids) == 1:
+            self.move_line_ids.qty_done = self.quantity_done
+
     @api.onchange('date_expected')
     def onchange_date(self):
         if self.date_expected:
