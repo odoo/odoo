@@ -22,7 +22,7 @@ class Project(models.Model):
 
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
-        if not self.analytic_account_id:
+        if not self.analytic_account_id and self._origin:
             self.allow_timesheets = False
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
