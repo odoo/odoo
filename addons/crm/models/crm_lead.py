@@ -252,8 +252,9 @@ class Lead(models.Model):
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
-        values = self._onchange_user_values(self.user_id.id)
-        self.update(values)
+        if self.user_id.sale_team_id:
+            values = self._onchange_user_values(self.user_id.id)
+            self.update(values)
 
     @api.constrains('user_id')
     @api.multi
