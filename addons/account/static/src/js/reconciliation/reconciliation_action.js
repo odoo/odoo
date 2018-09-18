@@ -32,6 +32,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
         load_more: '_onLoadMore',
+        reload: 'reload',
     },
     config: {
         // used to instantiate the model
@@ -97,6 +98,21 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                     'defaultDisplayQty': self.model.defaultDisplayQty,
                     'title': self.title,
                 });
+            });
+    },
+
+    reload: function() {
+        // On reload destroy all rendered line widget, reload data and then rerender widget
+        var self = this;
+        _.each(this.widgets, function(widget) {
+            widget.destroy();
+        })
+        this.widgets = [];
+        this.model.reload()
+            .then(function() {
+                self.$('.o_reconciliation_lines').html('');
+                self._renderLines();
+                self._openFirstLine();
             });
     },
 
@@ -199,7 +215,10 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             widget.appendTo(self.$('.o_reconciliation_lines'));
         });
         if (this.model.hasMoreLines() === false) {
-            this.renderer.hideLoadMoreButton();
+            this.renderer.hideLoadMoreButton(true);
+        }
+        else {
+            this.renderer.hideLoadMoreButton(false);
         }
     },
 

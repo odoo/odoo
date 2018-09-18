@@ -82,8 +82,13 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     /*
      * hide the button to load more statement line
      */
-    hideLoadMoreButton: function () {
-        this.$('.js_load_more').hide();
+    hideLoadMoreButton: function (show) {
+        if (!show) {
+            this.$('.js_load_more').show();
+        }
+        else {
+            this.$('.js_load_more').hide();
+        }
     },
     showRainbowMan: function (state) {
         var dt = Date.now()-this.time;
@@ -300,7 +305,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     }
                 )
             };
-            self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
+            self.fields.partner_id.insertAfter(self.$('.accounting_view caption .o_buttons'));
         });
         $('<span class="line_info_button fa fa-info-circle"/>')
             .appendTo(this.$('thead .cell_info_popover'))
@@ -599,11 +604,15 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onCreateReconcileModel: function (event) {
         event.preventDefault();
+        var self = this;
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
             views: [[false, 'form']],
             target: 'current'
+        }, 
+        {
+            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
         });
     },
     _editAmount: function (event) {
@@ -627,6 +636,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onEditReconcileModel: function (event) {
         event.preventDefault();
+        var self = this;
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
@@ -634,6 +644,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             view_type: "list",
             view_mode: "list",
             target: 'current'
+        },
+        {
+            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
         });
     },
     /**
