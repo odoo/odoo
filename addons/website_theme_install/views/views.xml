@@ -26,7 +26,7 @@
                             </div>
                             <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                             <div t-if="record.is_installed_on_current_website.raw_value" class="o_button_area">
-                                <button type="object" name="button_refresh_theme" class="btn btn-primary">Update theme</button>
+                                <button type="object" name="load_theme" class="btn btn-primary">Update theme</button>
                                 <hr />
                                 <button type="object" name="button_remove_theme" class="btn btn-secondary">Remove theme</button>
                             </div>
