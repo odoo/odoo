@@ -20,7 +20,7 @@ sAnimations.registry.WebsiteSale.include({
 sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend({
     selector: '.oe_website_sale',
     read_events: {
-        'click #add_to_cart, #products_grid .a-submit': '_onClickAdd',
+        'click #add_to_cart, #products_grid .product_price .a-submit': '_onClickAdd',
     },
 
     /**
