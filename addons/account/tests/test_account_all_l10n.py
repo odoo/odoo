@@ -10,7 +10,7 @@ from odoo.tests import tagged
 _logger = logging.getLogger(__name__)
 
 
-@tagged('standard', '-at_install', 'post_install', 'l10nall')
+@tagged('-standard', '-at_install', 'post_install', 'l10nall')
 class TestAllL10n(SingleTransactionCase):
     """ This test will install all the l10n_* modules.
     As the module install is not yet fully transactional, the modules will
