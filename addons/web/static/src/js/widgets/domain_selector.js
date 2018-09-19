@@ -548,10 +548,10 @@ var DomainSelector = DomainTree.extend({
         var oldChildren = this.children.slice();
         this._initialize(domain || this.getDomain());
         return this._renderChildrenTo($("<div/>")).then((function () {
+            _.each(oldChildren, function (child) { child.destroy(); });
             this.renderElement();
             this._postRender();
             _.each(this.children, (function (child) { child.$el.appendTo(this.$childrenContainer); }).bind(this));
-            _.each(oldChildren, function (child) { child.destroy(); });
         }).bind(this));
     },
 

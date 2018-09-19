@@ -308,13 +308,13 @@ QUnit.test('activity view: activity widget', function (assert) {
     today.find('.o_closest_deadline').click();
     assert.ok(dropdown.hasClass('show'), "dropdown should be displayed");
     assert.ok(dropdown.find('.o_activity_color_today:contains(Today)').length, "Title should be today");
-    assert.ok(dropdown.find('.o_activity_title div div div:first span:contains(template8)').length,
+    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(template8)').length,
         "template8 should be available");
-    assert.ok(dropdown.find('.o_activity_title div div div:nth-child(2) span:contains(template9)').length,
+    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:eq(1) div:contains(template9)').length,
         "template9 should be available");
 
-    dropdown.find('.o_activity_title div div div:first .o_activity_template_preview').click();
-    dropdown.find('.o_activity_title div div div:first .o_activity_template_send').click();
+    dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview').click();
+    dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send').click();
     var overdue = activity.$('table tbody tr:first td:nth-child(3).overdue');
     overdue.find('.o_closest_deadline').click();
     dropdown = overdue.find('.dropdown-menu.o_activity');

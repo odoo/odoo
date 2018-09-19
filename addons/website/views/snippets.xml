@@ -251,23 +251,10 @@
                             <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
                             <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
                             <p class="mt24">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
-                            <div class="s_share text-left pt16 pb16">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
-                                    <i class="fa fa-facebook rounded shadow-sm"/>
-                                </a>
-                                <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
-                                    <i class="fa fa-twitter rounded shadow-sm"/>
-                                </a>
-                                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
-                                    <i class="fa fa-linkedin rounded shadow-sm"/>
-                                </a>
-                                <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
-                                    <i class="fa fa-google-plus rounded shadow-sm"/>
-                                </a>
-                                <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email">
-                                    <i class="fa fa-envelope rounded shadow-sm"/>
-                                </a>
-                            </div>
+                            <t t-call="website.s_share">
+                                <t t-set="_classes" t-value="'text-left pt16 pb16'"/>
+                                <t t-set="_no_title" t-value="True"/>
+                            </t>
                         </div>
                     </div>
                 </div>
@@ -307,8 +294,8 @@
 </template>
 
 <template id="s_share" name="Share">
-    <div class="s_share">
-        <h4 class="s_share_title">Share</h4>
+    <div t-attf-class="s_share #{_classes or ''}">
+        <h4 t-if="not _no_title" class="s_share_title">Share</h4>
         <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
             <i class="fa fa-1x fa-facebook rounded shadow-sm"/>
         </a>

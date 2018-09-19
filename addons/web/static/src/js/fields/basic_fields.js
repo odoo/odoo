@@ -526,6 +526,25 @@ var FieldDate = InputField.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Asks the datepicker widget to activate the input, instead of doing it
+     * ourself, such that 'input' events triggered by the lib are correctly
+     * intercepted, and don't produce unwanted 'field_changed' events.
+     *
+     * @override
+     */
+    activate: function () {
+        if (this.datewidget) {
+            this.datewidget.focus();
+            return true;
+        }
+        return false;
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2395,7 +2414,7 @@ var JournalDashboardGraph = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
     destroy: function () {
-        if ('nv' in window) {
+        if ('nv' in window && nv.utils && nv.utils.offWindowResize) {
             // if the widget is destroyed before the lazy loaded libs (nv) are
             // actually loaded (i.e. after the widget has actually started),
             // nv is undefined, but the handler isn't bound yet anyway

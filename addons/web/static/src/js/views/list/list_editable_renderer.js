@@ -15,7 +15,6 @@ var core = require('web.core');
 var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
-var Context = require('web.Context');
 
 var _t = core._t;
 
@@ -38,7 +37,7 @@ ListRenderer.include({
      * @param {boolean} params.addTrashIcon
      */
     init: function (parent, state, params) {
-        var self = this
+        var self = this;
         this._super.apply(this, arguments);
 
         // if addCreateLine is true, the renderer will add a 'Add a line' link
@@ -67,8 +66,8 @@ ListRenderer.include({
                     }
 
                     self.creates.push({
-                        'context': child.attrs.context,
-                        'string': child.attrs.string,
+                        context: child.attrs.context,
+                        string: child.attrs.string,
                     });
                 });
             });
@@ -270,7 +269,6 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
-        var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         this.state = state;
         if (rowIndex === -1) {

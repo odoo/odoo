@@ -60,8 +60,23 @@ class AccountInvoiceLine(models.Model):
         if invoice_line.invoice_id.type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
             sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if sale_line_delivery:
-                timesheets = self.env['account.analytic.line'].search([('so_line', 'in', sale_line_delivery.ids), ('timesheet_invoice_id', '=', False), ('project_id', '!=', False)])
+                domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)
+                timesheets = self.env['account.analytic.line'].search(domain)
                 timesheets.write({
                     'timesheet_invoice_id': invoice_line.invoice_id.id,
                 })
         return invoice_line
+
+    @api.model
+    def _timesheet_domain_get_invoiced_lines(self, sale_line_delivery):
+        """ Get the domain for the timesheet to link to the created invoice
+            :param sale_line_delivery: recordset of sale.order.line to invoice
+            :return a normalized domain
+        """
+        return [
+            '&',
+            ('so_line', 'in', sale_line_delivery.ids),
+            '&',
+            ('timesheet_invoice_id', '=', False),
+            ('project_id', '!=', False)
+        ]
