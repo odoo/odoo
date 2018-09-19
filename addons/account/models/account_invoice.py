@@ -1575,6 +1575,7 @@ class AccountInvoiceLine(models.Model):
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=False)
     account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
         default=_default_account,
