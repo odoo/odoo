@@ -1639,14 +1639,12 @@
     </template>
 
     <!-- User Navbar -->
-    <template id="content_new_product" inherit_id="website.user_navbar">
-        <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-            <li groups="sales_team.group_sale_manager">
-                <a id="create-new-product" href="#" data-action="new_product">
-                    <i class="fa fa-shopping-cart" />
-                    <p>New Product</p>
-                </a>
-            </li>
+    <template id="user_navbar_inherit_website_sale" inherit_id="website.user_navbar">
+        <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_sale']" position="attributes">
+            <attribute name="name"/>
+            <attribute name="t-att-data-module-id"/>
+            <attribute name="t-att-data-module-shortdesc"/>
+            <attribute name="groups">sales_team.group_sale_manager</attribute>
         </xpath>
     </template>
 

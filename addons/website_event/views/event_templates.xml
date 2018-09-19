@@ -698,9 +698,12 @@
 
 
 <!-- User Navbar -->
-<template id="content_new_event" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
+<template id="user_navbar_inherit_website_event" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_event']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">event.group_event_manager</attribute>
     </xpath>
 </template>
 </odoo>

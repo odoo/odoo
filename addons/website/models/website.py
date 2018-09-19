@@ -802,6 +802,9 @@ class WebsitePublishedMixin(models.AbstractModel):
             'target': 'self',
         }
 
+    def create_and_get_website_url(self, **kwargs):
+        return self.create(kwargs).website_url
+
 
 class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 

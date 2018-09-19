@@ -545,9 +545,12 @@
 </template>
 
 <!-- User Navbar -->
-<template id="content_new_blogpost" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
+<template id="user_navbar_inherit_website_blog" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_blog']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">website.group_website_designer</attribute>
     </xpath>
 </template>
 
