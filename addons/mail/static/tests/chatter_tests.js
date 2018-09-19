@@ -1449,11 +1449,6 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
                     _.each(subtypes, function (subtype) {
                         subtype.followed = _.contains(args.kwargs.subtype_ids, subtype.id);
                     });
-                    // hack: the server creates a new follower each time the subtypes are updated
-                    // so we need here to mock that weird behavior here, as the followers widget
-                    // relies on that behavior
-                    this.data.partner.records[0].message_follower_ids = [2];
-                    followers[0].id = 2;
                 } else {
                     // follow
                     this.data.partner.records[0].message_follower_ids = [1];
@@ -1472,6 +1467,7 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
                 return $.when({
                     followers: followers,
                     subtypes: subtypes,
+                    // caution, subtype will only be returned if current user is in args follower list
                 });
             }
             if (route === '/web/dataset/call_kw/partner/message_unsubscribe') {
