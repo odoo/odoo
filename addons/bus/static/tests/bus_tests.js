@@ -21,7 +21,7 @@ QUnit.module('Bus', {
         LocalStorageServiceMock = AbstractStorageService.extend({storage: new RamStorage()});
     },
 }, function () {
-    QUnit.only('notifications received from the longpolling channel', function (assert) {
+    QUnit.test('notifications received from the longpolling channel', function (assert) {
         assert.expect(6);
 
         var pollDeferred = $.Deferred();
@@ -51,8 +51,7 @@ QUnit.module('Bus', {
         widget.appendTo($('#qunit-fixture'));
 
         widget.call('bus_service', 'onNotification', this, function (notifications) {
-            debugger;
-            assert.step(['notification', notifications.data[0]]);
+            assert.step(['notification', _.toArray(notifications.data)]);
         });
         widget.call('bus_service', 'addChannel', 'lambda');
 
@@ -75,7 +74,7 @@ QUnit.module('Bus', {
             ["/longpolling/poll", "lambda"]
         ]);
 
-        // parent.destroy();
+        parent.destroy();
     });
 
     QUnit.test('provide notification ID of 0 by default', function (assert) {
@@ -165,7 +164,7 @@ QUnit.module('Bus', {
         master.appendTo($('#qunit-fixture'));
 
         master.call('bus_service', 'onNotification', master, function (notifications) {
-            assert.step(['master', 'notification', notifications]);
+            assert.step(['master', 'notification', _.toArray(notifications.data)]);
         });
         master.call('bus_service', 'addChannel', 'lambda');
 
@@ -191,7 +190,7 @@ QUnit.module('Bus', {
             slave.appendTo($('#qunit-fixture'));
 
             slave.call('bus_service', 'onNotification', slave, function (notifications) {
-                assert.step(['slave', 'notification', notifications]);
+                assert.step(['slave', 'notification', _.toArray(notifications.data)]);
             });
             slave.call('bus_service', 'addChannel', 'lambda');
 
