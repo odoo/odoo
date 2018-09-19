@@ -465,14 +465,12 @@ var StatementModel = BasicModel.extend({
         var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'force_tax_included', 'tax_id', 'analytic_tag_ids'];
         this._blurProposition(handle);
 
-        var values = _.pick(reconcileModel, fields);
-        values.display_new = true;
-        var focus = this._formatQuickCreate(line, values);
+        var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
         focus.reconcileModelId = reconcileModelId;
         line.reconciliation_proposition.push(focus);
 
         if (reconcileModel.has_second_line) {
-            var second = {display_new: true};
+            var second = {};
             _.each(fields, function (key) {
                 second[key] = ("second_"+key) in reconcileModel ? reconcileModel["second_"+key] : reconcileModel[key];
             });
@@ -596,7 +594,6 @@ var StatementModel = BasicModel.extend({
             prop = this._formatQuickCreate(line);
             line.reconciliation_proposition.push(prop);
         }
-        prop.display_new = true;
         _.each(values, function (value, fieldName) {
             if (fieldName === 'analytic_tag_ids') {
                 switch (value.operation) {
@@ -852,7 +849,6 @@ var StatementModel = BasicModel.extend({
 
                             tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
                             tax_prop.invalid = prop.invalid;
-                            tax_prop.display_new = true;
 
                             reconciliation_proposition.push(tax_prop);
                         });
@@ -1070,7 +1066,6 @@ var StatementModel = BasicModel.extend({
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,
-            'display_new': values.display_new,
             'invalid': true,
             '__tax_to_recompute': true,
             'is_tax': values.is_tax,

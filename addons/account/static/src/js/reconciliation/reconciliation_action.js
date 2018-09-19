@@ -7,8 +7,6 @@ var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var Widget = require('web.Widget');
 var core = require('web.core');
-var time = require('web.time');
-var qweb = core.qweb;
 var _t = core._t;
 
 

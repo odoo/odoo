@@ -381,10 +381,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 move line 1         |       | 200   | <- can be a partial of 100
                 balance: -100
 
-                statement line      | 100   |       |
-                move line 1         |       | 150   | <- is not a eligible to be a partial due to the second line.
-                move line 2         |       | 150   | <- can be a partial of 100
-                balance: -200
+                statement line      | 500   |       |
+                move line 1         |       | 300   | <- is not a eligible to be a partial due to the second line.
+                move line 2         |       | 300   | <- can be a partial of 200
+                balance: --100
 
                 statement line      | 500   |       |
                 move line 1         |       | 700   | <- must not be a partial (debit = 800 > 700 = credit).
