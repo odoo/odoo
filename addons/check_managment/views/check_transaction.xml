@@ -1,0 +1,40 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+   
+    <record model="ir.ui.view" id="check_managment.check_transaction_list">
+      <field name="name">check_managment.check_transaction.list</field>
+      <field name="model">check_managment.check_transaction</field>
+      <field name="arch" type="xml">
+        <tree string="Check transactions"  delete="false">
+          <field name="operation"/>
+          <field name="operation_date"/>
+            <field name="status"/>
+
+
+        </tree>
+      </field>
+    </record>
+
+      <!--Form View-->
+  <record model="ir.ui.view" id="check_transaction_form_view">
+            <field name="name">check_managment_check_transaction_form</field>
+            <field name="model">check_managment.check_transaction</field>
+            <field name="arch" type="xml">
+                 <form string="Check transactions">
+                     <sheet>
+                         <group>
+                      <field name="operation"/>
+                     <field name="operation_date"/>
+                      </group>
+
+            </sheet>
+                 </form>
+            </field>
+
+        </record>
+
+
+    
+  </data>
+</openerp>

@@ -1,0 +1,44 @@
+<openerp>
+  <data>
+
+   <!--  <record model="ir.ui.view" id="accounting_configurations_form_view">
+            <field name="accounting_configurations_form"> </field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+              <field name="arch" type="xml">
+                  <xpath expr="//div[@name='payment_acquirer']" position="after">
+                 <newline/>
+                    <group>
+                       <group>
+                    <field name="main_cash_default_account"  string="Main cash default account"/>
+                  <field name="merchant_settlement_account"/>
+                 </group> <group>
+                 <field name="credit_card__fee_account"/>
+                 <field name="default_card_fee_percent"/>
+
+                    </group>
+                      <group>
+                      </group>
+
+                     </group>
+                 </xpath>
+
+              </field>
+     </record>-->
+
+      <record model="ir.actions.act_window" id="action_utravel_payment_conf">
+            <field name="name">Utravel Payment Conf</field>
+            <field name="res_model">check_managment.payment_cofig</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <!--<field name="domain">[('id','>',0)]</field>-->
+
+        </record>
+
+     <menuitem
+            action='action_utravel_payment_conf'
+            id='utravel_payment_conf'
+            parent='check_managment.menu_root'/>
+
+  </data>
+</openerp>
