@@ -8,6 +8,7 @@ var registry = require('web.field_registry');
 var widget_registry = require('web.widget_registry');
 var Widget = require('web.Widget');
 var FieldFloat = require('web.basic_fields').InputField;
+var py_eval = require('web.py_utils').py_eval;
 var _t = core._t;
 
 
@@ -279,6 +280,60 @@ var IotDetectButton = Widget.extend({
 });
 
 widget_registry.add('iot_detect_button', IotDetectButton);
+
+
+var IotTakeMeasureButton = Widget.extend({
+    tagName: 'button',
+    className: 'btn btn-primary',
+    events: {
+        'click': '_onButtonClick',
+    },
+
+    /**
+     * @override
+     */
+    init: function (parent, record, node) {
+        this.record = record;
+        this.options = py_eval(node.attrs.options);
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    //start: function () {
+        //this.$el.text('Take Measure');
+        //this._super.apply(this, arguments);
+
+   // },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onButtonClick: function (ev) {
+        var self = this;
+        var ip = this.record.data[this.options.ip_field];
+        var identifier = this.record.data[this.options.identifier_field];
+        var composite_url = "http://" + ip + ":8069/driverdetails/" + identifier;
+        var measure_field = this.options.measure_field
+
+        $.get(composite_url, function (measure) {
+                var changes = {}
+                changes[measure_field] = parseFloat(measure)
+                self.trigger_up('field_changed', {
+                    dataPointID: self.record.id,
+                    changes: changes,
+                });
+        })
+    },
+});
+
+widget_registry.add('iot_take_measure_button', IotTakeMeasureButton);
+
 });
 
 
