@@ -32,7 +32,6 @@
                 <field name="date"/>
                 <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>
                 <filter name="Quotations" string="Quotations" domain="[('state','=', 'draft')]"/>
-                <filter name="quotation_sent" string="Quotation Sent" domain="[('state', '=', 'sent')]"/>
                 <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
                 <field name="user_id"/>
