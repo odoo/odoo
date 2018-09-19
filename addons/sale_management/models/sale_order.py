@@ -145,6 +145,7 @@ class SaleOrderOption(models.Model):
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', store=False)
     quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
 
