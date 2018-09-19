@@ -89,10 +89,10 @@
         <field name="arch" type="xml">
             <search string="Search Batch Picking">
                 <field name="name" string="Batch Picking"/>
-                <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Batch Pickings not finished"/>
+                <filter name="in_progress" string="Running" domain="[('state', '=', 'in_progress')]" help="Batch Pickings not finished"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Responsible" name="user" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                 </group>
            </search>
@@ -134,9 +134,6 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='picking_type']" position="after">
-                <filter string="Batch" name="batch" domain="[]" context="{'group_by':'batch_id'}"/>
-            </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
                 <field name="batch_id"/>
             </xpath>
