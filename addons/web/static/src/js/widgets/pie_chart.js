@@ -41,7 +41,6 @@ var PieChart = Widget.extend({
             withControlPanel: false,
             isEmbedded: true,
             mode: 'pie',
-            title: modifiers.title || modifiers.measure || '',
         };
 
         this.viewInfo = {

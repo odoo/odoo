@@ -876,6 +876,9 @@ following attributes:
   the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
+``title`` (optional)
+  string displayed on the top of the graph.
+
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
   aggregated value within a group. Possible values are:
