@@ -13,15 +13,16 @@ WebsiteNewMenu.include({
         new_blog_post: '_createNewBlogPost',
     }),
 
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Actions
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      * Asks the user information about a new blog post to create, then creates
-     * it and redirects the user to this new page.
+     * it and redirects the user to this new post.
      *
      * @private
+     * @returns {Deferred} Unresolved if there is a redirection
      */
     _createNewBlogPost: function () {
         return this._rpc({
@@ -31,16 +32,21 @@ WebsiteNewMenu.include({
         }).then(function (blog_ids) {
             if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
+                return $.Deferred();
             } else if (blog_ids.length > 1) {
-                wUtils.prompt({
+                return wUtils.prompt({
                     id: 'editor_new_blog',
                     window_title: _t("New Blog Post"),
-                    select: "Select Blog",
+                    select: _t("Select Blog"),
                     init: function (field) {
                         return blog_ids;
                     },
                 }).then(function (blog_id) {
+                    if (!blog_id) {
+                        return;
+                    }
                     document.location = '/blog/' + blog_id + '/post/new';
+                    return $.Deferred();
                 });
             }
         });
