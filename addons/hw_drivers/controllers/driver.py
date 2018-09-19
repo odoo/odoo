@@ -57,9 +57,10 @@ class StatusController(http.Controller):
         last_ping[data['tab']] = datetime.datetime.now()
         for dev in data['devices']:
             if owner_dict.get(dev) and owner_dict[dev] == data['tab']:
-                if drivers[dev].ping_value:
-                    ping_dict[dev] = drivers[dev].ping_value
-                    drivers[dev].ping_value = '' #or set it to nothing
+                for driver_path in drivers:
+                    if driver_path.find(dev) == 0 and drivers[driver_path].ping_value:
+                        ping_dict[dev] = drivers[dev].ping_value
+                        drivers[dev].ping_value = ''  # or set it to nothing
             else:
                 ping_dict[dev] = 'STOP'
         return ping_dict
