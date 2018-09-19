@@ -35,5 +35,21 @@
                 </t>
             </t>
         </template>
+
+        <template id="label_picking_type_view">
+            <t t-foreach="docs" t-as="operation">
+                <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="operation.name"/>^FS
+<t t-if="operation.barcode">
+^FO100,100
+^BCN,100,Y,N,N
+^FD<t t-esc="operation.barcode"/>^FS
+</t>
+^XZ
+                </t>
+            </t>
+        </template>
     </data>
 </odoo>
