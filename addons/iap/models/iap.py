@@ -34,7 +34,7 @@ class AuthenticationError(Exception):
     pass
 
 
-def jsonrpc(url, method='call', params=None):
+def jsonrpc(url, method='call', params=None, timeout=15):
     """
     Calls the provided JSON-RPC endpoint, unwraps the result and
     returns JSON-RPC errors as exceptions.
@@ -49,7 +49,8 @@ def jsonrpc(url, method='call', params=None):
 
     _logger.info('iap jsonrpc %s', url)
     try:
-        req = requests.post(url, json=payload)
+        req = requests.post(url, json=payload, timeout=timeout)
+        req.raise_for_status()
         response = req.json()
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
@@ -66,7 +67,7 @@ def jsonrpc(url, method='call', params=None):
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema) as e:
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout) as e:
         raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
 
 #----------------------------------------------------------
@@ -144,6 +145,7 @@ class IapAccount(models.Model):
     service_name = fields.Char()
     account_token = fields.Char(default=lambda s: uuid.uuid4().hex)
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
+    insufficient_credit= fields.Boolean('Insufficient credits', default=False)
 
     @api.model
     def get(self, service_name):
@@ -181,3 +183,23 @@ class IapAccount(models.Model):
         d = {'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid')}
 
         return '%s?%s' % (endpoint + route, werkzeug.urls.url_encode(d))
+
+    @api.model
+    def get_credits(self, service_name):
+        credit = 0
+        account = self.get(service_name)
+        if account:
+            route = '/iap/1/balance'
+            endpoint = get_endpoint(self.env)
+            url = endpoint + route
+            params = {
+                'dbuuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                'account_token': account.account_token,
+                'service_name': service_name,
+            }
+
+            credit = jsonrpc(url=url, params=params)
+            account.write({'insufficient_credit': credit == 0})
+
+        return credit
+
