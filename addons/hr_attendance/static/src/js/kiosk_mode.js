@@ -36,6 +36,7 @@ var KioskMode = AbstractAction.extend({
 
     _onBarcodeScanned: function(barcode) {
         var self = this;
+        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         this._rpc({
                 model: 'hr.employee',
                 method: 'attendance_scan',
@@ -57,7 +58,6 @@ var KioskMode = AbstractAction.extend({
     },
 
     destroy: function () {
-        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
         clearInterval(this._interval);
         this._super.apply(this, arguments);
