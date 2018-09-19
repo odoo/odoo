@@ -72,7 +72,7 @@ class Discussion(models.Model):
     categories = fields.Many2many('test_new_api.category',
         'test_new_api_discussion_category', 'discussion', 'category')
     participants = fields.Many2many('res.users')
-    messages = fields.One2many('test_new_api.message', 'discussion')
+    messages = fields.One2many('test_new_api.message', 'discussion', copy=True)
     message_concat = fields.Text(string='Message concatenate')
     important_messages = fields.One2many('test_new_api.message', 'discussion',
                                          domain=[('important', '=', True)])
@@ -125,6 +125,7 @@ class Message(models.Model):
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
     important = fields.Boolean()
+    label = fields.Char(translate=True)
 
     @api.one
     @api.constrains('author', 'discussion')
