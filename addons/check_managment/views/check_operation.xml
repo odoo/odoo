@@ -1,0 +1,133 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+   
+    <record model="ir.ui.view" id="check_managment.check_operation_list">
+      <field name="name">check_managment.check_operation.list</field>
+      <field name="model">check_managment.check_operation</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="operation"/>
+          <field name="use_for"/>
+          <field name="initial_operation"/>
+           <field name="final_operation"/>
+            <field name="previous_status"/>
+             <field name="has_account_impact"/>
+              <field name="debit"/>
+               <field name="debit_account"/>
+                <field name="credit"/>
+                 <field name="credit_account"/>
+                  <field name="journal_type"/>
+              
+        </tree>
+      </field>
+    </record>
+
+      <!--Form View-->
+  <record model="ir.ui.view" id="check_operation_form_view">
+            <field name="name">check_managmentcheck_operation_form</field>
+            <field name="model">check_managment.check_operation</field>
+            <field name="arch" type="xml">
+                 <form string="Check Operations">
+                     <sheet>
+                         <group>
+                      <field name="operation"/>
+                      <field name="use_for"/>
+                      </group>
+                           <group>
+                      <field name="initial_operation" />
+                      <field name="final_operation" />
+                      <field name="previous_status" />
+                           </group>
+
+                         <group>
+                               <field name="has_account_impact" />
+                              <field name="journal_type" />
+
+                         </group>
+                           <group>
+                               <field name="debit" />
+
+                              <field name="debit_account" attrs="{'invisible': [('debit', 'not in', [3])]}" />
+                         </group>
+                           <group>
+                               <field name="credit" />
+
+                              <field name="credit_account" attrs="{'invisible': [('credit', 'not in', [3])]}" />
+                         </group>
+
+            </sheet>
+                 </form>
+            </field>
+
+        </record>
+
+
+
+  <record model="ir.ui.view" id="check_managment.check_list">
+      <field name="name">check_managment.check.list</field>
+      <field name="model">check_managment.check</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="number"/>
+          <field name="issue_date"/>
+          <field name="due_date"/>
+           <field name="issue_bank"/>
+            <field name="clearing_bank"/>
+             <field name="amount"/>
+            <field  name="last_operation" />
+             
+              
+        </tree>
+      </field>
+    </record>
+    
+   
+    
+    <record model="ir.actions.act_window" id="check_managment_checkoperation_list_action">
+			<field name="name">Check Managment</field>
+			<field name="res_model">check_managment.check_operation</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create new Operation
+				</p>
+			</field>
+		</record>
+
+  <record model="ir.actions.act_window" id="check_managment_check_list_action">
+			<field name="name">Check </field>
+			<field name="res_model">check_managment.check</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create new Check
+				</p>
+			</field>
+		</record>
+
+
+ <!-- Payment View Oveeride -->
+
+
+
+    <!-- Top menu item -->
+    
+    <menuitem name="Check Managment" id="check_managment.menu_root"    parent="account.menu_finance" sequence="17" groups="account.group_account_manager,base.group_configuration" />
+    
+    <!-- menu categories -->
+   
+    <menuitem name="Check Operations" id="check_managment.check_operation_menu" parent="check_managment.menu_root" 
+    action="check_managment_checkoperation_list_action" />
+      
+      <menuitem name="Check" id="check_managment.check_menu" parent="check_managment.menu_root" 
+    action="check_managment_check_list_action" />
+    
+   
+    <!-- actions -->
+   
+   <!--  <menuitem name="Check Operation" id="utravel_1.menu_1_list" parent="utravel_1.menu_1"
+              action="utravel_1.action_window"/> -->
+    
+  </data>
+</openerp>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="account_payment_method_received_check" model="account.payment.method">
+            <field name="name">Received  Check</field>
+            <field name="code">received_check</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+        <record id="account_payment_method_delivered_third_check" model="account.payment.method">
+            <field name="name">Delivered  Check</field>
+            <field name="code">delivered_check</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="account_payment_method_issue_check" model="account.payment.method">
+            <field name="name">Issue Check</field>
+            <field name="code">issue_check</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+
+
+    </data>
+</openerp>

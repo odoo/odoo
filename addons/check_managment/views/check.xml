@@ -1,0 +1,121 @@
+<openerp>
+  <data>
+
+
+ <record model="ir.ui.view" id="check_form_view">
+            <field name="name">check_managment_check_form</field>
+            <field name="model">check_managment.check</field>
+            <field name="arch" type="xml">
+                 <form string="voucher Form">
+                     <header attrs="{'invisible':[('need_posting','=',False)]}">
+                     <button name="post_last_operation" type="object" string="Post"
+							class="oe_highlight" />
+                     </header>
+
+
+                     <sheet>
+                         <group>
+                      <field name="number"/>
+                      <field name="check_type" readonly="1"/>
+
+                      <field name="issue_date" />
+                             <field name="due_date" />
+                      <field name="partner_id" readonly="1" />
+                      <field name="issue_bank" />
+                      <field name="clearing_bank"  domain="[('type', '=','bank')]" />
+                      <field name="amount" readonly="1" />
+                       <field name="need_posting" />
+                       </group>
+
+                         <group string = "Transactions">
+                              <field name="trasnaction_ids" />
+
+                         </group>
+            </sheet>
+
+                 </form>
+            </field>
+
+        </record>
+
+      <!--Recieved checks part -->
+
+       <record model="ir.ui.view" id="view_check_managment__recieved_check_tree">
+            <field name="name">check_managment.check.tree</field>
+            <field name="model">check_managment.check</field>
+            <field name="priority">100</field>
+
+            <field name="arch" type="xml">
+                <tree  string="Checks">
+
+                   	<field name="name" />
+                    <field name="number" />
+                    <field name="check_type" />
+                    <field name="issue_date" />
+                    <field name="partner_id" />
+                    <field name="issue_bank" />
+				     <field name="clearing_bank" />
+                     <field name="amount" />
+                     <field name="last_operation" />
+
+
+
+                </tree>
+            </field>
+        </record>
+
+       <record model="ir.actions.act_window" id="action_recieved_check">
+            <field name="name">Recieved Cheques</field>
+            <field name="res_model">check_managment.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="domain">[('check_type','=',1)]</field>
+
+        </record>
+
+       <record model="ir.ui.view" id="view_check_managment_search_view">
+			<field name="name">check_managment.check.search</field>
+			<field name="model">check_managment.check</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name" />
+                    <field name="number" />
+                    <field name="check_type" />
+                    <field name="issue_date" />
+                    <field name="partner_id" />
+                    <field name="issue_bank" />
+				     <field name="clearing_bank" />
+                     <field name="amount" />
+                     <field name="last_operation" />
+
+
+				</search>
+			</field>
+		</record>
+        <menuitem
+            action="action_recieved_check"
+            id="menu_recieved_check"
+            sequence="40"
+            parent="check_managment.check_menu"/>
+
+       <!--Paid checks part -->
+
+        <record model="ir.actions.act_window" id="action_paid_checks">
+            <field name="name">Paid Cheques</field>
+            <field name="res_model">check_managment.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="domain">[('check_type','=',2)]</field>
+
+        </record>
+
+        <menuitem
+            action="action_paid_checks"
+            id="menu_paid_checks"
+            sequence="41"
+            parent="check_managment.check_menu"/>
+
+
+
+  </data>
+</openerp>
