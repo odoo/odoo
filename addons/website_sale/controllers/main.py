@@ -986,7 +986,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
     @http.route(['/shop/print'], type='http', auth="public", website=True)
-    def print_saleorder(self):
+    def print_saleorder(self, **kwargs):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
             pdf, _ = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([sale_order_id])
