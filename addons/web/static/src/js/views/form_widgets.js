@@ -75,7 +75,7 @@ var WidgetButton = common.FormWidget.extend({
                 return self.on_confirmed();
             }
         };
-        if (!this.node.attrs.special) {
+        if (!this.node.attrs.special && this.view.get('actual_mode') !== 'view') {
             return this.view.recursive_save().then(exec_action);
         } else {
             return exec_action();
