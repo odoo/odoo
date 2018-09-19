@@ -115,8 +115,6 @@
     <!-- Complete page of the sale_order -->
     <template id="sale_order_portal_template" name="Sales Order Portal Template" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
                 <div t-ignore="true" class="text-center">
                     This is a preview of the customer portal <i class="fa fa-chevron-right"/>

@@ -74,8 +74,6 @@
 
     <template id="portal_invoice_page" name="Invoice Portal Template" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="wrapwrap_classes" t-value="'o_portal_bg_dark'"/>
-
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <t t-call="portal.portal_record_sidebar">
@@ -118,14 +116,17 @@
                 </t>
 
                 <!-- Page Content -->
-                <div id="invoice_content" class="o_portal_page_content col-12 col-lg d-flex justify-content-end">
-                    <t t-if="error or warning" t-call="account.portal_invoice_error"/>
-                    <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
-                    <div class="o_portal_html_view shadow">
-                        <div class="o_portal_html_loader text-center">
-                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                <div id="invoice_content" class="o_portal_page_content col-12 col-lg d-flex flex-column align-items-end">
+                    <div class="o_portal_page_size">
+                        <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+
+                        <div class="o_portal_html_view shadow">
+                            <div class="o_portal_html_loader text-center">
+                                <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                            </div>
+                            <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                         </div>
-                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
                     </div>
                 </div>
             </div>
