@@ -300,11 +300,10 @@ var IotTakeMeasureButton = Widget.extend({
     /**
      * @override
      */
-    //start: function () {
-        //this.$el.text('Take Measure');
-        //this._super.apply(this, arguments);
-
-   // },
+    start: function () {
+        this._super.apply(this, arguments);
+        this.$el.text('Take Measure');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
