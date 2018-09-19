@@ -65,6 +65,8 @@ class HolidaysType(models.Model):
         help="When selected, the Allocation/Leave Requests for this type require a second validation to be approved.")
     company_id = fields.Many2one('res.company', string='Company')
 
+    holidays_ids = fields.One2many('hr.holidays', 'holiday_status_id', string='Holidays', readonly=True, copy=False)
+
     @api.multi
     def get_days(self, employee_id):
         # need to use `dict` constructor to create a dict per id
@@ -94,6 +96,7 @@ class HolidaysType(models.Model):
         return result
 
     @api.multi
+    @api.depends('holidays_ids','holidays_ids.state')
     def _compute_leaves(self):
         data_days = {}
         if 'employee_id' in self._context:

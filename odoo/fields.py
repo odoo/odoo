@@ -936,6 +936,9 @@ class Field(object):
             # determine dependent fields
             spec = self.modified_draft(record)
 
+            # remove cached value for this record from all other environments
+            env.invalidate([(self, [record.id])])
+
             # set value in cache, inverse field, and mark record as dirty
             env.cache[self][record.id] = value
             if env.in_onchange:

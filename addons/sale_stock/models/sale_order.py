@@ -33,10 +33,10 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     @api.multi
-    @api.depends('procurement_group_id')
+    @api.depends('procurement_group_id', 'procurement_group_id.stock_picking_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
+            order.picking_ids = order.procurement_group_id.stock_picking_ids if order.procurement_group_id else []
             order.delivery_count = len(order.picking_ids)
 
     @api.onchange('warehouse_id')

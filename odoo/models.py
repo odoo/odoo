@@ -3442,7 +3442,7 @@ class BaseModel(object):
 
             # invalidate the *whole* cache, since the orm does not handle all
             # changes made in the database, like cascading delete!
-            self.invalidate_cache()
+            self.env.invalidate_all()
 
         # recompute new-style fields
         if self.env.recompute and self._context.get('recompute', True):

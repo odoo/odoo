@@ -178,7 +178,6 @@ class AccountFiscalPositionTax(models.Model):
          'A tax fiscal position could be defined only once time on same taxes.')
     ]
 
-
 class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
     _description = 'Accounts Fiscal Position'
@@ -258,6 +257,7 @@ class ResPartner(models.Model):
         return self._asset_difference_search('payable', operator, operand)
 
     @api.multi
+    @api.depends('invoice_ids', 'invoice_ids.state')
     def _invoice_total(self):
         account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
