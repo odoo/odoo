@@ -59,8 +59,8 @@ class StatusController(http.Controller):
             if owner_dict.get(dev) and owner_dict[dev] == data['tab']:
                 for driver_path in drivers:
                     if driver_path.find(dev) == 0 and drivers[driver_path].ping_value:
-                        ping_dict[dev] = drivers[dev].ping_value
-                        drivers[dev].ping_value = ''  # or set it to nothing
+                        ping_dict[dev] = drivers[driver_path].ping_value
+                        drivers[driver_path].ping_value = ''  # or set it to nothing
             else:
                 ping_dict[dev] = 'STOP'
         return ping_dict
