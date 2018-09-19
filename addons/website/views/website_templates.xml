@@ -46,6 +46,9 @@
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.zoomodoo.scss"/>
     </xpath>
+    <xpath expr="//script[@src='/web/static/src/js/chrome/public_root_widget.js']" position="replace">
+        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
+    </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
         <script type="text/javascript" src="/website/static/src/js/website.js"/>
@@ -54,7 +57,6 @@
         <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
-        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
@@ -183,7 +185,7 @@
 
             <script type="text/javascript">
                 odoo.session_info = {
-                    is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                    is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                     is_frontend: true,
                     translationURL: '/website/translations',
@@ -335,7 +337,7 @@
                                 <li><i class="fa fa-phone"/> <span t-field="res_company.phone"/></li>
                                 <li><i class="fa fa-envelope"/>  <span t-field="res_company.email"/></li>
                             </ul>
-                            <div class="btn-group">
+                            <p>
                                 <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="btn btn-sm btn-link"><i class="fa fa-2x fa-facebook-square"/></a>
                                 <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="btn btn-sm btn-link"><i class="fa fa-2x fa-twitter"/></a>
                                 <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="btn btn-sm btn-link"><i class="fa fa-2x fa-linkedin"/></a>
@@ -343,7 +345,7 @@
                                 <a t-if="website.social_googleplus" t-att-href="website.social_googleplus" class="btn btn-sm btn-link" rel="publisher"><i class="fa fa-2x fa-google-plus-square"/></a>
                                 <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-sm btn-link"><i class="fa fa-2x fa-github"/></a>
                                 <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="btn btn-sm btn-link"><i class="fa fa-2x fa-instagram"/></a>
-                            </div>
+                            </p>
                         </div>
                         <div class="col-lg-4">
                             <h5>

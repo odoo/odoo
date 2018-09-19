@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:39+0000\n"
-"PO-Revision-Date: 2018-09-05 08:39+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -61,8 +61,8 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__company_id
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
 msgstr "公司"
 
@@ -109,7 +109,7 @@ msgid "Define the schedule of resource"
 msgstr "定義資源調度"
 
 #. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+#: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
@@ -155,18 +155,18 @@ msgstr "週五上午"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
 msgstr "全局離開"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
 msgstr "分組"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
 msgstr "小時"
 
@@ -200,7 +200,7 @@ msgid ""
 msgstr "如果這有效字段設為否，它可以允許您隱藏此記錄且並不刪除它。"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
 msgstr "無效"
 
@@ -238,20 +238,20 @@ msgid "Leave"
 msgstr "退出"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Date"
 msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
 msgstr "休假詳情"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
 msgstr "休假"
 
@@ -297,8 +297,8 @@ msgstr "其他"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Reason"
 msgstr "原因"
 
@@ -312,10 +312,10 @@ msgstr "用於管理資源訪問權限的使用者名"
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
-#: model:ir.ui.view,arch_db:resource.resource_resource_form
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
 msgstr "資源"
 
@@ -356,7 +356,7 @@ msgstr "資源的日曆"
 #: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_ids
 #: model:ir.ui.menu,name:resource.menu_resource_resource
-#: model:ir.ui.view,arch_db:resource.resource_resource_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
 msgstr "資源"
 
@@ -366,8 +366,8 @@ msgid "Resources Leaves"
 msgstr "資源休假"
 
 #. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-#: model:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
+#: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
+#: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
 msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
@@ -380,17 +380,17 @@ msgid "Saturday"
 msgstr "週六"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
 msgstr "搜尋資源"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
 msgstr "搜尋工作期間休假"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
 msgstr "搜尋工作時間"
 
@@ -418,7 +418,7 @@ msgid "Starting Date"
 msgstr "起始日期"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave"
 msgstr ""
 
@@ -519,13 +519,13 @@ msgid "Tuesday Morning"
 msgstr "週二上午"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
 msgstr "類型"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__user_id
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "User"
 msgstr "使用者"
 
@@ -563,7 +563,7 @@ msgid "Work Detail"
 msgstr "工作詳情"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
 msgstr "工作資源"
 
@@ -582,7 +582,7 @@ msgstr "工作截止"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_calendar_id
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
 msgstr "工作時間"
 
@@ -593,18 +593,18 @@ msgid "Working Hours of %s"
 msgstr "%s的工作時間"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_resource_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
 msgstr "工作期間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
-#: model:ir.ui.view,arch_db:resource.resource_calendar_form
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
 msgstr "工作時間"
 

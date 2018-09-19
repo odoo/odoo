@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:38+0000\n"
-"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-09-18 09:48+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -25,22 +25,22 @@ msgid "%s (copy)"
 msgstr "%s (kopi)"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Rapportering</span>"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
 msgstr "<span>Til godkjenning</span>"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
 msgstr "<span>Må gjøres</span>"
 
@@ -100,8 +100,8 @@ msgid "Activity State"
 msgstr "Aktivitetsstatus"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr ""
 
@@ -116,10 +116,17 @@ msgid "Alias Contact Security"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Arkivert"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -132,6 +139,16 @@ msgid "Authenticated Partners"
 msgstr "Autentiserte partnere"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
+msgid "Auto Subscribe Departments"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
+msgid "Automatically subscribe members of those departments to the channel."
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
 msgstr "Bachelor"
@@ -142,7 +159,7 @@ msgid "Bank Account Number"
 msgstr "Bankkontonummer"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
 msgstr "Fødsel"
 
@@ -157,13 +174,13 @@ msgid "Child Departments"
 msgstr "Underavdelinger"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr "Statsborgerskap og annen informasjon"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
 msgstr "Coach"
 
@@ -175,7 +192,7 @@ msgid "Color Index"
 msgstr "Fargeindeks"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
 msgstr "Firmaer"
 
@@ -183,8 +200,8 @@ msgstr "Firmaer"
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "Firma"
 
@@ -209,7 +226,7 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
 msgstr "Kontaktinformasjon"
 
@@ -219,7 +236,7 @@ msgid "Country of Birth"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
 msgstr ""
 
@@ -257,9 +274,9 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
 msgstr "Avdeling"
 
@@ -271,9 +288,14 @@ msgstr "Avdelingsnavn"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
 msgstr "Avdelinger"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr "Diskusjonskanal"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -289,7 +311,7 @@ msgid "Divorced"
 msgstr "Skilt"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
 msgstr "Utdanning"
 
@@ -310,7 +332,7 @@ msgstr "Nødtelefon"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "Ansatt"
 
@@ -332,7 +354,7 @@ msgstr "Ansatt-tag"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-#: model:ir.ui.view,arch_db:hr.view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Ansatt-tagger"
 
@@ -342,7 +364,7 @@ msgid "Employee bank salary account"
 msgstr "Ansattes lønnskonto"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Ansattes navn"
 
@@ -354,11 +376,11 @@ msgstr "Ansattes navn"
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_tree
-#: model:ir.ui.view,arch_db:hr.view_partner_tree2
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "Ansatte"
 
@@ -368,7 +390,7 @@ msgid "Employees Structure"
 msgstr "Ansattstruktur"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_category_list
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr "Ansatt-tagger"
 
@@ -437,8 +459,8 @@ msgid "Gender"
 msgstr "Kjønn"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
 msgstr "Grupper etter"
 
@@ -448,7 +470,12 @@ msgid "HR Department"
 msgstr "HR-avdeling"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
+msgid "HR Departments"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "HR-innstillinger"
 
@@ -458,7 +485,6 @@ msgid "Hired Employees"
 msgstr "Ansatte"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__group_hr_user
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Human Resources"
@@ -507,18 +533,18 @@ msgstr ""
 "\"Aktiv\"."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:279
+#: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
 msgstr "I stilling"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
 msgstr "I rekruttering"
 
@@ -530,10 +556,10 @@ msgid "Is Follower"
 msgstr "Er følger"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-#: model:ir.ui.view,arch_db:hr.view_hr_job_tree
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
 msgstr "Stilling"
 
@@ -561,7 +587,7 @@ msgstr "Stillingstittel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "Stillinger"
 
@@ -600,8 +626,15 @@ msgid "Legal Cohabitant"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
+msgid "Main Attachment"
 msgstr ""
 
 #. module: hr
@@ -612,7 +645,7 @@ msgstr "Mann"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Leder"
@@ -764,7 +797,7 @@ msgid "Number of unread messages"
 msgstr "Antall uleste meldinger"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
@@ -780,19 +813,12 @@ msgid "Officer"
 msgstr "Funksjonær"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_res_users__group_hr_user
-msgid ""
-"Officer: The user will be able to approve document created by employees.\n"
-"Manager: The user will have access to the human resources configuration as well as statistic reports."
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
 msgid "Other"
 msgstr "Annet"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
 msgstr "Annen informasjon ..."
 
@@ -836,7 +862,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
 msgstr "Stilling"
 
@@ -846,17 +872,17 @@ msgid "Private Address"
 msgstr "Privatadresse"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
 msgstr "Privat informasjon"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
 msgstr "Rekruttering"
 
@@ -866,7 +892,7 @@ msgid "Recruitment in Progress"
 msgstr "Rekruttering igangsatt"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "Tilknyttet bruker"
 
@@ -916,7 +942,7 @@ msgid "School"
 msgstr "Skole"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
@@ -933,7 +959,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Innstillinger"
 
@@ -943,12 +969,12 @@ msgid "Show Organizational Chart"
 msgstr "Vis organisasjonskart"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
 msgstr "Vis organisasjonskart på ansattskjema"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
 msgstr "Vis organisasjonskart på ansattskjema"
 
@@ -994,14 +1020,14 @@ msgid "Spouse Complete Name"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
 msgstr "Start rekruttering"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
 msgstr "Status"
 
@@ -1015,7 +1041,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
 msgstr "Stopp rekruttering"
 
@@ -1096,9 +1122,9 @@ msgstr "Total prognose for ansatte"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Uleste meldinger"
 
@@ -1110,7 +1136,7 @@ msgid "Unread Messages Counter"
 msgstr "Teller for uleste meldinger"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "Use here the home address of the employee.\n"
 "                                            This private address is used in the expense report reimbursement document.\n"
@@ -1128,7 +1154,7 @@ msgid "Users"
 msgstr "Brukere"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
 msgstr "Ledige stillinger:"
 
@@ -1148,8 +1174,8 @@ msgid "Widower"
 msgstr "Enke(mann)"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1167,7 +1193,7 @@ msgid "Work Email"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
 msgstr "Arbeidsinformasjon"
 
@@ -1182,12 +1208,12 @@ msgid "Work Mobile"
 msgstr "Mobiltelefon arbeid"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Arbeidstillatelse"
 
@@ -1213,7 +1239,7 @@ msgid "You cannot create a recursive hierarchy."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:314
+#: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr ""
@@ -1224,17 +1250,17 @@ msgid "Your document has not been created"
 msgstr "Dokumentet ble ikke opprettet"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "avdeling"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "for eksempel Deltid"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "for eksempel Salgssjef"
 

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -59,12 +59,12 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
 msgstr ""
 
@@ -78,28 +78,28 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
 msgstr "<span>кг</span>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>Перевозчик</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "Номер для отслеживания"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Вес</strong>"
 
@@ -128,7 +128,7 @@ msgstr ""
 "валюте компании"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Архивировано"
 
@@ -148,7 +148,7 @@ msgid "Bulk Weight"
 msgstr "Объёмный Вес"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -157,9 +157,9 @@ msgstr "Отменить"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "Перевозчик"
 
@@ -169,7 +169,7 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "Условие"
 
@@ -203,7 +203,7 @@ msgid "Debug logging"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr ""
 
@@ -218,17 +218,17 @@ msgid "Delivery"
 msgstr "Доставка"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
 msgstr "Перевозчик доставки"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
 msgstr "Информация о доставке"
 
@@ -238,6 +238,7 @@ msgid "Delivery Message"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
@@ -248,7 +249,7 @@ msgstr "Метод доставки"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "Способы доставки"
 
@@ -260,13 +261,13 @@ msgstr "Мастер выбора упаковки для доставки"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
-#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
-#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
 msgstr ""
 
@@ -286,7 +287,7 @@ msgid "Delivery Rating Success"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
 msgstr "Доступность пункта назначения"
 
@@ -296,7 +297,7 @@ msgid "Determine the display order"
 msgstr "Определить порядок отображения"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr "Отменить"
 
@@ -313,7 +314,7 @@ msgid "Display tracking links"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
@@ -329,10 +330,11 @@ msgid "Environment"
 msgstr "Окружение"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:217
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
-msgid "Error: no matching grid."
-msgstr "Ошибка, нет соответствующей сетки (grid)"
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -347,7 +349,7 @@ msgstr ""
 " на комплектовании."
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
@@ -384,7 +386,7 @@ msgid "Get Rate and Create Shipment"
 msgstr "Получить процентную ставку и создать отправку"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
 msgstr "Группировать"
 
@@ -427,7 +429,7 @@ msgstr ""
 "(Актуальная стоимость доставки: %.2f)"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
 msgstr "Установить дополнительных провайдеров"
 
@@ -493,7 +495,7 @@ msgid "Margin cannot be lower than -100%"
 msgstr "Маржа не может быть ниже -100%"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
 msgstr ""
 
@@ -518,9 +520,8 @@ msgid "Maximum weight shippable in this packaging"
 msgstr "Максимальный вес, упакованный в эту упаковку"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
 msgstr "Название"
 
@@ -542,7 +543,7 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "ОК"
 
@@ -552,7 +553,7 @@ msgid "Operator"
 msgstr "Оператор"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
 msgstr "Упаковка"
 
@@ -614,13 +615,13 @@ msgid "Price"
 msgstr "Цена"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
 msgstr "Цена Правила"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
 msgstr "Установление цены"
 
@@ -632,7 +633,7 @@ msgstr "Правила Вычисления Цены"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
 msgstr "Провайдер"
 
@@ -669,17 +670,17 @@ msgid "Sales Order Line"
 msgstr "Строка заказа на продажу"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Save"
 msgstr "Сохранить"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
 msgstr "Отправить Грузоотправителю"
 
@@ -716,8 +717,8 @@ msgid "Shipping Weight"
 msgstr "Вес с упаковкой"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
 msgstr ""
 
@@ -746,7 +747,7 @@ msgid "There is no matching delivery rule."
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "                according to your settings; on the sales order (based on the\n"
@@ -770,12 +771,12 @@ msgid "This percentage will be added to the shipping price."
 msgstr "Этот процент будет добавлен к цене доставки."
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
 msgstr "Отслеживание"
 
@@ -833,7 +834,7 @@ msgstr "Объём"
 #: model:ir.model.fields,field_description:delivery.field_stock_move__weight
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "Вес"
 
@@ -859,8 +860,8 @@ msgid "Weight used to compute the price of the delivery (if applicable)."
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
 msgstr ""
 
@@ -891,7 +892,7 @@ msgid "You can add delivery price only on unconfirmed quotations."
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
@@ -916,7 +917,7 @@ msgid "Zip To"
 msgstr "Почтовые До"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr " например UPS Express"
 

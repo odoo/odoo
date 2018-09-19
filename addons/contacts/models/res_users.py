@@ -18,7 +18,7 @@ class Users(models.Model):
                 continue
             activity['icon'] = modules.module.get_module_icon('contacts')
             activity['actions'] = [{
-                'icon': 'fa-clock-o',
+                'icon': 'fa-th',
                 'name': 'Summary',
                 'action_xmlid': 'contacts.action_contacts_summary'
             }]

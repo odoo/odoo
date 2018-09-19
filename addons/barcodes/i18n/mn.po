@@ -4,18 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Otgonbayar.A <gobi.mn@gmail.com>, 2018
-# nasaaskii <nasaaskii@gmail.com>, 2018
-# Batzul B <batzul.active@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +43,7 @@ msgid ": empty braces."
 msgstr ": хоосон хаалтууд."
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
 "                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
@@ -61,7 +56,7 @@ msgstr ""
 "                                Зураасан кодын эхлэл угтвар хэсгийг нь regulare expression-р илэрхийлдэг."
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
@@ -70,7 +65,7 @@ msgstr ""
 "боловсруулахыг тодорхойлдог."
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
 msgstr ""
 
@@ -104,14 +99,15 @@ msgid "Any"
 msgstr "Дурын"
 
 #. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
 msgstr "Зураасан кодын нэр төрөл"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
 msgstr "Зураасан кодын нэр төрөл"
 
@@ -121,7 +117,7 @@ msgid "Barcode Pattern"
 msgstr "Зураасан кодын хэв"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
 msgstr "Зураасан кодын дүрэм"
 
@@ -139,6 +135,11 @@ msgstr "Кассчин"
 #: selection:barcode.rule,type:0
 msgid "Client"
 msgstr "Клиент"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -274,9 +275,9 @@ msgid "Never"
 msgstr "Хэзээ ч үгүй"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
-msgid "Nomenclature Name"
-msgstr "Нэр төрөлийн нэр"
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr ""
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -284,7 +285,7 @@ msgid "Package"
 msgstr "Баглаа"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "Patterns can also define how numerical values, such as weight or price, can be\n"
 "                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
@@ -335,7 +336,7 @@ msgid "Set quantity"
 msgstr "Тоо тааруулна уу"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
 msgstr "Хүснэгт"
 

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
 msgid ""
 "<i class=\"fa fa-heart\"/>\n"
 "                        Wishlist"
@@ -30,7 +30,7 @@ msgstr ""
 "Seznam přání"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr ""
 
@@ -40,24 +40,19 @@ msgid "Active"
 msgstr "Aktivní"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
 msgstr ""
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
 msgstr "Přidat produkt do košíku, ale nechat si jej v seznamu přání"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
-
-#. module: website_sale_wishlist
-#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
-msgid "Added Date"
 msgstr ""
 
 #. module: website_sale_wishlist
@@ -69,6 +64,11 @@ msgstr "Kontakt"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
 msgstr "Vytvořil(a)"
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__currency_id
@@ -101,7 +101,7 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
 msgstr ""
 
@@ -136,12 +136,12 @@ msgid "Product"
 msgstr "Výrobek"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Product image"
 msgstr "Obrázek produktu"
 
 #. module: website_sale_wishlist
-#: model:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
 msgstr ""
 

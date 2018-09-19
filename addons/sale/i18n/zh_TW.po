@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:39+0000\n"
-"PO-Revision-Date: 2018-09-05 08:39+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -49,36 +49,46 @@ msgstr ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "% discount"
 msgstr "% 折扣"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>根據</span>&amp;nbsp;"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
 msgid ""
 ",\n"
 "                an awesome"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<b class=\"d-block mb-1\">This offer expired!</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<b>Back in edit mode</b>."
+msgstr ""
+
+#. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:64
+#: code:addons/sale/static/src/js/tour.js:70
 #, python-format
 msgid "<b>Print this quotation to preview it.</b>"
 msgstr ""
@@ -113,255 +123,266 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-check\"/> Accept"
 msgstr "<i class=\"fa fa-check\"/>  接受"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-check\"/> Pay Now"
 msgstr "<i class=\"fa fa-check\"/>立即支付"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<i class=\"fa fa-comment\"/> Contact us"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
 msgstr "<i class=\"fa fa-comment\"/> 回饋"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<i class=\"fa fa-comment\"/> Send message"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<i class=\"fa fa-print mr-1\"/>Print"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr "<i class=\"fa fa-times\"/> 拒絕"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<small><b class=\"text-muted\">This offer expires in</b></small>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span class=\"badge badge-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting Payment</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-msgid ""
-"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-clock-o\"/> "
-"Expired</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-msgid ""
-"<span class=\"badge badge-secondary\"><i class=\"fa fa-fw fa-remove\"/> "
-"Cancelled</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"badge badge-success d-none d-md-inline-block\"><i class=\"fa "
-"fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/><span "
-"class=\"d-none d-md-inline\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span class=\"badge badge-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Paid</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
-"                                <span class=\"d-block d-md-none\">Ref.</span>"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<span>\n"
 "                                    , for an amount of </span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>, for an amount of </span>"
 msgstr "<span>, 金額 </span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Disc.(%)</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Discount</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<span>I agree that by paying this proposal, I accept it on the behalf of "
 "</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<span>I agree that by signing this proposal, I accept it on the behalf of "
 "</span>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
 msgstr "<span>形式發票＃</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>with payment terms: </span>"
 msgstr "<SPAN>付款條款：</SPAN>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Invoicing Address</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"d-block mb-1\">Shipping Address</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<strong class=\"text-muted d-block mb-1\">Invoices</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "<strong class=\"text-muted\">Your Contact:</strong>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
 msgstr "<strong>訂購日期：</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Date:</strong>"
 msgstr "<strong>日期:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Expiration Date:</strong>"
 msgstr "<STRONG>到期日期：</STRONG>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
 msgstr "<strong>財政狀況備註：</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong>Invoices</strong>"
-msgstr "<strong>發票</strong>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong>Invoicing Address</strong>"
-msgstr "<strong>開立發票地址</strong>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
 msgstr "<strong>付款條款:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
 msgstr " <strong>報價日期:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
 msgstr "<strong>銷售員:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>送貨地址</strong>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>送貨地址:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Signature</strong>"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>小計</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid ""
-"<strong>This offer expired!</strong><br/>\n"
-"                                    Contact us for new quotation."
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<strong>This offer expires in</strong>"
-msgstr "<STRONG>此報價過期在</STRONG>"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quotation."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Total</strong>"
 msgstr "<strong>總計</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "<strong>Your Contact:</strong>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
 msgstr "<strong>您的參考：</strong>"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:794
+#: code:addons/sale/models/sale.py:807
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:787
+#: code:addons/sale/models/sale.py:800
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
 msgstr ""
@@ -372,21 +393,21 @@ msgid "A single sales price per product"
 msgstr "每個產品的單個銷售價格"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:758
+#: code:addons/sale/models/sale.py:771
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:763
+#: code:addons/sale/models/sale.py:776
 #, python-format
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_upselling
+#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "A typical example is the pre-paid hours of service,\n"
 "                where you want to sell extra hours to the customer\n"
@@ -394,20 +415,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_users__has_group_warning_sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr "可以在產品或客戶上設定警告（銷售）"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr "能夠選擇銷售訂單中的包裝類型，並強制為每個包裝數量的倍數。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp;"
 msgstr ""
 
@@ -458,17 +478,17 @@ msgid "Activity Types"
 msgstr "活動類型"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
 msgstr ""
 
@@ -478,7 +498,6 @@ msgid "Additional Information"
 msgstr "額外的信息"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_users__has_group_delivery_invoice_address
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
 msgstr "在銷售訂單中的地址"
@@ -495,12 +514,7 @@ msgid "All sales orders grouped by Sales Teams"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Allow manual discounts on order lines"
-msgstr "允許訂單上的手動折扣"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
 msgstr "允許您發送形式發票給客戶"
 
@@ -510,7 +524,7 @@ msgid "Allows you to send pro-forma invoice."
 msgstr "允許您發送形式發票."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
 msgstr "金額"
 
@@ -552,12 +566,19 @@ msgid "Analytic lines"
 msgstr "分析明細行"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_quotation_layout_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_quotation_layout_form
 msgid "Apply"
 msgstr "應用"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Apply manual discounts on sales order lines or display discounts computed "
+"from pricelists (option to activate in the pricelist configuration)."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
@@ -569,13 +590,18 @@ msgid "At cost"
 msgstr "成本"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
 msgid "Attribute Values"
 msgstr "屬性值"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
 msgstr "屬性"
 
@@ -615,7 +641,7 @@ msgid "Blocking Message"
 msgstr "阻止消息"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
 "codes. Specific conditions can be set (products, customers, minimum purchase"
@@ -628,9 +654,9 @@ msgid "Can Edit Product"
 msgstr "允許編輯"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
 msgstr "取消"
 
@@ -640,7 +666,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
 msgstr "捕捉交易"
 
@@ -658,24 +684,24 @@ msgid "Check this box to set an invoicing target for this Sales Team."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose how to confirm quotations and get paid."
 msgstr ""
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:35
+#: code:addons/sale/static/src/js/tour.js:41
 #, python-format
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
 msgstr "點選以定義目標"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
 msgstr "關閉"
 
@@ -696,7 +722,7 @@ msgstr "承諾日期"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_acquirer__so_reference_type
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication"
 msgstr "溝通"
 
@@ -710,42 +736,42 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "公司"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr "計算運輸成本並用DHL裝運"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "計算運輸成本並用FedEx裝運"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
 msgstr "計算運輸成本並用USPS裝運"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "計算運輸成本並用USPS裝運"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
 msgstr "計算運輸成本並用bpost裝運"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "按訂單計算運費"
 
@@ -760,27 +786,27 @@ msgid "Configure your document layout"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm"
 msgstr "確認"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Confirmation &amp; Payment"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__confirmation_date
 #: model:ir.model.fields,field_description:sale.field_sale_report__confirmation_date
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Confirmation Date"
 msgstr "確認日期"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
 msgstr "聯絡人"
 
@@ -795,27 +821,27 @@ msgid "Coupons & Promotions"
 msgstr "優惠券和促銷"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
 msgstr "創建發票"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.product_template_action
+#: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model:ir.actions.act_window,help:sale.action_quotations
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
-#: model:ir.actions.act_window,help:sale.action_quotations_with_onboarding
+#: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+#: model_terms:ir.actions.act_window,help:sale.action_orders
+#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
 msgstr "創建並查看發票"
 
@@ -836,7 +862,7 @@ msgstr "創建時間"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Creation Date"
 msgstr "創建日期"
 
@@ -860,8 +886,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
 msgstr "客戶"
 
@@ -877,7 +903,7 @@ msgstr "客戶地址"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Country"
 msgstr ""
 
@@ -902,12 +928,12 @@ msgid "Customers"
 msgstr "客戶"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
+#: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize"
 msgstr "客製化"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
+#: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
 msgstr ""
 
@@ -917,8 +943,8 @@ msgid "DHL Connector"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Date"
 msgstr "日期   "
 
@@ -938,7 +964,12 @@ msgid "Date on which the sales order is confirmed."
 msgstr "銷售訂單確認日期。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Date:"
+msgstr "日期："
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
 msgstr ""
 
@@ -969,9 +1000,9 @@ msgid "Default product used for payment advances"
 msgstr "用於預收付款的預設產品"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
-msgid "Delivered"
-msgstr "已送貨"
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Deliver Content by Email"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
@@ -979,8 +1010,9 @@ msgid "Delivered Manually"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1007
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: code:addons/sale/models/sale.py:1020
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
 msgstr "已交貨數量"
@@ -1030,13 +1062,13 @@ msgstr "定金產品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Description"
 msgstr "描述"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Details"
 msgstr "詳細信息"
 
@@ -1071,7 +1103,6 @@ msgid "Discount included in the price"
 msgstr "折扣包含在價格中"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_users__has_group_discount_per_so_line
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
 msgstr "訂單行折扣"
@@ -1154,16 +1185,6 @@ msgid "Easypost Connector"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Edit Quotation"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "Edit Sales Order"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 msgid "Electronic Payment"
@@ -1193,17 +1214,17 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Expiration Date"
 msgstr "到期日期"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "擴展篩選"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:981
+#: code:addons/sale/models/sale.py:994
 #, python-format
 msgid "Extra line with %s "
 msgstr "更多明細 %s"
@@ -1239,7 +1260,7 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
@@ -1253,20 +1274,30 @@ msgid "Fully Invoiced"
 msgstr "已開具全額發票"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
 msgstr "未來的活動"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the electronic payment is confirmed"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Get a new quotation."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
 msgstr "獲取產品或客戶的訂單警告"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Grant discounts on sales order lines"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -1274,10 +1305,10 @@ msgid "Gross Weight"
 msgstr "毛重"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "分組"
 
@@ -1319,7 +1350,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
@@ -1346,7 +1377,7 @@ msgid "Import Template for Products (with several prices)"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
 msgstr "包含稅)"
 
@@ -1356,18 +1387,18 @@ msgid "Income Account"
 msgstr "收入科目"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr " 在這裡插入您的條款和條件…"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:777
+#: code:addons/sale/models/sale.py:790
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:780
+#: code:addons/sale/models/sale.py:793
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
 msgstr ""
@@ -1419,7 +1450,7 @@ msgid "Invoice Order"
 msgstr "開立發票訂單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
 msgstr "銷售訂單開立發票"
 
@@ -1463,14 +1494,14 @@ msgid "Invoiceable lines (deduct down payments)"
 msgstr "可開具發票明細 (扣除預付定金)"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 #: selection:sale.report,state:0
 msgid "Invoiced"
 msgstr "已開立發票"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1008
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: code:addons/sale/models/sale.py:1021
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
 msgstr "已開發票數量"
@@ -1484,8 +1515,8 @@ msgstr "本月已開發票"
 #: selection:crm.team,dashboard_graph_model:0
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "發票"
 
@@ -1500,7 +1531,7 @@ msgid "Invoices Statistics"
 msgstr "發票統計"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
@@ -1513,10 +1544,10 @@ msgid "Invoices: Untaxed Total"
 msgstr "發票：免稅的總額"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "開立發票"
 
@@ -1533,12 +1564,12 @@ msgid "Invoicing Target"
 msgstr "發票目標"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
 msgstr "開立發票地址："
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
 msgstr "開立發票和送貨地址："
 
@@ -1569,7 +1600,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1030
+#: code:addons/sale/models/sale.py:1043
 #, python-format
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
@@ -1579,6 +1610,12 @@ msgstr ""
 "%s"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:656
+#, python-format
+msgid "It is not allowed to confirm an order in the following states: %s"
+msgstr ""
+
+#. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
 #: selection:res.company,sale_onboarding_sample_quotation_state:0
 #: selection:res.company,sale_quotation_onboarding_state:0
@@ -1586,7 +1623,7 @@ msgid "Just done"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Last 365 Days"
 msgstr ""
 
@@ -1618,18 +1655,18 @@ msgid "Last Updated on"
 msgstr "最後更新時間"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
 msgstr "晚活動"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "讓您的客戶登錄查看他們的文件"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:18
+#: code:addons/sale/static/src/js/tour.js:24
 #, python-format
 msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
@@ -1637,7 +1674,7 @@ msgid ""
 msgstr "讓我們創建一個新的報價。<br/><i>注意，顏色按鈕通常指向下一個邏輯操作。</i>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
 msgstr "鎖定"
 
@@ -1652,12 +1689,17 @@ msgid "Locked"
 msgstr "已鎖定"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
+#: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Looks great!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage delivery dates from sales orders"
 msgstr ""
 
@@ -1667,7 +1709,7 @@ msgid "Manage delivery dates from sales orders."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
 msgstr "管理促銷及優惠券計劃"
 
@@ -1747,17 +1789,17 @@ msgid "Multiple prices per product (e.g. customer segments, currencies)"
 msgstr "每個產品的多個價格（例如客戶細分、貨幣）"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
 msgstr "我的活動"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr "我的訂餐單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "我的銷售訂單明細行"
 
@@ -1767,8 +1809,8 @@ msgid "Name of the person that signed the SO."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:118 code:addons/sale/models/sale.py:351
-#: code:addons/sale/models/sale.py:353 code:addons/sale/models/sale.py:355
+#: code:addons/sale/models/sale.py:123 code:addons/sale/models/sale.py:356
+#: code:addons/sale/models/sale.py:358 code:addons/sale/models/sale.py:360
 #: selection:sale.report,state:0
 #, python-format
 msgid "New"
@@ -1806,17 +1848,17 @@ msgid "No Message"
 msgstr "沒消息"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
 msgstr "一旦確認，不能再編輯訂單"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_upselling
+#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found"
 msgstr ""
 
@@ -1828,7 +1870,7 @@ msgid "Not done"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: selection:sale.order.line,display_type:0
 msgid "Note"
 msgstr "便箋"
@@ -1882,24 +1924,23 @@ msgid "Number of unread messages"
 msgstr "未讀消息的數量"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model:ir.actions.act_window,help:sale.action_quotations
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
-#: model:ir.actions.act_window,help:sale.action_quotations_with_onboarding
+#: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders
+#: model_terms:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
@@ -1907,7 +1948,7 @@ msgstr ""
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:59
+#: code:addons/sale/static/src/js/tour.js:65
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr "一旦您準備好報價單，您可以保存、列印或通過電子信件發送。"
@@ -1926,17 +1967,17 @@ msgid "Only Integer Value should be valid."
 msgstr "僅整數值是有效的。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
+#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
 msgid "Open Source CRM"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
 msgstr "訂單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
 msgstr "訂單 #"
 
@@ -1950,9 +1991,9 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:102
 #: model:ir.model.fields,field_description:sale.field_sale_order__date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report__date
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #, python-format
 msgid "Order Date"
 msgstr "訂購日期"
@@ -1964,12 +2005,12 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
 msgstr "訂單行"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
 msgstr "訂單號碼"
 
@@ -1992,19 +2033,19 @@ msgid "Order Upsell"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
 msgstr "已開立發票"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
 msgstr "訂購數量"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1004
+#: code:addons/sale/models/sale.py:1017
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
 msgstr "訂購數量"
@@ -2020,7 +2061,7 @@ msgstr ""
 "交付數量：根據供應商交付的數量填寫帳單(可以是工時或者貨物)。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Ordered date of the sales order"
 msgstr "銷售訂單的訂購日期"
 
@@ -2038,7 +2079,7 @@ msgstr "訂單"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
 msgstr "訂單發票"
 
@@ -2051,12 +2092,13 @@ msgstr "超售訂單"
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:13
+#: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Organize your sales activities with the <b>Sales Management app</b>."
 msgstr "用<b>銷售管理應用程序</b>來組織您的銷售活動。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Information"
 msgstr "其他信息"
 
@@ -2086,18 +2128,18 @@ msgid "Partner Country"
 msgstr "業務夥伴國家"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay"
 msgstr "付款"
 
 #. module: sale
-#: code:addons/sale/models/payment.py:146
+#: code:addons/sale/models/payment.py:159
 #, python-format
 msgid "Pay Now"
 msgstr "立即支付"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay with"
 msgstr "支付以"
 
@@ -2133,7 +2175,7 @@ msgid "Payment Acquirer"
 msgstr "收單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Acquirers"
 msgstr "收單"
 
@@ -2183,13 +2225,13 @@ msgid "Planned"
 msgstr "已安排"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:434
+#: code:addons/sale/models/sale.py:439
 #, python-format
 msgid "Please define an accounting sales journal for this company."
 msgstr "請為該公司定義一個會計銷售日記帳。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1261
+#: code:addons/sale/models/sale.py:1274
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -2207,8 +2249,7 @@ msgid "Posted"
 msgstr "已過帳"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.brand_promotion
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.brand_promotion
 msgid "Powered by"
 msgstr "官方技術支援"
 
@@ -2253,7 +2294,7 @@ msgstr "目前銷售訂單的價格表。"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_pricelist_setting
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricelists"
 msgstr "價格表"
 
@@ -2268,13 +2309,12 @@ msgid "Prices computed from formulas (discounts, margins, roundings)"
 msgstr "價格計算公式（折扣、利潤、湊整）"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "定價"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Print"
 msgstr "列印"
 
@@ -2284,7 +2324,6 @@ msgid "Pro-Forma Invoice"
 msgstr "形式發票"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_users__has_group_proforma_sales
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
 msgstr "形式發票"
@@ -2294,14 +2333,14 @@ msgstr "形式發票"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
 msgstr "產品"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
 msgstr "產品目錄"
 
@@ -2313,7 +2352,7 @@ msgstr "產品類別"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
 msgstr "產品類別"
 
@@ -2341,7 +2380,7 @@ msgid "Product Variants"
 msgstr "產品變體"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "用於預付定金的產品"
 
@@ -2350,12 +2389,12 @@ msgstr "用於預付定金的產品"
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.prod_config_main
 #: model:ir.ui.menu,name:sale.product_menu_catalog
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Products"
 msgstr "產品"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
 msgstr "數量"
 
@@ -2380,34 +2419,34 @@ msgid "Qty To Invoice"
 msgstr "待開立發票數量"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
 msgstr "從銷售訂單到發票的數量"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quantity"
 msgstr "數量"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
 msgstr "數量："
 
 #. module: sale
-#: code:addons/sale/models/sale.py:246
+#: code:addons/sale/models/sale.py:251
 #: model:ir.model,name:sale.model_sale_order
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
 #, python-format
 msgid "Quotation"
 msgstr "報價"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
 msgstr "報價單 #"
 
@@ -2417,22 +2456,22 @@ msgid "Quotation / Order"
 msgstr "報價單/訂單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
 msgstr "訂購日期"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
+#: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
 msgstr "報價單號碼"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
 msgstr "報價單送出"
@@ -2467,18 +2506,18 @@ msgstr "客戶審查過的報價單"
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.model.fields,field_description:sale.field_crm_team__use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Quotations"
 msgstr "報價單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
 msgstr "報價單和訂單"
 
@@ -2488,7 +2527,7 @@ msgid "Quotations Analysis"
 msgstr "報價單分析"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
 msgstr "報價單已發送"
 
@@ -2516,12 +2555,12 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "生成此銷售訂單相關的請求單據"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject"
 msgstr "拒絕"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
 msgstr ""
 
@@ -2532,22 +2571,22 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
 msgstr "報告"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an electronic payment to confirm orders"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:343
+#: code:addons/sale/models/sale.py:348
 #, python-format
 msgid "Requested date is too soon."
 msgstr ""
@@ -2564,17 +2603,12 @@ msgid "Sale Order Count"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_users__has_group_sale_order_dates
-msgid "Sale Order Dates"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
 msgstr ""
 
@@ -2587,10 +2621,10 @@ msgstr ""
 #: selection:crm.team,dashboard_graph_model:0
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Sales"
 msgstr "銷售"
 
@@ -2602,9 +2636,9 @@ msgstr "銷售預付款發票"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
-#: model:ir.ui.view,arch_db:sale.view_order_product_graph
-#: model:ir.ui.view,arch_db:sale.view_order_product_pivot
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_graph
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
 msgstr "銷售分析"
 
@@ -2614,16 +2648,16 @@ msgid "Sales Done"
 msgstr "銷售完成"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
 msgstr "銷售信息"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:246
+#: code:addons/sale/models/sale.py:251
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_ids
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: selection:sale.order,state:0 selection:sale.report,state:0
 #, python-format
 msgid "Sales Order"
@@ -2636,8 +2670,13 @@ msgid "Sales Order Confirmed"
 msgstr "銷售訂單已經確認"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
+msgid "Sales Order Item"
+msgstr "銷售訂單專案"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
@@ -2645,24 +2684,24 @@ msgstr "銷售訂單行"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line__sale_line_ids
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
 msgstr "銷售訂單明細"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
 msgstr "已開立發票銷售訂單行"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "與我的銷售訂單相關的銷售訂單行"
 
 #. module: sale
-#: code:addons/sale/models/payment.py:118
-#: model:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
+#: code:addons/sale/models/payment.py:131
+#: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
 msgstr ""
@@ -2674,15 +2713,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_order_tree
-#: model:ir.ui.view,arch_db:sale.view_sale_order_calendar
-#: model:ir.ui.view,arch_db:sale.view_sale_order_graph
-#: model:ir.ui.view,arch_db:sale.view_sale_order_pivot
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
 #, python-format
 msgid "Sales Orders"
 msgstr "銷售訂單"
@@ -2699,11 +2738,11 @@ msgstr "銷售訂單統計"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__team_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__team_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__team_id
-#: model:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
-#: model:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
 msgstr "銷售團隊"
 
@@ -2725,8 +2764,8 @@ msgid "Sales by Channel"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Sales by Channel Analysis"
 msgstr ""
 
@@ -2746,9 +2785,9 @@ msgstr "銷售：不含稅總價"
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__salesman_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__user_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
 msgstr "銷售員"
 
@@ -2765,13 +2804,13 @@ msgid "Sample Product"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Sample Quotation"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
 msgstr "搜索銷售訂單"
 
@@ -2781,7 +2820,7 @@ msgid "Section"
 msgstr "章節"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
 msgstr ""
 
@@ -2792,7 +2831,7 @@ msgstr "安全指示物"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:40
+#: code:addons/sale/static/src/js/tour.js:46
 #, python-format
 msgid "Select a product, or create a new one on the fly."
 msgstr ""
@@ -2812,27 +2851,27 @@ msgstr ""
 "消息寫入下一個字段。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "在不同的度量單位產品中採購和銷售"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "可在每個包裝中多個單位銷售產品"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
 msgstr "發送形式發票"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
 msgstr "一旦發票支付發送一個特定產品的電子信件"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
 msgstr ""
 
@@ -2842,17 +2881,17 @@ msgid "Send a sample quotation."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
 msgstr "通過電子信件發送"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Sending an email is useful if you need to share specific information or "
 "content about a product (instructions, rules, links, media, etc.). Create "
@@ -2870,7 +2909,7 @@ msgid "Set Invoicing Target"
 msgstr "設定發票目標"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
 msgstr ""
 
@@ -2882,27 +2921,27 @@ msgid "Set an invoicing target: "
 msgstr "設定開立發票目標："
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "設定每個產品的多個價格，自動折扣等。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
+#: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
 msgstr "將產品的屬性（如顏色、大小）設定於出售的種類"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
 msgstr "設定特定的帳單和發貨地址"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
 msgstr "設為報價單"
 
@@ -2918,7 +2957,7 @@ msgid "Share"
 msgstr "共享"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Shipping"
 msgstr "送貨"
 
@@ -2928,17 +2967,17 @@ msgid "Shipping Costs"
 msgstr "運輸成本"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Shipping Information"
 msgstr "送貨信息"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "顯示所有下一個活動日期在今天之前的記錄"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
 msgstr "訂貨時顯示利潤"
 
@@ -2948,7 +2987,7 @@ msgid "Show public price & discount to the customer"
 msgstr "給客戶顯示公開的價格和折扣"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
 msgstr "顯示標準條款和訂單條件"
 
@@ -2980,8 +3019,8 @@ msgid "Sold"
 msgstr "已售出"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
 msgstr ""
 
@@ -3020,7 +3059,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
 #: model:ir.model.fields,field_description:sale.field_sale_report__state
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Status"
 msgstr "狀態"
 
@@ -3077,8 +3116,8 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Taxes"
 msgstr "稅"
 
@@ -3093,7 +3132,7 @@ msgid "Technical field for UX purpose."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
@@ -3105,7 +3144,7 @@ msgid "Terms & Conditions"
 msgstr "條款及條件"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
 msgstr "條款和條件"
 
@@ -3115,19 +3154,36 @@ msgid "Terms and conditions"
 msgstr "條款和條件"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "Terms and conditions... (note: you can setup default ones in the "
 "Configuration menu)"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/analytic.py:116
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:115
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/analytic.py:111
 #, python-format
 msgid ""
-"The Sales Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
-msgstr "銷售訂單%s關聯的分析帳戶之前必須驗證註冊費用。"
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -3140,7 +3196,7 @@ msgid "The analytic account related to a sales order."
 msgstr "銷售訂單相關的分析會計帳戶。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:344
+#: code:addons/sale/models/sale.py:349
 #, python-format
 msgid ""
 "The commitment date is sooner than the expected date.You may be unable to "
@@ -3161,7 +3217,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
@@ -3203,17 +3259,17 @@ msgid "The value of the down payment amount must be positive."
 msgstr "定金必須為正數。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "現在您的帳戶沒有訂單."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "目前，您的帳戶沒有報價。"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "There are two ways to manage pricelists: 1) Multiple prices per product: "
 "must be set in the Sales tab of the product detail form. 2) Price computed "
@@ -3229,7 +3285,7 @@ msgid ""
 msgstr "本產品：「%s」 未定義應收科目。您可能需要從會計應用程序的設定選單中安裝一個科目表。"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:533 code:addons/sale/models/sale.py:537
+#: code:addons/sale/models/sale.py:538 code:addons/sale/models/sale.py:542
 #, python-format
 msgid ""
 "There is no invoiceable line. If a product has a Delivered quantities "
@@ -3237,18 +3293,24 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_upselling
+#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "These are orders with products invoiced based on ordered quantities,\n"
 "                in the case you have delivered more than what was ordered."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr "這個預設值是適用於任何新產品創造。這可以在產品細節形式改變。"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid ""
+"This is a preview of the customer portal <i class=\"fa fa-chevron-right\"/>"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3258,7 +3320,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:res.groups,comment:sale.group_sale_order_dates
 msgid ""
 "This option introduces extra fields in the sales order to easily schedule "
@@ -3267,19 +3329,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "This order"
 msgstr "此訂單"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                        and do not hesitate to"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_all
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
 "check your sales revenues and sort it by different group criteria (salesman,"
@@ -3291,7 +3353,7 @@ msgstr ""
 " 如果您想分析您的營業額，您應該用會計模組裡的發票分析報表。"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
 msgid ""
 "This report performs analysis on your quotations. Analysis check your sales "
 "revenues and sort it by different group criteria (salesman, partner, "
@@ -3303,7 +3365,7 @@ msgstr ""
 " 如果您想分析您的營業額，您應該用會計模組裡的發票分析報表功能。"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
 msgid ""
 "This report performs analysis on your sales orders. Analysis check your "
 "sales revenues and sort it by different group criteria (salesman, partner, "
@@ -3325,14 +3387,26 @@ msgid "Timesheets on project (one fare per SO/Project)"
 msgstr "時間表專案（一個票價每/專案）"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
 msgstr "待開立發票"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
+msgid "To Invoice Quantity"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -3340,7 +3414,7 @@ msgid "Today"
 msgstr "今日"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
 msgstr "今天的活動"
 
@@ -3349,15 +3423,15 @@ msgstr "今天的活動"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_total
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_total
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
 msgstr "合計"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "總價"
 
@@ -3367,8 +3441,8 @@ msgid "Total Tax"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_tree
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
 msgstr "含稅總金額"
 
@@ -3399,27 +3473,27 @@ msgid "USPS Connector"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:710
+#: code:addons/sale/models/sale.py:723
 #, python-format
 msgid "Uncategorized"
 msgstr "未歸類"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_content
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
 msgstr "單價"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
 msgstr "單價:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "計量單位"
 
@@ -3431,18 +3505,18 @@ msgstr "計量單位類別"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "測量單位"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
 msgstr "解鎖"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "未讀消息"
 
@@ -3478,7 +3552,7 @@ msgid "Untaxed Total"
 msgstr "不含稅總計"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:386
+#: code:addons/sale/models/sale.py:391
 #, python-format
 msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
@@ -3486,7 +3560,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
 msgstr "超售"
 
@@ -3498,30 +3572,25 @@ msgstr "超售商機"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:69
+#: code:addons/sale/static/src/js/tour.js:75
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr "使用麵包屑導航以<b>返回之前的頁面</b>。"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:73
+#: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr "使用此選單訪問報價單，銷售訂單以及客戶。"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_users
-msgid "Users"
-msgstr "使用者"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "有效期至"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
 msgstr "驗證訂單"
 
@@ -3538,7 +3607,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
 msgstr "無效交易"
 
@@ -3554,19 +3623,19 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1351
+#: code:addons/sale/models/sale.py:1364
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
 msgstr "銷售訂單警告"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
 msgstr "銷售這產品時的警告"
 
@@ -3597,7 +3666,7 @@ msgstr "電匯"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/tour.js:23
+#: code:addons/sale/static/src/js/tour.js:29
 #, python-format
 msgid ""
 "Write the name of your customer to create one on the fly, or select an "
@@ -3612,12 +3681,12 @@ msgid "Wrong value entered!"
 msgstr "輸入了錯誤值!"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You can"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:252
+#: code:addons/sale/models/sale.py:257
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
@@ -3625,7 +3694,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1409
+#: code:addons/sale/models/sale.py:1422
 #, python-format
 msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
@@ -3633,7 +3702,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
@@ -3648,24 +3717,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.product_template_action
+#: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid ""
 "You must define a product for everything you purchase,\n"
 "                    whether it's a physical product, a consumable or services."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Your advantage:"
-msgstr "您的優勢："
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback....."
 msgstr "您的回饋....."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your message has been successfully sent!"
 msgstr "您的留言已成功發送！"
 
@@ -3675,53 +3739,52 @@ msgid "bpost Connector"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "close"
 msgstr "關閉"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "contact us"
 msgstr "聯繫我們"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "day"
 msgstr "日"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
 msgstr "天"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "for\n"
 "                        any question."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "for\n"
 "                        any questions."
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "has already been cancelled!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "has already been validated!"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_portal_template
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "has not yet been sent!"
 msgstr ""
 

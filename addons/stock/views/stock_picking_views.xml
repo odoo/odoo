@@ -68,7 +68,7 @@
         </record>
 
         <record id="stock_picking_type_action" model="ir.actions.act_window">
-            <field name="name">Inventory</field>
+            <field name="name">Inventory Overview</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -119,7 +119,7 @@
             action="stock_picking_type_action"
             id="stock_picking_type_menu"
             parent="menu_stock_root" sequence="0"
-            name="Dashboard"/>
+            name="Overview"/>
 
         <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4"/>
 

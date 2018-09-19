@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# ChinaMaker <liuct@chinamaker.net>, 2018
+# 远鼎-Maker <liuct@chinamaker.net>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: ChinaMaker <liuct@chinamaker.net>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: 远鼎-Maker <liuct@chinamaker.net>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgid ": empty braces."
 msgstr ": 空的括号"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
 "                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
@@ -55,14 +55,14 @@ msgstr ""
 "<i>条码命名规则</i>定义如何识别和归类条码。当条码被扫码后，它就会关联到匹配到的<i>第一条<i>规则。模式的语法是正则表达式，如果正则表达式匹配到条码的前缀，则条码被匹配。"
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr "一个条码命名规则定义了POS如何识别和解释条码"
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
 msgstr "增加新条码命名规则"
 
@@ -96,14 +96,15 @@ msgid "Any"
 msgstr "任意"
 
 #. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
 msgstr "条码命名规则"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
 msgstr "条码命名规则"
 
@@ -113,7 +114,7 @@ msgid "Barcode Pattern"
 msgstr "条码模式"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
 msgstr "条码规则"
 
@@ -131,6 +132,11 @@ msgstr "收银员"
 #: selection:barcode.rule,type:0
 msgid "Client"
 msgstr "客户端"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "公司"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -266,9 +272,9 @@ msgid "Never"
 msgstr "从不"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
-msgid "Nomenclature Name"
-msgstr "条码命名规则"
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr ""
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -276,7 +282,7 @@ msgid "Package"
 msgstr "包裹"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "Patterns can also define how numerical values, such as weight or price, can be\n"
 "                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
@@ -325,7 +331,7 @@ msgid "Set quantity"
 msgstr "设置数量"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
 msgstr "桌台"
 

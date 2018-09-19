@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -59,12 +59,12 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
+#: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
 msgstr ""
 
@@ -78,28 +78,28 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "<span>kg</span>"
 msgstr "<span>kg</span>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
 msgstr "<strong>承运商</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+#: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "<strong>跟踪号码</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_shipping2
+#: model_terms:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>重量</strong>"
 
@@ -126,7 +126,7 @@ msgid ""
 msgstr "免费送货的订单金额，以公司本位币显示"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "已存档"
 
@@ -146,7 +146,7 @@ msgid "Bulk Weight"
 msgstr "散重"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Cancel"
 msgstr "取消"
 
@@ -155,9 +155,9 @@ msgstr "取消"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
 msgstr "承运商"
 
@@ -167,7 +167,7 @@ msgid "Company"
 msgstr "公司"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "条件"
 
@@ -201,7 +201,7 @@ msgid "Debug logging"
 msgstr "调试记录"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
 msgstr ""
 
@@ -216,17 +216,17 @@ msgid "Delivery"
 msgstr "交货"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
 msgstr "交货承运商"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
 msgstr "运输成本"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
 msgstr "交货信息"
 
@@ -236,6 +236,7 @@ msgid "Delivery Message"
 msgstr "发货消息"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
@@ -246,7 +247,7 @@ msgstr "交货方法"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
-#: model:ir.ui.view,arch_db:delivery.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Delivery Methods"
 msgstr "交货方式"
 
@@ -258,13 +259,13 @@ msgstr "邮包选择向导"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
-#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
 msgid "Delivery Packages"
 msgstr "交货包裹"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
-#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
+#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
 msgstr "交货包装"
 
@@ -284,7 +285,7 @@ msgid "Delivery Rating Success"
 msgstr "交付评级成功"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
 msgstr "目的地有效性"
 
@@ -294,7 +295,7 @@ msgid "Determine the display order"
 msgstr "决定显示顺序"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
 msgstr "舍弃"
 
@@ -311,7 +312,7 @@ msgid "Display tracking links"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
@@ -326,10 +327,11 @@ msgid "Environment"
 msgstr "环境"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:217
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
-msgid "Error: no matching grid."
-msgstr "错误：没有匹配的网格。"
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -342,7 +344,7 @@ msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr "如果你打算根据发货的实际数量填写账单的话，就填写这一字段"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
@@ -377,7 +379,7 @@ msgid "Get Rate and Create Shipment"
 msgstr "获取费率并创建装运"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
 msgstr "分组"
 
@@ -418,7 +420,7 @@ msgstr ""
 "（实际运输成本为： %.2f）"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
 msgstr "增加更多供应商"
 
@@ -484,7 +486,7 @@ msgid "Margin cannot be lower than -100%"
 msgstr "毛利不得低于 -100%"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
 msgstr "利润率"
 
@@ -509,9 +511,8 @@ msgid "Maximum weight shippable in this packaging"
 msgstr "可交付最大重量包装。"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Name"
 msgstr "名称"
 
@@ -533,7 +534,7 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr "没有与此订单匹配的价格规则；运送费用无法计算。"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "确认"
 
@@ -543,7 +544,7 @@ msgid "Operator"
 msgstr "运算符"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
 msgstr "包裹"
 
@@ -605,13 +606,13 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
-#: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
 msgstr "价格规则"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
 msgstr "定价"
 
@@ -623,7 +624,7 @@ msgstr "定价规则"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
 msgstr "服务商"
 
@@ -660,17 +661,17 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
+#: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Save"
 msgstr "保存"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
 msgstr "发送确认电子邮件"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
 msgstr "发给托运人"
 
@@ -705,8 +706,8 @@ msgid "Shipping Weight"
 msgstr "发货重量"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
 msgstr "装运重量："
 
@@ -735,7 +736,7 @@ msgid "There is no matching delivery rule."
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+#: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid ""
 "These methods allow to automatically compute the delivery price\n"
 "                according to your settings; on the sales order (based on the\n"
@@ -756,12 +757,12 @@ msgid "This percentage will be added to the shipping price."
 msgstr "这个百分比将被添加到航运价格。"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
 msgstr "追踪"
 
@@ -819,7 +820,7 @@ msgstr "体积"
 #: model:ir.model.fields,field_description:delivery.field_stock_move__weight
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight
-#: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight"
 msgstr "重量"
 
@@ -845,8 +846,8 @@ msgid "Weight used to compute the price of the delivery (if applicable)."
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
-#: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
+#: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Weight:"
 msgstr "重量："
 
@@ -877,7 +878,7 @@ msgid "You can add delivery price only on unconfirmed quotations."
 msgstr "您只能在未经确认的报价单上添加交货价格。"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
+#: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
@@ -900,7 +901,7 @@ msgid "Zip To"
 msgstr "邮编到"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "例如，UPS　快递"
 

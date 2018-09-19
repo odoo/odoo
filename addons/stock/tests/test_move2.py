@@ -159,7 +159,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'assigned', 'The picking should not assign what it does not have')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 5.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.productA, stock_location)), 0.0)
+        self.assertEqual(sum(self.env['stock.quant']._gather(self.productA, stock_location).mapped('quantity')), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.productA, pack_location)), 1.0)
 
     def test_mto_moves_return(self):
@@ -681,7 +681,7 @@ class TestPickShip(TestStockCommon):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pick_location), 5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, return_location), 5.0)
-        self.assertEqual(len(self.env['stock.quant'].search([('product_id', '=', self.productA.id)])), 2)
+        self.assertEqual(len(self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('quantity', '!=', 0)])), 2)
 
 
 class TestSinglePicking(TestStockCommon):

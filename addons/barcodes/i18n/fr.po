@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgid ": empty braces."
 msgstr ": accolades vides."
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
 "                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
@@ -58,7 +59,7 @@ msgstr ""
 "                                si l'expression régulière correspond à un préfixe du code-barre."
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
@@ -67,7 +68,7 @@ msgstr ""
 "identifie et interprète le code barre."
 
 #. module: barcodes
-#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+#: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
 msgstr "Ajouter une nouvelle nomenclature de code-barre"
 
@@ -102,14 +103,15 @@ msgid "Any"
 msgstr "Tous"
 
 #. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
 msgstr "Nomenclature de code-barre"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
 msgstr "Nomenclatures de code-barre"
 
@@ -119,7 +121,7 @@ msgid "Barcode Pattern"
 msgstr "Modèle de code-barres"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
 msgstr "Règle de code barre"
 
@@ -137,6 +139,11 @@ msgstr "Caissier"
 #: selection:barcode.rule,type:0
 msgid "Client"
 msgstr "Client"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -213,7 +220,7 @@ msgstr "Erreur: Document non-éditable"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:362
 #, python-format
 msgid "Error: No last scanned barcode"
-msgstr ""
+msgstr "Erreur: pas de dernier barcode scanné "
 
 #. module: barcodes
 #. openerp-web
@@ -223,7 +230,7 @@ msgstr ""
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:139
 #, python-format
 msgid "Error: Pager not available"
-msgstr ""
+msgstr "Erreur: Changement de page non disponible"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -272,9 +279,9 @@ msgid "Never"
 msgstr "Jamais"
 
 #. module: barcodes
-#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
-msgid "Nomenclature Name"
-msgstr "Nom de la nomenclature"
+#: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
+msgid "Nomenclature"
+msgstr "Nomenclature"
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
@@ -282,7 +289,7 @@ msgid "Package"
 msgstr "Colis"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
 "Patterns can also define how numerical values, such as weight or price, can be\n"
 "                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
@@ -333,7 +340,7 @@ msgid "Set quantity"
 msgstr "Définir la quantité"
 
 #. module: barcodes
-#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+#: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
 msgstr "Tables"
 
