@@ -42,7 +42,7 @@
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="float-left"/>
                 </div>
 
-                <div class="article din">
+                <div class="article din" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                     <div class="header_address">
                         <t t-if="address">
                             <div name="invoice_address" class="invoice_address">
