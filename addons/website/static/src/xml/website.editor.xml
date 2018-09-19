@@ -37,7 +37,7 @@
                 </div>
                 <div>
                     <h6>Background colors</h6>
-                    <t t-foreach="{'body': _t('Body'), 'menu': _t('Menu'), 'footer': _t('Footer')}" t-as="color">
+                    <t t-foreach="{'body': _t('Body'), 'menu': _t('Menus'), 'footer': _t('Footer')}" t-as="color">
                         <t t-call="website.theme_customize_color_palette_button"/>
                     </t>
                 </div>

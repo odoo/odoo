@@ -464,11 +464,6 @@
         <!-- Color options -->
         <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
             <opt data-xmlid="" data-color-palette="user" string="Choose your colors"/>
-
-            <list string="Menu text">
-                <opt string="Dark" data-xmlid="" data-reload="/"/>
-                <opt string="Light" data-xmlid="website.option_navbar_dark" data-reload="/"/>
-            </list>
         </content>
 
         <!-- Layout Options -->
@@ -515,13 +510,6 @@
             </list>
         </content>
     </div>
-</template>
-
-<!-- Menu color options -->
-<template id="option_navbar_dark" inherit_id="website.layout" active="False">
-    <xpath expr="//header/nav" position="attributes">
-        <attribute name="class" remove="navbar-light" add="navbar-dark" separator=" "/>
-    </xpath>
 </template>
 
 <!-- Layout options -->

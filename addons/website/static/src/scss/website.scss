@@ -32,8 +32,15 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
     }
 }
 
-.navbar {
-    @include o-bg-color(color('menu'));
+.navbar-light {
+    // Style only navbar-light which Odoo is only supposed to use in standard
+    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
+    // Note: this only works because navbar-light is defined before navbar-dark,
+    // we may want to use a safest way when possible.
+    background-color: color('menu') !important;
+    @if (color-yiq(color('menu')) != $yiq-text-dark) {
+        @extend .navbar-dark;
+    }
 
     .nav-item {
         transition: opacity 1000ms ease 0s;
