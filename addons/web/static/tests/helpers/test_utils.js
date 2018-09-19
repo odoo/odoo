@@ -677,7 +677,7 @@ function dragAndDrop($el, $to, options) {
         toOffset.left += bound.left;
         toOffset.top += bound.top;
     }
-
+    $el.trigger($.Event("mouseenter"));
     if (!(options && options.continueMove)) {
         elementCenter.left += $el.outerWidth()/2;
         elementCenter.top += $el.outerHeight()/2;
