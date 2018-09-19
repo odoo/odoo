@@ -133,7 +133,7 @@ class MailTemplate(models.Model):
             res['model_id'] = self.env['ir.model']._get(res.pop('model')).id
         return res
 
-    name = fields.Char('Name')
+    name = fields.Char('Name', translate=True)
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     lang = fields.Char('Language',
