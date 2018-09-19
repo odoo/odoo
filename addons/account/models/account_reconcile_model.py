@@ -413,7 +413,7 @@ class AccountReconcileModel(models.Model):
                 if rule.match_partner_category_ids:
                     query += ''' 
                         AND line_partner.partner_id IN (
-                            SELECT categ.partner_id FROM res_partner_res_partner_category_rel categ WHERE categ.category_id IN %s
+                            SELECT DISTINCT categ.partner_id FROM res_partner_res_partner_category_rel categ WHERE categ.category_id IN %s
                         )
                     '''
                     params += [tuple(rule.match_partner_category_ids.ids)]
@@ -426,7 +426,7 @@ class AccountReconcileModel(models.Model):
                 # N.B: 'communication_flag' is there to distinct invoice matching through the number/reference
                 # (higher priority) from invoice matching using the partner (lower priority).
                 query = query.replace(
-                    'FROM',
+                    'FROM account_bank_statement_line st_line',
                     '''
                     ,aml.id                             AS aml_id,
                     aml.currency_id                     AS aml_currency_id,
@@ -441,20 +441,20 @@ class AccountReconcileModel(models.Model):
                             REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(invoice.reference, '[^0-9]', '', 'g')
                         )
                     THEN TRUE ELSE FALSE END            AS communication_flag
-                    FROM
+                    FROM account_bank_statement_line st_line
                     '''
                 )
 
                 # Adapt the FROM to join the account_move_line table.
                 query = query.replace(
-                    'WHERE',
+                    'WHERE st_line.id',
                     '''
                     , account_move_line aml
                     LEFT JOIN account_move move             ON move.id = aml.move_id
                     LEFT JOIN res_company aml_company       ON aml_company.id = aml.company_id
                     LEFT JOIN account_account aml_account   ON aml_account.id = aml.account_id
                     LEFT JOIN account_invoice invoice       ON invoice.move_name = move.name
-                    WHERE
+                    WHERE st_line.id
                     '''
                 )
 
@@ -579,7 +579,6 @@ class AccountReconcileModel(models.Model):
         :param partner_map:     Dict mapping each line with new partner eventually.
         :return:                A dict mapping each statement line id with:
             * aml_ids:      A list of account.move.line ids.
-            * write_off:    A list of account.move.line dict corresponding to the write_off.
             * model:        An account.reconcile.model record (optional).
             * status:       'reconciled' if the lines has been already reconciled, 'write_off' if the write-off must be
                             applied on the statement line.
@@ -627,7 +626,8 @@ class AccountReconcileModel(models.Model):
         reconciled_amls_ids = set()
 
         # Iterate all and create results.
-        for line in st_lines:
+        sorted_st_lines = sorted(st_lines, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
+        for line in sorted_st_lines:
             line_currency = line.currency_id or line.journal_id.currency_id or line.company_id.currency_id
             line_residual = line.currency_id and line.amount_currency or line.amount
 
