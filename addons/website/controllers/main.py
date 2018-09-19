@@ -121,7 +121,7 @@ class Website(Home):
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
 
     @http.route(['/robots.txt'], type='http', auth="public")
-    def robots(self):
+    def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
@@ -193,7 +193,7 @@ class Website(Home):
         return request.make_response(content, [('Content-Type', mimetype)])
 
     @http.route('/website/info', type='http', auth="public", website=True)
-    def website_info(self):
+    def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
         except Exception as e:
@@ -256,7 +256,7 @@ class Website(Home):
         return request.render("website.list_website_pages", values)
 
     @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
-    def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
+    def pagenew(self, path="", noredirect=False, add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -286,7 +286,7 @@ class Website(Home):
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
-    def reset_template(self, templates, redirect='/'):
+    def reset_template(self, templates, redirect='/', **kwargs):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
         for temp_id in templates:
@@ -383,7 +383,7 @@ class Website(Home):
         return True
 
     @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable, tab=0):
+    def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
         self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
         return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
 
