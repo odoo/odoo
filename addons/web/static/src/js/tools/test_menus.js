@@ -61,7 +61,7 @@
             $listOfAppMenuItems = $(".o_app, .o_menuitem")
         } else {
             console.log("Odoo flavor: Community")
-            $listOfAppMenuItems = $('#oe_main_menu_navbar a.oe_menu_leaf, #oe_main_menu_navbar a.oe_menu_toggler');
+            $listOfAppMenuItems = $('a.o_app');
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
 
@@ -94,12 +94,7 @@
         testedApps.push(element.dataset.menuXmlid);
         return testMenuItem(element).then(function () {
             var $subMenuItems;
-            var isEnterprise = odoo.session_info.server_version_info[5] === 'e';
-            if (isEnterprise) {
-                $subMenuItems = $('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
-            } else {
-                $subMenuItems = $('div.o_sub_menu_content .oe_menu_leaf');
-            }
+            $subMenuItems = $('.o_menu_entry_lvl_1, .o_menu_entry_lvl_2, .o_menu_entry_lvl_3, .o_menu_entry_lvl_4');
             var testMenuDef = $.when();
             testMenuDef = chainDeferred($subMenuItems, testMenuDef, testMenuItem);
             return testMenuDef;
@@ -265,9 +260,9 @@
      * @returns : the chained deferred
      */
     function chainDeferred($elements, deferred, f) {
-        _.each($elements, function($el) {
+        _.each($elements, function(el) {
             deferred = deferred.then(function () {
-                return f($el);
+                return f(el);
             });
         });
         return deferred;

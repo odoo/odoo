@@ -5,13 +5,24 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <search string="Sales">
-                <field name="partner_id"/>
+                <field name="website_id" groups="website.group_multi_website"/>
                 <field name="product_id"/>
+                <field name="categ_id"/>
+                <field name="partner_id"/>
+                <field name="country_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <filter string="Confirmed Orders" name="confirmed" domain="[('state', 'in', ['sale', 'done'])]"/>
-                <separator/>
-                <filter name="order_date" string="Order Date" date="date" default_period="last_30_days"/>
-                <filter name="confirmed_date" string="Confirmed" date="confirmation_date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Website" name="groupby_website" context="{'group_by':'website_id'}" groups="website.group_multi_website"/>
+                    <filter string="Product" name="groupby_product" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" name="groupby_product_category" context="{'group_by':'categ_id'}"/>
+                    <filter string="Customer" name="groupby_customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Customer Country" name="groupby_country" context="{'group_by':'country_id'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Order Date" name="groupby_order_date" context="{'group_by':'date'}"/>
+                    <filter string="Confirmation Date" name="groupby_confirmation_date" context="{'group_by':'confirmation_date'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -40,7 +51,7 @@
     </record>
 
     <record id="sale_report_action_dashboard" model="ir.actions.act_window">
-        <field name="name">Sales</field>
+        <field name="name">Online Sales Analysis</field>
         <field name="res_model">sale.report</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>

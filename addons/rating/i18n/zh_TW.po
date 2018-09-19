@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid ""
 "<br/>\n"
 "                            on our services on \""
@@ -28,7 +28,7 @@ msgstr ""
 "                            我們的服務 \""
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
 msgstr "<span class=\"o_stat_text\">資源</span>"
 
@@ -65,12 +65,12 @@ msgstr "創建時間"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
 msgstr "客戶"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Date"
 msgstr "日期   "
 
@@ -101,27 +101,22 @@ msgid "Enabled if the rating has been filled."
 msgstr "提交點評後該項啟用。"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
-msgid "Feedback:\\n#{record.feedback.raw_value}"
-msgstr ""
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
 msgstr "已填寫的點評"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_view
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
 msgstr "請瀏覽我們的網站"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
 msgstr "分組"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
 msgstr "非常不滿意"
@@ -174,7 +169,7 @@ msgid "Model of the followed resource"
 msgstr "關注資源的模型"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
 msgstr "我的點評"
 
@@ -184,12 +179,12 @@ msgid "No Rating yet"
 msgstr "尚未評級"
 
 #. module: rating
-#: model:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "No rating yet"
 msgstr "還沒評分"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
 msgstr "不滿意"
@@ -220,7 +215,7 @@ msgid "Parent Related Document Model"
 msgstr "上級相關單據模型"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
 msgstr "已經被評級的使用者"
 
@@ -234,15 +229,15 @@ msgstr "評級人員"
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "評分"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
 msgstr "平均點評"
 
@@ -294,7 +289,7 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "評級值：0=不高興，10=高興"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "點評"
 
@@ -317,7 +312,7 @@ msgid "Related ratings"
 msgstr "相關評級"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Resource"
 msgstr "資源"
 
@@ -327,7 +322,7 @@ msgid "Resource name"
 msgstr "資源名稱"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Satisfied"
 msgstr "滿意"
@@ -338,18 +333,18 @@ msgid "Security Token"
 msgstr "安全指示物"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
 msgstr "發送回饋"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
 msgstr "提交日期"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thanks! We appreciate your feedback."
 msgstr "謝謝！我們對您的回饋表示感激。"
 
@@ -359,33 +354,33 @@ msgid "The name of the rated resource."
 msgstr "被評估對象的名字。"
 
 #. module: rating
-#: model:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "There is no rating for this object at the moment."
 msgstr "這個對象目前沒有點評。"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_view
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
 msgstr "我們感謝您的回饋！"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
 msgstr "希望您能提供以下信息："
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
 msgstr "您的點評已提交。"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
 msgstr "by"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
 msgstr "為"
 
@@ -402,7 +397,7 @@ msgid "not satisfied"
 msgstr "不滿意"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
 msgstr "在"
 
@@ -413,6 +408,6 @@ msgid "satisfied"
 msgstr "滿意"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
 msgstr "您是"

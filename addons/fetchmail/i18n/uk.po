@@ -3,18 +3,14 @@
 # * fetchmail
 # 
 # Translators:
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
-# Yaroslav Molochko <onorua@gmail.com>, 2018
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
 msgstr "Дії що виконувати на вхідні повідомлення"
 
@@ -33,18 +29,18 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
 msgstr "Розширено"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Додаткові налаштування"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
 msgstr "Налаштування"
 
@@ -54,7 +50,7 @@ msgid "Confirmed"
 msgstr "Підтверджено"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/models/fetchmail.py:136
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Перевірка з'єднання не вдалася: %s"
@@ -94,12 +90,12 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "Email Count"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Отримати зараз"
 
@@ -114,7 +110,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
@@ -124,7 +120,7 @@ msgid "IMAP Server"
 msgstr "Сервер IMAP"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
 msgstr "Якщо вимагається SSL."
 
@@ -134,13 +130,13 @@ msgid "Inbound Mail Server"
 msgstr "Вхідний поштовий сервер"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Incoming Email Servers"
 msgstr "Сервери вхідної пошти"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
 msgstr "Вхідний поштовий сервер"
 
@@ -186,7 +182,7 @@ msgid "Local Server"
 msgstr "Локальний сервер"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Інформація входу"
 
@@ -214,16 +210,7 @@ msgid "Not Confirmed"
 msgstr "Не підтверджено"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__action_id
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-"Необов'язкова користувацька дія сервера, щоб викликати кожну вхідну пошту, "
-"на запис, створений або оновлений цією поштою"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
 msgstr "Сервери вихідної пошти"
 
@@ -233,7 +220,7 @@ msgid "Outgoing Mails"
 msgstr "Вихідна пошта"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
@@ -248,7 +235,7 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP Server"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "POP/IMAP Servers"
 
@@ -274,12 +261,12 @@ msgstr ""
 " подальших електронних листів до існуючих розмов (документів)."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "Скинути підтвердження"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
@@ -294,22 +281,17 @@ msgid "Script"
 msgstr "Скрипт"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
 msgstr "Пошук серверів вхідної пошти"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "Сервер та логін"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__action_id
-msgid "Server Action"
-msgstr "Дії на сервері"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "Інформація про сервер"
 
@@ -329,12 +311,12 @@ msgid "Server Type"
 msgstr "Тип серверу"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Тип серверу IMAP."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "Тип серверу POP."
 
@@ -344,7 +326,7 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Перевірити та підтвердити"
 

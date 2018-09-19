@@ -8,10 +8,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -27,14 +27,9 @@ msgstr "Actie"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
-#: model:ir.model.fields,field_description:utm.field_account_invoice__campaign_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__campaign_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__campaign_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__campaign_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
-#: model:ir.ui.view,arch_db:utm.utm_campaign_form
-#: model:ir.ui.view,arch_db:utm.utm_campaign_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_tree
 msgid "Campaign"
 msgstr "Campagne"
 
@@ -50,8 +45,8 @@ msgid "Campaigns"
 msgstr "Campagnes"
 
 #. module: utm
-#: model:ir.ui.view,arch_db:utm.utm_medium_view_form
-#: model:ir.ui.view,arch_db:utm.utm_source_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 msgid "Channel"
 msgstr "Kanaal"
 
@@ -85,12 +80,12 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: utm
-#: model:ir.actions.act_window,help:utm.utm_medium_action
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Define a new medium"
 msgstr "Definieer een nieuw kanaal"
 
 #. module: utm
-#: model:ir.actions.act_window,help:utm.utm_source_action
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid "Define a new source"
 msgstr "Definieer een nieuwe bron"
 
@@ -164,15 +159,10 @@ msgstr "Relatie mailing"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
-#: model:ir.model.fields,field_description:utm.field_account_invoice__medium_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__medium_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__medium_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__medium_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
-#: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
-#: model:ir.ui.view,arch_db:utm.utm_source_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
+#: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Medium"
 msgstr "Gemiddeld"
 
@@ -193,11 +183,6 @@ msgstr "Zoekmachine"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
-#: model:ir.model.fields,field_description:utm.field_account_invoice__source_id
-#: model:ir.model.fields,field_description:utm.field_crm_lead__source_id
-#: model:ir.model.fields,field_description:utm.field_hr_applicant__source_id
-#: model:ir.model.fields,field_description:utm.field_link_tracker__source_id
-#: model:ir.model.fields,field_description:utm.field_sale_order__source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
 msgid "Source"
 msgstr "Bron"
@@ -214,11 +199,6 @@ msgid "Sources"
 msgstr "Bronnen"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__campaign_id
-#: model:ir.model.fields,help:utm.field_crm_lead__campaign_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__campaign_id
-#: model:ir.model.fields,help:utm.field_link_tracker__campaign_id
-#: model:ir.model.fields,help:utm.field_sale_order__campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
@@ -228,22 +208,12 @@ msgstr ""
 "inspanningen, bijvoorbeeld Herfst_Rit, Kerstmis_Special"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__medium_id
-#: model:ir.model.fields,help:utm.field_crm_lead__medium_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__medium_id
-#: model:ir.model.fields,help:utm.field_link_tracker__medium_id
-#: model:ir.model.fields,help:utm.field_sale_order__medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 "Dit een levermethode, bijv. ansichtkaart, e-mail of een banner advertentie"
 
 #. module: utm
-#: model:ir.model.fields,help:utm.field_account_invoice__source_id
-#: model:ir.model.fields,help:utm.field_crm_lead__source_id
-#: model:ir.model.fields,help:utm.field_hr_applicant__source_id
-#: model:ir.model.fields,help:utm.field_link_tracker__source_id
-#: model:ir.model.fields,help:utm.field_sale_order__source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "

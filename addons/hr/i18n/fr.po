@@ -6,13 +6,14 @@
 # Martin Trigaux, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
+# Nathan Grognet <ngr@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:38+0000\n"
-"PO-Revision-Date: 2018-09-05 08:38+0000\n"
-"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +28,22 @@ msgid "%s (copy)"
 msgstr "%s (copie)"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Analyse</span>"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
 msgstr "<span>A Approuver</span>"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
 msgstr "<span>A faire</span>"
 
@@ -129,8 +130,8 @@ msgid "Activity State"
 msgstr "Status de l'Activité"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr "Ajouter un nouvel employé"
 
@@ -145,10 +146,17 @@ msgid "Alias Contact Security"
 msgstr "Sécurité d'alias de contact"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archivé"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre de pièces jointes"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -161,6 +169,16 @@ msgid "Authenticated Partners"
 msgstr "Partenaires authentifiés"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
+msgid "Auto Subscribe Departments"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
+msgid "Automatically subscribe members of those departments to the channel."
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
 msgstr "Bachelier"
@@ -171,7 +189,7 @@ msgid "Bank Account Number"
 msgstr "Numéro de Compte Bancaire"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
 msgstr "Naissance"
 
@@ -186,13 +204,13 @@ msgid "Child Departments"
 msgstr "Sous-départements"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr "Nationalité & Autre Information"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
 msgstr "Mentor"
 
@@ -204,7 +222,7 @@ msgid "Color Index"
 msgstr "Couleur"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
 msgstr "Sociétés"
 
@@ -212,8 +230,8 @@ msgstr "Sociétés"
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "Société"
 
@@ -238,7 +256,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
 msgstr "Information de contact"
 
@@ -248,7 +266,7 @@ msgid "Country of Birth"
 msgstr "Pays de Naissance"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
 msgstr "Créer un nouveau département"
 
@@ -286,9 +304,9 @@ msgstr "Définir la planification de la ressource"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
 msgstr "Département"
 
@@ -300,9 +318,14 @@ msgstr "Nom du département"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
 msgstr "Départements"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr "Canal de discussion"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -318,7 +341,7 @@ msgid "Divorced"
 msgstr "Divorcé(e)"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
 msgstr "Éducation"
 
@@ -339,7 +362,7 @@ msgstr "Téléphone d'urgence"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "Employé"
 
@@ -361,7 +384,7 @@ msgstr "Étiquette d'employé"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-#: model:ir.ui.view,arch_db:hr.view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Étiquettes d'employé"
 
@@ -371,7 +394,7 @@ msgid "Employee bank salary account"
 msgstr "Compte bancaire du salaire de l'employé"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr "Nom de l'employé"
 
@@ -383,11 +406,11 @@ msgstr "Nom de l'employé"
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_tree
-#: model:ir.ui.view,arch_db:hr.view_partner_tree2
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "Employés"
 
@@ -397,7 +420,7 @@ msgid "Employees Structure"
 msgstr "Structure des employés"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_category_list
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr "Étiquettes d'employés"
 
@@ -468,8 +491,8 @@ msgid "Gender"
 msgstr "Genre"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
 msgstr "Regrouper par"
 
@@ -479,7 +502,12 @@ msgid "HR Department"
 msgstr "Département RH"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
+msgid "HR Departments"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Paramètres RH"
 
@@ -489,7 +517,6 @@ msgid "Hired Employees"
 msgstr "Employés recrutés"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__group_hr_user
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Ressources humaines"
@@ -538,18 +565,18 @@ msgstr ""
 "supprimée."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:279
+#: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
 msgstr "En poste"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
 msgstr "En recrutement"
 
@@ -561,10 +588,10 @@ msgid "Is Follower"
 msgstr "Est un abonné"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-#: model:ir.ui.view,arch_db:hr.view_hr_job_tree
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
 msgstr "Poste"
 
@@ -592,7 +619,7 @@ msgstr "Titre du poste"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "Postes"
 
@@ -631,9 +658,16 @@ msgid "Legal Cohabitant"
 msgstr "Cohabitant légal"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
 msgstr "Créons une offre d'emploi."
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pièce jointe principale"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -643,7 +677,7 @@ msgstr "Masculin"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Gestionnaire"
@@ -796,7 +830,7 @@ msgid "Number of unread messages"
 msgstr "Nombre de messages non lus"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
@@ -812,21 +846,12 @@ msgid "Officer"
 msgstr "Fonctionnaire"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_res_users__group_hr_user
-msgid ""
-"Officer: The user will be able to approve document created by employees.\n"
-"Manager: The user will have access to the human resources configuration as well as statistic reports."
-msgstr ""
-"Fonctionnaire: l'utilisateur sera capable d'approuver des documents créés par les employés. \n"
-"Gestionnaire: L'utilisateur aura accès à la configuration des ressources humaines ainsi qu'aux rapports. "
-
-#. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
 msgid "Other"
 msgstr "Autre"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
 msgstr "Autre information..."
 
@@ -874,7 +899,7 @@ msgstr ""
 "- abonnés : seulement les abonnés au canaux de suivi\n"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
 msgstr "Poste"
 
@@ -884,17 +909,17 @@ msgid "Private Address"
 msgstr "Adresse personnelle"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
 msgstr "Informations personnelles"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
 msgstr "Prêt à recruter plus efficacement?"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
 msgstr "Recrutement"
 
@@ -904,7 +929,7 @@ msgid "Recruitment in Progress"
 msgstr "Recrutement en cours"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "Utilisateur lié"
 
@@ -954,7 +979,7 @@ msgid "School"
 msgstr "École"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
@@ -973,7 +998,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Configuration"
 
@@ -983,12 +1008,12 @@ msgid "Show Organizational Chart"
 msgstr "Afficher l'organigramme"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
 msgstr "Afficher l'organigramme sur le formulaire de l'employé"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
 msgstr "Affichez l'organigramme sur le formulaire de l'employé."
 
@@ -1034,14 +1059,14 @@ msgid "Spouse Complete Name"
 msgstr "Nom complet de l'Epouse"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
 msgstr "Lancer le recrutement"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
 msgstr "Statut"
 
@@ -1059,7 +1084,7 @@ msgstr ""
 "Planifiée : activités futures"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
 msgstr "Arrêter le recrutement"
 
@@ -1145,9 +1170,9 @@ msgstr "Nombre total d'employés prévu"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Messages non lus"
 
@@ -1159,7 +1184,7 @@ msgid "Unread Messages Counter"
 msgstr "Compteur de messages non lus"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "Use here the home address of the employee.\n"
 "                                            This private address is used in the expense report reimbursement document.\n"
@@ -1180,7 +1205,7 @@ msgid "Users"
 msgstr "Utilisateurs"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
 msgstr "Postes vacants :"
 
@@ -1200,8 +1225,8 @@ msgid "Widower"
 msgstr "Veuf(ve)"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1222,7 +1247,7 @@ msgid "Work Email"
 msgstr "Adresse électronique professionnelle"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
 msgstr "Informations professionnelles"
 
@@ -1237,12 +1262,12 @@ msgid "Work Mobile"
 msgstr "Tél. portable professionnel"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
 msgstr "Organisation professionnelle"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Permis de travail"
 
@@ -1268,7 +1293,7 @@ msgid "You cannot create a recursive hierarchy."
 msgstr "Vous ne pouvez pas créer une hiérarchie récursive."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:314
+#: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr "Vous ne pouvez pas créer des départements récursifs. "
@@ -1279,17 +1304,17 @@ msgid "Your document has not been created"
 msgstr "Votre document n'a pas été créé"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "département"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "i.e. Temps partiel"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr "e.g. Directeur Commercial"
 

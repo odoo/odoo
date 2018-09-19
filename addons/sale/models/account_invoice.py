@@ -81,6 +81,11 @@ class AccountInvoice(models.Model):
     def _get_refund_common_fields(self):
         return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
 
+    def _get_intrastat_country_id(self):
+        if self.type in ['out_invoice', 'out_refund']:
+            return self.partner_shipping_id.country_id.id or super(AccountInvoice, self)._get_intrastat_country_id()
+        return super(AccountInvoice, self)._get_intrastat_country_id()
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

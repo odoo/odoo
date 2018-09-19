@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:38+0000\n"
-"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-09-18 09:48+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -32,22 +32,22 @@ msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Hlášení</span>"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
 msgstr ""
 
@@ -107,8 +107,8 @@ msgid "Activity State"
 msgstr "Stav činností"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
 msgstr ""
 
@@ -123,10 +123,17 @@ msgid "Alias Contact Security"
 msgstr "Zabezpečení aliasu kontaktu"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
 msgstr "Archivováno"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -139,6 +146,16 @@ msgid "Authenticated Partners"
 msgstr "Ověření partneři"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
+msgid "Auto Subscribe Departments"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
+msgid "Automatically subscribe members of those departments to the channel."
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
 msgstr ""
@@ -149,7 +166,7 @@ msgid "Bank Account Number"
 msgstr "Číslo bankovního účtu"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
 msgstr "Narození"
 
@@ -164,13 +181,13 @@ msgid "Child Departments"
 msgstr "Dětské oddělení"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Coach"
 msgstr "Školitel"
 
@@ -182,7 +199,7 @@ msgid "Color Index"
 msgstr "Barevný index"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
 msgstr "Firmy v systému"
 
@@ -190,8 +207,8 @@ msgstr "Firmy v systému"
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
 msgstr "Firma"
 
@@ -216,7 +233,7 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
 msgstr "Kontaktní informace"
 
@@ -226,7 +243,7 @@ msgid "Country of Birth"
 msgstr "Země narození"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
 msgstr ""
 
@@ -264,9 +281,9 @@ msgstr "Určit plánování zdroje"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
 msgstr "Oddělení"
 
@@ -278,9 +295,14 @@ msgstr "Jméno oddělení"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
 msgstr "Oddělení"
+
+#. module: hr
+#: model:ir.model,name:hr.model_mail_channel
+msgid "Discussion channel"
+msgstr "Diskusní kanál"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__display_name
@@ -296,7 +318,7 @@ msgid "Divorced"
 msgstr "Rozvedený"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Education"
 msgstr "Vzdělání"
 
@@ -317,7 +339,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr "Zaměstnanec"
 
@@ -339,7 +361,7 @@ msgstr "Štítek zaměstnance"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-#: model:ir.ui.view,arch_db:hr.view_employee_category_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "Štítky zaměstnanců"
 
@@ -349,7 +371,7 @@ msgid "Employee bank salary account"
 msgstr "Výplatní bankovní účet zaměstnance"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name"
 msgstr ""
 
@@ -361,11 +383,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_tree
-#: model:ir.ui.view,arch_db:hr.view_partner_tree2
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "Zaměstnanci"
 
@@ -375,7 +397,7 @@ msgid "Employees Structure"
 msgstr "Struktura zaměstnanců"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_category_list
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
 msgid "Employees Tags"
 msgstr ""
 
@@ -447,8 +469,8 @@ msgid "Gender"
 msgstr "Pohlaví"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
 msgstr "Seskupit podle"
 
@@ -458,7 +480,12 @@ msgid "HR Department"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
+msgid "HR Departments"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
 msgstr "Nastavení personalistiky"
 
@@ -468,7 +495,6 @@ msgid "Hired Employees"
 msgstr "Najatí zaměstnanci"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users__group_hr_user
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Personalistika"
@@ -517,18 +543,18 @@ msgstr ""
 "zdroje bez jeho odstranění."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:279
+#: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
 msgstr "V pozici"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
 msgstr "V náboru"
 
@@ -540,10 +566,10 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-#: model:ir.ui.view,arch_db:hr.view_hr_job_tree
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_tree
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Job"
 msgstr "Práce"
 
@@ -571,7 +597,7 @@ msgstr "Pracovní pozice"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__jobs_ids
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Jobs"
 msgstr "Pracovní místa"
 
@@ -610,8 +636,15 @@ msgid "Legal Cohabitant"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
+msgid "Main Attachment"
 msgstr ""
 
 #. module: hr
@@ -622,7 +655,7 @@ msgstr "Můž"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__parent_id
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "Manažer"
@@ -774,7 +807,7 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
+#: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
@@ -787,19 +820,12 @@ msgid "Officer"
 msgstr "úředník"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_res_users__group_hr_user
-msgid ""
-"Officer: The user will be able to approve document created by employees.\n"
-"Manager: The user will have access to the human resources configuration as well as statistic reports."
-msgstr ""
-
-#. module: hr
 #: selection:hr.employee,certificate:0 selection:hr.employee,gender:0
 msgid "Other"
 msgstr "jiný"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
 msgstr "Jiné informace"
 
@@ -843,7 +869,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Position"
 msgstr "Pozice"
 
@@ -853,17 +879,17 @@ msgid "Private Address"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Recruitment"
 msgstr "Nábor"
 
@@ -873,7 +899,7 @@ msgid "Recruitment in Progress"
 msgstr "Probíhající nábor"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "Příslušný uživatel"
 
@@ -923,7 +949,7 @@ msgid "School"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
@@ -938,7 +964,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Nastavení"
 
@@ -948,12 +974,12 @@ msgid "Show Organizational Chart"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
 msgstr ""
 
@@ -999,14 +1025,14 @@ msgid "Spouse Complete Name"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Start Recruitment"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__state
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Status"
 msgstr "Stav"
 
@@ -1020,7 +1046,7 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
 msgstr "Ukonči nábor"
 
@@ -1102,9 +1128,9 @@ msgstr "Celkem očekávaných zaměstnanců"
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_department_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Nepřečtené zprávy"
 
@@ -1116,7 +1142,7 @@ msgid "Unread Messages Counter"
 msgstr "Počítadlo nepřečtených zpráv"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid ""
 "Use here the home address of the employee.\n"
 "                                            This private address is used in the expense report reimbursement document.\n"
@@ -1134,7 +1160,7 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
 msgstr ""
 
@@ -1154,8 +1180,8 @@ msgid "Widower"
 msgstr "Vdovec"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.act_employee_from_department
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+#: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
+#: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1173,7 +1199,7 @@ msgid "Work Email"
 msgstr "Pracovní email"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
 msgstr ""
 
@@ -1188,12 +1214,12 @@ msgid "Work Mobile"
 msgstr "Pracovní mobil"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Permit"
 msgstr "Pracovní povolení"
 
@@ -1219,7 +1245,7 @@ msgid "You cannot create a recursive hierarchy."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:314
+#: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr ""
@@ -1230,17 +1256,17 @@ msgid "Your document has not been created"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "oddělení"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "např. částečný úvazek"
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
 msgstr ""
 

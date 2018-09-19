@@ -16,10 +16,10 @@
 # Islam Eldeeb <islameldeb@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:278
+#: code:addons/account_budget/models/account_budget.py:277
 #, python-format
 msgid ""
 "\"End Date\" of the budget line should be included in the Period of the "
@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:273
+#: code:addons/account_budget/models/account_budget.py:272
 #, python-format
 msgid ""
 "\"Start Date\" of the budget line should be included in the Period of the "
@@ -46,7 +46,7 @@ msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post__account_ids
-#: model:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
 msgid "Accounts"
 msgstr "الحسابات"
 
@@ -89,22 +89,27 @@ msgid "Analytic Group"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Approve"
 msgstr "موافقه"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_id
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Budget"
 msgstr "الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
-#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
 msgstr "بنود الموازنة"
 
@@ -116,18 +121,18 @@ msgstr "خط الموازنة"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__crossovered_budget_line
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
 msgid "Budget Lines"
 msgstr "خطوط الموازنة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__name
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
 msgstr "اسم الموازنة"
 
@@ -139,23 +144,23 @@ msgstr ""
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__general_budget_id
-#: model:ir.ui.view,arch_db:account_budget.view_budget_post_form
-#: model:ir.ui.view,arch_db:account_budget.view_budget_post_search
-#: model:ir.ui.view,arch_db:account_budget.view_budget_post_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_tree
 msgid "Budgetary Position"
 msgstr "وضع الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
-#: model:ir.ui.view,arch_db:account_budget.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.res_config_settings_view_form
 msgid "Budgetary Positions"
 msgstr "مراكز الموازنة"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 msgid "Budgets"
 msgstr "الموازنات"
 
@@ -166,7 +171,7 @@ msgid "Budgets Analysis"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
 msgstr "إلغاء الموازنة"
 
@@ -176,7 +181,7 @@ msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
 msgstr "اضغط لإنشاء موازنة جديدة"
 
@@ -195,7 +200,7 @@ msgid ""
 msgstr ""
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Confirm"
 msgstr "تأكيد"
 
@@ -232,18 +237,18 @@ msgstr "اسم العرض"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Done"
 msgstr "تم"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft"
 msgstr "مسودة"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft Budgets"
 msgstr "موازنة مؤقتة"
 
@@ -254,7 +259,7 @@ msgid "End Date"
 msgstr "تاريخ الإنتهاء"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Entries..."
 msgstr ""
 
@@ -274,7 +279,7 @@ msgid "Followers (Partners)"
 msgstr "المتابعون (الشركاء)"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 msgid "Group By"
 msgstr "تجميع حسب"
 
@@ -332,6 +337,11 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -348,7 +358,7 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 msgid "Not Cancelled"
 msgstr ""
 
@@ -383,37 +393,37 @@ msgid "Paid Date"
 msgstr "تاريخ الدفع"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Period"
 msgstr "فترة"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__planned_amount
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Planned Amount"
 msgstr "المبلغ المخطط"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
 msgid "Planned amount"
 msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__practical_amount
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Practical Amount"
 msgstr "المبلغ الفعلى"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
 msgid "Practical amount"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
 msgstr "إعادة التعيين لمسودة"
 
@@ -441,28 +451,28 @@ msgstr ""
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__theoritical_amount
-#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Theoretical Amount"
 msgstr "المبلغ النظرية"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Theoritical Amount"
 msgstr "المبلغ النظرية"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
 msgid "Theoritical amount"
 msgstr ""
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve"
 msgstr "للموافقة"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve Budgets"
 msgstr "للموافقة علي الموازنة"
 
@@ -477,7 +487,7 @@ msgid "Unread Messages Counter"
 msgstr "عدد الرسائل الجديدة"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
 
@@ -497,7 +507,7 @@ msgid "Website communication history"
 msgstr "سجل تواصل الموقع"
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:242
+#: code:addons/account_budget/models/account_budget.py:241
 #, python-format
 msgid ""
 "You have to enter at least a budgetary position or analytic account on a "

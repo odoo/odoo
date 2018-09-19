@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Timo Koukkari <ti.ko@netikka.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -39,19 +39,19 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_form
-#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
 msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Määrä"
 
@@ -60,27 +60,25 @@ msgstr "Määrä"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__account_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Analyyttinen tili"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
-#: model:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analyyttinen kirjanpito"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_tags
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
 msgstr ""
@@ -88,7 +86,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__analytic_distribution_ids
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Kustannuspaikat"
 
@@ -99,19 +97,19 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 msgid "Analytic Distribution"
 msgstr "Analyyttinen jakelu"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
 msgstr "Analyyttiset viennit"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Analyyttinen kirjaus"
 
@@ -138,29 +136,34 @@ msgstr "Analyyttinen tunniste"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
 #: model:ir.model,name:analytic.model_account_analytic_tag
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Tags"
 msgstr "Analyyttiset tunnisteet"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Arkistoitu"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
 msgstr "Yhteistyökumppani"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
 msgstr ""
 
@@ -175,7 +178,7 @@ msgid "Childrens"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
 msgstr ""
 
@@ -198,7 +201,7 @@ msgid "Complete Name"
 msgstr "Täydellinen nimi"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
 msgstr "Kulut/Tulot"
 
@@ -208,8 +211,8 @@ msgid "Costs & Revenues"
 msgstr "Kustannukset ja tulot"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
@@ -237,7 +240,7 @@ msgstr "Luotu"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
 msgstr "Kredit"
 
@@ -259,7 +262,7 @@ msgstr "Päivämäärä"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
 msgstr "Debit"
 
@@ -300,8 +303,8 @@ msgid "Group"
 msgstr "Ryhmä"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Ryhmittele.."
 
@@ -339,8 +342,8 @@ msgstr ""
 "sen poistamista."
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
@@ -380,6 +383,11 @@ msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -392,17 +400,17 @@ msgstr "Viestit"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
 msgstr "Nimi"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
 msgstr ""
 
@@ -458,7 +466,7 @@ msgstr "Prosenttia"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Määrä"
 
@@ -468,8 +476,8 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
 "                invoices. Customer invoices can be created based on sales orders\n"
@@ -478,7 +486,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Hae analyyttisiä rivejä"
 
@@ -493,7 +501,7 @@ msgid "Tags"
 msgstr "Tunnisteet"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Date"
 msgstr ""
 
@@ -512,12 +520,12 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Yhteensä"
 
@@ -542,16 +550,11 @@ msgid "User"
 msgstr "Käyttäjä"
 
 #. module: analytic
-#: model:ir.model,name:analytic.model_res_users
-msgid "Users"
-msgstr "Käyttäjät"
-
-#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "account.analytic.distribution"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "esim. Projekti XYZ"

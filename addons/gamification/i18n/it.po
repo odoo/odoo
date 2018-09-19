@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-18 09:50+0000\n"
+"PO-Revision-Date: 2018-09-18 09:50+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -189,7 +189,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
@@ -398,7 +398,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.badge_list_action
+#: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid ""
 "A badge is a symbolic token granted to a user as a sign of reward.\n"
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
@@ -406,7 +406,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_definition_list_action
+#: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
@@ -424,7 +424,7 @@ msgstr ""
 "raggiunge il valore da raggiungere"
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_list_action
+#: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
@@ -452,7 +452,7 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
 msgstr "Opzioni Avanzate"
 
@@ -472,16 +472,22 @@ msgid "Appears in"
 msgstr "Appare in"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge To"
 msgstr "Assegna sfida a"
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.challenge_list_action
+#: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
+msgstr ""
+
+#. module: gamification
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
+msgid "Attachment Count"
 msgstr ""
 
 #. module: gamification
@@ -508,12 +514,12 @@ msgstr "Automatico: somma di un campo"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__name
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
 msgstr "Badge"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
 msgstr "Descrizione badge"
 
@@ -524,13 +530,13 @@ msgid "Badge Granted"
 msgstr "Badge concesso"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_list_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
 msgstr "Lista badge"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Name"
 msgstr "Nome Badge"
 
@@ -541,7 +547,7 @@ msgid "Badges"
 msgstr "Badge"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Badges are granted when a challenge is finished. This is either at the end "
 "of a running period (eg: end of the month for a monthly challenge), at the "
@@ -560,7 +566,7 @@ msgid "Brilliant"
 msgstr "Brillante"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
 msgstr "Non è possibile concederlo"
 
@@ -572,8 +578,8 @@ msgstr ""
 "Non è possibile modificare la configurazione di un obiettivo già avviato"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
-#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
+#: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -583,7 +589,7 @@ msgid "Canceled"
 msgstr "Annullata"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
 msgstr "Categoria"
 
@@ -599,7 +605,7 @@ msgid "Challenge Line"
 msgstr "Riga sfida"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_line_list_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
 msgstr "Righe sfida"
 
@@ -623,7 +629,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_challenge_menu
-#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+#: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
 msgstr "Sfide"
 
@@ -633,7 +639,7 @@ msgid "Check to set a monthly limit per person of sending this badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
 msgstr ""
 
@@ -661,7 +667,7 @@ msgstr "Completamento"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__computation_mode
-#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
 msgstr "Modalità di calcolo"
 
@@ -671,27 +677,27 @@ msgid "Create User"
 msgstr "Crea Utente"
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.badge_list_action
+#: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.challenge_list_action
+#: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_list_action
+#: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goal_definition_list_action
+#: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Create a new goal definition"
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.action_new_simplified_res_users
+#: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
 msgid ""
 "Create and manage users that will connect to the system. Users can be "
 "deactivated should there be a period of time during which they will/should "
@@ -705,12 +711,8 @@ msgstr ""
 " devono utilizzare nel sistema."
 
 #. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_date
-msgid "Created"
-msgstr "Creato"
-
-#. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__create_uid
@@ -722,6 +724,7 @@ msgstr "Creato da"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__create_date
@@ -730,11 +733,6 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__create_date
 msgid "Created on"
 msgstr "Creato il"
-
-#. module: gamification
-#: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__create_uid
-msgid "Creator"
-msgstr "Autore"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
@@ -753,7 +751,7 @@ msgid "Daily"
 msgstr "Giornaliero"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
 msgstr "Dati"
 
@@ -781,12 +779,12 @@ msgid "Definition Description"
 msgstr "Definizione descrizione"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
 msgstr ""
@@ -794,7 +792,7 @@ msgstr ""
 "importante..."
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
 msgstr ""
 "Descrivi quel che hanno fatto e per quale motivo è importante (sarà visibile"
@@ -844,21 +842,21 @@ msgstr ""
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
 msgstr "Completato"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: selection:gamification.goal,state:0
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
 msgstr "Bozza"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
 msgstr "Data fine"
 
@@ -936,12 +934,12 @@ msgid "For Every Succeeding User"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Formating Options"
 msgstr "Opzioni formattazione"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
 msgstr "Da"
 
@@ -994,8 +992,8 @@ msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
-#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goal"
 msgstr "Obiettivo"
 
@@ -1003,14 +1001,14 @@ msgstr "Obiettivo"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__name
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
 msgstr "Definizione obiettivo"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
-#: model:ir.ui.view,arch_db:gamification.goal_definition_list_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
 msgstr "Definizioni Obiettivo"
 
@@ -1020,12 +1018,12 @@ msgid "Goal Description"
 msgstr "Descrizione Obiettivo"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
 msgstr "Obiettivo Fallito"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_list_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
 msgstr "Lista Obiettivi"
 
@@ -1037,22 +1035,22 @@ msgid "Goal Performance"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Reached"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#: model:ir.ui.view,arch_db:gamification.challenge_list_view
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_list_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
 msgstr "Definizioni obiettivo"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
 msgstr "Obiettivi"
 
@@ -1062,41 +1060,41 @@ msgid "Good Job"
 msgstr "Bel Lavoro"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
 msgstr "Concedi"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
-#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
 msgstr "Assegna Badge"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
-#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
+#: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
 msgstr "Assegna Badge a"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
 msgstr "Assegna questo Badge"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
 msgstr "Assegnato da"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
-#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
 msgstr "Raggruppa per"
 
@@ -1106,7 +1104,7 @@ msgid "Group that will receive a copy of the report in addition to the user"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
 msgstr ""
 
@@ -1116,7 +1114,7 @@ msgid "Hidden"
 msgstr "Nascosto"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
 msgstr ""
 
@@ -1181,7 +1179,7 @@ msgid "In Progress"
 msgstr "In Corso"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
 "In batch mode, the domain is evaluated globally. If enabled, do not use "
 "keyword 'user' in above filter domain."
@@ -1281,7 +1279,7 @@ msgid "Limitation Number"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
 msgstr ""
 
@@ -1306,7 +1304,13 @@ msgid "Mail Group Following"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
+#: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_main_attachment_id
+#: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Member"
 msgstr "Membro"
 
@@ -1324,7 +1328,7 @@ msgstr "Messaggi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
-#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
 msgstr "Modello"
 
@@ -1355,7 +1359,7 @@ msgid "Monthly total"
 msgstr "Totale mensile"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
 msgstr "I miei Obiettivi"
 
@@ -1400,12 +1404,12 @@ msgid "Next Report Date"
 msgstr "Data prossimo Report"
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
+#: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
 msgstr ""
 
@@ -1436,7 +1440,7 @@ msgid "Non-updated manual goals will be reminded after"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
 msgstr "Messaggi di Notifica"
 
@@ -1491,12 +1495,12 @@ msgid "Only these people can give this badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
 msgstr "Ottimizzazione"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Owner"
 msgstr "Proprietario"
 
@@ -1511,7 +1515,7 @@ msgid "People having some badges"
 msgstr "Persone che hanno alcuni badge"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
 msgstr "Periodo"
 
@@ -1555,7 +1559,7 @@ msgid "Reached"
 msgstr "Raggiunto"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
 msgstr ""
 
@@ -1565,12 +1569,12 @@ msgid "Recorded manually"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
 msgstr "Riferimento"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
 msgstr ""
 
@@ -1595,7 +1599,7 @@ msgid "Remind delay"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
 msgstr ""
 
@@ -1615,7 +1619,7 @@ msgid "Required Badges"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
 msgstr ""
 
@@ -1631,7 +1635,7 @@ msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reward"
 msgstr "Premio"
 
@@ -1656,49 +1660,49 @@ msgid "Rewarded by"
 msgstr "Premiato per"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
 msgstr "Premi per Sfide"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
 msgstr "In esecuzione"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
 msgstr "Sfide in corso"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
 msgstr "Pianificazione"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
 msgstr "Ricerca Sfide"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
 msgstr "Cerca Definizioni dell'Obiettivo"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
 msgstr "Ricerca Obiettivi"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
 msgstr "Invia Report"
 
@@ -1723,7 +1727,7 @@ msgid "Sequence number for ordering"
 msgstr "Numero di sequenza per l'ordinamento"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
+#: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
 msgstr "Imposta il valore corrente raggiunto per questo obiettivo"
 
@@ -1756,7 +1760,7 @@ msgid "Setup your Company"
 msgstr "Imposta la tua azienda"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
 msgstr "Avvia sfida"
 
@@ -1767,25 +1771,25 @@ msgid "Start Date"
 msgstr "Data inizio"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
 msgstr "Avvia obiettivo"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__state
-#: model:ir.ui.view,arch_db:gamification.challenge_search_view
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
 msgstr "Stato"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
 msgstr "Statistiche"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
 msgstr "Abbonamenti"
 
@@ -1807,7 +1811,7 @@ msgid "Target Value to Reach"
 msgstr "Valore da raggiungere"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
 msgstr "Obiettivo: minore di"
 
@@ -1997,7 +2001,7 @@ msgid ""
 msgstr ""
 
 #. module: gamification
-#: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
+#: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
 "There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
@@ -2009,7 +2013,7 @@ msgid "These goals will not be recomputed."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:210
+#: code:addons/gamification/models/badge.py:208
 #, python-format
 msgid "This badge can not be sent by users."
 msgstr "Questo badge non può essere inviato da utenti."
@@ -2021,7 +2025,7 @@ msgstr ""
 "Questo campo conserva l'immagine utilizzata per il badge, limitata a 256x256"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
 msgstr "A"
 
@@ -2063,7 +2067,7 @@ msgid "Unread Messages Counter"
 msgstr "Contatore di messaggi non letti"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
+#: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
 msgstr "Aggiorna"
 
@@ -2077,7 +2081,7 @@ msgstr "Aggiorna %s"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__user_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__user_id
-#: model:ir.ui.view,arch_db:gamification.goal_search_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
 msgstr "Utente"
 
@@ -2108,7 +2112,7 @@ msgid "Who can grant this badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
+#: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
 msgstr "Chi vorresti premiare?"
 
@@ -2131,7 +2135,7 @@ msgid "Yearly"
 msgstr "Annuale"
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:212
+#: code:addons/gamification/models/badge.py:210
 #, python-format
 msgid "You are not in the user allowed list."
 msgstr ""
@@ -2149,7 +2153,7 @@ msgid "You can not reset a challenge with unfinished goals."
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
 msgstr ""
 
@@ -2159,13 +2163,13 @@ msgid "You did great at your job."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:214
+#: code:addons/gamification/models/badge.py:212
 #, python-format
 msgid "You do not have the required badges."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/badge.py:216
+#: code:addons/gamification/models/badge.py:214
 #, python-format
 msgid "You have already sent this badge too many time this month."
 msgstr ""
@@ -2176,35 +2180,35 @@ msgid "You have found the hidden badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
 msgstr "badge questo mese"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
 msgstr "giorni"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.challenge_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
 msgstr "es. Obiettivi mensili di vendita"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
 msgstr "es. giorni"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid ""
 "e.g. result = env['mail.followers'].search_count([('res_model', '=', "
 "'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
 msgstr "es. user.partner_id.id"
 
@@ -2219,26 +2223,26 @@ msgid "gamification.goal.wizard"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "refresh"
 msgstr "aggiorna"
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.goal_form_view
+#: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_user_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "the"
 msgstr ""
 
 #. module: gamification
-#: model:ir.ui.view,arch_db:gamification.badge_kanban_view
+#: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
 msgstr "questo mese"

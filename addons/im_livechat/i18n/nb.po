@@ -4,19 +4,25 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:06+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:50+0000\n"
+"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "# Messages"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
@@ -30,7 +36,7 @@ msgstr "# talere"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
 msgstr "% fornøyd"
 
@@ -43,7 +49,7 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "<span>Define rules for your live support channel. You can apply an action "
 "(disable the support, automatically open your support, or just make the "
@@ -56,6 +62,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Action"
 msgstr "Handling"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Anonymous"
+msgstr "Anonym"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__anonymous_name
@@ -75,8 +86,8 @@ msgid "Ask something ..."
 msgstr "Spør om noe ..."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Attendees"
 msgstr "Deltakere"
 
@@ -89,6 +100,11 @@ msgstr "Auto-popup"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Auto popup timer"
 msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Avatar"
+msgstr "Avatar"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
@@ -120,7 +136,7 @@ msgid "Canned Responses"
 msgstr "Standardsvar"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid ""
 "Canned responses allow you to insert prewritten responses in\n"
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
@@ -133,10 +149,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__livechat_channel_id
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_channel_id
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 #: selection:mail.channel,channel_type:0
 msgid "Channel"
 msgstr "Kanal"
@@ -147,13 +163,13 @@ msgid "Channel Name"
 msgstr "Kanalnavn"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "Channel Rule"
 msgstr "Kanalregel"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
 msgstr "Kanalregler"
 
@@ -186,7 +202,8 @@ msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Code"
 msgstr "Kode"
 
@@ -202,7 +219,7 @@ msgid "Conversation"
 msgstr "Samtale"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
@@ -215,17 +232,12 @@ msgid "Country"
 msgstr "Land"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__create_date
-msgid "Create Date"
-msgstr "Opprettet dato"
-
-#. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Create a channel and start chatting to fill up your history."
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Create a new canned response"
 msgstr ""
 
@@ -242,19 +254,19 @@ msgid "Created on"
 msgstr "Opprettet"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Creation Date"
 msgstr "Opprettet Dato"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Creation date (hour)"
 msgstr "Opprettet dato (time)"
 
@@ -270,7 +282,7 @@ msgid "Default text displayed on the Livechat Support Button"
 msgstr "Standardtekst som vises på kundestøtte-chat-knappen."
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid "Define a new website live chat channel"
 msgstr ""
 
@@ -314,13 +326,18 @@ msgid "Duration of the conversation (in seconds)"
 msgstr "Samtalens varighet (i sekunder)"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "Each channel has it's own URL that you can send by email to\n"
 "                your customers in order to start chatting with you."
 msgstr ""
 "Hver kanal har sin egen nettadresse/URL som du kan sende\n"
 "på epost til kundene slik at de kan chatte med deg."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Empty Sessions"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
@@ -330,7 +347,7 @@ msgid "Explain your note"
 msgstr "Forklar notatet ditt"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "For website built with Odoo CMS, please install the website_livechat module."
 " Then go to Website Admin &gt; Configuration &gt; Settings and select the "
@@ -352,14 +369,14 @@ msgid "Good"
 msgstr "Bra"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Group By..."
 msgstr "Grupper etter..."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Happy face"
 msgstr ""
 
@@ -370,8 +387,8 @@ msgstr "Skjul knappen"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "History"
 msgstr "Historikk"
 
@@ -388,7 +405,7 @@ msgid "How may I help you?"
 msgstr "Hva kan jeg hjelpe deg med?"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
 msgstr ""
 
@@ -413,18 +430,18 @@ msgid "Image"
 msgstr "Bilde"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Join"
 msgstr "Bli med"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Join Channel"
 msgstr "Bli med i kanal"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Last 24h"
 msgstr "Siste 24 timer"
 
@@ -449,12 +466,12 @@ msgid "Last Updated on"
 msgstr "Sist oppdatert"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
 msgstr "Forlat"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Forlat kanal"
 
@@ -469,7 +486,6 @@ msgid "Live Chat"
 msgstr "Chat"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_res_users__group_im_livechat_user
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
 msgstr "Kundestøtte i sanntid"
@@ -484,7 +500,7 @@ msgstr "Chat"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
-#: model:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
 msgstr "Chattekanal"
 
@@ -494,8 +510,8 @@ msgid "Livechat Conversation"
 msgstr "Chattesamtale"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
 msgid ""
 "Livechat Support Channel Statistics allows you to easily check and analyse "
 "your company livechat session performance. Extract information about the "
@@ -515,10 +531,10 @@ msgid "Livechat Support Report Channel"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_pivot
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
 msgstr "Statistikk for kundestøtte via chat"
 
@@ -549,7 +565,7 @@ msgstr ""
 "noen kanban-visninger."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Missed sessions"
 msgstr ""
 
@@ -559,17 +575,17 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Neutral face"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
+#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
 msgid "No customer ratings on live chat session yet"
 msgstr ""
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:119
+#: code:addons/im_livechat/models/mail_channel.py:118
 #, python-format
 msgid "No history found"
 msgstr "Ingen historikk funnet"
@@ -608,8 +624,8 @@ msgstr "OK"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__partner_id
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
 msgstr "Operatør"
 
@@ -620,12 +636,12 @@ msgstr "Operatøranalyse"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Operators"
 msgstr "Operatører"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid ""
 "Operators\n"
 "                                            <br/>\n"
@@ -633,7 +649,7 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
@@ -642,7 +658,7 @@ msgstr ""
 "anses som frakoblet."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
 msgstr "Valg"
 
@@ -654,8 +670,7 @@ msgstr "Prosentandel fornøyde vurderinger siste 7 dager"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
 msgstr "Vurdering"
 
@@ -687,17 +702,17 @@ msgid "Rating: %s"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
 msgstr "Vurdering: Dårlig"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Great"
 msgstr "Vurdering: Flott"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Okay"
 msgstr "Vurdering: OK"
 
@@ -724,12 +739,12 @@ msgstr "Rapport"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
 msgid "Rules"
 msgstr "Regler"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sad face"
 msgstr ""
 
@@ -739,30 +754,30 @@ msgid "Script (external)"
 msgstr "Skript (eksternt)"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Search history"
 msgstr "Søk i historikk"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Search report"
 msgstr "Søk etter rapport"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:107
+#: code:addons/im_livechat/models/mail_channel.py:106
 #, python-format
 msgid "See 15 last visited pages"
 msgstr "Se 15 siste besøkte sider"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Session Date"
 msgstr "Øktdato"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Session Form"
 msgstr ""
 
@@ -774,8 +789,8 @@ msgstr "Øktstatistikk"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__channel_ids
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sessions"
 msgstr "Økter"
 
@@ -796,8 +811,8 @@ msgstr ""
 "lite bilde er påkrevd."
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Start Date"
 msgstr "Startdato"
 
@@ -854,7 +869,7 @@ msgid "The user will be able to join support channels."
 msgstr "Brukeren kan bli  med i kundestøttekanaler."
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
+#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
 msgid "There is no rating for this channel at the moment"
 msgstr ""
 
@@ -884,7 +899,7 @@ msgid "Time to answer"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
 msgstr ""
 
@@ -907,22 +922,10 @@ msgid "UUID"
 msgstr "UUID"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 #: model:res.groups,name:im_livechat.im_livechat_group_user
 msgid "User"
 msgstr "Bruker"
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_res_users__group_im_livechat_user
-msgid ""
-"User: The user will be able to join support channels.\n"
-"Manager: The user will be able to delete support channels."
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_res_users
-msgid "Users"
-msgstr "Brukere"
 
 #. module: im_livechat
 #. openerp-web
@@ -948,7 +951,17 @@ msgid "Welcome Message"
 msgstr "Velkomstmelding"
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Widget"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "With Messages"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
 msgid ""
 "You can create channels for each website on which you want\n"
 "                to integrate the website live chat widget, allowing your website\n"
@@ -956,17 +969,17 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.actions.act_window,help:im_livechat.mail_channel_action
+#: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Your chatter history is empty"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
 msgstr "for eksempel Hei, hva kan jeg gjøre for deg?"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "for eksempel DittNettsted.com"
 
@@ -976,11 +989,11 @@ msgid "ir.autovacuum"
 msgstr "ir.autovacuum"
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form
 msgid "seconds"
 msgstr "sekunder"

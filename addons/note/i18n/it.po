@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:38+0000\n"
-"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-09-18 09:48+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "Azione Necessaria"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Attivo"
 
@@ -62,12 +62,12 @@ msgid "Activity Type"
 msgstr "Tipo di Attività"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
 msgstr ""
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
 msgstr ""
 
@@ -86,12 +86,17 @@ msgid "Add new note"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
 msgstr "Archivio"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Per categoria post-it"
 
@@ -145,7 +150,7 @@ msgid "Date done"
 msgstr "Data Completamento"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Elimina"
 
@@ -157,9 +162,9 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Menu a discesa"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
@@ -167,7 +172,7 @@ msgid "Folded by Default"
 msgstr "Chiuso di default"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
 msgstr ""
 
@@ -187,12 +192,12 @@ msgid "Followers (Partners)"
 msgstr "Followers (Partner)"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "Attività future"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Raggruppa per"
 
@@ -245,9 +250,14 @@ msgid "Last Updated on"
 msgstr "Ultima modifica il"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
 msgstr "Attività in ritardo"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
 
 #. module: note
 #: selection:mail.activity.type,category:0
@@ -270,7 +280,7 @@ msgid "Messages"
 msgstr "Messaggi"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
 msgstr "Le mie attività"
 
@@ -296,8 +306,8 @@ msgstr "Tipo Prossima Attività"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
 msgstr "Nota"
 
@@ -325,14 +335,14 @@ msgstr "Tag nota"
 #: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
 msgstr "Note"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
@@ -433,14 +443,14 @@ msgid "Set date and time"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
 "Mostra tutti i record che hanno la prossima data dell’azione è prima di oggi"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "Fase"
 
@@ -450,19 +460,19 @@ msgid "Stage Name"
 msgstr "Nome Fase"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
 msgstr "Fase delle Note"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
 #: model:ir.ui.menu,name:note.menu_notes_stage
-#: model:ir.ui.view,arch_db:note.view_note_note_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
 msgstr "Fasi"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
 msgstr "Fasi delle Note"
 
@@ -498,9 +508,9 @@ msgstr "Il nome del Tag esiste già !"
 #: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
-#: model:ir.ui.view,arch_db:note.note_tag_view_tree
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Tags"
 
@@ -513,7 +523,7 @@ msgid "Today"
 msgstr "Oggi"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "Attività di Oggi"
 

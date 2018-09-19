@@ -9,13 +9,14 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # trendspotter, 2018
+# Ladislav Tomm <tomm@helemik.cz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Ladislav Tomm <tomm@helemik.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,57 +25,57 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Date</strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Description</strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Qty</strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Reference </strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Date</strong>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Vendor </strong>"
 msgstr "<strong>Dodavatel </strong>"
 
@@ -101,12 +102,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__type_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
 msgstr ""
 
@@ -119,6 +120,11 @@ msgstr "Analytický účet"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_tag_ids
 msgid "Analytic Tags"
 msgstr "Analytické značky"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -143,12 +149,12 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -159,13 +165,13 @@ msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:115
+#: code:addons/purchase_requisition/models/purchase_requisition.py:116
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Close"
 msgstr "Zavřít"
 
@@ -182,12 +188,12 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
 msgstr "Potvrdit"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 #: selection:purchase.requisition,state_blanket_order:0
 msgid "Confirmed"
@@ -218,7 +224,7 @@ msgid "Currency"
 msgstr "Měna"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
 msgstr ""
 
@@ -245,7 +251,7 @@ msgid "Do not create RfQ lines automatically"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Done"
 msgstr "Hotovo"
 
@@ -255,19 +261,19 @@ msgid "Downstream Move"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 #: selection:purchase.requisition,state:0
 #: selection:purchase.requisition,state_blanket_order:0
 msgid "Draft"
 msgstr "Návrh"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "End Date"
 msgstr "Datum ukončení"
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
@@ -288,7 +294,7 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
@@ -296,7 +302,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Group By"
 msgstr "Seskupit podle"
 
@@ -323,7 +329,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "In a call for tenders, you can record the products you need to buy\n"
 "            and generate the creation of RfQs to vendors. Once the tenders have\n"
@@ -332,7 +338,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
 msgstr "Při vyjednávání"
 
@@ -373,6 +379,11 @@ msgid "Lines"
 msgstr "Linky"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
 msgstr ""
@@ -383,22 +394,22 @@ msgid "Messages"
 msgstr "Zprávy"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
 msgstr "Nová nabídka"
 
@@ -450,7 +461,7 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
 msgstr ""
 
@@ -459,6 +470,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_template__purchase_requisition
 msgid "Procurement"
 msgstr "Zásobování"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Žádost o zásobování"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -477,8 +493,8 @@ msgid "Product Unit of Measure"
 msgstr "Měrná jednotka výrobku"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Products"
 msgstr "Produkty"
 
@@ -506,17 +522,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_type
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
 msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
 msgstr "Nákupní smlouvy"
 
@@ -536,13 +552,13 @@ msgid "Purchase Orders"
 msgstr "Objednávky"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
 msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
 msgstr ""
 
@@ -575,12 +591,12 @@ msgid "Quantity"
 msgstr "Množství"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
 msgid "Reordering"
 msgstr ""
 
@@ -595,12 +611,12 @@ msgid "Request for Quotations"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Requisition"
 msgstr ""
 
@@ -610,7 +626,12 @@ msgid "Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model:ir.model.fields,field_description:purchase_requisition.field_stock_move__requistion_line_ids
+msgid "Requistion Line"
+msgstr ""
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
 msgstr "Nastavit na návrh"
 
@@ -620,7 +641,7 @@ msgid "Scheduled Date"
 msgstr "Plánované datum"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
 msgstr ""
 
@@ -653,7 +674,7 @@ msgid "Set quantities manually"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Source"
 msgstr "Zdroj"
 
@@ -663,7 +684,7 @@ msgid "Source Document"
 msgstr "Zdrojový dokument"
 
 #. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+#: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
 msgstr ""
 
@@ -674,7 +695,7 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Status"
 msgstr "Stav"
 
@@ -694,7 +715,7 @@ msgid "Supplier Info"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
 msgstr "Podmínky"
 
@@ -705,7 +726,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:94
+#: code:addons/purchase_requisition/models/purchase_requisition.py:95
 #, python-format
 msgid ""
 "There is already an open blanket order for this supplier. We suggest you to "
@@ -713,12 +734,12 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned"
 msgstr "Nepřiřazeno"
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
 msgstr ""
 
@@ -748,7 +769,7 @@ msgid "Use quantities of agreement"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
 msgstr "Schválit"
 
@@ -763,7 +784,7 @@ msgid "Warehouse"
 msgstr "Sklad"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:93
+#: code:addons/purchase_requisition/models/purchase_requisition.py:94
 #, python-format
 msgid "Warning for %s"
 msgstr "Upozornění na %s"
@@ -779,33 +800,33 @@ msgid "Website communication history"
 msgstr "Historie komunikace Webové stránky"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:177
+#: code:addons/purchase_requisition/models/purchase_requisition.py:178
 #, python-format
 msgid "You can only delete draft requisitions."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:122
+#: code:addons/purchase_requisition/models/purchase_requisition.py:123
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:126
-#: code:addons/purchase_requisition/models/purchase_requisition.py:219
-#: code:addons/purchase_requisition/models/purchase_requisition.py:227
+#: code:addons/purchase_requisition/models/purchase_requisition.py:127
+#: code:addons/purchase_requisition/models/purchase_requisition.py:220
+#: code:addons/purchase_requisition/models/purchase_requisition.py:228
 #, python-format
 msgid "You cannot confirm the blanket order without price."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:128
+#: code:addons/purchase_requisition/models/purchase_requisition.py:129
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/models/purchase_requisition.py:155
+#: code:addons/purchase_requisition/models/purchase_requisition.py:156
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -813,6 +834,6 @@ msgid ""
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr ""

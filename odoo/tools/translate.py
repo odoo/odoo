@@ -830,7 +830,7 @@ def trans_generate(lang, modules, cr):
         tnx = (module, source, name, id, type, tuple(comments or ()))
         to_translate.add(tnx)
 
-    query = 'SELECT name, model, res_id, module FROM ir_model_data'
+    query = 'SELECT min(name), model, res_id, module FROM ir_model_data'
     query_models = """SELECT m.id, m.model, imd.module
                       FROM ir_model AS m, ir_model_data AS imd
                       WHERE m.id = imd.res_id AND imd.model = 'ir.model'"""
@@ -848,7 +848,7 @@ def trans_generate(lang, modules, cr):
         query_models += ' AND imd.module != %s'
         query_param = ('__export__',)
 
-    query += ' ORDER BY module, model, name'
+    query += ' GROUP BY model, res_id, module ORDER BY module, model, min(name)'
     query_models += ' ORDER BY module, model'
 
     cr.execute(query, query_param)
@@ -894,7 +894,8 @@ def trans_generate(lang, modules, cr):
                 except Exception:
                     continue
                 for term in set(field.get_trans_terms(value)):
-                    push_translation(module, 'model', name, xml_name, term)
+                    trans_type = 'model_terms' if callable(field.translate) else 'model'
+                    push_translation(module, trans_type, name, xml_name, term)
 
         # End of data for ir.model.data query results
 
@@ -982,9 +983,6 @@ def trans_generate(lang, modules, cr):
         for root, dummy, files in walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
                 babel_extract_terms(fname, path, root)
-            # mako provides a babel extractor: http://docs.makotemplates.org/en/latest/usage.html#babel
-            for fname in fnmatch.filter(files, '*.mako'):
-                babel_extract_terms(fname, path, root, 'mako', trans_type='report')
             # Javascript source files in the static/src/js directory, rest is ignored (libs)
             if fnmatch.fnmatch(root, '*/static/src/js*'):
                 for fname in fnmatch.filter(files, '*.js'):

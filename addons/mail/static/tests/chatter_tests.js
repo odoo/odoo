@@ -55,14 +55,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
-                    related_attachment_count: {
+                    message_attachment_count: {
                         string: 'Attachment count',
                         type: 'integer',
                     },
                 },
                 records: [{
                     id: 2,
-                    related_attachment_count: 3,
+                    message_attachment_count: 3,
                     display_name: "first partner",
                     foo: "HELLO",
                     message_follower_ids: [],
@@ -492,7 +492,7 @@ QUnit.test('kanban activity widget with no activity', function (assert) {
 });
 
 QUnit.test('kanban activity widget with an activity', function (assert) {
-    assert.expect(11);
+    assert.expect(12);
 
     this.data.partner.records[0].activity_ids = [1];
     this.data.partner.records[0].activity_state = 'today';
@@ -539,8 +539,9 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
     $record.find('.o_activity_btn').click();
     assert.strictEqual(rpcCount, 2, 'a read should have been done to fetch the activity details');
     assert.strictEqual($record.find('.o_activity_title').length, 1, "should have an activity scheduled");
-    var label_text = $record.find('.o_activity_label .o_activity_color_today').text();
-    assert.ok(label_text.indexOf('Today (1)') >= 0, "should display the correct label and count");
+    var label = $record.find('.o_activity_log .o_activity_color_today');
+    assert.strictEqual(label.find('strong').text(), "Today", "should display the correct label");
+    assert.strictEqual(label.find('.badge-warning').text(), "1", "should display the correct count");
 
     // click on the activity button to close the dropdown
     $record.find('.o_activity_btn').click();

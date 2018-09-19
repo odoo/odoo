@@ -235,6 +235,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/user_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/apps_menu.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_view_mobile.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/search/search_filters.js"></script>
@@ -315,8 +316,10 @@
 
         <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"></script>
     </template>
 
     <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -352,19 +355,21 @@
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_frontend" t-css="false"/>
             </t>
-            <t t-set="body_classname" t-value="'container'"/>
+            <t t-set="body_classname" t-value="'bg-100'"/>
 
-            <div class="row">
-                <div class="col-lg-6 offset-lg-3 o_database_list">
-                    <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo"/>
-                    </div>
-                    <t t-raw="0"/>
-                    <div class="text-center" t-if="not disable_footer">
-                        <t t-if="not disable_database_manager">
-                            <a class="" href="/web/database/manager">Manage Databases</a> |
-                        </t>
-                        <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+            <div class="container mb-5 pb-5">
+                <div t-attf-class="card border-0 mx-auto mt-5 bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
+                    <div class="card-body">
+                        <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
+                            <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                        </div>
+                        <t t-raw="0"/>
+                        <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
+                            <t t-if="not disable_database_manager">
+                                <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
+                            </t>
+                            <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -378,8 +383,8 @@
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
                     <label for="db" class="col-form-label">Database</label>
-                    <div class="input-group">
-                        <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
+                    <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
+                        <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
                         <span class="input-group-append">
                             <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
                         </span>
@@ -387,13 +392,13 @@
                 </div>
 
                 <div class="form-group field-login">
-                    <label for="login" class="col-form-label">Email</label>
-                    <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus" autocapitalize="off"/>
+                    <label for="login">Email</label>
+                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
                 <div class="form-group field-password">
-                    <label for="password" class="col-form-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
                 <p class="alert alert-danger" t-if="error" role="alert">
@@ -404,70 +409,12 @@
                 </p>
 
                 <input type="hidden" name="redirect" t-att-value="redirect"/>
-                <div class="clearfix oe_login_buttons">
-                    <button type="submit" class="btn btn-primary">Log in</button>
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                    <div class="o_login_auth"/>
                 </div>
             </form>
         </t>
-    </template>
-
-    <template id="web.menu">
-        <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
-            <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link">
-                    <t t-set="_classes" t-value="'nav-link'"/>
-                </t>
-            </li>
-        </ul>
-
-        <ul class="nav navbar-nav flex-nowrap ml-auto oe_systray" style="display: none;"/>
-        <ul class="nav navbar-nav flex-nowrap oe_user_menu_placeholder" style="display: none;"/>
-    </template>
-    <template id="web.menu_secondary">
-        <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
-            <span class="oe_logo_edit">Edit Company data</span>
-            <img src='/web/binary/company_logo' alt="Logo"/>
-        </a>
-        <div class="o_sub_menu_content">
-            <t t-foreach="menu_data['children']" t-as="menu">
-                <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                    <t t-foreach="menu['children']" t-as="menu">
-                        <div class="oe_secondary_menu_section" t-att-data-menu-xmlid="menu.get('xmlid')">
-                            <t t-if="menu['children']"><t t-esc="menu['name']"/></t>
-                            <t t-if="not menu['children']"><t t-call="web.menu_link"/></t>
-                        </div>
-                        <t t-call="web.menu_secondary_submenu"/>
-                    </t>
-                </div>
-            </t>
-        </div>
-        <div class="o_sub_menu_footer">
-            Powered by <a href="http://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank"><span>Odoo</span></a>
-        </div>
-    </template>
-    <template id="web.menu_secondary_submenu">
-        <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills flex-column">
-            <li t-foreach="menu['children']" t-as="menu" class="nav-item">
-                <t t-call="web.menu_link">
-                    <t t-set="_classes" t-value="'nav-link'"/>
-                </t>
-                <t t-call="web.menu_secondary_submenu"/>
-            </li>
-        </ul>
-    </template>
-    <template id="web.menu_link">
-        <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
-        <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
-            role="menuitem"
-            t-attf-class="#{_classes} #{'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'}"
-            t-att-data-menu="menu['id']"
-            t-att-data-menu-xmlid="menu.get('xmlid')"
-            t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None"
-            t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None">
-            <span class="oe_menu_text">
-                <t t-esc="menu['name']"/>
-            </span>
-        </a>
     </template>
 
     <template id="web.js_tests_assets">
@@ -757,21 +704,7 @@
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
-
-            <header id="oe_main_menu_navbar">
-                <nav class="navbar navbar-expand-md navbar-dark bg-dark" groups="base.group_user,base.group_portal">
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="navbar-toggler-icon"/>
-                    </button>
-                    <div class="navbar-collapse collapse">
-                        <t t-call="web.menu"/>
-                    </div>
-                </nav>
-            </header>
             <div class="o_main">
-                <aside class="o_sub_menu" groups="base.group_user,base.group_portal" aria-label="Submenu">
-                    <t t-call="web.menu_secondary"/>
-                </aside>
                 <main class="o_main_content"/>
             </div>
         </t>

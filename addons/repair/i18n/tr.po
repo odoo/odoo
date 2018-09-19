@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:06+0000\n"
-"PO-Revision-Date: 2018-08-24 09:06+0000\n"
+"POT-Creation-Date: 2018-09-18 09:50+0000\n"
+"PO-Revision-Date: 2018-09-18 09:50+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -38,12 +38,12 @@ msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
 msgstr "(<i>Kaldır</i>)"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "(update)"
 msgstr "(güncelle)"
 
@@ -88,59 +88,59 @@ msgid ""
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
 msgstr "<i>(Ekle)</i>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid ""
 "<span class=\"o_form_label\">This operation will cancel the Repair process, "
 "but will not cancel it's Invoice. Do you want to continue?</span>"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
 msgstr "<strong>Yazdırma Tarihi:</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
 msgstr "<strong>Onarılacak Ürün:</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Shipping address :</strong>"
 msgstr "<Strong> Teslimat adresi: </ strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>Vergisiz Toplam</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>Toplam</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
 msgstr ""
 
@@ -165,12 +165,12 @@ msgid "Add"
 msgstr "Ekle"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
 msgstr "İç not ekle..."
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes..."
 msgstr "Teklif notu ekle..."
 
@@ -180,25 +180,30 @@ msgid "After Repair"
 msgstr "Onarım Sonrası"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "Before Repair"
 msgstr "Onarım Öncesi"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
 msgstr "İptal"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_cancel
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
 msgstr "Onarımı İptal Et"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_cancel_repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Cancel Repair Order"
 msgstr "Onarım Siparişini İptal Et"
 
@@ -220,17 +225,17 @@ msgstr "Siparişin faturalanacağı ve teslim edileceği iş ortağını seçin.
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
 msgstr "Şirket"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
 msgstr "Onarımı Onayla"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 #: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Confirmed"
 msgstr "Doğrulanmış"
@@ -248,18 +253,18 @@ msgstr ""
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
 msgstr "Fatura Oluştur"
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "Create a new reparation order"
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
 msgstr "Fatura oluştur"
 
@@ -301,7 +306,7 @@ msgstr "Teslim Adresi"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
 #: model:ir.model.fields,field_description:repair.field_repair_line__name
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Description"
 msgstr "Açıklama"
 
@@ -321,7 +326,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
 msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
 
@@ -336,17 +341,17 @@ msgid "Draft"
 msgstr "Taslak"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
 msgstr "Onarımı Bitir"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Extra Info"
 msgstr "Diğer Bilgiler"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Fees"
 msgstr "Ücret"
 
@@ -366,12 +371,12 @@ msgid "Followers (Partners)"
 msgstr "Tekipçiler (İş ortakları)"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
 msgstr "Yapılacaklar"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "Grupla"
 
@@ -381,7 +386,7 @@ msgid "Group by partner invoice address"
 msgstr "İş Ortağı Fatura Adreslerine göre Gruplandır"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "History"
 msgstr "Geçmiş"
 
@@ -411,7 +416,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
 "                add or replace and record the time you spent on the different\n"
@@ -439,7 +444,7 @@ msgstr "Envanter Hareketi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
 msgstr "Fatura"
 
@@ -460,12 +465,12 @@ msgid "Invoice Method"
 msgstr "Fatura Yöntemi"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
 msgstr "Fatura adresi:"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
 msgstr "Fatura ve teslimat adresi:"
 
@@ -479,7 +484,7 @@ msgstr "Fatura oluşturuldu"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoiced
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
 msgstr "Faturalanan"
 
@@ -524,7 +529,7 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
 
@@ -539,6 +544,11 @@ msgstr "Konum"
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
 msgstr "Lot/Seri"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
@@ -566,7 +576,7 @@ msgid "Move created by the repair order"
 msgstr "Onarım siparişi tarafından oluşturulan hareket"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "My Activities"
 msgstr "Aktivitelerim"
 
@@ -624,7 +634,7 @@ msgid "No valid pricelist line found."
 msgstr ""
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Notes"
 msgstr "Notlar"
 
@@ -661,7 +671,7 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
 msgstr "Operasyonlar"
 
@@ -671,13 +681,13 @@ msgid "Overdue"
 msgstr "Geciken"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr "Parçalar"
 
@@ -687,7 +697,7 @@ msgid "Planned"
 msgstr "Planlanan"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Price"
 msgstr "Fiyat"
 
@@ -702,7 +712,7 @@ msgid "Pricelist of the selected partner."
 msgstr "Seçilen iş ortağının fiyat listesi."
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
 msgstr "Teklifi Yazdır"
 
@@ -710,7 +720,7 @@ msgstr "Teklifi Yazdır"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
 msgstr "Ürün"
 
@@ -744,8 +754,8 @@ msgstr "Miktar"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
-#: model:ir.ui.view,arch_db:repair.report_repairorder
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quantity"
 msgstr "Miktar"
 
@@ -765,12 +775,12 @@ msgid "Quotation Notes"
 msgstr "Teklif Notları"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
 msgstr "Teklifler"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
 msgstr "Onarıma Hazır"
 
@@ -797,18 +807,18 @@ msgstr "Onarım Ücretleri Satırı"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Line"
 msgstr "Onarım Satırı"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Order"
 msgstr "Onarım Siparişi"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
 msgstr "Onarım Sipariş #:"
 
@@ -820,12 +830,12 @@ msgstr "Onarım Siparişi Referansı"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "Onarım Siparişleri"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
 msgstr "Onarım Teklif #:"
 
@@ -876,8 +886,8 @@ msgid "Repairs"
 msgstr "Onarımlar"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
-#: model:ir.ui.view,arch_db:repair.view_repair_order_tree
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
 msgstr "Onarım Siparişi"
 
@@ -887,7 +897,7 @@ msgid "Responsible User"
 msgstr "Sorumlu Kullanıcı"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
 msgstr "Onarım Siparişlerini Ara"
 
@@ -903,7 +913,7 @@ msgstr ""
 " ise bu onarım siparişi için fatura kesmek istemediğiniz anlamına gelir."
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
 msgstr "Teklifi Gönder"
 
@@ -914,12 +924,12 @@ msgid "Serial number is required for operation line with product '%s'"
 msgstr "Seri numarası, '%s' ürünlü işlem kalemi için gereklidir"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "Taslak olarak ayarla"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
@@ -929,14 +939,14 @@ msgid "Source Location"
 msgstr "Kaynak Konumu"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Start Repair"
 msgstr "Onarımı Başlat"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__state
 #: model:ir.model.fields,field_description:repair.field_repair_order__state
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Status"
 msgstr "Durumu"
 
@@ -961,7 +971,7 @@ msgid "Subtotal"
 msgstr "Ara Toplam"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
 msgstr "Vergi"
 
@@ -969,7 +979,7 @@ msgstr "Vergi"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__tax_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
 msgstr "Vergiler"
 
@@ -993,7 +1003,7 @@ msgid "The repair order is already invoiced."
 msgstr ""
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
 "                order to know if whether the repair should be invoiced to the\n"
@@ -1027,7 +1037,7 @@ msgid "Today"
 msgstr "Bugün"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
 
@@ -1037,7 +1047,7 @@ msgid "Total"
 msgstr "Toplam"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Total amount"
 msgstr "Toplam tutar"
 
@@ -1059,12 +1069,12 @@ msgstr "Onarımda"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_unit
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_unit
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Unit Price"
 msgstr "Birim Maliyet"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
@@ -1084,7 +1094,7 @@ msgid "Untaxed Amount"
 msgstr "Vergi Hariç Tutar"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
 msgstr "Vergi Hariç Tutar"
 
@@ -1096,7 +1106,7 @@ msgstr "Uyarı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
 msgstr "Garanti Bitişi"
 
@@ -1111,7 +1121,7 @@ msgid "Website communication history"
 msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Yes"
 msgstr "Evet"
 

@@ -154,7 +154,7 @@ class IapAccount(models.Model):
         return account
 
     @api.model
-    def get_credits_url(self, service_name, base_url='', credit=0):
+    def get_credits_url(self, service_name, base_url='', credit=0, trial=False):
         dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         if not base_url:
             endpoint = get_endpoint(self.env)
@@ -167,6 +167,8 @@ class IapAccount(models.Model):
             'account_token': account_token,
             'credit': credit,
         }
+        if trial:
+            d.update({'trial': trial})
         return '%s?%s' % (base_url, werkzeug.urls.url_encode(d))
 
     @api.model

@@ -123,13 +123,13 @@
     }
 
     .o_activity_color_planned {
-        color: theme-color('success');
+        color: darken(theme-color('success'), 10%);
     }
     .o_activity_color_overdue {
-        color: theme-color('danger');
+        color: darken(theme-color('danger'), 10%);
     }
     .o_activity_color_today {
-        color: theme-color('warning');
+        color: darken(theme-color('warning'), 10%);
     }
 }
 
@@ -160,62 +160,45 @@
             }
         }
 
-        .o_activity_link_kanban {
-            visibility: hidden;
-            @include media-breakpoint-down(sm) {
-                visibility: visible;
-            }
-        }
-
-        .o_activity_template_preview,.o_activity_template_send {
-            font-weight: bold;
-            color: $o-brand-primary;
-            cursor: pointer;
-            &:hover:not(.active) {
-                color: darken($o-brand-primary, 15%);
-                border-color: darken($o-brand-primary, 15%);
-            }
-        }
-
         div.o_activity {
             min-width: 290px;
             padding: 0px 0px;
 
-            > :last-child {
-                background-color: $o-brand-lightsecondary;
-                line-height: 3em;
-            }
-            ul.o_activity_log {
+            .o_activity_log_container {
                 max-height: 300px;
                 overflow-y: auto;
+            }
+
+            ul.o_activity_log {
                 color: $body-color;
 
                 li {
-                    width: 100%;
-                    display: inline-block;
-
-                    &.o_activity_label {
-                        line-height: 2.5em;
-                        padding: 0px 5px;
-                        background-color: $o-brand-lightsecondary;
+                    .o_activity_title_entry {
+                        display: flex;
+                        align-items: baseline;
                     }
 
-                    &.o_edit_activity {
-                        padding: 8px 10px 8px 0px;
-                        vertical-align: middle;
-                        &:hover {
-                            background-color: theme-color('light');
-                            .o_activity_link_kanban {
-                                visibility: visible;
-                            }
-                        }
+                    .o_edit_button {
+                        opacity: 0.5;
+                    }
 
-                        .o_activity_title {
-                            width: 85%;
-                            padding: 0px 5px 0px 10px;
-                            white-space: nowrap;
-                            text-overflow: ellipsis;
-                        }
+                    &:hover .o_edit_button{
+                        opacity: 1;
+                    }
+
+                    .o_activity_link_kanban {
+                        font-size: 1.5em;
+                        @include o-hover-text-color($text-muted, theme-color('success'));
+                        @include o-hover-opacity(0.5, 1);
+                    }
+
+                    &.o_activity_selected {
+                        border-bottom: 0;
+                    }
+
+                    &.o_activity_form > div {
+                        padding-top: 0.5em;
+                        padding-bottom: 0.7em;
                     }
                 }
             }

@@ -167,7 +167,8 @@ QUnit.module('DomainSelector', {
         assert.strictEqual($datepicker.length, 1,
             "there should be a datepicker");
 
-        var val = $datepicker.find('input').focus().click().val();
+        var val = $datepicker.find('input').val();
+        testUtils.openDatepicker($datepicker);
         $('.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]').click();
         assert.notEqual(domainSelector.$(".o_datepicker:visible input").val(), val,
             "datepicker value should have changed");

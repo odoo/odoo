@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-05 08:38+0000\n"
-"PO-Revision-Date: 2018-09-05 08:38+0000\n"
+"POT-Creation-Date: 2018-09-18 09:48+0000\n"
+"PO-Revision-Date: 2018-09-18 09:48+0000\n"
 "Last-Translator: Metin Akın <aknmetin@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Eylem Gerekiyor"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Etkin"
 
@@ -59,12 +59,12 @@ msgid "Activity Type"
 msgstr "Aktivite Tipi"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
 msgstr ""
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
 msgstr "Yeni bir etiket ekle"
 
@@ -83,12 +83,17 @@ msgid "Add new note"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
 msgstr "Arşivle"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Yapışkan nota göre Kategori"
 
@@ -140,7 +145,7 @@ msgid "Date done"
 msgstr "Tamamlanma Tarihi"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Sil"
 
@@ -152,7 +157,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
 msgstr ""
 
@@ -162,7 +167,7 @@ msgid "Folded by Default"
 msgstr "Varsayılan Olarak Katlanmış"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
 msgstr ""
 
@@ -182,12 +187,12 @@ msgid "Followers (Partners)"
 msgstr "Tekipçiler (İş ortakları)"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "Yapılacaklar"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Grupla"
 
@@ -240,9 +245,14 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
 
 #. module: note
 #: selection:mail.activity.type,category:0
@@ -265,7 +275,7 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
 msgstr "Aktivitelerim"
 
@@ -291,8 +301,8 @@ msgstr "Sonraki Faaliyet Türü"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
 msgstr "Not"
 
@@ -320,14 +330,14 @@ msgstr "Not Etiketi"
 #: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
 msgstr "Notlar"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
@@ -428,13 +438,13 @@ msgid "Set date and time"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "Aşama"
 
@@ -444,19 +454,19 @@ msgid "Stage Name"
 msgstr "Aşama Adı"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
 msgstr "Not Aşaması"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
 #: model:ir.ui.menu,name:note.menu_notes_stage
-#: model:ir.ui.view,arch_db:note.view_note_note_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
 msgstr "Aşamalar"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
 msgstr "Not Aşamaları"
 
@@ -488,9 +498,9 @@ msgstr "Etiket adı halihazırda mevcut !"
 #: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
-#: model:ir.ui.view,arch_db:note.note_tag_view_tree
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiketler"
 
@@ -503,7 +513,7 @@ msgid "Today"
 msgstr "Bugün"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "Bugünkü Aktiviteler"
 

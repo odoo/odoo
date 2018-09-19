@@ -809,7 +809,7 @@ var patches = {};
  * @param {Class|Object} target
  * @param {Object} props
  */
-function patch (target, props) {
+function patch(target, props) {
     var patchID = _.uniqueId('patch_');
     target.__patchID = patchID;
     patches[patchID] = {
@@ -887,6 +887,15 @@ function unpatch(target) {
     delete target.__patchID;
 }
 
+/**
+ * Opens the datepicker of a given element.
+ *
+ * @param {jQuery} $datepickerEl element to which a datepicker is attached
+ */
+function openDatepicker($datepickerEl) {
+    $datepickerEl.find('.o_datepicker_input').trigger('focus.datetimepicker');
+}
+
 // Loading static files cannot be properly simulated when their real content is
 // really needed. This is the case for static XML files so we load them here,
 // before starting the qunit test suite.
@@ -913,6 +922,7 @@ return $.when(
         fieldsViewGet: fieldsViewGet,
         intercept: intercept,
         observe: observe,
+        openDatepicker: openDatepicker,
         patch: patch,
         patchDate: patchDate,
         removeSrcAttribute: removeSrcAttribute,

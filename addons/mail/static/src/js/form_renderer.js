@@ -29,7 +29,7 @@ FormRenderer.include({
      */
     confirmChange: function (state, id, fields) {
         if (this.chatter) {
-            var chatterFields = ['related_attachment_count'].concat(_.values(this.mailFields));
+            var chatterFields = ['message_attachment_count'].concat(_.values(this.mailFields));
             var updatedMailFields = _.intersection(fields, chatterFields);
             if (updatedMailFields.length) {
                 this.chatter.update(state, updatedMailFields);

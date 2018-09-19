@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -25,12 +25,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
 msgstr "<span class=\"text-muted\">(اگر قرارداد ثابت است)</span>"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "<span>/ month</span>"
 msgstr "<span>/ماه</span>"
 
@@ -60,14 +60,19 @@ msgid "Advantages"
 msgstr "مزایا"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
 msgstr "مزایا..."
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Archived"
 msgstr "بایگانی شده"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -90,28 +95,28 @@ msgid "Contract Count"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Details"
 msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
 msgstr "منبع قرارداد"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Terms"
 msgstr "شرایط قرارداد"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__name
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
 msgstr "نوع قرارداد"
 
@@ -146,16 +151,15 @@ msgstr "تجدید قراداد"
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_res_users__group_hr_contract_user
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
-#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Contracts"
 msgstr "قراردادها"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+#: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Create a new contract"
 msgstr ""
 
@@ -178,18 +182,18 @@ msgstr "ارز"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_id
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
 msgstr "قرارداد کنونی"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
 msgstr "کارمند کونی"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Delete"
 msgstr "حذف"
 
@@ -205,19 +209,19 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Dropdown menu"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
 msgstr "ویرایش قرارداد"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__employee_id
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employee"
 msgstr "کارمند"
 
@@ -300,7 +304,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
 
@@ -335,7 +339,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Important Messages"
 msgstr "پیام‌های مهم"
 
@@ -350,7 +354,7 @@ msgid "Is a Manager"
 msgstr "مدیر است"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job"
 msgstr "شغل"
 
@@ -383,12 +387,17 @@ msgid "Latest contract of the employee"
 msgstr "آخرین قرارداد کارمند"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Manager"
 msgstr "مدیر"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
 msgstr "آزمون پزشکی"
 
@@ -408,7 +417,7 @@ msgid "Messages"
 msgstr "پیام‌ها"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Monthly Advantages in Cash"
 msgstr "مزایای نقدی ماهانه"
 
@@ -434,7 +443,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
 msgstr "یادداشت‌ها"
 
@@ -484,23 +493,23 @@ msgid "Running"
 msgstr "در حال اجرا"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "اطلاعات حقوق و دستمزد"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
 msgstr "جستجوی قرارداد"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
 msgstr "جستجوی نوع قرارداد"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type__sequence
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
 msgstr "دنباله"
 
@@ -520,7 +529,7 @@ msgid "Start date of the contract."
 msgstr "تاریخ شروع قرارداد"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "State"
 msgstr "استان"
 
@@ -545,13 +554,13 @@ msgstr "وضعیت قرارداد"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
 msgstr "جهت تجدید"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "To Report to Social Secretariat"
 msgstr ""
 
@@ -569,11 +578,6 @@ msgstr "پیام های ناخوانده"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "شمارنده پیام‌های خوانده‌نشده"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_res_users
-msgid "Users"
-msgstr "کاربران"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire

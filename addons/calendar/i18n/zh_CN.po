@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-18 09:50+0000\n"
+"PO-Revision-Date: 2018-09-18 09:50+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: 更新日期"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:742
+#: code:addons/calendar/models/calendar.py:739
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -43,7 +43,7 @@ msgstr ""
 " %s 在 %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:733
+#: code:addons/calendar/models/calendar.py:730
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s 在 (%s 到 %s) (%s)"
@@ -315,13 +315,13 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
 msgstr "<span> 小时</span>"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
 msgstr "接受"
 
@@ -366,7 +366,7 @@ msgid "All Day"
 msgstr "全天"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:729
+#: code:addons/calendar/models/calendar.py:726
 #, python-format
 msgid "AllDay , %s"
 msgstr "全天，%s"
@@ -375,6 +375,11 @@ msgstr "全天，%s"
 #: sql_constraint:calendar.contacts:0
 msgid "An user cannot have twice the same contact."
 msgstr "用户不能重复创建联系人。"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_attendee
@@ -388,19 +393,19 @@ msgstr "出席者状态"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
 msgstr "与会者"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
 msgstr "可用"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1687
+#: code:addons/calendar/models/calendar.py:1691
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -421,13 +426,13 @@ msgstr "日历"
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
 #: model:ir.ui.menu,name:calendar.menu_calendar_alarm
-#: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
 msgstr "日历警报"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
 msgstr "日程邀请"
 
@@ -459,7 +464,7 @@ msgid "Category"
 msgstr "类别"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr "点击这里只更新这个实例，不包含其它循环"
 
@@ -499,7 +504,7 @@ msgstr "创建时间"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_start
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Date"
 msgstr "日期"
 
@@ -510,7 +515,7 @@ msgid "Date of month"
 msgstr "日期"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
 msgstr "天"
 
@@ -525,7 +530,7 @@ msgid "Day(s)"
 msgstr "天(s)"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
 msgstr "拒绝"
 
@@ -558,8 +563,8 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
 msgstr "单据"
 
@@ -580,7 +585,7 @@ msgstr "单据模型名称"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
 msgstr "持续时间"
 
@@ -608,7 +613,7 @@ msgstr "员工"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
 msgstr "结束日期"
 
@@ -623,7 +628,7 @@ msgid "End date"
 msgstr "截止日期"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
 msgstr "结束于"
 
@@ -643,7 +648,7 @@ msgid "Event alarm"
 msgstr "活动警报"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1228
+#: code:addons/calendar/models/calendar.py:1232
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "事件重复间隔不能为负数"
@@ -670,7 +675,7 @@ msgid "First"
 msgstr "第一个"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:993
+#: code:addons/calendar/models/calendar.py:996
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "首先，必须确定邀请的日期"
@@ -717,12 +722,12 @@ msgid "Friday"
 msgstr "周五"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
 msgstr "分组"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1630
+#: code:addons/calendar/models/calendar.py:1634
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "目前不支持按日期分组，可以通过日历视图达到此目的。"
@@ -780,12 +785,12 @@ msgid "Invitation Token"
 msgstr "邀请令牌"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
 msgstr "邀请详情"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
 msgstr "邀请"
 
@@ -795,7 +800,7 @@ msgid "Invitation to ${object.event_id.name}"
 msgstr "邀请到${object.event_id.name}"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
 msgstr "邀请"
 
@@ -860,7 +865,7 @@ msgstr "让事件在该时间间隔自动重复"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
 msgstr "地点"
 
@@ -870,9 +875,14 @@ msgid "Location of Event"
 msgstr "活动的地点"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Logo"
 msgstr "徽标"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
@@ -880,20 +890,20 @@ msgid "Me"
 msgstr "我"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 #: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "会议"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:937
-#: code:addons/calendar/models/calendar.py:942
+#: code:addons/calendar/models/calendar.py:940
+#: code:addons/calendar/models/calendar.py:945
 #, python-format
 msgid "Meeting '%s' starts '%s' and ends '%s'"
 msgstr "会议'%s'开始于'%s'结束于‘%s’"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
 msgstr "会议详情"
 
@@ -910,7 +920,7 @@ msgstr "会议类型"
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
 msgstr "会议类型"
 
@@ -922,10 +932,10 @@ msgstr "会议已连接"
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
 msgstr "会议"
 
@@ -950,7 +960,7 @@ msgid "Minute(s)"
 msgstr "分"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Misc"
 msgstr "杂项"
 
@@ -970,12 +980,12 @@ msgid "Month(s)"
 msgstr "月"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Events"
 msgstr "我的活动"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
 msgstr "我的会议"
 
@@ -992,7 +1002,7 @@ msgid "Needs Action"
 msgstr "待处理"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
 msgstr "我不会去。"
 
@@ -1049,7 +1059,7 @@ msgid "Only me"
 msgstr "仅我"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Open Calendar"
 msgstr "打开日历"
 
@@ -1059,7 +1069,7 @@ msgid "Option"
 msgstr "选项"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
 msgstr "选项"
 
@@ -1070,7 +1080,7 @@ msgstr "其他"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
 msgstr "所有者"
 
@@ -1085,14 +1095,14 @@ msgid "Partner-related data of the user"
 msgstr "用户的业务伙伴相关数据"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1241
+#: code:addons/calendar/models/calendar.py:1245
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "请选择这个月合适的一天"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
 msgstr "隐私"
 
@@ -1173,7 +1183,7 @@ msgstr "重复 N 次"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
 msgstr "负责人"
 
@@ -1193,12 +1203,12 @@ msgid "Saturday"
 msgstr "周六"
 
 #. module: calendar
-#: model:ir.actions.act_window,help:calendar.action_calendar_event
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Schedule a new meeting"
 msgstr "安排新会议"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
 msgstr "搜索会议"
 
@@ -1208,12 +1218,12 @@ msgid "Second"
 msgstr "秒"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
 msgstr "选择参会者..."
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
 msgstr "发送邮件"
 
@@ -1236,7 +1246,7 @@ msgstr "开始"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
 msgstr "开始日期"
 
@@ -1251,8 +1261,8 @@ msgid "Start date of an event, without time for full days events"
 msgstr "一个事件的开始日期，不包括全天事件的时间"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
 msgstr "起始于"
 
@@ -1278,7 +1288,7 @@ msgid "Stop date of an event, without time for full days events"
 msgstr "一个事件的结束日期，不包括全天事件的时间"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
 msgstr "主题"
 
@@ -1303,7 +1313,7 @@ msgid "Tags"
 msgstr "标签"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
 msgstr "这"
 
@@ -1317,7 +1327,7 @@ msgid ""
 msgstr "活动与会议相关联。删除该活动也会删除相关会议。是否要继续？"
 
 #. module: calendar
-#: model:ir.actions.act_window,help:calendar.action_calendar_event
+#: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid ""
 "The calendar is shared between employees and fully integrated with\n"
 "            other applications such as the employee leaves or the business\n"
@@ -1328,14 +1338,14 @@ msgstr ""
 "            全面整合。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:936
+#: code:addons/calendar/models/calendar.py:939
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:941
+#: code:addons/calendar/models/calendar.py:944
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
 msgstr ""
@@ -1346,7 +1356,7 @@ msgid "Third"
 msgstr "第三个"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
 msgstr "这个事件关联到一个循环...<br/>"
 
@@ -1384,7 +1394,7 @@ msgstr "类型"
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
 msgstr "不确定"
 
@@ -1400,7 +1410,7 @@ msgstr "单位"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "未读消息"
 
@@ -1410,12 +1420,12 @@ msgid "Unread Messages Counter"
 msgstr "未读消息计数器"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
 msgstr "直到"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
 msgstr "仅更新这个实例"
 
@@ -1450,7 +1460,7 @@ msgid "Year(s)"
 msgstr "年"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
 msgstr "我会去。"
 
@@ -1471,12 +1481,12 @@ msgid "calendar.contacts"
 msgstr "日历.联系人"
 
 #. module: calendar
-#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "例如:商务午餐"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1226
+#: code:addons/calendar/models/calendar.py:1230
 #, python-format
 msgid "interval cannot be negative."
 msgstr "间隔不能是负数。"
