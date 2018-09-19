@@ -189,7 +189,7 @@ class Cursor(object):
         self.cache = {}
 
         # event handlers, see method after() below
-        self._event_handlers = {'commit': [], 'rollback': []}
+        self._event_handlers = {'before_commit': [], 'before_rollback': [], 'commit': [], 'rollback': []}
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -348,8 +348,18 @@ class Cursor(object):
         self._cnx.set_isolation_level(isolation_level)
 
     @check
+    def before(self, event, func):
+        """
+        Register an "before" event handler.
+        :param event: the event, either `commit` or `rollback`
+        :param func: a callable object, called with no argument after the event occurs
+        """
+        self._event_handlers["before_" + event].append(func)
+
+    @check
     def after(self, event, func):
-        """ Register an event handler.
+        """
+            Register an event handler.
 
             :param event: the event, either `'commit'` or `'rollback'`
             :param func: a callable object, called with no argument after the
@@ -366,15 +376,18 @@ class Cursor(object):
     def _pop_event_handlers(self):
         # return the current handlers, and reset them on self
         result = self._event_handlers
-        self._event_handlers = {'commit': [], 'rollback': []}
+        self._event_handlers = {'before_commit': [], 'before_rollback': [], 'commit': [], 'rollback': []}
         return result
 
     @check
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
+        event_handlers = self._pop_event_handlers()
+        for func in event_handlers['before_commit']:
+            func()
         result = self._cnx.commit()
-        for func in self._pop_event_handlers()['commit']:
+        for func in event_handlers['commit']:
             func()
         return result
 
@@ -382,8 +395,11 @@ class Cursor(object):
     def rollback(self):
         """ Perform an SQL `ROLLBACK`
         """
+        event_handlers = self._pop_event_handlers()
+        for func in event_handlers['before_rollback']:
+            func()
         result = self._cnx.rollback()
-        for func in self._pop_event_handlers()['rollback']:
+        for func in event_handlers['rollback']:
             func()
         return result
 
