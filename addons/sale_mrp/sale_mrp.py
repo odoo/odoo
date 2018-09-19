@@ -58,7 +58,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id)
+        bom_quantity = self.product_uom._compute_quantity(1, bom.product_uom_id)
         boms, lines = bom.explode(self.product_id, bom_quantity)
         components = {}
         for line, line_data in lines:
