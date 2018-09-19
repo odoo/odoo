@@ -3,17 +3,29 @@
     <!-- Assets for reports -->
 
     <template id="report_assets_common">
-        <t t-call="web._assets_helpers"/>
+        <!--
+            FIXME
+            This asset is using files from web_editor, portal and website.
+            The is done by safety to have an asset which is the same as the
+            website one even when website is not installed and which is
+            website_* and theme independant.
+            The proper solution would be to include web.assets_frontend in the
+            report templates directly, but this has to be intensively tested.
+        -->
+        <t t-call="web._assets_utils"/>
 
-        <!-- FIXME remove web_editor / portal / website dependency ..? -->
+        <t t-call="web._assets_primary_variables"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
 
+        <t t-call="web._assets_secondary_variables"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
         <t t-call="web._assets_bootstrap"/>
+
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
 
-        <!-- FIXME remove web_editor / portal / website dependency ..? -->
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/>
         <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/portal.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
@@ -26,7 +38,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
 
-        <script type="text/javascript" src="web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
         <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
