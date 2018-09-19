@@ -62,7 +62,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_bom_component_qty(self, bom):
-        product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, bom.product_uom)
+        product_uom_qty_bom = self.env['product.uom']._compute_qty_obj(self.product_uom, 1, bom.product_uom)
         bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, product_uom_qty_bom)[0]
         components = {}
         for bom_line in bom_exploded:
@@ -138,7 +138,7 @@ class AccountInvoiceLine(models.Model):
                         prod_moves = [m for m in moves if m.product_id.id == product_id]
                         prod_qty_done = factor * qty_done
                         prod_quantity = factor * quantity
-                        average_price_unit += self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
+                        average_price_unit += factor * self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
                     price_unit = average_price_unit or price_unit
                     price_unit = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price_unit, to_uom_id=self.uom_id.id)
         return price_unit
