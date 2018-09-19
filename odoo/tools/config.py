@@ -268,6 +268,9 @@ class configmanager(object):
             group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=2048 * 1024 * 1024,
                              help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 671088640 aka 640MB).",
                              type="int")
+            group.add_option("--limit-open-files", dest="limit_open_files", my_default=1024,
+                             help="The maximum number of open file descriptors",
+                             type="int")
             group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
                              help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail (default 805306368 aka 768MB).",
                              type="int")
@@ -414,7 +417,7 @@ class configmanager(object):
 
         posix_keys = [
             'workers',
-            'limit_memory_hard', 'limit_memory_soft',
+            'limit_memory_hard', 'limit_memory_soft', 'limit_open_files',
             'limit_time_cpu', 'limit_time_real', 'limit_request', 'limit_time_real_cron'
         ]
 
