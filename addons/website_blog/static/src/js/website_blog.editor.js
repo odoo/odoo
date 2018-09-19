@@ -35,7 +35,7 @@ WebsiteNewMenu.include({
                 wUtils.prompt({
                     id: 'editor_new_blog',
                     window_title: _t("New Blog Post"),
-                    select: "Select Blog",
+                    select: _t("Select Blog"),
                     init: function (field) {
                         return blog_ids;
                     },

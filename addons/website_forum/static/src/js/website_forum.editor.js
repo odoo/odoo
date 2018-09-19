@@ -30,7 +30,8 @@ WebsiteNewMenu.include({
         wUtils.prompt({
             id: "editor_new_forum",
             window_title: _t("New Forum"),
-            input: "Forum Name",init: function () {
+            input: _t("Forum Name"),
+            init: function () {
                 var $group = this.$dialog.find("div.form-group");
                 $group.removeClass("mb0");
 

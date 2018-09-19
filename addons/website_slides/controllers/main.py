@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import logging
 import werkzeug
 
@@ -295,6 +296,12 @@ class WebsiteSlides(http.Controller):
             _logger.error(e)
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
+
+    @http.route('/slides/channels', type='json', auth='user', methods=['POST'], website=True)
+    def channel_list(self, **kw):
+        return {
+            'channels': [{'id': channel.id, 'name': channel.name} for channel in request.env['slide.channel'].search([])]
+        }
 
     # --------------------------------------------------
     # EMBED IN THIRD PARTY WEBSITES
