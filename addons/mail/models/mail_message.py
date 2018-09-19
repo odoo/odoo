@@ -175,15 +175,14 @@ class Message(models.Model):
 
     @api.model
     def _search_need_moderation(self, operator, operand):
-        if operator == '=' and operand:
+        if operator == '=' and operand is True:
             return ['&', '&',
                     ('moderation_status', '=', 'pending_moderation'),
                     ('model', '=', 'mail.channel'),
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
-        return ['|', '|',
-                ('moderation_status', '!=', 'pending_moderation'),
-                ('model', '!=', 'mail.channel'),
-                ('res_id', 'not in', self.env.user.moderation_channel_ids.ids)]
+
+        # no support for other operators
+        return ValueError(_('Unsupported search filter on moderation status'))
 
     #------------------------------------------------------
     # Notification API
