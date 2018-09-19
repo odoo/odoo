@@ -773,11 +773,13 @@
 </ul>
 <t t-name="web.datepicker">
     <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-    <div class="o_datepicker" aria-atomic="true">
+    <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+    <div class="o_datepicker" aria-atomic="true" t-att-id="datepickerID" data-target-input="nearest">
         <input type="text"
-            class="o_datepicker_input o_input"
+            class="o_datepicker_input o_input datetimepicker-input"
             t-att-name="widget.name"
-            t-att-placeholder="placeholder"/>
+            t-att-placeholder="placeholder"
+            t-attf-data-target="##{datepickerID}"/>
         <span class="o_datepicker_button"/>
     </div>
 </t>
@@ -1529,7 +1531,7 @@
 
 <t t-name="UserMenu">
     <li class="o_user_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+        <a class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
             <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
             <span class="oe_topbar_name"/>
         </a>

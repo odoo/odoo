@@ -514,8 +514,8 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 var colors = {};
                 colors[colorName] = ev.data.hex;
-                if (colorName === 'primary') {
-                    colors['secondary'] = 'null';
+                if (colorName === 'alpha') {
+                    colors['beta'] = 'null';
                     colors['gamma'] = 'null';
                     colors['delta'] = 'null';
                     colors['epsilon'] = 'null';

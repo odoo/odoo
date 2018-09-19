@@ -65,51 +65,53 @@
                     <div class="row mt32">
                         <div class="col-lg-8">
                             <t t-if="len(ratings) &gt; 0">
-                                <div class="col">
-                                    <h3>Statistics</h3>
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <div class="card bg-warning text-white">
-                                                <div class="card-body text-center">
-                                                    <img src="/rating/static/src/img/rating_5.png" style="height:50px" alt="Neutral face"/>
-                                                </div>
-                                                <div class="card-body text-center">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 50px">
-                                                            <t t-esc="percentage['okay']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-5">
-                                            <div class="card bg-success text-white">
-                                                <div class="card-body text-center">
-                                                    <img src="/rating/static/src/img/rating_10.png" style="height:60px" alt="Happy face"/>
-                                                </div>
-                                                <div class="card-body text-center">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 60px">
-                                                            <t t-esc="percentage['great']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
+                                <div class="row">
+                                    <div class="col-lg-12 mb32">
+                                        <h3>Statistics</h3>
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="card bg-success text-white" t-attf-style="height: #{150 + int(percentage['great'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_10_white.png" style="height:40px" alt="Happy face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['great']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="card bg-danger text-white">
-                                                <div class="card-body text-center">
-                                                    <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
+                                            <div class="col-lg-4">
+                                                <div class="card bg-warning text-white" t-attf-style="height: #{150 + int(percentage['okay'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_5_white.png" style="height:40px" alt="Neutral face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['okay']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
-                                                <div class="card-body text-center">
-                                                    <h2 style="margin: 0">
-                                                        <b style="font-size: 40px">
-                                                            <t t-esc="percentage['bad']" />
-                                                        </b>
-                                                        <small>%</small>
-                                                    </h2>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="card bg-danger text-white" t-attf-style="height: #{150 + int(percentage['bad'])}px;">
+                                                    <div class="card-body text-center">
+                                                        <img src="/rating/static/src/img/rating_1_white.png" style="height:40px" alt="Sad face"/>
+                                                    </div>
+                                                    <div class="card-body text-center">
+                                                        <h2 style="margin: 0">
+                                                            <b style="font-size: 30px">
+                                                                <t t-esc="percentage['bad']" />
+                                                            </b>
+                                                            <small>%</small>
+                                                        </h2>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -120,7 +122,7 @@
                                         <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
                                         <div style="text-align:center">
                                             <t t-foreach="ratings" t-as="rating">
-                                                <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name"/>
+                                                <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.res_name" width="48px" height="48px"/>
                                                 <t t-if="(rating_index+1) % 10 == 0">
                                                     <br/>
                                                 </t>
@@ -130,7 +132,7 @@
                                 </div>
                             </t>
                             <t t-if="len(ratings) == 0">
-                                <h4 style="text-align:center">This is no rating for this channel for now.</h4>
+                                <h4 style="text-align:center">There is no rating for this channel for now.</h4>
                             </t>
                         </div>
                         <div class="col-lg-4 mb32">
@@ -139,7 +141,7 @@
                                 <div class="media mt-3">
                                     <t t-if="user.image_small">
                                         <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
-                                            class="rounded" t-att-alt="user.name"/>
+                                            class="rounded" style="padding-right: 8px;" t-att-alt="user.name"/>
                                     </t>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>

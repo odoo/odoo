@@ -618,7 +618,7 @@ class TestNoModel(ViewCase):
             'type': 'qweb',
         })
         self.env['ir.translation'].create({
-            'type': 'model',
+            'type': 'model_terms',
             'name': 'ir.ui.view,arch_db',
             'res_id': view.id,
             'lang': 'fr_FR',
