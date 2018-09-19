@@ -65,6 +65,7 @@ class AccountInvoiceSend(models.TransientModel):
         for wizard in self:
             letters = wizard._fetch_letters()
             letters.write({'state': 'pending'})
+            wizard.invoice_ids.filtered(lambda inv: not inv.sent).write({'sent': True})
             if len(letters) == 1:
                 letters._snailmail_print()
 
