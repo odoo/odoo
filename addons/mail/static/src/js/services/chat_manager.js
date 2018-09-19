@@ -1151,13 +1151,8 @@ var ChatManager =  AbstractService.extend({
             (channel.id === 'channel_inbox') ? [['needaction', '=', true]] :
             (channel.id === 'channel_starred') ? [['starred', '=', true]] :
             (channel.id === 'channel_moderation') ? [['need_moderation', '=', true]] :
-                                                    ['|',
-                                                     '&', '&',
-                                                     ['model', '=', 'mail.channel'],
-                                                     ['res_id', 'in', [channel.id]],
-                                                     ['need_moderation', '=', true],
-                                                     ['channel_ids', 'in', [channel.id]]
-                                                    ];
+                                                    [['channel_ids', 'in', [channel.id]]];
+        var moderated_channel_ids = typeof(channel.id) === 'number' ? [channel.id] : false;
         var cache = this._getChannelCache(channel, options.domain);
 
         if (options.domain) {
@@ -1172,7 +1167,11 @@ var ChatManager =  AbstractService.extend({
                 model: 'mail.message',
                 method: 'message_fetch',
                 args: [domain],
-                kwargs: {limit: LIMIT, context: session.user_context},
+                kwargs: {
+                    moderated_channel_ids: moderated_channel_ids,
+                    limit: LIMIT,
+                    context: session.user_context
+                },
             })
             .then(function (msgs) {
                 if (!cache.all_history_loaded) {
