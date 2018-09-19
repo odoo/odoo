@@ -5,6 +5,7 @@ var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 
 var _t = core._t;
+var previously_barcode_scanned;
 
 
 var GreetingMessage = AbstractAction.extend({
@@ -51,6 +52,20 @@ var GreetingMessage = AbstractAction.extend({
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
         this.employee_name = action.employee_name;
+    },
+
+    willStart: function() {
+        if (this.attendance != undefined){
+            this._rpc({
+                model: 'hr.employee',
+                method: 'read',
+                args: [this.attendance.employee_id[0], ['barcode']],
+             })
+            .then(function (employee) {
+                previously_barcode_scanned = employee[0].barcode;
+            });
+        }
+        return this._super.apply(this, arguments);
     },
 
     start: function() {
@@ -139,18 +154,21 @@ var GreetingMessage = AbstractAction.extend({
         if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
             clearTimeout(this.return_to_main_menu);
         }
-        this._rpc({
-                model: 'hr.employee',
-                method: 'attendance_scan',
-                args: [barcode, ],
-            })
-            .then(function (result) {
-                if (result.action) {
-                    self.do_action(result.action);
-                } else if (result.warning) {
-                    self.do_warn(result.warning);
-                }
-            });
+        if (previously_barcode_scanned != barcode){
+            previously_barcode_scanned = barcode;
+            this._rpc({
+                    model: 'hr.employee',
+                    method: 'attendance_scan',
+                    args: [barcode, ],
+                })
+                .then(function (result) {
+                    if (result.action) {
+                        self.do_action(result.action);
+                    } else if (result.warning) {
+                        self.do_warn(result.warning);
+                    }
+                });
+        }
     },
 
     destroy: function () {
