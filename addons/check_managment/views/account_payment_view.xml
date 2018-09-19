@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- TODO inherit other form views also (like check printing module) -->
+
+     <record model="ir.ui.view" id="payment_check_form_view">
+            <field name="name">payment_check_form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+              <field name="arch" type="xml">
+
+             <xpath expr="//field[@name='communication']" position="after">
+                 <newline/>
+                 <newline/>
+
+                  <newline/>
+                 <newline/>
+
+
+             </xpath>
+
+                <xpath expr="//field[@name='journal_id']" position="attributes">
+                  <attribute name="string">Payment Journal</attribute>
+              </xpath>
+
+             <xpath expr="sheet/group[1]" position="after">
+
+                     <group string = "Utravel">
+                 <field name="payment_method_2" string="Payment method"  />
+                 <field name="check_id" string="Check" options="{'no_open': False}" attrs="{'invisible': [('payment_method_code', 'not in', ['received_check', 'delivered_check', 'issue_check'])]}"/>
+                <field name="pay_rec_cash_account" attrs="{'invisible':['|',('payment_method_2', '!=', 'cash'),('payment_type', '=', 'transfer')]}"/>/>
+                         <field name="rec_credit_card_account" attrs="{'invisible':['|',('payment_method_2', '!=', 'credit_card'),('payment_type', '!=', 'inbound')]}"/>
+                         <field name="rec_credit_card_cc_fee_account" attrs="{'invisible':['|',('payment_method_2', '!=', 'credit_card'),('payment_type', '!=', 'inbound')]}"/>
+                         <field name="pay_credit_card_account" attrs="{'invisible':['|',('payment_method_2', '!=', 'credit_card'),('payment_type', '!=', 'outbound')]}"/>
+                         <field name="pay_rec_bank_trans_account"  attrs="{'invisible':['|',('payment_method_2', '!=', 'bank_transfer') ,('payment_type', '=', 'transfer') ]}"/>
+                         <field name="pay_rec_bank_deposit_account" attrs="{'invisible':['|',('payment_method_2', '!=', 'bank_deposit'),('payment_type', '=', 'transfer')]}"/>
+
+                 <field name="card_fee_percent" attrs="{'invisible':[('payment_method_2', '!=', 'credit_card')]}" />
+                 <field name="card_fee_amount" attrs="{'invisible':[('payment_method_2', '!=', 'credit_card')]}"/>
+
+                    </group>
+                  <group string = "Extras">
+                              <field name="extra_ids"  attrs="{'invisible':[('payment_method_2', '=', 'cheque')]}" />
+
+                         </group>
+
+               </xpath>
+
+              </field>
+
+        </record>
+
+       <record model="ir.ui.view" id="check_managment.payment_extras_list">
+      <field name="name">account.payment.extra.list</field>
+      <field name="model">account.payment.extra</field>
+      <field name="arch" type="xml">
+        <tree string="Extras" >
+          <field name="name"/>
+          <field name="amount"/>
+          <field name="account"/>
+
+        </tree>
+      </field>
+    </record>
+
+    <!--  Checks search view -->
+        <record id="view_account_payment_search" model="ir.ui.view">
+            <field name="name">account.payment.check.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_search"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="check_id"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
