@@ -87,7 +87,7 @@ var DocumentViewer = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
-        this.trigger_up('document_viewer_closed');
+        this.trigger('document_viewer_closed');
         this.$el.modal('hide');
         this.$el.remove();
         this._super.apply(this, arguments);

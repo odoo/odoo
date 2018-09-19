@@ -3437,7 +3437,7 @@ QUnit.module('ActionManager', {
             },
         });
 
-        actionManager.trigger_up('history_back');
+        actionManager.trigger('history_back');
         assert.verifySteps(['on_close'], "should have called the on_close handler");
 
         actionManager.destroy();

@@ -325,14 +325,14 @@ var FormRenderer = BasicRenderer.extend({
                     transform: 'translateX(-100%)',
                     transition: '350ms'
                 });
-                self.trigger_up('swipe_left');
+                self.trigger('swipe_left');
             },
             swipeRight: function () {
                 this.css({
                     transform: 'translateX(100%)',
                     transition: '350ms'
                 });
-                self.trigger_up('swipe_right');
+                self.trigger('swipe_right');
             },
         });
     },
