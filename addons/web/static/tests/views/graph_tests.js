@@ -106,6 +106,21 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('title attribute', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph title="Partners" type="pie">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+        assert.strictEqual(graph.$('label').text(), "Partners", "should have 'Partners as title'");
+        graph.destroy();
+    });
+
     QUnit.test('switching mode', function (assert) {
         assert.expect(6);
 

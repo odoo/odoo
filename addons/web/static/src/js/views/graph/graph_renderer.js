@@ -35,6 +35,7 @@ return AbstractRenderer.extend({
         this._super.apply(this, arguments);
         this.isComparison = !!state.comparisonData;
         this.stacked = this.isComparison ? false : params.stacked;
+        this.title = params.title || '';
     },
     /**
      * @override
@@ -446,20 +447,39 @@ return AbstractRenderer.extend({
                 chart.tooltip.chartContainer(self.$('.o_graph_svg_container').last()[0]);
             }
         }
-        var chart1 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
+        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
 
         // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
-        chart1.dispatch.on('renderEnd', function () {
+        chart.dispatch.on('renderEnd', function () {
             $('.nv-y .tick > line').attr('x2', function (i, value) {
                 return Math.abs(value);
             });
         })
 
-        chartResize(chart1);
+        chartResize(chart);
+
         if (this.state.mode === 'pie' && this.isComparison) {
-            var chart2 = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
-            chartResize(chart2);
-            chart1.update();
+            // Render graph title
+            var timeRangeMenuData = this.state.context.timeRangeMenuData;
+            var chartTitle = this.title + ' (' + timeRangeMenuData.timeRangeDescription + ')';
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: chartTitle,
+            }));
+
+            // Instantiate comparison graph
+            var comparisonChart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.comparisonData);
+            // Render comparison graph title
+            var comparisonChartTitle = this.title + ' (' + timeRangeMenuData.comparisonTimeRangeDescription + ')';
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: comparisonChartTitle,
+            }));
+            chartResize(comparisonChart);
+
+            chart.update();
+        } else if (this.title) {
+            this.$('.o_graph_svg_container').last().prepend($('<label/>', {
+                text: this.title,
+            }));
         }
     },
     /**
