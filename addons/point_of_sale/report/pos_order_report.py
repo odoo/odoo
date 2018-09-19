@@ -10,7 +10,7 @@ class PosOrderReport(models.Model):
     _auto = False
     _order = 'date desc'
 
-    date = fields.Datetime(string='Date Order', readonly=True)
+    date = fields.Datetime(string='Order Date', readonly=True)
     order_id = fields.Many2one('pos.order', string='Order', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
