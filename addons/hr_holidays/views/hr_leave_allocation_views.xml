@@ -66,7 +66,7 @@
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"
                                 domain="[('valid', '=', True), ('allocation_type', 'in', ['fixed_allocation', 'no'])]"/>
 
@@ -74,9 +74,9 @@
                             <label for="number_of_days" string="Duration"/>
                             <div>
                                 <field name="number_of_days_display" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
+                                    attrs="{'readonly': ['|', ('type_request_unit', '=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '=', 'hour')]}"/>
                                 <field name="number_of_hours_display" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': [('state', '=', 'validate')], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
+                                    attrs="{'readonly': ['|', ('type_request_unit', '!=', 'hour'), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('type_request_unit', '!=', 'hour')]}"/>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '=', 'hour')]}">Days</span>
                                 <span class="ml8" attrs="{'invisible': [('type_request_unit', '!=', 'hour')]}">Hours</span>
                             </div>

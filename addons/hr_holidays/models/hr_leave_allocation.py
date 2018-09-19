@@ -65,11 +65,11 @@ class HolidaysAllocation(models.Model):
         'Number of Days', track_visibility='onchange',
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
-        'Duration (days)', compute='_compute_number_of_days_display', inverse='_inverse_number_of_days_display',
+        'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="UX field allowing to see and modify the allocation duration, computed in days.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display', inverse='_inverse_number_of_hours_display',
+        'Duration (hours)', compute='_compute_number_of_hours_display',
         help="UX field allowing to see and modify the allocation duration, computed in hours.")
     # details
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
@@ -201,20 +201,10 @@ class HolidaysAllocation(models.Model):
             allocation.number_of_days_display = allocation.number_of_days
 
     @api.multi
-    def _inverse_number_of_days_display(self):
-        for allocation in self:
-            allocation.number_of_days = allocation.number_of_days_display
-
-    @api.multi
     @api.depends('number_of_days', 'employee_id')
     def _compute_number_of_hours_display(self):
         for allocation in self:
             allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-
-    @api.multi
-    def _inverse_number_of_hours_display(self):
-        for allocation in self:
-            allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -239,6 +229,18 @@ class HolidaysAllocation(models.Model):
                 allocation.can_approve = False
             else:
                 allocation.can_approve = True
+
+    @api.multi
+    @api.onchange('number_of_hours_display')
+    def _onchange_number_of_hours_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
+    @api.multi
+    @api.onchange('number_of_days_display')
+    def _onchange_number_of_days_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
