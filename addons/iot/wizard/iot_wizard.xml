@@ -4,23 +4,20 @@
         <field name="name">Add IoT box</field>
         <field name="model">add.iot.box</field>
         <field name="arch" type="xml">
-            <form string="Add IoT Box">
-                <p><h2>
-                    1. Power on the IoT Box <br/>
-
-                    2. If you connected the network cable, use the 
-                    "Scan" button to detect connected IoT Boxes. <br/>
-
-                    3. If it does not work or you want to connect wirelessly: <br/>
+            <form string="Connect an IoT Box" class="d-inline-block">
+                <p>
+                    0. Power on the IoT Box<br/><br/>
+    
+                    <strong>A. Ethernet Connection</strong><br/>
+                    1. Click on the "Scan" button below<br/><br/>
                     
-                    4. Power on the IoT Box without ethernet cable if not already done so.<br/>
-
-                    5. Copy this token in your clipboard.<br/>
-
-                    6. Connect to the "IoT Box" wifi network.<br/>
-
-                    7. Paste the token into the "server token" field.<br/>
-                </h2></p>
+                    <strong>B. WiFi Connection (or Ethernet Connection doesn't work)</strong><br/>
+                    1. Make sure no ethernet cable is connected to the IoT Box<br/>
+                    2. Copy the token that is below<br/>
+                    3. Connect to the IoT Box WiFi network (you should see it in your available WiFi networks)<br/>
+                    4. You will be redirected to the IoT Box Homepage<br/>
+                    5. Paste the token in token field and follow the steps described on the IoT Box Homepage<br/>
+                </p>
                 <group>
                     <field name="token" widget="CopyClipboardChar"/>
                     <field name="view_token" invisible="1"/>
@@ -33,7 +30,7 @@
         </field>
     </record>
     <record id="action_add_iot_box" model="ir.actions.act_window">
-        <field name="name">Add IoT box...</field>
+        <field name="name">Connect an IoT Box</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">add.iot.box</field>
         <field name="view_type">form</field>

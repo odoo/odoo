@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 class AddIotBox(models.TransientModel):
     _name = 'add.iot.box'
 
-    token = fields.Char(string='Token to add IoTBox', readonly=True)
+    token = fields.Char(string='Token', readonly=True)
     view_token = fields.Char(string='View token', compute='_get_token')
 
     @api.depends('token')
