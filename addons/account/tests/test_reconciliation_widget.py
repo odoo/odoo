@@ -14,6 +14,9 @@ class TestUi(odoo.tests.HttpCase):
         if not bank_stmt:
              _logger.exception('Could not find bank statement BNK/2014/001')
 
+        # To be able to test reconciliation, admin user must have access to accounting features, so we give him the right group for that
+        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('account.group_account_user').id)]})
+
         self.phantom_js("/web#statement_ids=" + str(bank_stmt.id) + "&action=bank_statement_reconciliation_view",
             "odoo.__DEBUG__.services['web_tour.tour'].run('bank_statement_reconciliation')",
             "odoo.__DEBUG__.services['web_tour.tour'].tours.bank_statement_reconciliation.ready", login="admin")
