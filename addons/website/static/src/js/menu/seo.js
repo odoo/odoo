@@ -217,13 +217,10 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.initDescription = this.description();
     },
     url: function () {
-        var url = window.location.href;
-        var hashIndex = url.indexOf('?');
-        return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        return window.location.origin + window.location.pathname;
     },
     title: function () {
-        var $title = $('title');
-        return ($title.length > 0) && $title.text() && $title.text().trim();
+        return $('title').text().trim();
     },
     changeTitle: function (title) {
         // TODO create tag if missing
@@ -231,8 +228,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.trigger('title-changed', title);
     },
     description: function () {
-        var $description = $('meta[name=description]');
-        return ($description.length > 0) && ($description.attr('content') && $description.attr('content').trim());
+        return ($('meta[name=description]').attr('content') || '').trim();
     },
     changeDescription: function (description) {
         // TODO create tag if missing
@@ -801,7 +797,7 @@ var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     init: function (parent, options) {
         this._super(parent, options);
 
-        if (window.location.href.includes('enable_seo')) {
+        if ($.deparam.querystring().enable_seo !== undefined) {
             this._promoteCurrentPage();
         }
     },
