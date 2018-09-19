@@ -184,7 +184,7 @@
                             <field name="location_id"/>
                         </group>
                     </group>
-                    <separator string="Content" />
+                    <separator string="Ongoing Package Creation: Content" attrs="{'invisible': [('current_picking_id', '=', False)]}"/>
                     <field name="current_picking_id" invisible="1"/>
                     <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
                         <tree>
@@ -194,6 +194,7 @@
                             <field name="product_uom_id" groups="product.group_uom"/>
                         </tree>
                     </field>
+                    <separator string="Content" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
                     <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
                         <tree>
                             <field name="product_id"/>
