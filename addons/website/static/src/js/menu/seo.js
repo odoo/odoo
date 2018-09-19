@@ -1,6 +1,7 @@
 odoo.define('website.seo', function (require) {
 'use strict';
 
+var cleanUrl = require('website.helpers').cleanUrl;
 var core = require('web.core');
 var Class = require('web.Class');
 var Dialog = require('web.Dialog');
@@ -217,9 +218,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         this.initDescription = this.description();
     },
     url: function () {
-        var url = window.location.href;
-        var hashIndex = url.indexOf('?');
-        return hashIndex >= 0 ? url.substring(0, hashIndex) : url;
+        return cleanUrl(window.location.href, true, true);
     },
     title: function () {
         var $title = $('title');

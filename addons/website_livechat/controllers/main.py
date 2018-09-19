@@ -16,7 +16,6 @@ class WebsiteLivechat(http.Controller):
         }
         return request.render('website_livechat.channel_list_page', values)
 
-
     @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True)
     def channel_rating(self, channel, **kw):
         # get the last 100 ratings and the repartition per grade
@@ -40,3 +39,9 @@ class WebsiteLivechat(http.Controller):
             'percentage': percentage
         }
         return request.render("website_livechat.channel_page", values)
+
+    @http.route('/livechat/add_channel', type='json', auth="user", methods=['POST'], website=True)
+    def add_channel(self, name, **kw):
+        return request.env['im_livechat.channel'].create({
+            'name': name
+        }).website_url

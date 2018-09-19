@@ -109,9 +109,58 @@
                     <li class="o_new_content_menu" id="new-content-menu">
                         <a href="#"><span class="fa fa-plus"/>New</a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
-                            <ul>
-                                <li groups="website.group_website_designer"><a href="#" data-action="new_page" aria-label="New page" title="New page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
-                            </ul>
+                            <div class="container pt32 pb32">
+                                <div class="row">
+                                    <div groups="website.group_website_designer" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_page" aria-label="New page" title="New page">
+                                            <i class="fa fa-file-o"/>
+                                            <p>New Page</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_blog" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_blog_post">
+                                            <i class="fa fa-rss"/>
+                                            <p>New Blog Post</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_event" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_event">
+                                            <i class="fa fa-glass"/>
+                                            <p>New Event</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_forum" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_forum">
+                                            <i class="fa fa-comment"/>
+                                            <p>New Forum</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_hr_recruitment" class="col-md-4 mb8 js_new_element">
+                                        <a href="/jobs/add">
+                                            <i class="fa fa-briefcase"/>
+                                            <p>New Job Offer</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_sale" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_product">
+                                            <i class="fa fa-shopping-cart"/>
+                                            <p>New Product</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_slides" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_slide">
+                                            <i class="fa fa-youtube-play"/>
+                                            <p>New Slide</p>
+                                        </a>
+                                    </div>
+                                    <div groups="base.group_system" t-module="website_livechat" class="col-md-4 mb8 js_new_element">
+                                        <a href="#" data-action="new_channel">
+                                            <i class="fa fa-hashtag"/>
+                                            <p>New Channel</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">

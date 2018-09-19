@@ -27,7 +27,7 @@ WebsiteNewMenu.include({
         wUtils.prompt({
             id: "editor_new_event",
             window_title: _t("New Event"),
-            input: "Event Name",
+            input: _t("Event Name"),
         }).then(function (eventName) {
             self._rpc({
                 route: '/event/add_event',

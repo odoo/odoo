@@ -1,12 +1,16 @@
 odoo.define('website.newMenu', function (require) {
 'use strict';
 
+var cleanUrl = require('website.helpers').cleanUrl;
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var websiteNavbarData = require('website.navbar');
 var wUtils = require('website.utils');
 
 var qweb = core.qweb;
 var _t = core._t;
+
+var enableFlag = 'enable_new_content';
 
 var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
@@ -14,16 +18,50 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         new_page: '_createNewPage',
     }),
     events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.events || {}, {
-        'click > a': '_onMenuToggleClick',
-        'click > #o_new_content_menu_choices': '_onBackgroundClick',
+        'click': '_onBackgroundClick',
+        'keydown': '_onBackgroundKeydown',
     }),
 
     /**
+     * Prepare the navigation and find the modules to install.
+     * Move not installed module buttons after installed modules buttons,
+     * but keep the original index to be able to move back the pending install
+     * button at its final position, so the user can click at the same place.
+     *
      * @override
      */
     start: function () {
+        var self = this;
+        var autoOpen = window.location.href.includes(enableFlag);
+        this.pendingInstall = 0;
         this.$newContentMenuChoices = this.$('#o_new_content_menu_choices');
-        return this._super.apply(this, arguments);
+
+        var $modules = this.$newContentMenuChoices.find('.js_new_element');
+        _.each($modules, function (el, index) {
+            var $el = $(el);
+            $el.data('original-index', index);
+            if ($el.data('module-id')) {
+
+                $el.appendTo($el.parent());
+                $el.find('a i').addClass('text-muted');
+                $el.find('a p').addClass('text-muted');
+
+                $el.click(function (ev) {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    self._openInstallDialog($el);
+                });
+            }
+        });
+
+        this.$firstLink = this.$newContentMenuChoices.find('a:eq(0)');
+        this.$lastLink = this.$newContentMenuChoices.find('a:last');
+
+        return this._super.apply(this, arguments).then(function () {
+            if (autoOpen) {
+                self._onBackgroundClick();
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -65,23 +103,187 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the menu's toggle button is clicked -> Opens the menu.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onMenuToggleClick: function (ev) {
-        ev.preventDefault();
-        this.$newContentMenuChoices.toggleClass('o_hidden');
-    },
-    /**
-     * Called when a click outside the menu's options occurs -> Closes the menu
+     * Called when the menu's toggle button is clicked:
+     *  -> Opens the menu and reset the tab navigation (if closed)
+     *  -> Close the menu (if open)
+     * Called when a click outside the menu's options occurs -> Close the menu
      *
      * @private
      * @param {Event} ev
      */
     _onBackgroundClick: function (ev) {
+        // condition to prevent a crash when clicking on the button before the start is finished
+        if (this.$newContentMenuChoices) {
+            if (this.$newContentMenuChoices.hasClass('o_hidden')) {
+                this._showMenu();
+            } else {
+                this._hideMenu();
+            }
+        }
+    },
+    /**
+     * Called when a keydown occurs:
+     *  ESC -> Closes the modal
+     *  TAB -> Navigation (captured in the modal)
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onBackgroundKeydown: function (ev) {
+        switch (ev.which) {
+            case $.ui.keyCode.ESCAPE:
+                this._hideMenu();
+                break;
+            case $.ui.keyCode.TAB:
+                if (ev.shiftKey) {
+                    if (this.firstTab || document.activeElement === this.$firstLink[0]) {
+                        this._focusLastLink();
+                        ev.preventDefault();
+                    }
+                } else {
+                    if (this.firstTab || document.activeElement === this.$lastLink[0]) {
+                        this._focusFirstLink();
+                        ev.preventDefault();
+                    }
+                }
+                this.firstTab = false;
+                break;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Set the focus on the first link
+     *
+     * @private
+     */
+    _focusFirstLink: function () {
+        this.$firstLink.focus();
+    },
+    /**
+     * Set the focus on the last link
+     *
+     * @private
+     */
+    _focusLastLink: function () {
+        this.$lastLink.focus();
+    },
+    /**
+     * Hide the menu
+     *
+     * @private
+     */
+    _hideMenu: function () {
         this.$newContentMenuChoices.addClass('o_hidden');
+        $('body').removeClass('modal-open');
+    },
+    /**
+     * Install a module
+     *
+     * @private
+     * @param {number} moduleId: the module to install
+     */
+    _install: function (moduleId) {
+        this.pendingInstall = 1;
+        return this._rpc({
+            route: '/website/module/' + moduleId + '/install',
+        });
+    },
+    /**
+     * Open the install dialog related to an element:
+     *  - open the dialog depending on access right and another pending install
+     *  - if ok to install, prepare the install action:
+     *      - call the proper action on click
+     *      - change the button text and style
+     *      - handle the result (reload on the same page or error)
+     *
+     * @private
+     * @param {object} $el: the related element
+     */
+    _openInstallDialog: function ($el) {
+        var self = this;
+        var $i = $el.find('a i');
+        var $p = $el.find('a p');
+
+        var title = $p.text();
+        var content = '';
+        var buttons;
+
+        var moduleId = $el.data('module-id');
+
+        var name = $el.data('module-shortdesc');
+        var canInstall = $el.data('module-can-install');
+
+        function rpcDone(result) {
+            if (!result) {
+                rpcFail();
+                return;
+            }
+            window.location.href = cleanUrl(window.location.href, true, true) + '?' + enableFlag;
+        }
+        function rpcFail() {
+            $i.removeClass()
+                .addClass('fa fa-exclamation-triangle');
+            $p.text(_.str.sprintf(_t('"%s" failed to install.'), name));
+        }
+
+        if (this.pendingInstall) {
+                content = _.str.sprintf(_t('The installation of a module is already in progress.'), name);
+        } else if (canInstall) {
+            content = _.str.sprintf(_t('You need to install the "%s" module in order to execute this action.'), name);
+            buttons = [{
+                text: 'Install',
+                classes: 'btn-primary',
+                close: true,
+                click: function () {
+                    // move the element where it will be after installation
+                    var finalPosition = self.$newContentMenuChoices
+                        .find('.js_new_element:not([data-module-id])')
+                        .filter(function () {
+                            return $(this).data("original-index") < $el.data('original-index');
+                        }).last();
+                    if (finalPosition) {
+                        $el.fadeTo(400, 0, function () {
+                            $el.insertAfter(finalPosition);
+                            // change style to use spinner
+                            $i.removeClass()
+                                .addClass('fa fa-spin fa-spinner fa-pulse');
+                            $p.removeClass('text-muted')
+                                .text(_.str.sprintf(_t('Please wait while "%s" is being installed...'), name));
+                            $el.fadeTo(1000, 1);
+                        });
+                    }
+                    
+                    self._install(moduleId).then(rpcDone).fail(rpcFail);
+                }
+            },{
+                text: 'Cancel',
+                close: true,
+            }];
+        } else {
+            content = _.str.sprintf(_t('You need to ask your system administrator to install the "%s" module in order to execute this action.'), name);
+        }
+
+        new Dialog(this, {
+            title: title,
+            size: 'medium',
+            $content: $('<p/>', {text: content}),
+            buttons: buttons
+        }).open();
+    },
+    /**
+     * Show the menu
+     *
+     * @private
+     */
+    _showMenu: function () {
+        this.firstTab = true;
+        this.$newContentMenuChoices.removeClass('o_hidden');
+        $('body').addClass('modal-open');
+        this.$('> a').focus();
     },
 });
 
