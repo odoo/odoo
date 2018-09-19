@@ -72,6 +72,11 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
+        # Force website with query string paramater, typically set from website selector in frontend navbar
+        force_website_id = request.httprequest.args.get('fw')
+        if force_website_id and request.session.get('force_website_id') != force_website_id:
+            request.env['website']._force_website(request.httprequest.args.get('fw'))
+
         context = {}
         if not request.context.get('tz'):
             context['tz'] = request.session.get('geoip', {}).get('time_zone')
