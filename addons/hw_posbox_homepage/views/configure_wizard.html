@@ -29,13 +29,13 @@
                             if(cpt === 0){
                                 window.location = url
                             } else {
-                                $('.redirect-message').html('You will be redirected to <a href="'+ url +'">' + url + '</a> in <b>' + cpt + '</b> secounds');
+                                $('.redirect-message').html('You will be redirected to <a href="'+ url +'">' + url + '</a> in <b>' + cpt + '</b> seconds');
                                 --cpt;
                             }
                         } , 1000);
                     }
                 }).fail(function () {
-                    $('.error-message').text('Error in submiting data');
+                    $('.error-message').text('Error in submitting data');
                     $('.loading-block').addClass('o_hide');
                 });
             });

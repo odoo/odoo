@@ -23,7 +23,9 @@ class IotBox(models.Model):
 
 class IotTrigger(models.Model):
     _name = 'iot.trigger'
+    _order = 'sequence'
 
+    sequence = fields.Integer(default=1)
     device_id = fields.Many2one('iot.device', 'Device', required=True)
     key = fields.Char('Key')
     action = fields.Selection([('pass', 'Pass'),
