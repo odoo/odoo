@@ -10,6 +10,7 @@ from functools import partial
 from operator import attrgetter
 import itertools
 import logging
+import base64
 
 import pytz
 
@@ -27,6 +28,7 @@ from .tools import float_repr, float_round, frozendict, html_sanitize, human_siz
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
+from .tools.mimetypes import guess_mimetype
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -1752,6 +1754,14 @@ class Binary(Field):
         # on purpose - non base64 data must be passed as a 8bit byte strings.
         if not value:
             return None
+        # Detect if the binary content is an SVG for restricting its upload
+        # only to system users.
+        if value[:1] == b'P':  # Fast detection of first 6 bits of '<' (0x3C)
+            decoded_value = base64.b64decode(value)
+            # Full mimetype detection
+            if (guess_mimetype(decoded_value).startswith('image/svg') and
+                    not record.env.user._is_admin()):
+                raise UserError(_("Only admins can upload SVG files."))
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
         try:
