@@ -3,8 +3,6 @@
 
         <!-- Marketing / Mailing -->
         <menuitem name="Email Marketing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
-        <menuitem name="Mailings" id="mass_mailing_menu"
-            parent="mass_mailing_menu_root" sequence="1" groups="mass_mailing.group_mass_mailing_user"/>
         <menuitem name="Mailing Lists" id="mass_mailing_mailing_list_menu"
             parent="mass_mailing_menu_root" sequence="2" groups="mass_mailing.group_mass_mailing_user"/>
         <!-- Marketing / Configuration -->
@@ -825,9 +823,8 @@
             </field>
         </record>
 
-        <menuitem name="Mailings" id="menu_email_mass_mailings"
-            parent="mass_mailing_menu" sequence="2"
-            action="action_view_mass_mailings"/>
+        <menuitem name="Mailings" id="mass_mailing_menu" parent="mass_mailing_menu_root"
+            sequence="1" action="action_view_mass_mailings" groups="mass_mailing.group_mass_mailing_user"/>
 
         <!--  MAILING CAMPAIGN STAGE !-->
         <record model="ir.ui.view" id="view_mail_mass_mailing_stage_search">

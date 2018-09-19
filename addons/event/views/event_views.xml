@@ -140,6 +140,17 @@
             </field>
         </record>
 
+        <record id="event_type_view_search" model="ir.ui.view">
+            <field name="name">event.type.search</field>
+            <field name="model">event.type</field>
+            <field name="arch" type="xml">
+                <search string="Event Categories">
+                    <field name="name"/>
+                    <filter string="Online Event" name="online_event" help="Online Event" domain="[('is_online', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_event_type">
             <field name="name">Event Categories</field>
             <field name="res_model">event.type</field>
@@ -366,15 +377,15 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
+                    <filter string="My Events" name="myevents" help="My Events" domain="[('user_id', '=', uid)]"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
-                    <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
-                    <separator/>
-                    <filter string="My Events" name="myevents" help="My Events" domain="[('user_id','=',uid)]"/>
+                    <filter string="Unconfirmed" name="draft" domain="[('state', '=', 'draft')]" help="Events in New state"/>
                     <separator/>
                     <filter string="Upcoming/Running" name="upcoming"
                         domain="['&amp;', ('state', '!=', 'cancel'), ('date_end','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
+                    <filter string="Online Events" name="online_events" help="Online Events" domain="[('is_online', '=', True)]"/>
                     <field name="event_type_id"/>
                     <field name="user_id"/>
                     <separator/>
