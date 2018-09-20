@@ -389,9 +389,9 @@ class StockMove(models.Model):
 
     def write(self, vals):
         # Check that we do not modify a stock.move which is done
-        frozen_fields = ['product_uom', 'product_id', 'state']
+        frozen_fields = ['state']
         if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self):
-            raise UserError(_('Quantities, Units of Measure, Products and cannot be modified on done stock moves.'))
+            raise UserError(_('State cannot be modified on done stock moves.'))
 
         # FIXME: pim fix your crap
         receipt_moves_to_reassign = self.env['stock.move']
