@@ -6,6 +6,7 @@ function connect () {
 	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
 	TOKEN_FILE=/home/pi/token
 	TOKEN="${3}"
+	REBOOT="${4}"
 	HOSTS=/root_bypass_ramdisks/etc/hosts
 	HOST_FILE=/root_bypass_ramdisks/etc/hostname
 	HOSTNAME="$(hostname)"
@@ -38,7 +39,10 @@ function connect () {
 	fi
 	sudo mount -o remount,ro /
 	sudo mount -o remount,ro /root_bypass_ramdisks
-	sudo service odoo restart
+	if [ "$REBOOT" ]
+	then
+		sudo service odoo restart
+	fi
 }
 
-connect "${1}" "${2}" "${3}" &
+connect "${1}" "${2}" "${3}" "${4}" &

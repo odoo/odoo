@@ -277,8 +277,8 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
     def connect_to_server(self, token, iotname):
         url = token.split('|')[0]
         token = token.split('|')[1]
-        subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh', url, iotname, token])
-
+        reboot = True
+        subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_server.sh', url, iotname, token, reboot])
         return 'http://' + self.get_ip_iotbox() + ':8069'
 
     @http.route('/steps', type='http', auth='none', cors='*', csrf=False)
