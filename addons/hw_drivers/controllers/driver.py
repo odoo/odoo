@@ -197,10 +197,9 @@ class GattBtManager(gatt.DeviceManager):
             d = driverclass(device = device)
             path = "bt_%s" % (device.mac_address,)
             if d.supported():
-                if path not in drivers:
-                    drivers[path] = d
-                    d.connect()
-                    send_iot_box_device(False)
+                drivers[path] = d
+                d.connect()
+                send_iot_box_device(False)
 
 
 class BtManager(Thread):
