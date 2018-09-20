@@ -10,6 +10,7 @@ import pytz
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools import pycompat
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -374,7 +375,7 @@ class MailActivity(models.Model):
     @api.multi
     def action_feedback_schedule_next(self, feedback=False):
         ctx = dict(
-                    self.env.context,
+                    clean_context(self.env.context),
                     default_previous_activity_type_id=self.activity_type_id.id,
                     activity_previous_deadline=self.date_deadline,
                     default_res_id=self.res_id,
