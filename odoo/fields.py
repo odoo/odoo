@@ -1681,7 +1681,10 @@ class Binary(Field):
             return None
         if isinstance(value, bytes):
             return psycopg2.Binary(value)
-        return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
+        try:
+            return psycopg2.Binary(pycompat.text_type(value).encode('ascii'))
+        except UnicodeEncodeError:
+            raise UserError(_("ASCII characters are required for %s in %s") % (value, self.name))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
