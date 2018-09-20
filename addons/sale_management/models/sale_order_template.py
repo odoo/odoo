@@ -71,8 +71,7 @@ class SaleOrderTemplateLine(models.Model):
             self.name = name
             self.price_unit = self.product_id.lst_price
             self.product_uom_id = self.product_id.uom_id.id
-            domain = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-            return {'domain': domain}
+            return {}
 
     @api.onchange('product_uom_id')
     def _onchange_product_uom(self):
