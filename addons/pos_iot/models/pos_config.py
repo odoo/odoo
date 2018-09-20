@@ -52,7 +52,7 @@ class PosConfig(models.Model):
 
     @api.multi
     def create(self, vals):
-        if values.get('module_pos_iot') and values.get('iface_customer_facing_display'):
-            if values.get('customer_facing_display_html') and not values['customer_facing_display_html'].strip():
-                values['customer_facing_display_html'] = self._compute_default_customer_html()
+        if vals.get('module_pos_iot') and vals.get('iface_customer_facing_display'):
+            if vals.get('customer_facing_display_html') and not vals['customer_facing_display_html'].strip():
+                vals['customer_facing_display_html'] = self._compute_default_customer_html()
         return super(PosConfig, self).write(vals)
