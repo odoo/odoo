@@ -124,7 +124,7 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
         try:
             f = open('/home/pi/devices', 'r')
             for line in f:
-                url = 'http://' + get_ip_iotbox() + '8069/driverdetails/' + line.split('|')[0]
+                url = 'http://' + self.get_ip_iotbox() + '8069/driverdetails/' + line.split('|')[0]
                 http = urllib3.PoolManager()
                 value = ''
                 try:
