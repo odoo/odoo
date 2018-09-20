@@ -3,240 +3,12 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import pycompat, float_is_zero
+from odoo.tools import pycompat
 from odoo.tools.misc import formatLang
 
 
 class AccountReconciliation(models.AbstractModel):
     _name = 'account.reconciliation.widget'
-
-    ####################################################
-    # Search propositions
-    ####################################################
-
-    @api.model
-    def _get_matching_amls_query(self, st_lines, excluded_ids=None):
-        ''' Base query used by the matching rules.
-        Main things about this huge query:
-        - Try to join the res.partner table:
-            1) On st_line.partner_id.
-            2) On partner_id found on a res.partner.bank sharing the same account number.
-            3) On a partner having the same case insensitive name.
-        - Basic filters on account_move_line.
-
-        :param st_lines:        Account.bank.statement.lines recordset.
-        :param excluded_ids:    Account.move.lines to exclude.
-        :return:                (query, params)
-        '''
-        params = [tuple(st_lines.ids)]
-
-        # N.B: The first part of the CASE is about 'blue lines' while the second part is about 'black lines'.
-        query = '''
-            SELECT
-                st_line.id                          AS id,
-                aml.id                              AS aml_id,
-                aml.currency_id                     AS aml_currency_id,
-                aml.amount_residual                 AS aml_amount_residual,
-                aml.amount_residual_currency        AS aml_amount_residual_currency
-            FROM account_bank_statement_line st_line
-            LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
-            LEFT JOIN res_company company           ON company.id = st_line.company_id
-            LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
-            LEFT JOIN res_partner partner           ON (
-                CASE WHEN st_line.partner_id IS NOT NULL THEN
-                    partner.id = st_line.partner_id
-                WHEN bank.partner_id IS NOT NULL THEN
-                    partner.id = bank.partner_id
-                ELSE
-                    partner.name ILIKE st_line.partner_name
-                END
-            )
-            , account_move_line aml
-            LEFT JOIN res_company aml_company       ON aml_company.id = aml.company_id
-            LEFT JOIN account_account aml_account   ON aml_account.id = aml.account_id
-            WHERE st_line.id IN %s
-                AND aml.company_id = st_line.company_id
-                AND aml.statement_id IS NULL
-                
-                AND (
-                    company.account_bank_reconciliation_start IS NULL
-                    OR
-                    aml.date > company.account_bank_reconciliation_start
-                )
-                
-                AND CASE WHEN journal.default_credit_account_id IS NOT NULL
-                    AND journal.default_debit_account_id IS NOT NULL
-                    THEN
-                        (
-                            aml.account_id IN (journal.default_credit_account_id, journal.default_debit_account_id)
-                            AND aml.payment_id IS NOT NULL
-                        )
-                        OR
-                        (
-                            aml_account.reconcile IS TRUE
-                            AND aml.reconciled IS FALSE
-                        )
-                    END
-        '''
-
-        if excluded_ids:
-            query += 'AND aml.id NOT IN %s'
-            params.append(tuple(excluded_ids))
-        return query, params
-
-    @api.model
-    def _get_matching_amls_invoice_rule(self, st_lines, excluded_ids=None):
-        ''' RULE 1: Match an account.move.line automatically if linked to an invoice having a number or reference quite
-        similar.
-
-        This rule automatically match when invoice_reference match when:
-        - matching only one invoice.
-        - matching multiple invoices but having the same total amount residual.
-
-        :param st_lines:        Account.bank.statement.lines recordset.
-        :param excluded_ids:    Account.move.lines to exclude.
-        :return:                (query, params, automatic_match_func)
-        '''
-
-        def automatic_match_func(st_line, fetched_amls):
-            # Match only one invoice.
-            if len(fetched_amls) == 1:
-                return True
-
-            # Match multiple invoices but having the same total amount residual.
-            total_residual = sum(aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual'] for aml in fetched_amls)
-            line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-            line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
-            return float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding)
-
-        query, params = self._get_matching_amls_query(st_lines, excluded_ids=excluded_ids)
-
-        # Join the account_invoice table.
-        query = query.replace(
-            'account_move_line aml',
-            '''
-            account_move_line aml
-            LEFT JOIN account_move move                 ON move.id = aml.move_id
-            LEFT JOIN account_invoice invoice           ON invoice.move_name = move.name
-            '''
-        )
-
-        # Add where clause.
-        # N.B: invoice_reference could be a list of invoice reference/number (e.g. 'INV/2018/0001,INV/2018/0002').
-        query += '''
-            AND invoice.state = 'open'
-            AND CASE WHEN st_line.amount >= 0.0 THEN
-                    invoice.type IN ('out_invoice', 'in_refund')
-                ELSE
-                    invoice.type IN ('in_invoice', 'out_refund')
-                END
-            AND (
-                REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(invoice.number, '[^0-9]', '', 'g')
-                OR (
-                    invoice.reference IS NOT NULL
-                    AND
-                    REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(invoice.reference, '[^0-9]', '', 'g')
-                )
-            )
-            AND CASE WHEN partner.id IS NOT NULL THEN
-                    invoice.partner_id = partner.id
-                ELSE
-                    TRUE
-                END
-        '''
-        return query, params, automatic_match_func
-
-    @api.model
-    def _get_matching_amls_amount_rule(self, st_lines, excluded_ids=None):
-        ''' RULE 2: Match one or more account.move.lines automatically if either the statement line has exactly the same amount
-        or either the statement line matchs a single line having a greater or equals amount.
-
-        This only work if a partner has been found on the statement line.
-
-        :param st_lines:        Account.bank.statement.lines recordset.
-        :param excluded_ids:    Account.move.lines to exclude.
-        :return:                (query, params, automatic_match_func)
-        '''
-
-        def automatic_match_func(st_line, fetched_amls):
-            total_residual = sum(aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual'] for aml in fetched_amls)
-            line_residual = st_line.currency_id and st_line.amount_currency or st_line.amount
-            line_currency = st_line.currency_id or st_line.journal_id.currency_id or st_line.company_id.currency_id
-
-            # Match the total residual amount.
-            if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):
-                return True
-
-            # Match only one line having a greater residual amount.
-            return len(fetched_amls) == 1 and line_residual < total_residual
-
-        query, params = self._get_matching_amls_query(st_lines, excluded_ids=excluded_ids)
-
-        # Add where clause.
-        # N.B: move.line currency_id is either set or either got from the company.
-        # N.B2: statement.line currency_id is either set, either got from the journal or either got from the company.
-        query += '''
-            AND partner.id IS NOT NULL
-            AND aml.partner_id = partner.id
-            AND (
-                CASE WHEN st_line.currency_id IS NOT NULL AND st_line.currency_id != aml_company.currency_id THEN
-                    aml.currency_id = st_line.currency_id
-                WHEN journal.currency_id IS NOT NULL AND journal.currency_id != aml_company.currency_id THEN
-                    aml.currency_id = journal.currency_id
-                ELSE
-                    aml.currency_id IS NULL
-                END
-            )
-        '''
-        return query, params, automatic_match_func
-
-    @api.model
-    def _get_matching_amls(self, st_lines, excluded_ids=None):
-        ''' Apply reconciliation matching rules in order to find matching account.move.lines.
-
-        :param st_lines:        Account.bank.statement.lines recordset.
-        :param excluded_ids:    Account.move.lines ids to exclude.
-        :return:                A dictionnary mapping each id with:
-            * line:     The account.bank.statement.line record.
-            * aml_ids:  The matching account.move.line ids.
-        '''
-        results = dict((r.id, {'line': r, 'aml_ids': []}) for r in st_lines)
-        excluded_ids = excluded_ids or []
-
-        rules = [
-            self._get_matching_amls_invoice_rule,
-            self._get_matching_amls_amount_rule,
-        ]
-        for rule in rules:
-            query, params, automatic_match_func = rule(st_lines, excluded_ids=excluded_ids)
-            self._cr.execute(query, params)
-            query_res = self._cr.dictfetchall()
-
-            # Map statement line with candidates.
-            candidates_map = {}
-            for res in query_res:
-                candidates_map.setdefault(res['id'], [])
-                candidates_map[res['id']].append(res)
-
-            for line_id, fetched_amls in candidates_map.items():
-                st_line = results[line_id]['line']
-
-                candidate_amls = []
-                candidate_amls_ids = []
-                for aml in fetched_amls:
-                    if aml['aml_id'] not in excluded_ids:
-                        candidate_amls.append(aml)
-                        candidate_amls_ids.append(aml['aml_id'])
-
-                if automatic_match_func(results[line_id]['line'], candidate_amls):
-                    results[line_id]['aml_ids'] = candidate_amls_ids
-
-                    # Mark statement line as already processed.
-                    st_lines -= st_line
-
-                    # Exclude move lines.
-                    excluded_ids += candidate_amls_ids
-        return results
 
     ####################################################
     # Public
@@ -305,6 +77,33 @@ class AccountReconciliation(models.AbstractModel):
         return self._prepare_move_lines(aml_recs, target_currency=target_currency, target_date=st_line.date, recs_count=recs_count)
 
     @api.model
+    def _get_bank_statement_line_partners(self, st_lines):
+        query = '''
+            SELECT
+                st_line.id                          AS id,
+                partner.id                          AS partner_id
+            FROM account_bank_statement_line st_line
+            LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
+            LEFT JOIN res_partner partner           ON (
+                CASE WHEN st_line.partner_id IS NOT NULL THEN
+                    partner.id = st_line.partner_id
+                WHEN bank.partner_id IS NOT NULL THEN
+                    partner.id = bank.partner_id
+                ELSE
+                    partner.name ILIKE st_line.partner_name
+                END
+            )
+            WHERE st_line.id IN %s
+        '''
+        params = [tuple(st_lines.ids)]
+        self._cr.execute(query, params)
+
+        result = {}
+        for res in self._cr.dictfetchall():
+            result[res['id']] = res['partner_id']
+        return result
+
+    @api.model
     def get_bank_statement_line_data(self, st_line_ids, excluded_ids=None):
         """ Returns the data required to display a reconciliation widget, for
             each statement line in self
@@ -314,19 +113,43 @@ class AccountReconciliation(models.AbstractModel):
                 result
         """
         excluded_ids = excluded_ids or []
-        ret = []
-        st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
-        matching_amls = self._get_matching_amls(st_lines, excluded_ids=excluded_ids)
+
+        bank_statement_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
+        sorted_st_lines = sorted(bank_statement_lines, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
+        reconcile_model = self.env['account.reconcile.model'].search([('rule_type', '!=', 'writeoff_button')])
+
+        # Search for missing partners when opening the reconciliation widget.
+        partner_map = self._get_bank_statement_line_partners(bank_statement_lines)
+
+        matching_amls = reconcile_model._apply_rules(bank_statement_lines, excluded_ids=excluded_ids, partner_map=partner_map)
+
+        results = {
+            'lines': [],
+            'value_min': 0,
+            'value_max': len(bank_statement_lines),
+            'reconciled_aml_ids': [],
+        }
 
         # Iterate on st_lines to keep the same order in the results list.
-        for line in st_lines:
-            aml_ids = matching_amls[line.id]['aml_ids']
-            amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
-            ret.append({
-                'st_line': self._get_statement_line(line),
-                'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
-            })
-        return ret
+        bank_statements_left = self.env['account.bank.statement']
+        for line in sorted_st_lines:
+            if matching_amls[line.id].get('status') == 'reconciled':
+                reconciled_move_lines = matching_amls[line.id].get('reconciled_lines')
+                results['value_min'] += 1
+                results['reconciled_aml_ids'] += reconciled_move_lines and reconciled_move_lines.ids or []
+            else:
+                aml_ids = matching_amls[line.id]['aml_ids']
+                bank_statements_left += line.statement_id
+
+                amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
+                results['lines'].append({
+                    'st_line': self._get_statement_line(line),
+                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
+                    'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
+                    'write_off': matching_amls[line.id].get('status') == 'write_off',
+                })
+
+        return results
 
     @api.model
     def get_bank_statement_data(self, bank_statement_ids):
@@ -339,62 +162,43 @@ class AccountReconciliation(models.AbstractModel):
             :param st_line_id: ids of the bank statement
         """
         bank_statements = self.env['account.bank.statement'].browse(bank_statement_ids)
-        Bank_statement_line = self.env['account.bank.statement.line']
 
-        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
-        # this is why we filter out statements lines where account_id is set
+        query = '''
+             SELECT line.id
+             FROM account_bank_statement_line line
+             WHERE account_id IS NULL
+             AND line.amount != 0.0
+             AND line.statement_id IN %s
+             AND NOT EXISTS (SELECT 1 from account_move_line aml WHERE aml.statement_line_id = line.id)
+        '''
+        self.env.cr.execute(query, [tuple(bank_statements.ids)])
 
-        sql_query = """SELECT stl.id
-                        FROM account_bank_statement_line stl
-                        WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
-                """
-        params = []
-        if bank_statements:
-            sql_query += ' AND stl.statement_id IN %s'
-            params += (tuple(bank_statements.ids),)
-        else:
-            sql_query += ' AND stl.company_id = %s'
-            params += [self.env.user.company_id.id]
-        sql_query += ' ORDER BY stl.id'
-        self.env.cr.execute(sql_query, params)
-        st_lines_left = Bank_statement_line.browse([line.get('id') for line in self.env.cr.dictfetchall()])
+        bank_statement_lines = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
 
-        #try to assign partner to bank_statement_line
-        stl_to_assign = st_lines_left.filtered(lambda stl: not stl.partner_id)
-        refs = set(stl_to_assign.mapped('name'))
-        if stl_to_assign and refs\
-           and st_lines_left[0].journal_id.default_credit_account_id\
-           and st_lines_left[0].journal_id.default_debit_account_id:
+        results = self.get_bank_statement_line_data(bank_statement_lines.ids)
+        bank_statement_lines_left = self.env['account.bank.statement.line'].browse([line['st_line']['id'] for line in results['lines']])
+        bank_statements_left = bank_statement_lines_left.mapped('statement_id')
 
-            sql_query = """SELECT aml.partner_id, aml.ref, stl.id
-                            FROM account_move_line aml
-                                JOIN account_account acc ON acc.id = aml.account_id
-                                JOIN account_bank_statement_line stl ON aml.ref = stl.name
-                            WHERE (aml.company_id = stl.company_id
-                                AND aml.partner_id IS NOT NULL)
-                                AND (
-                                    (aml.statement_id IS NULL AND aml.account_id IN %s)
-                                    OR
-                                    (acc.internal_type IN ('payable', 'receivable') AND aml.reconciled = false)
-                                    )
-                                AND aml.ref IN %s
-                                """
-            params = ((st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
-            if bank_statements:
-                sql_query += 'AND stl.id IN %s'
-                params += (tuple(stl_to_assign.ids),)
-            self.env.cr.execute(sql_query, params)
-            results = self.env.cr.dictfetchall()
-            for line in results:
-                Bank_statement_line.browse(line.get('id')).write({'partner_id': line.get('partner_id')})
+        results.update({
+            'statement_name': len(bank_statements_left) == 1 and bank_statements_left.name or False,
+            'journal_id': bank_statements_left and bank_statements_left[0].journal_id.id or False,
+            'notifications': []
+        })
 
-        return {
-            'st_lines_ids': st_lines_left.ids,
-            'notifications': [],
-            'statement_name': len(bank_statements) == 1 and bank_statements[0].name or False,
-            'journal_id': bank_statements and bank_statements[0].journal_id.id or False,
-            'num_already_reconciled_lines': 0,
-        }
+        if len(results['lines']) < len(bank_statement_lines):
+            results['notifications'].append({
+                'type': 'info',
+                'template': 'reconciliation.notification.reconciled',
+                'reconciled_aml_ids': results['reconciled_aml_ids'],
+                'nb_reconciled_lines': results['value_min'],
+                'details': {
+                    'name': _('Journal Items'),
+                    'model': 'account.move.line',
+                    'ids': results['reconciled_aml_ids'],
+                }
+            })
+
+        return results
 
     @api.model
     def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False, offset=0, limit=None, target_currency_id=False):

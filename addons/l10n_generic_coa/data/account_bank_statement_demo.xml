@@ -6,7 +6,7 @@
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
-            <field name="name">BNK/2014/001</field>
+            <field name="name" eval="'BNK/%s/0001' % time.strftime('%Y')"/>
             <field name="balance_end_real">8998.2</field>
             <field name="balance_start">5103.0</field>
         </record>
@@ -15,11 +15,11 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">1</field>
-            <field name="name">SAJ/2014/002 and SAJ/2014/003</field>
+            <field name="name" eval="'INV/%s/0002 and INV/%s/0003' % (time.strftime('%Y'), time.strftime('%Y'))"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
-            <field name="amount">1175.0</field>
+            <field name="amount">1275.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="partner_id" ref="base.res_partner_2"/>
         </record>
@@ -53,7 +53,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">4</field>
-            <field name="name">First 2000 € of SAJ/2014/001</field>
+            <field name="name" eval="'First 2000 $ of invoice %s/0001' % time.strftime('%Y')"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
@@ -78,7 +78,7 @@
             <field name="ref"></field>
             <field name="statement_id" ref="l10n_generic_coa.demo_bank_statement_1"/>
             <field name="sequence">1</field>
-            <field name="name" eval="'SAJ/'+time.strftime('%Y')+'/002'"/>
+            <field name="name" eval="'INV/'+time.strftime('%Y')+'/0002'"/>
             <field name="journal_id" model="account.journal" search="[
                 ('type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>

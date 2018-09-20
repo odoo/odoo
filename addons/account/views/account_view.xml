@@ -867,7 +867,75 @@
                         </div>
                         <group>
                             <group>
-                                <field name="account_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="rule_type" widget="radio"/>
+                            </group>
+                            <group>
+                                <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
+                            </group>
+                        </group>
+                        <group string="Conditions on Bank Statement Line">
+                            <group>
+                                <field name="match_journal_ids"
+                                       options="{'no_create': True}"
+                                       widget="many2many_tags"/>
+                                <field name="match_nature" widget="radio"
+                                       attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
+                            </group>
+                            <group attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}">
+                                <label for="match_amount"/>
+                                <div>
+                                    <field name="match_amount" style="width: 30% !important" class="oe_inline"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span> <!-- Make a little space. -->
+                                    <field name="match_amount_min" style="width: 30% !important;" class="oe_inline"
+                                           attrs="{'invisible': [('match_amount', 'in', (False, 'lower'))], 'required': [('match_amount', '!=', False)]}"/>
+                                    <span class="o_form_label"
+                                          attrs="{'invisible': [('match_amount', '!=', 'between')]}">and</span>
+                                    <field name="match_amount_max" style="width: 30% !important;" class="oe_inline"
+                                           attrs="{'invisible': [('match_amount', 'in', (False, 'greater'))], 'required': [('match_amount', '=', 'between')]}"/>
+                                </div>
+                                <label for="match_label"/>
+                                <div>
+                                    <field name="match_label" style="width: 30% !important" class="oe_inline"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span> <!-- Make a little space. -->
+                                    <field name="match_label_param" style="width: 68% !important;" class="oe_inline"
+                                           attrs="{'invisible': [('match_label', '=', False)], 'required': [('match_label', '!=', False)]}"/>
+                                </div>
+                                <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
+                                <label for="match_total_amount"
+                                       attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False)]}"/>
+                                <div attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False)]}">
+                                    <field name="match_total_amount" class="oe_inline"/>
+                                    <field name="match_total_amount_param" class="oe_inline"
+                                           attrs="{'invisible': [('match_total_amount', '=', False)]}"/>
+                                    <span class="o_form_label oe_inline"
+                                          attrs="{'invisible': [('match_total_amount', '=', False)]}">%</span>
+                                    <div class="text-muted" attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_total_amount', '=', False)]}">
+                                    This parameter will be bypassed in case of a statement line communication matching exactly existing entries</div>
+                                </div>
+                            </group>
+                            <group attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}">
+                                <field name="match_partner"
+                                       attrs="{'invisible': [('rule_type', '!=', 'writeoff_suggestion')]}"/>
+                                <field name="match_partner"
+                                       string="Partner Is Set &amp; Matches"
+                                       attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
+                                <label for="match_partner_ids" class="ml16"
+                                       attrs="{'invisible': [('match_partner', '=', False)]}"/>
+                                <field name="match_partner_ids" nolabel="1"
+                                       widget="many2many_tags"
+                                       attrs="{'invisible': [('match_partner', '=', False)]}"/>
+                                <label for="match_partner_category_ids" class="ml16"
+                                       attrs="{'invisible': [('match_partner', '=', False)]}"/>
+                                <field name="match_partner_category_ids" nolabel="1"
+                                       widget="many2many_tags"
+                                       attrs="{'invisible': [('match_partner', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group string="Write-off Values"
+                               attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
+                            <group>
+                                <field name="account_id" domain="[('company_id', '=', company_id)]"
+                                       attrs="{'required': ['|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id"
                                        domain="[('company_id', '=', company_id)]"
@@ -888,16 +956,19 @@
                                     <field name="amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"
+                                       attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
-                        <div class="oe_edit_only">
+                        <div class="oe_edit_only"
+                             attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <field name="has_second_line" />
                             <label for="has_second_line" string="Add a second line"/>
                         </div>
-                        <group attrs="{'invisible':[('has_second_line','!=',True)]}">
+                        <group attrs="{'invisible':['|', ('has_second_line', '=', False), '&amp;', ('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
                             <group>
-                                <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_account_id" string="Account" domain="[('company_id', '=', company_id)]"
+                                       attrs="{'required': [('has_second_line', '=', True), '|', ('rule_type', '!=', 'invoice_matching'), '&amp;', '&amp;', ('rule_type', '=', 'invoice_matching'), ('match_total_amount', '=', True), ('match_total_amount_param', '!=', 100.0)]}"/>
                                 <field name="second_amount_type" string="Amount type"/>
                                 <field name="second_tax_id"
                                        string="Tax"
@@ -918,7 +989,8 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"/>
+                                <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"
+                                       attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
                     </sheet>

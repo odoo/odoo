@@ -9,34 +9,21 @@ Tour.register('bank_statement_reconciliation', {
         test: true,
         // Go to the reconciliation page of the statement: "BNK/2014/001"
     }, [
-        // Reconciliation of 'SAJ/2018/002'
-        // Select the 'INV/2018/0002' line and click on reconcile.
+        // Reconciliation of 'INV/2018/0002'
+        // Click on reconcile (matching done automatically by the reconciliation rule).
 
-        {
-            content: "open the last line in match mode to test the reconcile button",
-            trigger: '.toggle_match:last',
-            extra_trigger: '.o_reconciliation',
-        },
-        {
-            content: "select the 'INV/2018/0002' line",
-            trigger: '.o_reconciliation_line:last .match .cell_label:contains("INV/2018/0002")'
-        },
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:nth-child(1) .o_reconcile:visible',
         },
 
-        // Reconciliation of 'First 2000 € of SAJ/2014/0001'
+        // Reconciliation of 'First 2000 $ of INV/2018/0001'
         // Make a partial reconciliation
 
         {
             content: "open the last line in match mode to test the partial reconciliation",
             extra_trigger: '.o_reconciliation_line:first[data-mode="match"]',
             trigger: '.o_reconciliation_line:last .cell_label:contains("First")'
-        },
-        {
-            content: "select a line with with a higher amount",
-            trigger: '.o_reconciliation_line:last .match .cell_label:contains("INV/2018/0001")'
         },
         {
             content: "click on partial reconcile",
@@ -67,7 +54,6 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select a line linked to Deco Addict ",
-            extra_trigger: '.o_reconciliation_line:nth-child(2) .match:not(:has(tr:eq(1)))',
             trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*='Deco Addict']"
         },
         {
