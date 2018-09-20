@@ -5,7 +5,6 @@ var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 
 var _t = core._t;
-var previously_barcode_scanned;
 
 
 var GreetingMessage = AbstractAction.extend({
@@ -55,17 +54,19 @@ var GreetingMessage = AbstractAction.extend({
     },
 
     willStart: function() {
-        if (this.attendance != undefined){
-            this._rpc({
+        var self = this;
+        var def;
+        if (this.attendance && this.attendance.employee_id) {
+            def = this._rpc({
                 model: 'hr.employee',
                 method: 'read',
                 args: [this.attendance.employee_id[0], ['barcode']],
              })
             .then(function (employee) {
-                previously_barcode_scanned = employee[0].barcode;
+                self.attendanceBarcode = employee[0].barcode;
             });
         }
-        return this._super.apply(this, arguments);
+        return $.when(this._super.apply(this, arguments), def);
     },
 
     start: function() {
@@ -151,11 +152,11 @@ var GreetingMessage = AbstractAction.extend({
 
     _onBarcodeScanned: function(barcode) {
         var self = this;
-        if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
-            clearTimeout(this.return_to_main_menu);
-        }
-        if (previously_barcode_scanned != barcode){
-            previously_barcode_scanned = barcode;
+        if (this.attendanceBarcode !== barcode){
+            if (this.return_to_main_menu) {  // in case of multiple scans in the greeting message view, delete the timer, a new one will be created.
+                clearTimeout(this.return_to_main_menu);
+            }
+            core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
             this._rpc({
                     model: 'hr.employee',
                     method: 'attendance_scan',
