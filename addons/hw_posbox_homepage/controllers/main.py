@@ -14,7 +14,7 @@ import odoo
 import base64
 from odoo import http
 import requests
-import request
+from odoo.http import request
 import zipfile
 import io
 import os
