@@ -1572,7 +1572,7 @@ class AccountInvoiceLine(models.Model):
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure',
-        ondelete='set null', index=True, oldname='uos_id')
+        ondelete='set null', index=True, oldname='uos_id', domain="[('category_id', '=', product_uom_category_id)]")
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')

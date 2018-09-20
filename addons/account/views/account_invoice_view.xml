@@ -75,6 +75,7 @@
                         TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                     -->
                     <field name="sequence" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <group attrs="{'invisible': [('display_type', '!=', False)]}">
                         <group>
                             <field name="product_id"
@@ -313,6 +314,7 @@
                                         context="{'partner_id': parent.partner_id}" domain="[('purchase_ok','=',True)]"/>
                                     <field name="name"/>
                                     <field name="company_id" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
@@ -492,7 +494,7 @@
                                         context="{'default_partner_id': parent.partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" domain="[('category_id', '=', product_uom_category_id)]" groups="uom.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit" string="Price"/>
                                     <field name="discount" groups="base.group_no_one" string="Disc (%)"/>
                                     <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"

@@ -305,6 +305,7 @@
                             >
                                 <form>
                                     <field name="display_type" invisible="1"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
                                     <!--
                                         We need the sequence field to be here for new lines to be added at the correct position.
                                         TODO: at some point we want to fix this in the framework so that an invisible field is not required.
@@ -454,7 +455,6 @@
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field
                                         name="product_uom"
-                                        domain="[('category_id', '=', product_uom_category_id)]"
                                         attrs="{
                                             'readonly': [('state', 'in', ('sale','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],

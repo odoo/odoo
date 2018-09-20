@@ -43,7 +43,6 @@ class MrpBom(models.Model):
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
-    # product_uom_category_id = fields.Many2one(related='product_uom_id.category_id', store=False)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',

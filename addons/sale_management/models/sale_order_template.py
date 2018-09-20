@@ -54,7 +54,7 @@ class SaleOrderTemplateLine(models.Model):
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     product_uom_qty = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', store=False)
 
     display_type = fields.Selection([
