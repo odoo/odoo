@@ -109,46 +109,16 @@
                             </div>
                         </div>
                     </div>
-                    <h2>IotBox / Hardware Proxy</h2>
+                    <h2>Hardware</h2>
                     <div class="row mt16 o_settings_container" id="posbox_reference">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="module_iot"/>
+                                <field name="module_pos_iot"/>
                             </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_iot"/>
+                            <div class="o_setting_right_pane" name="session_iot">
+                                <label for="module_pos_iot"/>
                                 <div class="text-muted">
-                                    Use an integrated hardware setup like <a href="https://www.odoo.com/documentation/user/online/point_of_sale/overview/setup.html" target="_blank">IoTBox</a>
-                                </div>
-                                <div class="content-group mt16" attrs="{'invisible' : [('module_iot', '=', False)]}">
-                                    <field name="iot_box_id"/>
-                                    <div class="row">
-                                        <label string="Barcode Scanner" for="iface_scan_via_proxy" class="col-lg-3 o_light_label"/>
-                                        <field name="iface_scan_via_proxy"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Electronic Scale" for="iface_electronic_scale" class="col-lg-3 o_light_label"/>
-                                        <field name="iface_electronic_scale"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
-                                        <field name="iface_cashdrawer"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Receipt Printer" for="iface_print_via_proxy" class="col-lg-3 o_light_label"/>
-                                        <field name="iface_print_via_proxy"/>
-                                    </div>
-                                    <div class="row">
-                                        <label string="Customer Display" for="iface_customer_facing_display" class="col-lg-3 o_light_label"/>
-                                        <field name="iface_customer_facing_display"/>
-                                    </div>
-                                    <field name="customer_facing_display_html" invisible="1"/>
-                                    <div class="text-muted" attrs="{'invisible' : ['|', ('iface_customer_facing_display', '=', False), '&amp;', ('id', '!=', False), ('customer_facing_display_html', '!=', '')]}">Save this configuration to see and edit the customer display</div>
-                                    <div class="row mt16 o_settings_container" attrs="{'invisible' : ['|', '|',('iface_customer_facing_display', '=', False), ('id', '=', False), ('customer_facing_display_html', '=', '')]}">
-                                        <div class="col-12 col-lg-6 o_setting_box">
-                                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
-                                        </div>
-                                    </div>
+                                    Connect to an IoT Box to use hardware for the PoS
                                 </div>
                             </div>
                         </div>
@@ -381,28 +351,14 @@
                                 <div class="text-muted">
                                     Print receipts automatically once the payment is registered
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('module_iot', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('module_pos_iot', '=', False)]}">
                                     <div>
                                         <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('iface_print_via_proxy','=',False)]}">
-                            <div class="o_setting_left_pane">
-                                <field name='module_pos_reprint'/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="module_pos_reprint"/>
-                                <div class="text-muted">
-                                    Allow cashier to reprint receipts
-                                </div>
-                                <div class="content-group" attrs="{'invisible': [('module_pos_reprint', '=', False)]}">
-                                    <div class="mt16" id="btn_use_pos_reprint">
-                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
-                                    </div>
-                                </div>
-                            </div>
+                        <div name="session_reprint" class="col-12 col-lg-6 o_setting_box" invisible="1">
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="iface_invoicing">
                             <div class="o_setting_left_pane">

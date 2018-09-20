@@ -60,9 +60,6 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
-    def _compute_default_customer_html(self):
-        return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
-
     name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
@@ -86,13 +83,8 @@ class PosConfig(models.Model):
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
-    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration.")
-    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help=u"Don’t turn this option on if you take orders on smartphones or tablets. \n Such devices already benefit from a native keyboard.")
-    iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
-    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
-    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
         help='The receipt will automatically be printed at the end of each order.')
@@ -110,9 +102,6 @@ class PosConfig(models.Model):
     cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
-    iot_box_id = fields.Many2one('iot.box', string="IotBox")
-    proxy_ip = fields.Char(string='IP Address', related="iot_box_id.ip",
-        help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()),
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
@@ -149,7 +138,6 @@ class PosConfig(models.Model):
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
-    customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
@@ -161,7 +149,7 @@ class PosConfig(models.Model):
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
-    module_iot = fields.Boolean(string="IotBox integration")
+    module_pos_iot = fields.Boolean(string="Connect an IoT Box")
     is_header_or_footer = fields.Boolean("Header & Footer")
 
     def _compute_is_installed_account_accountant(self):
@@ -255,10 +243,6 @@ class PosConfig(models.Model):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
             raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
-    @api.onchange('iface_print_via_proxy')
-    def _onchange_iface_print_via_proxy(self):
-        self.iface_print_auto = self.iface_print_via_proxy
-
     @api.onchange('module_account')
     def _onchange_module_account(self):
         if self.module_account:
@@ -283,29 +267,12 @@ class PosConfig(models.Model):
         if self.pricelist_id not in self.available_pricelist_ids:
             self.pricelist_id = False
 
-    @api.onchange('iface_scan_via_proxy')
-    def _onchange_iface_scan_via_proxy(self):
-        if self.iface_scan_via_proxy:
-            self.barcode_scanner = True
-        else:
-            self.barcode_scanner = False
-
     @api.onchange('barcode_scanner')
     def _onchange_barcode_scanner(self):
         if self.barcode_scanner:
             self.barcode_nomenclature_id = self.env.user.company_id.nomenclature_id
         else:
             self.barcode_nomenclature_id = False
-
-    @api.onchange('module_iot')
-    def _onchange_module_iot(self):
-        if not self.module_iot:
-            self.iot_box_id = False
-            self.iface_scan_via_proxy = False
-            self.iface_electronic_scale = False
-            self.iface_cashdrawer = False
-            self.iface_print_via_proxy = False
-            self.iface_customer_facing_display = False
 
     @api.onchange('tax_regime')
     def _onchange_tax_regime(self):
@@ -341,9 +308,6 @@ class PosConfig(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('module_iot') and values.get('iface_customer_facing_display'):
-            if values.get('customer_facing_display_html') and not values['customer_facing_display_html'].strip():
-                values['customer_facing_display_html'] = self._compute_default_customer_html()
         IrSequence = self.env['ir.sequence'].sudo()
         val = {
             'name': _('POS Order %s') % values['name'],
@@ -366,10 +330,6 @@ class PosConfig(models.Model):
     @api.multi
     def write(self, vals):
         result = super(PosConfig, self).write(vals)
-
-        config_display = self.filtered(lambda c: c.module_iot and c.iface_customer_facing_display and not (c.customer_facing_display_html or '').strip())
-        if config_display:
-            super(PosConfig, config_display).write({'customer_facing_display_html': self._compute_default_customer_html()})
 
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
