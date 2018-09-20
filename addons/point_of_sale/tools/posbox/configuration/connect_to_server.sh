@@ -39,7 +39,7 @@ function connect () {
 	fi
 	sudo mount -o remount,ro /
 	sudo mount -o remount,ro /root_bypass_ramdisks
-	if [ "$REBOOT" ]
+	if [ "$REBOOT" == 'reboot' ]
 	then
 		sudo service odoo restart
 	fi
