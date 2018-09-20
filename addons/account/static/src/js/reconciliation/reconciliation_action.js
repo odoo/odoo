@@ -7,6 +7,7 @@ var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var Widget = require('web.Widget');
 var core = require('web.core');
+var _t = core._t;
 
 
 /**
@@ -109,7 +110,18 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
         this._renderLines();
-        this._openFirstLine();
+
+        // No more lines to reconcile, trigger the rainbowman.
+        var initialState = this.renderer._initialState;
+        if(initialState.valuenow === initialState.valuemax){
+            initialState.context = this.model.getContext();
+            this.renderer.showRainbowMan(initialState);
+        }else{
+            // Create a notification if some lines has been reconciled automatically.
+            if(initialState.valuenow > 0)
+                this.renderer._renderNotifications(this.model.statement.notifications);
+            this._openFirstLine();
+        }
     },
 
     /**

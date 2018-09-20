@@ -159,6 +159,7 @@ var db = {
         fields: {
             id: {string: "ID", type: 'integer'},
             name: {string: "Button Label", type: 'char'},
+            rule_type: {string: "Type", type: 'selection', selection: [['writeoff_button', 'Create a Button'], ['writeoff_suggestion', 'Write off Suggestion'], ['invoice_matching', 'Invoice matching']], default:'writeoff_button'},
             has_second_line: {string: "Add a second line", type: 'boolean'},
             account_id: {string: "Account", type: 'many2one', relation:'account.account'},
             journal_id: {string: "Journal", type: 'many2one', relation:'account.journal'},
@@ -174,14 +175,15 @@ var db = {
             second_amount: {string: "Second Amount", type: 'float', digits:0, help:"Fixed amount will count as a debit if it is negative, as a credit if it is positive.", default:100.0},
             second_tax_id: {string: "Second Tax", type: 'many2one', relation:'account.tax', domain:[('type_tax_use', '=', 'purchase')]},
             second_analytic_account_id: {string: "Second Analytic Account", type: 'many2one', relation:'account.analytic.account'},
+            match_journal_ids: {string: "Journal Ids", type: 'many2many', relation: 'account.journal'}
         },
         records: [
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 4, 'analytic_account_id': false, 'display_name': "Int\u00e9rrets", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 282, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "fixed", 'name': "Int\u00e9rrets", 'amount': 0.0, 'second_amount': 100.0},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 2, 'analytic_account_id': false, 'display_name': "Perte et Profit", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 283, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Perte et Profit", 'amount': 100.0, 'second_amount': 100.0},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 5, 'analytic_account_id': false, 'display_name': "Fs bank", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 284, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Fs bank", 'amount': 100.0, 'second_amount': 100.0},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 8, 'analytic_account_id': false, 'display_name': "Caisse Sand.", 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': "Caisse Sand.", 'second_label': false, 'second_account_id': false, 'account_id': 308, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Caisse Sand.", 'amount': 100.0, 'second_amount': 100.0},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
-            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 4, 'analytic_account_id': false, 'display_name': "Int\u00e9rrets", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 282, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "fixed", 'name': "Int\u00e9rrets", 'amount': 0.0, 'second_amount': 100.0, 'match_journal_ids': []},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 2, 'analytic_account_id': false, 'display_name': "Perte et Profit", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 283, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Perte et Profit", 'amount': 100.0, 'second_amount': 100.0, 'match_journal_ids': []},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 5, 'analytic_account_id': false, 'display_name': "Fs bank", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': false, 'second_label': false, 'second_account_id': false, 'account_id': 284, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Fs bank", 'amount': 100.0, 'second_amount': 100.0},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 8, 'analytic_account_id': false, 'display_name': "Caisse Sand.", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': false, 'journal_id': false, 'label': "Caisse Sand.", 'second_label': false, 'second_account_id': false, 'account_id': 308, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Caisse Sand.", 'amount': 100.0, 'second_amount': 100.0, 'match_journal_ids': []},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'rule_type': 'writeoff_button', 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
+            {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'rule_type': 'writeoff_button', 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5, 'match_journal_ids': []},
         ]
     },
     'account.reconciliation.widget': {
@@ -222,10 +224,17 @@ var db = {
         },
         get_bank_statement_line_data: function (args) {
             var ids = args[0];
-            return $.when(_.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+            var results = {
+                value_min: 0,
+                value_max: ids.length,
+                lines: _.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);})
+            };
+            return $.when(results);
         },
         get_bank_statement_data: function () {
-            return $.when(Datas.used.data_preprocess);
+            var results = Datas.used.data_preprocess;
+            results.lines = _.filter(Datas.used.data_widget, function (w) {return _.contains(results.st_lines_ids, w.st_line.id);});
+            return $.when(results);
         },
         get_move_lines_for_manual_reconciliation: function (args) {
             var excluded_ids = args.splice(2, 1)[0];
@@ -267,6 +276,8 @@ var db = {
 };
 
 var data_preprocess = {
+    value_min: 0,
+    value_max: 4,
     notifications: [],
     num_already_reconciled_lines: 0,
     st_lines_ids: [5, 6, 7, 8],
@@ -865,7 +876,7 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('body'));
+        clientAction.appendTo($('#qunit-fixture'));
 
         var widget = clientAction.widgets[0];
 
@@ -1048,7 +1059,7 @@ QUnit.module('account', {
 
         assert.notOk(widget.$('.accounting_view tfoot .cell_label').text(), "should not display 'Open Balance' line because the rest to reconcile is null");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have only the created reconcile line");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 SAJ/2014/002 and SAJ/2014/003 1175.00 ",
+        assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 New SAJ/2014/002 and SAJ/2014/003 1175.00 ",
             "the new line should have the selected account, name and amout");
         assert.ok(widget.$('caption button.btn-primary:visible').length, "should display the 'Reconcile' button");
 
@@ -1071,7 +1082,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().trim().replace(/[\n\r\s\u00a0]+/g, ' '), "$ 1100.00", "should display the value 1100.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 75.00", "should display 'Open Balance' line because the rest to reconcile is 75.00");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 1, "should have ever only the created reconcile line");
-        assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 SAJ/2014/002 and SAJ/2014/003 1100.00 ",
+        assert.strictEqual(widget.$('.accounting_view tbody tr').text().replace(/[\n\r\s$,]+/g, ' '), " 101200 New SAJ/2014/002 and SAJ/2014/003 1100.00 ",
             "the new line should be update the amout");
         assert.ok(widget.$('caption button.btn-secondary:visible').length, "should display the 'validate' button");
 
@@ -1085,7 +1096,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open Balance'");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_right').text(), "$ 175.00", "should display 'Open Balance' line because the rest to reconcile is 175.00");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
-        assert.strictEqual(widget.$('.accounting_view tbody tr:eq(1)').text().replace(/[\n\r\s$,]+/g, ' '), " 101000 test0 100.00 ",
+        assert.strictEqual(widget.$('.accounting_view tbody tr:eq(1)').text().replace(/[\n\r\s$,]+/g, ' '), " 101000 New test0 100.00 ",
             "the new line should have the selected account, name and amout");
 
         widget.$('.accounting_view tfoot td:first').trigger('click');
@@ -1236,7 +1247,7 @@ QUnit.module('account', {
         widget.$('.create .create_amount input').val('100').trigger('input');
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
-            " 101120 ATOS Banque 1075.00 101120 Tax 20.00% 215.00 101130 ATOS Frais 90.91 101300 Tax 10.00% include 9.09 ",
+            " 101120 New ATOS Banque 1075.00 101120 New Tax 20.00% 215.00 101130 New ATOS Frais 90.91 101300 New Tax 10.00% include 9.09 ",
             "should update the value of the 4 lines (because the line must have 100% of the value)");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Open balance215.00", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
@@ -1249,7 +1260,7 @@ QUnit.module('account', {
         widget.$('.create .quick_add button:contains(Double)').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody').text().replace(/[\n\r\s$,]+/g, ' '),
-            " 101120 Double Banque 1145.62 101130 Double Frais 29.38 ",
+            " 101120 New Double Banque 1145.62 101130 New Double Frais 29.38 ",
             "should have a sum of reconciliation proposition amounts equal to the line amount");
 
         clientAction.destroy();
@@ -1302,240 +1313,6 @@ QUnit.module('account', {
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 1, "should display the 'Write-off' line because the balance is not null in Euro");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_validate:visible').length, 1, "should display 'Reconcile' button");
-
-        clientAction.destroy();
-    });
-
-    QUnit.test('Reconciliation pager', function (assert) {
-        assert.expect(6);
-
-        this.params.data['account.bank.statement.line'].records.push(
-            {id: 9, display_name: "add 9"},
-            {id: 10, display_name: "add 10"},
-            {id: 11, display_name: "add 11"},
-            {id: 12, display_name: "add 12"},
-            {id: 13, display_name: "add 13"},
-            {id: 14, display_name: "add 14"},
-            {id: 15, display_name: "add 15"},
-            {id: 16, display_name: "add 16"}
-        );
-
-        var data_preprocess = this.params.data_preprocess;
-        data_preprocess.st_lines_ids.push(9, 10, 11, 12, 13, 14, 15, 16);
-
-        this.params.data_widget.push(
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 9",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 9,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 10",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 10,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 11",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 11,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 12",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 12,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 13",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 13,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 14",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 14,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 15",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 15,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 16",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 16,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            }
-        );
-
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
-            data: this.params.data,
-            session: {
-                currencies: {
-                    3: {
-                        digits: [69, 2],
-                        position: "before",
-                        symbol: "$"
-                    }
-                }
-            },
-        });
-
-        clientAction.appendTo($('#qunit-fixture'));
-
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should display 10 lines");
-        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 1, "should display the load more button");
-        clientAction.$('.accounting_view:has(.o_reconcile:visible) thead .cell_action').click();
-        clientAction.$('.o_reconcile:visible').click();
-        assert.strictEqual(clientAction.$('.o_reconcile:visible').length, 0, "should remove the reconciled line");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should load one line to complete the 10");
-        clientAction.$('thead .cell_action:eq(1)').click();
-        clientAction.$('.js_load_more').click();
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 11, "should load the last record");
-        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 0, "should hide the load more button");
 
         clientAction.destroy();
     });
@@ -1780,8 +1557,7 @@ QUnit.module('account', {
 
         // Add first prop
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.notOk( widget.$('.cell_right .line_info_button').length,
-            "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.cell_right .line_info_button').length, 1, "should display the partial reconciliation alert");
 
         // Add second prop
         widget.$('.match .cell_account_code:first').trigger('click');
