@@ -4,6 +4,7 @@
 from . import pycompat
 from . import win32
 from . import appdirs
+from . import migration
 from . import pdf
 from .config import config
 from .misc import *
