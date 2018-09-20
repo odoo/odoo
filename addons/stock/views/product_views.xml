@@ -181,7 +181,8 @@
                         <button string="Update Qty On Hand"
                             type="action"
                             name="%(action_view_change_product_quantity)d"
-                            attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                            attrs="{'invisible': [('type', '!=', 'product')]}"
+                            groups="stock.group_stock_manager"/>
                     </header>
                     <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
