@@ -113,6 +113,7 @@
                 <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
                     <field name="product_id"/>
                     <field name="name" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="location_id" invisible="1"/>
@@ -228,6 +229,7 @@
                             <group name="main_grp_col2">
                                 <field name="product_id"/>
                                 <label for="product_uom_qty"/>
+                                <field name="product_uom_category_id" invisible="1"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
@@ -283,6 +285,7 @@
                         <field name="product_id"/>
                         <field name="picking_type_id" invisible="1"/>
                         <field name="group_id" invisible="1"/>
+                        <field name="product_uom_category_id" invisible="1"/>
                         <label for="product_uom_qty"/>
                         <div>
                             <field name="product_uom_qty"/>
