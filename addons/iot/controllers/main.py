@@ -12,6 +12,11 @@ class IoTController(http.Controller):
 
     @http.route('/iot/get_drivers', type='http', auth='public', csrf=False)
     def download_drivers(self, mac):
+        # Check mac is of one of the iot boxes
+        box = request.env['iot.box'].sudo().search([('identifier', '=', mac)], limit=1)
+        if not box:
+            return ''
+
         zip_list = []
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
