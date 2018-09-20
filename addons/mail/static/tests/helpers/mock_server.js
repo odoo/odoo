@@ -86,6 +86,7 @@ MockServer.include({
     /**
      * Simulate the 'message_format' Python method
      *
+     * @private
      * @return {Object[]}
      */
     _mockMessageFormat: function (args) {
@@ -101,6 +102,8 @@ MockServer.include({
     },
     /**
      * Simulate the 'moderate' Python method
+     *
+     * @private
      */
     _mockModerate: function (args) {
         var messageIDs = args.args[0];
@@ -137,6 +140,32 @@ MockServer.include({
             });
             this._widget.call('bus_service', 'trigger', 'notification', notifications);
         }
+    },
+    /**
+     * Simulate the 'set_message_done' Python method, which turns provided
+     * needaction message to non-needaction (i.e. they are marked as read from
+     * from the Inbox mailbox). Also notify on the longpoll bus that the
+     * messages have been marked as read, so that UI is updated.
+     *
+     * @private
+     * @param {Object} args
+     */
+    _mockSetMessageDone: function (args) {
+        var self = this;
+        var messageIDs = args.args[0];
+        _.each(messageIDs, function (messageID) {
+            var message = _.findWhere(self.data['mail.message'].records, {
+                id: messageID
+            });
+            if (message) {
+                message.needaction = false;
+                message.needaction_partner_ids = [];
+            }
+        });
+        var header = [null, 'res.partner'];
+        var data = { type: 'mark_as_read', message_ids: messageIDs };
+        var notifications = [[header, data]];
+        this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**
      * @override
@@ -178,7 +207,7 @@ MockServer.include({
             return $.when(res);
         }
         if (args.method === 'set_message_done') {
-            return $.when();
+            return $.when(this._mockSetMessageDone(args));
         }
         if (args.method === 'moderate') {
             return $.when(this._mockModerate(args));
