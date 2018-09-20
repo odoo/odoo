@@ -136,7 +136,7 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
                     value = req.data.decode('utf-8')
                 iot_device.append({
                                     'name': line.split('|')[1],
-                                    'message': line.split('|')[0] + value,
+                                    'message': line.split('|')[0] + ' : ' + value,
                                     'type': 'device',
                                     })
             f.close()
