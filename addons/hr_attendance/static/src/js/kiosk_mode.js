@@ -58,6 +58,7 @@ var KioskMode = AbstractAction.extend({
     },
 
     destroy: function () {
+        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
         clearInterval(this._interval);
         this._super.apply(this, arguments);
