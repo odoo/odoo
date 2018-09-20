@@ -8,6 +8,36 @@ from odoo.tools import float_compare
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    def _get_possible_qty(self, bom, products_qty):
+        components = self._get_bom_component_qty(bom)
+        possible_qty = []
+        for product_id, line in components.items():
+            qty = line.get('qty', 0.0)
+            if qty > 0:
+                qty = products_qty[product_id] / qty
+            possible_qty.append(qty)
+        return possible_qty and min(possible_qty) or 0.0
+
+    def _get_bom_products_moves(self, moves):
+        products = moves.mapped('product_id')
+        line_product = self.product_id
+        products_qty = {}
+        for product in products:
+            products_qty[product.id] = 0.0
+            product_moves = moves.filtered(lambda r: r.product_id == product)
+            returned_moves = product_moves.mapped('returned_move_ids').filtered(lambda r: r.to_refund)
+            delivered_moves = product_moves - returned_moves
+            for move in delivered_moves:
+                products_qty[product.id] += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            for move in returned_moves:
+                products_qty[product.id] -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+
+        bom = line_product.bom_ids._bom_find(
+            product=line_product,
+            company_id=self.env.user.company_id.id
+        )
+        return self._get_possible_qty(bom, products_qty)
+
     @api.multi
     def _get_delivered_qty(self):
         self.ensure_one()
@@ -16,12 +46,18 @@ class SaleOrderLine(models.Model):
         # have changed, we don't compute the quantities but verify the move state.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
-            if bom_delivered:
-                return self.product_uom_qty
-            else:
-                return 0.0
+            moves = self.move_ids.filtered(lambda r: r.state == 'done')
+            return self.sudo()._get_bom_products_moves(moves)
         return super(SaleOrderLine, self)._get_delivered_qty()
+
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        moves = self.move_ids.filtered(lambda r: r.state != 'cancel')
+        products = moves.mapped('product_id')
+        if products and self.product_id not in products:
+            return self.sudo()._get_bom_products_moves(moves)
+        else:
+            return super(SaleOrderLine, self)._get_qty_procurement()
 
     @api.multi
     def _get_bom_component_qty(self, bom):
