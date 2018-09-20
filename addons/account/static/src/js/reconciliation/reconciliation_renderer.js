@@ -148,11 +148,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     _renderNotifications: function(notifications) {
         this.$(".notification_area").empty();
         for (var i=0; i<notifications.length; i++) {
-            var $notification = $(qweb.render("reconciliation.notification", {
-                type: notifications[i].type,
-                message: notifications[i].message,
-                details: notifications[i].details,
-            })).hide();
+            var $notification = $(qweb.render("reconciliation.notification", notifications[i])).hide();
             $notification.appendTo(this.$(".notification_area")).slideDown(300);
         }
     },

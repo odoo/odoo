@@ -113,29 +113,43 @@ class AccountReconciliation(models.AbstractModel):
                 result
         """
         excluded_ids = excluded_ids or []
-        ret = []
-        st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
+
+        bank_statement_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
+        sorted_st_lines = sorted(bank_statement_lines, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
+        reconcile_model = self.env['account.reconcile.model'].search([('rule_type', '!=', 'writeoff_button')])
 
         # Search for missing partners when opening the reconciliation widget.
-        partner_map = self._get_bank_statement_line_partners(st_lines)
+        partner_map = self._get_bank_statement_line_partners(bank_statement_lines)
 
-        matching_amls = self.env['account.reconcile.model'].search([('rule_type', '!=', 'writeoff_button')])._apply_criteria(
-            st_lines, excluded_ids=excluded_ids, partner_map=partner_map)
+        matching_amls = reconcile_model._apply_criteria(bank_statement_lines, excluded_ids=excluded_ids, partner_map=partner_map)
+
+        results = {
+            'lines': [],
+            'value_min': 0,
+            'value_max': len(bank_statement_lines),
+            'reconciled_aml_ids': [],
+        }
 
         # Iterate on st_lines to keep the same order in the results list.
-        for line in st_lines:
-            aml_ids = matching_amls[line.id]['aml_ids']
+        bank_statements_left = self.env['account.bank.statement']
+        for line in sorted_st_lines:
+            if matching_amls[line.id].get('status') == 'reconciled':
+                reconciled_move_lines = matching_amls[line.id].get('reconciled_lines')
+                results['value_min'] += 1
+                results['reconciled_aml_ids'] += reconciled_move_lines and reconciled_move_lines.ids or []
+            else:
+                aml_ids = matching_amls[line.id]['aml_ids']
+                bank_statements_left += line.statement_id
 
-            amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
-            reconciled_move_lines = matching_amls[line.id].get('reconciled_lines')
-            ret.append({
-                'st_line': self._get_statement_line(line),
-                'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
-                'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
-                'status': matching_amls[line.id].get('status'),
-                'reconciled_aml_ids': reconciled_move_lines and reconciled_move_lines.ids,
-            })
-        return ret
+                amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
+                results['lines'].append({
+                    'st_line': self._get_statement_line(line),
+                    'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
+                    'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
+                    'write_off': matching_amls[line.id].get('status') == 'write_off',
+                })
+
+        return results
 
     @api.model
     def get_bank_statement_data(self, bank_statement_ids):
@@ -148,66 +162,43 @@ class AccountReconciliation(models.AbstractModel):
             :param st_line_id: ids of the bank statement
         """
         bank_statements = self.env['account.bank.statement'].browse(bank_statement_ids)
-        Bank_statement_line = self.env['account.bank.statement.line']
 
-        # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
-        # this is why we filter out statements lines where account_id is set
+        query = '''
+             SELECT line.id
+             FROM account_bank_statement_line line
+             WHERE account_id IS NULL
+             AND line.amount != 0.0
+             AND line.statement_id IN %s
+             AND NOT EXISTS (SELECT 1 from account_move_line aml WHERE aml.statement_line_id = line.id)
+        '''
+        self.env.cr.execute(query, [tuple(bank_statements.ids)])
 
-        sql_query = """SELECT stl.id
-                        FROM account_bank_statement_line stl
-                        WHERE account_id IS NULL AND stl.amount != 0.0 AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
-                """
-        params = []
-        if bank_statements:
-            sql_query += ' AND stl.statement_id IN %s'
-            params += (tuple(bank_statements.ids),)
-        else:
-            sql_query += ' AND stl.company_id = %s'
-            params += [self.env.user.company_id.id]
-        sql_query += ' ORDER BY stl.id'
-        self.env.cr.execute(sql_query, params)
-        st_lines_left = Bank_statement_line.browse([line.get('id') for line in self.env.cr.dictfetchall()])
+        bank_statement_lines = self.env['account.bank.statement.line'].browse([line.get('id') for line in self.env.cr.dictfetchall()])
 
-        #try to assign partner to bank_statement_line
-        stl_to_assign = st_lines_left.filtered(lambda stl: not stl.partner_id)
-        refs = set(stl_to_assign.mapped('name'))
-        if stl_to_assign and refs\
-           and st_lines_left[0].journal_id.default_credit_account_id\
-           and st_lines_left[0].journal_id.default_debit_account_id:
+        results = self.get_bank_statement_line_data(bank_statement_lines.ids)
+        bank_statement_lines_left = self.env['account.bank.statement.line'].browse([line['st_line']['id'] for line in results['lines']])
+        bank_statements_left = bank_statement_lines_left.mapped('statement_id')
 
-            sql_query = """SELECT aml.partner_id, aml.ref, stl.id
-                            FROM account_move_line aml
-                                JOIN account_account acc ON acc.id = aml.account_id
-                                JOIN account_bank_statement_line stl ON aml.ref = stl.name
-                            WHERE (aml.company_id = stl.company_id
-                                AND aml.partner_id IS NOT NULL)
-                                AND (
-                                    (aml.statement_id IS NULL AND aml.account_id IN %s)
-                                    OR
-                                    (acc.internal_type IN ('payable', 'receivable') AND aml.reconciled = false)
-                                    )
-                                AND aml.ref IN %s
-                                """
-            params = ((st_lines_left[0].journal_id.default_credit_account_id.id, st_lines_left[0].journal_id.default_debit_account_id.id), tuple(refs))
-            if bank_statements:
-                sql_query += 'AND stl.id IN %s'
-                params += (tuple(stl_to_assign.ids),)
-            self.env.cr.execute(sql_query, params)
-            results = self.env.cr.dictfetchall()
-            for line in results:
-                Bank_statement_line.browse(line.get('id')).write({'partner_id': line.get('partner_id')})
+        results.update({
+            'statement_name': len(bank_statements_left) == 1 and bank_statements_left.name or False,
+            'journal_id': bank_statements_left and bank_statements_left[0].journal_id.id or False,
+            'notifications': []
+        })
 
-        # Keep the same order as the table.
-        sorted_st_lines = sorted(st_lines_left, key=lambda line: (line.statement_id.id, line.date, -line.sequence, line.id), reverse=True)
-        sorted_st_lines_ids = [line.id for line in sorted_st_lines]
+        if len(results['lines']) < len(bank_statement_lines):
+            results['notifications'].append({
+                'type': 'info',
+                'template': 'reconciliation.notification.reconciled',
+                'reconciled_aml_ids': results['reconciled_aml_ids'],
+                'nb_reconciled_lines': results['value_min'],
+                'details': {
+                    'name': _('Journal Items'),
+                    'model': 'account.move.line',
+                    'ids': results['reconciled_aml_ids'],
+                }
+            })
 
-        return {
-            'st_lines_ids': sorted_st_lines_ids,
-            'notifications': [],
-            'statement_name': len(bank_statements) == 1 and bank_statements[0].name or False,
-            'journal_id': bank_statements and bank_statements[0].journal_id.id or False,
-            'num_already_reconciled_lines': 0,
-        }
+        return results
 
     @api.model
     def get_move_lines_for_manual_reconciliation(self, account_id, partner_id=False, excluded_ids=None, search_str=False, offset=0, limit=None, target_currency_id=False):

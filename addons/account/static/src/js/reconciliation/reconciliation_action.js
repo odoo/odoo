@@ -118,29 +118,8 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             this.renderer.showRainbowMan(initialState);
         }else{
             // Create a notification if some lines has been reconciled automatically.
-            if(initialState.valuenow > 0){
-                var linesCounter = 0;
-                var reconciledAmlIds = [];
-                _.each(this.model.lines, function(line){
-                    if(line.reconciled && line.reconciled_aml_ids){
-                        reconciledAmlIds = reconciledAmlIds.concat(line.reconciled_aml_ids);
-                        linesCounter += 1;
-                        delete self.model.lines[line.handle];
-                    }
-                })
-                if(reconciledAmlIds.length > 0){
-                    var notification = {
-                        type: 'info',
-                        message: linesCounter + _t(' statement lines have been reconciled automatically. Show the created journal items by clicking on '),
-                        details: {
-                            name: _t('Journal Items'),
-                            model: 'account.move.line',
-                            ids: reconciledAmlIds,
-                        }
-                    };
-                    this.renderer._renderNotifications([notification])
-                }
-            }
+            if(initialState.valuenow > 0)
+                this.renderer._renderNotifications(this.model.statement.notifications);
             this._openFirstLine();
         }
     },

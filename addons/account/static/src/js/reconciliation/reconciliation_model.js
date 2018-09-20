@@ -358,13 +358,13 @@ var StatementModel = BasicModel.extend({
             .then(function (statement) {
                 self.statement = statement;
                 self.bank_statement_id = statement_ids.length === 1 ? {id: statement_ids[0], display_name: statement.statement_name} : false;
-                self.valuenow = 0;
-                self.valuemax = statement.st_lines_ids.length;
+                self.valuenow = statement.value_min;
+                self.valuemax = statement.value_max;
                 self.context.journal_id = statement.journal_id;
-                _.each(statement.st_lines_ids, function (id) {
+                _.each(statement.lines, function (res) {
                     var handle = _.uniqueId('rline');
                     self.lines[handle] = {
-                        id: id,
+                        id: res.st_line.id,
                         handle: handle,
                         reconciled: false,
                         mode: 'inactive',
@@ -375,6 +375,10 @@ var StatementModel = BasicModel.extend({
                         reconcileModels: [],
                     };
                 });
+                return true;
+            })
+            .then(function(){
+                return self._formatLine(self.statement.lines);
             });
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
@@ -412,7 +416,7 @@ var StatementModel = BasicModel.extend({
             var ids = _.pluck(self.lines, 'id');
             ids = ids.splice(0, self.defaultDisplayQty);
             self.pagerIndex = ids.length;
-            return self.loadData(ids, []);
+            return true;
         });
     },
     /**
@@ -438,6 +442,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     loadData: function(ids, excluded_ids) {
+        debugger;
         var self = this;
         return self._rpc({
             model: 'account.reconciliation.widget',
@@ -445,7 +450,9 @@ var StatementModel = BasicModel.extend({
             args: [ids, excluded_ids],
             context: self.context,
         })
-        .then(self._formatLine.bind(self));
+        .then(function(res){
+            return self._formatLine(res['lines']);
+        })
     },
     /**
      * Add lines into the propositions from the reconcile model
@@ -962,13 +969,6 @@ var StatementModel = BasicModel.extend({
             var line = _.find(self.lines, function (l) {
                 return l.id === data.st_line.id;
             });
-            // Line has been already reconciled by the reconciliation model.
-            if(data.status === 'reconciled'){
-                self.valuenow += 1;
-                line.reconciled = true;
-                line.reconciled_aml_ids = data.reconciled_aml_ids;
-                return;
-            }
             line.visible = true;
             line.limitMoveLines = self.limitMoveLines;
             _.extend(line, data);
@@ -979,7 +979,7 @@ var StatementModel = BasicModel.extend({
 
             // No partner set on st_line and all matching amls have the same one: set it on the st_line.
             defs.push(
-                $.when(self._computeLine(line))
+                self._computeLine(line)
                 .then(function(){
                     if(!line.st_line.partner_id && line.reconciliation_proposition.length > 0){
                         var hasDifferentPartners = function(prop){

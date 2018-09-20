@@ -32,7 +32,6 @@
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-secondary js_load_more">Load more</button>
         </div>
-        <div class="float-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_noreconciliation">
         <p>Nothing to do!</p>
@@ -306,16 +305,41 @@
     </table>
 </t>
 
+
+<t t-name="reconciliation.notification.reconciled">
+    <t t-if="details !== undefined">
+        <a rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+            <t t-esc="nb_reconciled_lines"/>
+            statement lines
+        </a>
+        have been reconciled automatically.
+    </t>
+</t>
+
+
+<t t-name="reconciliation.notification.default">
+    <t t-esc="message"/>
+    <t t-if="details !== undefined">
+        <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
+            t-att-data-action_name="details.name"
+            t-att-data-model="details.model"
+            t-att-data-ids="details.ids">
+        </a>
+    </t>
+</t>
+
+
 <t t-name="reconciliation.notification">
     <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span title="Close" class="fa fa-times"></span></button>
-        <t t-esc="message" />
-        <t t-if="details !== undefined">
-            <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"
-                t-att-data-action_name="details.name"
-                t-att-data-model="details.model"
-                t-att-data-ids="details.ids">
-            </a>
+        <t t-if="template">
+            <t t-call="{{template}}"/>
+        </t>
+        <t t-else="">
+            <t t-call="{{'reconciliation.notification.default'}}"/>
         </t>
     </div>
 </t>
