@@ -164,7 +164,7 @@
             <field name="arch" type="xml">
                 <sheet position="before">
                     <header>
-                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}" groups="stock.group_stock_manager"/>
                     </header>
                 </sheet>
             </field>
