@@ -33,6 +33,7 @@ from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.image import image_data_uri
 
 _logger = logging.getLogger(__name__)
 
@@ -1296,6 +1297,7 @@ actual arch.
             xmlid=self.key,
             viewid=self.id,
             to_text=pycompat.to_text,
+            image_data_uri=image_data_uri,
         )
         return qcontext
 

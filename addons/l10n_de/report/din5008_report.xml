@@ -39,7 +39,7 @@
                     <div class="float-right">
                         <h3 class="mt0 text-right" t-field="company.report_header"/>
                     </div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="float-left"/>
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left"/>
                 </div>
 
                 <div class="article din" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">

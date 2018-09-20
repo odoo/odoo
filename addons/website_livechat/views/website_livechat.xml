@@ -147,7 +147,7 @@
                             <t t-foreach="team" t-as="user">
                                 <div class="media mt-3">
                                     <t t-if="user.image_small">
-                                        <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
+                                        <img t-att-src="user.image_small and image_data_uri(user.image_small) or '/web/static/src/img/placeholder.png'"
                                             class="rounded" style="padding-right: 8px;" t-att-alt="user.name"/>
                                     </t>
                                     <div class="media-body">
@@ -180,7 +180,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div t-attf-class="media#{' mt-3' if channel_index else ''}">
                                             <a t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + to_text(channel.image_small)) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_small and image_data_uri(channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4><t t-esc="channel.name"/></h4>
