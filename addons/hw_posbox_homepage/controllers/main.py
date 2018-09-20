@@ -14,6 +14,7 @@ import odoo
 import base64
 from odoo import http
 import requests
+import request
 import zipfile
 import io
 import os
@@ -123,8 +124,19 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
         try:
             f = open('/home/pi/devices', 'r')
             for line in f:
+                url = 'http://' + get_ip_iotbox() + '8069/driverdetails/' + line.split('|')[0]
+                http = urllib3.PoolManager()
+                value = ''
+                try:
+                    req = http.request('GET', url)
+                except:
+                    req = ''
+
+                if req:
+                    value = req.data.decode('utf-8')
                 iot_device.append({
-                                    'name': line,
+                                    'name': line.split('|')[1],
+                                    'message': line.split('|')[0] + value,
                                     'type': 'device',
                                     })
             f.close()
