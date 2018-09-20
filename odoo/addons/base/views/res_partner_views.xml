@@ -270,6 +270,7 @@
                         <page string="Contacts &amp; Addresses" autofocus="autofocus">
                             <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang, 'default_user_id': user_id}">
                                 <kanban>
+                                    <field name="id"/>
                                     <field name="color"/>
                                     <field name="name"/>
                                     <field name="title"/>
@@ -298,7 +299,7 @@
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <div class="o_kanban_image">
-                                                    <img alt="" t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
+                                                    <img alt="" t-if="record.image_small.raw_value" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
                                                     <t t-if="!record.image_small.raw_value">
                                                         <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
                                                         <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
