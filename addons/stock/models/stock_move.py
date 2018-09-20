@@ -653,7 +653,7 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-        return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
+        return {}
 
     @api.onchange('date_expected')
     def onchange_date(self):
