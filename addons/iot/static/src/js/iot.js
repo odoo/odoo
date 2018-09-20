@@ -232,7 +232,6 @@ var IotDetectButton = Widget.extend({
             if (ip) {
                 range = ip.replace(ip.split('.')[3], '');
                 self._addIPRange(range, port);
-                self._addIPRange('10.30.15.', port);
             }
             else {
                 self._addIPRange('192.168.0.', port);
