@@ -446,7 +446,7 @@ class MailActivity(models.Model):
             }
         res_ids_sorted = sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item])
         activity_type_infos = []
-        for elem in activity_type_ids:
+        for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
             for mail_template_id in elem.mail_template_ids:
                 mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
