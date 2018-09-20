@@ -399,7 +399,7 @@ def send_iot_box_device(send_printer):
         if devicesList:
             subprocess.call('> /home/pi/devices', shell=True)
             for device in devicesList:
-                subprocess.call('echo "' + devicesList[device] + '|' + devicesList[device]['name'] + '" >> /home/pi/devices', shell=True)
+                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /home/pi/devices', shell=True)
         subprocess.call('sudo mount -o remount,ro /', shell=True)
 
         #build JSON with all devices
