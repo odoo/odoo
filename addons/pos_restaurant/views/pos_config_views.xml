@@ -62,26 +62,14 @@
             </div>
             <div id="barcode_scanner" position="after">
                 <div class="col-12 col-lg-6 o_setting_box"
-                     id="is_order_printer"
+                     id="module_pos_restaurant_iot"
                      attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
-                        <field name="is_order_printer"/>
+                        <field name="module_pos_restaurant_iot"/>
                     </div>
-                    <div class="o_setting_right_pane">
-                        <label for="is_order_printer"/>
-                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
-                        <div class="text-muted">
-                            Print orders at the kitchen, at the bar, etc.
-                        </div>
-                        <div class="content-group" attrs="{'invisible': [('is_order_printer', '=', False)]}">
-                            <div class="mt16">
-                                <label string="Printers" for="printer_ids" class="o_light_label"/>
-                                <field name="printer_ids" widget="many2many_tags"/>
-                            </div>
-                            <div>
-                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
-                            </div>
-                        </div>
+                    <div class="o_setting_right_pane" name="session_restaurant_printers">
+                        <label for="module_pos_restaurant_iot"/>
+                        <button string="Save" type="object" name="execute" class="oe_highlight" id="btn_use_pos_restaurant_iot" attrs="{'invisible': [('module_pos_restaurant_iot','=',False)]}" />
                     </div>
                 </div>
             </div>

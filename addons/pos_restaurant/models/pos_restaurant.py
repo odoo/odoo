@@ -51,13 +51,3 @@ class RestaurantTable(models.Model):
         else:
             table_id = self.create(table).id
         return table_id
-
-
-class RestaurantPrinter(models.Model):
-
-    _name = 'restaurant.printer'
-    _description = 'Restaurant Printer'
-
-    name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
-    proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")
-    product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <!-- ******  Basic Restaurant Setup ***** -->
+
+        <!-- Kitchen Printer -->
+
+        <record id="kitchen_printer" model="restaurant.printer">
+            <field name="name">Kitchen Printer</field>
+            <field name="proxy_ip">localhost</field>
+            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
+        </record>
+
+        <!-- Pos Config -->
+        <record model="pos.config" id="pos_config_restaurant">
+            <field name="name">Bar</field>
+            <field name="printer_ids" eval="[(6, 0, [ref('pos_restaurant.kitchen_printer')])]" />
+        </record>
+
+</odoo>

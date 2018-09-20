@@ -3,14 +3,6 @@
 
         <!-- ******  Basic Restaurant Setup ***** -->
 
-        <!-- Kitchen Printer -->
-
-        <record id="kitchen_printer" model="restaurant.printer">
-            <field name="name">Kitchen Printer</field>
-            <field name="proxy_ip">localhost</field>
-            <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
-        </record>
-
         <record id="product_category_pos" model="product.category">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">PoS</field>
@@ -57,7 +49,6 @@
             <field name="iface_splitbill">True</field>
             <field name="iface_printbill">True</field>
             <field name="iface_orderline_notes">True</field>
-            <field name="printer_ids" eval="[(6, 0, [ref('pos_restaurant.kitchen_printer')])]" />
         </record>
 
         <!-- Floors: Main Floor -->
