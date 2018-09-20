@@ -4,24 +4,35 @@
         <field name="name">Add IoT box</field>
         <field name="model">add.iot.box</field>
         <field name="arch" type="xml">
-            <form string="Connect an IoT Box" class="d-inline-block">
-                <p>
-                    0. Power on the IoT Box<br/><br/>
-    
-                    <strong>A. Ethernet Connection</strong><br/>
-                    1. Click on the "Scan" button below<br/><br/>
-                    
-                    <strong>B. WiFi Connection (or Ethernet Connection doesn't work)</strong><br/>
-                    1. Make sure no ethernet cable is connected to the IoT Box<br/>
-                    2. Copy the token that is below<br/>
-                    3. Connect to the IoT Box WiFi network (you should see it in your available WiFi networks)<br/>
-                    4. You will be redirected to the IoT Box Homepage<br/>
-                    5. Paste the token in token field and follow the steps described on the IoT Box Homepage<br/>
-                </p>
-                <group>
-                    <field name="token" widget="CopyClipboardChar"/>
-                    <field name="view_token" invisible="1"/>
-                </group>
+            <form string="Connect an IoT Box">
+                <div class="row">
+                    <div class="col-8">
+                        <p>
+                            0. Power on the IoT Box<br/><br/>
+
+                            <strong>A. Ethernet Connection</strong><br/>
+                            1. Click on the "Scan" button below<br/><br/>
+
+                            <strong>B. WiFi Connection (or Ethernet Connection doesn't work)</strong><br/>
+                            1. Make sure no ethernet cable is connected to the IoT Box<br/>
+                            2. Copy the token that is below<br/>
+                            3. Connect to the IoT Box WiFi network (you should see it in your available WiFi networks)<br/>
+                            4. You will be redirected to the IoT Box Homepage<br/>
+                            5. Paste the token in token field and follow the steps described on the IoT Box Homepage<br/>
+                        </p>
+                        <group>
+                            <field name="token" widget="CopyClipboardChar"/>
+                            <field name="view_token" invisible="1"/>
+                        </group>
+                    </div>
+                    <div class="col-4 pl-5 scan_progress" style="display: none;">
+                        <h4>Scanning range(s)</h4>
+                        <ul class="scan_ranges mb-4 list-group"/>
+
+                        <h4>Found device(s)</h4>
+                        <ul class="found_devices list-group"/>
+                    </div>
+                </div>
                 <footer>
                     <widget name='iot_detect_button' string="Detect and Add IoT devices in the network"/>
                     <button name="Ok" string="Ok" special="cancel"/>

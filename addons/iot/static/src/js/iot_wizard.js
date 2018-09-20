@@ -8,7 +8,7 @@ var ListView = require('web.ListView');
 
 
 
-function boxRenderButtons ($node) {
+function boxRenderButtons($node) {
         var self = this;
         this.$buttons = $('<div/>');
         this.$buttons.html('<button class="btn btn-primary type="button">CONNECT</button>');
@@ -16,7 +16,7 @@ function boxRenderButtons ($node) {
             self.do_action('iot.action_add_iot_box');
         });
         this.$buttons.appendTo($node);
-};
+}
 
 var BoxKanbanController = KanbanController.extend({
     renderButtons: function ($node) {
