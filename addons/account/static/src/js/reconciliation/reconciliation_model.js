@@ -375,10 +375,6 @@ var StatementModel = BasicModel.extend({
                         reconcileModels: [],
                     };
                 });
-                return true;
-            })
-            .then(function(){
-                return self._formatLine(self.statement.lines);
             });
         var def_reconcileModel = this._rpc({
                 model: 'account.reconcile.model',
@@ -416,7 +412,7 @@ var StatementModel = BasicModel.extend({
             var ids = _.pluck(self.lines, 'id');
             ids = ids.splice(0, self.defaultDisplayQty);
             self.pagerIndex = ids.length;
-            return true;
+            return self._formatLine(self.statement.lines);
         });
     },
     /**
@@ -442,7 +438,6 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     loadData: function(ids, excluded_ids) {
-        debugger;
         var self = this;
         return self._rpc({
             model: 'account.reconciliation.widget',

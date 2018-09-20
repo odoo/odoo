@@ -224,10 +224,17 @@ var db = {
         },
         get_bank_statement_line_data: function (args) {
             var ids = args[0];
-            return $.when(_.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+            var results = {
+                value_min: 0,
+                value_max: ids.length,
+                lines: _.filter(Datas.used.data_widget, function (w) {return _.contains(ids, w.st_line.id);})
+            };
+            return $.when(results);
         },
         get_bank_statement_data: function () {
-            return $.when(Datas.used.data_preprocess);
+            var results = Datas.used.data_preprocess;
+            results.lines = _.filter(Datas.used.data_widget, function (w) {return _.contains(results.st_lines_ids, w.st_line.id);});
+            return $.when(results);
         },
         get_move_lines_for_manual_reconciliation: function (args) {
             var excluded_ids = args.splice(2, 1)[0];
@@ -269,6 +276,8 @@ var db = {
 };
 
 var data_preprocess = {
+    value_min: 0,
+    value_max: 4,
     notifications: [],
     num_already_reconciled_lines: 0,
     st_lines_ids: [5, 6, 7, 8],
@@ -858,7 +867,7 @@ QUnit.module('account', {
             },
         });
 
-        clientAction.appendTo($('body'));
+        clientAction.appendTo($('#qunit-fixture'));
 
         var widget = clientAction.widgets[0];
 
@@ -1295,240 +1304,6 @@ QUnit.module('account', {
 
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 1, "should display the 'Write-off' line because the balance is not null in Euro");
         assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_validate:visible').length, 1, "should display 'Reconcile' button");
-
-        clientAction.destroy();
-    });
-
-    QUnit.test('Reconciliation pager', function (assert) {
-        assert.expect(6);
-
-        this.params.data['account.bank.statement.line'].records.push(
-            {id: 9, display_name: "add 9"},
-            {id: 10, display_name: "add 10"},
-            {id: 11, display_name: "add 11"},
-            {id: 12, display_name: "add 12"},
-            {id: 13, display_name: "add 13"},
-            {id: 14, display_name: "add 14"},
-            {id: 15, display_name: "add 15"},
-            {id: 16, display_name: "add 16"}
-        );
-
-        var data_preprocess = this.params.data_preprocess;
-        data_preprocess.st_lines_ids.push(9, 10, 11, 12, 13, 14, 15, 16);
-
-        this.params.data_widget.push(
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 9",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 9,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 10",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 10,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 11",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 11,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 12",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 12,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 13",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 13,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 14",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 14,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 15",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 15,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            },
-            {
-                'st_line': {
-                    'currency_id': 3,
-                    'communication_partner_name': false,
-                    'open_balance_account_id': 287,
-                    'name': "add 16",
-                    'partner_name': "Camptocamp",
-                    'partner_id': 12,
-                    'has_no_partner': false,
-                    'journal_id': 84,
-                    'account_name': "Bank",
-                    'note': "",
-                    'amount': 650.0,
-                    'amount_str': "$ 650.00",
-                    'amount_currency_str': "",
-                    'date': "2017-01-01",
-                    'account_code': "101401",
-                    'ref': "",
-                    'id': 16,
-                    'statement_id': 2
-                },
-                'reconciliation_proposition': []
-            }
-        );
-
-        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
-        testUtils.addMockEnvironment(clientAction, {
-            data: this.params.data,
-            session: {
-                currencies: {
-                    3: {
-                        digits: [69, 2],
-                        position: "before",
-                        symbol: "$"
-                    }
-                }
-            },
-        });
-
-        clientAction.appendTo($('#qunit-fixture'));
-
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should display 10 lines");
-        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 1, "should display the load more button");
-        clientAction.$('.accounting_view:has(.o_reconcile:visible) thead .cell_action').click();
-        clientAction.$('.o_reconcile:visible').click();
-        assert.strictEqual(clientAction.$('.o_reconcile:visible').length, 0, "should remove the reconciled line");
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 10, "should load one line to complete the 10");
-        clientAction.$('thead .cell_action:eq(1)').click();
-        clientAction.$('.js_load_more').click();
-        assert.strictEqual(clientAction.$('.o_reconciliation_line').length, 11, "should load the last record");
-        assert.strictEqual(clientAction.$('.js_load_more:visible').length, 0, "should hide the load more button");
 
         clientAction.destroy();
     });
