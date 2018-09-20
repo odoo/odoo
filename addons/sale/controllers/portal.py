@@ -4,6 +4,7 @@
 from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 from odoo.osv import expression
@@ -266,13 +267,13 @@ class CustomerPortal(CustomerPortal):
         vals = {
             'acquirer_id': acquirer_id,
             'type': order._get_payment_type(),
+            'return_url': order.get_portal_url(),
         }
 
         transaction = order._create_payment_transaction(vals)
-
+        PaymentProcessing.add_payment_transaction(transaction)
         return transaction.render_sale_button(
             order,
-            order.get_portal_url(),
             submit_txt=_('Pay & Confirm'),
             render_values={
                 'type': order._get_payment_type(),
@@ -299,8 +300,9 @@ class CustomerPortal(CustomerPortal):
         vals = {
             'payment_token_id': pm_id,
             'type': 'server2server',
+            'return_url': order.get_portal_url(),
         }
 
-        order._create_payment_transaction(vals)
-
-        return request.redirect(order.get_portal_url())
+        tx = order._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
+        return request.redirect('/payment/process')
