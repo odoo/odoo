@@ -45,4 +45,4 @@ function connect () {
 	fi
 }
 
-connect "${1}" "${2}" "${3}" "${4}" &
+connect "${1}" "${2}" "${3}" "${4}"
