@@ -161,8 +161,7 @@ class SaleOrderOption(models.Model):
         if pricelist and product:
             partner_id = self.order_id.partner_id.id
             self.price_unit = pricelist.with_context(uom=self.uom_id.id).get_product_price(product, self.quantity, partner_id)
-        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        return {'domain': domain}
+        return {}
 
     @api.multi
     def button_add_to_order(self):
