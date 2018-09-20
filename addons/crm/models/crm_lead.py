@@ -451,6 +451,14 @@ class Lead(models.Model):
             'context': {'default_type': 'opportunity'}
         }
 
+    def toggle_active(self):
+        """ When re-activating leads and opportunities set their probability
+        to the default stage one. """
+        res = super(Lead, self).toggle_active()
+        for lead in self.filtered(lambda lead: lead.active and lead.stage_id.probability):
+            lead.probability = lead.stage_id.probability
+        return res
+
     # ----------------------------------------
     # Business Methods
     # ----------------------------------------
