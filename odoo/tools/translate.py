@@ -598,34 +598,12 @@ class CSVFileReader:
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
     def __init__(self, source):
-
-        def get_pot_path(source_name):
-            # when fileobj is a TemporaryFile, its name is an inter in P3, a string in P2
-            if isinstance(source_name, str) and source_name.endswith('.po'):
-                # Normally the path looks like /path/to/xxx/i18n/lang.po
-                # and we try to find the corresponding
-                # /path/to/xxx/i18n/xxx.pot file.
-                # (Sometimes we have 'i18n_extra' instead of just 'i18n')
-                path = Path(source_name)
-                filename = path.parent.parent.name + '.pot'
-                pot_path = path.with_name(filename)
-                return pot_path.exists() and str(pot_path) or False
-            return False
-
         # polib accepts a path or the file content as a string, not a fileobj
         if isinstance(source, str):
             self.pofile = polib.pofile(source)
-            pot_path = get_pot_path(source)
         else:
             # either a BufferedIOBase or result from NamedTemporaryFile
             self.pofile = polib.pofile(source.read().decode())
-            pot_path = get_pot_path(source.name)
-
-        if pot_path:
-            # Make a reader for the POT file
-            # (Because the POT comments are correct on GitHub but the
-            # PO comments tends to be outdated. See LP bug 933496.)
-            self.pofile.merge(polib.pofile(pot_path))
 
     def __iter__(self):
         for entry in self.pofile:
@@ -1146,15 +1124,18 @@ class TranslationModuleReader:
                     break
 
 
-def trans_load(cr, filename, lang, verbose=True, create_empty_translation=False, overwrite=False):
+def trans_load(cr, filename, lang, module_name, verbose=True, create_empty_translation=False, overwrite=False):
     try:
         with file_open(filename, mode='rb') as fileobj:
             _logger.info("loading %s", filename)
             fileformat = os.path.splitext(filename)[-1][1:].lower()
-            return trans_load_data(cr, fileobj, fileformat, lang,
-                                   verbose=verbose,
-                                   create_empty_translation=create_empty_translation,
-                                   overwrite=overwrite)
+            iso_code = get_iso_codes(lang)
+            cursor = trans_load_data(cr, fileobj, fileformat, iso_code,
+                verbose=verbose,
+                module_name=module_name,
+                create_empty_translation=create_empty_translation,
+                overwrite=overwrite)
+            cursor.transfer(lang, [module_name], src_lang=iso_code)
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
@@ -1162,14 +1143,15 @@ def trans_load(cr, filename, lang, verbose=True, create_empty_translation=False,
 
 
 def trans_load_data(cr, fileobj, fileformat, lang,
-                    verbose=True, create_empty_translation=False, overwrite=False):
-    """Populates the ir_translation table.
+        verbose=True, module_name=None, create_empty_translation=False, overwrite=False):
+    """Populates the ir_translation_reference table.
 
     :param fileobj: buffer open to a translation file
     :param fileformat: format of the `fielobj` file, one of 'po' or 'csv'
     :param lang: language code of the translations contained in `fileobj`
                  language must be present and activated in the database
     :param verbose: increase log output
+    :param module_name: name of the module to use for created translations  # TODO move to TranslationFileReader?
     :param create_empty_translation: create an ir.translation record, even if no value
                                      is provided in the translation entry
     :param overwrite: if an ir.translation already exists for a term, replace it with
@@ -1179,15 +1161,24 @@ def trans_load_data(cr, fileobj, fileformat, lang,
         _logger.info('loading translation file for language %s', lang)
 
     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+    lang = get_iso_codes(lang)
 
     try:
-        if not env['res.lang']._lang_get(lang):
-            _logger.error("Couldn't read translation for lang '%s', language not found", lang)
-            return None
-
         # now, the serious things: we read the language file
         fileobj.seek(0)
         reader = TranslationFileReader(fileobj, fileformat=fileformat)
+        if module_name and fileformat == 'po':
+            pot_path = os.path.join(module_name, "i18n", module_name+".pot")
+            try:
+                with file_open(pot_path, mode="rb") as refobj:
+                    # Make a reader for the POT file
+                    # (Because the POT comments are correct on GitHub but the
+                    # PO comments tends to be outdated. See LP bug 933496.)
+                    reference = TranslationFileReader(refobj, fileformat="po")
+                    reader.pofile.merge(reference.pofile)
+            except OSError:
+                # file not found
+                pass
 
         # read the rest of the file with a cursor-like object for fast inserting translations"
         Translation = env['ir.translation']
@@ -1208,16 +1199,27 @@ def trans_load_data(cr, fileobj, fileformat, lang,
                 return
 
             irt_cursor.push(dic)
+            return dic['module']
 
+        modules = set([])
         # First process the entries from the PO file (doing so also fills/removes
         # the entries from the POT file).
         for row in reader:
-            process_row(row)
+            module = process_row(row)
+            if module:
+                modules.add(module)
 
-        irt_cursor.finish()
+        if irt_cursor._rows:
+            if modules:
+                irt_cursor.cleanup(modules=modules, lang=lang)
+            else:
+                _logger.error("Could not determine module information from translation file lang %s", lang)
+            irt_cursor.finish()
         Translation.clear_caches()
         if verbose:
             _logger.info("translation file loaded successfully")
+
+        return irt_cursor
 
     except IOError:
         iso_lang = get_iso_codes(lang)

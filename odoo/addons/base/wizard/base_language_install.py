@@ -29,12 +29,15 @@ class BaseLanguageInstall(models.TransientModel):
                                help="If you check this box, your customized translations will be overwritten and replaced by the official ones.")
     state = fields.Selection([('init', 'init'), ('done', 'done')],
                              string='Status', readonly=True, default='init')
+    remote_translations = fields.Boolean("Fetch Online Translations", default=True,
+                                         help="Fetch the translations on a translation server, not only the locale translations")
 
     def lang_install(self):
         self.ensure_one()
-        mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        self.env['res.lang']._activate_lang(self.lang)
-        mods._update_translations(self.lang, self.overwrite)
+
+        language = self.env['res.lang']._activate_lang(self.lang)
+        language._install_language(self.overwrite, remote=self.remote_translations)
+
         self.state = 'done'
         self.env.cr.execute('ANALYZE ir_translation')
 

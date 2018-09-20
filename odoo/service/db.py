@@ -67,7 +67,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
 
             if lang:
                 modules = env['ir.module.module'].search([('state', '=', 'installed')])
-                modules._update_translations(lang)
+                modules._update_translations(filter_lang=[lang])
 
             if country_code:
                 country = env['res.country'].search([('code', 'ilike', country_code)])[0]

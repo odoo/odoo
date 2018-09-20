@@ -117,6 +117,7 @@ def import_translation():
     registry = odoo.modules.registry.Registry.new(dbname)
     with odoo.api.Environment.manage():
         with registry.cursor() as cr:
+            # TODO fixme module required
             odoo.tools.trans_load(
                 cr, config["translate_in"], config["language"], overwrite=overwrite,
             )

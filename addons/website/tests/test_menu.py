@@ -93,7 +93,7 @@ class TestMenu(common.TransactionCase):
         specific1.name = 'Menu in french'
 
         # loading translation add missing specific translation
-        Translation._load_module_terms(['website'], ['fr_FR'])
+        self.env.ref("base.module_website")._update_translations(filter_lang=['fr_FR'], overwrite=False)
         Menu.invalidate_cache(['name'])
         self.assertEqual(specific1.name,  'Menu in french',
             'Load translation without overwriting keep existing translation')
@@ -101,7 +101,7 @@ class TestMenu(common.TransactionCase):
             'Load translation add missing translation from template menu')
 
         # loading translation with overwrite sync all translations from menu template
-        Translation._load_module_terms(['website'], ['fr_FR'], overwrite=True)
+        self.env.ref("base.module_website")._update_translations(filter_lang=['fr_FR'], overwrite=True)
         Menu.invalidate_cache(['name'])
         self.assertEqual(specific1.name,  'Menu en français',
             'Load translation with overwriting update existing menu from template')
