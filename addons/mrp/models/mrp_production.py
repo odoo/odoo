@@ -588,8 +588,9 @@ class MrpProduction(models.Model):
             if not (raw_finished_lots <= finished_lots):
                 lots_short = raw_finished_lots - finished_lots
                 error_msg = _(
-                    'Some raw materials were produced for a lot without finished product. '
-                    'You can correct the following components by unlocking:\n'
+                    'Some raw materials have been consumed for a lot/serial number that has not been produced. '
+                    'Unlock the MO and click on the components lines to correct it.\n'
+                    'List of the components:\n'
                 )
                 move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
                 for ml in move_lines:
