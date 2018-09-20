@@ -421,7 +421,7 @@ class HrPayslipLine(models.Model):
     _name = 'hr.payslip.line'
     _inherit = 'hr.salary.rule'
     _description = 'Payslip Line'
-    _order = 'contract_id, sequence'
+    _order = 'contract_id, sequence, code'
 
     slip_id = fields.Many2one('hr.payslip', string='Pay Slip', required=True, ondelete='cascade')
     salary_rule_id = fields.Many2one('hr.salary.rule', string='Rule', required=True)
