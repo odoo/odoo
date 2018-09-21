@@ -983,6 +983,10 @@ non-editable :ref:`form view <reference/views/form>`. Records may be grouped
 in columns for use in workflow visualisation or manipulation (e.g. tasks or
 work-progress management), or ungrouped (used simply to visualize records).
 
+.. note:: The kanban view will load and display a maximum of ten columns.
+          Any column after that will be closed (but can still be opened by
+          the user).
+
 The root element of the Kanban view is ``<kanban>``, it can use the following
 attributes:
 
