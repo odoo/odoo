@@ -11,7 +11,7 @@ class SaleCouponGenerate(models.TransientModel):
         ('nbr_coupon', 'Number of Coupons'),
         ('nbr_customer', 'Number of Selected Customers')
         ], default='nbr_coupon')
-    partners_domain = fields.Char(string="Customer")
+    partners_domain = fields.Char(string="Customer", default='[]')
     partner_ids = fields.Many2many('res.partner', string="Related Partners", compute='_compute_partner_ids')
 
     @api.multi
