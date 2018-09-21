@@ -446,6 +446,8 @@ Andrew</p>]]></field>
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
             <field name="datas_fname">YourCompany2012.doc</field>
             <field name="name">YourCompany2012.doc</field>
+            <field name="res_model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
         </record>
         <record id="msg_case15_1" model="mail.message">
             <field name="subject">Plan to buy RedHat servers</field>
@@ -474,6 +476,10 @@ Andrew</p>]]></field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_case15_attach1')])]"/>
+        </record>
+        <!--Main attachment is usually registered by message_post, so here we must set it manually-->
+        <record id="crm_case_15" model="crm.lead">
+            <field name="message_main_attachment_id" ref="msg_case15_attach1"/>
         </record>
         <record id="msg_case15_3" model="mail.message">
             <field name="subject">Re: Plan to buy RedHat servers</field>
