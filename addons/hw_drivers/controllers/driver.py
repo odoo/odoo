@@ -101,7 +101,7 @@ class StatusController(http.Controller):
         for device in drivers:
             if device.find(identifier) != -1:
                 return str(drivers[device].value)
-        return 'device not found'
+        return ''
 
     @http.route('/driveraction/<string:identifier>', type='json', auth='none', cors='*', csrf=False)
     def driveraction(self, identifier):
