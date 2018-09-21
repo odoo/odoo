@@ -1,0 +1,28 @@
+.o_field_partner_autocomplete.dropdown {
+    display: block;
+
+    > .o_partner_autocomplete_dropdown .dropdown-item {
+        min-width: 300px;
+        padding: 4px 8px;
+        > img {
+            float: left;
+            width: 36px;
+            height: 36px;
+        }
+        > .o_partner_autocomplete_info {
+            margin-left: 50px;
+            > * {
+                @include o-text-overflow(block);
+            }
+        }
+    }
+}
+
+.ui-autocomplete .ui-menu-item > a.o_partner_autocomplete_dropdown_item {
+    > img {
+        float: right;
+        width: 20px;
+        height: 20px;
+    }
+
+}

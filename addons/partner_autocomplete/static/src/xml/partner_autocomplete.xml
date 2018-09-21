@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="partner_autocomplete.dropdown" class="o_partner_autocomplete_dropdown dropdown-menu show" role="menu">
+        <t t-foreach="suggestions" t-as="info">
+            <a role="menuitem" href="#"
+                t-attf-class="dropdown-item o_partner_autocomplete_suggestion clearfix#{info_index == 0 and ' active' or ''}"
+                t-att-data-index="info_index">
+                <img t-att-src="info['logo']" onerror="this.src='/base/static/img/company_image.png'" alt="Placeholder"/>
+                <div class="o_partner_autocomplete_info">
+                    <strong><t t-esc="info['label'] or '&#160;'"/></strong>
+                    <div><t t-esc="info['description']"/></div>
+                </div>
+            </a>
+        </t>
+    </div>
+
+    <div t-name="partner_autocomplete.iap_credit_checker" class="mt-2 row">
+        <div class="col-sm">
+            <div class="loading text-muted">
+                <i class="fa fa-spinner fa-spin"/> Checking remaining credit ...
+            </div>
+            <div class="insufficient">
+                <i class="fa fa-exclamation-triangle text-warning"/> Insufficient credit<br/>
+            </div>
+            <div class="sufficient">
+                <i class="fa fa-check-circle text-success"/> Remaining : <b class="remaining_credits"/> credits
+            </div>
+        </div>
+        <div class="col-sm text-right">
+            <a class="oe_link" target="_blank"><i class="fa fa-arrow-right"/> Buy more credits</a>
+        </div>
+    </div>
+</templates>
