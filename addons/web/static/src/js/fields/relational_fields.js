@@ -138,6 +138,11 @@ var FieldMany2One = AbstractField.extend({
         this.isDirty = false;
         this.lastChangeEvent = undefined;
 
+        // List of autocomplete sources
+        this._autocompleteSources = [];
+        // Add default search method for M20 (name_search)
+        this._addAutocompleteSource(this._search, {placeholder: _t('Loading...'), order: 1});
+
         // use a DropPrevious to properly handle related record quick creations,
         // and store a createDef to be able to notify the environment that there
         // is pending quick create operation
@@ -213,14 +218,46 @@ var FieldMany2One = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Add a source to the autocomplete results
+     *
+     * @param {function} method : A function that returns a list of results. If async source, the function should return a promise
+     * @param {Object} params : Parameters containing placeholder/validation/order
+     * @private
+     */
+    _addAutocompleteSource: function (method, params) {
+        this._autocompleteSources.push({
+            method: method,
+            placeholder: (params.placeholder ? _t(params.placeholder) : _t('Loading...')) + '<i class="fa fa-spinner fa-spin pull-right"></i>' ,
+            validation: params.validation,
+            loading: false,
+            order: params.order || 999
+        });
+
+        this._autocompleteSources = _.sortBy(this._autocompleteSources, 'order');
+    },
+    /**
      * @private
      */
     _bindAutoComplete: function () {
         var self = this;
         this.$input.autocomplete({
             source: function (req, resp) {
-                self._search(req.term).then(function (result) {
-                    resp(result);
+                _.each(self._autocompleteSources, function (source) {
+                    // Resets the results for this source
+                    source.results = [];
+
+                    // Check if this source should be used for the searched term
+                    if (!source.validation || source.validation.call(self, req.term)) {
+                        source.loading = true;
+
+                        // Wrap the returned value of the source.method with $.when.
+                        // So event if the returned value is not async, it will work
+                        $.when(source.method.call(self, req.term)).then(function (results) {
+                            source.results = results;
+                            source.loading = false;
+                            resp(self._concatenateAutocompleteResults());
+                        });
+                    }
                 });
             },
             select: function (event, ui) {
@@ -255,6 +292,25 @@ var FieldMany2One = AbstractField.extend({
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;
+    },
+    /**
+     * Concatenate async results for autocomplete.
+     *
+     * @returns {Array}
+     * @private
+     */
+    _concatenateAutocompleteResults: function () {
+        var results = [];
+        _.each(this._autocompleteSources, function (source) {
+            if (source.results && source.results.length) {
+                results = results.concat(source.results);
+            } else if (source.loading) {
+                results.push({
+                    label: source.placeholder
+                });
+            }
+        });
+        return results;
     },
     /**
      * @private
@@ -389,6 +445,8 @@ var FieldMany2One = AbstractField.extend({
         this.m2o_value = this._formatValue(this.value);
     },
     /**
+     * Executes a name_search and process its result.
+     *
      * @private
      * @param {string} search_val
      * @returns {Deferred}

@@ -6,6 +6,7 @@ import datetime
 import hashlib
 import pytz
 import threading
+import re
 
 from email.utils import formataddr
 
@@ -238,6 +239,12 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
+
+    @api.model_cr
+    def init(self):
+        self._cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_partner_vat_index'""")
+        if not self._cr.fetchone():
+            self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -610,6 +617,8 @@ class Partner(models.Model):
             name = "%s <%s>" % (name, partner.email)
         if self._context.get('html_format'):
             name = name.replace('\n', '<br/>')
+        if self._context.get('show_vat') and partner.vat:
+            name = "%s - %s" % (name, partner.vat)
         return name
 
     @api.multi
@@ -697,7 +706,9 @@ class Partner(models.Model):
                                percent=unaccent('%s'),
                                vat=unaccent('vat'),)
 
-            where_clause_params += [search_name]*5
+            where_clause_params += [search_name]*3  # for email / display_name, reference
+            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name)]  # for vat
+            where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
                 where_clause_params.append(limit)
