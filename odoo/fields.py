@@ -421,6 +421,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
+            attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
@@ -621,7 +622,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
-    _related_readonly = property(attrgetter('readonly'))
     _related_groups = property(attrgetter('groups'))
     _related_group_operator = property(attrgetter('group_operator'))
 
