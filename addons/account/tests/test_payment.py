@@ -571,13 +571,13 @@ class TestPayment(AccountingTestCase):
 
         # Reconcile the two payments with an invoice, whose full amount is equal to their sum
         invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id)
-        (payment_one.move_line_ids + payment_two.move_line_ids + invoice.move_id.line_ids).filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
+        (payment_one.move_line_ids + payment_two.move_line_ids + invoice.move_id.line_ids).filtered(lambda x: x.account_id.user_type_id.account_type == 'receivable').reconcile()
 
         self.assertTrue(invoice.reconciled, "Invoice should have been reconciled with the payments")
         self.assertEqual(invoice.state, 'in_payment', "Invoice should be in 'in payment' state")
 
         # Match the first payment with a bank statement line
-        bank_statement_one = self.reconcile(payment_one.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
+        bank_statement_one = self.reconcile(payment_one.move_line_ids.filtered(lambda x: x.account_id.user_type_id.account_type == 'liquidity'), 42)
         stmt_line_date_one = bank_statement_one.mapped('line_ids.date')
 
         self.assertEqual(payment_one.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, payment one's account.move should be posted.")
@@ -586,7 +586,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(invoice.state, 'in_payment', "The invoice should still be 'in payment', not all its payments are reconciled with a statement")
 
         # Match the second payment with a bank statement line
-        bank_statement_two = self.reconcile(payment_two.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
+        bank_statement_two = self.reconcile(payment_two.move_line_ids.filtered(lambda x: x.account_id.user_type_id.account_type == 'liquidity'), 42)
         stmt_line_date_two = bank_statement_two.mapped('line_ids.date')
 
         self.assertEqual(payment_two.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, payment two's account.move should be posted.")

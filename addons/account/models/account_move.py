@@ -42,7 +42,7 @@ class AccountMove(models.Model):
                 total += line.debit
             move.amount = total
 
-    @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.matched_debit_ids.amount', 'line_ids.matched_credit_ids.amount', 'line_ids.account_id.user_type_id.type')
+    @api.depends('line_ids.debit', 'line_ids.credit', 'line_ids.matched_debit_ids.amount', 'line_ids.matched_credit_ids.amount', 'line_ids.account_id.user_type_id.account_type')
     def _compute_matched_percentage(self):
         """Compute the percentage to apply for cash basis method. This value is relevant only for moves that
         involve journal items on receivable or payable accounts.
@@ -51,7 +51,7 @@ class AccountMove(models.Model):
             total_amount = 0.0
             total_reconciled = 0.0
             for line in move.line_ids:
-                if line.account_id.user_type_id.type in ('receivable', 'payable'):
+                if line.account_id.user_type_id.account_type in ('receivable', 'payable'):
                     amount = abs(line.debit - line.credit)
                     total_amount += amount
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):

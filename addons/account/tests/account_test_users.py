@@ -3,7 +3,7 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 class AccountTestUsers(AccountingTestCase):
 
-    """Tests for diffrent type of user 'Accountant/Adviser' and added groups"""
+    """Tests for different type of user 'Accountant/Adviser' and added groups"""
 
     def setUp(self):
         super(AccountTestUsers, self).setUp()

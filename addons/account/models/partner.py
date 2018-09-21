@@ -208,21 +208,21 @@ class ResPartner(models.Model):
         where_params = [tuple(self.ids)] + where_params
         if where_clause:
             where_clause = 'AND ' + where_clause
-        self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
+        self._cr.execute("""SELECT account_move_line.partner_id, act.account_type, SUM(account_move_line.amount_residual)
                       FROM account_move_line
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
-                      WHERE act.type IN ('receivable','payable')
+                      WHERE act.account_type IN ('receivable','payable')
                       AND account_move_line.partner_id IN %s
                       AND account_move_line.reconciled IS FALSE
                       """ + where_clause + """
-                      GROUP BY account_move_line.partner_id, act.type
+                      GROUP BY account_move_line.partner_id, act.account_type
                       """, where_params)
-        for pid, type, val in self._cr.fetchall():
+        for pid, account_type, val in self._cr.fetchall():
             partner = self.browse(pid)
-            if type == 'receivable':
+            if account_type == 'receivable':
                 partner.credit = val
-            elif type == 'payable':
+            elif account_type == 'payable':
                 partner.debit = -val
 
     @api.multi

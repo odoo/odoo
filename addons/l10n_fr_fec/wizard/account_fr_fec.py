@@ -168,9 +168,9 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id, aat.type
+        GROUP BY aml.account_id, aat.account_type
         HAVING sum(aml.balance) != 0
-        AND aat.type not in ('receivable', 'payable')
+        AND aat.account_type not in ('receivable', 'payable')
         '''
         formatted_date_from = self.date_from.replace('-', '')
         date_from = self.date_from
@@ -254,9 +254,9 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id, aat.type, rp.ref, rp.id
+        GROUP BY aml.account_id, aat.account_type, rp.ref, rp.id
         HAVING sum(aml.balance) != 0
-        AND aat.type in ('receivable', 'payable')
+        AND aat.account_type in ('receivable', 'payable')
         '''
         self._cr.execute(
             sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))

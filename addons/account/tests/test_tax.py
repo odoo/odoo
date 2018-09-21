@@ -65,7 +65,7 @@ class TestTax(AccountTestUsers):
         })
         self.bank_journal = self.env['account.journal'].search([('journal_type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
-        self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+        self.expense_account = self.env['account.account'].search([('user_type_id.account_type', '=', 'payable')], limit=1) #Should be done by onchange later
 
     def test_tax_group_of_group_tax(self):
         self.fixed_tax.include_base_amount = True

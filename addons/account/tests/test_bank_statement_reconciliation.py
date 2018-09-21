@@ -53,7 +53,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         self.assertTrue(st_line.journal_entry_ids)
         counterpart_mv_line = None
         for l in st_line.journal_entry_ids:
-            if l.account_id.user_type_id.type == 'receivable':
+            if l.account_id.user_type_id.account_type == 'receivable':
                 counterpart_mv_line = l
                 break
         self.assertIsNotNone(counterpart_mv_line)
