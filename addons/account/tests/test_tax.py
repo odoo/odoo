@@ -63,6 +63,21 @@ class TestTax(AccountTestUsers):
                 (4, self.group_tax_bis.id, 0)
             ]
         })
+        self.tax_with_no_account = self.tax_model.create({
+            'name': "Tax with no account",
+            'amount_type': 'fixed',
+            'amount': 0,
+            'sequence': 8,
+        })
+        some_account = self.env['account.account'].search([], limit=1)
+        self.tax_with_account = self.tax_model.create({
+            'name': "Tax with account",
+            'amount_type': 'fixed',
+            'account_id': some_account.id,
+            'refund_account_id': some_account.id,
+            'amount': 0,
+            'sequence': 8,
+        })
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
@@ -128,3 +143,15 @@ class TestTax(AccountTestUsers):
         self.division_tax.amount = 15.0
         res = self.division_tax.compute_all(200.0, currency=self.env.ref('base.VEF'))
         self.assertAlmostEqual(res['total_included'], 235.2941)
+
+    def test_tax_with_no_account(self):
+        self.tax_with_no_account.amount = 10.0
+        res = self.tax_with_no_account.compute_all(200.0)
+        self.assertEquals(res['total_included'], 210)
+        self.assertEquals(res['total_void'], 210)
+
+    def test_tax_with_account(self):
+        self.tax_with_account.amount = 10.0
+        res = self.tax_with_account.compute_all(200.0)
+        self.assertEquals(res['total_included'], 210)
+        self.assertEquals(res['total_void'], 200)
