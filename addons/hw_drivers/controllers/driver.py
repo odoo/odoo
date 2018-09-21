@@ -3,9 +3,7 @@ import logging
 import time
 from threading import Thread
 import usb
-import serial
 import gatt
-import evdev
 import subprocess
 import netifaces as ni
 import json
@@ -15,8 +13,6 @@ from odoo import http
 import urllib3
 from odoo.http import request as httprequest
 import datetime
-
-from uuid import getnode as get_mac
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
 _logger = logging.getLogger('dispatcher')
@@ -47,7 +43,6 @@ class StatusController(http.Controller):
         for device in data['devices']:
             owner_dict[device] = data['tab']
             last_ping[data['tab']] = datetime.datetime.now()
-        print('Took ownership: ', data['tab'])
         return data['tab']
 
     @http.route('/owner/ping', type='json', auth='none', cors='*', csrf=False)
@@ -270,6 +265,7 @@ class USBDeviceManager(Thread):
     devices = {}
     def run(self):
         first_time = True
+        send_iot_box_device(False)
         while 1:
             sendJSON = False
             devs = usb.core.find(find_all=True)
@@ -397,24 +393,20 @@ def send_iot_box_device(send_printer):
                                 subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "' -m '" + ppd[0].split(' ')[0] + "'", shell=True)
                         except:
                             subprocess.call("sudo lpadmin -p '" + identifier + "' -E -v '" + printerTab[0].split('= ')[1] + "'", shell=True)
-            subprocess.call('sudo mount -o remount,rw /', shell=True)
-            subprocess.call('> /home/pi/printers', shell=True)
+            subprocess.call('> /tmp/printers', shell=True)
             for printer in printerList:
-                subprocess.call('echo "' + printerList[printer]['name'] + '" >> /home/pi/printers', shell=True)
-            subprocess.call('sudo mount -o remount,ro /', shell=True)
+                subprocess.call('echo "' + printerList[printer]['name'] + '" >> /tmp/printers', shell=True)
 
-        subprocess.call('sudo mount -o remount,rw /', shell=True)
         if devicesList:
-            subprocess.call('> /home/pi/devices', shell=True)
+            subprocess.call('> /tmp/devices', shell=True)
             for device in devicesList:
-                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /home/pi/devices', shell=True)
-        subprocess.call('sudo mount -o remount,ro /', shell=True)
+                subprocess.call('echo "' + str(device) + '|' + devicesList[device]['name'] + '" >> /tmp/devices', shell=True)
 
         #build JSON with all devices
         hostname = subprocess.check_output('hostname').decode('utf-8').split('\n')[0]
         token = "" # read from file
         try:
-            f = open('/home/pi/token', 'r')
+            f = open('/tmp/token', 'r')
             for line in f:
                 token += line
             f.close()
