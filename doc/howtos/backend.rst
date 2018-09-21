@@ -119,7 +119,7 @@ Object-Relational Mapping
 
 A key component of Odoo is the :abbr:`ORM (Object-Relational Mapping)` layer.
 This layer avoids having to write most :abbr:`SQL (Structured Query Language)`
-by hand and provides extensibility and security services\ [#rawsql]_.
+by hand and provides extensibility and security services ([#rawsql]_).
 
 Business objects are declared as Python classes extending
 :class:`~odoo.models.Model` which integrates them into the automated
@@ -181,7 +181,7 @@ Example of simple fields are :class:`~odoo.fields.Boolean`,
 Reserved fields
 ###############
 
-Odoo creates a few fields in all models\ [#autofields]_. These fields are
+Odoo creates a few fields in all models ([#autofields]_). These fields are
 managed by the system and shouldn't be written to. They can be read if
 useful or necessary:
 
@@ -1860,10 +1860,10 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     * http://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib
 
-.. [#autofields] it is possible to :attr:`disable the automatic creation of some
-                 fields <odoo.models.Model._log_access>`
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it
              bypasses all Odoo authentication and security mechanisms.
+.. [#autofields] it is possible to :attr:`disable the automatic creation of some
+                 fields <odoo.models.Model._log_access>`
 
 .. _database index:
     http://use-the-index-luke.com/sql/preface
