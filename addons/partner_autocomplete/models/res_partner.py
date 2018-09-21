@@ -10,7 +10,7 @@ from odoo.addons.iap.models.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
 
-PARTNER_REMOTE_URL = 'https://partner-autocomplete.odoo.com/iap/partner_autocomplete'
+DEFAULT_ENDPOINT = 'https://partner-autocomplete.odoo.com'
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -76,8 +76,14 @@ class ResPartner(models.Model):
         return country_id, state_id
 
     @api.model
+    def get_endpoint(self):
+        url = self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', DEFAULT_ENDPOINT)
+        url += '/iap/partner_autocomplete'
+        return url
+
+    @api.model
     def _rpc_remote_api(self, action, params, timeout=15):
-        url = '%s/%s' % (PARTNER_REMOTE_URL, action)
+        url = '%s/%s' % (self.get_endpoint(), action)
         account = self.env['iap.account'].get('partner_autocomplete')
         params.update({
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
@@ -90,10 +96,9 @@ class ResPartner(models.Model):
         except (ConnectionError, HTTPError, exceptions.AccessError) as exception:
             _logger.error('Autocomplete API error: %s' % str(exception))
             return False, str(exception)
-        except InsufficientCreditError:
-            account = self.env['iap.account'].get('partner_autocomplete')
-            if account:
-                account.write({'insufficient_credit': True})
+        except InsufficientCreditError as exception:
+            _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
+            account.sudo().write({'insufficient_credit': True})
             return False, 'Insufficient Credit'
 
     @api.model
@@ -172,9 +177,8 @@ class ResPartner(models.Model):
 
     @api.multi
     def write(self, values):
-        record = super(ResPartner, self).write(values)
+        res = super(ResPartner, self).write(values)
         if len(self) == 1:
-            for partner in self:
-                partner._update_autocomplete_data(values.get('vat', False))
+            self._update_autocomplete_data(values.get('vat', False))
 
-            return record
+        return res

@@ -43,7 +43,8 @@ return {
                     return suggestion.website;
                 });
                 clearbitSuggestions.forEach(function (suggestion) {
-                    if (websites.indexOf(suggestion.website) < 0) {
+                    if (websites.indexOf(suggestion.domain) < 0) {
+                        websites.push(suggestion.domain);
                         odooSuggestions.push(suggestion);
                     }
                 });

@@ -37,7 +37,7 @@ odoo.define('partner_autocomplete.tests', function (require) {
     QUnit.module('partner_autocomplete', {
         before: function () {
             var suggestions = [
-                {name: "Odoo", website: "odoo.com", logo: "odoo.com/logo.png", vat: "BE0477472701"}
+                {name: "Odoo", website: "odoo.com", domain: "odoo.com", logo: "odoo.com/logo.png", vat: "BE0477472701"}
             ];
 
             var enrich_data = {

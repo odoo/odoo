@@ -199,7 +199,7 @@ class IapAccount(models.Model):
             }
 
             credit = jsonrpc(url=url, params=params)
-            account.write({'insufficient_credit': credit == 0})
+            account.sudo().write({'insufficient_credit': credit == 0})
 
         return credit
 
