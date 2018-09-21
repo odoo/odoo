@@ -8,13 +8,9 @@ import jinja2
 import subprocess
 import socket
 import sys
-import werkzeug
 import netifaces as ni
 import odoo
-import base64
 from odoo import http
-import requests
-from odoo.http import request
 import zipfile
 import io
 import os

@@ -8,7 +8,6 @@ import subprocess
 import netifaces as ni
 import json
 import re
-import os
 from odoo import http
 import urllib3
 from odoo.http import request as httprequest
@@ -242,12 +241,6 @@ class BtDriver(Driver, metaclass=BtMetaClass):
     def connect(self):
         pass
 
-#----------------------------------------------------------
-#Bluetooth start
-#----------------------------------------------------------
-bm = BtManager()
-bm.daemon = True
-bm.start()
 
 
 
@@ -295,6 +288,7 @@ class USBDeviceManager(Thread):
 
 
 def send_iot_box_device(send_printer):
+    _logger.info("Sending IoT Box info: %s", send_printer)
     maciotbox = subprocess.check_output("/sbin/ifconfig eth0 |grep -Eo ..\(\:..\){5}", shell=True).decode('utf-8').split('\n')[0]
     server = "" # read from file
     try:
@@ -421,7 +415,3 @@ def send_iot_box_device(send_printer):
             _logger.warning('Could not reach configured server')
 
 
-
-udm = USBDeviceManager()
-udm.daemon = True
-udm.start()
