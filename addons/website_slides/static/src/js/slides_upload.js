@@ -378,4 +378,10 @@ $('.oe_slide_js_upload').on('click', function () {
     var channel_id = $(this).attr('channel_id');
     slides.page_widgets['upload_dialog'] = new SlideDialog(this, channel_id).appendTo(document.body);
 });
+
+// automatically open the upload dialog if requested from query string
+if ($.deparam.querystring().enable_slide_upload !== undefined) {
+    $('.oe_slide_js_upload').click();
+}
+
 });
