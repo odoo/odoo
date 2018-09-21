@@ -182,6 +182,11 @@ class Channel(models.Model):
                 subtype = 'mail.mt_note'
         return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
+    def list_all(self):
+        return {
+            'channels': [{'id': channel.id, 'name': channel.name, 'website_url': channel.website_url} for channel in self.search([])]
+        }
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """
