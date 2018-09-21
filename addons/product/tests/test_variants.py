@@ -60,6 +60,14 @@ class TestVariants(common.TestProductCommon):
         self.size_attr_value_l = self.env['product.attribute.value'].create({'name': 'L', 'attribute_id': self.size_attr.id})
         return res
 
+    def test_variants_is_product_variant(self):
+        template = self.product_7_template
+        variants = template.product_variant_ids
+        self.assertFalse(template.is_product_variant,
+                         'Product template is not a variant')
+        self.assertEqual({True}, set(v.is_product_variant for v in variants),
+                         'Product variants are variants')
+
     def test_variants_creation_mono(self):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
