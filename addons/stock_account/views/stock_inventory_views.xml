@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_inventory_form_inherit" model="ir.ui.view">
+        <field name="name">stock.inventory.form.inherite</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//tree//field[@name='prod_lot_id']" position="after">
+                <field name="cost_method" invisible="1"/>
+                <field name="theoretical_qty_bigger" invisible="1"/>
+                <field name="unit_cost" attrs="{
+                'readonly': [('cost_method', '=', 'standard')],
+                'invisible': ['&amp;','|',('cost_method','=','fifo'),('cost_method','=','average'), ('theoretical_qty_bigger', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
