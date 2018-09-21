@@ -998,6 +998,9 @@ attributes:
   whether groups can be deleted via the context menu. Default: true.
 ``group_edit``
   whether groups can be edited via the context menu. Default: true.
+``archivable``
+  whether records belonging to a column can be archived / restored if an
+  ``active`` field is defined on the model. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is

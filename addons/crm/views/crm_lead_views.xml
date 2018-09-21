@@ -45,14 +45,21 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                    <button name="toggle_active"
+                        string="Restore"
+                        type="object"
+                        attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
+                    <button name="action_set_lost"
+                        string="Mark as Lost"
+                        type="object"
+                        attrs="{'invisible': ['&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                 </header>
                 <sheet>
+                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
                     </div>
-                    <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                    <div class="badge-pill badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                    <div class="badge-pill badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
@@ -169,7 +176,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" archivable="false">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -306,7 +313,8 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
+                    archivable="false">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -335,8 +343,6 @@
                                     <div class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
                                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
-                                        <a t-if="! record.active.value"  role="menuitem" name="action_set_active" type="object" class="dropdown-item">Restore</a>
-                                        <a t-if="record.active.value" role="menuitem" name="action_set_unactive" type="object" class="dropdown-item">Archive</a>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
                                 </div>
@@ -400,7 +406,7 @@
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
+                            domain="['&amp;', ('probability', '=', 0), ('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -439,12 +445,17 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
+                        <button name="toggle_active"
+                            string="Restore"
+                            type="object"
+                            attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
                             attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
@@ -455,13 +466,9 @@
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
                                 </div>
                             </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
-                                    attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
                         </div>
-                        <div class="badge badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
-                        <div class="badge badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                        <div class="badge-pill badge-danger float-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                        <div class="badge-pill badge-success float-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
