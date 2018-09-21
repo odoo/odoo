@@ -134,6 +134,9 @@ var x2ManyCommands = {
 };
 
 var BasicModel = AbstractModel.extend({
+    // constants
+    OPEN_GROUP_LIMIT: 10, // after this limit, groups are automatically folded
+
     // list of models for which the DataManager's cache should be cleared on
     // create, update and delete operations
     noCacheModels: [
@@ -3991,6 +3994,7 @@ var BasicModel = AbstractModel.extend({
                 list.data = [];
                 list.count = 0;
                 var defs = [];
+                var openGroupCount = 0;
 
                 _.each(groups, function (group) {
                     var aggregateValues = {};
@@ -4046,7 +4050,7 @@ var BasicModel = AbstractModel.extend({
                         oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         _.extend(oldGroup, updatedProps);
                         newGroup = oldGroup;
-                    } else if (!newGroup.openGroupByDefault) {
+                    } else if (!newGroup.openGroupByDefault || openGroupCount >= self.OPEN_GROUP_LIMIT) {
                         newGroup.isOpen = false;
                     } else {
                         newGroup.isOpen = '__fold' in group ? !group.__fold : true;
@@ -4054,6 +4058,7 @@ var BasicModel = AbstractModel.extend({
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
                     if (newGroup.isOpen && newGroup.count > 0) {
+                        openGroupCount++;
                         defs.push(self._load(newGroup, options));
                     }
                 });
