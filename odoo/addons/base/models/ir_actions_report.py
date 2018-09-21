@@ -572,18 +572,21 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            writer = PdfFileWriter()
-            for stream in streams:
-                reader = PdfFileReader(stream)
-                writer.appendPagesFromReader(reader)
-            result_stream = io.BytesIO()
-            streams.append(result_stream)
-            writer.write(result_stream)
-            result = result_stream.getvalue()
+            result = self._merge_pdfs(streams)
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
         return result
+
+    def _merge_pdfs(self, streams):
+        writer = PdfFileWriter()
+        for stream in streams:
+            reader = PdfFileReader(stream)
+            writer.appendPagesFromReader(reader)
+        result_stream = io.BytesIO()
+        streams.append(result_stream)
+        writer.write(result_stream)
+        return result_stream.getvalue()
 
     @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
