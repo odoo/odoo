@@ -163,7 +163,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="type" invisible="context.get('type',True)"/>
+                    <field name="invoice_type" invisible="context.get('invoice_type',True)"/>
                 </tree>
             </field>
         </record>
@@ -243,7 +243,7 @@
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="type" invisible="context.get('type',True)"/>
+                    <field name="invoice_type" invisible="context.get('invoice_type',True)"/>
                 </tree>
             </field>
         </record>
@@ -257,7 +257,7 @@
                 <header>
                         <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask for a Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','in_payment','paid'))]}"/>
+                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask for a Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('invoice_type', 'in', ['in_refund','out_refund']),('state','not in',('open','in_payment','paid'))]}"/>
                         <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" />
                 </header>
@@ -267,11 +267,11 @@
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Vendor Bill">
                     <div>
-                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}">Draft Bill</span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('invoice_type','!=','in_invoice')]}">Draft Bill</span>
                         <span class="o_form_label" attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">- First Number:</span>
-                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}">Draft Credit Note</span>
-                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}">Bill </span>
-                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}">Credit Note </span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('invoice_type','!=','in_refund')]}">Draft Credit Note</span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('invoice_type','!=','in_invoice')]}">Bill </span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('invoice_type','!=','in_refund')]}">Credit Note </span>
                         <h1 class="mt0">
                             <field name="number" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
@@ -280,7 +280,7 @@
                             </div>
                         </h1>
                     </div>
-                    <field name="type" invisible="1"/>
+                    <field name="invoice_type" invisible="1"/>
                     <group>
                         <group>
                             <field string="Vendor" name="partner_id"
@@ -289,7 +289,7 @@
                               domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
                             <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
-                              domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','in_payment','paid')), ('type','=','in_invoice')]"
+                              domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','in_payment','paid')), ('invoice_type','=','in_invoice')]"
                               string="Auto-Complete" placeholder="Select an old vendor bill"
                               options="{'no_create': True}" context="{'show_total_amount': True}"/>
                         </group>
@@ -302,12 +302,12 @@
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="commercial_partner_id" invisible="1"/>
-                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Bank Account" context="{'default_partner_id': commercial_partner_id}" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
+                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Bank Account" context="{'default_partner_id': commercial_partner_id}" attrs="{'invisible': [('invoice_type', '!=', 'in_invoice')]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Bill">
-                            <field context="{'type': type, 'journal_id': journal_id}" name="invoice_line_ids">
+                            <field context="{'invoice_type': invoice_type, 'journal_id': journal_id}" name="invoice_line_ids">
                                 <tree string="Bill lines" editable="bottom">
                                     <field name="sequence" widget="handle" />
                                     <field name="product_id" groups="account.group_products_in_bills"
@@ -324,7 +324,7 @@
                                     <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'invoice_type':parent.invoice_type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
@@ -387,7 +387,7 @@
                         </page>
                     </notebook>
                 </sheet>
-                <div class="o_attachment_preview" attrs="{'invisible': ['|',('type', '!=', 'in_invoice'),('state', '!=', 'draft')]}" />
+                <div class="o_attachment_preview" attrs="{'invisible': ['|',('invoice_type', '!=', 'in_invoice'),('state', '!=', 'draft')]}" />
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
@@ -409,7 +409,7 @@
                             attrs="{'invisible': [('state', '!=', 'open')]}"
                             string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="account.group_account_invoice"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Add Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','in_payment','paid'))]}"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Add Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('invoice_type', '=', 'out_refund'), ('state', 'not in', ('open','in_payment','paid'))]}"/>
                     <button name="preview_invoice" type="object" string="Preview"/>
                     <button name="action_invoice_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid"/>
@@ -421,11 +421,11 @@
                 <sheet string="Invoice">
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <span class="o_form_label" attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}">Credit Note</span>
+                    <span class="o_form_label" attrs="{'invisible': ['|',('state','=','draft'), ('invoice_type','!=','out_refund')]}">Credit Note</span>
                     <h1 class="mt0">
                         <div attrs="{'invisible': [('sequence_number_next_prefix','!=',False)]}">
-                            <label for="number" string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
-                            <label for="number" string="Draft Credit Note" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_refund')]}"/>
+                            <label for="number" string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('invoice_type','!=','out_invoice')]}"/>
+                            <label for="number" string="Draft Credit Note" attrs="{'invisible': ['|',('state','not in',('draft',)), ('invoice_type','!=','out_refund')]}"/>
                             <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/>
                         </div>
                         <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
@@ -434,7 +434,7 @@
                             <field name="sequence_number_next" class="oe_inline"/>
                         </div>
                     </h1>
-                    <field name="type" invisible="1"/>
+                    <field name="invoice_type" invisible="1"/>
                     <group>
                         <group>
                             <field string="Customer" name="partner_id"
@@ -465,7 +465,7 @@
                                 nolabel="1"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
-                                context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}"
+                                context="{'invoice_type': invoice_type, 'journal_id': journal_id, 'default_invoice_id': id}"
                             >
                                 <tree string="Invoice Lines" editable="bottom">
                                     <control>
@@ -495,7 +495,7 @@
                                     <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit" string="Price"/>
                                     <field name="discount" groups="base.group_no_one" string="Disc (%)"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'invoice_type':parent.invoice_type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
                                     <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
@@ -676,7 +676,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
-            <field name="context">{'type':'out_invoice'}</field>
+            <field name="context">{'invoice_type':'out_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
 
@@ -686,8 +686,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
             <field name="view_id" ref="invoice_tree"/>
-            <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
-            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="domain">[('invoice_type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="context">{'default_invoice_type':'out_invoice', 'invoice_type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
 
@@ -711,7 +711,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
-            <field name="context">{'type':'out_invoice'}</field>
+            <field name="context">{'invoice_type':'out_invoice'}</field>
             <field name="domain">[('state','=','draft')]</field>
            <!-- <field name="search_view_id" ref="view_account_invoice_filter"/>-->
         </record>
@@ -735,8 +735,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_invoice')]</field>
-            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="domain">[('invoice_type','=','out_invoice')]</field>
+            <field name="context">{'invoice_type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -769,8 +769,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','out_refund')]</field>
-            <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
+            <field name="domain">[('invoice_type','=','out_refund')]</field>
+            <field name="context">{'default_invoice_type': 'out_refund', 'invoice_type': 'out_refund', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -807,8 +807,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_invoice')]</field>
-            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="domain">[('invoice_type','=','in_invoice')]</field>
+            <field name="context">{'default_invoice_type': 'in_invoice', 'invoice_type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -854,8 +854,8 @@ action = action_values
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field eval="False" name="view_id"/>
-            <field name="domain">[('type','=','in_refund')]</field>
-            <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
+            <field name="domain">[('invoice_type','=','in_refund')]</field>
+            <field name="context">{'default_invoice_type': 'in_refund', 'invoice_type': 'in_refund', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

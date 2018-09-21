@@ -189,7 +189,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
         invoice_vals = {
             'name': '',
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'partner_id': self.partner_customer_usd.id,
             'invoice_line_ids': [(0, 0, {'name': serv_cost.name, 'product_id': serv_cost.id, 'quantity': 2, 'uom_id': serv_cost.uom_id.id, 'price_unit': serv_cost.standard_price, 'account_analytic_id': so.analytic_account_id.id, 'account_id': self.account_income.id})],
             'account_id': self.account_payable.id,

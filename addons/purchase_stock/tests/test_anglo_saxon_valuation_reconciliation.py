@@ -50,7 +50,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'partner_id': self.test_partner.id,
             'currency_id': self.currency_two.id,
             'name': 'vendor bill',
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'date_invoice': date,
             'date': date,
             'account_id': account_receivable.id,

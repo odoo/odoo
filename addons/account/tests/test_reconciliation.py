@@ -49,13 +49,13 @@ class TestReconciliation(AccountingTestCase):
             'payment_type': 'inbound',
         })
 
-    def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
+    def create_invoice(self, invoice_type='out_invoice', invoice_amount=50, currency_id=None):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
             'currency_id': currency_id,
-            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
+            'name': invoice_type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,
-            'type': type,
+            'invoice_type': invoice_type,
             'date_invoice': time.strftime('%Y') + '-07-01',
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
@@ -101,13 +101,13 @@ class TestReconciliation(AccountingTestCase):
 
     def make_customer_and_supplier_flows(self, invoice_currency_id, invoice_amount, bank_journal, amount, amount_currency, transaction_currency_id):
         #we create an invoice in given invoice_currency
-        invoice_record = self.create_invoice(type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(invoice_type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=amount, amount_currency=amount_currency, currency_id=transaction_currency_id)
         customer_move_lines = bank_stmt.move_line_ids
 
         #we create a supplier bill in given invoice_currency
-        invoice_record = self.create_invoice(type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
+        invoice_record = self.create_invoice(invoice_type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id)
         supplier_move_lines = bank_stmt.move_line_ids
@@ -225,7 +225,7 @@ class TestReconciliation(AccountingTestCase):
 
     def test_statement_euro_invoice_usd_transaction_euro_full(self):
         #we create an invoice in given invoice_currency
-        invoice_record = self.create_invoice(type='out_invoice', invoice_amount=50, currency_id=self.currency_usd_id)
+        invoice_record = self.create_invoice(invoice_type='out_invoice', invoice_amount=50, currency_id=self.currency_usd_id)
         #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
         bank_stmt = self.acc_bank_stmt_model.create({
             'journal_id': self.bank_journal_euro.id,
@@ -288,7 +288,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'name': 'Foreign invoice with exchange gain',
             'account_id': self.account_rcv_id,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'date_invoice': time.strftime('%Y-%m-%d'),
             'journal_id': self.bank_journal_usd_id,
             'invoice_line': [
@@ -423,7 +423,7 @@ class TestReconciliation(AccountingTestCase):
         # create a bank statement in USD bank journal with a bank statement line of 85 USD
         # Reconcile bank statement with payment and put the remaining 5 USD in bank fees or another account.
 
-        invoice = self.create_invoice(type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
+        invoice = self.create_invoice(invoice_type='out_invoice', invoice_amount=80, currency_id=self.currency_usd_id)
         # register payment on invoice
         payment = self.env['account.payment'].create({'payment_type': 'inbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
@@ -530,7 +530,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'date_invoice': time.strftime('%Y') + '-' + '07' + '-01',
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
@@ -545,7 +545,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'date_invoice': time.strftime('%Y') + '-' + '08' + '-01',
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
@@ -758,13 +758,13 @@ class TestReconciliation(AccountingTestCase):
         self.assertEqual(reversed_bank_line.full_reconcile_id.id, bank_line.full_reconcile_id.id)
         self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
 
-    def create_invoice_partner(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False):
+    def create_invoice_partner(self, invoice_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': partner_id,
             'currency_id': currency_id,
-            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
+            'name': invoice_type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,
-            'type': type,
+            'invoice_type': invoice_type,
             'date_invoice': time.strftime('%Y') + '-07-01',
             })
         self.account_invoice_line_model.create({'product_id': self.product.id,
@@ -918,7 +918,7 @@ class TestReconciliation(AccountingTestCase):
         invoice_cust_1 = self.account_invoice_model.create({
             'partner_id': self.partner_agrolait_id,
             'account_id': self.account_rcv.id,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'currency_id': self.currency_usd_id,
             'date_invoice': time.strftime('%Y') + '-01-01',
         })
@@ -1001,7 +1001,7 @@ class TestReconciliation(AccountingTestCase):
             'currency_id': self.currency_usd_id,
             'name': 'Multiple payment terms',
             'account_id': self.account_rcv.id,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-07-01',
         })
         self.account_invoice_line_model.create({

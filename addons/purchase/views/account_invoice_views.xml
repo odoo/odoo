@@ -6,8 +6,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','=','in_invoice')]</field>
-        <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase'}</field>
+        <field name="domain">[('invoice_type','=','in_invoice')]</field>
+        <field name="context">{'default_invoice_type':'in_invoice', 'invoice_type':'in_invoice', 'journal_type': 'purchase'}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -27,8 +27,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
         <field eval="False" name="view_id"/>
-        <field name="domain">[('type','in',('in_invoice', 'in_refund')),('purchase_id','=',active_id)]</field>
-        <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase', 'default_purchase_id': active_id}</field>
+        <field name="domain">[('invoice_type','in',('in_invoice', 'in_refund')),('purchase_id','=',active_id)]</field>
+        <field name="context">{'default_invoice_type': 'in_invoice', 'invoice_type': 'in_invoice', 'journal_type': 'purchase', 'default_purchase_id': active_id}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -59,7 +59,7 @@
         <field name="groups_id" eval="[(4,ref('purchase.group_purchase_user'))]"/>
         <field name="arch" type="xml">
             <field name="vendor_bill_id" position="after">
-                <field name="vendor_bill_purchase_id" attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('type', '=', 'in_refund')]}"
+                <field name="vendor_bill_purchase_id" attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('invoice_type', '=', 'in_refund')]}"
                     class="oe_edit_only" domain="[('partner_id','child_of',[partner_id])]"
                     placeholder="Select a purchase order or an old bill"
                     options="{'no_create': True, 'no_open': True}"/>
@@ -67,7 +67,7 @@
                     invisible="1" context="{'show_total_amount': True}"/>
             </field>
             <field name="vendor_bill_id" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('type', '=', 'in_invoice'), ('state', 'not in', ['draft'])]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('invoice_type', '=', 'in_invoice'), ('state', 'not in', ['draft'])]}</attribute>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1" readonly="0"/>
@@ -82,7 +82,7 @@
         <field name="inherit_id" ref="account.view_invoice_line_form"/>
         <field name="arch" type="xml">
             <field name="account_id" position="before">
-                <field name="purchase_id" invisible="context.get('type') in ('out_invoice', 'out_refund')"/>
+                <field name="purchase_id" invisible="context.get('invoice_type') in ('out_invoice', 'out_refund')"/>
             </field>
         </field>
     </record>

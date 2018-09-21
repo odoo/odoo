@@ -6,12 +6,12 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestReconciliationMatchingRules(AccountingTestCase):
-    def _create_invoice_line(self, amount, partner, type):
+    def _create_invoice_line(self, amount, partner, invoice_type):
         ''' Create an invoice on the fly.'''
-        self_ctx = self.env['account.invoice'].with_context(type=type)
+        self_ctx = self.env['account.invoice'].with_context(invoice_type=invoice_type)
         journal_id = self_ctx._default_journal().id
         self_ctx = self_ctx.with_context(journal_id=journal_id)
-        view = type in ('in_invoice', 'in_refund') and 'account.invoice_supplier_form' or 'account.invoice_form'
+        view = invoice_type in ('in_invoice', 'in_refund') and 'account.invoice_supplier_form' or 'account.invoice_form'
         with Form(self_ctx, view=view) as invoice_form:
             invoice_form.partner_id = partner
             with invoice_form.invoice_line_ids.new() as invoice_line_form:

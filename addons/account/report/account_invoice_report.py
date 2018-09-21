@@ -48,12 +48,12 @@ class AccountInvoiceReport(models.Model):
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg", groups="base.group_multi_currency")
     nbr = fields.Integer(string='Line Count', readonly=True)  # TDE FIXME master: rename into nbr_lines
     invoice_id = fields.Many2one('account.invoice', readonly=True)
-    type = fields.Selection([
+    invoice_type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Credit Note'),
         ('in_refund', 'Vendor Credit Note'),
-        ], readonly=True)
+        ], string='Type', readonly=True, oldname='type')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('open', 'Open'),
@@ -77,7 +77,7 @@ class AccountInvoiceReport(models.Model):
             'account_id', 'amount_total_company_signed', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position_id',
             'journal_id', 'number', 'partner_bank_id', 'partner_id', 'payment_term_id',
-            'residual', 'state', 'type', 'user_id',
+            'residual', 'state', 'invoice_type', 'user_id',
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
@@ -94,7 +94,7 @@ class AccountInvoiceReport(models.Model):
         select_str = """
             SELECT sub.id, sub.number, sub.date, sub.product_id, sub.partner_id, sub.country_id, sub.account_analytic_id,
                 sub.payment_term_id, sub.uom_name, sub.currency_id, sub.journal_id,
-                sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.invoice_id, sub.type, sub.state,
+                sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.invoice_id, sub.invoice_type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total as price_total, sub.price_average as price_average, sub.amount_total as amount_total,
                 COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
@@ -110,7 +110,7 @@ class AccountInvoiceReport(models.Model):
                     u2.name AS uom_name,
                     ai.currency_id, ai.journal_id, ai.fiscal_position_id, ai.user_id, ai.company_id,
                     1 AS nbr,
-                    ai.id AS invoice_id, ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
+                    ai.id AS invoice_id, ai.invoice_type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM ((invoice_type.sign_qty * ail.quantity) / u.factor * u2.factor) AS product_qty,
                     SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
@@ -140,11 +140,11 @@ class AccountInvoiceReport(models.Model):
                 JOIN (
                     -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
-                         WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
+                         WHEN ai.invoice_type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1
                             ELSE 1
                         END) AS sign,(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                         WHEN ai.invoice_type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1
                             ELSE 1
                         END) AS sign_qty
@@ -157,7 +157,7 @@ class AccountInvoiceReport(models.Model):
         group_by_str = """
                 GROUP BY ail.id, ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
-                    ai.fiscal_position_id, ai.user_id, ai.company_id, ai.id, ai.type, invoice_type.sign, ai.state, pt.categ_id,
+                    ai.fiscal_position_id, ai.user_id, ai.company_id, ai.id, ai.invoice_type, invoice_type.sign, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
                     ai.amount_total_company_signed, ai.commercial_partner_id, coalesce(partner.country_id, partner_ai.country_id)
         """

@@ -31,7 +31,7 @@ class TestReInvoice(TestCommonSaleNoChart):
         Invoice = cls.env['account.invoice'].with_context(mail_notrack=True, mail_create_nolog=True)
         cls.invoiceA = Invoice.create({
             'name': 'Test Invoice',
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'partner_id': cls.partner_customer_usd.id,
             'account_id': cls.account_payable.id,
             'journal_id': cls.journal_purchase.id,
@@ -39,7 +39,7 @@ class TestReInvoice(TestCommonSaleNoChart):
         })
         cls.invoiceB = Invoice.create({
             'name': 'Test Invoice 2',
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'partner_id': cls.partner_customer_usd.id,
             'account_id': cls.account_payable.id,
             'journal_id': cls.journal_purchase.id,

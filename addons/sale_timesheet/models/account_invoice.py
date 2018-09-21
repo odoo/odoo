@@ -57,7 +57,7 @@ class AccountInvoiceLine(models.Model):
             to compute the delivered one (for reporting).
         """
         invoice_line = super(AccountInvoiceLine, self).create(values)
-        if invoice_line.invoice_id.type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
+        if invoice_line.invoice_id.invoice_type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
             sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
             if sale_line_delivery:
                 domain = self._timesheet_domain_get_invoiced_lines(sale_line_delivery)

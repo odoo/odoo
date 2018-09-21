@@ -309,7 +309,7 @@ class Repair(models.Model):
                     invoice = Invoice.create({
                         'name': repair.name,
                         'origin': repair.name,
-                        'type': 'out_invoice',
+                        'invoice_type': 'out_invoice',
                         'account_id': repair.partner_id.property_account_receivable_id.id,
                         'partner_id': repair.partner_invoice_id.id or repair.partner_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,

@@ -84,7 +84,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': self.po.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [5.0, 5.0], 'Purchase: all products should be invoiced"')
@@ -118,7 +118,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': self.po.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         self.invoice.purchase_order_change()
         self.invoice.invoice_validate()
@@ -149,7 +149,7 @@ class TestPurchaseOrder(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': self.po.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_refund',
+            'invoice_type': 'in_refund',
         })
         self.invoice.purchase_order_change()
         self.invoice.invoice_line_ids[0].quantity = 2.0

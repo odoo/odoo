@@ -122,7 +122,7 @@ class Partner(models.Model):
                                 s = 0
                                 inv = mline.account_invoice_line.invoice_id
                                 for ml in inv.payment_move_line_ids:
-                                    if any(ml.invoice_id.filtered(lambda inv: inv.type == 'out_refund')):
+                                    if any(ml.invoice_id.filtered(lambda inv: inv.invoice_type == 'out_refund')):
                                         s = 2
                                 break
                             elif mstate == 'open' and s != 0:

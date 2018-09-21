@@ -38,7 +38,7 @@ class TestAccountInvoiceRounding(AccountingTestCase):
             'currency_id': self.env.ref('base.USD').id,
             'name': 'invoice test rounding',
             'account_id': self.account_receivable.id,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-06-26',
         })
         if tax_amount:

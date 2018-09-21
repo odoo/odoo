@@ -72,7 +72,7 @@ class TestAccountInvoice(TransactionCase):
             active_model='account.invoice',
             active_id=invoice.id,
             active_ids=invoice.ids,
-            type='out_invoice',
+            invoice_type='out_invoice',
         ).invoice_confirm()
 
         # I check that customer invoice state is "Open"

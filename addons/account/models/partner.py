@@ -279,7 +279,7 @@ class ResPartner(models.Model):
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']),
-            ('type', 'in', ('out_invoice', 'out_refund'))
+            ('invoice_type', 'in', ('out_invoice', 'out_refund'))
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
@@ -457,7 +457,7 @@ class ResPartner(models.Model):
             return can_edit_vat
         Invoice = self.env['account.invoice']
         has_invoice = Invoice.search([
-            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('invoice_type', 'in', ['out_invoice', 'out_refund']),
             ('partner_id', 'child_of', self.commercial_partner_id.id),
             ('state', 'not in', ['draft', 'cancel'])
         ], limit=1)

@@ -26,7 +26,7 @@ class AccountInvoice(models.Model):
             doy = date.strftime('%j')
             year = date.strftime('%Y')
             seq = '001'
-            invoices = self.search([('type', '=', 'out_invoice'),
+            invoices = self.search([('invoice_type', '=', 'out_invoice'),
                  ('reference', 'like', '+++%s/%s/%%' % (doy, year))], order='reference')
             if invoices:
                 prev_seq = int(invoices[-1].reference[12:15])
@@ -49,7 +49,7 @@ class AccountInvoice(models.Model):
             else:
                 partner_ref_nr = partner_ref_nr.ljust(7, '0')
                 seq = '001'
-                invoices = self.search([('type', '=', 'out_invoice'),
+                invoices = self.search([('invoice_type', '=', 'out_invoice'),
                      ('reference', 'like', '+++%s/%s/%%' % (partner_ref_nr[:3], partner_ref_nr[3:]))], order='reference')
                 if invoices:
                     prev_seq = int(invoices[-1].reference[12:15])

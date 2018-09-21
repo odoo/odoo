@@ -68,7 +68,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
     def create_invoice(self, amount):
         """ Return the move line that gets to be reconciled (the one in the receivable account) """
         vals = {'partner_id': self.partner.id,
-                'type': 'out_invoice',
+                'invoice_type': 'out_invoice',
                 'name': '-',
                 'currency_id': self.env.user.company_id.currency_id.id,
                 }

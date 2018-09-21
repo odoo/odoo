@@ -10,12 +10,12 @@
                 </t>
                 <div class="page">
                     <h2>
-                        <span t-if="o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
-                        <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
-                        <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                        <span t-if="o.type == 'out_refund'">Credit Note</span>
-                        <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
-                        <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                        <span t-if="o.invoice_type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')">Invoice</span>
+                        <span t-if="o.invoice_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+                        <span t-if="o.invoice_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                        <span t-if="o.invoice_type == 'out_refund'">Credit Note</span>
+                        <span t-if="o.invoice_type == 'in_refund'">Vendor Credit Note</span>
+                        <span t-if="o.invoice_type == 'in_invoice'">Vendor Bill</span>
                         <span t-field="o.number"/>
                     </h2>
 
@@ -28,7 +28,7 @@
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div class="col-auto" t-if="o.date_due and o.type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
+                        <div class="col-auto" t-if="o.date_due and o.invoice_type == 'out_invoice' and o.state in ('open', 'in_payment', 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
@@ -219,7 +219,7 @@
         <template id="report_invoice">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-set="lang" t-value="o.user_id.lang if o.invoice_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
                     <t t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
             </t>
@@ -228,7 +228,7 @@
         <template id="report_invoice_with_payments">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-set="lang" t-value="o.user_id.lang if o.type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
+                    <t t-set="lang" t-value="o.user_id.lang if o.invoice_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
                     <t t-call="account.report_invoice_document_with_payments" t-lang="lang"/>
                 </t>
             </t>

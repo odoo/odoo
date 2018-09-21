@@ -22,7 +22,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
 
         invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_2').id,
             'account_id': invoice_account,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
 
         self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,
@@ -77,7 +77,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
 
         invoice = self.env['account.invoice'].create({'partner_id': self.env.ref('base.res_partner_2').id,
             'account_id': invoice_account,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
 
         invoice_line = self.env['account.invoice.line'].create({'product_id': self.env.ref('product.product_product_4').id,

@@ -57,7 +57,7 @@ class TestProductIdChange(AccountingTestCase):
             'partner_id': partner.id,
             'name': 'invoice to client',
             'account_id': self.account_receivable.id,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'date_invoice': time.strftime('%Y') + '-06-26',
             'fiscal_position_id': fp.id,
         })
@@ -74,7 +74,7 @@ class TestProductIdChange(AccountingTestCase):
             'partner_id': partner.id,
             'name': 'invoice to supplier',
             'account_id': self.account_receivable.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
             'date_invoice': time.strftime('%Y') + '-06-26',
             'fiscal_position_id': fp.id,
         })

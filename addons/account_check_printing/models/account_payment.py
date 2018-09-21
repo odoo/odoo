@@ -157,8 +157,8 @@ class AccountPayment(models.Model):
         multi_stub = self.company_id.account_check_printing_multi_stub
 
         invoices = self.invoice_ids.sorted(key=lambda r: r.date_due)
-        debits = invoices.filtered(lambda r: r.type == 'in_invoice')
-        credits = invoices.filtered(lambda r: r.type == 'in_refund')
+        debits = invoices.filtered(lambda r: r.invoice_type == 'in_invoice')
+        credits = invoices.filtered(lambda r: r.invoice_type == 'in_refund')
 
         # Prepare the stub lines
         if not credits:
@@ -192,7 +192,7 @@ class AccountPayment(models.Model):
         """ Return the dict used to display an invoice/refund in the stub
         """
         # Find the account.partial.reconcile which are common to the invoice and the payment
-        if invoice.type in ['in_invoice', 'out_refund']:
+        if invoice.invoice_type in ['in_invoice', 'out_refund']:
             invoice_sign = 1
             invoice_payment_reconcile = invoice.move_id.line_ids.mapped('matched_debit_ids').filtered(lambda r: r.debit_move_id in self.move_line_ids)
         else:

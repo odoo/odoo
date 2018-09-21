@@ -354,7 +354,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': po1.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         invoice_po1.purchase_order_change()
         invoice_po1.action_invoice_open()
@@ -382,7 +382,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': po2.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         invoice_po2.purchase_order_change()
         invoice_po2.action_invoice_open()
@@ -408,7 +408,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'partner_id': self.partner_id.id,
             'purchase_id': po2.id,
             'account_id': self.partner_id.property_account_payable_id.id,
-            'type': 'in_refund',
+            'invoice_type': 'in_refund',
         })
 
         creditnote_po2.purchase_order_change()
@@ -451,7 +451,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'partner_id': order.partner_id.id,
             'purchase_id': order.id,
             'account_id': order.partner_id.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         invoice.purchase_order_change()
         invoice.invoice_line_ids[0].price_unit = 15.0

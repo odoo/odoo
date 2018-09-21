@@ -63,7 +63,7 @@ class CrmTeam(models.Model):
             ('team_id', 'in', self.ids),
             ('date', '<=', date.today()),
             ('date', '>=', date.today().replace(day=1)),
-            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('invoice_type', 'in', ['out_invoice', 'out_refund']),
         ], ['amount_untaxed_signed', 'team_id'], ['team_id'])
         for datum in invoice_data:
             self.browse(datum['team_id'][0]).invoiced = datum['amount_untaxed_signed']

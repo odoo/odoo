@@ -221,7 +221,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         invoice_2 = self.sale_order.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]  # the first invoice, its refund, and the new invoice
 
         # Check invoice's type and number
-        self.assertEquals(invoice_2.type, 'out_invoice', 'The last created invoiced should be a customer invoice')
+        self.assertEquals(invoice_2.invoice_type, 'out_invoice', 'The last created invoiced should be a customer invoice')
         self.assertEquals(invoice_2.state, 'draft', 'Last Customer invoices should be in draft')
 
         # At this time, the invoice 1 and its refund are confirmed, so the amounts invoiced are zero. The third invoice

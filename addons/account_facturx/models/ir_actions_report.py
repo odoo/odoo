@@ -15,7 +15,7 @@ class IrActionsReport(models.Model):
         # OVERRIDE
         if self.model == 'account.invoice' and res_ids and len(res_ids) == 1:
             invoice = self.env['account.invoice'].browse(res_ids)
-            if invoice.type in ('out_invoice', 'out_refund') and invoice.state != 'draft':
+            if invoice.invoice_type in ('out_invoice', 'out_refund') and invoice.state != 'draft':
                 xml_content = invoice._export_as_facturx_xml()
 
                 # Add attachment.

@@ -41,14 +41,14 @@ class TestPayment(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
-    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None, account_id=None):
+    def create_invoice(self, amount=100.0, invoice_type='out_invoice', currency_id=None, partner=None, account_id=None):
         """ Returns an open invoice """
         invoice = self.invoice_model.create({
             'partner_id': partner or self.partner_agrolait.id,
             'currency_id': currency_id or self.currency_eur_id,
-            'name': type,
+            'name': invoice_type,
             'account_id': account_id or self.account_receivable.id,
-            'type': type,
+            'invoice_type': invoice_type,
             'date_invoice': time.strftime('%Y') + '-06-26',
         })
         self.invoice_line_model.create({
@@ -161,7 +161,7 @@ class TestPayment(AccountingTestCase):
         # One payment for inv_3 (different partner)
         inv_3 = self.create_invoice(amount=200, partner=self.partner_china_exp.id)
         # One payment for inv_4 (Vendor Bill)
-        inv_4 = self.create_invoice(amount=50, partner=self.partner_agrolait.id, type='in_invoice')
+        inv_4 = self.create_invoice(amount=50, partner=self.partner_agrolait.id, invoice_type='in_invoice')
 
         ids = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
         register_payments = self.register_payments_model.with_context(active_ids=ids).create({
@@ -243,7 +243,7 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_id.partner_type, 'customer')
 
         # Test Vendor Bill
-        inv_2 = self.create_invoice(amount=500, type='in_invoice', partner=self.partner_china_exp.id)
+        inv_2 = self.create_invoice(amount=500, invoice_type='in_invoice', partner=self.partner_china_exp.id)
         ids = [inv_2.id]
         register_payments = self.register_payments_model.with_context(active_ids=ids).create({
             'payment_date': time.strftime('%Y') + '-07-15',
@@ -357,7 +357,7 @@ class TestPayment(AccountingTestCase):
         # Company is in EUR, create a customer invoice for 25 EUR and register payment of 25 USD.
         # Mark invoice as fully paid with a write_off
         # Check that all the aml are correctly created.
-        invoice = self.create_invoice(amount=25, type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=25, invoice_type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         # register payment on invoice
         payment = self.payment_model.create({'payment_type': 'inbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
@@ -384,7 +384,7 @@ class TestPayment(AccountingTestCase):
         # Company is in EUR, create a vendor bill for 25 EUR and register payment of 25 USD.
         # Mark invoice as fully paid with a write_off
         # Check that all the aml are correctly created.
-        invoice = self.create_invoice(amount=25, type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=25, invoice_type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         # register payment on invoice
         payment = self.payment_model.create({'payment_type': 'outbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
@@ -412,7 +412,7 @@ class TestPayment(AccountingTestCase):
         # Company is in EUR, create a credit note for 100 EUR and register payment of 90.
         # Mark invoice as fully paid with a write_off
         # Check that all the aml are correctly created.
-        invoice = self.create_invoice(amount=100, type='out_refund', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=100, invoice_type='out_refund', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         # register payment on invoice
         payment = self.payment_model.create({'payment_type': 'outbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
@@ -449,7 +449,7 @@ class TestPayment(AccountingTestCase):
             'rate': 0.88,
             'name': time.strftime('%Y') + '-07-15'})
 
-        invoice = self.create_invoice(amount=5325.6, type='in_invoice', currency_id=self.currency_usd_id, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=5325.6, invoice_type='in_invoice', currency_id=self.currency_usd_id, partner=self.partner_agrolait.id)
         self.assertRecordValues(invoice.move_id.line_ids, [
             {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 5950.39, 'amount_currency': -5325.6, 'currency_id': self.currency_usd_id},
             {'account_id': self.account_revenue.id, 'debit': 5950.39, 'credit': 0.0, 'amount_currency': 5325.6, 'currency_id': self.currency_usd_id},
@@ -501,7 +501,7 @@ class TestPayment(AccountingTestCase):
             'rate': 948,
             'name': time.strftime('%Y') + '-06-26'})
 
-        invoice = self.create_invoice(amount=247590.4, type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        invoice = self.create_invoice(amount=247590.4, invoice_type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
         self.assertRecordValues(invoice.move_id.line_ids, [
             {'account_id': self.account_receivable.id, 'debit': 247590.4, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
             {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 247590.4, 'amount_currency': 0.0, 'currency_id': False},

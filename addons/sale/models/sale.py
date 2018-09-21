@@ -67,17 +67,17 @@ class SaleOrder(models.Model):
         refund is not directly linked to the SO.
         """
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.invoice_type in ['out_invoice', 'out_refund'])
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.invoice_type in ['out_invoice', 'out_refund'])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
             if invoice_ids:
                 for inv in invoice_ids:
-                    refund_ids += refund_ids.search([('type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
+                    refund_ids += refund_ids.search([('invoice_type', '=', 'out_refund'), ('origin', '=', inv.number), ('origin', '!=', False), ('journal_id', '=', inv.journal_id.id)])
 
             # Ignore the status of the deposit product
             deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
@@ -451,7 +451,7 @@ class SaleOrder(models.Model):
         invoice_vals = {
             'name': self.client_order_ref or '',
             'origin': self.name,
-            'type': 'out_invoice',
+            'invoice_type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
@@ -553,7 +553,7 @@ class SaleOrder(models.Model):
                 raise UserError(_('There is no invoiceable line. If a product has a Delivered quantities invoicing policy, please make sure that a quantity has been delivered.'))
             # If invoice is negative, do a refund invoice instead
             if invoice.amount_untaxed < 0:
-                invoice.type = 'out_refund'
+                invoice.invoice_type = 'out_refund'
                 for line in invoice.invoice_line_ids:
                     line.quantity = -line.quantity
             # Use additional field helper function (for account extensions)
@@ -977,9 +977,9 @@ class SaleOrderLine(models.Model):
             qty_invoiced = 0.0
             for invoice_line in line.invoice_lines:
                 if invoice_line.invoice_id.state != 'cancel':
-                    if invoice_line.invoice_id.type == 'out_invoice':
+                    if invoice_line.invoice_id.invoice_type == 'out_invoice':
                         qty_invoiced += invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
-                    elif invoice_line.invoice_id.type == 'out_refund':
+                    elif invoice_line.invoice_id.invoice_type == 'out_refund':
                         qty_invoiced -= invoice_line.uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
@@ -1257,7 +1257,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_delivered_manual = 0.0
 
-    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.invoice_id.state', 'invoice_lines.invoice_id.type')
+    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.invoice_id.state', 'invoice_lines.invoice_id.invoice_type')
     def _compute_untaxed_amount_invoiced(self):
         """ Compute the untaxed amount already invoiced from the sale order line, taking the refund attached
             the so line into account. This amount is computed as
@@ -1271,9 +1271,9 @@ class SaleOrderLine(models.Model):
             for invoice_line in line.invoice_lines:
                 if invoice_line.invoice_id.state in ['open', 'in_payment', 'paid']:
                     invoice_date = invoice_line.invoice_id.date_invoice or fields.Date.today()
-                    if invoice_line.invoice_id.type == 'out_invoice':
+                    if invoice_line.invoice_id.invoice_type == 'out_invoice':
                         amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
-                    elif invoice_line.invoice_id.type == 'out_refund':
+                    elif invoice_line.invoice_id.invoice_type == 'out_refund':
                         amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
             line.untaxed_amount_invoiced = amount_invoiced
 

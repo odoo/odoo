@@ -14,7 +14,7 @@ class AccountInvoice(models.Model):
     @api.model
     def invoice_line_move_line_get(self):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
-        if self.company_id.anglo_saxon_accounting and self.type in ('out_invoice', 'out_refund'):
+        if self.company_id.anglo_saxon_accounting and self.invoice_type in ('out_invoice', 'out_refund'):
             for i_line in self.invoice_line_ids:
                 res.extend(self._anglo_saxon_sale_move_lines(i_line))
         return res
@@ -51,7 +51,7 @@ class AccountInvoice(models.Model):
     def _get_anglosaxon_interim_account(self, product):
         """ Returns the interim account used in anglosaxon accounting for
         this invoice"""
-        if self.type in ('out_invoice', 'out_refund'):
+        if self.invoice_type in ('out_invoice', 'out_refund'):
             return product.product_tmpl_id._get_product_accounts()['stock_output']
         return product.product_tmpl_id.get_product_accounts()['stock_input']
 
@@ -109,9 +109,9 @@ class AccountInvoiceLine(models.Model):
             price = price_unit * self.quantity
         return self.invoice_id.currency_id.round(price)
 
-    def get_invoice_line_account(self, type, product, fpos, company):
-        if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
+    def get_invoice_line_account(self, invoice_type, product, fpos, company):
+        if company.anglo_saxon_accounting and invoice_type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
             if accounts['stock_input']:
                 return accounts['stock_input']
-        return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
+        return super(AccountInvoiceLine, self).get_invoice_line_account(invoice_type, product, fpos, company)

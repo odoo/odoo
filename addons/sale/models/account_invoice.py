@@ -12,7 +12,7 @@ class AccountInvoice(models.Model):
         return self.env['crm.team']._get_default_team_id()
 
     def _default_comment(self):
-        invoice_type = self.env.context.get('type', 'out_invoice')
+        invoice_type = self.env.context.get('invoice_type', 'out_invoice')
         if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
             return self.env.user.company_id.sale_note
 
@@ -46,7 +46,7 @@ class AccountInvoice(models.Model):
     def _onchange_delivery_address(self):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
-        if self.env.context.get('type', 'out_invoice') == 'out_invoice':
+        if self.env.context.get('invoice_type', 'out_invoice') == 'out_invoice':
             company = self.company_id or self.env.user.company_id
             self.comment = company.with_context(lang=self.partner_id.lang).sale_note
 
@@ -99,7 +99,7 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
 
     def _get_intrastat_country_id(self):
-        if self.type in ['out_invoice', 'out_refund']:
+        if self.invoice_type in ['out_invoice', 'out_refund']:
             return self.partner_shipping_id.country_id.id or super(AccountInvoice, self)._get_intrastat_country_id()
         return super(AccountInvoice, self)._get_intrastat_country_id()
 

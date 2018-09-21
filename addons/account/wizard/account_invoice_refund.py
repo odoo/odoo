@@ -84,7 +84,7 @@ class AccountInvoiceRefund(models.TransientModel):
                         tax_lines = inv_tax_obj.browse(invoice['tax_line_ids'])
                         tax_lines = inv_obj._refund_cleanup_lines(tax_lines)
                         invoice.update({
-                            'type': inv.type,
+                            'invoice_type': inv.invoice_type,
                             'date_invoice': form.date_invoice,
                             'state': 'draft',
                             'number': False,
@@ -105,15 +105,15 @@ class AccountInvoiceRefund(models.TransientModel):
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()
                         created_inv.append(inv_refund.id)
-                xml_id = inv.type == 'out_invoice' and 'action_invoice_out_refund' or \
-                         inv.type == 'out_refund' and 'action_invoice_tree1' or \
-                         inv.type == 'in_invoice' and 'action_invoice_in_refund' or \
-                         inv.type == 'in_refund' and 'action_invoice_tree2'
+                xml_id = inv.invoice_type == 'out_invoice' and 'action_invoice_out_refund' or \
+                         inv.invoice_type == 'out_refund' and 'action_invoice_tree1' or \
+                         inv.invoice_type == 'in_invoice' and 'action_invoice_in_refund' or \
+                         inv.invoice_type == 'in_refund' and 'action_invoice_tree2'
         if xml_id:
             result = self.env.ref('account.%s' % (xml_id)).read()[0]
             if mode == 'modify':
                 # When refund method is `modify` then it will directly open the new draft bill/invoice in form view
-                if inv_refund.type == 'in_invoice':
+                if inv_refund.invoice_type == 'in_invoice':
                     view_ref = self.env.ref('account.invoice_supplier_form')
                 else:
                     view_ref = self.env.ref('account.invoice_form')

@@ -56,7 +56,7 @@ class AccountInvoice(models.Model):
 
         # type must be present in the context to get the right behavior of the _default_journal method (account.invoice).
         # journal_id must be present in the context to get the right behavior of the _default_account method (account.invoice.line).
-        self_ctx = self.with_context(type='in_invoice')
+        self_ctx = self.with_context(invoice_type='in_invoice')
         journal_id = self_ctx._default_journal().id
         self_ctx = self_ctx.with_context(journal_id=journal_id)
 
@@ -203,7 +203,7 @@ class AccountInvoice(models.Model):
                     invoice_line_form.price_unit = amount_total_import
 
             # Refund.
-            invoice_form.type = 'in_refund' if refund_sign == -1 else 'in_invoice'
+            invoice_form.invoice_type = 'in_refund' if refund_sign == -1 else 'in_invoice'
 
         return invoice_form.save()
 
@@ -222,7 +222,7 @@ class AccountInvoice(models.Model):
             # Handle both _Attachment namedtuple in mail.thread or ir.attachment.
             return hasattr(attachment, 'content') and getattr(attachment, 'content') or base64.b64decode(attachment.datas)
 
-        if 'default_res_id' not in self._context and len(self) == 1 and self.state == 'draft' and self.type in ('in_invoice', 'in_refund'):
+        if 'default_res_id' not in self._context and len(self) == 1 and self.state == 'draft' and self.invoice_type in ('in_invoice', 'in_refund'):
             # Get attachments.
             # - 'attachments' is a namedtuple defined in mail.thread looking like:
             # _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))

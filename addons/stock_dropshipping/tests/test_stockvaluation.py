@@ -70,7 +70,7 @@ class TestStockValuation(AccountingTestCase):
             'partner_id': vendor1.id,
             'purchase_id': self.purchase_order1.id,
             'account_id': vendor1.property_account_payable_id.id,
-            'type': 'in_invoice',
+            'invoice_type': 'in_invoice',
         })
         self.vendor_bill1.purchase_order_change()
         self.vendor_bill1.action_invoice_open()

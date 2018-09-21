@@ -65,7 +65,7 @@ class AccountInvoice(models.Model):
             'origin': line.order_id.origin,
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
-            'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
+            'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'invoice_type': 'in_invoice'})._default_account(),
             'price_unit': line.order_id.currency_id._convert(
                 line.price_unit, self.currency_id, line.company_id, date or fields.Date.today(), round=False),
             'quantity': qty,
@@ -133,7 +133,7 @@ class AccountInvoice(models.Model):
         if payment_term_id:
             self.payment_term_id = payment_term_id
         if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
-                self.type in ['in_invoice', 'in_refund'] and\
+                self.invoice_type in ['in_invoice', 'in_refund'] and\
                 self.currency_id != self.partner_id.property_purchase_currency_id and\
                 self.partner_id.property_purchase_currency_id.id:
             journal_domain = [

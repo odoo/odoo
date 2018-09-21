@@ -41,7 +41,7 @@ class AccountInvoiceLine(models.Model):
     def write(self, vals):
         MemberLine = self.env['membership.membership_line']
         res = super(AccountInvoiceLine, self).write(vals)
-        for line in self.filtered(lambda line: line.invoice_id.type == 'out_invoice'):
+        for line in self.filtered(lambda line: line.invoice_id.invoice_type == 'out_invoice'):
             member_lines = MemberLine.search([('account_invoice_line', '=', line.id)])
             if line.product_id.membership and not member_lines:
                 # Product line has changed to a membership product
@@ -68,7 +68,7 @@ class AccountInvoiceLine(models.Model):
     def create(self, vals):
         MemberLine = self.env['membership.membership_line']
         invoice_line = super(AccountInvoiceLine, self).create(vals)
-        if invoice_line.invoice_id.type == 'out_invoice' and \
+        if invoice_line.invoice_id.invoice_type == 'out_invoice' and \
                 invoice_line.product_id.membership and \
                 not MemberLine.search([('account_invoice_line', '=', invoice_line.id)]):
             # Product line is a membership product

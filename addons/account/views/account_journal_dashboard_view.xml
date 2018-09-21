@@ -119,12 +119,12 @@
                                     <span>View</span>
                                 </div>
                                 <div>
-                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'use_domain': [('type', '=', 'out_invoice')]}">Invoices</a>
-                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'use_domain': [('type', '=', 'in_invoice')]}">Bills</a>
+                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'use_domain': [('invoice_type', '=', 'out_invoice')]}">Invoices</a>
+                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'use_domain': [('invoice_type', '=', 'in_invoice')]}">Bills</a>
                                 </div>
                                 <div>
-                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'use_domain': [('type', '=', 'out_refund')], 'invoice_type': 'refund'}">Credit Notes</a>
-                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'use_domain': [('type', '=', 'in_refund')], 'invoice_type': 'refund'}">Credit Notes</a>
+                                    <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'use_domain': [('invoice_type', '=', 'out_refund')], 'invoice_type': 'refund'}">Credit Notes</a>
+                                    <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'use_domain': [('invoice_type', '=', 'in_refund')], 'invoice_type': 'refund'}">Credit Notes</a>
                                 </div>
                                 <div>
                                     <a type="object" name="action_open_reconcile">Payments Matching</a>

@@ -15,9 +15,9 @@ class AccountInvoice(models.Model):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountInvoice, self)._get_last_step_stock_moves()
-        for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
+        for invoice in self.filtered(lambda x: x.invoice_type == 'out_invoice'):
             rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
-        for invoice in self.filtered(lambda x: x.type == 'out_refund'):
+        for invoice in self.filtered(lambda x: x.invoice_type == 'out_refund'):
             rslt += invoice.mapped('refund_invoice_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 

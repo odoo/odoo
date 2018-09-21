@@ -186,7 +186,7 @@ class account_journal(models.Model):
             query_results_drafts = self.env.cr.dictfetchall()
 
             today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
+            query = """SELECT amount_total, currency_id AS currency, invoice_type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
@@ -216,7 +216,7 @@ class account_journal(models.Model):
         data as its first element, and the arguments dictionary to use to run
         it as its second.
         """
-        return ("""SELECT state, residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id
+        return ("""SELECT state, residual_signed as amount_total, currency_id AS currency, invoice_type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
@@ -226,7 +226,7 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type, date_invoice, company_id
+        return ("""SELECT state, amount_total, currency_id AS currency, invoice_type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
@@ -240,7 +240,7 @@ class account_journal(models.Model):
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
-            type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
+            type_factor = result.get('invoice_type') in ('in_refund', 'out_refund') and -1 or 1
             rslt_sum += type_factor * cur._convert(
                 result.get('amount_total'), target_currency, company, result.get('date_invoice') or fields.Date.today())
         return (rslt_count, rslt_sum)
@@ -250,14 +250,14 @@ class account_journal(models.Model):
         ctx = self._context.copy()
         model = 'account.invoice'
         if self.type == 'sale':
-            ctx.update({'journal_type': self.type, 'default_type': 'out_invoice', 'type': 'out_invoice', 'default_journal_id': self.id})
+            ctx.update({'journal_type': self.type, 'default_invoice_type': 'out_invoice', 'invoice_type': 'out_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
-                ctx.update({'default_type':'out_refund', 'type':'out_refund'})
+                ctx.update({'default_invoice_type':'out_refund', 'invoice_type':'out_refund'})
             view_id = self.env.ref('account.invoice_form').id
         elif self.type == 'purchase':
-            ctx.update({'journal_type': self.type, 'default_type': 'in_invoice', 'type': 'in_invoice', 'default_journal_id': self.id})
+            ctx.update({'journal_type': self.type, 'default_invoice_type': 'in_invoice', 'invoice_type': 'in_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
-                ctx.update({'default_type': 'in_refund', 'type': 'in_refund'})
+                ctx.update({'default_invoice_type': 'in_refund', 'invoice_type': 'in_refund'})
             view_id = self.env.ref('account.invoice_supplier_form').id
         else:
             ctx.update({'default_journal_id': self.id, 'view_no_maturity': True})
@@ -320,10 +320,10 @@ class account_journal(models.Model):
                 action_name = 'action_view_bank_statement_tree'
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
-                self = self.with_context(use_domain=[('type', '=', 'out_invoice')])
+                self = self.with_context(use_domain=[('invoice_type', '=', 'out_invoice')])
             elif self.type == 'purchase':
                 action_name = 'action_vendor_bill_template'
-                self = self.with_context(use_domain=[('type', '=', 'in_invoice')])
+                self = self.with_context(use_domain=[('invoice_type', '=', 'in_invoice')])
             else:
                 action_name = 'action_move_journal_line'
 
@@ -343,8 +343,8 @@ class account_journal(models.Model):
         ctx.update({
             'journal_type': self.type,
             'default_journal_id': self.id,
-            'default_type': invoice_type,
-            'type': invoice_type
+            'default_invoice_type': invoice_type,
+            'invoice_type': invoice_type
         })
 
         [action] = self.env.ref('account.%s' % action_name).read()

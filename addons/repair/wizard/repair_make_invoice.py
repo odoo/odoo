@@ -31,6 +31,6 @@ class MakeInvoice(models.TransientModel):
             'res_model': 'account.invoice',
             'view_id': False,
             'views': [(self.env.ref('account.invoice_tree').id, 'tree'), (self.env.ref('account.invoice_form').id, 'form')],
-            'context': "{'type':'out_invoice'}",
+            'context': "{'invoice_type':'out_invoice'}",
             'type': 'ir.actions.act_window'
         }

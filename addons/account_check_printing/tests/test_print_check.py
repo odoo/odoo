@@ -33,7 +33,7 @@ class TestPrintCheck(AccountingTestCase):
         invoice = self.invoice_model.create({
             'partner_id': self.partner_axelor.id,
             'name': is_refund and "Supplier Refund" or "Supplier Invoice",
-            'type': is_refund and "in_refund" or "in_invoice",
+            'invoice_type': is_refund and "in_refund" or "in_invoice",
             'account_id': self.account_payable.id,
             'date_invoice': time.strftime('%Y') + '-06-26',
         })

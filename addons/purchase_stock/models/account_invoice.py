@@ -13,7 +13,7 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
 
         if self.env.user.company_id.anglo_saxon_accounting:
-            if self.type in ['in_invoice', 'in_refund']:
+            if self.invoice_type in ['in_invoice', 'in_refund']:
                 for i_line in self.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(i_line, res))
         return res
@@ -64,9 +64,9 @@ class AccountInvoice(models.Model):
                             ('purchase_line_id', '=', i_line.purchase_line_id.id),
                             ('state', '=', 'done'), ('product_qty', '!=', 0.0)
                         ])
-                        if self.type == 'in_refund':
+                        if self.invoice_type == 'in_refund':
                             valuation_stock_move = valuation_stock_move.filtered(lambda m: m._is_out())
-                        elif self.type == 'in_invoice':
+                        elif self.invoice_type == 'in_invoice':
                             valuation_stock_move = valuation_stock_move.filtered(lambda m: m._is_in())
 
                         if valuation_stock_move:
@@ -143,8 +143,8 @@ class AccountInvoice(models.Model):
         """ Overridden from stock_account.
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountInvoice, self)._get_last_step_stock_moves()
-        for invoice in self.filtered(lambda x: x.type == 'in_invoice'):
+        for invoice in self.filtered(lambda x: x.invoice_type == 'in_invoice'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'supplier')
-        for invoice in self.filtered(lambda x: x.type == 'in_refund'):
+        for invoice in self.filtered(lambda x: x.invoice_type == 'in_refund'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt

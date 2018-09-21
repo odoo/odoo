@@ -90,7 +90,7 @@ class account_abstract_payment(models.AbstractModel):
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
-            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.invoice_type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].invoice_type]
             or inv.account_id != invoices[0].account_id
             or inv.partner_bank_id != invoices[0].partner_bank_id
             for inv in invoices)
@@ -104,7 +104,7 @@ class account_abstract_payment(models.AbstractModel):
             'currency_id': currency.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': False if multi else invoices[0].commercial_partner_id.id,
-            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].invoice_type],
             'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
             'invoice_ids': [(6, 0, invoices.ids)],
             'multi': multi,
@@ -237,7 +237,7 @@ class account_abstract_payment(models.AbstractModel):
         total = 0.0
         groups = groupby(invoices, lambda i: i.currency_id)
         for payment_currency, payment_invoices in groups:
-            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.type] * i.residual_signed for i in payment_invoices])
+            amount_total = sum([MAP_INVOICE_TYPE_PAYMENT_SIGN[i.invoice_type] * i.residual_signed for i in payment_invoices])
             if payment_currency == currency:
                 total += amount_total
             else:
@@ -303,7 +303,7 @@ class account_register_payments(models.TransientModel):
         for inv in self.invoice_ids:
             partner_id = inv.commercial_partner_id.id
             account_id = inv.account_id.id
-            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.invoice_type]
             recipient_account =  inv.partner_bank_id
             key = (partner_id, account_id, invoice_type, recipient_account)
             if not key in results:
@@ -334,7 +334,7 @@ class account_register_payments(models.TransientModel):
             'amount': abs(amount),
             'currency_id': self.currency_id.id,
             'partner_id': invoices[0].commercial_partner_id.id,
-            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].invoice_type],
             'partner_bank_account_id': bank_account.id,
             'multi': False,
         }
@@ -505,8 +505,8 @@ class account_payment(models.Model):
             invoice = invoice_defaults[0]
             rec['communication'] = invoice['reference'] or invoice['name'] or invoice['number']
             rec['currency_id'] = invoice['currency_id'][0]
-            rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
+            rec['payment_type'] = invoice['invoice_type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['invoice_type']]
             rec['partner_id'] = invoice['partner_id'][0]
             rec['amount'] = invoice['residual']
         return rec

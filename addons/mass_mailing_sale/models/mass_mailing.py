@@ -37,7 +37,7 @@ class MassMailing(models.Model):
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
         action['domain'] = [
             ('id', 'in', invoices.ids),
-            ('type', 'in', ['out_invoice', 'out_refund']),
+            ('invoice_type', 'in', ['out_invoice', 'out_refund']),
             ('state', 'not in', ['draft', 'cancel'])
         ]
         return action

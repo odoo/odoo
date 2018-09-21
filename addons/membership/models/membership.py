@@ -45,7 +45,7 @@ class MembershipLine(models.Model):
 
     @api.depends('account_invoice_line.invoice_id.state',
                  'account_invoice_line.invoice_id.payment_ids',
-                 'account_invoice_line.invoice_id.payment_ids.invoice_ids.type')
+                 'account_invoice_line.invoice_id.payment_ids.invoice_ids.invoice_type')
     def _compute_state(self):
         """Compute the state lines """
         Invoice = self.env['account.invoice']
@@ -76,7 +76,7 @@ class MembershipLine(models.Model):
             elif istate == 'paid':
                 line.state = 'paid'
                 invoices = Invoice.browse(fetched[1]).payment_ids.mapped('invoice_ids')
-                if invoices.filtered(lambda invoice: invoice.type == 'out_refund'):
+                if invoices.filtered(lambda invoice: invoice.invoice_type == 'out_refund'):
                     line.state = 'canceled'
             elif istate == 'cancel':
                 line.state = 'canceled'

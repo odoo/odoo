@@ -7,7 +7,7 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     def invoice_validate_send_email(self):
-        for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
+        for invoice in self.filtered(lambda x: x.invoice_type == 'out_invoice'):
             # send template only on customer invoice
             # subscribe the partner to the invoice
             if invoice.partner_id not in invoice.message_partner_ids:
