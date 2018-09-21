@@ -53,14 +53,10 @@
                 <field name="identifier"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top mb0">
-                                <strong class="o_kanban_record_title">
-                                    <field name="name"/>
-                                </strong>
-                                <div class="oe_kanban_details">
-                                    <field name="identifier"/>
-                                </div>
+                        <div class="oe_kanban_global_click p-0">
+                            <div class="col-9 p-2 border-left">
+                                <div class="text-truncate font-weight-bold" t-att-title="record.name.raw_value"><field name="name"/></div>
+                                <div class="text-truncate"><field name="identifier"/></div>
                             </div>
                         </div>
                     </t>
@@ -140,9 +136,9 @@
                                 </div>
                                 <div class="col-9 p-2 border-left">
                                     <div class="text-truncate font-weight-bold" t-att-title="record.name.raw_value"><field name="name"/></div>
-                                    <div><field name="identifier"/></div>
-                                    <span class="text-muted font-italic"><field name="iot_id"/></span>
-                                    <t t-set="connections" t-value="{'network': 'wifi', 'direct': 'plug', 'bluetooth': 'bluetooth-b'}"/>
+                                    <div class="text-truncate"><field name="identifier"/></div>
+                                    <span class="text-muted font-italic text-truncate"><field name="iot_id"/></span>
+                                    <t t-set="connections" t-value="{'network': 'wifi', 'direct': 'usb', 'bluetooth': 'bluetooth-b'}"/>
                                     <span class="float-right" t-att-title="record.connection.raw_value"><i t-attf-class="fa fa-#{connections[record.connection.raw_value]}"></i></span>
                                 </div>
                             </div>
