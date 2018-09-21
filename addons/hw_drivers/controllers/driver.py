@@ -250,15 +250,7 @@ bm.daemon = True
 bm.start()
 
 
-import importlib.util
-driversList = os.listdir("/home/pi/odoo/addons/hw_drivers/drivers")
-for driver in driversList:
-    #from ..drivers import driver
-    path = "/home/pi/odoo/addons/hw_drivers/drivers/" + driver
-    spec = importlib.util.spec_from_file_location(driver, path)
-    if spec:
-        foo = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(foo)
+
 
 
 class USBDeviceManager(Thread):
