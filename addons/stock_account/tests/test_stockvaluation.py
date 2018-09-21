@@ -3111,7 +3111,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move1.remaining_value, 10)
         self.assertEqual(move1.remaining_qty, 1)
         self.assertAlmostEqual(self.product1.qty_available, 0.0)
-        self.assertAlmostEqual(self.product1.qty_at_date, 2.0)
+        self.assertAlmostEqual(self.product1.qty_at_date, 1.0)
         self.assertEqual(self.product1.stock_value, 10)
         self.assertTrue(len(move1.account_move_ids), 1)
 
