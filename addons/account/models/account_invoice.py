@@ -1720,9 +1720,9 @@ class AccountInvoiceLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return ''
-
+        invoice_type = self.invoice_id.type
         rslt = self.product_id.partner_ref
-        if type in ('in_invoice', 'in_refund'):
+        if invoice_type in ('in_invoice', 'in_refund'):
             if self.product_id.description_purchase:
                 rslt += '\n' + self.product_id.description_purchase
         else:
