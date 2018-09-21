@@ -51,7 +51,7 @@ class Digest(models.Model):
         for digest in self:
             kpis_values_fields = []
             for field_name, field in digest._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and digest[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and digest[field_name]:
                     kpis_values_fields += [field_name + '_value']
             digest.available_fields = ', '.join(kpis_values_fields)
 
@@ -112,7 +112,7 @@ class Digest(models.Model):
             previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1], company=company).sudo(user.id)
             kpis = {}
             for field_name, field in self._fields.items():
-                if field.type == 'boolean' and (field_name.startswith('kpi_') or field_name.startswith('x_kpi_')) and self[field_name]:
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]:
 
                     try:
                         compute_value = digest[field_name + '_value']
