@@ -50,9 +50,7 @@ class PosConfig(models.Model):
 
         return super(PosConfig, self).write(vals)
 
-    @api.multi
-    def create(self, vals):
-        if vals.get('module_pos_iot') and vals.get('iface_customer_facing_display'):
-            if vals.get('customer_facing_display_html') and not vals['customer_facing_display_html'].strip():
-                vals['customer_facing_display_html'] = self._compute_default_customer_html()
-        return super(PosConfig, self).write(vals)
+    @api.onchange('customer_facing_display_html')
+    def _onchange_customer_facing_display_html(self):
+        if self.iface_customer_facing_display and not self.customer_facing_display_html.strip():
+            self.customer_facing_display_html = self._compute_default_customer_html()

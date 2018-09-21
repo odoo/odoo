@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-
+    <data noupdate="r01">
         <!-- ******  Basic Restaurant Setup ***** -->
 
         <!-- Kitchen Printer -->
@@ -12,9 +12,9 @@
         </record>
 
         <!-- Pos Config -->
-        <record model="pos.config" id="pos_config_restaurant">
-            <field name="name">Bar</field>
-            <field name="printer_ids" eval="[(6, 0, [ref('pos_restaurant.kitchen_printer')])]" />
+        <record model="pos.config" id="pos_restaurant.pos_config_restaurant">
+            <field name="module_pos_restaurant_iot">True</field>
+            <field name="printer_ids" eval="[(6, 0, [ref('pos_restaurant_iot.kitchen_printer')])]" />
         </record>
-
+    </data>
 </odoo>

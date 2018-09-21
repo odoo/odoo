@@ -12,7 +12,11 @@
         'security/ir.model.access.csv',
         'views/pos_printer_views.xml',
         'views/pos_config_view.xml',
+        'views/pos_restaurant_templates.xml',
+    ],
+    'demo': [
+        'data/pos_restaurant_iot_demo.xml',
     ],
     'installable': True,
-    'application': False,
+    'auto-install': True,
 }

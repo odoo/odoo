@@ -12,5 +12,5 @@
         'views/pos_config_view.xml',
     ],
     'installable': True,
-    'application': False,
+    'auto-install': True,
 }
