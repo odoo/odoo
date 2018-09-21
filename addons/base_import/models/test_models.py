@@ -89,6 +89,7 @@ class PreviewModel(models.Model):
 
 class FloatModel(models.Model):
     _name = name('float')
+    _description = 'Tests: Base Import Model Float'
 
     value = fields.Float()
     value2 = fields.Monetary()
@@ -96,6 +97,7 @@ class FloatModel(models.Model):
 
 class ComplexModel(models.Model):
     _name = name('complex')
+    _description = 'Tests: Base Import Model Complex'
 
     f = fields.Float()
     m = fields.Monetary()

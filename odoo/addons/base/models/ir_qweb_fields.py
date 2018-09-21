@@ -48,6 +48,7 @@ class FieldConverter(models.AbstractModel):
     * generates the root result node itself through :meth:`~.render_element`
     """
     _name = 'ir.qweb.field'
+    _description = 'Qweb Field'
 
     @api.model
     def get_available_options(self):

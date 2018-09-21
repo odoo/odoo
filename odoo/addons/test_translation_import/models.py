@@ -5,6 +5,7 @@ from odoo import models, fields, _
 class m(models.TransientModel):
     """ A model to provide source strings. """
     _name = 'test.translation.import'
+    _description = 'Test: Translation Import'
 
     name = fields.Char('1XBUO5PUYH2RYZSA1FTLRYS8SPCNU1UYXMEYMM25ASV7JC2KTJZQESZYRV9L8CGB',
                        size=32, help='Efgh')

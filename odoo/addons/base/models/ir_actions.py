@@ -336,6 +336,7 @@ class IrActionsServer(models.Model):
       server actions
     """
     _name = 'ir.actions.server'
+    _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'

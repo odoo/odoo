@@ -34,7 +34,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     """
 
     _name = 'ir.qweb'
-    _descriptiob = 'Qweb'
+    _description = 'Qweb'
 
     @api.model
     def render(self, id_or_xml_id, values=None, **options):

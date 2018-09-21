@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class ChooseDestinationLocation(models.TransientModel):
     _name = 'stock.package.destination'
+    _description = 'Stock Package Destination'
 
     picking_id = fields.Many2one('stock.picking', required=True)
     move_line_ids = fields.Many2many('stock.move.line', 'Products', compute='_compute_move_line_ids', required=True)
