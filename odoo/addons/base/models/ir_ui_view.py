@@ -1393,34 +1393,35 @@ actual arch.
 
     @api.model
     def _validate_module_views(self, module):
-        """Validate architecture of all the views of a given module"""
-        assert not self.pool._init or module in self.pool._init_modules
-        xmlid_filter = ''
-        params = (module,)
-        if self.pool._init:
-            # only validate the views that are still existing...
-            xmlid_filter = "AND md.name IN %s"
-            prefix = module + '.'
-            prefix_len = len(prefix)
-            names = tuple(
-                xmlid[prefix_len:]
-                for xmlid in self.pool.loaded_xmlids
-                if xmlid.startswith(prefix)
-            )
-            if not names:
-                # no views for this module, nothing to validate
-                return
-            params += (names,)
+        """ Validate the architecture of all the views of a given module that
+            are impacted by view updates, but have not been checked yet.
+        """
+        assert self.pool._init
 
-        query = """SELECT max(v.id)
-                     FROM ir_ui_view v
-                LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                    WHERE md.module = %s {0}
-                 GROUP BY coalesce(v.inherit_id, v.id)""".format(xmlid_filter)
-        self._cr.execute(query, params)
+        # only validate the views that still exist...
+        prefix = module + '.'
+        prefix_len = len(prefix)
+        names = tuple(
+            xmlid[prefix_len:]
+            for xmlid in self.pool.loaded_xmlids
+            if xmlid.startswith(prefix)
+        )
+        if not names:
+            return
 
-        for vid, in self._cr.fetchall():
+        # retrieve the views with an XML id that has not been checked yet, i.e.,
+        # the views with noupdate=True on their xml id
+        query = """
+            SELECT v.id
+            FROM ir_ui_view v
+            JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            WHERE md.module = %s AND md.name IN %s AND md.noupdate
+        """
+        self._cr.execute(query, (module, names))
+        views = self.browse([row[0] for row in self._cr.fetchall()])
+
+        for view in views:
             try:
-                self.browse(vid)._check_xml()
+                view._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view:\n%s" % e, vid)
+                self.raise_view_error("Can't validate view:\n%s" % e, view.id)

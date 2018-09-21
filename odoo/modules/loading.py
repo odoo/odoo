@@ -240,8 +240,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 if post_init:
                     getattr(py_module, post_init)(cr, registry)
 
-            # validate all the views at a whole
-            env['ir.ui.view']._validate_module_views(module_name)
+            if mode == 'update':
+                # validate the views that have not been checked yet
+                env['ir.ui.view']._validate_module_views(module_name)
 
             # need to commit any modification the module's installation or
             # update made to the schema or data so the tests can run
