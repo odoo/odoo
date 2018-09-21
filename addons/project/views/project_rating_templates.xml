@@ -6,12 +6,10 @@
         <template id="rating_index" name="Project Rating List">
             <t t-call="portal.frontend_layout">
                 <t t-set="additional_title">Project Satisfaction</t>
-                <div id="wrap">
+                <div id="wrap" class="row mt4">
                     <div class="oe_structure"/>
                     <div class="container o_portal_project_rating">
-                        <div class="row text-center">
-                            <h2>Projects</h2>
-                        </div>
+                        <h3>Projects</h3>
                         <div class="oe_structure"/>
                         <div class="row">
                             <t t-if="not projects">
@@ -148,10 +146,10 @@
 
         <template id="rating_project_rating_page" name="Project Rating Page">
             <t t-call="portal.frontend_layout">
-                 <div id="wrap">
+                 <div id="wrap" class="row mt4">
                     <div class="oe_structure"/>
                     <div class="container o_project o_portal_project_rating">
-                        <h1 t-esc="project.name" class="text-center"/>
+                        <h2 t-esc="project.name"/>
                         <div class="row mb32">
                             <div class="col-lg-12">
                                 <h3 class="o_page_header">Customer Ratings</h3>
