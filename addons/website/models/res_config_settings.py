@@ -50,12 +50,22 @@ class ResConfigSettings(models.TransientModel):
     social_googleplus = fields.Char(related='website_id.social_googleplus')
     social_instagram = fields.Char(related='website_id.social_instagram')
 
-    @api.depends('website_id')
+    @api.depends('website_id', 'social_twitter', 'social_facebook', 'social_github', 'social_linkedin', 'social_youtube', 'social_googleplus', 'social_instagram')
     def has_social_network(self):
         self.has_social_network = self.social_twitter or self.social_facebook or self.social_github \
             or self.social_linkedin or self.social_youtube or self.social_googleplus or self.social_instagram
 
-    has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=lambda x: x)
+    def inverse_has_social_network(self):
+        if not self.has_social_network:
+            self.social_twitter = ''
+            self.social_facebook = ''
+            self.social_github = ''
+            self.social_linkedin = ''
+            self.social_youtube = ''
+            self.social_googleplus = ''
+            self.social_instagram = ''
+
+    has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=inverse_has_social_network)
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
 
