@@ -2058,12 +2058,6 @@ class MailThread(models.AbstractModel):
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
         values['attachment_ids'] = attachment_ids
-        if attachment_ids and self.ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
@@ -2082,6 +2076,14 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
+        # Set main attachment field if necessary
+        attachment_ids = msg_vals['attachment_ids']
+        if attachment_ids and self.ids and not self.message_main_attachment_id:
+            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
+            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
+                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
+                                     or all_attachments
+            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         if msg_vals.get('moderation_status') != 'pending_moderation':
             message._notify(
