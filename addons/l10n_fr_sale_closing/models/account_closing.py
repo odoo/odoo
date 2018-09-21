@@ -41,7 +41,7 @@ class AccountClosing(models.Model):
             JOIN account_account acc ON acc.id = aml.account_id
             JOIN account_account_type t ON (t.id = acc.user_type_id AND t.type = 'receivable')
             JOIN account_move m ON m.id = aml.move_id
-            WHERE j.type = 'sale'
+            WHERE j.journal_type = 'sale'
                 AND aml.company_id = %(company_id)s
                 AND m.state = 'posted' '''
 

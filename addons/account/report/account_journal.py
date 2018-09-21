@@ -86,7 +86,7 @@ class ReportJournal(models.AbstractModel):
                 'base_amount': base_amounts[tax.id],
                 'tax_amount': self.env.cr.fetchone()[0] or 0.0,
             }
-            if journal_id.type == 'sale':
+            if journal_id.journal_type == 'sale':
                 #sales operation are credits
                 res[tax]['base_amount'] = res[tax]['base_amount'] * -1
                 res[tax]['tax_amount'] = res[tax]['tax_amount'] * -1

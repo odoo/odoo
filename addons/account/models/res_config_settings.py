@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
         'account.journal',
         related='company_id.currency_exchange_journal_id', readonly=False,
         string="Exchange Gain or Loss Journal",
-        domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
+        domain="[('company_id', '=', company_id), ('journal_type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',

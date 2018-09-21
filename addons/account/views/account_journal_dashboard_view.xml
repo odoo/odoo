@@ -6,7 +6,7 @@
             <kanban create="false" class="oe_background_grey o_kanban_dashboard o_account_kanban" banner_route="/account/account_dashboard_onboarding">
                 <field name="id"/>
                 <field name="name"/>
-                <field name="type"/>
+                <field name="journal_type"/>
                 <field name="color"/>
                 <field name="show_on_dashboard"/>
                 <field name="kanban_dashboard"/>
@@ -14,7 +14,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.color.raw_value)}">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
-                            <t t-value="record.type.raw_value" t-set="journal_type"/>
+                            <t t-value="record.journal_type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
                             <div class="container o_kanban_card_content">
                                 <div class="row">
@@ -42,7 +42,7 @@
                                     <a type="object" name="open_action"><field name="name"/></a>
                                 </div>
                                 <div class="o_secondary" t-att-title="dashboard.title">
-                                    <field name="type"/>
+                                    <field name="journal_type"/>
                                 </div>
                             </div>
                             <div class="o_kanban_manage_button_section">

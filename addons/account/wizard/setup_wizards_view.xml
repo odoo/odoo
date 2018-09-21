@@ -46,7 +46,7 @@
                          <field name="create_or_link_option" widget="radio" options="{'horizontal': true}"/>
                         <group attrs="{'invisible': [('create_or_link_option','!=','link')]}">
                            <group>
-                            <field name="linked_journal_id" attrs="{'required': [('create_or_link_option','=','link')]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
+                            <field name="linked_journal_id" attrs="{'required': [('create_or_link_option','=','link')]}" domain="[('journal_type','=','bank'), ('bank_account_id', '=', False)]"/>
                           </group>
                           <group>
                                <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>

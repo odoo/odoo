@@ -29,7 +29,7 @@ class TestSaleExpense(TestSale):
         # create some expense and validate it (expense at cost)
         prod_exp_1 = self.env.ref('hr_expense.air_ticket')
         company = self.env.ref('base.main_company')
-        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'type': 'purchase', 'company_id': company.id})
+        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'HRTPJ', 'journal_type': 'purchase', 'company_id': company.id})
         account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'HR Expense - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
         employee = self.env['hr.employee'].create({'name': 'Test employee', 'user_id': self.user.id, 'address_home_id': self.user.partner_id.id})
         self.user.partner_id.property_account_payable_id = account_payable.id

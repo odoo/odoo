@@ -411,7 +411,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.category.property_stock_account_input_categ_id = self.account_receiv
         self.category.property_stock_account_output_categ_id = account_output
         self.category.property_stock_valuation_account_id = self.account_receiv
-        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'journal_type': 'sale', 'code': 'STK00'})
 
         Product = self.env['product.product']
         self.finished_product = Product.create({

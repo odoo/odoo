@@ -55,7 +55,7 @@ class account_abstract_payment(models.AbstractModel):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     communication = fields.Char(string='Memo')
-    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('journal_type', 'in', ('bank', 'cash'))])
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
@@ -132,7 +132,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
         for payment in self:
-            if not payment.journal_id or payment.journal_id.type not in ['bank', 'cash']:
+            if not payment.journal_id or payment.journal_id.journal_type not in ['bank', 'cash']:
                 payment.hide_payment_method = True
                 continue
             journal_payment_methods = payment.payment_type == 'inbound'\
@@ -201,8 +201,8 @@ class account_abstract_payment(models.AbstractModel):
     def _onchange_amount(self):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
-        domain_on_types = [('type', 'in', list(journal_types))]
-        if self.journal_id.type not in journal_types:
+        domain_on_types = [('journal_type', 'in', list(journal_types))]
+        if self.journal_id.journal_type not in journal_types:
             self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
         return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
 
@@ -212,7 +212,7 @@ class account_abstract_payment(models.AbstractModel):
 
         # Set by default the first liquidity journal having this currency if exists.
         journal = self.env['account.journal'].search(
-            [('type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
+            [('journal_type', 'in', ('bank', 'cash')), ('currency_id', '=', self.currency_id.id)], limit=1)
         if journal:
             return {'value': {'journal_id': journal.id}}
 
@@ -410,7 +410,7 @@ class account_payment(models.Model):
     # Money flows from the journal_id's default_debit_account_id or default_credit_account_id to the destination_account_id
     destination_account_id = fields.Many2one('account.account', compute='_compute_destination_account_id', readonly=True)
     # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
-    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', 'in', ('bank', 'cash'))])
+    destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('journal_type', 'in', ('bank', 'cash'))])
 
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True, help="""Technical field containing the invoices for which the payment has been generated.
                                                                                                                                                                        This does not especially correspond to the invoices reconciled with the payment,
@@ -494,7 +494,7 @@ class account_payment(models.Model):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
         journal_types.update(['bank', 'cash'])
-        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('journal_type', 'in', list(journal_types))]
         return res
 
     @api.model

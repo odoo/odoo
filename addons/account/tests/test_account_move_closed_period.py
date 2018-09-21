@@ -26,7 +26,7 @@ class TestPeriodState(AccountingTestCase):
         if draft_entries:
             draft_entries.post()
         self.user_id.company_id.fiscalyear_lock_date = self.last_day_month_str
-        self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        self.sale_journal_id = self.env['account.journal'].search([('journal_type', '=', 'sale')])[0]
         self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable')])[0]
 
     def test_period_state(self):

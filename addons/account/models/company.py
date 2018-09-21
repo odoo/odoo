@@ -37,7 +37,7 @@ class ResCompany(models.Model):
         ('round_per_line', 'Round per Line'),
         ('round_globally', 'Round Globally'),
         ], default='round_per_line', string='Tax Calculation Rounding Method')
-    currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
+    currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('journal_type', '=', 'general')])
     income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id', readonly=False,
         string="Gain Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id', readonly=False,
@@ -46,7 +46,7 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
-    bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
+    bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('journal_type', '=', 'bank')], string='Bank Journals')
     overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
         default=lambda s: _('''Dear Sir/Madam,
 
@@ -351,7 +351,7 @@ Best Regards,'''))
         """
         self.ensure_one()
         if not self.account_opening_move_id:
-            default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
+            default_journal = self.env['account.journal'].search([('journal_type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
                 raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))

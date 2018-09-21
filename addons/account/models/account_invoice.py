@@ -83,7 +83,7 @@ class AccountInvoice(models.Model):
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
         company_id = self._context.get('company_id', self.env.user.company_id.id)
         domain = [
-            ('type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
+            ('journal_type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
             ('company_id', '=', company_id),
         ]
         journal_with_currency = False
@@ -667,7 +667,7 @@ class AccountInvoice(models.Model):
         destination_emails = email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or ''))
         alias_names = [mail_to.split('@')[0] for mail_to in destination_emails]
         journal = self.env['account.journal'].search([
-            ('type', '=', 'purchase'), ('alias_name', 'in', alias_names)
+            ('journal_type', '=', 'purchase'), ('alias_name', 'in', alias_names)
         ], limit=1)
 
         # Create the message and the bill.
@@ -686,7 +686,7 @@ class AccountInvoice(models.Model):
     def complete_empty_list_help(self):
         # add help message about email alias in vendor bills empty lists
         Journal = self.env['account.journal']
-        journals = Journal.browse(self._context.get('default_journal_id')) or Journal.search([('type', '=', 'purchase')])
+        journals = Journal.browse(self._context.get('default_journal_id')) or Journal.search([('journal_type', '=', 'purchase')])
 
         if journals:
             links = ''
@@ -1413,9 +1413,9 @@ class AccountInvoice(models.Model):
         if journal_id:
             journal = self.env['account.journal'].browse(journal_id)
         elif invoice['invoice_type'] == 'in_invoice':
-            journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
+            journal = self.env['account.journal'].search([('journal_type', '=', 'purchase')], limit=1)
         else:
-            journal = self.env['account.journal'].search([('type', '=', 'sale')], limit=1)
+            journal = self.env['account.journal'].search([('journal_type', '=', 'sale')], limit=1)
         values['journal_id'] = journal.id
         values['invoice_type'] = TYPE2REFUND[invoice['invoice_type']]
         values['date_invoice'] = date_invoice or fields.Date.context_today(invoice)

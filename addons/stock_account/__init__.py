@@ -25,11 +25,11 @@ def _configure_journals(cr, registry):
             journal_id = env['account.journal'].search([
                 ('name', '=', _('Stock Journal')),
                 ('company_id', '=', company_id.id),
-                ('type', '=', 'general')], limit=1).id
+                ('journal_type', '=', 'general')], limit=1).id
             if not journal_id:
               journal_id = env['account.journal'].create({
                 'name': _('Stock Journal'),
-                'type': 'general',
+                'journal_type': 'general',
                 'code': 'STJ',
                 'company_id': company_id.id,
                 'show_on_dashboard': False

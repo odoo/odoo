@@ -81,7 +81,7 @@ class AccountBankStatementImport(models.TransientModel):
                 'default_bank_acc_number': account_number,
                 'default_name': _('Bank') + ' ' + account_number,
                 'default_currency_id': currency and currency.id or False,
-                'default_type': 'bank',
+                'default_journal_type': 'bank',
             }
         }
 

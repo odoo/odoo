@@ -10,10 +10,10 @@ class TaxAdjustments(models.TransientModel):
 
     @api.multi
     def _get_default_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'general')], limit=1).id
+        return self.env['account.journal'].search([('journal_type', '=', 'general')], limit=1).id
 
     reason = fields.Char(string='Justification', required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, default=_get_default_journal, domain=[('type', '=', 'general')])
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, default=_get_default_journal, domain=[('journal_type', '=', 'general')])
     date = fields.Date(required=True, default=fields.Date.context_today)
     debit_account_id = fields.Many2one('account.account', string='Debit account', required=True, domain=[('deprecated', '=', False)])
     credit_account_id = fields.Many2one('account.account', string='Credit account', required=True, domain=[('deprecated', '=', False)])

@@ -95,7 +95,7 @@
                         </group>
                         <group string="Accounting Information" groups="account.group_account_manager">
                             <group>
-                                <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                <field name="sale_journal" domain="[('journal_type','=','sale')]"/>
                                 <field name="account_move" readonly="1"
                                         attrs="{'invisible':[('state','!=','done')]}"/>
                             </group>

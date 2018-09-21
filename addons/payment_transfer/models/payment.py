@@ -23,7 +23,7 @@ class TransferPaymentAcquirer(models.Model):
             [('provider', '=', 'transfer'), ('journal_id', '=', False), ('company_id', '=', company.id)])
 
         bank_journal = self.env['account.journal'].search(
-            [('type', '=', 'bank'), ('company_id', '=', company.id)], limit=1)
+            [('journal_type', '=', 'bank'), ('company_id', '=', company.id)], limit=1)
         if bank_journal:
             acquirers.write({'journal_id': bank_journal.id})
         return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers(company=company)
@@ -34,7 +34,7 @@ class TransferPaymentAcquirer(models.Model):
     def _format_transfer_data(self):
         company_id = self.env.user.company_id.id
         # filter only bank accounts marked as visible
-        journals = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', company_id)])
+        journals = self.env['account.journal'].search([('journal_type', '=', 'bank'), ('company_id', '=', company_id)])
         accounts = journals.mapped('bank_account_id').name_get()
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])

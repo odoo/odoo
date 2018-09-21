@@ -72,7 +72,7 @@ class AccountJournal(models.Model):
             Called upon module installation via data file.
         """
         check_printing = self.env.ref('account_check_printing.account_payment_method_check')
-        bank_journals = self.search([('type', '=', 'bank')])
+        bank_journals = self.search([('journal_type', '=', 'bank')])
         for bank_journal in bank_journals:
             bank_journal._create_check_sequence()
             bank_journal.write({

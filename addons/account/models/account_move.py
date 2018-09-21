@@ -70,7 +70,7 @@ class AccountMove(models.Model):
     @api.multi
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
-            return self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
+            return self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('journal_type', '=', self.env.context['default_journal_type'])], limit=1).id
 
     @api.multi
     @api.depends('line_ids.partner_id')
@@ -125,7 +125,7 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
-        self.tax_type_domain = self.journal_id.type if self.journal_id.type in ('sale', 'purchase') else None
+        self.tax_type_domain = self.journal_id.journal_type if self.journal_id.journal_type in ('sale', 'purchase') else None
 
     @api.onchange('line_ids')
     def _onchange_line_ids(self):
@@ -551,7 +551,7 @@ class AccountMoveLine(models.Model):
     @api.depends('debit', 'credit', 'move_id.matched_percentage', 'move_id.journal_id')
     def _compute_cash_basis(self):
         for move_line in self:
-            if move_line.journal_id.type in ('sale', 'purchase'):
+            if move_line.journal_id.journal_type in ('sale', 'purchase'):
                 move_line.debit_cash_basis = move_line.debit * move_line.move_id.matched_percentage
                 move_line.credit_cash_basis = move_line.credit * move_line.move_id.matched_percentage
             else:

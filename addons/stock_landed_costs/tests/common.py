@@ -40,7 +40,7 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.expenses_journal = self.env['account.journal'].create({
             'name': 'Expenses - Test',
             'code': 'TEXJ',
-            'type': 'purchase',
+            'journal_type': 'purchase',
             'default_debit_account_id': self.default_account.id,
             'default_credit_account_id': self.default_account.id})
         # Create product refrigerator & oven

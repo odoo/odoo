@@ -5,13 +5,13 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
-                    <field name="journal_user" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                <xpath expr="//field[@name='journal_type']" position="after">
+                    <field name="journal_user" attrs="{'invisible': [('journal_type', 'not in', ['bank', 'cash'])]}"/>
                 </xpath>
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale" attrs="{'invisible': [('journal_user', '=', False)]}">
                         <group>
-                            <group name="amount_authorized" attrs="{'invisible': [('type', '!=', 'cash')]}">
+                            <group name="amount_authorized" attrs="{'invisible': [('journal_type', '!=', 'cash')]}">
                                 <field name="amount_authorized_diff"/>
                             </group>
                         </group>

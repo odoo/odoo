@@ -17,9 +17,9 @@ class account_journal(models.Model):
 
     @api.one
     def _kanban_dashboard_graph(self):
-        if (self.type in ['sale', 'purchase']):
+        if (self.journal_type in ['sale', 'purchase']):
             self.kanban_dashboard_graph = json.dumps(self.get_bar_graph_datas())
-        elif (self.type in ['cash', 'bank']):
+        elif (self.journal_type in ['cash', 'bank']):
             self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
@@ -28,11 +28,11 @@ class account_journal(models.Model):
     color = fields.Integer("Color Index", default=0)
 
     def _graph_title_and_key(self):
-        if self.type in ['sale', 'purchase']:
+        if self.journal_type in ['sale', 'purchase']:
             return ['', _('Residual amount')]
-        elif self.type == 'cash':
+        elif self.journal_type == 'cash':
             return ['', _('Cash: Balance')]
-        elif self.type == 'bank':
+        elif self.journal_type == 'bank':
             return ['', _('Bank: Balance')]
 
     # Below method is used to get data of bank and cash statemens
@@ -149,7 +149,7 @@ class account_journal(models.Model):
         title = ''
         number_draft = number_waiting = number_late = 0
         sum_draft = sum_waiting = sum_late = 0.0
-        if self.type in ['bank', 'cash']:
+        if self.journal_type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
             last_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
             #Get the number of items to reconcile for that bank journal
@@ -174,8 +174,8 @@ class account_journal(models.Model):
                 if query_results and query_results[0].get('sum') != None:
                     account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
-        elif self.type in ['sale', 'purchase']:
-            title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
+        elif self.journal_type in ['sale', 'purchase']:
+            title = _('Bills to pay') if self.journal_type == 'purchase' else _('Invoices owed to you')
 
             (query, query_args) = self._get_open_bills_to_pay_query()
             self.env.cr.execute(query, query_args)
@@ -249,13 +249,13 @@ class account_journal(models.Model):
     def action_create_new(self):
         ctx = self._context.copy()
         model = 'account.invoice'
-        if self.type == 'sale':
-            ctx.update({'journal_type': self.type, 'default_invoice_type': 'out_invoice', 'invoice_type': 'out_invoice', 'default_journal_id': self.id})
+        if self.journal_type == 'sale':
+            ctx.update({'journal_type': self.journal_type, 'default_invoice_type': 'out_invoice', 'invoice_type': 'out_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
                 ctx.update({'default_invoice_type':'out_refund', 'invoice_type':'out_refund'})
             view_id = self.env.ref('account.invoice_form').id
-        elif self.type == 'purchase':
-            ctx.update({'journal_type': self.type, 'default_invoice_type': 'in_invoice', 'invoice_type': 'in_invoice', 'default_journal_id': self.id})
+        elif self.journal_type == 'purchase':
+            ctx.update({'journal_type': self.journal_type, 'default_invoice_type': 'in_invoice', 'invoice_type': 'in_invoice', 'default_journal_id': self.id})
             if ctx.get('refund'):
                 ctx.update({'default_invoice_type': 'in_refund', 'invoice_type': 'in_refund'})
             view_id = self.env.ref('account.invoice_supplier_form').id
@@ -288,7 +288,7 @@ class account_journal(models.Model):
 
     @api.multi
     def action_open_reconcile(self):
-        if self.type in ['bank', 'cash']:
+        if self.journal_type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
             bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)])
             return {
@@ -299,9 +299,9 @@ class account_journal(models.Model):
         else:
             # Open reconciliation view for customers/suppliers
             action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
-            if self.type == 'sale':
+            if self.journal_type == 'sale':
                 action_context.update({'mode': 'customers'})
-            elif self.type == 'purchase':
+            elif self.journal_type == 'purchase':
                 action_context.update({'mode': 'suppliers'})
             return {
                 'type': 'ir.actions.client',
@@ -311,17 +311,17 @@ class account_journal(models.Model):
 
     @api.multi
     def open_action(self):
-        """return action based on type for related journals"""
+        """return action based on journal_type for related journals"""
         action_name = self._context.get('action_name', False)
         if not action_name:
-            if self.type == 'bank':
+            if self.journal_type == 'bank':
                 action_name = 'action_bank_statement_tree'
-            elif self.type == 'cash':
+            elif self.journal_type == 'cash':
                 action_name = 'action_view_bank_statement_tree'
-            elif self.type == 'sale':
+            elif self.journal_type == 'sale':
                 action_name = 'action_invoice_tree1'
                 self = self.with_context(use_domain=[('invoice_type', '=', 'out_invoice')])
-            elif self.type == 'purchase':
+            elif self.journal_type == 'purchase':
                 action_name = 'action_vendor_bill_template'
                 self = self.with_context(use_domain=[('invoice_type', '=', 'in_invoice')])
             else:
@@ -336,12 +336,12 @@ class account_journal(models.Model):
             ('cash', None): 'cash',
             ('general', None): 'general',
         }
-        invoice_type = _journal_invoice_type_map[(self.type, self._context.get('invoice_type'))]
+        invoice_type = _journal_invoice_type_map[(self.journal_type, self._context.get('invoice_type'))]
 
         ctx = self._context.copy()
         ctx.pop('group_by', None)
         ctx.update({
-            'journal_type': self.type,
+            'journal_type': self.journal_type,
             'default_journal_id': self.id,
             'default_invoice_type': invoice_type,
             'invoice_type': invoice_type
@@ -358,7 +358,7 @@ class account_journal(models.Model):
         if action_name in ['action_bank_statement_tree', 'action_view_bank_statement_tree']:
             action['views'] = False
             action['view_id'] = False
-        if self.type == 'purchase':
+        if self.journal_type == 'purchase':
             new_help = self.env['account.invoice'].with_context(ctx).complete_empty_list_help()
             action.update({'help': action.get('help', '') + new_help})
         return action
@@ -409,7 +409,7 @@ class account_journal(models.Model):
 
     @api.multi
     def create_bank_statement(self):
-        """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
+        """return action to create a bank statements. This button should be called only on journals with journal_type =='bank'"""
         action = self.env.ref('account.action_bank_statement_tree').read()[0]
         action.update({
             'views': [[False, 'form']],

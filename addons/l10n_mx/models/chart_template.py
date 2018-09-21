@@ -17,7 +17,7 @@ class AccountChartTemplate(models.Model):
             return res
         journal_basis = self.env['account.journal'].search([
             ('company_id', '=', company.id),
-            ('type', '=', 'general'),
+            ('journal_type', '=', 'general'),
             ('code', '=', 'CBMX')], limit=1)
         company.write({'tax_cash_basis_journal_id': journal_basis.id})
         return res
@@ -31,7 +31,7 @@ class AccountChartTemplate(models.Model):
             return res
         account = acc_template_ref.get(self.env.ref('l10n_mx.cuenta118_01').id)
         res.append({
-            'type': 'general',
+            'journal_type': 'general',
             'name': _('Effectively Paid'),
             'code': 'CBMX',
             'company_id': company.id,

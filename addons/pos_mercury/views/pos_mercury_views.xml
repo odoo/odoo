@@ -74,7 +74,7 @@
             <field name="inherit_id" ref="point_of_sale.view_account_journal_pos_user_form"></field>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='amount_authorized']" position="after">
-                    <group  attrs="{'invisible': [('type', '!=', 'bank')]}">
+                    <group  attrs="{'invisible': [('journal_type', '!=', 'bank')]}">
                         <field name="pos_mercury_config_id"/>
                     </group>
                 </xpath>

@@ -10,12 +10,12 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     @api.model
-    def _prepare_liquidity_account(self, name, company, currency_id, type):
+    def _prepare_liquidity_account(self, name, company, currency_id, journal_type):
         '''
         When preparing the values to use when creating the default debit and credit accounts of a
         liquidity journal, set the correct tags for the mexican localization.
         '''
-        res = super(AccountJournal, self)._prepare_liquidity_account(name, company, currency_id, type)
+        res = super(AccountJournal, self)._prepare_liquidity_account(name, company, currency_id, journal_type)
         if company.country_id.id == self.env.ref('base.mx').id:
             mx_tags = self.env['account.account'].mx_search_tags(res.get('code', ''))
             if mx_tags:

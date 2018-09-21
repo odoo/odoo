@@ -23,7 +23,7 @@ class AccountJournal(models.Model):
                 args += [('id', 'in', session.config_id.journal_ids.ids)]
         return super(AccountJournal, self)._search(args=args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-    @api.onchange('type')
+    @api.onchange('journal_type')
     def onchange_type(self):
-        if self.type not in ['bank', 'cash']:
+        if self.journal_type not in ['bank', 'cash']:
             self.journal_user = False

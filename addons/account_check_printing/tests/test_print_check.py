@@ -26,7 +26,7 @@ class TestPrintCheck(AccountingTestCase):
         self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
 
-        self.bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
+        self.bank_journal = self.env['account.journal'].create({'name': 'Bank', 'journal_type': 'bank', 'code': 'BNK67'})
         self.bank_journal.check_manual_sequencing = True
 
     def create_invoice(self, amount=100, is_refund=False):

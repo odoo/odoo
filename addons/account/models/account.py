@@ -391,7 +391,7 @@ class AccountGroup(models.Model):
 class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
-    _order = 'sequence, type, code'
+    _order = 'sequence, journal_type, code'
 
     def _default_inbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_in')
@@ -408,13 +408,13 @@ class AccountJournal(models.Model):
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
-    type = fields.Selection([
+    journal_type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
             ('cash', 'Cash'),
             ('bank', 'Bank'),
             ('general', 'Miscellaneous'),
-        ], required=True,
+        ], required=True,  string='Type', oldname='type',
         help="Select 'Sale' for customer invoices journals.\n"\
         "Select 'Purchase' for vendor bills journals.\n"\
         "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"\
@@ -549,9 +549,9 @@ class AccountJournal(models.Model):
                 raise ValidationError(_('The currency of the journal should be the same than the default debit account.'))
 
     @api.one
-    @api.constrains('type', 'bank_account_id')
+    @api.constrains('journal_type', 'bank_account_id')
     def _check_bank_account(self):
-        if self.type == 'bank' and self.bank_account_id:
+        if self.journal_type == 'bank' and self.bank_account_id:
             if self.bank_account_id.company_id != self.company_id:
                 raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % self.company_id.name)
             # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
@@ -651,17 +651,17 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-            if vals.get('type') == 'purchase':
+            if vals.get('journal_type') == 'purchase':
                 journal._update_mail_alias(vals)
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
         if 'bank_acc_number' in vals:
-            for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
+            for journal in self.filtered(lambda r: r.journal_type == 'bank' and not r.bank_account_id):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
         # create the relevant refund sequence
         if vals.get('refund_sequence'):
-            for journal in self.filtered(lambda j: j.type in ('sale', 'purchase') and not j.refund_sequence_id):
+            for journal in self.filtered(lambda j: j.journal_type in ('sale', 'purchase') and not j.refund_sequence_id):
                 journal_vals = {
                     'name': journal.name,
                     'company_id': journal.company_id.id,
@@ -705,7 +705,7 @@ class AccountJournal(models.Model):
         return seq
 
     @api.model
-    def _prepare_liquidity_account(self, name, company, currency_id, type):
+    def _prepare_liquidity_account(self, name, company, currency_id, journal_type):
         '''
         This function prepares the value to use for the creation of the default debit and credit accounts of a
         liquidity journal (created through the wizard of generating COA from templates for example).
@@ -713,7 +713,7 @@ class AccountJournal(models.Model):
         :param name: name of the bank account
         :param company: company for which the wizard is running
         :param currency_id: ID of the currency in which is the bank account
-        :param type: either 'cash' or 'bank'
+        :param journal_type: either 'cash' or 'bank'
         :return: mapping of field names and values
         :rtype: dict
         '''
@@ -722,7 +722,7 @@ class AccountJournal(models.Model):
         if acc:
             digits = len(acc.code)
         # Seek the next available number for the account code
-        if type == 'bank':
+        if journal_type == 'bank':
             account_code_prefix = company.bank_account_code_prefix or ''
         else:
             account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
@@ -749,14 +749,14 @@ class AccountJournal(models.Model):
     @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
-        if vals.get('type') in ('bank', 'cash'):
+        if vals.get('journal_type') in ('bank', 'cash'):
             # For convenience, the name can be inferred from account number
             if not vals.get('name') and 'bank_acc_number' in vals:
                 vals['name'] = vals['bank_acc_number']
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
-                vals['code'] = self.get_next_bank_cash_default_code(vals['type'], company_id)
+                vals['code'] = self.get_next_bank_cash_default_code(vals['journal_type'], company_id)
                 if not vals['code']:
                     raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
@@ -764,7 +764,7 @@ class AccountJournal(models.Model):
             default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
             if not default_account:
                 company = self.env['res.company'].browse(company_id)
-                account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
+                account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('journal_type'))
                 default_account = self.env['account.account'].create(account_vals)
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
@@ -772,15 +772,15 @@ class AccountJournal(models.Model):
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
+        if vals.get('journal_type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self).create(vals)
-        if journal.type == 'purchase':
+        if journal.journal_type == 'purchase':
             # create a mail alias for purchase journals (always, deactivated if alias_name isn't set)
             journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary
-        if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
+        if journal.journal_type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
             journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
         return journal
@@ -849,7 +849,7 @@ class AccountJournal(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
-    journal_id = fields.One2many('account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
+    journal_id = fields.One2many('account.journal', 'bank_account_id', domain=[('journal_type', '=', 'bank')], string='Account Journal', readonly=True,
         help="The accounting journal corresponding to this bank account.")
 
     @api.one
@@ -973,8 +973,8 @@ class AccountTax(models.Model):
 
         if context.get('journal_id'):
             journal = self.env['account.journal'].browse(context.get('journal_id'))
-            if journal.type in ('sale', 'purchase'):
-                args += [('type_tax_use', '=', journal.type)]
+            if journal.journal_type in ('sale', 'purchase'):
+                args += [('type_tax_use', '=', journal.journal_type)]
 
         return super(AccountTax, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
 

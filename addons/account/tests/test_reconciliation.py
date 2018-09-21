@@ -34,10 +34,10 @@ class TestReconciliation(AccountingTestCase):
         self.account_rsa = partner_agrolait.property_account_payable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
 
-        self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
+        self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'journal_type': 'bank', 'code': 'BNK67'})
         self.account_euro = self.bank_journal_euro.default_debit_account_id
 
-        self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
+        self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'journal_type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
         
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
@@ -502,7 +502,7 @@ class TestReconciliation(AccountingTestCase):
         # Balance Debit = 18.75
         # Counterpart Credit goes in Exchange diff
 
-        dest_journal_id = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', self.env.ref('base.main_company').id)], limit=1)
+        dest_journal_id = self.env['account.journal'].search([('journal_type', '=', 'purchase'), ('company_id', '=', self.env.ref('base.main_company').id)], limit=1)
         account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
 
         self.bank_journal_euro.write({'default_debit_account_id': self.account_rsa.id,
@@ -787,7 +787,7 @@ class TestReconciliation(AccountingTestCase):
         currency = self.env.user.company_id.currency_id
 
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
-        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
+        journal = self.env['account.journal'].create({'name': 'Bank', 'journal_type': 'bank', 'code': 'THE'})
 
         statement = self.make_payment(invoice, journal, 50)
 
@@ -900,7 +900,7 @@ class TestReconciliation(AccountingTestCase):
             [('user_type_id', '=', self.env.ref(
                 'account.data_account_type_revenue').id)], limit=1)
         dest_journal_id = self.env['account.journal'].search(
-            [('type', '=', 'purchase'),
+            [('journal_type', '=', 'purchase'),
              ('company_id', '=', self.env.ref('base.main_company').id)],
             limit=1)
 

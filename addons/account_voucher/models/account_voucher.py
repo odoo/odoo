@@ -18,7 +18,7 @@ class AccountVoucher(models.Model):
         voucher_type = self._context.get('voucher_type', 'sale')
         company_id = self._context.get('company_id', self.env.user.company_id.id)
         domain = [
-            ('type', '=', voucher_type),
+            ('journal_type', '=', voucher_type),
             ('company_id', '=', company_id),
         ]
         return self.env['account.journal'].search(domain, limit=1)
@@ -27,7 +27,7 @@ class AccountVoucher(models.Model):
     def _default_payment_journal(self):
         company_id = self._context.get('company_id', self.env.user.company_id.id)
         domain = [
-            ('type', 'in', ('bank', 'cash')),
+            ('journal_type', 'in', ('bank', 'cash')),
             ('company_id', '=', company_id),
         ]
         return self.env['account.journal'].search(domain, limit=1)
@@ -47,7 +47,7 @@ class AccountVoucher(models.Model):
     journal_id = fields.Many2one('account.journal', 'Journal',
         required=True, readonly=True, states={'draft': [('readonly', False)]}, default=_default_journal)
     payment_journal_id = fields.Many2one('account.journal', string='Payment Method', readonly=True,
-        states={'draft': [('readonly', False)]}, domain="[('type', 'in', ['cash', 'bank'])]", default=_default_payment_journal)
+        states={'draft': [('readonly', False)]}, domain="[('journal_type', 'in', ['cash', 'bank'])]", default=_default_payment_journal)
     account_id = fields.Many2one('account.account', 'Account',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         domain="[('deprecated', '=', False), ('internal_type','=', (voucher_type == 'purchase' and 'payable' or 'receivable'))]")
@@ -139,7 +139,7 @@ class AccountVoucher(models.Model):
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        pay_journal_domain = [('type', 'in', ['cash', 'bank'])]
+        pay_journal_domain = [('journal_type', 'in', ['cash', 'bank'])]
         if self.partner_id:
             self.account_id = self.partner_id.property_account_receivable_id \
                 if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id

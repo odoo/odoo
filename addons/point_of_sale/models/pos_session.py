@@ -134,7 +134,7 @@ class PosSession(models.Model):
             session.cash_journal_id = session.cash_register_id = session.cash_control = False
             if session.config_id.cash_control:
                 for statement in session.statement_ids:
-                    if statement.journal_id.type == 'cash':
+                    if statement.journal_id.journal_type == 'cash':
                         session.cash_control = True
                         session.cash_journal_id = statement.journal_id.id
                         session.cash_register_id = statement.id
@@ -183,9 +183,9 @@ class PosSession(models.Model):
         # define some cash journal if no payment method exists
         if not pos_config.journal_ids:
             Journal = self.env['account.journal']
-            journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('type', '=', 'cash')])
+            journals = Journal.with_context(ctx).search([('journal_user', '=', True), ('journal_type', '=', 'cash')])
             if not journals:
-                journals = Journal.with_context(ctx).search([('type', '=', 'cash')])
+                journals = Journal.with_context(ctx).search([('journal_type', '=', 'cash')])
                 if not journals:
                     journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
             journals.sudo().write({'journal_user': True})
@@ -202,7 +202,7 @@ class PosSession(models.Model):
             # set the journal_id which should be used by
             # account.bank.statement to set the opening balance of the
             # newly created bank statement
-            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.type == 'cash' else False
+            ctx['journal_id'] = journal.id if pos_config.cash_control and journal.journal_type == 'cash' else False
             st_values = {
                 'journal_id': journal.id,
                 'user_id': self.env.user.id,
@@ -280,7 +280,7 @@ class PosSession(models.Model):
                     # The pos manager can close statements with maximums.
                     if not self.user_has_groups("point_of_sale.group_pos_manager"):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
-                if (st.journal_id.type not in ['bank', 'cash']):
+                if (st.journal_id.journal_type not in ['bank', 'cash']):
                     raise UserError(_("The journal type for your payment method should be bank or cash."))
                 st.with_context(ctx).sudo().button_confirm_bank()
         self.with_context(ctx)._confirm_orders()

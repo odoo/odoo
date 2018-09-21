@@ -15,7 +15,7 @@ class AccountChartTemplate(models.Model):
         '''
         bank_journals = super(AccountChartTemplate, self)._create_bank_journals(company, acc_template_ref)
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
-        bank_journals.filtered(lambda journal: journal.type == 'cash').write({
+        bank_journals.filtered(lambda journal: journal.journal_type == 'cash').write({
             'outbound_payment_method_ids': [(3, payment_method_check.id)]
         })
         return bank_journals

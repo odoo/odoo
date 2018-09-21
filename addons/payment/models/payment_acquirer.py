@@ -90,7 +90,7 @@ class PaymentAcquirer(models.Model):
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
+        'account.journal', 'Payment Journal', domain=[('journal_type', 'in', ['bank', 'cash'])],
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
@@ -238,7 +238,7 @@ class PaymentAcquirer(models.Model):
             'name': self.name,
             'code': self.name.upper(),
             'sequence': 999,
-            'type': 'bank',
+            'journal_type': 'bank',
             'company_id': self.company_id.id,
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,

@@ -135,14 +135,14 @@ class PosOrder(models.Model):
                 # Select for change one of the cash journals used in this
                 # payment
                 cash_journal = self.env['account.journal'].search([
-                    ('type', '=', 'cash'),
+                    ('journal_type', '=', 'cash'),
                     ('id', 'in', list(journal_ids)),
                 ], limit=1)
                 if not cash_journal:
                     # If none, select for change one of the cash journals of the POS
                     # This is used for example when a customer pays by credit card
                     # an amount higher than total amount of the order and gets cash back
-                    cash_journal = [statement.journal_id for statement in pos_session.statement_ids if statement.journal_id.type == 'cash']
+                    cash_journal = [statement.journal_id for statement in pos_session.statement_ids if statement.journal_id.journal_type == 'cash']
                     if not cash_journal:
                         raise UserError(_("No cash statement found for this session. Unable to record returned cash."))
                 cash_journal_id = cash_journal[0].id
@@ -454,7 +454,7 @@ class PosOrder(models.Model):
             # Reconcile returns first
             # to avoid mixing up the credit of a payment and the credit of a return
             # in the receivable account
-            aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
+            aml_returns = aml.filtered(lambda l: (l.journal_id.journal_type == 'sale' and l.credit) or (l.journal_id.journal_type != 'sale' and l.debit))
             try:
                 aml_returns.reconcile()
                 (aml - aml_returns).reconcile()

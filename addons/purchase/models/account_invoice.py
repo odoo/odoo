@@ -137,7 +137,7 @@ class AccountInvoice(models.Model):
                 self.currency_id != self.partner_id.property_purchase_currency_id and\
                 self.partner_id.property_purchase_currency_id.id:
             journal_domain = [
-                ('type', '=', 'purchase'),
+                ('journal_type', '=', 'purchase'),
                 ('company_id', '=', self.company_id.id),
                 ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
             ]

@@ -309,7 +309,7 @@ class AccountChartTemplate(models.Model):
         for acc in self._get_default_bank_journals_data():
             bank_journals += self.env['account.journal'].create({
                 'name': acc['acc_name'],
-                'type': acc['account_type'],
+                'journal_type': acc['account_type'],
                 'company_id': company.id,
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
                 'sequence': 10
@@ -381,33 +381,33 @@ class AccountChartTemplate(models.Model):
         JournalObj = self.env['account.journal']
         for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
             journal = JournalObj.create(vals_journal)
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
+            if vals_journal['journal_type'] == 'general' and vals_journal['code'] == _('EXCH'):
                 company.write({'currency_exchange_journal_id': journal.id})
-            if vals_journal['type'] == 'general' and vals_journal['code'] == _('CABA'):
+            if vals_journal['journal_type'] == 'general' and vals_journal['code'] == _('CABA'):
                 company.write({'tax_cash_basis_journal_id': journal.id})
         return True
 
     @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        def _get_default_account(journal_vals, type='debit'):
+        def _get_default_account(journal_vals, adj_type='debit'):
             # Get the default accounts
             default_account = False
-            if journal['type'] == 'sale':
+            if journal['journal_type'] == 'sale':
                 default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
-            elif journal['type'] == 'purchase':
+            elif journal['journal_type'] == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
-                if type=='credit':
+            elif journal['journal_type'] == 'general' and journal['code'] == _('EXCH'):
+                if adj_type=='credit':
                     default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
                 else:
                     default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
             return default_account
 
-        journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'color': 11, 'sequence': 5},
-                    {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'color': 11, 'sequence': 6},
-                    {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
-                    {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
-                    {'name': _('Cash Basis Tax Journal'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
+        journals = [{'name': _('Customer Invoices'), 'journal_type': 'sale', 'code': _('INV'), 'favorite': True, 'color': 11, 'sequence': 5},
+                    {'name': _('Vendor Bills'), 'journal_type': 'purchase', 'code': _('BILL'), 'favorite': True, 'color': 11, 'sequence': 6},
+                    {'name': _('Miscellaneous Operations'), 'journal_type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
+                    {'name': _('Exchange Difference'), 'journal_type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
+                    {'name': _('Cash Basis Tax Journal'), 'journal_type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
         if journals_dict != None:
             journals.extend(journals_dict)
 
@@ -415,7 +415,7 @@ class AccountChartTemplate(models.Model):
         journal_data = []
         for journal in journals:
             vals = {
-                'type': journal['type'],
+                'journal_type': journal['journal_type'],
                 'name': journal['name'],
                 'code': journal['code'],
                 'company_id': company.id,
@@ -975,7 +975,7 @@ class AccountReconcileModelTemplate(models.Model):
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
-        domain="[('type', 'in', ('bank', 'cash'))]",
+        domain="[('journal_type', 'in', ('bank', 'cash'))]",
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),

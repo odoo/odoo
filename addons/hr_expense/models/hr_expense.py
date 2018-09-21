@@ -499,12 +499,12 @@ class HrExpenseSheet(models.Model):
     def _default_journal_id(self):
         journal = self.env.ref('hr_expense.hr_expense_account_journal', raise_if_not_found=False)
         if not journal:
-            journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
+            journal = self.env['account.journal'].search([('journal_type', '=', 'purchase')], limit=1)
         return journal.id
 
     @api.model
     def _default_bank_journal_id(self):
-        return self.env['account.journal'].search([('type', 'in', ['cash', 'bank'])], limit=1)
+        return self.env['account.journal'].search([('journal_type', 'in', ['cash', 'bank'])], limit=1)
 
     name = fields.Char('Expense Report Summary', required=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'approve': [('readonly', True)], 'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)

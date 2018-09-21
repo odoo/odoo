@@ -259,7 +259,7 @@ class TestUi(odoo.tests.HttpCase):
 
         test_sale_journal = journal_obj.create({'name': 'Sales Journal - Test',
                                                 'code': 'TSJ',
-                                                'type': 'sale',
+                                                'journal_type': 'sale',
                                                 'company_id': main_company.id})
 
         all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
@@ -285,7 +285,7 @@ class TestUi(odoo.tests.HttpCase):
             'invoice_journal_id': test_sale_journal.id,
             'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
                                                        'code': 'TSC',
-                                                       'type': 'cash',
+                                                       'journal_type': 'cash',
                                                        'company_id': main_company.id,
                                                        'journal_user': True})],
             'use_pricelist': True,

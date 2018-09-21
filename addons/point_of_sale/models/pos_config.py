@@ -46,7 +46,7 @@ class PosConfig(models.Model):
         return self._default_invoice_journal()
 
     def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return self.env['account.journal'].search([('journal_type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
@@ -69,7 +69,7 @@ class PosConfig(models.Model):
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
-        domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
+        domain="[('journal_user', '=', True ), ('journal_type', 'in', ['bank', 'cash'])]",)
     picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
     stock_location_id = fields.Many2one(
@@ -77,12 +77,12 @@ class PosConfig(models.Model):
         domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
-        domain=[('type', '=', 'sale')],
+        domain=[('journal_type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
         default=_default_sale_journal)
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
-        domain=[('type', '=', 'sale')],
+        domain=[('journal_type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")

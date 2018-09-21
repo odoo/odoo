@@ -60,7 +60,7 @@ class StockMoveInvoice(AccountingTestCase):
         # I pay the invoice.
         self.invoice = self.sale_prepaid.invoice_ids
         self.invoice.action_invoice_open()
-        self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
+        self.journal = self.AccountJournal.search([('journal_type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
         self.invoice.pay_and_reconcile(self.journal, self.invoice.amount_total)
 
         # Check the SO after paying the invoice

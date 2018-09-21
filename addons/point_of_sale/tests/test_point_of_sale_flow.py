@@ -356,7 +356,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         journal = self.env['account.journal'].create({
             'name': 'Bank Test',
             'code': 'BNKT',
-            'type': 'bank',
+            'journal_type': 'bank',
             'company_id': self.company_id,
         })
         # I create a bank statement with Opening and Closing balance 0.

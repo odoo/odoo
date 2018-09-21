@@ -103,7 +103,7 @@ class AccountBankStatement(models.Model):
         journal_type = self.env.context.get('journal_type', False)
         company_id = self.env['res.company']._company_default_get('account.bank.statement').id
         if journal_type:
-            journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
+            journals = self.env['account.journal'].search([('journal_type', '=', journal_type), ('company_id', '=', company_id)])
             if journals:
                 return journals[0]
         return self.env['account.journal']
@@ -143,7 +143,7 @@ class AccountBankStatement(models.Model):
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
-    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
+    journal_type = fields.Selection(related='journal_id.journal_type', help="Technical field used for usability purposes", readonly=False)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env['res.company']._company_default_get('account.bank.statement'))
 
@@ -315,7 +315,7 @@ class AccountBankStatementLine(models.Model):
     def _check_amount(self):
         # Allow to enter bank statement line with an amount of 0,
         # so that user can enter/import the exact bank statement they have received from their bank in Odoo
-        if self.journal_id.type != 'bank' and self.currency_id.is_zero(self.amount):
+        if self.journal_id.journal_type != 'bank' and self.currency_id.is_zero(self.amount):
             raise ValidationError(_('The amount of a cash transaction cannot be 0.'))
 
     @api.one

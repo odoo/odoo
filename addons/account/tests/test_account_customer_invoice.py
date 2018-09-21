@@ -21,7 +21,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # Create a customer invoice
         self.account_invoice_obj = self.env['account.invoice']
         self.payment_term = self.env.ref('account.account_payment_term_advance')
-        self.journalrec = self.env['account.journal'].search([('type', '=', 'sale')])[0]
+        self.journalrec = self.env['account.journal'].search([('journal_type', '=', 'sale')])[0]
         self.partner3 = self.env.ref('base.res_partner_3')
         account_user_type = self.env.ref('account.data_account_type_receivable')
         self.ova = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_current_assets').id)], limit=1)
@@ -84,7 +84,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         assert self.account_invoice_customer0.move_id, "Move not created for open invoice"
 
         # I totally pay the Invoice
-        self.account_invoice_customer0.pay_and_reconcile(self.env['account.journal'].search([('type', '=', 'bank')], limit=1), 10050.0)
+        self.account_invoice_customer0.pay_and_reconcile(self.env['account.journal'].search([('journal_type', '=', 'bank')], limit=1), 10050.0)
 
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"

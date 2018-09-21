@@ -17,7 +17,7 @@ class Digest(models.Model):
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
             account_moves = self.env['account.move'].read_group([
-                ('journal_id.type', '=', 'sale'),
+                ('journal_id.journal_type', '=', 'sale'),
                 ('company_id', '=', company.id),
                 ('date', '>=', start),
                 ('date', '<', end)], ['journal_id', 'amount'], ['journal_id'])

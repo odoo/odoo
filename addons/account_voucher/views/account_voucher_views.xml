@@ -179,7 +179,7 @@
                     <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('journal_type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
                         <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -200,7 +200,7 @@
                     <filter string="Draft" name="darft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','sale')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('journal_type','=','sale')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
                         <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -241,7 +241,7 @@
                         </group>
                         <group>
                             <field name="journal_id"
-                                   domain="[('type','=','sale')]"
+                                   domain="[('journal_type','=','sale')]"
                                    widget="selection"
                                    groups="account.group_account_user"/>
                             <field name="date"/>
@@ -360,7 +360,7 @@
                         </group>
                         <group>
                             <field name="journal_id"
-                                   domain="[('type','=','purchase')]"
+                                   domain="[('journal_type','=','purchase')]"
                                    widget="selection"
                                    groups="account.group_account_user"/>
                             <field name="date" string="Bill Date"/>
@@ -415,7 +415,7 @@
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
-            <field name="domain">[('journal_id.type','=','purchase'), ('voucher_type','=','purchase')]</field>
+            <field name="domain">[('journal_id.journal_type','=','purchase'), ('voucher_type','=','purchase')]</field>
             <field name="context">{'default_voucher_type': 'purchase', 'voucher_type': 'purchase'}</field>
             <field name="view_id" eval="view_voucher_tree_purchase"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>

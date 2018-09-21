@@ -2023,7 +2023,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         if (Math.abs(order.get_total_with_tax() - order.get_total_paid()) > 0.00001) {
             var cash = false;
             for (var i = 0; i < this.pos.cashregisters.length; i++) {
-                cash = cash || (this.pos.cashregisters[i].journal.type === 'cash');
+                cash = cash || (this.pos.cashregisters[i].journal.journal_type === 'cash');
             }
             if (!cash) {
                 this.gui.show_popup('error',{

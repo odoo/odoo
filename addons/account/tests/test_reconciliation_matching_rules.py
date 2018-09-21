@@ -59,7 +59,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
 
         invoice_number = self.invoice_line_1.move_id.name
 
-        bank_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+        bank_journal = self.env['account.journal'].search([('journal_type', '=', 'bank')], limit=1)
 
         self.bank_st = self.env['account.bank.statement'].create({
             'name': 'test bank journal', 'journal_id': bank_journal.id,
@@ -79,7 +79,7 @@ class TestReconciliationMatchingRules(AccountingTestCase):
             'sequence': 2,
         })
 
-        cash_journal = self.env['account.journal'].search([('type', '=', 'cash')], limit=1)
+        cash_journal = self.env['account.journal'].search([('journal_type', '=', 'cash')], limit=1)
         self.cash_st = self.env['account.bank.statement'].create({
             'name': 'test cash journal', 'journal_id': cash_journal.id,
         })

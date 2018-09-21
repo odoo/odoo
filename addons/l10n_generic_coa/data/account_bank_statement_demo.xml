@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="demo_bank_statement_1" model="account.bank.statement">
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
             <field name="name" eval="'BNK/%s/0001' % time.strftime('%Y')"/>
@@ -17,7 +17,7 @@
             <field name="sequence">1</field>
             <field name="name" eval="'INV/%s/0002 and INV/%s/0003' % (time.strftime('%Y'), time.strftime('%Y'))"/>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">1275.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
@@ -30,7 +30,7 @@
             <field name="sequence">2</field>
             <field name="name">Bank fees</field>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">-32.58</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
@@ -42,7 +42,7 @@
             <field name="sequence">3</field>
             <field name="name">Prepayment</field>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">650.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
@@ -55,7 +55,7 @@
             <field name="sequence">4</field>
             <field name="name" eval="'First 2000 $ of invoice %s/0001' % time.strftime('%Y')"/>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">2000.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
@@ -68,7 +68,7 @@
             <field name="sequence">5</field>
             <field name="name">Last Year Interests</field>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">102.78</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
@@ -80,7 +80,7 @@
             <field name="sequence">1</field>
             <field name="name" eval="'INV/'+time.strftime('%Y')+'/0002'"/>
             <field name="journal_id" model="account.journal" search="[
-                ('type', '=', 'bank'),
+                ('journal_type', '=', 'bank'),
                 ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)]"/>
             <field name="amount">750.0</field>
             <field name="date" eval="time.strftime('%Y')+'-01-01'"/>

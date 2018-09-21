@@ -12,14 +12,14 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
-        journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
+        journal_to_add = [{'name': _('Stock Journal'), 'journal_type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
         return super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
 
     @api.multi
     def generate_properties(self, acc_template_ref, company, property_list=None):
         res = super(AccountChartTemplate, self).generate_properties(acc_template_ref=acc_template_ref, company=company)
         PropertyObj = self.env['ir.property']  # Property Stock Journal
-        value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
+        value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('journal_type', '=', 'general')], limit=1)
         if value:
             field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
             vals = {

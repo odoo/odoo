@@ -25,7 +25,7 @@ class AccountReconcileModel(models.Model):
 
     # ===== Conditions =====
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
-        domain="[('type', 'in', ('bank', 'cash'))]",
+        domain="[('journal_type', 'in', ('bank', 'cash'))]",
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),
@@ -354,7 +354,7 @@ class AccountReconcileModel(models.Model):
                 FROM account_journal j
                 LEFT JOIN res_company c ON j.company_id = c.id
                 LEFT JOIN res_currency currency ON COALESCE(j.currency_id, c.currency_id) = currency.id
-                WHERE j.type IN ('bank', 'cash')
+                WHERE j.journal_type IN ('bank', 'cash')
             )'''
         # Compute partners values table.
         # This is required since some statement line's partners could be shadowed in the reconciliation widget.

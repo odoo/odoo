@@ -392,7 +392,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.journal',
-        fields: ['type', 'sequence'],
+        fields: ['journal_type', 'sequence'],
         domain: function(self,tmp){ return [['id','in',tmp.journals]]; },
         loaded: function(self, journals){
             var i;
@@ -416,9 +416,9 @@ exports.PosModel = Backbone.Model.extend({
 
             self.cashregisters = self.cashregisters.sort(function(a,b){
                 // prefer cashregisters to be first in the list
-                if (a.journal.type == "cash" && b.journal.type != "cash") {
+                if (a.journal.journal_type == "cash" && b.journal.journal_type != "cash") {
                     return -1;
-                } else if (a.journal.type != "cash" && b.journal.type == "cash") {
+                } else if (a.journal.journal_type != "cash" && b.journal.journal_type == "cash") {
                     return 1;
                 } else {
                     return a.journal.sequence - b.journal.sequence;
@@ -1951,7 +1951,7 @@ exports.Paymentline = Backbone.Model.extend({
     },
     // returns the payment type: 'cash' | 'bank'
     get_type: function(){
-        return this.cashregister.journal.type;
+        return this.cashregister.journal.journal_type;
     },
     // returns the associated cashregister
     //exports as JSON for server communication
@@ -2446,7 +2446,7 @@ exports.Order = Backbone.Model.extend({
     add_paymentline: function(cashregister) {
         this.assert_editable();
         var newPaymentline = new exports.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
-        if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
+        if(cashregister.journal.journal_type !== 'cash' || this.pos.config.iface_precompute_cash){
             newPaymentline.set_amount( this.get_due() );
         }
         this.paymentlines.add(newPaymentline);
@@ -2620,7 +2620,7 @@ exports.Order = Backbone.Model.extend({
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){
-            return pl.cashregister.journal.type === 'cash';
+            return pl.cashregister.journal.journal_type === 'cash';
         });
     },
     finalize: function(){

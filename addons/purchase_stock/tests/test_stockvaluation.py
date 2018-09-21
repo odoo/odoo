@@ -39,7 +39,7 @@ class TestStockValuation(TransactionCase):
         self.stock_journal = self.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
-            'type': 'general',
+            'journal_type': 'general',
         })
         self.product1.categ_id.write({
             'property_stock_account_input_categ_id': self.stock_input_account.id,
@@ -310,7 +310,7 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.stock_journal = self.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
-            'type': 'general',
+            'journal_type': 'general',
         })
         self.product1.categ_id.write({
             'property_stock_account_input_categ_id': self.stock_input_account.id,

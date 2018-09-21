@@ -214,7 +214,7 @@
         <record id="sales_journal" model="account.journal">
             <field name="name">Customer Invoices - Test</field>
             <field name="code">TINV</field>
-            <field name="type">sale</field>
+            <field name="journal_type">sale</field>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
             <field name="refund_sequence" eval="True"/>
@@ -223,7 +223,7 @@
         <record id="expenses_journal" model="account.journal">
             <field name="name">Vendor Bills - Test</field>
             <field name="code">TEXJ</field>
-            <field name="type">purchase</field>
+            <field name="journal_type">purchase</field>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
             <field name="refund_sequence" eval="True"/>
@@ -237,14 +237,14 @@
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank - Test</field>
             <field name="code">TBNK</field>
-            <field name="type">bank</field>
+            <field name="journal_type">bank</field>
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash - Test</field>
             <field name="code">TCSH</field>
-            <field name="type">cash</field>
+            <field name="journal_type">cash</field>
             <field name="profit_account_id" ref="rsa" />
             <field name="loss_account_id" ref="rsa" />
             <field name="default_debit_account_id" ref="cash"/>
@@ -253,13 +253,13 @@
         <record id="miscellaneous_journal" model="account.journal">
             <field name="name">Miscellaneous - Test</field>
             <field name="code">TMIS</field>
-            <field name="type">general</field>
+            <field name="journal_type">general</field>
             <field name="show_on_dashboard" eval="False"/>
         </record>
         <record id="currency_diff_journal" model="account.journal">
             <field name="name">Currency Difference - Test</field>
             <field name="code">CUR</field>
-            <field name="type">general</field>
+            <field name="journal_type">general</field>
             <field name="default_debit_account_id" ref="income_fx_income"/>
             <field name="default_credit_account_id" ref="income_fx_expense"/>
             <field name="show_on_dashboard" eval="False"/>
@@ -273,7 +273,7 @@
         <record id="bank_journal_usd" model="account.journal">
             <field name="name">USD Bank - Test</field>
             <field name="code">TUBK</field>
-            <field name="type">bank</field>
+            <field name="journal_type">bank</field>
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="bank_account_id" ref="bank_account_usd"/>
