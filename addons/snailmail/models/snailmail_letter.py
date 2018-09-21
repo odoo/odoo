@@ -127,6 +127,7 @@ class SnailmailLetter(models.Model):
         }
         """
         account_token = self.env['iap.account'].get('snailmail').account_token
+        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         documents = []
 
         batch = len(self) > 1
@@ -186,6 +187,7 @@ class SnailmailLetter(models.Model):
 
         return {
             'account_token': account_token,
+            'dbuuid': dbuuid,
             'documents': documents,
             'options': {
                 'color': self and self[0].color,
