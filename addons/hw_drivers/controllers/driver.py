@@ -247,6 +247,14 @@ class BtDriver(Driver, metaclass=BtMetaClass):
     def connect(self):
         pass
 
+#----------------------------------------------------------
+#Bluetooth start
+#----------------------------------------------------------
+bm = BtManager()
+bm.daemon = True
+bm.start()
+
+
 import importlib.util
 driversList = os.listdir("/home/pi/odoo/addons/hw_drivers/drivers")
 for driver in driversList:

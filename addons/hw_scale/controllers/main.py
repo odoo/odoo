@@ -124,8 +124,8 @@ class Scale(Thread):
         self.lock = Lock()
         self.scalelock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
-        self.input_dir = '/dev/serial/by-id/'
-        self.forbidden_dir = '/dev/serial/by-path'
+        self.input_dir = '/dev/serial/by-path/'
+        self.forbidden_dir = '/dev/serial/by-id/'
         self.weight = 0
         self.weight_info = 'ok'
         self.device = None
