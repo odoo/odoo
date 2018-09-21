@@ -148,7 +148,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('basic grouped rendering with active field', function (assert) {
+    QUnit.test('basic grouped rendering with active field (archivable by default)', function (assert) {
         assert.expect(9);
 
         // add active field on partner model and make all records active
@@ -190,6 +190,75 @@ QUnit.module('Views', {
         assert.ok($('.modal').length, 'a confirm modal should be displayed');
         $('.modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
+        kanban.destroy();
+    });
+
+    QUnit.test('basic grouped rendering with active field and archive enabled (archivable true)', function (assert) {
+        assert.expect(7);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" archivable="true">' +
+                        '<field name="active"/>' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // check archive/restore all actions in kanban header's config dropdown
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, "should be able to archive all the records");
+        assert.ok(kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, "should be able to restore all the records");
+
+        // archive the records of the first column
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3,
+            "last column should contain 3 records");
+        envIDs = [4];
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click(); // Click on 'Archive All'
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-secondary').click(); // Click on 'Cancel'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 3, "still last column should contain 3 records");
+        kanban.$('.o_kanban_group:last .o_column_archive_records').click();
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        $('.modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').length, 0, "last column should not contain any records");
+        kanban.destroy();
+    });
+
+    QUnit.test('basic grouped rendering with active field and hidden archive buttons (archivable false)', function (assert) {
+        assert.expect(2);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var envIDs = [1, 2, 3, 4]; // the ids that should be in the environment during this test
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" archivable="false">' +
+                        '<field name="active"/>' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        // check archive/restore all actions in kanban header's config dropdown
+        assert.strictEqual(
+            kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive_records').length, 0,
+            "should not be able to archive all the records");
+        assert.strictEqual(
+            kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive_records').length, 0,
+            "should not be able to restore all the records");
         kanban.destroy();
     });
 
