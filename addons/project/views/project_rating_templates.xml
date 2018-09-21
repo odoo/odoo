@@ -9,7 +9,7 @@
                 <div id="wrap">
                     <div class="oe_structure"/>
                     <div class="container o_portal_project_rating">
-                        <div class="row text-center">
+                        <div class="text-center">
                             <h2>Projects</h2>
                         </div>
                         <div class="oe_structure"/>
@@ -85,7 +85,7 @@
                     <div class="col-md-4 o_smiley_no_padding_right">
                         <span class="ml8" t-esc="partner_stat['rated_partner'].name"/>
                     </div>
-                    <div class="col-md-4 o_smiley_no_padding_right">
+                    <div class="col-md-4 o_smiley_no_padding_right row">
                         <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                             <span t-if="partner_stat['rating_10']">
                                 <img title="happy" alt="Happy face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_10.png'/>
@@ -152,7 +152,7 @@
                     <div class="oe_structure"/>
                     <div class="container o_project o_portal_project_rating">
                         <h1 t-esc="project.name" class="text-center"/>
-                        <div class="row mb32">
+                        <div class="mb32">
                             <div>
                                 <h3 class="o_page_header">Customer Ratings</h3>
                                 <div class="row">
