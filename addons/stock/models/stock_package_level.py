@@ -8,6 +8,7 @@ from operator import itemgetter
 
 class StockPackageLevel(models.Model):
     _name = 'stock.package_level'
+    _description = 'Stock Package Level'
 
     package_id = fields.Many2one('stock.quant.package', 'Package', required=True)
     picking_id = fields.Many2one('stock.picking', 'Picking')

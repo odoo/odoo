@@ -10,7 +10,7 @@ from odoo.osv import expression
 class FleetVehicle(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle'
-    _description = 'Information on a vehicle'
+    _description = 'Vehicle'
     _order = 'license_plate asc, acquisition_date asc'
 
     def _get_default_state(self):
@@ -313,6 +313,7 @@ class FleetVehicleOdometer(models.Model):
 class FleetVehicleState(models.Model):
     _name = 'fleet.vehicle.state'
     _order = 'sequence asc'
+    _description = 'Vehicle Status'
 
     name = fields.Char(required=True)
     sequence = fields.Integer(help="Used to order the note stages")
@@ -322,6 +323,7 @@ class FleetVehicleState(models.Model):
 
 class FleetVehicleTag(models.Model):
     _name = 'fleet.vehicle.tag'
+    _description = 'Vehicle Tag'
 
     name = fields.Char(required=True, translate=True)
     color = fields.Integer('Color Index')
@@ -331,7 +333,7 @@ class FleetVehicleTag(models.Model):
 
 class FleetServiceType(models.Model):
     _name = 'fleet.service.type'
-    _description = 'Type of services available on a vehicle'
+    _description = 'Fleet Service Type'
 
     name = fields.Char(required=True, translate=True)
     category = fields.Selection([

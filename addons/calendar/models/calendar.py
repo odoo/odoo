@@ -92,6 +92,7 @@ def sort_remap(f):
 
 class Contacts(models.Model):
     _name = 'calendar.contacts'
+    _description = 'Calendar Contacts'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Employee', required=True)
@@ -111,7 +112,7 @@ class Attendee(models.Model):
 
     _name = 'calendar.attendee'
     _rec_name = 'common_name'
-    _description = 'Calendar Registration'
+    _description = 'Calendar Attendee Information'
 
     def _default_access_token(self):
         return uuid.uuid4().hex
@@ -240,6 +241,7 @@ class Attendee(models.Model):
 class AlarmManager(models.AbstractModel):
 
     _name = 'calendar.alarm_manager'
+    _description = 'Event Alarm Manager'
 
     def get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
         result = {}
@@ -471,7 +473,7 @@ class AlarmManager(models.AbstractModel):
 
 class Alarm(models.Model):
     _name = 'calendar.alarm'
-    _description = 'Event alarm'
+    _description = 'Event Alarm'
 
     @api.depends('interval', 'duration')
     def _compute_duration_minutes(self):
@@ -527,7 +529,7 @@ class Alarm(models.Model):
 class MeetingType(models.Model):
 
     _name = 'calendar.event.type'
-    _description = 'Meeting Type'
+    _description = 'Event Meeting Type'
 
     name = fields.Char('Name', required=True)
 

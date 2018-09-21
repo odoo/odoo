@@ -92,7 +92,7 @@ class AccountAccountTemplate(models.Model):
 
 class AccountChartTemplate(models.Model):
     _name = "account.chart.template"
-    _description = "Templates for Account Chart"
+    _description = "Account Chart Template"
 
     name = fields.Char(required=True)
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
@@ -901,7 +901,7 @@ class AccountFiscalPositionTemplate(models.Model):
 
 class AccountFiscalPositionTaxTemplate(models.Model):
     _name = 'account.fiscal.position.tax.template'
-    _description = 'Template Tax Fiscal Position'
+    _description = 'Tax Mapping Template of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Position', required=True, ondelete='cascade')
@@ -911,7 +911,7 @@ class AccountFiscalPositionTaxTemplate(models.Model):
 
 class AccountFiscalPositionAccountTemplate(models.Model):
     _name = 'account.fiscal.position.account.template'
-    _description = 'Template Account Fiscal Mapping'
+    _description = 'Accounts Mapping Template of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
@@ -921,6 +921,7 @@ class AccountFiscalPositionAccountTemplate(models.Model):
 
 class AccountReconcileModelTemplate(models.Model):
     _name = "account.reconcile.model.template"
+    _description = 'Reconcile Model Template'
 
     # Base fields.
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)

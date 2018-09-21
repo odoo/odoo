@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class PaymentWizard(models.TransientModel):
     _name = 'payment.acquirer.onboarding.wizard'
+    _description = 'Payment acquire onboarding wizard'
 
     payment_method = fields.Selection([
         ('paypal', "Pay with PayPal"),

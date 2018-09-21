@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 
 class AccountAnalyticDistribution(models.Model):
     _name = 'account.analytic.distribution'
+    _description = 'Analytic Account Distribution'
     _rec_name = 'account_id'
 
     account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True)

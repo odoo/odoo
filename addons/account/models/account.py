@@ -353,6 +353,7 @@ class AccountAccount(models.Model):
 
 class AccountGroup(models.Model):
     _name = "account.group"
+    _description = 'Account Group'
     _parent_store = True
     _order = 'code_prefix'
 
@@ -857,6 +858,7 @@ class ResPartnerBank(models.Model):
 
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
+    _description = 'Tax Group'
     _order = 'sequence asc'
 
     name = fields.Char(required=True, translate=True)

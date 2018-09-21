@@ -230,7 +230,7 @@ class LandedCost(models.Model):
 
 class LandedCostLine(models.Model):
     _name = 'stock.landed.cost.lines'
-    _description = 'Stock Landed Cost Lines'
+    _description = 'Stock Landed Cost Line'
 
     name = fields.Char('Description')
     cost_id = fields.Many2one(
@@ -253,7 +253,7 @@ class LandedCostLine(models.Model):
 
 class AdjustmentLines(models.Model):
     _name = 'stock.valuation.adjustment.lines'
-    _description = 'Stock Valuation Adjustment Lines'
+    _description = 'Valuation Adjustment Lines'
 
     name = fields.Char(
         'Description', compute='_compute_name', store=True)

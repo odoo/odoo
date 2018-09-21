@@ -32,6 +32,7 @@ def hashable(key):
 class ImBus(models.Model):
 
     _name = 'bus.bus'
+    _description = 'Communication Bus'
 
     channel = fields.Char('Channel')
     message = fields.Char('Message')

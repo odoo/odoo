@@ -8,7 +8,7 @@ from odoo.addons import decimal_precision as dp
 
 class ProjectCreateSalesOrder(models.TransientModel):
     _name = 'project.create.sale.order'
-    _description = "Create a SO from project"
+    _description = "Create SO from project"
 
     @api.model
     def default_get(self, fields):
@@ -194,6 +194,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
 class ProjectCreateSalesOrderLine(models.TransientModel):
     _name = 'project.create.sale.order.line'
+    _description = 'Create SO Line from project'
     _order = 'id,create_date'
 
     wizard_id = fields.Many2one('project.create.sale.order', required=True)

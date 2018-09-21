@@ -22,6 +22,7 @@ class ProductAttribute(models.Model):
 class ProductAttributevalue(models.Model):
     _name = "product.attribute.value"
     _order = 'attribute_id, sequence, id'
+    _description = 'Product Attribute Value'
 
     name = fields.Char('Attribute Value', required=True, translate=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
@@ -82,6 +83,7 @@ class ProductAttributevalue(models.Model):
 
 class ProductAttributePrice(models.Model):
     _name = "product.attribute.price"
+    _description = 'Product Attribute Price'
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
     value_id = fields.Many2one('product.attribute.value', 'Product Attribute Value', ondelete='cascade', required=True)
@@ -91,6 +93,7 @@ class ProductAttributePrice(models.Model):
 class ProductAttributeLine(models.Model):
     _name = "product.attribute.line"
     _rec_name = 'attribute_id'
+    _description = 'Product Attribute Line'
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
     attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='restrict', required=True)

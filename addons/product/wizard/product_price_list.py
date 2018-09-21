@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class product_price_list(models.TransientModel):
     _name = 'product.price_list'
-    _description = 'Price List'
+    _description = 'Product Price per Unit Based on Pricelist Version'
 
     price_list = fields.Many2one('product.pricelist', 'PriceList', required=True)
     qty1 = fields.Integer('Quantity-1', default=1)

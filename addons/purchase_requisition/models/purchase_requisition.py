@@ -19,7 +19,7 @@ PURCHASE_REQUISITION_STATES = [
 
 class PurchaseRequisitionType(models.Model):
     _name = "purchase.requisition.type"
-    _description = "Purchase Agreement Type"
+    _description = "Purchase Requisition Type"
     _order = "sequence"
 
     name = fields.Char(string='Agreement Type', required=True, translate=True)

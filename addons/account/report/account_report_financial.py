@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class ReportFinancial(models.AbstractModel):
     _name = 'report.account.report_financial'
+    _description = 'Financial Report'
 
     def _compute_account_balance(self, accounts):
         """ compute the balance, debit and credit for the provided accounts

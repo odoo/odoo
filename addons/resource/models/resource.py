@@ -143,7 +143,7 @@ class ResourceCalendar(models.Model):
     (begin_datetime, end_datetime). A list of intervals is therefore a list of
     tuples, holding several intervals of work or leaves. """
     _name = "resource.calendar"
-    _description = "Resource Calendar"
+    _description = "Resource Working Time"
 
     @api.model
     def default_get(self, fields):
@@ -419,7 +419,7 @@ class ResourceCalendarAttendance(models.Model):
 
 class ResourceResource(models.Model):
     _name = "resource.resource"
-    _description = "Resource Detail"
+    _description = "Resources"
 
     @api.model
     def default_get(self, fields):
@@ -498,7 +498,7 @@ class ResourceResource(models.Model):
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
-    _description = "Leave Detail"
+    _description = "Resource Leaves Detail"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(

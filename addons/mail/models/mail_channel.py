@@ -54,7 +54,7 @@ class Moderation(models.Model):
 class Channel(models.Model):
     """ A mail.channel is a discussion group that may behave like a listener
     on documents. """
-    _description = 'Discussion channel'
+    _description = 'Discussion Channel'
     _name = 'mail.channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'

@@ -44,7 +44,7 @@ class RecruitmentSource(models.Model):
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
-    _description = "Stage of Recruitment"
+    _description = "Recruitment Stages"
     _order = 'sequence'
 
     name = fields.Char("Stage name", required=True, translate=True)
@@ -79,7 +79,7 @@ class RecruitmentStage(models.Model):
 
 class RecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
-    _description = "Degree of Recruitment"
+    _description = "Applicant Degree"
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]

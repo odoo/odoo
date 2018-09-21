@@ -52,6 +52,7 @@ class IrModelFields(models.Model):
 
 class TestSparse(models.TransientModel):
     _name = 'sparse_fields.test'
+    _description = 'Sparse fields Test'
 
     data = fields.Serialized()
     boolean = fields.Boolean(sparse='data')

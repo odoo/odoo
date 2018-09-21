@@ -46,6 +46,7 @@ class EventRegistrationAnswer(models.Model):
 
     _name = 'event.registration.answer'
     _table = 'event_registration_answer'
+    _description = 'Event Registration Answer'
 
     event_answer_id = fields.Many2one('event.answer', required=True, ondelete='cascade')
     event_registration_id = fields.Many2one('event.registration', required=True, ondelete='cascade')
@@ -62,6 +63,7 @@ class EventQuestion(models.Model):
     _name = 'event.question'
     _rec_name = 'title'
     _order = 'sequence,id'
+    _description = 'Event Question'
 
     title = fields.Char(required=True, translate=True)
     event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
@@ -93,6 +95,7 @@ class EventQuestion(models.Model):
 class EventAnswer(models.Model):
     _name = 'event.answer'
     _order = 'sequence,id'
+    _description = 'Event Answer'
 
     name = fields.Char('Answer', required=True, translate=True)
     question_id = fields.Many2one('event.question', required=True, ondelete='cascade')

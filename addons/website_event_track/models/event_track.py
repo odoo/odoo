@@ -8,7 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 
 class TrackTag(models.Model):
     _name = "event.track.tag"
-    _description = 'Track Tag'
+    _description = 'Event Track Tag'
     _order = 'name'
 
     name = fields.Char('Tag')
@@ -22,14 +22,14 @@ class TrackTag(models.Model):
 
 class TrackLocation(models.Model):
     _name = "event.track.location"
-    _description = 'Track Location'
+    _description = 'Event Track Location'
 
     name = fields.Char('Room')
 
 
 class TrackStage(models.Model):
     _name = 'event.track.stage'
-    _description = 'Track Stage'
+    _description = 'Event Track Stage'
     _order = 'sequence, id'
 
     name = fields.Char(string='Stage Name', required=True, translate=True)

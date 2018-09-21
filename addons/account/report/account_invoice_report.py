@@ -185,6 +185,7 @@ class AccountInvoiceReport(models.Model):
 
 class ReportInvoiceWithPayment(models.AbstractModel):
     _name = 'report.account.report_invoice_with_payments'
+    _description = 'Account report with payment lines'
 
     @api.model
     def _get_report_values(self, docids, data=None):

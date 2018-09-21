@@ -9,6 +9,7 @@ class PaymentWizard(models.TransientModel):
 
     _inherit = 'payment.acquirer.onboarding.wizard'
     _name = 'sale.payment.acquirer.onboarding.wizard'
+    _description = 'Sale Payment acquire onboarding wizard'
 
     def _get_default_payment_method(self):
         return self.env.user.company_id.sale_onboarding_payment_method or 'digital_signature'

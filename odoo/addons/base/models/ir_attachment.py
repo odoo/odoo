@@ -36,6 +36,7 @@ class IrAttachment(models.Model):
     on the local filesystem using name based on their sha1 hash
     """
     _name = 'ir.attachment'
+    _description = 'Attachment'
     _order = 'id desc'
 
     @api.depends('res_model', 'res_id')

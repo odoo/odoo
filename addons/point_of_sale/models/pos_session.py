@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
+    _description = 'Point of Sale Session'
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open

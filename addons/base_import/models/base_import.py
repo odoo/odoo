@@ -85,6 +85,7 @@ class ImportMapping(models.Model):
     time.
     """
     _name = 'base_import.mapping'
+    _description = 'Base Import Mapping'
 
     res_model = fields.Char(index=True)
     column_name = fields.Char()
@@ -107,6 +108,7 @@ class ResUsers(models.Model):
 class Import(models.TransientModel):
 
     _name = 'base_import.import'
+    _description = 'Base Import'
 
     # allow imports to survive for 12h in case user is slow
     _transient_max_hours = 12.0

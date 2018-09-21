@@ -82,6 +82,7 @@ def keep_query(*keep_params, **additional_params):
 
 class ViewCustom(models.Model):
     _name = 'ir.ui.view.custom'
+    _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
 
     ref_id = fields.Many2one('ir.ui.view', string='Original View', index=True, required=True, ondelete='cascade')
@@ -179,6 +180,7 @@ READONLY = re.compile(r"\breadonly\b")
 
 class View(models.Model):
     _name = 'ir.ui.view'
+    _description = 'View'
     _order = "priority,name,id"
 
     name = fields.Char(string='View Name', required=True)

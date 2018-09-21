@@ -12,7 +12,7 @@ class BadgeUser(models.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
-    _description = 'Gamification user badge'
+    _description = 'Gamification User Badge'
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -60,7 +60,7 @@ class GamificationBadge(models.Model):
     TOO_MANY = 5
 
     _name = 'gamification.badge'
-    _description = 'Gamification badge'
+    _description = 'Gamification Badge'
     _inherit = ['mail.thread']
 
     name = fields.Char('Badge', required=True, translate=True)

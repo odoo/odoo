@@ -7,6 +7,7 @@ from odoo.tools import float_round
 
 class ReportBomStructure(models.AbstractModel):
     _name = 'report.mrp.report_bom_structure'
+    _description = 'BOM Structure Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):

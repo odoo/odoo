@@ -51,6 +51,7 @@ class ResConfigConfigurable(models.TransientModel):
     their view inherit from the related res_config_view_base view.
     '''
     _name = 'res.config'
+    _description = 'Config'
 
     @api.multi
     def start(self):
@@ -228,6 +229,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
     """
     _name = 'res.config.installer'
     _inherit = 'res.config'
+    _description = 'Config Installer'
 
     _install_if = {}
 
@@ -379,6 +381,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         such methods can be defined to provide current values for other fields.
     """
     _name = 'res.config.settings'
+    _description = 'Config Settings'
 
     @api.multi
     def copy(self, values):

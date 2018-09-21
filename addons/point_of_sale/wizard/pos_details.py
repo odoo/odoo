@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class PosDetails(models.TransientModel):
     _name = 'pos.details.wizard'
-    _description = 'Open Sales Details Report'
+    _description = 'Point of Sale Details Report'
 
     def _default_start_date(self):
         """ Find the earliest start_date of the latests sessions """
