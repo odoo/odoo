@@ -1081,9 +1081,8 @@ class Meeting(models.Model):
             else:
                 sort_fields[field] = self[field]
                 if isinstance(self[field], models.BaseModel):
-                    name_get = self[field].name_get()
-                    if len(name_get) and len(name_get[0]) >= 2:
-                        sort_fields[field] = name_get[0][1]
+                    name_get = self[field].mapped('display_name')
+                    sort_fields[field] = name_get and name_get[0] or ''
         if r_date:
             sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:
