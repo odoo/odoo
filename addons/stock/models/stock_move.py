@@ -160,6 +160,38 @@ class StockMove(models.Model):
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
     has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
 
+    def _get_move_equilibrium(self, only_to_refund=True):
+        negative_allowed = False
+        # Take care that there will be no negative initial demand
+        done_moves = self.filtered(lambda r: r.state == 'done')
+        pending_moves = self.filtered(lambda r: r.state not in ['done', 'cancel'])
+
+        outside = ['customer', 'transit']
+        origin = ['supplier', 'internal']
+
+        delivered_moves = done_moves.filtered(lambda r: r.location_id.usage in origin  and r.location_dest_id.usage in outside)
+        returned_moves = done_moves.filtered(lambda r: r.location_id.usage in outside and r.location_dest_id.usage in origin)
+
+        pending_delivery_moves = pending_moves.filtered(lambda r: r.location_id.usage in origin and r.location_dest_id.usage in outside)
+        pending_return_moves = pending_moves.filtered(lambda r: r.location_id.usage in outside and r.location_dest_id.usage in origin)
+        if only_to_refund:
+            returned_moves = returned_moves.filtered(lambda r: r.to_refund)
+            pending_return_moves = pending_return_moves.filtered(lambda r: r.to_refund)
+
+        involved_moves = delivered_moves + pending_delivery_moves + returned_moves + pending_return_moves
+
+        # In case of any state where we have no stock moves which need to be adapted
+        if not involved_moves:
+            negative_allowed = True
+        move_equilibrium = (
+            sum(delivered_moves.mapped('move_line_ids').mapped('qty_done')) - 
+            sum(returned_moves.mapped('move_line_ids').mapped('qty_done')) + 
+            sum(pending_delivery_moves.mapped('product_uom_qty')) - 
+            sum(pending_return_moves.mapped('product_uom_qty'))
+        )
+
+        return move_equilibrium, negative_allowed
+
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
         for move in self:
@@ -598,7 +630,13 @@ class StockMove(models.Model):
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
-        return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
+        moves_cleaned = (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
+        if moves_cleaned.filtered(lambda move: move.product_uom_qty < 0):
+            raise UserError(
+                'You can not change a quantity which results in a negative initial demand based on your configuration!\n\n'
+                'It was most likely that the merging was not possible due to different characteristic of the stock move fields %s' % (', '.join(self._prepare_merge_moves_distinct_fields()))
+            )
+        return moves_cleaned
 
     def _get_relevant_state_among_moves(self):
         # We sort our moves by importance of state:

@@ -12,6 +12,10 @@ from odoo.tools.misc import formatLang
 from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons import decimal_precision as dp
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
@@ -667,13 +671,19 @@ class PurchaseOrderLine(models.Model):
                     activity._onchange_activity_type_id()
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
+                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                 picking = pickings and pickings[0] or False
                 if not picking:
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
                 move_vals = line._prepare_stock_moves(picking)
                 for move_val in move_vals:
+                    # As we do not assume two different values on the same purchase order we do sync the price in order to be able to merge
+                    test = self.env['stock.move'].new(move_val)
+                    similar_moves = picking.move_lines.filtered(lambda move: move.product_id == test.product_id)
+                    if test.price_unit not in similar_moves.mapped('price_unit'):
+                        similar_moves.write({'price_unit': test.price_unit})
+                        move_val['price_unit'] = test.price_unit
                     self.env['stock.move']\
                         .create(move_val)\
                         ._action_confirm()\
@@ -730,15 +740,16 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
         diff_quantity = self.product_qty - qty
-        if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            quant_uom = self.product_id.uom_id
-            get_param = self.env['ir.config_parameter'].sudo().get_param
-            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
-                template['product_uom'] = quant_uom.id
-                template['product_uom_qty'] = product_qty
-            else:
-                template['product_uom_qty'] = diff_quantity
+        quant_uom = self.product_id.uom_id
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+            diff_quantity = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
+            template['product_uom'] = quant_uom.id
+
+        moves = self.mapped('move_ids')
+        move_equilibrium, negative_allowed = moves._get_move_equilibrium()
+        if move_equilibrium + diff_quantity >= 0:
+            template['product_uom_qty'] = diff_quantity
             res.append(template)
         return res
 

@@ -101,15 +101,30 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         lines = self.env['sale.order.line']
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            self.ensure_one()
+            lines = self._get_procurement_lines(values)
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_procurement_rule()
+            # Cancel and unlink zero moves
+            moves_to_unlink = lines.mapped('move_ids').filtered(lambda m: m.product_uom_qty == 0)
+            if moves_to_unlink:
+                moves_to_unlink._clean_merged()
+                moves_to_unlink._action_cancel()
+                moves_to_unlink.sudo().unlink()
         return res
     
+
+    def _get_procurement_lines(self, values):
+        lines = False
+        moves = self.mapped('move_ids')
+        move_equilibrium, negative_allowed = moves._get_move_equilibrium()
+        move_equilibrium_qty = self.product_id.uom_id._compute_quantity(move_equilibrium, self.product_uom)
+        diff_qty = values['product_uom_qty'] - self.product_uom_qty
+        if move_equilibrium_qty + diff_qty >= 0 or negative_allowed:
+            lines = self.filtered(lambda r: r.state == 'sale')
+        return lines
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -223,13 +238,10 @@ class SaleOrderLine(models.Model):
 
     def _get_qty_procurement(self):
         self.ensure_one()
-        qty = 0.0
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            if move.picking_code == 'outgoing':
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-            elif move.picking_code == 'incoming':
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        return qty
+        moves = self.move_ids.filtered(lambda r: r.state != 'cancel')
+        move_equilibrium, negative_allowed = moves._get_move_equilibrium()
+        move_equilibrium_qty = self.product_id.uom_id._compute_quantity(move_equilibrium, self.product_uom)
+        return move_equilibrium_qty
 
     @api.multi
     def _action_launch_procurement_rule(self):
@@ -238,14 +250,11 @@ class SaleOrderLine(models.Model):
         sale order line. procurement group will launch '_run_move', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         errors = []
         for line in self:
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = line._get_qty_procurement()
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
-                continue
 
             group_id = line.order_id.procurement_group_id
             if not group_id:
@@ -280,6 +289,7 @@ class SaleOrderLine(models.Model):
                 self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
             except UserError as error:
                 errors.append(error.name)
+
         if errors:
             raise UserError('\n'.join(errors))
         return True
