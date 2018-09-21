@@ -128,27 +128,24 @@
         <field name="arch" type="xml">
             <kanban create="false" group_create="false">
                 <field name="name"/>
-                <field name="identifier"/>
+                <field name="type"/>
+                <field name="connection"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="o_kanban_image">
-                                <div t-if="record.type.value == 'Printer'" class="fa fa-print fa-3x" aria-label="Printer" title="Printer"/>
-                                <div t-elif="record.type.value == 'Camera'" class="fa fa-video-camera fa-3x" aria-label="Camera" title="Camera"/>
-                                <div t-elif="record.type.value == 'Device'" class="fa fa-wrench fa-3x" aria-label="Device" title="Device"/>
+                        <div class="oe_kanban_global_click p-0">
+                            <div class="row no-gutters">
+                                <div class="col-3 p-2 text-center align-self-center">
+                                    <t t-set="types" t-value="{'camera': 'video-camera', 'printer': 'print', 'device': 'wrench'}"/>
+                                    <i t-attf-class="fa fa-#{types[record.type.raw_value]} fa-3x"></i>
+                                </div>
+                                <div class="col-9 p-2 border-left">
+                                    <div class="text-truncate font-weight-bold" t-att-title="record.name.raw_value"><field name="name"/></div>
+                                    <div><field name="identifier"/></div>
+                                    <span class="text-muted font-italic"><field name="iot_id"/></span>
+                                    <t t-set="connections" t-value="{'network': 'wifi', 'direct': 'plug', 'bluetooth': 'bluetooth-b'}"/>
+                                    <span class="float-right" t-att-title="record.connection.raw_value"><i t-attf-class="fa fa-#{connections[record.connection.raw_value]}"></i></span>
+                                </div>
                             </div>
-                            <strong class="o_kanban_record_title">
-                                <field name="name"/>
-                            </strong>
-                            <div class="oe_kanban_details">
-                                <field name="iot_id"/><br/>
-                                <field name="identifier"/><br/>
-                                <field name="type" invisible="1"/>
-                                <field name="connection" invisible="1"/>
-                            </div>
-                            <div t-if="record.connection.value == 'Network'" class="fa fa-wifi float-right" aria-label="Network" title="Network"/>
-                            <div t-elif="record.connection.value == 'USB'" class="fa fa-usb float-right" aria-label="USB" title="USB"/>
-                            <div t-elif="record.connection.value == 'Bluetooth'" class="fa fa-bluetooth-b float-right" aria-label="Bluetooth" title="Bluetooth"/>
                         </div>
                     </t>
                 </templates>
