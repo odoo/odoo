@@ -125,10 +125,22 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
-                            <div class="o_kanban_record_top mb0">
-                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                            <div class="o_kanban_image">
+                                <div t-if="record.type.value == 'Printer'" class="fa fa-print fa-3x" aria-label="Printer" title="Printer"/>
+                                <div t-elif="record.type.value == 'Camera'" class="fa fa-video-camera fa-3x" aria-label="Camera" title="Camera"/>
+                                <div t-elif="record.type.value == 'Device'" class="fa fa-wrench fa-3x" aria-label="Device" title="Device"/>
                             </div>
-                            <field name="iot_id"/>
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                            </strong>
+                            <div class="oe_kanban_details">
+                                <field name="iot_id"/><br/>
+                                <field name="type" invisible="1"/>
+                                <field name="connection" invisible="1"/>
+                            </div>
+                            <div t-if="record.connection.value == 'Network'" class="fa fa-wifi float-right" aria-label="Network" title="Network"/>
+                            <div t-elif="record.connection.value == 'USB'" class="fa fa-usb float-right" aria-label="USB" title="USB"/>
+                            <div t-elif="record.connection.value == 'Bluetooth'" class="fa fa-bluetooth-b float-right" aria-label="Bluetooth" title="Bluetooth"/>
                         </div>
                     </t>
                 </templates>
