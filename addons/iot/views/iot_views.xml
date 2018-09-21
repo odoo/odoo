@@ -76,6 +76,14 @@
         <field name="name">IoT Boxes</field>
         <field name="res_model">iot.box</field>
         <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No IoTBox found !
+            </p><p>
+                You should click on the 
+                <a name="%(iot.action_add_iot_box)d" type="action" string="Connact an IoT Box" tabindex="-1">connect</a>.
+            </p>
+        </field>
     </record>
 
     <!-- IoT Devices -->
