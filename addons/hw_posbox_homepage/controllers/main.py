@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 import json
 import jinja2
 import subprocess
@@ -19,7 +18,6 @@ import urllib3
 
 from uuid import getnode as get_mac
 from odoo.addons.hw_proxy.controllers import main as hw_proxy
-from odoo.addons.hw_drivers.controllers import driver as hw_drivers
 
 _logger = logging.getLogger(__name__)
 
