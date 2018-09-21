@@ -65,16 +65,19 @@ var PartnerField = FieldMany2One.extend({
      */
     _modifyAutompleteRendering: function (){
         var api = this.$input.data('ui-autocomplete');
-        var renderWithoutLogo = api._renderItem;
-        api._renderItem = function ( ul, item ) {
-            var $li = renderWithoutLogo.call(this, ul, item);
+        api._renderItem = function(ul, item){
+            ul.addClass('o_partner_autocomplete_dropdown');
+            var $a = $('<a/>')["html"](item.label);
             if (item.logo){
-                var $a = $li.find('>a').addClass('o_partner_autocomplete_dropdown_item');
                 var $img = $('<img/>').attr('src', item.logo);
                 $a.append($img);
             }
 
-            return $li;
+            return $("<li></li>")
+                .data("item.autocomplete",item)
+                .append($a)
+                .appendTo(ul)
+                .addClass(item.classname);
         };
     },
 
@@ -104,20 +107,17 @@ var PartnerField = FieldMany2One.extend({
             Autocomplete.autocomplete(search_val).then(function (suggestions) {
                 var choices = [];
                 if (suggestions && suggestions.length) {
-                    choices.push({
-                        label: _t('Create and Edit from Autocomplete :'),
-                    });
                     _.each(suggestions, function (suggestion) {
-                        var label =_.str.sprintf('%s - %s', suggestion.label, suggestion.description);
-                        label = label.replace(new RegExp(search_val, "gi"), "<b>$&</b>");
+                        var label = '<i class="fa fa-magic text-muted"/> ';
+                        label += _.str.sprintf('%s, <span class="text-muted">%s</span>', suggestion.label, suggestion.description);
 
                         choices.push({
                             label: label,
                             action: function () {
                                 self._createPartner(suggestion);
                             },
-                            classname: 'o_m2o_dropdown_option',
                             logo: suggestion.logo,
+                            classname: 'o_partner_autocomplete_dropdown_item',
                         });
                     });
                 }

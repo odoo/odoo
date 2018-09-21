@@ -15,9 +15,6 @@
                 <field name="partner_gid" invisible="True"/>
                 <field name="additional_info" invisible="True"/>
             </xpath>
-            <xpath expr="//div[hasclass('oe_title')]/div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
-                <attribute name="help">You can find a customer, a contact, etc. by its Name, TIN, Email or Internal Reference.</attribute>
-            </xpath>
         </field>
     </record>
 
@@ -35,9 +32,6 @@
             <xpath expr="//field[last()]" position="after">
                 <field name="partner_gid" invisible="True"/>
                 <field name="additional_info" invisible="True"/>
-            </xpath>
-            <xpath expr="//div[hasclass('oe_title')]/div[hasclass('o_row')]/field[@name='parent_id']" position="attributes">
-                <attribute name="help">You can find a customer, a contact, etc. by its Name, TIN, Email or Internal Reference.</attribute>
             </xpath>
         </field>
     </record>
