@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 class AccountBankStatementImportJounalCreation(models.TransientModel):
     _name = 'account.bank.statement.import.journal.creation'
-    _description = 'Import Bank Statement Journal Creation Wizard'
+    _description = 'Journal Creation on Bank Statement Import'
 
     journal_id = fields.Many2one('account.journal', delegate=True, required=True, ondelete='cascade')
 

@@ -12,6 +12,7 @@ class m(models.Model):
         and the clients.
     """
     _name = 'test.exceptions.model'
+    _description = 'Test Exception Model'
 
     @api.multi
     def generate_except_osv(self):

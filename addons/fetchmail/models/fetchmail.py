@@ -22,7 +22,7 @@ class FetchmailServer(models.Model):
     """Incoming POP/IMAP mail server account"""
 
     _name = 'fetchmail.server'
-    _description = "POP/IMAP Server"
+    _description = 'Incoming Mail Server'
     _order = 'priority'
 
     name = fields.Char('Name', required=True)

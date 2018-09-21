@@ -7,7 +7,7 @@ from odoo.tools import formatLang
 class PurchaseBillUnion(models.Model):
     _name = 'purchase.bill.union'
     _auto = False
-    _description = 'Bills & Purchases'
+    _description = 'Purchases & Bills Union'
     _order = "purchase_order_id desc, vendor_bill_id desc"
 
     name = fields.Char(string='Reference', readonly=True)

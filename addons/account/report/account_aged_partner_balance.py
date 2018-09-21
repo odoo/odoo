@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 class ReportAgedPartnerBalance(models.AbstractModel):
 
     _name = 'report.account.report_agedpartnerbalance'
+    _description = 'Aged Partner Balance Report'
 
     def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
         # This method can receive the context key 'include_nullified_amount' {Boolean}

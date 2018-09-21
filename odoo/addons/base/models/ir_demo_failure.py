@@ -5,6 +5,7 @@ class DemoFailure(models.TransientModel):
     """ Stores modules for which we could not install demo data
     """
     _name = 'ir.demo_failure'
+    _description = 'Demo failure'
 
     module_id = fields.Many2one('ir.module.module', required=True, string="Module")
     error = fields.Char(string="Error")
@@ -12,6 +13,7 @@ class DemoFailure(models.TransientModel):
 
 class DemoFailureWizard(models.TransientModel):
     _name = 'ir.demo_failure.wizard'
+    _description = 'Demo Failure wizard'
 
     failure_ids = fields.One2many(
         'ir.demo_failure', 'wizard_id', readonly=True,

@@ -175,6 +175,7 @@ class MrpWorkcenter(models.Model):
 
 class MrpWorkcenterProductivityLossType(models.Model):
     _name = "mrp.workcenter.productivity.loss.type"
+    _description = 'MRP Workorder productivity losses'
     _rec_name = 'loss_type'
 
     @api.depends('loss_type')
@@ -197,7 +198,7 @@ class MrpWorkcenterProductivityLossType(models.Model):
 
 class MrpWorkcenterProductivityLoss(models.Model):
     _name = "mrp.workcenter.productivity.loss"
-    _description = "TPM Big Losses"
+    _description = "Workcenter Productivity Losses"
     _order = "sequence, id"
 
     name = fields.Char('Reason', required=True)
