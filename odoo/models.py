@@ -2480,6 +2480,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     related=(parent_field, name),
                     related_sudo=False,
                     copy=field.copy,
+                    readonly=field.readonly,
                 )
 
         # add inherited fields that are not redefined locally
