@@ -5066,13 +5066,13 @@ msgstr ""
 "В случай, че изберете метода 'Закръгляне за ред' : за всеки данък първо ще "
 "бъде изчислена и закръглена сумата на данъка за всеки PO/SO/фактурен ред и "
 "тогава тези закръглени суми ще бъдат сумирани, което води до общата сума за "
-"този данък. Ако пък изберете 'Цялостно закръгляне': за всеки данък, сумата "
-"на данъка ще бъде изчислена за всеки PO/SO/фактурен ред, тогава тези "
-"количества ще бъдат сумирани и в крайна сметка тази обща данъчна сума ще "
-"бъде закръглена. Ако продавате стоки с включен данък, трябва да изберете "
-"метода 'Закръгляне за ред', защото със сигурност желаете сумата на Вашите "
-"редове с междинни суми с включени данъци да бъде равна на общата сума с "
-"включени данъци."
+"този данък. Ако пък изберете 'Глобално закръгляне': за всеки данък, сумата "
+"на данъка ще бъде изчислена за всеки поръчка за покупки/поръчка за "
+"продажби/фактурен ред, тогава тези количества ще бъдат сумирани и в крайна "
+"сметка тази обща данъчна сума ще бъде закръглена. Ако продавате стоки с "
+"включен данък, трябва да изберете метода 'Закръгляне за ред', защото със "
+"сигурност желаете сумата на Вашите редове с междинни суми с включени данъци "
+"да бъде равна на общата сума с включени данъци."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_tax_calculation_rounding_method
@@ -5088,7 +5088,7 @@ msgstr ""
 "В случай, че изберете метода 'Закръгляне за ред' : за всеки данък, първо ще бъде\n"
 "             изчислена и закръглена сумата на данъка за всеки PO/SO/фактурен ред и тогава тези закръглени суми ще бъдат сумирани,\n"
 "             което води до общата сума за този данък. Ако пък изберете 'Цялостно закръгляне': за всеки данък,\n"
-"             сумата на данъка ще бъде изчислена за всеки PO/SO/фактурен ред, тогава тези количества ще бъдат              \n"
+"             сумата на данъка ще бъде изчислена за всеки поръчка за покупки/поръчка за продажби/фактурен ред, тогава тези количества ще бъдат              \n"
 "сумирани и в крайна сметка тази обща данъчна сума ще бъде закръглена. Ако продавате стоки с включен данък,\n"
 "             трябва да изберете метода 'Закръгляне за ред', защото със сигурност желаете сумата за Вашите редове с междинни суми с включени данъци\n"
 "             да бъде равна на общата сума с включени данъци."
@@ -6305,7 +6305,7 @@ msgstr "Извършете ръчни данъчни настройки"
 msgid ""
 "Manage time &amp; material contracts or fixed-price recurring subscriptions."
 msgstr ""
-"Управлявайте времето &amp); договорите за материали или периодичните "
+"Управлявайте времето &amp); материалните договори или периодичните "
 "абонаменти за фиксирана цена."
 
 #. module: account
@@ -7039,7 +7039,7 @@ msgstr ""
 "Операцията не е позволена. Можете да обединявате единствено записи, които "
 "споделят една и съща второстепенна валута или които не притежават такава. "
 "Преди да продължите по-нататък, редактирайте статиите в журнала или "
-"направете друг подбор."
+"направете друга селекция."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -7066,7 +7066,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Options"
-msgstr "Варианти/възможности"
+msgstr "Варианти/опции"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_payment_id
@@ -8220,7 +8220,7 @@ msgstr "Име на отчет"
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
 #: model:ir.ui.view,arch_db:account.account_common_report_view
 msgid "Report Options"
-msgstr "Варианти на отчет"
+msgstr "Опции в отчет"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_financial_report_search
@@ -8323,7 +8323,7 @@ msgstr "Прегледайте списъка с наличните валути
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr "Закръглете общо"
+msgstr "Закръглете глобално"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -8786,7 +8786,7 @@ msgstr "Състояния"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
 msgid "States count"
-msgstr "Преброяване на състояния"
+msgstr "Брой състояния"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_state
@@ -9259,7 +9259,7 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
 msgstr ""
-"Сумата, изразена във възможна друга валута, в случай че записът е "
+"Сумата, изразена в незадължителна друга валута, в случай че записът е "
 "мултивалутен."
 
 #. module: account
@@ -9433,7 +9433,7 @@ msgstr "Името, което ще се използва в редовете з
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
 #: model:ir.model.fields,help:account.field_account_move_line_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Възможната друга валута, ако това е мултивалутен запис."
+msgstr "Незадължителната друга валута, ако това е мултивалутен запис."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_quantity
@@ -9441,9 +9441,9 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"Възможното количество, изразено от този ред, напр. количество продаван "
-"продукт.  Количеството не се явява законово изискване, но е много полезно за"
-" някои справки."
+"Незадължителното количество, изразено от този ред, напр. количество продаван"
+" продукт.  Количеството не се явява законово изискване, но е много полезно "
+"за някои справки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_account_id
@@ -9853,9 +9853,9 @@ msgid ""
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
 msgstr ""
-"Тази възможност Ви позволява да се сдобиете с повече подробности за начина, "
-"по който се изчислява салдото Ви. Тъй като това заема доста място на диска, "
-"не позволяваме да го използвате, докато извършвате сравнение."
+"Тази опция Ви позволява да се сдобиете с повече подробности за начина, по "
+"който се изчислява салдото Ви. Тъй като това заема доста място на диска, не "
+"позволяваме да го използвате, докато извършвате сравнение."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_chart_template_id
@@ -10597,9 +10597,9 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
-"Можем да управляваме целия процес по въвеждане \n"
-"                                        за Вас: просто изпратете на Вашия Odoo проджект\n"
-"                                        мениджър CSV файл, съдържащ всичките Ви\n"
+"Можем да обработваме целия процес по въвеждане \n"
+"                                        за Вас: просто изпратете на Odoo мениджъра\n"
+"                                        проект CSV файл, съдържащ всичките Ви\n"
 "                                        данни."
 
 #. module: account
@@ -10610,9 +10610,9 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
-"Можем да управляваме целия процес по внедряване\n"
-"                                        за Вас: просто изпратете на Вашия проджект\n"
-"                                        мениджър CSV файл, съдържащ всичките Ви\n"
+"Можем да обработваме целия процес по въвеждане\n"
+"                                        за Вас: просто изпратете на Odoo мениджъра\n"
+"                                        проект CSV файл, съдържащ всичките Ви\n"
 "                                        продукти."
 
 #. module: account
@@ -11400,4 +11400,4 @@ msgstr "wizard.multi.charts.accounts"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
-msgstr "→ Бройте"
+msgstr "→ Брой"
