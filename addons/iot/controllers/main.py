@@ -28,7 +28,7 @@ class IoTController(http.Controller):
         for zip in zip_list:
             zipfile_ob.write(zip[0], zip[1]) # In order to remove the absolute path
         zipfile_ob.close()
-        return file_like_object.getvalue() #could remove base64.encodebytes(base64.encodebytes(
+        return file_like_object.getvalue()
 
     # Return home screen
     @http.route('/iot/box/<string:identifier>/screen_url', type='http', auth='public')
