@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import http
-import logging
 from odoo.http import request
 import odoo
 import os
 import zipfile
 import io
-import base64
 
 class IoTController(http.Controller):
 
@@ -32,14 +30,6 @@ class IoTController(http.Controller):
         zipfile_ob.close()
         return file_like_object.getvalue() #could remove base64.encodebytes(base64.encodebytes(
 
-    #get base url (might be used for authentication feature too)
-    @http.route('/iot/base_url', type='json', auth='user')
-    def get_base_url(self):
-        config = request.env['ir.config_parameter'].search([('key', '=', 'web.base.url')], limit=1)
-        if config:
-            return config.value
-        return 'Not Found'
-
     # Return home screen
     @http.route('/iot/box/<string:identifier>/screen_url', type='http', auth='public')
     def get_url(self, identifier):
@@ -48,16 +38,6 @@ class IoTController(http.Controller):
             return iotbox.screen_url
         else:
             return 'http://localhost:8069/point_of_sale/display'
-
-    # Return db uuid
-    @http.route('/iot/get_db_uuid', type='json', auth='public')
-    def get_db_uuid(self):
-        data = request.jsonrequest
-        if data['mac_address'] == 'macaddress' and data['token'] == 'token':
-            db_uuid = request.env['ir.config_parameter'].sudo().get_param('database.uuid')
-            return db_uuid
-        else:
-            return ''
 
     @http.route('/iot/setup', type='json', auth='public')
     def update_box(self):

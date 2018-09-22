@@ -277,7 +277,7 @@ var IotDetectButton = Widget.extend({
     _connectToIOT: function (url){
         var self = this;
         var full_url = url + '/box/connect';
-        var json_data = {token: self.token, url: self.localServerURL};
+        var json_data = {token: self.token};
         
         $.ajax({
             headers: {'Content-Type': 'application/json'},
@@ -293,14 +293,8 @@ var IotDetectButton = Widget.extend({
     },
 
     _onButtonClick: function (e) {
-        var self = this;
-
         this.$el.attr('disabled', true);
-
-        this._rpc({route: '/iot/base_url'}).then(function (localServerURL){
-            self.localServerURL = localServerURL;
-            self._findIOTs();
-        });
+        this._findIOTs();
     },
 
 });
