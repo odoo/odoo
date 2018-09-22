@@ -17,7 +17,7 @@ class ProductUoM(models.Model):
     _description = 'Product Unit of Measure'
     _order = "name"
 
-    name = fields.Char('Unit of Measure', required=True, translate=True)
+    name = fields.Char('Unit of Measure', required=True)
     category_id = fields.Many2one(
         'product.uom.categ', 'Category', required=True, ondelete='cascade',
         help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
