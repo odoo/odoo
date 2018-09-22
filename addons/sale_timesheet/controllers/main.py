@@ -41,7 +41,7 @@ class SaleTimesheetController(http.Controller):
             'rates': dict.fromkeys(billable_types + ['total'], 0.0),
             'money_amount': {
                 'invoiced': 0.0,
-                'to_invoiced': 0.0,
+                'to_invoice': 0.0,
                 'cost': 0.0,
                 'total': 0.0,
             }
