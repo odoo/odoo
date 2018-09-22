@@ -8,6 +8,7 @@
 # Martin Trigaux, 2017
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Rolandas <info@paninfo.lt>, 2017
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -55,7 +56,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Atšaukti,</i> Jūsų mokėjimas buvo atšauktas."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -64,6 +65,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Atlikta,</i> Jūsų internetinis mokėjimas buvo sėkmingai užregistruotas. "
+"Dėkojame už Jūsų užsakymą."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -95,6 +98,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Testinė</span>\n"
+"                                    <span class=\"o_stat_text\">Aplinka</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -102,6 +107,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Produkcinė</span>\n"
+"                                    <span class=\"o_stat_text\">Aplinka</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -176,7 +183,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr "Pirkėjas"
+msgstr "Gavėjas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
@@ -444,7 +451,7 @@ msgstr "Pasirinktinis"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
 msgid "Customer"
-msgstr "Pirkėjas"
+msgstr "Klientas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_description
@@ -487,7 +494,7 @@ msgstr "El. paštas"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Elektroninis"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -498,7 +505,7 @@ msgstr "El. paštas"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
-msgstr ""
+msgstr "Aplinka"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -591,6 +598,8 @@ msgid ""
 "If you leave it empty, the payment acquirer will be available for all the "
 "countries."
 msgstr ""
+"Jei paliksite tuščią, šis mokėjimų gavimo būdas bus pasiekiamas visoms "
+"šalims."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
@@ -845,14 +854,14 @@ msgstr "Mokėjimas"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Pirkėjas"
+msgstr "Mokėjimo gavėjas"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Mokėjimų gavimas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
@@ -869,7 +878,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Mokėjimų ikonos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
@@ -940,6 +949,13 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Mokėjimai bus registruojami šiame žurnale. Jei gaunate mokėjimus tiesiogiai į savo banko sąskaitą,\n"
+"pasirinkite ją. Jei gaunate mokėjimus už kelias operacijas kartu, sukurkite konkretų mokėjimo\n"
+"žurnalą šiam mokėjimo gavimui, kad galėtumėte lengvai valdyti banko suderinimus. Jūs\n"
+"turite sumą laikinoje pervedimo įrašų sąskaitoje (sukuriama automatiškai, kai sukuriate\n"
+"mokėjimo žurnalą). Kai jūs gaunate mokėjimą į savo banko sąskaitą, jūs suderinate\n"
+"banko išrašo eilutę su šia laikina perkėlimo sąskaita. Naudokite suderinimo šablonus, \n"
+"kad galėtumėte tai atlikti vienu paspaudimu."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1004,7 +1020,7 @@ msgstr "Gamyba"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_provider
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
-msgstr ""
+msgstr "Tiekėjas"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -1126,7 +1142,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_specific_countries
 msgid "Specific Countries"
-msgstr ""
+msgstr "Konkrečios šalys"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -1142,7 +1158,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Palaikomų mokėjimų ikonos"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -1185,12 +1201,16 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Šiame lauke saugomas paveikslėlis, kuris naudojamas kaip mokėjimo ikona. "
+"Maksimalus dydis 1024x1024px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
+"Šiame lauke saugomas paveikslėlis, naudojamas šiam tiekėjui. Maksimalus "
+"dydis 1024x1024px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
@@ -1373,7 +1393,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Jūsų mokėjimas buvo patvirtintas."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form

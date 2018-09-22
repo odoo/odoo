@@ -16,14 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: mass_mailing_event
+#: model:ir.ui.view,arch_db:mass_mailing_event.event_event_view_form_inherit_mass_mailing
+msgid "<span class=\"o_stat_text\">Mail Attendees</span>"
+msgstr ""
 
 #. module: mass_mailing_event
 #: model:ir.model,name:mass_mailing_event.model_event_event
 msgid "Event"
 msgstr "אירוע"
-
-#. module: mass_mailing_event
-#: model:ir.ui.view,arch_db:mass_mailing_event.event_event_view_form_inherit_mass_mailing
-msgid "Mail Attendees"
-msgstr ""

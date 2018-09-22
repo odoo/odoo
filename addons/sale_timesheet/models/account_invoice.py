@@ -51,15 +51,19 @@ class AccountInvoice(models.Model):
         self._compute_timesheet_revenue()
         return result
 
+    def _get_compute_timesheet_revenue_domain(self, so_line_ids):
+        return [
+            ('so_line', 'in', so_line_ids),
+            ('project_id', '!=', False),
+            ('timesheet_invoice_id', '=', False),
+            ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
+        ]
+
     def _compute_timesheet_revenue(self):
         for invoice in self:
             for invoice_line in invoice.invoice_line_ids.filtered(lambda line: line.product_id.type == 'service').sorted(key=lambda inv_line: (inv_line.invoice_id, inv_line.id)):
-                uninvoiced_timesheet_lines = self.env['account.analytic.line'].sudo().search([
-                    ('so_line', 'in', invoice_line.sale_line_ids.ids),
-                    ('project_id', '!=', False),
-                    ('timesheet_invoice_id', '=', False),
-                    ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
-                ])
+                domain = self._get_compute_timesheet_revenue_domain(invoice_line.sale_line_ids.ids)
+                uninvoiced_timesheet_lines = self.env['account.analytic.line'].sudo().search(domain)
 
                 # NOTE JEM : changing quantity (or unit price) of invoice line does not impact the revenue calculation. (FP specs)
                 if uninvoiced_timesheet_lines:

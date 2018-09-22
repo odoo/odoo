@@ -197,9 +197,9 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', _('On invitation only')),
-            ('employees', _('Visible by all employees')),
-            ('portal', _('Visible by following customers')),
+            ('followers', 'On invitation only'),
+            ('employees', 'Visible by all employees'),
+            ('portal', 'Visible by following customers'),
         ],
         string='Privacy', required=True,
         default='employees',
@@ -473,7 +473,7 @@ class Task(models.Model):
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
-            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
@@ -753,7 +753,7 @@ class Task(models.Model):
 
         groups = [new_group] + groups
         for group_name, group_method, group_data in groups:
-            if group_name in ['customer', 'portal']:
+            if group_name == 'customer':
                 continue
             group_data['has_button_access'] = True
 
@@ -831,12 +831,12 @@ class Task(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(Task, self).message_get_suggested_recipients()
-        for task in self.filtered('partner_id'):
-            reason = _('Customer Email') if task.partner_id.email else _('Customer')
+        for task in self:
             if task.partner_id:
+                reason = _('Customer Email') if task.partner_id.email else _('Customer')
                 task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
             elif task.email_from:
-                task._message_add_suggested_recipient(recipients, partner=task.email_from, reason=reason)
+                task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
     @api.multi

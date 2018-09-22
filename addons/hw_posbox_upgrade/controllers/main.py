@@ -80,7 +80,7 @@ upgrade_template = """
         </p>
         <pre>
 """
-upgrade_template += subprocess.check_output("git --work-tree=/home/pi/odoo/ --git-dir=/home/pi/odoo/.git log -1", shell=True).replace("\n", "<br/>")
+upgrade_template += subprocess.check_output("git --work-tree=/home/pi/odoo/ --git-dir=/home/pi/odoo/.git log -1", shell=True).decode('utf-8').replace("\n", "<br/>")
 upgrade_template += """
         </pre>
         <div class='centering'>

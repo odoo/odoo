@@ -31,19 +31,19 @@ msgstr "&amp;times;"
 #: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
+msgstr "<%s> транзакція (%s) не вийшла: <%s>"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
+msgstr "<%s> транзакція (%s) недійсний стан: %s"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr ""
+msgstr "<%s> транзакція (%s) підтвердження замовлення не вдалося: <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -53,7 +53,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Оплатити зараз"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Виконано"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -82,32 +82,32 @@ msgstr "<strong>Транзакції</strong>"
 #: code:addons/sale_payment/models/payment.py:54
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Невідповідність кількості (%s)"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
-msgstr ""
+msgstr "Кількість очікуваних транзакцій"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
-msgstr ""
+msgstr "Кількість транзакцій для отримання"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "Авторизовані платіжні операції"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payment"
-msgstr ""
+msgstr "Очікуваний платіж"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payments"
-msgstr ""
+msgstr "Очікувані платежі"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:52
@@ -127,23 +127,23 @@ msgstr "Остання операція"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Кількість транзакцій оплати"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
-msgstr ""
+msgstr "Кількість очікуваних транзакцій"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
 msgid "Number of transactions to capture"
-msgstr ""
+msgstr "Кількість транзакцій для отримання"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
-msgstr ""
+msgstr "Оплатити"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:200
@@ -169,17 +169,17 @@ msgstr "Платіжні операції"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payment to Capture"
-msgstr ""
+msgstr "Оплата для отримання"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Оплати для отримання"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr "Очікувані платіжні операції"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -189,7 +189,7 @@ msgstr "Пропозиція"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
 msgid "Sale Order State"
-msgstr ""
+msgstr "Стан замовлення на продаж"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
@@ -208,22 +208,28 @@ msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"
 " amount is %r but acquirer replied with %r."
 msgstr ""
+"Замовлення на продаж не було підтверджено, незважаючи на відповідь покупця "
+"(%s): суме SO є %r але відповідь покупця з %r."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: impossible to validate order."
 msgstr ""
+"Під час обробки вашого платежу сталася помилка: неможливо підтвердити "
+"замовлення."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order state."
 msgstr ""
+"Під час обробки вашого платежу сталася помилка: неправильний стан "
+"замовлення."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order."
-msgstr ""
+msgstr "Під час обробки вашого платежу сталася помилка: невірне замовлення."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -231,27 +237,34 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Під час обробки вашого платежу виникла помилка: перевірте ідентифікатор "
+"кредитної картки."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Під час обробки вашого платежу виникла помилка: випуск суми транзакції.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
+"Під час обробки вашого платежу сталася помилка: транзакція не виконана.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
 msgstr ""
+"Під час обробки вашого платежу виникла помилка: проблема з транзакцією.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Під час обробки вашого платежу сталася помилка: недійсний ідентифікатор "
+"кредитної картки."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids

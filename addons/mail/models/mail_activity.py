@@ -113,9 +113,10 @@ class MailActivity(models.Model):
 
         for record in self.filtered(lambda activity: activity.date_deadline):
             today = today_default
-            if record.user_id.tz:
+            tz = record.user_id.sudo().tz
+            if tz:
                 today_utc = pytz.UTC.localize(datetime.utcnow())
-                today_tz = today_utc.astimezone(pytz.timezone(record.user_id.tz))
+                today_tz = today_utc.astimezone(pytz.timezone(tz))
                 today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
 
             date_deadline = fields.Date.from_string(record.date_deadline)
@@ -131,7 +132,13 @@ class MailActivity(models.Model):
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
             self.summary = self.activity_type_id.summary
-            self.date_deadline = (datetime.now() + timedelta(days=self.activity_type_id.days))
+            tz = self.user_id.sudo().tz
+            if tz:
+                today_utc = pytz.UTC.localize(datetime.utcnow())
+                today = today_utc.astimezone(pytz.timezone(tz))
+            else:
+                today = datetime.now()
+            self.date_deadline = (today + timedelta(days=self.activity_type_id.days))
 
     @api.onchange('previous_activity_type_id')
     def _onchange_previous_activity_type_id(self):

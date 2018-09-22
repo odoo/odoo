@@ -100,8 +100,10 @@ class MrpProductProduce(models.TransientModel):
                 if self.product_id.tracking != 'none':
                     qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
                     move._generate_consumed_move_line(qty_to_add, self.lot_id)
-                else:
+                elif len(move._get_move_lines()) < 2:
                     move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                else:
+                    move._set_quantity_done(quantity * move.unit_factor)
         for move in self.production_id.move_finished_ids:
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
                 rounding = move.product_uom.rounding

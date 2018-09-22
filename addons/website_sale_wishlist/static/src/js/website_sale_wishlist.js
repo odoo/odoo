@@ -28,7 +28,12 @@ var ProductWishlist = Widget.extend({
 
         if ($('.wishlist-section').length) {
             $('.wishlist-section a.o_wish_rm').on('click', function (e){ self.wishlist_rm(e, false); });
-            $('.wishlist-section a.o_wish_add').on('click', function (e){ self.wishlist_add_or_mv(e); });
+            $('.wishlist-section a.o_wish_add').on('click', function (e){
+                $('.wishlist-section a.o_wish_add').addClass('disabled');
+                self.wishlist_add_or_mv(e).then(function(o) {
+                    $('.wishlist-section a.o_wish_add').removeClass('disabled');
+                });
+            });
         }
 
         $('.oe_website_sale').on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function(ev) {
@@ -133,7 +138,7 @@ var ProductWishlist = Widget.extend({
         // can be hidden if empty
         $('#my_cart').removeClass('hidden');
         website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
-        this.add_to_cart(product, tr.find('qty').val() || 1);
+        return this.add_to_cart(product, tr.find('qty').val() || 1);
     },
     wishlist_mv: function(e){
         var tr = $(e.currentTarget).parents('tr');
@@ -143,6 +148,7 @@ var ProductWishlist = Widget.extend({
         website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
         var adding_deffered = this.add_to_cart(product, tr.find('qty').val() || 1);
         this.wishlist_rm(e, adding_deffered);
+        return adding_deffered;
     },
     add_to_cart: function(product_id, qty_id) {
         var add_to_cart = ajax.jsonRpc("/shop/cart/update_json", 'call', {

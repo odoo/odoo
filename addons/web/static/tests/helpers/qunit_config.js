@@ -130,4 +130,25 @@ function _addSortButton() {
     });
 }
 
+/**
+ * We add here a 'fail fast' feature: we often want to stop the test suite after
+ * the first failed test.  This is also useful for the runbot test suites.
+ */
+
+QUnit.config.urlConfig.push({
+  id: "failfast",
+  label: "Fail Fast",
+  tooltip: "Stop the test suite immediately after the first failed test."
+});
+
+QUnit.begin(function() {
+    if (QUnit.config.failfast) {
+        QUnit.testDone(function(details) {
+            if (details.failed > 0) {
+                QUnit.config.queue.length = 0;
+            }
+        });
+    }
+});
+
 })();

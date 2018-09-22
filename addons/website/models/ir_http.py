@@ -6,6 +6,7 @@ import traceback
 import os
 import unittest
 
+import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
@@ -74,6 +75,10 @@ class Http(models.AbstractModel):
         context = {}
         if not request.context.get('tz'):
             context['tz'] = request.session.get('geoip', {}).get('time_zone')
+            try:
+                pytz.timezone(context['tz'] or '')
+            except pytz.UnknownTimeZoneError:
+                context.pop('tz')
 
         request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
         context['website_id'] = request.website.id

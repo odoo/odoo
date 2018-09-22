@@ -98,13 +98,13 @@ class Product(models.Model):
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
-        if lot_id:
+        if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
-        if owner_id:
+        if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
             domain_move_out += [('restrict_partner_id', '=', owner_id)]
-        if package_id:
+        if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
             domain_move_in_done = list(domain_move_in)
@@ -132,17 +132,19 @@ class Product(models.Model):
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
-            res[product.id] = {}
+            product_id = product.id
+            rounding = product.uom_id.rounding
+            res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(product.id, 0.0) - moves_in_res_past.get(product.id, 0.0) + moves_out_res_past.get(product.id, 0.0)
+                qty_available = quants_res.get(product_id, 0.0) - moves_in_res_past.get(product_id, 0.0) + moves_out_res_past.get(product_id, 0.0)
             else:
-                qty_available = quants_res.get(product.id, 0.0)
-            res[product.id]['qty_available'] = float_round(qty_available, precision_rounding=product.uom_id.rounding)
-            res[product.id]['incoming_qty'] = float_round(moves_in_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['outgoing_qty'] = float_round(moves_out_res.get(product.id, 0.0), precision_rounding=product.uom_id.rounding)
-            res[product.id]['virtual_available'] = float_round(
-                qty_available + res[product.id]['incoming_qty'] - res[product.id]['outgoing_qty'],
-                precision_rounding=product.uom_id.rounding)
+                qty_available = quants_res.get(product_id, 0.0)
+            res[product_id]['qty_available'] = float_round(qty_available, precision_rounding=rounding)
+            res[product_id]['incoming_qty'] = float_round(moves_in_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['outgoing_qty'] = float_round(moves_out_res.get(product_id, 0.0), precision_rounding=rounding)
+            res[product_id]['virtual_available'] = float_round(
+                qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
+                precision_rounding=rounding)
 
         return res
 
@@ -157,7 +159,7 @@ class Product(models.Model):
         if self.env.context.get('company_owned', False):
             company_id = self.env.user.company_id.id
             return (
-                [('location_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
@@ -583,3 +585,29 @@ class ProductCategory(models.Model):
             category = category.parent_id
             routes |= category.route_ids
         self.total_route_ids = routes
+
+
+class ProductUoM(models.Model):
+    _inherit = 'product.uom'
+
+    def write(self, values):
+        # Users can not update the factor if open stock moves are based on it
+        if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
+            changed = self.filtered(
+                lambda u: any(u[f] != values[f] if f in values else False
+                              for f in {'factor', 'factor_inv'})) + self.filtered(
+                lambda u: any(u[f].id != int(values[f]) if f in values else False
+                              for f in {'category_id'}))
+            if changed:
+                stock_move_lines = self.env['stock.move.line'].search_count([
+                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
+                    ('state', '!=', 'cancel'),
+                ])
+
+                if stock_move_lines:
+                    raise UserError(_(
+                        "You cannot change the ratio of this unit of mesure as some"
+                        " products with this UoM have already been moved or are "
+                        "currently reserved."
+                    ))
+        return super(ProductUoM, self).write(values)

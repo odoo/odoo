@@ -10,7 +10,7 @@ from odoo.tools.translate import _
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
+    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities', readonly=True)
     city_id = fields.Many2one('res.city', string='City')
 
     @api.onchange('city_id')

@@ -137,13 +137,9 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
-        # prefetch field before filtering
-        self.mapped('product_id')
-        # on consumable or stockable products, qty_delivered_updateable defaults
-        # to False; on other lines use the original computation
-        lines = self.filtered(lambda line: line.product_id.type not in ('consu', 'product'))
-        lines = lines.with_prefetch(self._prefetch)
-        super(SaleOrderLine, lines)._compute_qty_delivered_updateable()
+        for line in self:
+            if line.product_id.type not in ('consu', 'product'):
+                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -167,7 +163,10 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product = self.product_id.with_context(warehouse=self.order_id.warehouse_id.id)
+            product = self.product_id.with_context(
+                warehouse=self.order_id.warehouse_id.id,
+                lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
+            )
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
@@ -221,6 +220,13 @@ class SaleOrderLine(models.Model):
         })
         return values
 
+    def _get_qty_procurement(self):
+        self.ensure_one()
+        qty = 0.0
+        for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        return qty
+
     @api.multi
     def _action_launch_procurement_rule(self):
         """
@@ -233,9 +239,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
-            qty = 0.0
-            for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+            qty = line._get_qty_procurement()
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 

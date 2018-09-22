@@ -8,6 +8,7 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
     start: function () {
         var self = this;
         this.is_user = false;
+        var unsubscribePage = window.location.search.slice(1).split('&').indexOf("unsubscribe") >= 0;
         this._rpc({
             route: '/groups/is_member',
             params: {
@@ -19,6 +20,9 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
             self.is_user = data.is_user;
             self.email = data.email;
             self.$target.find('.js_mg_link').attr('href', '/groups/' + self.$target.data('id'));
+            if (unsubscribePage && self.is_user) {
+                self.$target.find(".js_mg_follow_form").remove();
+            }
             self.toggle_subscription(data.is_member ? 'on' : 'off', data.email);
             self.$target.removeClass("hidden");
         });

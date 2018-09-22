@@ -51,6 +51,8 @@ class LandedCost(models.Model):
     account_journal_id = fields.Many2one(
         'account.journal', 'Account Journal',
         required=True, states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string="Company",
+        related='account_journal_id.company_id')
 
     @api.one
     @api.depends('cost_lines.price_unit')
@@ -105,9 +107,9 @@ class LandedCost(models.Model):
                 new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
                 line.move_id.write({
                     'landed_cost_value': new_landed_cost_value,
-                    'value': line.move_id.value + cost_to_add,
+                    'value': line.move_id.value + line.additional_landed_cost,
                     'remaining_value': line.move_id.remaining_value + cost_to_add,
-                    'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
+                    'price_unit': (line.move_id.value + line.additional_landed_cost) / line.move_id.product_qty,
                 })
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.

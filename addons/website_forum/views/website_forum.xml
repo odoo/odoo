@@ -620,7 +620,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
-                <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags"/>
+                <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags" t-att-readonly="user.karma &lt; forum.karma_edit_retag" t-att-title="'You need to have sufficient karma to edit tags' if user.karma &lt; forum.karma_edit_retag else ''"/>
                 <br/>
             </div>
             <button type="submit" class="btn btn-primary btn-lg">Save</button>

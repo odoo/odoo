@@ -4,21 +4,22 @@
 # 
 # Translators:
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Mariusz <waniliowy@o2.pl>, 2017
+# Martin Trigaux, 2017
+# Mariusz, 2017
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Jakobus Buntownikus <buntownix@gmail.com>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Paweł Wodyński <pw@myodoo.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Paweł Michoń <michon.pawel@wp.pl>, 2017\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgstr "# pozycji umorzeń"
 #: model:ir.cron,cron_name:account_asset.account_asset_cron
 #: model:ir.cron,name:account_asset.account_asset_cron
 msgid "Account Asset: Generate asset entries"
-msgstr ""
+msgstr "Zasób konta: generuj wpisy zasobów"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -98,7 +99,7 @@ msgstr ""
 #: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
-msgstr ""
+msgstr "Wpisy rachunkowe oczekujące na ręczną weryfikację"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -330,6 +331,9 @@ msgid ""
 "  * Number of Entries: Fix the number of entries and the time between 2 depreciations.\n"
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
+"Wybierz metodę używaną do obliczania dat i liczby wpisów.\n"
+"  * Liczba wpisów: Napraw liczbę wpisów i czas między dwiema amortyzacjami.\n"
+"  * Data końcowa: wybierz czas między dwiema amortyzacjami a datą, której amortyzacje nie przekroczą."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -1002,6 +1006,8 @@ msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be null."
 msgstr ""
+"Liczba amortyzacji lub długość okresu w kategorii aktywów nie może być "
+"zerowa."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:482
@@ -1010,6 +1016,8 @@ msgid ""
 "This depreciation is already linked to a journal entry! Please post or "
 "delete it."
 msgstr ""
+"Ta amortyzacja jest już powiązana z wpisem do dziennika! Proszę go "
+"opublikować lub usunąć."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

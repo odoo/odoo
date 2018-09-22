@@ -44,7 +44,7 @@
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
-                    <field name="to_refund" widget="boolean_toggle"/>
+                    <field name="to_refund"/>
                 </xpath>
             </field>
         </record>
@@ -73,7 +73,7 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="qty_at_date"/>
                     <field name="uom_id" groups="product.group_uom"/>
                     <field name="currency_id" invisible="1"/>

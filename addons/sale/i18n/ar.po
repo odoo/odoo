@@ -3,31 +3,31 @@
 # * sale
 # 
 # Translators:
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
+# Osoul <baruni@osoul.ly>, 2017
 # Mustafa Rawi <mustafa@cubexco.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
-# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
 # Martin Trigaux, 2017
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2017
+# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2017
 # hoxhe Aits <hoxhe0@gmail.com>, 2017
-# Yihya Hugirat <hugirat@gmail.com>, 2017
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Nasma Elazrag <n.azrak@gmail.com>, 2017
 # amrnegm <amrnegm.01@gmail.com>, 2017
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2017
 # Akram Alfusayal <akram_ma@hotmail.com>, 2017
 # nle_odoo, 2017
-# Islam Eldeeb <islameldeb@gmail.com>, 2017
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2017
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2017
-# Abdulaziz Alkahlani <abdulaziz.alkahlani@gmail.com>, 2017
+# Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2018
+# Amer Hazaa <eng.amer.it@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-04-27 14:48+0000\n"
 "PO-Revision-Date: 2018-04-27 14:48+0000\n"
-"Last-Translator: Abdulaziz Alkahlani <abdulaziz.alkahlani@gmail.com>, 2017\n"
+"Last-Translator: Amer Hazaa <eng.amer.it@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +104,7 @@ msgstr "عدد البنود"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr "عدد الطلبيات"
+msgstr "عدد الأوامر"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
@@ -146,7 +146,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;<span>في</span>&amp;nbsp;"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -249,6 +249,8 @@ msgid ""
 "<span class=\"hidden-xs\">Sales Order #</span>\n"
 "                      <span class=\"visible-xs\">Ref.</span>"
 msgstr ""
+"<span class=\"hidden-xs\">أمر المبيعات #</span>\n"
+"                      <span class=\"visible-xs\">المرجع</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -270,7 +272,9 @@ msgstr "منتهي الصلاحية"
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelled</span>"
-msgstr "تم إلغاءه"
+msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
+"remove\"/>ملغي</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -287,6 +291,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Invoiced</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\">مفوتر </span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -294,6 +300,8 @@ msgid ""
 "<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"hidden-xs\"> Done</span></span>"
 msgstr ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\">تم </span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -310,52 +318,54 @@ msgid ""
 "<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
 "Done</span>"
 msgstr ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/>تم "
+"</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr ""
+msgstr "<span>فاتورة أوّلية # </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Contact</strong>"
-msgstr "<strong>اتصل</strong>"
+msgstr "<strong>جهة الاتصال</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr ""
+msgstr "<strong>تاريخ الأمر:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Date:</strong>"
-msgstr "<strong>تاريخ:</strong>"
+msgstr "<strong>التاريخ:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
-msgstr "تاريخ الانتهاء"
+msgstr "<strong>تاريخ الانتهاء:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>ملاحظة الوظيفة المالية:</strong>"
+msgstr "<strong>الوضع المالي:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoices</strong>"
-msgstr "<strong>فواتير</strong>"
+msgstr "<strong>الفواتير</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoicing Address</strong>"
-msgstr "<strong>عنوان الفواتير</strong>"
+msgstr "<strong>عنوان الفوترة</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>شروط الدفع:</strong>"
+msgstr "<strong>شروط السداد:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -365,12 +375,12 @@ msgstr "<strong>المنتج</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Quantity</strong>"
-msgstr "<strong>كمية</strong>"
+msgstr "<strong>الكمية</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>تاريخ العرض المبدئي: </strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -392,13 +402,13 @@ msgstr "<strong>عنوان الشحن:</strong>"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal: </strong>"
-msgstr ""
+msgstr "<strong>المجموع: </strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>الإجمالي الفرعي</strong>"
+msgstr "<strong>المجموع</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -414,12 +424,12 @@ msgstr "<strong>سعر الوحدة</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>المرجع الخاص بك:</strong>"
+msgstr "<strong>مرجع العميل:</strong>"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "A single sales price per product"
-msgstr ""
+msgstr "سعر بيع واحد لكل صنف"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -441,7 +451,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr "حساب يستخدم للأموال المدفوعة مقدما."
+msgstr "الحساب المستخدم للدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
@@ -462,24 +472,24 @@ msgstr "العناوين في أوامر المبيعات"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:156
 #, python-format
 msgid "Advance: %s"
-msgstr "مقدما: %s"
+msgstr "مقدّم: %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "All Channels Sales Orders"
-msgstr ""
+msgstr "جميع قنوات البيع"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "All Channels Sales Orders Analysis"
-msgstr ""
+msgstr "تحليل جميع قنوات البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "All sales orders grouped by sales channels"
-msgstr ""
+msgstr "جميع المبيعات مجمّعة حسب قنوات البيع"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -499,24 +509,24 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
-msgstr "الزمن"
+msgstr "القيمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
 msgid "Amount Invoiced"
-msgstr ""
+msgstr "القيمة المفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr ""
+msgstr "القيمة للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "إجمالي العروض المبدئية للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -543,7 +553,7 @@ msgstr "الوسوم التحليلية"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "بالتكلفة"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -593,7 +603,7 @@ msgstr "حسب فريق المبيعات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "السماح بتحرير ما تم تسليمه"
+msgstr "السماح بتعديل ما تم تسليمه"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_updatable
@@ -609,12 +619,12 @@ msgstr "إلغاء"
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Cancelled"
-msgstr "ملغى "
+msgstr "ملغي"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.product_menu_catalog
 msgid "Catalog"
-msgstr ""
+msgstr "دليل المنتجات"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
@@ -642,7 +652,7 @@ msgstr "الكيان التجارى"
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr "الشركات"
+msgstr "المؤسسات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_company_id
@@ -651,32 +661,32 @@ msgstr "الشركات"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "الشركة"
+msgstr "المؤسسة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "احتساب كلفة الشحن وشحنه عبر DHL"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "احتساب كلفة الشحن واتمام الشحن عبر  FedEx"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "احتساب كلفة الشحن واتمام الشحن عبر UPS"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "احتساب كلفة الشحن واتمام الشحن عبر  USPS"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "احتساب كلفة الشحن واتمام الشحن عبر  bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -721,7 +731,7 @@ msgstr "إنشاء الفواتير"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "الخطوه الاولى للمبيعات الجديدة ، إنشاء التسعيرة"
+msgstr "قم بإنشاء عرض مبدئي كخطوة أولى للمبعات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -757,7 +767,7 @@ msgstr "العملة"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Current Year Sales"
-msgstr ""
+msgstr "مبيعات السنة الحالية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
@@ -770,7 +780,7 @@ msgstr "العميل"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr ""
+msgstr "عنوان العميل"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_client_order_ref
@@ -791,7 +801,7 @@ msgstr "العملاء"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
-msgstr "ترتيب التواريخ"
+msgstr "تاريخ الأمر"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
@@ -801,12 +811,12 @@ msgstr "تاريخ إنشاء أمر المبيعات"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sales order is confirmed."
-msgstr ""
+msgstr "تاريخ تأكيد أمر المبيعات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_use_sale_note
 msgid "Default Terms & Conditions"
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
@@ -816,7 +826,7 @@ msgstr "الشروط والأحكام الافتراضية"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_default_deposit_product_id
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "المنتج الافتراضي المستخدم للدفعات المقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -828,12 +838,12 @@ msgstr "تم التسليم"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
-msgstr "الكمية المسلمه"
+msgstr "الكمية المسلّمة"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr "الكميات المسلمه"
+msgstr "الكميات المسلّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
@@ -849,23 +859,23 @@ msgstr "الوقت اللازم للتسليم"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "عنوان التسليم للفاتورة الحالية."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
-msgstr "عنوان التسليم لأوامر البيع الحالية."
+msgstr "عنوان التسليم لأمر البيع الحالي."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr "الوديعة"
+msgstr "الدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
 msgid "Deposit Product"
-msgstr "إيداع المنتج"
+msgstr "منتج الدفعة المقدمّة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -888,7 +898,7 @@ msgstr "محتوى رقمي"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr "نسبة الخصم (%)"
+msgstr "الخصم (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_discount
@@ -930,38 +940,38 @@ msgstr "الاسم المعروض"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
-msgstr "المقدم"
+msgstr "الدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "المبلغ المقدم"
+msgstr "قيمة الدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "المقدم للمنتج"
+msgstr "منتج الدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Down Payments"
-msgstr ""
+msgstr "الدفعة المقدّمة"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "المقدم (مبلغ ثابت)"
+msgstr "دفعة مقدّمة (مبلغ ثابت)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr "المقدم (نسبة)"
+msgstr "دفعة مقدّمة (نسبة)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "المقدم من %s%%"
+msgstr "الدفعة مقدّمة لـ %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_is_downpayment
@@ -978,7 +988,7 @@ msgstr "تحميل"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "عرض سعر 'مسودة'"
+msgstr "عرض مبدئي مسودّة"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -988,7 +998,7 @@ msgstr "معالج تكوين رسالة بريد الالكتروني"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
-msgstr "تاريخ الانتهاء"
+msgstr "تاريخ الصلاحية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1004,7 +1014,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "الوظيفة المالية"
+msgstr "الوضع المالي"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1018,12 +1028,12 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "مفوترة بالكامل"
+msgstr "مفوتر بالكامل"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr "الأنشطة المستقبلية"
+msgstr "الأنشطة القادمة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1073,6 +1083,8 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"صورة لمتغير المنتج (صورة كبيرة الحجم من قالب المنتج إذا خاطئة). يتم تغيير "
+"الحجم تلقائيا كصورة 1024x1024px، مع المحافظة على نسبة الارتفاع."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1088,7 +1100,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:216
 #, python-format
 msgid "Invalid order"
-msgstr ""
+msgstr "أمر غير سليم"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1099,7 +1111,7 @@ msgstr "الفاتورة"
 #: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr "الفاتورة %s مدفوعة"
+msgstr "الفاتورة %s دفعت"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -1109,12 +1121,12 @@ msgstr "عنوان الفاتورة"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "الفاتورة مؤكده"
+msgstr "تم تأكيد الفاتورة"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "الفاتورة انشأت"
+msgstr "تم إنشاء فاتورة"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
@@ -1129,7 +1141,7 @@ msgstr "بنود الفاتورة"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr "أمر فاتورة"
+msgstr "فاتورة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1158,34 +1170,34 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "فوترة الكميات المسلّمة"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "فوترة الكميات المطلوبة"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr ""
+msgstr "بنود قابلة للفوترة"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "بنود قابلة للفوترة (خصم الدفعة المقدّمة)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
 msgid "Invoiced"
-msgstr "فاتوره محرره "
+msgstr "الكمية المفوترة"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:825
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr "الكميات المفوترة"
+msgstr "الكمية المفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
@@ -1230,19 +1242,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "تحرير الفواتير"
+msgstr "الفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "بوليصة الفواتير"
+msgstr "سياسة الفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "المبلغ المستهدف"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1257,12 +1269,12 @@ msgstr "عنوان الفاتورة والشحن"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
 msgid "Is a down payment"
-msgstr ""
+msgstr "هو دفعة مقدّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_is_expired
 msgid "Is expired"
-msgstr ""
+msgstr "منتهي الصلاحية"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:861
@@ -1328,17 +1340,17 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "اغلاق"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_auto_done_setting
 msgid "Lock Confirmed Orders"
-msgstr ""
+msgstr "اغلاق الأوامر المؤكدّة"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "مغلق"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1413,7 +1425,7 @@ msgstr "طلباتي"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "خطوط أوامر البيع الخاصة بى"
+msgstr "بنود أوامر البيع الخاصة بى"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
@@ -1431,7 +1443,7 @@ msgstr "جديد"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "تسعيرة جديدة"
+msgstr "عرض مبدئي جديد"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1481,7 +1493,7 @@ msgstr "عدد الأيام بين تأكيد أمر البيع وبدء شحن 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "عدد العروض المبدئية للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
@@ -1519,7 +1531,7 @@ msgstr "يمكنك استخدام الأعداد الطبيعية فقط."
 #: code:addons/sale/controllers/portal.py:209
 #, python-format
 msgid "Operation not allowed"
-msgstr ""
+msgstr "العملية غير مسموح بها"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
@@ -1531,7 +1543,7 @@ msgstr "الأمر"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr "رقم الطلبية"
+msgstr "أمر مبيعات #"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:86
@@ -1542,7 +1554,7 @@ msgstr "رقم الطلبية"
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 #, python-format
 msgid "Order Date"
-msgstr "تاريخ الأمر"
+msgstr "التاريخ"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1564,7 +1576,7 @@ msgstr "شهر الأمر"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr "رقم الطلب"
+msgstr "أمر مبيعات رقم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_name
@@ -1577,7 +1589,7 @@ msgstr "مرجع الأمر"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
 msgid "Order Status"
-msgstr "حالة الطلب"
+msgstr "حالة الأمر"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:218
@@ -1599,14 +1611,14 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr "الكميات المطلوبة"
+msgstr "الكمية المطلوبة"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:821
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr "الكميات المطلوبة"
+msgstr "الكمية المطلوبة"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1619,7 +1631,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Ordered date of the sales order"
-msgstr "تاريخ أمر من أوامر المبيعات"
+msgstr "تاريخ الطلب لأمر المبيعات"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
@@ -1630,14 +1642,14 @@ msgstr "الكميات المطلوبة"
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: model:ir.ui.menu,name:sale.sale_order_menu
 msgid "Orders"
-msgstr "الطلبيّات"
+msgstr "أوامر المبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "طلبات الفوترة"
+msgstr "أوامر للفوترة"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1661,7 +1673,7 @@ msgstr "معلومات أخرى"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr ""
+msgstr "فاتورة أوّلية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
@@ -1673,12 +1685,12 @@ msgstr "الشريك"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr "دولة الشريك"
+msgstr "بلد الشريك"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr "دولة الشريك"
+msgstr "بلد الشريك"
 
 #. module: sale
 #: selection:res.config.settings,portal_confirmation_options:0
@@ -1699,7 +1711,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:353
 #, python-format
 msgid "Please define an accounting sales journal for this company."
-msgstr ""
+msgstr "يجب تعريف يومية مبيعات لهذه المؤسسة"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:916
@@ -1707,7 +1719,7 @@ msgstr ""
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
-msgstr ""
+msgstr "يجب تحديد حساب دخل للمنتج: \"%s\" (id:%d) - أو لفئة المنتجات: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1732,7 +1744,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
 msgid "Price Subtotal"
-msgstr ""
+msgstr "المجموع"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -1778,7 +1790,7 @@ msgstr "طباعة"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "فاتورة أولية"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -1798,7 +1810,7 @@ msgstr "المنتج"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr ""
+msgstr "دليل المنتجات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
@@ -1815,7 +1827,7 @@ msgstr "صورة المنتج"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty
 msgid "Product Quantity"
-msgstr "جودة المنتج"
+msgstr "كمية المنتج"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -1833,7 +1845,7 @@ msgstr "موديلات المنتج"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr ""
+msgstr "المنتج المستخدم للدفعة المقدّمة"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -1849,39 +1861,39 @@ msgstr "الكمية"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_delivered
 msgid "Qty Delivered"
-msgstr "الكميات المسلمه"
+msgstr "الكمية المسلّمة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr "الكميات المفوترة"
+msgstr "الكمية المفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "Qty Ordered"
-msgstr ""
+msgstr "الكمية المطلوبة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "الكميات للفوترة"
+msgstr "الكمية للفوترة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "الكميات للفوترة من أوامر المبيعات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quantity"
-msgstr "كمية"
+msgstr "الكمية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr ""
+msgstr "الكمية:"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1891,45 +1903,45 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
 msgid "Quotation"
-msgstr "التسعيرة"
+msgstr "عرض مبدئي"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr "التسعيرة #"
+msgstr "عرض مبدئي #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "التسعيرة / الأمر"
+msgstr "أمر المبيعات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
-msgstr ""
+msgstr "تاريخ العرض المبدئي"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "رقم عرض السعر"
+msgstr "رقم العرض المبدئي"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr "تم إرسال عرض الأسعار"
+msgstr "تم إرسال العرض المبدئي"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "تمت الموافقة على عرض الأسعار"
+msgstr "تمت الموافقة على العرض المبدئي"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr "تم إرسال عروض الاسعار"
+msgstr "تم إرسال العرض المبدئي"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:101
@@ -1945,22 +1957,22 @@ msgstr "تم إرسال عروض الاسعار"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Quotations"
-msgstr "عروض السعر"
+msgstr "العروض المبدئية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "العروض المبدئية والمبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "تحليل عروض الأسعار"
+msgstr "تحليل العروض المبدئية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "تم إرسال العرض المبدئي"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_quote
@@ -1970,7 +1982,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "عروض الأسعار والمبيعات"
+msgstr "العروض المبدئية والمبيعات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
@@ -2006,7 +2018,7 @@ msgstr "تقرير تخطيط الفئات "
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "اعداد التقرير "
+msgstr "التقارير"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2020,12 +2032,12 @@ msgstr "اعداد التقرير "
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
-msgstr "مبيعات"
+msgstr "المبيعات"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "فاتورة الدفع المقدم للمبيعات"
+msgstr "فاتورة الدفعة المقدمة للمبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -2049,18 +2061,18 @@ msgstr "تحليل المبيعات"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Channel"
-msgstr ""
+msgstr "قناة البيع"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Channels"
-msgstr ""
+msgstr "قنوات البيع"
 
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr "مبيعات منجزة"
+msgstr "تمّ"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -2082,13 +2094,13 @@ msgstr "بيانات المبيعات"
 #: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
-msgstr "أمر البيع"
+msgstr "أمر مبيعات"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "تأكيد أمر البيع"
+msgstr "تم تأكيد أمر البيع"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -2132,7 +2144,7 @@ msgstr "خطوط أوامر البيع ذات الصلة بأوامر البيع
 #: model:ir.ui.view,arch_db:sale.view_sale_order_pivot
 #, python-format
 msgid "Sales Orders"
-msgstr "أوامر البيع"
+msgstr "أوامر المبيعات"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -2142,7 +2154,7 @@ msgstr "إحصائيات أوامر البيع"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "Sales price"
-msgstr ""
+msgstr "سعر البيع"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:94
@@ -2159,7 +2171,7 @@ msgstr "المبيعات: الإجمالي بدون ضرائب"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "مسئول المبيعات"
+msgstr "موظف المبيعات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -2204,7 +2216,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "بيع وشراء المنتجات بوحدات قياس مختلفة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
@@ -2220,7 +2232,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "أرسل الفاتورة الأوّلية"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2281,7 +2293,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "تغير الى تسعيرة"
+msgstr "تغيير الى عرض مبدئي"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
@@ -2297,7 +2309,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Shipping"
-msgstr "شحن"
+msgstr "الشحن"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
@@ -2389,7 +2401,7 @@ msgstr "الحالة "
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
 #: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
 msgid "Subtotal"
-msgstr "الإجمالي الفرعي"
+msgstr "المجموع"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced_target
@@ -2445,7 +2457,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_note
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "الشروط و الأحكام"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2531,7 +2543,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
 msgid "There is no invoiceable line."
-msgstr ""
+msgstr "لا توجد بنود قابلة للفوترة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2607,12 +2619,12 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr "إلى الفاتوره"
+msgstr "في انتظار الفوترة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "نشاطات اليوم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_total
@@ -2648,12 +2660,12 @@ msgstr "تتبع الخدمة"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
 msgid "UPS"
-msgstr ""
+msgstr "UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
 msgid "USPS"
-msgstr ""
+msgstr "USPS"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:570
@@ -2666,12 +2678,12 @@ msgstr "غير مصنف"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
-msgstr "سعر الوحده "
+msgstr "سعر الوحدة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr ""
+msgstr "سعر الوحدة:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom
@@ -2695,7 +2707,7 @@ msgstr "وحدة القياس"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "إعادة الفتح"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2710,7 +2722,7 @@ msgstr "المبلغ بدون ضرائب"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "الإجمالي بدون الضرائب"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2779,7 +2791,7 @@ msgstr "أدخلت قيمة خاطئة!"
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
-msgstr ""
+msgstr "لا يمكنك حذف العرض المبدئي أو أمر المبيعات! قم بمحاولة إلغاءه أولا."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1069
@@ -2805,7 +2817,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:229
 #, python-format
 msgid "Your Order has been confirmed."
-msgstr ""
+msgstr "تم تأكيد الأمر"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2826,7 +2838,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
 msgid "bpost"
-msgstr ""
+msgstr "bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

@@ -137,6 +137,9 @@ class Partner(models.Model):
     def _default_company(self):
         return self.env['res.company']._company_default_get('res.partner')
 
+    def _split_street_with_params(self, street_raw, street_format):
+        return {'street': street_raw}
+
     name = fields.Char(index=True)
     display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
     date = fields.Date(index=True)
@@ -324,7 +327,9 @@ class Partner(models.Model):
     @api.multi
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        chosen_name = default.get('name') if default else ''
+        new_name = chosen_name or _('%s (copy)') % self.name
+        default = dict(default or {}, name=new_name)
         return super(Partner, self).copy(default)
 
     @api.onchange('parent_id')
@@ -443,7 +448,7 @@ class Partner(models.Model):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if values.get('parent_id') or values.get('type', 'contact'):
+        if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self._commercial_sync_from_company()

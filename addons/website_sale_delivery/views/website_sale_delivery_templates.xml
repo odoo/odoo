@@ -57,6 +57,10 @@
                 </a>
             </div>
         </xpath>
+        <!-- we shouldn't be able to pay if there is no way to deliver -->
+        <xpath expr="//div[@id='payment_method']" position="attributes">
+                <attribute name="t-att-style">'display: none!important' if not deliveries and delivery_has_stockable else ''</attribute>
+        </xpath>
     </template>
 
     <template id="portal_order_page_shipping_tracking" name="Shipping tracking on orders followup" inherit_id="website_sale_stock.portal_order_page_shipping">

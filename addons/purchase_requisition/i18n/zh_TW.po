@@ -24,7 +24,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr "<strong>招標參照:</strong><br/>"
+msgstr "<strong>招標編號:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -117,7 +117,7 @@ msgstr "出價選擇"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr "一攬子訂購"
+msgstr "長期採購合約"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
@@ -128,7 +128,7 @@ msgstr "招標"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr "取消來電"
+msgstr "取消招標"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -207,7 +207,7 @@ msgstr "顯示名稱"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr "不自動創建RFQ明細行"
+msgstr "不自動創建採購招標單明細行"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -236,7 +236,7 @@ msgstr "終止月份"
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr "採購協議的例子包括招標和一攬子訂單。"
+msgstr "採購協議的例子包括招標與長期採購合約。"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -245,7 +245,7 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
-"對於一攬子訂單，您可以記錄特定期限\n"
+"對於長期採購合約，您可以記錄特定期限\n"
 "（例如一年）的協議，並且您在本協議內訂購產品，從協商價格中受益。"
 
 #. module: purchase_requisition
@@ -269,9 +269,9 @@ msgid ""
 "            validate some and cancel others."
 msgstr ""
 "在招標中，您可以記錄您需要購買的產品\n"
-"並創建RfQ。 一旦投標了\n"
-"已經註冊，您可以查看和比較它們，您可以\n"
-"驗證一些並取消其他。"
+"並創建採購招標單。 \n"
+"在將採購招標單輸入系統後，您可以查看和比較它們\n"
+"同時在最後決定時，您可以接受部分採購訂單並取消其他訂單。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -463,7 +463,7 @@ msgstr "數量"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr "RFQs/訂單"
+msgstr "採購招標單/訂單"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
@@ -528,9 +528,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"選擇一個RFQ(獨家）：當一個採購訂單被確認，便取消餘下的採購訂單。\n"
+"選擇招標(獨家）：當一個採購訂單被確認，便取消餘下的採購訂單。\n"
 "\n"
-"選擇多個RFQ：就是允許多個採購訂單。當採購訂單被確認，不可以取消餘下的採購訂單"
+"選擇招標(多廠商)：可以允許多個採購訂單。當採購訂單被確認，系統不會取消剩下的採購訂單"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -621,7 +621,7 @@ msgstr "您不能確認招標因為沒有產品行。"
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr "在關閉採購申請之前，您必須取消或驗證每個RfQ。"
+msgstr "在關閉採購申請之前，您必須取消或驗證每個採購招標單。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

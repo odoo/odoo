@@ -243,6 +243,21 @@ class ResourceWorkingHours(TestResourceCommon):
             compute_leaves=True)
         self.assertEqual(res, 33.0)
 
+    def test_calendar_working_hours_24(self):
+        self.att_4 = self.env['resource.calendar.attendance'].create({
+            'name': 'Att4',
+            'calendar_id': self.calendar.id,
+            'dayofweek': '2',
+            'hour_from': 0,
+            'hour_to': 24
+        })
+        res = self.calendar.get_work_hours_count(
+            Datetime.from_string('2018-06-19 23:00:00'),
+            Datetime.from_string('2018-06-21 01:00:00'),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertAlmostEqual(res, 24.0)
+
     def test_calendar_timezone(self):
         # user in timezone UTC-9 asks for work hours
         #  Limits: between 2013-02-19 10:00:00 and 2013-02-26 15:30:00 (User TZ)

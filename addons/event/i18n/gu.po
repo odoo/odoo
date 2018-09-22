@@ -6,13 +6,14 @@
 # Martin Trigaux, 2018
 # Dharmraj Jhala <dja@openerp.com>, 2018
 # Divya Pandya <dia@odoo.com>, 2018
+# Turkesh Patel <turkesh4friends@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Divya Pandya <dia@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Turkesh Patel <turkesh4friends@gmail.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -719,7 +720,7 @@ msgstr "રદ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr ""
+msgstr "વર્ગ"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -754,7 +755,7 @@ msgid "Company"
 msgstr "કંપની"
 
 #. module: event
-#: code:addons/event/models/event.py:481
+#: code:addons/event/models/event.py:486
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -777,7 +778,7 @@ msgstr "રુપરેખાંકન"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "ખાતરી"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -798,7 +799,7 @@ msgstr ""
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
-msgstr ""
+msgstr "સમર્થિત"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -826,7 +827,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr ""
+msgstr "દેશ"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -858,13 +859,13 @@ msgid "Created on"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:444
+#: code:addons/event/models/event.py:449
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "ભાગીદાર"
 
 #. module: event
-#: code:addons/event/models/event.py:446
+#: code:addons/event/models/event.py:451
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -899,12 +900,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr ""
+msgstr "કાઢી નાંખો"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
 msgid "Description"
-msgstr ""
+msgstr "વર્ણન"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -922,7 +923,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_display_name
 #: model:ir.model.fields,field_description:event.field_event_type_mail_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "પ્રદર્શન નામ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_sequence
@@ -939,7 +940,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "પુર્ણ થયુ"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -951,7 +952,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr ""
+msgstr "ઈ-મેઈલ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -968,7 +969,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr ""
+msgstr "અંતિમ તારીખ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -982,7 +983,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr ""
+msgstr "ઘટના"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -1059,6 +1060,24 @@ msgid "Event Registration"
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event_mail.py:143
+#, python-format
+msgid ""
+"Event Scheduler for:\n"
+"                              - Event: %s (%s)\n"
+"                              - Scheduled: %s\n"
+"                              - Template: %s (%s)\n"
+"\n"
+"                            Failed with error:\n"
+"                              - %s\n"
+"\n"
+"                            You receive this email because you are:\n"
+"                              - the organizer of the event,\n"
+"                              - or the responsible of the event,\n"
+"                              - or the last writer of the template."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
 msgid "Event Start Date"
 msgstr ""
@@ -1066,7 +1085,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail_event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "કાર્યક્રમ નો પ્રકાર"
 
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
@@ -1088,7 +1107,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
+msgstr "ઘટનાઓ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
@@ -1350,7 +1369,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr ""
+msgstr "સ્થળ"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1577,12 +1596,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
-msgstr ""
+msgstr "ભાગીદાર"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
-msgstr ""
+msgstr "ફોન"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
@@ -1694,7 +1713,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
-msgstr ""
+msgstr "અહેવાલીકરણ"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1788,7 +1807,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "શરુઆતની તારીખ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1811,7 +1830,7 @@ msgstr "સ્થિતિ"
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "ઉમેદવારી નોંધાવો"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1897,7 +1916,7 @@ msgstr ""
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Unconfirmed"
-msgstr ""
+msgstr "પુષ્ટિ થયેલ નથી"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
@@ -1932,7 +1951,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,seats_availability:0
 msgid "Unlimited"
-msgstr ""
+msgstr "અમર્યાદિત"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1978,6 +1997,12 @@ msgid "Visibility"
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event_mail.py:130
+#, python-format
+msgid "WARNING: Event Scheduler Error for event: %s"
+msgstr ""
+
+#. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
 msgstr ""
@@ -2014,7 +2039,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Workflows"
-msgstr ""
+msgstr "કાર્યપધ્ધ્તી"
 
 #. module: event
 #: code:addons/event/models/event.py:420
@@ -2061,25 +2086,25 @@ msgid "events@odoo.com"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:508
 #, python-format
 msgid "in %d days"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:507
+#: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:505
+#: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:509
+#: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
 msgstr ""
@@ -2090,13 +2115,13 @@ msgid "res.config.settings"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:506
 #, python-format
 msgid "tomorrow"
 msgstr ""

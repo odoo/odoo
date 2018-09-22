@@ -47,7 +47,7 @@ class ProviderGrid(models.Model):
         if not carrier:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': _('Error: no matching grid.'),
+                    'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
 
         try:

@@ -23,6 +23,7 @@
 # Fabri Yohann <psn@fabri.pw>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Léonie Bouchat <lbo@odoo.com>, 2017
 # Nicolas Roussey <nro@odoo.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2017
@@ -34,9 +35,9 @@
 # lap.odoo <lap@odoo.com>, 2017
 # leemannd <denis.leemann@camptocamp.com>, 2017
 # Simon CARRIER <carrier.sim@gmail.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
 # François Lothaire <frl@odoo.com>, 2017
 # zoe <yann.hoareau@migs.re>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
 # fr rev <e2ffr04@hotmail.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
@@ -112,7 +113,7 @@ msgstr ""
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
 "% set doc_name = 'devis' if object.state in ('draft', 'sent') else 'confirmation de la commande'\n"
 "% set pay_sign_name =  object.get_portal_confirmation_action()\n"
-"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accepter et %s en ligne' % pay_sign_name or 'Consulter %s' % doc_name\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name == 'pay' and 'Accepter et payer en ligne' or pay_sign_name == 'sign' and 'Accepter et signer en ligne' or 'Consulter %s' % doc_name\n"
 "% set access_url = is_online and object.get_mail_url() or ''\n"
 "\n"
 "% if object.partner_id.parent_id:\n"
@@ -480,7 +481,7 @@ msgstr "<strong>Contact</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr "<strong>Date de commande:</strong>"
+msgstr "<strong>Date de commande :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -491,12 +492,12 @@ msgstr "<strong>Date :</strong>"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
-msgstr "<strong>Date d'Expiration:</strong>"
+msgstr "<strong>Date d'Expiration :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Remarque sur le régime fiscal :</strong>"
+msgstr "<strong>Remarque sur le régime fiscal :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -511,7 +512,7 @@ msgstr "<strong>Adresse de facturation</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Conditions de paiement:</strong>"
+msgstr "<strong>Conditions de paiement :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -526,12 +527,12 @@ msgstr "<strong>Quantité</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr "<strong>Date du devis :</strong>"
+msgstr "<strong>Date du devis :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "<strong>Vendeur :</strong>"
+msgstr "<strong>Vendeur :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -542,13 +543,13 @@ msgstr "<strong>Adresse de livraison</strong>"
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Adresse de livraison:</strong>"
+msgstr "<strong>Adresse de livraison :</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal: </strong>"
-msgstr "<strong>Sous-total : </strong>"
+msgstr "<strong>Sous-total : </strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -570,7 +571,7 @@ msgstr "<strong>Prix unitaire</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>Votre référence : </strong>"
+msgstr "<strong>Votre référence :</strong>"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -1559,7 +1560,7 @@ msgid ""
 "installed."
 msgstr ""
 "Définition manuelle de la date de validité de votre devis, ou définition "
-"automatique en fonction du modèle si la devis en ligne sont installés."
+"automatique en fonction du modèle si le devis en ligne est installé."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_margin

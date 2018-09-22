@@ -262,12 +262,12 @@ class StockQuant(models.Model):
             # if we want to reserve
             available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
+                raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
             # if we want to unreserve
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
-                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % (', '.join(quants.mapped('product_id').mapped('display_name'))))
+                raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % product_id.display_name)
         else:
             return reserved_quants
 
@@ -459,6 +459,12 @@ class QuantPackage(models.Model):
             if move_lines_to_remove:
                 move_lines_to_remove.write({'result_package_id': False})
             else:
+                move_line_to_modify = self.env['stock.move.line'].search([
+                    ('package_id', '=', package.id),
+                    ('state', 'in', ('assigned', 'partially_available')),
+                    ('product_qty', '!=', 0),
+                ])
+                move_line_to_modify.write({'package_id': False})
                 package.mapped('quant_ids').write({'package_id': False})
 
     def action_view_picking(self):
@@ -474,7 +480,7 @@ class QuantPackage(models.Model):
         return action
 
     def _get_contained_quants(self):
-        return self.env['stock.quant'].search([('package_id', 'child_of', self.ids)])
+        return self.env['stock.quant'].search([('package_id', 'in', self.ids)])
 
     def _get_all_products_quantities(self):
         '''This function computes the different product quantities for the given package

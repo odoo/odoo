@@ -68,7 +68,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         partner_ids = [partner['partner_id'] for partner in partners if partner['partner_id']]
         lines = dict((partner['partner_id'] or False, []) for partner in partners)
         if not partner_ids:
-            return [], [], []
+            return [], [], {}
 
         # This dictionary will store the not due amount of all partners
         undue_amounts = {}
@@ -194,7 +194,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 values['name'] = _('Unknown Partner')
                 values['trust'] = False
 
-            if at_least_one_amount or self._context.get('include_nullified_amount'):
+            if at_least_one_amount or (self._context.get('include_nullified_amount') and lines[partner['partner_id']]):
                 res.append(values)
 
         return res, total, lines

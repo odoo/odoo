@@ -3,7 +3,7 @@
 # * sale_order_dates
 # 
 # Translators:
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
+# Martin Aavastik <martin@avalah.ee>, 2017
 # Martin Trigaux, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 msgid ""
@@ -32,6 +32,9 @@ msgid ""
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 msgstr ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
@@ -39,11 +42,13 @@ msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
 msgstr ""
+"Date by which the products are sure to be delivered. This is a date that you"
+" can promise to the customer, based on the Product Lead Times."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Date on which the first Delivery Order was created."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
@@ -53,7 +58,7 @@ msgstr "Tegelik kuupäev"
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
 msgid "Quotation"
-msgstr "Pakkumine"
+msgstr "Quotation"
 
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
@@ -64,7 +69,7 @@ msgstr "Nõutud kuupäev"
 #: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "Requested date is too soon!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
@@ -78,3 +83,5 @@ msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"The date requested by the customer is sooner than the commitment date. You "
+"may be unable to honor the customer's request."

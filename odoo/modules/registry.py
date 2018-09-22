@@ -153,9 +153,7 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                registry = cls.registries.pop(db_name)
-                registry.clear_caches()
-                registry.registry_invalidated = True
+                cls.registries.pop(db_name)
 
     @classmethod
     def delete_all(cls):
@@ -298,6 +296,8 @@ class Registry(Mapping):
         """
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
+        elif context.get('models_to_check', False):
+            _logger.info("verifying fields for every extended model")
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]

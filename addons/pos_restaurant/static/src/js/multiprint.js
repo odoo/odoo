@@ -27,11 +27,14 @@ var Printer = core.Class.extend(mixins.PropertiesMixin,{
         function send_printing_job(){
             if(self.receipt_queue.length > 0){
                 var r = self.receipt_queue.shift();
-                self.connection.rpc('/hw_proxy/print_xml_receipt',{receipt: r},{timeout: 5000})
+                var options = {shadow: true, timeout: 5000};
+                self.connection.rpc('/hw_proxy/print_xml_receipt', {receipt: r}, options)
                     .then(function(){
                         send_printing_job();
-                    },function(){
+                    },function(error, event){
                         self.receipt_queue.unshift(r);
+                        console.log('There was an error while trying to print the order:');
+                        console.log(error);
                     });
             }
         }
@@ -55,7 +58,7 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
-                var url = printers[i].proxy_ip;
+                var url = printers[i].proxy_ip || '';
                 if(url.indexOf('//') < 0){
                     url = 'http://'+url;
                 }

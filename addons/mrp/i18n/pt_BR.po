@@ -10,6 +10,7 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # Silmar <pinheirosilmar@gmail.com>, 2017
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2017
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
 # Adriel Kotviski <kotviski@gmail.com>, 2017
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2017
@@ -53,7 +54,7 @@ msgstr "# Listas utilizadas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
 msgid "# Done Work Orders"
-msgstr "# Ordens de trabalho Finalizadas"
+msgstr "# Ordens de Serviço Finalizadas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
@@ -64,14 +65,14 @@ msgstr "# Ordens de Produção"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_ready_count
 msgid "# Read Work Orders"
-msgstr "# Ler Ordens de Trabalho"
+msgstr "# Ler Ordens de Serviço"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
 msgid "# Work Orders"
-msgstr "# Ordens de Trabalho"
+msgstr "# Ordens de Serviço"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template_used_in_bom_count
@@ -146,7 +147,7 @@ msgstr "<span class=\"o_stat_text\">Carga de Centro de Trabalho</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
-msgstr "<span class=\"o_stat_text\">Ordens de Trabalho</span>"
+msgstr "<span class=\"o_stat_text\">Ordens de Serviço</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -176,7 +177,7 @@ msgstr "<span>Visualizar</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
-msgstr "<span>ORDENS DE TRABALHO</span>"
+msgstr "<span>ORDENS DE SERVIÇO</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -678,7 +679,7 @@ msgstr "Clique aqui para criar um novo Centro de Trabalho"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid "Click here to create a new Work Order Message."
-msgstr ""
+msgstr "Clique aqui para criar uma nova Mensagem na Ordens de Serviço"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -1643,7 +1644,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr "Ordens de Fabricação que estão atualmente em produção."
+msgstr "Ordens de Produção que estão atualmente em produção."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1813,7 +1814,7 @@ msgstr "Próxima Operação"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
 msgid "Next Work Order"
-msgstr "Próxima Ordem de Trabalho"
+msgstr "Próxima Ordem de Serviço"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1876,17 +1877,17 @@ msgstr "Observações"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr ""
+msgstr "Número de Ordens de Produção Atrasadas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr ""
+msgstr "Número de Ordens de Produção Aguardando"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
 msgid "Number of Manufacturing Orders to Process"
-msgstr ""
+msgstr "Número de Ordens de Produção a Fazer"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity
@@ -3563,7 +3564,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr ""
+msgstr "Desempenho das Ordens de Serviço"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -3577,6 +3578,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Ordens de Serviço são operações processadas em um Centro de trabalho para "
+"finalizar uma Ordem de Produção. Ordens de Serviço são geradas através de "
+"Ordens de Produção e baseadas em suas Rotas definidas."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3585,6 +3589,9 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones."
 msgstr ""
+"Ordens de Serviço são operações processadas em um Centro de trabalho para "
+"finalizar uma Ordem de Produção. Ordens de Serviço são geradas através de "
+"Ordens de Produção e baseadas em suas Rotas definidas."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
@@ -3593,6 +3600,9 @@ msgid ""
 "           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "           they are based on the Routing defined on these ones."
 msgstr ""
+"Ordens de Serviço são operações processadas em um Centro de trabalho para "
+"finalizar uma Ordem de Produção. Ordens de Serviço são geradas através de "
+"Ordens de Produção e baseadas em suas Rotas definidas."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -3603,12 +3613,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:567
 #, python-format
 msgid "Work order %s is still running"
-msgstr ""
+msgstr "Ordem de serviço %s está em andamento"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
 msgstr ""
+"Ordem de serviço em progresso. Clique para bloquear o centro de trabalho."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3648,7 +3659,7 @@ msgstr "Tempo de Trabalho"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
 msgid "Workorder Message"
-msgstr "Mensagem de trabalho"
+msgstr "Mensagem de serviço"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
@@ -3668,12 +3679,14 @@ msgstr ""
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr ""
+"Você não pode cancelar a ordem de produção, uma ordem de serviço ainda está "
+"em andamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:240
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "Você não pode alterar uma ordem de serviço já concluída."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:553
@@ -3869,7 +3882,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr ""
+msgstr "ordens de serviço"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet

@@ -85,7 +85,11 @@ class Website(models.Model):
     @api.multi
     def write(self, values):
         self._get_languages.clear_cache(self)
-        return super(Website, self).write(values)
+        result = super(Website, self).write(values)
+        if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
+            # invalidate the caches from static node at compile time
+            self.env['ir.qweb'].clear_caches()
+        return result
 
     #----------------------------------------------------------
     # Page Management
@@ -563,15 +567,15 @@ class Website(models.Model):
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
-    @api.model
     def get_cdn_url(self, uri):
-        # Currently only usable in a website_enable request context
-        if request and request.website and not request.debug and request.website.user_id.id == request.uid:
-            cdn_url = request.website.cdn_url
-            cdn_filters = (request.website.cdn_filters or '').splitlines()
-            for flt in cdn_filters:
-                if flt and re.match(flt, uri):
-                    return urls.url_join(cdn_url, uri)
+        self.ensure_one()
+        if not uri:
+            return ''
+        cdn_url = self.cdn_url
+        cdn_filters = (self.cdn_filters or '').splitlines()
+        for flt in cdn_filters:
+            if flt and re.match(flt, uri):
+                return urls.url_join(cdn_url, uri)
         return uri
 
     @api.model
@@ -762,11 +766,11 @@ class Page(models.Model):
         for page in self:
             # Other pages linked to the ir_ui_view of the page being deleted (will it even be possible?)
             pages_linked_to_iruiview = self.search(
-                [('view_id', '=', self.view_id.id), ('id', '!=', self.id)]
+                [('view_id', '=', page.view_id.id), ('id', '!=', page.id)]
             )
-            if len(pages_linked_to_iruiview) == 0:
+            if not pages_linked_to_iruiview:
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
-                self.env['ir.ui.view'].search([('id', '=', self.view_id.id)]).unlink()
+                page.view_id.unlink()
         # And then delete the website_page itself
         return super(Page, self).unlink()
 
@@ -786,7 +790,6 @@ class Page(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
         result = super(Page, self).write(vals)

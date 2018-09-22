@@ -36,14 +36,15 @@ class ProductWishlist(models.Model):
 
     @api.model
     def current(self):
-        """Get all wishlist items that belong to current user or session."""
-        return self.search([
+        """Get all wishlist items that belong to current user or session,
+        filter products that are unpublished."""
+        return self.sudo().search([
             "|",
             ("partner_id", "=", self.env.user.partner_id.id),
             "&",
             ("partner_id", "=", False),
             ("session", "=", self.env.user.current_session),
-        ])
+        ]).filtered('product_id.product_tmpl_id.website_published')
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False, session=False):

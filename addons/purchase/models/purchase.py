@@ -138,8 +138,8 @@ class PurchaseOrder(models.Model):
         ('invoiced', 'No Bill to Receive'),
         ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
-    picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0, store=True)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
+    picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0, store=True, compute_sudo=True)
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True, compute_sudo=True)
 
     # There is no inverse function on purpose since the date may be different on each line
     date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
@@ -370,13 +370,16 @@ class PurchaseOrder(models.Model):
             if order.state in ('draft', 'sent', 'to approve'):
                 for order_line in order.order_line:
                     if order_line.move_dest_ids:
-                        siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
+                        move_dest_ids = order_line.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                        siblings_states = (move_dest_ids.mapped('move_orig_ids')).mapped('state')
                         if all(state in ('done', 'cancel') for state in siblings_states):
-                            order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            order_line.move_dest_ids._recompute_state()
+                            move_dest_ids.write({'procure_method': 'make_to_stock'})
+                            move_dest_ids._recompute_state()
 
             for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
                 pick.action_cancel()
+
+            order.order_line.write({'move_dest_ids':[(5,0,0)]})
 
         self.write({'state': 'cancel'})
 
@@ -452,7 +455,7 @@ class PurchaseOrder(models.Model):
                     'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
                     'min_qty': 0.0,
-                    'price': self.currency_id.compute(line.price_unit, currency),
+                    'price': self.currency_id.compute(line.price_unit, currency, round=False),
                     'currency_id': currency.id,
                     'delay': 0,
                 }
@@ -470,14 +473,14 @@ class PurchaseOrder(models.Model):
         This function returns an action that display existing picking orders of given purchase order ids.
         When only one found, show the picking immediately.
         '''
-        action = self.env.ref('stock.action_picking_tree')
+        action = self.env.ref('stock.action_picking_tree_all')
         result = action.read()[0]
 
         #override the context to get rid of the default filtering on operation type
         result['context'] = {}
         pick_ids = self.mapped('picking_ids')
         #choose the view_mode accordingly
-        if len(pick_ids) > 1:
+        if not pick_ids or len(pick_ids) > 1:
             result['domain'] = "[('id','in',%s)]" % (pick_ids.ids)
         elif len(pick_ids) == 1:
             res = self.env.ref('stock.view_picking_form', False)
@@ -634,7 +637,7 @@ class PurchaseOrderLine(models.Model):
 
     # Replace by invoiced Qty
     qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
-    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
+    qty_received = fields.Float(compute='_compute_qty_received', string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), store=True, compute_sudo=True)
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
@@ -904,12 +907,13 @@ class ProcurementRule(models.Model):
         if domain in cache:
             po = cache[domain]
         else:
-            po = self.env['purchase.order'].search([dom for dom in domain])
+            po = self.env['purchase.order'].sudo().search([dom for dom in domain])
             po = po[0] if po else False
             cache[domain] = po
         if not po:
             vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
-            po = self.env['purchase.order'].create(vals)
+            company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
+            po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
             cache[domain] = po
         elif not po.origin or origin not in po.origin.split(', '):
             if po.origin:
@@ -930,7 +934,7 @@ class ProcurementRule(models.Model):
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
-            self.env['purchase.order.line'].create(vals)
+            self.env['purchase.order.line'].sudo().create(vals)
 
     def _get_purchase_schedule_date(self, values):
         """Return the datetime value to use as Schedule Date (``date_planned``) for the

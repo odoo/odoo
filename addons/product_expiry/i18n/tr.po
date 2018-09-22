@@ -7,13 +7,14 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +110,7 @@ msgstr "Lot/Seri"
 #: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
-msgstr ""
+msgstr "Lot / seri numarasında bir uyarının kaldırılması için gün sayısı."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_life_time
@@ -118,6 +119,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Mallar tehlikeli hale gelmeden ve tüketilmek zorunda olmadan önceki günlerin"
+" sayısı. Bu sayı lot/seri numaralarından hesaplanacaktır."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_removal_time
@@ -126,6 +129,8 @@ msgid ""
 "Number of days before the goods should be removed from the stock. It will be"
 " computed on the lot/serial number."
 msgstr ""
+"Malların stoktan çıkarılmadan önce gereken gün sayısı. Bu lot / seri "
+"numarası üzerinde hesaplanacaktır.."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product_use_time
@@ -134,6 +139,8 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
+"Malların daha tehlikeli hale gelmeden önce, malların bozulmadan geçen gün "
+"sayısı. Lot / seri numarası üzerinde hesaplanacaktır."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product_alert_time
