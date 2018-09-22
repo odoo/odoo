@@ -5,6 +5,7 @@
 #                         维智众源 oldrev@gmail.com  <states data>
 # Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+# Copyright (C) 2018-now  浪潮PS Cloud pscloud@inspur.com    < PM and LTS >
 
 {
     'name': '中国小企业会计科目表',
@@ -27,5 +28,5 @@
         'data/l10n_cn_small_business_chart_data.xml',
         'data/account_chart_template_data.yml',
     ],
-    'auto_install': True
+    
 }
