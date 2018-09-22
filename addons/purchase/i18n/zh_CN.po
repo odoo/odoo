@@ -6,7 +6,7 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
-# Bo Cao <cao.poobo@hotmail.com>, 2016
+# Bo Cao, 2016
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # guohuadeng <guohuadeng@hotmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
@@ -74,26 +74,6 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
-"\n"
-"<p>Dear ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>\n"
-"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>You can reply to this email if you have any questions.</p>\n"
-"<p>Thank you,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -1101,7 +1081,7 @@ msgstr "产品价值"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "产品可以有好几个属性，通过不同属性来定义不同的产品变体(属性如: 尺寸, 颜色.....)"
+msgstr "产品可以有多个属性，通过不同属性来定义不同的产品变体(如: 尺码, 颜色.....)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0

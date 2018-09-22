@@ -86,7 +86,7 @@ msgid ""
 "\n"
 "                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
-"Състояние 'Канбан на грешка' посочва специални ситуации, които го засягат:\n"
+"Канбан състояние на грешка посочва специални ситуации, които го засягат:\n"
 "\n"
 "                                           * 'Нормален' е ситуация по подразбиране\n"
 "\n"
@@ -135,7 +135,7 @@ msgstr "Средно работни часове до затваряне"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Средно работни часове до отваряне"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -152,7 +152,7 @@ msgstr "Блокиран"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Настройте като извършен"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -169,6 +169,7 @@ msgstr "Канал"
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
 msgstr ""
+"Отметнете това поле, за да управлявате клиентската дейност чрез този проект"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -178,12 +179,12 @@ msgstr "Затворено"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
-msgstr "Индекс на Цветовете."
+msgstr "Индекс на цветове"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
 msgid "Communication channel."
-msgstr ""
+msgstr "Комуникационен канал"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
@@ -204,13 +205,13 @@ msgstr "Контакт"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Date"
-msgstr "Създаване на дата"
+msgstr "Задайте дата"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Create Day"
-msgstr ""
+msgstr "Създайте ден"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
@@ -237,7 +238,7 @@ msgstr "Клиент"
 #: code:addons/project_issue/models/project_issue.py:298
 #, python-format
 msgid "Customer Email"
-msgstr "Имейл на потребителя"
+msgstr "Потребителски имейл "
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
@@ -253,27 +254,27 @@ msgstr "Дата"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
 msgid "Date of Closing"
-msgstr ""
+msgstr "Дата на затваряне"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
-msgstr ""
+msgstr "Дата на отваряне"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
 msgid "Days since creation date"
-msgstr ""
+msgstr "Дни от датата на създаване"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
 msgid "Days since last action"
-msgstr ""
+msgstr "Дни от последното действие"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
-msgstr "Дни за разпределение"
+msgstr "Дни до разпределение"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
@@ -303,12 +304,12 @@ msgstr "Описание"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
 msgid "Difference in days between creation date and current date"
-msgstr ""
+msgstr "Разлика в дните между датата на създаване и текущата дата"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Разлика в дните между последното действие и текущата дата"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
@@ -319,7 +320,7 @@ msgstr "Покажете име"
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Do not track working hours on issues"
-msgstr ""
+msgstr "Не проследявайте работните часове на грешки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -344,12 +345,12 @@ msgstr "Допълнителна информация"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Изобразете дървовидна графика на тракер"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
 msgid "Feature description"
-msgstr ""
+msgstr "Описание на функции"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -360,7 +361,7 @@ msgstr "Групирайте по"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Хелпдеск & поддръжка"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -385,60 +386,60 @@ msgstr "ИН"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue"
-msgstr "Билет"
+msgstr "Грешка"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "Блокирана грешка"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Отворена грешка"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Готова грешка"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Променен етап на грешка"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Обобщение на грешка..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "Търсене на тракер на грешки"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "Дървовидна графика на тракер на грешки"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Блокирани грешки"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Отворена грешка"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "Грешка, готова за следващ етап"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -460,17 +461,17 @@ msgstr "Грешки"
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Анализ на грешки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Обяснение за блокиран Канбан"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Обяснение за функциониращ Канбан"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -480,7 +481,7 @@ msgstr "Състояние Канбан"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Валидно обяснение Канбан"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -535,7 +536,7 @@ msgstr "Моите грешки"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Имате нужда от функционална или техническа помощ"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -546,7 +547,7 @@ msgstr "Нов"
 #: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Нова грешка"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -562,7 +563,7 @@ msgstr "Без тема"
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "No customer rating"
-msgstr ""
+msgstr "Няма клиентско оценяване"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -576,7 +577,7 @@ msgstr "Нормален"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "Невалидиран"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -586,7 +587,7 @@ msgstr "Брой дни до затваряне на проектната гре
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Брой дни до отваряне на проектната грешка."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
@@ -595,7 +596,7 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Отменете стойността по подразбиране, показана за блокираното състояние на "
-"канбан подбора, когато задачата или грешката са в този етап."
+"канбан селекцията, когато задачата или грешката са в този етап."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -603,8 +604,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Отменете стойността по подразбиране, показана за състояние 'извършена' на "
-"канбан избора, когато задачата или грешката са в този етап."
+"Отменете стандартната стойността, показана за състояние 'извършена' на "
+"канбан селекцията, когато задачата или грешката са в този етап."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -613,7 +614,7 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Отменете стойността по подразбиране, показана за нормалното състояние на "
-"канбан подбора, когато задачата или грешката са в този етап."
+"канбан селекцията, когато задачата или грешката са в този етап."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -627,6 +628,8 @@ msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
 msgstr ""
+"Моля, премахнете съществуващите грешки в проекта, свързани със сметките, "
+"които искате да изтриете."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -636,12 +639,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Priority"
-msgstr "Важност"
+msgstr "Приоритет"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
-msgstr ""
+msgstr "Поверителна бележка"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -657,13 +660,13 @@ msgstr "Проект"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
-msgstr "Проектен билет"
+msgstr "Проектна грешка"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
 #: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
-msgstr ""
+msgstr "Проектни грешки"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
@@ -677,22 +680,22 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "Оценяване на грешка"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr "Готови за следващ етап"
+msgstr "Готов за следващ етап"
 
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Готов за повторно отваряне"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
-msgstr "Търсене"
+msgstr "Потърсете"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -716,7 +719,7 @@ msgstr "Променен етап"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
 msgid "Tags"
-msgstr "Етикети"
+msgstr "Маркери"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
@@ -738,6 +741,9 @@ msgid ""
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"Тракерът за грешки на Odoo Ви позволява ефективно да управлявате неща \n"
+"                    като вътрешни заявки, технически грешки, свързани с развитието на софтуеъра, оплаквания от\n"
+"                    клиенти, проектни проблеми, разбивки на материали и пр."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -746,7 +752,7 @@ msgid ""
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
 "Тези имейл адреси ще бъдат добавени към CC полето на всички входящи\n"
-"        и изходящи имейли за този запис приди да бъде изпратен. Разделяйте имейл адресите със запетая"
+"        и изходящи имейли за този запис преди да бъде изпратен. Разделяйте имейл адресите със запетая"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -756,7 +762,7 @@ msgstr "Тези хора ще получат имейл."
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "Това позволява на клиентите да оценяват грешка"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -767,6 +773,11 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
+"Този отчет на проектните грешки Ви позволява да анализирате качеството на "
+"поддръжката си или на следпродажбените услуги. Можете да проследявате "
+"грешките по възраст. Можете да анализирате времето, необходимо за отваряне "
+"или затваряне на грешка, броя на имейлите, които да се обменят, и "
+"осредненото време, отделено на грешките."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
@@ -781,7 +792,7 @@ msgstr "Графици на грешки"
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
-msgstr ""
+msgstr "Проследявайте удовлетворението на клиентите по грешки"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -799,17 +810,17 @@ msgstr "Непрочетени съобщения"
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
-msgstr ""
+msgstr "Използвайте грешки"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "Използвайте грешки като"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
 msgid "User Email"
-msgstr "Потребителски имейлл"
+msgstr "Потребителски имейл"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
@@ -824,7 +835,7 @@ msgstr "Работни часове, за да се определи грешк�
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
 msgid "Working Hours to close the Issue"
-msgstr ""
+msgstr "Работни часове, за да се затвори грешката"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_task_id
@@ -839,7 +850,7 @@ msgstr ""
 #: code:addons/project_issue/models/project_issue.py:191
 #, python-format
 msgid "issues"
-msgstr ""
+msgstr "грешки"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
@@ -849,4 +860,4 @@ msgstr "project.config.settings"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
-msgstr ""
+msgstr "project.issue.report"

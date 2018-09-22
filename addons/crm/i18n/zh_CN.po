@@ -140,13 +140,6 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
-"\n"
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -229,12 +222,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
-"<p>${object.user_id and object.user_id.name or ''}您好！</p>\n"
-"<p>商机 <strong>${object.name}</strong>已经5天没有任何跟进记录了。</p>\n"
+"<p>您好 ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>这条商机 <strong>${object.name}</strong> 已经5天没动了得跟进跟进啦。</p>\n"
 "%if object.description:\n"
-"<p>这是关于商机的说明： </p><p><i>${object.description}</i>\n"
+"<p>以下是商机的说明 : </p><p><i>${object.description}</i>\n"
 "%endif\n"
-"</p><p>谢谢！</p>\n"
+"</p><p>打扰啦谢谢!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -1762,7 +1755,7 @@ msgstr "最终联系人"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Discard"
-msgstr "丢弃"
+msgstr "取消"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_display_name
@@ -1804,7 +1797,7 @@ msgstr "不要忘记更改此地址："
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Don't hesitate to"
-msgstr "不要犹豫做"
+msgstr "不要犹豫"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
