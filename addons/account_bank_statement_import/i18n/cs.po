@@ -223,7 +223,7 @@ msgstr ""
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr ""
+msgstr "Stáhněte výpis z banky a importujte jej zde. Podporované formáty:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -280,7 +280,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
-msgstr ""
+msgstr "Import bankovních výpisů"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
@@ -447,6 +447,9 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
+"Účet daného bankovního výpisu, který importujete, dosud není zaznamenán v "
+"Odoo. Chcete-li pokračovat v importu, musíte pro tento účet vytvořit účetní "
+"deník."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
@@ -472,6 +475,7 @@ msgstr "Měna použitá k zadání příkazu"
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
+"Položky tohoto účetního deníku budou pojmenovány pomocí této předpony."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -491,7 +495,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr ""
+msgstr "Tento soubor neobsahuje žádné příkazy."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:119

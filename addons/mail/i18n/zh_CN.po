@@ -124,9 +124,9 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
-"${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
-"object.parent_id.subject) or (object.parent_id and "
+"${object.subject or (object.record_name and 'Re: %s' % object.record_name) 或"
+" (object.parent_id and object.parent_id.subject 及 'Re: %s' % "
+"object.parent_id.subject) 或 (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
@@ -186,10 +186,10 @@ msgid ""
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
 "<br><br>\n"
-" 您可以通过键入 <b>@用户名</b>提及某人，这将吸引他的注意力。<br>\n"
-" 您可以通过键入 <b>#渠道</b>提及渠道。<br>\n"
-" 您可以通过键入 <b>/命令</b>执行命令。<br>\n"
-" 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
+" 您可以通过键入小老鼠 <b>@用户名</b>提及某人，这将吸引他的注意力。<br>\n"
+" 您可以通过键入井号 <b>#渠道</b>提及渠道。<br>\n"
+" 您可以通过键入斜杠 <b>/命令</b>执行命令。<br>\n"
+" 您可以通过键入冒号 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:475
@@ -4599,7 +4599,7 @@ msgstr "董事会会议"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
-msgstr "by"
+msgstr "作者"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -4735,7 +4735,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr "rd"
+msgstr "研发"
 
 #. module: mail
 #. openerp-web
