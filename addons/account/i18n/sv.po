@@ -22,13 +22,14 @@
 # Daniel Forslund <daniel.forslund@gmail.com>, 2018
 # Leif Persson <leifpz54@gmail.com>, 2018
 # Peter Wickenberg <peter@wickenberg.nu>, 2018
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Peter Wickenberg <peter@wickenberg.nu>, 2018\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Statusen 'Utdrag' används när en användare skapar en ny och obekräftad faktura.\n"
+" * Statusen 'Öppen' används när en användare skapar en faktura och ett fakturanummer genererats. Den förblir med statusen öppen tills dess att kunden betalat.\n"
+" * Statusen 'Betald' sätts automatiskt när fakturan har betalats. Dess relaterade journalanteckningar kan komma att biläggas.\n"
+" * Statusen 'Avbruten' används när en användare avbryter en faktura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -54,7 +59,7 @@ msgstr "# Antal siffror"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -65,7 +70,7 @@ msgstr "${object.company_id.name} Faktura (Ref ${object.number or 'n/a'})"
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Kvitto (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:44
@@ -96,12 +101,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>den</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr ""
+msgstr "- Första numret: "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -169,6 +174,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data>Bäste ${object.partner_id.name},</p>\n"
+"<p>Tack för din betalning!<br/>Här är ditt kvitto<strong>${(object.name or '').replace('/','-')}</strong> med belopp<strong>${format_amount(object.amount, object.currency_id)}</strong> från ${object.company_id.name}.</p>\n"
+"<p>Om du har några frågor, tveka då inte att kontakta oss!</p>\n"
+"<p>Med vänliga hälsningar,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -218,6 +233,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Bästa ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Bifogat finner du en kopia på din \n"
+"% if object.number:\n"
+"faktura <strong>${object.number}</strong>\n"
+"% else:\n"
+"faktura\n"
+"% endif\n"
+"% if object.origin:\n"
+"(med referens: ${object.origin})\n"
+"% endif\n"
+"om belopp <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"från ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Visa faktura</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Denna faktura är redan betald.</p>\n"
+"% else:\n"
+"    <p>Vi emotser din snaraste betalning.</p>\n"
+"% endif\n"
+"\n"
+"<p>Med vänliga hälsningar,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -239,6 +298,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
 "class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\"> Betald</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -246,6 +307,8 @@ msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
 "class=\"hidden-xs\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\"> Avbruten</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -253,6 +316,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Inväntar betalning</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -294,7 +359,7 @@ msgstr "<span> Till </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr ""
+msgstr "<span>Journalanteckningar</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -329,7 +394,7 @@ msgstr "<span>Avstämning</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Rapportering</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -339,7 +404,7 @@ msgstr "<span>Visa</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>Att betala</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -355,7 +420,7 @@ msgstr "<strong>Bolag:</strong> "
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "<strong>Customer Address</strong>"
-msgstr ""
+msgstr "<strong>Kundadress</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -414,12 +479,12 @@ msgstr "<strong>Poster sorterade på</strong> "
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<strong>Fiscal Year End</strong>"
-msgstr ""
+msgstr "<strong>Fiskalt årslut</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>From</strong>"
-msgstr ""
+msgstr "<strong>Från</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -440,7 +505,7 @@ msgstr "<strong>Journaler:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>Kom ihåg: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -450,17 +515,17 @@ msgstr "<strong>Företag:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Amount: </strong>"
-msgstr ""
+msgstr "<strong>Belopp att betala: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Date: </strong>"
-msgstr ""
+msgstr "<strong>Betalningsdatum: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Method: </strong>"
-msgstr ""
+msgstr "<strong>Betalsätt: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -470,7 +535,7 @@ msgstr "<strong>Periodlängd (dagar)</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>Purchase</strong>"
-msgstr ""
+msgstr "<strong>Inköp</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -518,7 +583,7 @@ msgstr "<strong>Valda affärshändelser:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "<strong>There is nothing due with this customer.</strong>"
-msgstr ""
+msgstr "<strong>Det finns inget förfallet hos denna kund.</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -530,7 +595,7 @@ msgstr "<strong>Totalt</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
-msgstr ""
+msgstr "<strong>Typ:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1006,6 +1071,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Konto som anges på rader skapade i kontantbaserade journalinlägg och används"
+" för att hålla reda på skattebelopp."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -2076,7 +2143,7 @@ msgstr "Bas-summa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_base_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_base_account_id
 msgid "Base Tax Received Account"
-msgstr ""
+msgstr "Konto för skatteåterbäring"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0

@@ -15,13 +15,16 @@
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Wynand Tastenhoye <wta@odoo.com>, 2018
+# Jordy Blankestijn <jblankestijn@erpopen.nl>, 2018
+# Cas Vissers <c.vissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-08-02 09:12+0000\n"
 "PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
+"Last-Translator: Cas Vissers <c.vissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +92,7 @@ msgstr "%s (kopie)"
 #: code:addons/account/models/account_move.py:382
 #, python-format
 msgid "%sreversal of: "
-msgstr ""
+msgstr "%somkering van: "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -286,6 +289,8 @@ msgid ""
 "<p>You can control the invoice from your vendor based on what you purchased "
 "or received.</p>"
 msgstr ""
+"<p>U kan de factuur van uw leverancier beheren op basis van wat u hebt "
+"gekocht of ontvangen.</p>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -325,6 +330,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Enkel journalen die nog niet aan een bankrekening"
+" werden gelinkt worden voorgesteld</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -740,6 +747,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Rekening %s (%s) laat geen afpunting toe. Wijzig de opzet van deze rekening "
+"eerst om dit toe te laten."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3383,7 +3392,7 @@ msgstr "Crediteer kasbasis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__filter_refund
 msgid "Credit Method"
-msgstr ""
+msgstr "Credit methode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
@@ -3686,6 +3695,10 @@ msgid ""
 "greater than the last day of a month, this number will instead select the "
 "last day of this month."
 msgstr ""
+"Dag van de maand waarop de factuur moet vervallen. Wanneer 0 of negatie, zal"
+" de waarde worden genegeerd, en wordt er geen specifieke dag ingesteld. "
+"Wanneer groter dan de laatste dag in een maand, zal dit nummer de laatste "
+"dag van de maand selecteren."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5555,7 +5568,7 @@ msgstr "Te valideren facturen"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with this payment's."
-msgstr ""
+msgstr "Facturen waarvan de boekingen zijn afgeletterd met deze betaling."
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
@@ -5611,6 +5624,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft vendor bill by sending an email."
 msgstr ""
+"Het maakt een concept leveranciersfactuur bij het versturen van een e-mail."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__reconciled
@@ -5716,7 +5730,7 @@ msgstr "Boekingen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr ""
+msgstr "Boekingen per datum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__move_id
@@ -6232,7 +6246,7 @@ msgstr "Aantal regels"
 #. module: account
 #: selection:account.setup.bank.manual.config,create_or_link_option:0
 msgid "Link to an existing journal"
-msgstr ""
+msgstr "Link naar bestaand dagboek"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__move_id
@@ -6249,7 +6263,7 @@ msgstr "Liquiditeit"
 #: code:addons/account/models/chart_template.py:155
 #, python-format
 msgid "Liquidity Transfer"
-msgstr ""
+msgstr "Liquiditeit overschrijving"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__tax_template_ids
@@ -6811,6 +6825,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
 msgstr ""
+"Opmerking. De makkelijkste manier om een leveranciers credit nota te maken, "
+"is om dit rechtstreeks bij de leveranciers rekening te doen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__note
@@ -7110,6 +7126,8 @@ msgid ""
 "Or share the email %s to your vendors: bills will be created automatically "
 "upon mail reception."
 msgstr ""
+"Of deel de email %smet uw leveranciers: rekeningen worden automatisch "
+"gecreëerd wanneer de mail ontvangen is."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:694
@@ -7429,7 +7447,7 @@ msgstr "Betaalwijze soort"
 #: model:ir.ui.view,arch_db:account.view_account_bank_journal_form
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Method Types"
-msgstr ""
+msgstr "Betalings Methode Typen"
 
 #. module: account
 #. openerp-web
@@ -8022,7 +8040,7 @@ msgstr "Ontvangen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
 msgid "Recompute Tax Line"
-msgstr ""
+msgstr "Herbereken BTW regel"
 
 #. module: account
 #. openerp-web
@@ -8068,7 +8086,7 @@ msgstr "Afgeletterde boekingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr ""
+msgstr "Afgeletterde facturen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
@@ -8272,7 +8290,7 @@ msgstr "Vertegenwoordigd de niet-nul kleinste munt (bijvoorbeeld 0,05)."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__res_partner_bank_id
 msgid "Res Partner Bank"
-msgstr ""
+msgstr "Res Partner Bank"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -8602,7 +8620,7 @@ msgstr "Selecteer een relatie of kies een tegenrekening"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Select an old vendor bill"
-msgstr ""
+msgstr "Selecteer een oude leveranciers rekening"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -8810,7 +8828,7 @@ msgstr "Kleinste tekst"
 #: code:addons/account/static/src/js/reconciliation/reconciliation_renderer.js:760
 #, python-format
 msgid "Some fields are undefined"
-msgstr ""
+msgstr "Sommige velden zijn niet ingevuld"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -8833,7 +8851,7 @@ msgstr "Brondocument"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__source_email
 msgid "Source Email"
-msgstr ""
+msgstr "Bron Email"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -8866,7 +8884,7 @@ msgstr "Startdatum voor vergelijking"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_from
 msgid "Start Date, included in the fiscal year."
-msgstr ""
+msgstr "Start Datum, in dit fiscale jaar inbegrepen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -9180,7 +9198,7 @@ msgstr "Belasting sjablonen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_type_domain
 msgid "Tax Type Domain"
-msgstr ""
+msgstr "BTW Type Domein"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
@@ -9226,7 +9244,7 @@ msgstr "Belastingen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr ""
+msgstr "BTW Toegepast"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -9529,7 +9547,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1041
 #, python-format
 msgid "The account %s (%s) is deprecated."
-msgstr ""
+msgstr "Deze rekening %s (%s) is vervallen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -11393,7 +11411,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:1101
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr ""
+msgstr "U kunt een vervallen rekening niet gebruiken."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1067
@@ -11441,7 +11459,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_general_ledger.py:21
 #, python-format
 msgid "You must define a start Date"
-msgstr ""
+msgstr "U moet een startdatum ingeven"
 
 #. module: account
 #: code:addons/account/models/account.py:126
