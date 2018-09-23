@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -877,7 +877,7 @@ msgstr "Aggiungi dei link ai social media sul tuo sito Web"
 #: code:addons/website/static/src/js/menu/new_content.js:50
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "Aggiungi al menu"
 
 #. module: website
 #. openerp-web
@@ -968,6 +968,11 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "Sei sicuro di voler cancellare questa pagina?"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_attachment
+msgid "Attachment"
+msgstr "Allegato"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -1217,6 +1222,11 @@ msgid "Complete CRM for any size team"
 msgstr "Un CRM completo per team di qualsiasi dimensione"
 
 #. module: website
+#: model:ir.model,name:website.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
 msgstr "Configurazione"
@@ -1379,9 +1389,9 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr "TRASCINA I COMPONENTI QUI"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Dark"
-msgstr "Scuro"
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr "Dashboard"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2041,8 +2051,8 @@ msgstr "Editor HTML/CSS"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
-msgid "HTTP routing"
-msgstr "Routing HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -2415,11 +2425,6 @@ msgid "Let's start designing."
 msgstr "Iniziamo a creare!"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Light"
-msgstr "Leggero"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "Personalizzazione limitata"
@@ -2543,11 +2548,6 @@ msgid "Menu Label"
 msgstr "Voce di Menu"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Menu text"
-msgstr "Menu testo"
-
-#. module: website
 #: code:addons/website/models/website.py:321
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
@@ -2640,6 +2640,16 @@ msgstr "Spostato in modo permanente (301)"
 #: selection:website.redirect,type:0
 msgid "Moved temporarily (302)"
 msgstr "Spostato in modo temporaneo (302)"
+
+#. module: website
+#: model:ir.model,name:website.model_website_multi_mixin
+msgid "Multi Website Mixin"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_multi_mixin
+msgid "Multi Website Published Mixin"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2910,11 +2920,6 @@ msgstr ""
 "le loro performance."
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_dashboard
-msgid "Overview"
-msgstr "Visione d'insieme"
-
-#. module: website
 #: code:addons/website/models/website.py:289
 #: code:addons/website/models/website.py:353
 #: model:ir.model,name:website.model_website_page
@@ -3112,9 +3117,19 @@ msgid "Quality"
 msgstr "Qualità"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
 msgid "Read more"
 msgstr "Leggi di più"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Regola record"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_from
@@ -3247,11 +3262,6 @@ msgid "SEO optimized"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_dashboard
-msgid "Sales Dashboard"
-msgstr "Dashboard delle vendite"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Sample Icons"
 msgstr ""
@@ -3336,6 +3346,11 @@ msgstr "Inviaci un email"
 #: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "Sequenza"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_actions_server
+msgid "Server Action"
+msgstr "Azione Server"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -4021,6 +4036,7 @@ msgid "Very Slow"
 msgstr "Molto Lento"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_view
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Vista"
@@ -4176,6 +4192,11 @@ msgstr "Pagine del Sito Web"
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
 msgstr "Percorso del sito web"
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_mixin
+msgid "Website Published Mixin"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
@@ -4348,8 +4369,7 @@ msgstr ""
 "gruppo di paesi per scegliere quale sito Web visualizzare. "
 
 #. module: website
-#: code:addons/website/models/res_users.py:33 sql_constraint:res.users:0
-#, python-format
+#: sql_constraint:res.users:0
 msgid "You can not have two users with the same login!"
 msgstr "Non puoi avere due utenti con lo stesso login!"
 
@@ -4460,6 +4480,11 @@ msgid "e.g. About Us"
 msgstr "es: Chi siamo"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_dashboard
+msgid "eCommerce Dashboard"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
@@ -4477,34 +4502,9 @@ msgid "instance of Odoo, the"
 msgstr "istanza di Odoo, il"
 
 #. module: website
-#: model:ir.model,name:website.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "ir.qweb"
 msgstr "ir.qweb"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_qweb_field_contact
-msgid "ir.qweb.field.contact"
-msgstr "ir.qweb.field.contact"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "ir.rule"
-msgstr "ir.rule"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -4525,11 +4525,6 @@ msgstr "pagina, frammenti,...)"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "px"
 msgstr "px"
-
-#. module: website
-#: model:ir.model,name:website.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website
 #. openerp-web
@@ -4553,21 +4548,6 @@ msgstr "url"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "sito web"
-
-#. module: website
-#: model:ir.model,name:website.model_website_multi_mixin
-msgid "website.multi.mixin"
-msgstr "website.multi.mixin"
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_mixin
-msgid "website.published.mixin"
-msgstr "website.published.mixin"
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_multi_mixin
-msgid "website.published.multi.mixin"
-msgstr "website.published.multi.mixin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion

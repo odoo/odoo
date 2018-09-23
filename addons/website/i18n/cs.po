@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Adam Kettner <cetnerix@gmail.com>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,7 @@ msgstr "&times;"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "' did not match any pages."
-msgstr ""
+msgstr "\" neodpovídá žádným stránkám"
 
 #. module: website
 #. openerp-web
@@ -824,7 +824,7 @@ msgstr "Přidat odkazy na sociální média na svých webových stránkách"
 #: code:addons/website/static/src/js/menu/new_content.js:50
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "Přidat do nabídky"
 
 #. module: website
 #. openerp-web
@@ -914,6 +914,11 @@ msgstr ""
 #, python-format
 msgid "Are you sure you want to delete this page ?"
 msgstr "Opravdu chcete tuto stránku smazat?"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_attachment
+msgid "Attachment"
+msgstr "Příloha"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -1106,7 +1111,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "Client ID"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1157,6 +1162,11 @@ msgstr "Firemní tým"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Complete CRM for any size team"
 msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -1317,9 +1327,9 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Dark"
-msgstr "Tmavý"
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr "Nástěnka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1455,13 +1465,13 @@ msgstr ""
 #: code:addons/website/models/ir_qweb_fields.py:15
 #, python-format
 msgid "Display the biography"
-msgstr ""
+msgstr "Zobrazit životopis"
 
 #. module: website
 #: code:addons/website/models/ir_qweb_fields.py:14
 #, python-format
 msgid "Display the website description"
-msgstr ""
+msgstr "Zobrazit popis webových stránek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1663,7 +1673,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_facebook
@@ -1893,7 +1903,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model_terms:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Mapy"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
@@ -1960,8 +1970,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP směrování"
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -2123,13 +2133,13 @@ msgstr "Zděděný pohled"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_instagram
 #: model:ir.model.fields,field_description:website.field_website__social_instagram
 msgid "Instagram Account"
-msgstr ""
+msgstr "Instagram účet"
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2187,7 +2197,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Je zveřejněno"
 
 #. module: website
 #. openerp-web
@@ -2325,11 +2335,6 @@ msgid "Let's start designing."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Light"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr ""
@@ -2453,11 +2458,6 @@ msgid "Menu Label"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Menu text"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website.py:321
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
@@ -2546,6 +2546,16 @@ msgstr ""
 #. module: website
 #: selection:website.redirect,type:0
 msgid "Moved temporarily (302)"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_multi_mixin
+msgid "Multi Website Mixin"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_multi_mixin
+msgid "Multi Website Published Mixin"
 msgstr ""
 
 #. module: website
@@ -2807,11 +2817,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_dashboard
-msgid "Overview"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website.py:289
 #: code:addons/website/models/website.py:353
 #: model:ir.model,name:website.model_website_page
@@ -2819,7 +2824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page__page_ids
 #, python-format
 msgid "Page"
-msgstr ""
+msgstr "Strana"
 
 #. module: website
 #: code:addons/website/models/website.py:296
@@ -2927,7 +2932,7 @@ msgstr "Náhled"
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Předchozí"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3009,9 +3014,19 @@ msgid "Quality"
 msgstr "Jakost"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
 msgid "Read more"
 msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Pravidlo záznamu"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_from
@@ -3141,12 +3156,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.menu,name:website.menu_website_dashboard
-msgid "Sales Dashboard"
-msgstr ""
+msgstr "SEO optimalizováno"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3233,6 +3243,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "Číselná řada"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_actions_server
+msgid "Server Action"
+msgstr "Akce serveru"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -3413,6 +3428,7 @@ msgid ""
 "Technical field used to resolve multiple attachments in a multi-website "
 "environment."
 msgstr ""
+"Technické pole používané k vyřešení více příloh v prostředí více webů."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -3725,7 +3741,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_twitter
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "Twitter Account"
-msgstr ""
+msgstr "Twitter účet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -3787,7 +3803,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.publish_short
 #, python-format
 msgid "Unpublished"
-msgstr ""
+msgstr "Nepublikovaný"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__url
@@ -3900,6 +3916,7 @@ msgid "Very Slow"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_view
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Zobrazení"
@@ -3922,7 +3939,7 @@ msgstr "Typ zobrazení"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Zobrazit režim dědičnosti"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
@@ -4049,6 +4066,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
 msgstr "Webadresa"
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_mixin
+msgid "Website Published Mixin"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
@@ -4205,8 +4227,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/res_users.py:33 sql_constraint:res.users:0
-#, python-format
+#: sql_constraint:res.users:0
 msgid "You can not have two users with the same login!"
 msgstr ""
 
@@ -4311,6 +4332,11 @@ msgid "e.g. About Us"
 msgstr "např: O nás"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_dashboard
+msgid "eCommerce Dashboard"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
@@ -4328,34 +4354,9 @@ msgid "instance of Odoo, the"
 msgstr "instance Odoo,"
 
 #. module: website
-#: model:ir.model,name:website.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "ir.qweb"
 msgstr "ir.qweb"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_qweb_field_contact
-msgid "ir.qweb.field.contact"
-msgstr "ir.qweb.field.contact"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "ir.rule"
-msgstr "ir.rule"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -4376,11 +4377,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "px"
 msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website
 #. openerp-web
@@ -4404,21 +4400,6 @@ msgstr "url"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "webová stránka"
-
-#. module: website
-#: model:ir.model,name:website.model_website_multi_mixin
-msgid "website.multi.mixin"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_mixin
-msgid "website.published.mixin"
-msgstr "website.published.mixin"
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_multi_mixin
-msgid "website.published.multi.mixin"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion

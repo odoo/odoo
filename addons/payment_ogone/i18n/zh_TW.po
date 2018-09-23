@@ -3,14 +3,14 @@
 # * payment_ogone
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,27 +61,27 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
 msgstr "信用卡認證編號"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Card number"
 msgstr "卡號"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Cardholder name"
 msgstr "持卡人姓名"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Expires (MM / YY)"
 msgstr "到期日 (MM / YY)"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
 msgstr "如何設定您的Ogone帳戶？"
 
@@ -138,6 +138,11 @@ msgid "Payment Acquirer"
 msgstr "收單"
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "付款指示物"
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "付款交易"
@@ -176,8 +181,3 @@ msgstr "條帶"
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "電匯"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"

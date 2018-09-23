@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Turkesh Patel <turkesh4friends@gmail.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
@@ -876,6 +876,11 @@ msgid "Are you sure you want to delete this page ?"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_attachment
+msgid "Attachment"
+msgstr "જોડાણ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
 msgstr ""
@@ -1119,6 +1124,11 @@ msgid "Complete CRM for any size team"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
 msgstr "રુપરેખાંકન"
@@ -1277,8 +1287,8 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Dark"
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
 msgstr ""
 
 #. module: website
@@ -1920,7 +1930,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
-msgid "HTTP routing"
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: website
@@ -2283,11 +2293,6 @@ msgid "Let's start designing."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Light"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr ""
@@ -2411,11 +2416,6 @@ msgid "Menu Label"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Menu text"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website.py:321
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
@@ -2504,6 +2504,16 @@ msgstr ""
 #. module: website
 #: selection:website.redirect,type:0
 msgid "Moved temporarily (302)"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_multi_mixin
+msgid "Multi Website Mixin"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_multi_mixin
+msgid "Multi Website Published Mixin"
 msgstr ""
 
 #. module: website
@@ -2765,11 +2775,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_dashboard
-msgid "Overview"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website.py:289
 #: code:addons/website/models/website.py:353
 #: model:ir.model,name:website.model_website_page
@@ -2967,8 +2972,18 @@ msgid "Quality"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
 msgid "Read more"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
 msgstr ""
 
 #. module: website
@@ -3102,11 +3117,6 @@ msgid "SEO optimized"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_dashboard
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Sample Icons"
 msgstr ""
@@ -3191,6 +3201,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "ક્રમ"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_actions_server
+msgid "Server Action"
+msgstr ""
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -3857,6 +3872,7 @@ msgid "Very Slow"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_view
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "દેખાવ"
@@ -4005,6 +4021,11 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_mixin
+msgid "Website Published Mixin"
 msgstr ""
 
 #. module: website
@@ -4162,8 +4183,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/res_users.py:33 sql_constraint:res.users:0
-#, python-format
+#: sql_constraint:res.users:0
 msgid "You can not have two users with the same login!"
 msgstr ""
 
@@ -4268,6 +4288,11 @@ msgid "e.g. About Us"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_dashboard
+msgid "eCommerce Dashboard"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
@@ -4285,33 +4310,8 @@ msgid "instance of Odoo, the"
 msgstr ""
 
 #. module: website
-#: model:ir.model,name:website.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_ir_attachment
-msgid "ir.attachment"
-msgstr ""
-
-#. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "ir.qweb"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_ir_qweb_field_contact
-msgid "ir.qweb.field.contact"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "ir.rule"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_ir_ui_view
-msgid "ir.ui.view"
 msgstr ""
 
 #. module: website
@@ -4335,11 +4335,6 @@ msgid "px"
 msgstr ""
 
 #. module: website
-#: model:ir.model,name:website.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
@@ -4360,21 +4355,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_website_multi_mixin
-msgid "website.multi.mixin"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_mixin
-msgid "website.published.mixin"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_multi_mixin
-msgid "website.published.multi.mixin"
 msgstr ""
 
 #. module: website

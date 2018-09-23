@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# e2f <projects@e2f.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
@@ -12,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -94,7 +93,7 @@ msgid "Message"
 msgstr "消息"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:81
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr "手机号缺失 %s."
@@ -109,6 +108,11 @@ msgstr "没有定义手机号码，无法发送短信:%s"
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
 msgstr "收件人"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr ""
 
 #. module: sms
 #. openerp-web
@@ -131,6 +135,7 @@ msgstr "发送"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
 #: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "发送短信"
@@ -139,13 +144,3 @@ msgstr "发送短信"
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
 msgstr "发送一条短信"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr "sms.api"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
-msgstr "sms.send_sms"

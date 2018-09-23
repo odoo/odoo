@@ -4,13 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
+# Vasilis Dimopoulos <iap3tos@outlook.com>, 2018
+# George M, 2018
+# Giota Dandidou <giotadandidou@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:51+0000\n"
-"PO-Revision-Date: 2018-09-18 09:51+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:45+0000\n"
+"PO-Revision-Date: 2018-09-21 13:45+0000\n"
+"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +66,10 @@ msgid ""
 "Allow cashier to reprint receipts\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Επιτρέπει στον ταμία την επανεκτύπωση αποδείξεων\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -182,9 +192,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Αναγνώριση Εσόδων\n"
+"====================\n"
+"Διαχείριση της αναγνώρισης εσόδων σε πωλήσεις προϊόντων.\n"
+"Παρακολουθεί τις δόσεις αναγνώρισης εσόδων, και δημιουργεί τις αντίστοιχες καταχωρήσεις ημερολογίου.\n"
+"\n"
+"    "
 
 #. module: base
-#: code:addons/base/models/res_config.py:314
+#: code:addons/base/models/res_config.py:316
 #, python-format
 msgid ""
 "\n"
@@ -214,6 +232,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Αυτό το άρθρωμα προσθέτει αρκετές λειτουργίες εστίασης στην Εντατική Λιανική:\n"
+"- Εκτύπωση Λογαριασμού: Σας επιτρέπει να εκτυπώσετε μια απόδειξη πριν η παραγγελία πληρωθεί\n"
+"- Διαχωρισμός Λογαριασμού: Σας επιτρέπει να  μοιράσετε μια παραγγελία σε περισσότερες\n"
+"- Εκτύπωση Παραγγελιών Κουζίνας: Σας επιτρέπει να εκτυπώσετε ανανεώσεις παραγγελιών σε εκτυπωτές κουζίνας ή μπαρ\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -224,6 +249,10 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Αυτό το άρθρωμα επιτρέπει στον ταμία να δίνει γρήγορα μια ποσοστιαία έκπτωση πώλησης σε ένα πελάτη.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -235,6 +264,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Αυτό το άρθρωμα επιτρέπει να ορίσετε ένα πρόγραμμα\n"
+"αφοσίωσης στην εντατική λιανική, όπου οι πελάτες κερδίζουν\n"
+"πόντους αφοσίωσης και να λαμβάνουν ανταμοιβές.\n"
+"\n"
 
 #. module: base
 #: code:addons/model.py:136
@@ -411,12 +446,22 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_partner_autocomplete
+msgid ""
+"\n"
+"        Auto-complete partner companies' data"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
 msgid ""
 "\n"
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        Τιμολόγηση καταχωρημένων χρονοδιαγραμματών σε δελτία helpdesk.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -424,6 +469,8 @@ msgid ""
 "\n"
 "        Bridge between HR and Maintenance."
 msgstr ""
+"\n"
+"        Γεφύρωση μεταξύ HR και Συντήρησης."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -431,6 +478,16 @@ msgid ""
 "\n"
 "        Compute sales tax automatically using TaxCloud based on customer address in United States.\n"
 "    "
+msgstr ""
+"\n"
+"        Αυτόματος υπολογισμός φόρου πωλήσεων με χρήση TaxCloud βασιζόμενος σε διεύθυνση πελάτη στις Ηνωμένες Πολιτείες Αμερικής.\n"
+"    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_partner_autocomplete_address_extended
+msgid ""
+"\n"
+"        Correct address formating when both modules are installed"
 msgstr ""
 
 #. module: base
@@ -443,6 +500,12 @@ msgid ""
 "        DIOT Report\n"
 "    "
 msgstr ""
+"\n"
+"        Ηλεκτρονικές λογιστικές αναφορές\n"
+"            - COA\n"
+"            - Ισοζύγιο\n"
+"        Αναφορά DIOT\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -495,6 +558,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Εκτύπωση ποσού σε λέξεις σε επιταγές εξόδων\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
@@ -530,6 +596,9 @@ msgid ""
 "        This module adds support for barcodes scanning to the delivery packages.\n"
 "    "
 msgstr ""
+"\n"
+"        Αυτό το αρθρωμα προσθέτει υποστήριξη για σκανάρισμα barcode στα παραδιδόμενα πακέτα.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -608,6 +677,8 @@ msgid ""
 "\n"
 "        This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"        Αυτό το άρθρωμα χρησιμοποιείται για Online τραπεζικό συγχρονισμό."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_sync
@@ -616,6 +687,9 @@ msgid ""
 "        This module is used for Online bank synchronization. It provides basic methods to synchronize bank statement.\n"
 "    "
 msgstr ""
+"\n"
+"        Αυτό το άρθρωμα χρησιμοποιείται για Online τραπεζικό συγχρονισμό. Παρέχει βασικές μεθόδους για συγχρονισμό των τραπεζικών δηλώσεων.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -624,6 +698,9 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
+"\n"
+"        Αυτό το άρθρωμα προμηθεύει τον πυρήνα της Κινητής Εφαρμογής Odoo.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -638,6 +715,8 @@ msgid ""
 "\n"
 "        Use Plaid.com to retrieve bank statements"
 msgstr ""
+"\n"
+"        Χρήση του Plaid.com για την ανάκτηση των τραπεζικών δηλώσεων"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_plaid
@@ -646,6 +725,9 @@ msgid ""
 "        Use Plaid.com to retrieve bank statements.\n"
 "    "
 msgstr ""
+"\n"
+"        Χρήση του Plaid.com για την ανάκτηση των τραπεζικών δηλώσεων.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_survey
@@ -670,6 +752,11 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"        Κατά την τιμολόγηση χρονοδιαγραμμάτων, επιτρέπει την τιμολόγηση\n"
+"        είτε άλλων χρονοδιαγραμμάτων σε ένα SO, ή μόνο τα επικυρωμένα\n"
+"        χρονοδιαγράμματα\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_zebra
@@ -683,6 +770,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Zebra printers integration for stock module"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_partner_autocomplete
+msgid ""
+"\n"
+"       Auto-complete partner companies' data\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -717,6 +812,8 @@ msgid ""
 "\n"
 "    Adds workcenters to Quality Control\n"
 msgstr ""
+"\n"
+"    Προσθέτει σταθμούς εργασίας στον Έλεγχο Ποιότητας\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_iot
@@ -735,6 +832,11 @@ msgid ""
 "    syntax-checked and tested.\n"
 "    "
 msgstr ""
+"\n"
+"   Περιέχει κομμάτια κώδικα προς χρήση παραδειγμάτων έγγραφης\n"
+"   υποστήριξης (μέσω της εντολής ``literalinclude`` σε περιπτώσεις\n"
+"   όπου μπορούν να ελεχθούν συντακτικά και να δοκιμαστούν.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -743,6 +845,9 @@ msgid ""
 "    Gantt view for Leaves Dashboard\n"
 "    "
 msgstr ""
+"\n"
+"    Προβολή Gantt για Ταμπλό Αδειών\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -1144,11 +1249,18 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_account
-#: model:ir.module.module,description:base.module_documents_mrp
 #: model:ir.module.module,description:base.module_documents_project
 msgid ""
 "\n"
 "Add the ability to create invoices from the document module.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_documents_product
+msgid ""
+"\n"
+"Add the ability to create products from the document module.\n"
+"and to get the option to send products' attachments to the documents app.\n"
 msgstr ""
 
 #. module: base
@@ -1447,17 +1559,6 @@ msgid ""
 "=============================\n"
 "\n"
 "GST Reporting for Australian Accounting.\n"
-"    "
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_base_vat_autocomplete
-msgid ""
-"\n"
-"Auto-Complete Addresses based on VAT numbers\n"
-"============================================\n"
-"\n"
-"    This module requires the python library stdnum to work.\n"
 "    "
 msgstr ""
 
@@ -4332,14 +4433,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_website_sale_dashboard_with_margin
-msgid ""
-"\n"
-"This module adds the average margin of your online sales to the statistics displayed in the Website application new dashboard view.\n"
-"    "
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_stock_picking_batch
 msgid ""
 "\n"
@@ -5097,7 +5190,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1081
+#: code:addons/base/models/ir_ui_view.py:1083
 #, python-format
 msgid " - %r in %s=%r"
 msgstr ""
@@ -5184,10 +5277,10 @@ msgstr "%p - Αντίστοιχο με το π.μ ή το μ.μ.\""
 
 #. module: base
 #: code:addons/base/models/ir_filters.py:38
-#: code:addons/base/models/res_partner.py:331
+#: code:addons/base/models/res_partner.py:336
 #: code:addons/base/models/res_users.py:163
-#: code:addons/base/models/res_users.py:506
-#: code:addons/base/models/res_users.py:508
+#: code:addons/base/models/res_users.py:507
+#: code:addons/base/models/res_users.py:509
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -5205,28 +5298,28 @@ msgstr "%y - Έτος χωρίς τον αιώνα [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:187
+#: code:addons/base/models/ir_fields.py:188
 #, python-format
 msgid "'%s' does not seem to be a number for field '%%(field)s'"
 msgstr "'%s' δεν μοιάζει να είναι ένας αριθμός για το πεδίο '%%(field)s'"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:207
+#: code:addons/base/models/ir_fields.py:208
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
 msgstr "'%s' δεν μοιάζει να είναι έγκυρη ημερομηνία για το πεδίο '%%(field)s'"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:239
+#: code:addons/base/models/ir_fields.py:240
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
 msgstr "'%s' δεν μοιάζει να είναι έγκυρη ώρα ημέρας για το πεδίο '%%(field)s'"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:176
+#: code:addons/base/models/ir_fields.py:177
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
 msgstr ""
@@ -6028,7 +6121,7 @@ msgstr "Ένα άρθρωμα με ψεύτικες μεθόδους"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
-msgstr ""
+msgstr "Ένας χρήστης που σχετίζεται με την επαφή"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -6342,6 +6435,7 @@ msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_actions_act_url
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__url
 msgid "Action URL"
 msgstr "URL Ενέργειας"
@@ -6352,7 +6446,23 @@ msgid "Action Usage"
 msgstr "Χρήση Ενέργειας"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_actions_act_window
+msgid "Action Window"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_actions_act_window_close
+msgid "Action Window Close"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
+#: model:ir.model,name:base.model_ir_actions_actions
 #: model:ir.ui.menu,name:base.menu_ir_sequence_actions
 #: model:ir.ui.menu,name:base.next_id_6
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -6560,16 +6670,16 @@ msgstr ""
 "Περιφέρεια"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:954
-#: code:addons/base/models/ir_model.py:1066
-#: code:addons/base/models/ir_model.py:1529
+#: code:addons/base/models/ir_model.py:957
+#: code:addons/base/models/ir_model.py:1070
+#: code:addons/base/models/ir_model.py:1523
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr ""
 "Δικαίωμα Πρόσβασης Διαχειριστή απαιτείται για να απεγκαταστήσετε ένα άρθρωμα"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:613
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "Adress separator"
 msgstr ""
@@ -6668,16 +6778,26 @@ msgid "All"
 msgstr "Όλα"
 
 #. module: base
-#: code:addons/base/wizard/base_partner_merge.py:278
+#: code:addons/base/wizard/base_partner_merge.py:280
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
 msgstr ""
+"Όλες οι επαφές πρέπει να έχουν το ίδιο email. Μόνο ο διαχειριστής μπορεί να "
+"συγχωνεύσει τις επαφές με διαφορετικά email."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "All done!"
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner__lang
+#: model:ir.model.fields,help:base.field_res_users__lang
+msgid ""
+"All the emails and documents sent to this contact will be translated in this"
+" language."
 msgstr ""
 
 #. module: base
@@ -6699,6 +6819,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_website_sale_comparison
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
+"Επιτρέψτε στους αγοραστές να συγκρίνουν τα είδη βάσει των χαρακτηριστικών "
+"τους"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_wishlist
@@ -6714,11 +6836,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Allowed Companies"
 msgstr "Επιτρεπόμενες Εταιρίες"
-
-#. module: base
-#: model:ir.model,name:base.model_report_paperformat
-msgid "Allows customization of a report."
-msgstr "Επιτρέπει την παραμετροποίηση μιας αναφοράς."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_delivery
@@ -6753,7 +6870,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:393
+#: code:addons/base/models/ir_fields.py:394
 #, python-format
 msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
@@ -6959,12 +7076,16 @@ msgstr "Αρχειοθετημένα"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
 msgstr ""
+"Είστε σίγουροι ότι θέλετε να εκτελέσετε την αυτόματη συγχώνευση των επαφών "
+"σας;"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr ""
+"Είστε σίγουροι ότι θέλετε να εκτελέσετε την λίστα των αυτόματων συγχωνεύσεων"
+" των επαφών σας;"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -7038,6 +7159,7 @@ msgid "Attached To"
 msgstr "Συνημμένο με"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "Συνημμένο"
@@ -7147,6 +7269,11 @@ msgstr "Αυτόματη Εγκατάσταση"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
+msgstr "Οδηγός Αυτόματης συγχώνευσης"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_autovacuum
+msgid "Automatic Vacuum"
 msgstr ""
 
 #. module: base
@@ -7179,7 +7306,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Avatar"
-msgstr ""
+msgstr "Άβαταρ"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -7348,13 +7475,13 @@ msgid "Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:587
+#: code:addons/base/models/ir_qweb_fields.py:602
 #, python-format
 msgid "Barcode type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:587
+#: code:addons/base/models/ir_qweb_fields.py:602
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
 msgstr ""
@@ -7365,6 +7492,7 @@ msgid "Barcodes Scanning and Parsing"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_base
 #: model:ir.module.category,name:base.module_category_base
 #: model:ir.module.module,shortdesc:base.module_base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
@@ -7682,7 +7810,7 @@ msgstr "Buckaroo Αποκτήσεις Πληρωμών"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budget Management"
-msgstr ""
+msgstr "Διαχείριση Προϋπολογισμών"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
@@ -7692,6 +7820,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_editor
 msgid "Build custom web forms"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_sale_quotation_builder
+msgid "Build great quotation templates"
 msgstr ""
 
 #. module: base
@@ -7720,7 +7853,7 @@ msgid "By"
 msgstr "από"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:273
+#: code:addons/base/models/ir_qweb_fields.py:279
 #, python-format
 msgid "By default the widget uses the field informations"
 msgstr ""
@@ -7792,7 +7925,7 @@ msgid "Cameroon"
 msgstr "Cameroon"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:390
+#: code:addons/base/models/ir_fields.py:391
 #, python-format
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
@@ -7809,7 +7942,7 @@ msgstr ""
 "εγκατεστημένο."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:704
+#: code:addons/base/models/ir_model.py:706
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr ""
@@ -7884,13 +8017,13 @@ msgid "Cannot deactivate a language that is currently used by users."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_config.py:385
+#: code:addons/base/models/res_config.py:388
 #, python-format
 msgid "Cannot duplicate configuration!"
 msgstr "Δεν μπορεί να αντιγραφεί η διαμόρφωση!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:604
+#: code:addons/base/models/ir_model.py:606
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
@@ -7953,11 +8086,6 @@ msgid "Change Password Wizard"
 msgstr "Οδηγός Αλλαγής Κωδικού Πρόσβασης"
 
 #. module: base
-#: model:ir.model,name:base.model_change_password_user
-msgid "Change Password Wizard User"
-msgstr "Χρήστης Οδηγού Αλλαγής Password"
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Change password"
 msgstr "Αλλαγή Κωδικού Πρόσβασης"
@@ -7968,7 +8096,7 @@ msgid "Change the way addresses are displayed in reports"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:345
+#: code:addons/base/models/res_partner.py:350
 #, python-format
 msgid ""
 "Changing the company of a contact should only be done if it was never "
@@ -7983,13 +8111,13 @@ msgstr ""
 " αυτή την αλλαγή ."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:691
+#: code:addons/base/models/ir_model.py:693
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Αλλαγή του μοντέλου ενός πεδίου δεν επιτρέπεται!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:694
+#: code:addons/base/models/ir_model.py:696
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
@@ -8036,18 +8164,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__customer
 #: model:ir.model.fields,help:base.field_res_users__customer
-msgid "Check this box if this contact is a customer."
-msgstr "Επιλέξτε εάν  αυτή η επαφή είναι ένας πελάτης"
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__supplier
 #: model:ir.model.fields,help:base.field_res_users__supplier
 msgid ""
-"Check this box if this contact is a vendor. If it's not checked, purchase "
-"people will not see it when encoding a purchase order."
+"Check this box if this contact is a vendor. It can be selected in purchase "
+"orders."
 msgstr ""
-"Επιλέξτε εάν αυτή η επαφή είναι ένας προμηθευτής. Εάν δεν είναι επιλεγμένο, "
-"οι υπεύθυνοι αγορών δεν θα το βλέπουν όταν καταχωρούν μια εντολή αγοράς"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__employee
@@ -8143,7 +8271,7 @@ msgid "China - Standard CoA"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:735
+#: code:addons/base/models/ir_actions_report.py:740
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Επιλέξτε τη Διάταξη των Εγγράφων σας"
@@ -8192,6 +8320,11 @@ msgstr ""
 #: selection:ir.logging,type:0
 msgid "Client"
 msgstr "Πελάτης"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_actions_client
+msgid "Client Action"
+msgstr "Client Action"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__tag
@@ -8361,7 +8494,7 @@ msgid "Companies count"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:384
+#: code:addons/base/models/ir_qweb_fields.py:395
 #: model:ir.model.fields,field_description:base.field_ir_attachment__company_id
 #: model:ir.model.fields,field_description:base.field_ir_default__company_id
 #: model:ir.model.fields,field_description:base.field_ir_property__company_id
@@ -8386,7 +8519,7 @@ msgstr "Εταιρία"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Company Data"
-msgstr ""
+msgstr "Δεδομένα εταιρείας"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
@@ -8413,6 +8546,11 @@ msgid "Company Properties"
 msgstr "Ιδιότητες Εταιρίας"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_property
+msgid "Company Property"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
 msgid "Company Registry"
 msgstr "Μητρώο Εταιρίας"
@@ -8429,7 +8567,7 @@ msgid "Company Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:384
+#: code:addons/base/models/ir_qweb_fields.py:395
 #, python-format
 msgid ""
 "Company used for the original currency (only used for t-esc). By default use"
@@ -8492,6 +8630,21 @@ msgid "Condition"
 msgstr "Κατάσταση"
 
 #. module: base
+#: model:ir.model,name:base.model_res_config
+msgid "Config"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_res_config_installer
+msgid "Config Installer"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Config Wizard Steps"
@@ -8552,7 +8705,7 @@ msgid "Connection Security"
 msgstr "Ασφάλεια Σύνδεσης"
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:187
+#: code:addons/base/models/ir_mail_server.py:188
 #, python-format
 msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
@@ -8560,7 +8713,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:195
+#: code:addons/base/models/ir_mail_server.py:196
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
 msgstr ""
@@ -8676,7 +8829,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Συμβάσεις"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__contributors
@@ -8714,7 +8867,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Κόστα Ρίκα - Λογιστική"
 
 #. module: base
-#: code:addons/base/models/res_partner.py:647
+#: code:addons/base/models/res_partner.py:654
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "Δεν μπορεί να δημιουργηθεί επαφή χωρίς διεύθυνση email!"
@@ -8807,10 +8960,20 @@ msgid "Create Date"
 msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_crm_reveal
+msgid "Create Leads/Opportunities from your website's traffic"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create Menu"
 msgstr "Δημιουργήστε μενού"
+
+#. module: base
+#: model:ir.model,name:base.model_wizard_ir_model_menu_create
+msgid "Create Menu Wizard"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_project
@@ -9096,7 +9259,7 @@ msgstr "Δημιουργία"
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Creation Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
@@ -9210,7 +9373,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__current_line_id
 msgid "Current Line"
-msgstr ""
+msgstr "Τρέχουσα γραμμή"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate
@@ -9246,7 +9409,12 @@ msgid "Custom Shortcuts"
 msgstr "Προσαρμοσμένες συντομεύσεις"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:392
+#: model:ir.model,name:base.model_ir_ui_view_custom
+msgid "Custom View"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_model.py:394
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Τα ειδικά πεδία πρέπει να έχουν όνομα που ξεκινάει από 'x_' !"
@@ -9331,7 +9499,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 msgid "Dashboard"
-msgstr ""
+msgstr "Ταμπλό"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -9388,7 +9556,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:383
+#: code:addons/base/models/ir_qweb_fields.py:394
 #: model:ir.model.fields,field_description:base.field_res_currency__date
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__name
 #: model:ir.model.fields,field_description:base.field_res_partner__date
@@ -9405,31 +9573,31 @@ msgid "Date Format"
 msgstr "Μορφή Ημερομηνίας"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:202
+#: code:addons/base/models/ir_qweb_fields.py:205
 #, python-format
 msgid "Date format"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:552
+#: code:addons/base/models/ir_qweb_fields.py:566
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:497
+#: code:addons/base/models/ir_qweb_fields.py:510
 #, python-format
 msgid "Date unit"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:497
+#: code:addons/base/models/ir_qweb_fields.py:510
 #, python-format
 msgid "Date unit used for comparison and formatting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:498
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
@@ -9437,7 +9605,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:383
+#: code:addons/base/models/ir_qweb_fields.py:394
 #, python-format
 msgid ""
 "Date used for the original currency (only used for t-esc). by default use "
@@ -9477,12 +9645,12 @@ msgstr "Διαχωριστικό Δεκαδικών"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
-msgstr ""
+msgstr "Διαγραφή Διπλών Επαφών"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr ""
+msgstr "Διατήρηση ενός αντιγράφου άλλης επαφής"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -9498,6 +9666,11 @@ msgstr "Προεπιλεγμένο Θέμα"
 #: model:ir.model.fields,field_description:base.field_ir_default__json_value
 msgid "Default Value (JSON format)"
 msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_default
+msgid "Default Values"
+msgstr "Προεπιλεγμένες τιμές"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__limit
@@ -9553,7 +9726,7 @@ msgstr "Διαγραφή Δικαιώματος Πρόσβασης"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Delivery"
-msgstr ""
+msgstr "Παράδοση"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_barcode
@@ -9566,9 +9739,19 @@ msgid "Delivery Costs"
 msgstr "Κόστη  Παράδοσης"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_demo
+msgid "Demo"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__demo
 msgid "Demo Data"
 msgstr "Δοκιμαστικές Εγγραφές"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_demo_failure_wizard
+msgid "Demo Failure wizard"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
@@ -9580,6 +9763,11 @@ msgstr ""
 msgid ""
 "Demo data should only be used on test databases. Once they are loaded, they "
 "cannot be removed."
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_demo_failure
+msgid "Demo failure"
 msgstr ""
 
 #. module: base
@@ -9633,6 +9821,13 @@ msgid "Design gorgeous mails"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_quotation_builder
+msgid ""
+"Design great quotation templates with building blocks to significantly boost"
+" your success rate."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
 msgstr "Σχεδιασμός ,αποστολή και παρακολούθηση emails"
@@ -9640,7 +9835,7 @@ msgstr "Σχεδιασμός ,αποστολή και παρακολούθηση
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
-msgstr ""
+msgstr "Επαφή Προορισμού"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
@@ -9679,7 +9874,7 @@ msgid "Digital Products"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:496
+#: code:addons/base/models/ir_qweb_fields.py:509
 #, python-format
 msgid "Digital formating"
 msgstr ""
@@ -9690,7 +9885,7 @@ msgid "Direction"
 msgstr "Κατεύθυνση"
 
 #. module: base
-#: code:addons/base/models/res_config.py:431
+#: code:addons/base/models/res_config.py:434
 #, python-format
 msgid ""
 "Disabling this option will also uninstall the following modules \n"
@@ -9862,7 +10057,7 @@ msgstr ""
 "διατηρηθούν."
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:382
+#: code:addons/base/models/ir_qweb_fields.py:393
 #, python-format
 msgid "Display currency"
 msgstr ""
@@ -9880,37 +10075,37 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:220
+#: code:addons/base/models/ir_qweb_fields.py:224
 #, python-format
 msgid "Display only the time"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:617
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Display the country image if the field is present on the record"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:616
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Display the phone icons even if no_marker is True"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:617
+#: code:addons/base/models/ir_qweb_fields.py:633
 #, python-format
 msgid "Displayed contry image"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:612
+#: code:addons/base/models/ir_qweb_fields.py:628
 #, python-format
 msgid "Displayed fields"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:616
+#: code:addons/base/models/ir_qweb_fields.py:632
 #, python-format
 msgid "Displayed phone icons"
 msgstr ""
@@ -9961,8 +10156,8 @@ msgid "Document management"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1221
-#: code:addons/base/models/ir_model.py:1224
+#: code:addons/base/models/ir_model.py:1226
+#: code:addons/base/models/ir_model.py:1229
 #, python-format
 msgid "Document model"
 msgstr "Μοντέλου Εγγράφου"
@@ -9975,7 +10170,7 @@ msgstr "Δοκιμές παραδειγμάτων τεκμηρίωσης"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents
 msgid "Documents"
-msgstr ""
+msgstr "Έγγραφα"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_account
@@ -9983,8 +10178,8 @@ msgid "Documents - Accounting"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_documents_mrp
-msgid "Documents - MRP"
+#: model:ir.module.module,shortdesc:base.module_documents_product
+msgid "Documents - Product"
 msgstr ""
 
 #. module: base
@@ -10026,7 +10221,7 @@ msgid "Dominican Republic - Accounting"
 msgstr "Δομινικανική Δημοκρατία - Λογιστική"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:614
+#: code:addons/base/models/ir_qweb_fields.py:630
 #, python-format
 msgid "Don't display the font awsome marker"
 msgstr ""
@@ -10094,19 +10289,19 @@ msgid "EDI for Mexico"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:541
+#: code:addons/base/models/ir_attachment.py:542
 #, python-format
 msgid "ERROR: Invalid PDF file!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:582
+#: code:addons/base/models/ir_attachment.py:583
 #, python-format
 msgid "ERROR: Invalid list of pages to split. Example: 1,5-9,10"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:578
+#: code:addons/base/models/ir_attachment.py:579
 #, python-format
 msgid "ERROR: the file must be a PDF"
 msgstr ""
@@ -10220,8 +10415,8 @@ msgid "Electronic invoicing for Colombia with Carvajal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:609
-#: code:addons/base/models/ir_ui_view.py:690
+#: code:addons/base/models/ir_ui_view.py:611
+#: code:addons/base/models/ir_ui_view.py:692
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "Στοιχείο '%s' δεν μπορεί να τοποθετηθεί σε μια μητρική οθόνη"
@@ -10278,7 +10473,7 @@ msgid "Employees"
 msgstr "Υπάλληλοι"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:448
+#: code:addons/base/models/ir_model.py:450
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -10334,10 +10529,10 @@ msgstr "Eritrea"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure__error
 msgid "Error"
-msgstr ""
+msgstr "Σφάλμα"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:516
+#: code:addons/base/models/ir_ui_view.py:518
 #, python-format
 msgid ""
 "Error context:\n"
@@ -10357,7 +10552,7 @@ msgid "Error while validating constraint"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_menu.py:75
+#: code:addons/base/models/ir_ui_menu.py:76
 #, python-format
 msgid "Error! You cannot create recursive menus."
 msgstr ""
@@ -10385,7 +10580,7 @@ msgstr ""
 #. module: base
 #: model:res.country.group,name:base.europe
 msgid "Europe"
-msgstr ""
+msgstr "Ευρώπη"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines__type
@@ -10455,7 +10650,7 @@ msgstr "Παραδείγματα"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr ""
+msgstr "Εξαίρεση επαφών που έχουν"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__exclusion_id
@@ -10562,6 +10757,16 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa
 msgid "Export payments as SEPA Credit Transfer files"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_exports
+msgid "Exports"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_exports_line
+msgid "Exports Line"
 msgstr ""
 
 #. module: base
@@ -10844,7 +11049,7 @@ msgstr "Faroe Islands"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.contact
 msgid "Fax"
-msgstr ""
+msgstr "Fax"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -10921,25 +11126,25 @@ msgid "Field"
 msgstr "Πεδίο"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:200
+#: code:addons/base/models/ir_model.py:202
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:204
+#: code:addons/base/models/ir_model.py:206
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:202
+#: code:addons/base/models/ir_model.py:204
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1080
+#: code:addons/base/models/ir_ui_view.py:1082
 #, python-format
 msgid "Field %r used in attributes must be present in view but is missing:"
 msgstr ""
@@ -10971,13 +11176,13 @@ msgid "Field Type"
 msgstr "Τύπος Πεδίου"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:1074
+#: code:addons/base/models/ir_ui_view.py:1076
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Το πεδίο `%(field_name)s` δεν υπάρχει"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:396
+#: code:addons/base/models/ir_model.py:398
 #, python-format
 msgid ""
 "Field names can only contain characters, digits and underscores (up to 63)."
@@ -11001,12 +11206,17 @@ msgid "Fields"
 msgstr "Πεδία"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_fields_converter
+msgid "Fields Converter"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Fields Description"
 msgstr "Περιγραφή Πεδίων"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:605
+#: code:addons/base/models/ir_model.py:607
 #, python-format
 msgid "Fields: %s"
 msgstr ""
@@ -11057,7 +11267,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas_fname
 msgid "Filename"
-msgstr ""
+msgstr "Όνομα αρχείου"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -11117,7 +11327,7 @@ msgstr ""
 #. module: base
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Finished"
-msgstr ""
+msgstr "Ολοκληρώθηκε"
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -11132,7 +11342,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet"
-msgstr ""
+msgstr "Στόλος"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -11145,6 +11355,11 @@ msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
 
 #. module: base
+#: model:ir.model,name:base.model_format_address_mixin
+msgid "Fomat Address"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
 msgid "Food"
 msgstr "Εστίαση"
@@ -11152,7 +11367,7 @@ msgstr "Εστίαση"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
 msgid "Footer"
-msgstr ""
+msgstr "Υποσέλιδο"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_footer
@@ -11192,15 +11407,17 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "Για πεδία σχέσεων, το τεχνικό όνομα του υποδείγματος στόχου"
 
 #. module: base
-#: code:addons/base/wizard/base_partner_merge.py:268
+#: code:addons/base/wizard/base_partner_merge.py:270
 #, python-format
 msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
 msgstr ""
+"Για λόγους ασφάλειας, δεν μπορείτε να συγχωνεύσετε περισσότερες απο 3 επαφές"
+" μαζί. Μπορείτε να ξανα-ανοίξετε τον οδηγό πολλές φορές αν απαιτείται."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:647
+#: code:addons/base/models/ir_model.py:649
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Για τα επιλεγμένα πεδία, οι Ρυθμίσεις Επιλογών πρέπει να παρέχονται!"
@@ -11217,7 +11434,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Forecast"
-msgstr ""
+msgstr "Πρόβλεψη"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -11266,7 +11483,7 @@ msgid "Forum"
 msgstr "Φόρουμ"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:347
+#: code:addons/base/models/ir_fields.py:348
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
 msgstr ""
@@ -11332,7 +11549,7 @@ msgstr "French Southern Territories"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Friday"
-msgstr ""
+msgstr "Παρασκευή"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
@@ -11341,7 +11558,7 @@ msgstr "Από"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
-msgid "From quotes to invoices"
+msgid "From quotations to invoices"
 msgstr ""
 
 #. module: base
@@ -11574,11 +11791,6 @@ msgid "Get a new dashboard view in the Website App"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_website_sale_dashboard_with_margin
-msgid "Get margin information in your e-commerce dashboard"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,summary:base.module_website_enterprise
 msgid "Get the enterprise look and feel"
 msgstr ""
@@ -11621,7 +11833,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_config.py:737
+#: code:addons/base/models/res_config.py:742
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Μετάβαση στον πίνακα ελέγχου"
@@ -11696,7 +11908,7 @@ msgstr "Ενσωμάτωση Google Drive™"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
 msgid "Google Maps"
-msgstr ""
+msgstr "Χάρτες Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_spreadsheet
@@ -11795,7 +12007,7 @@ msgstr "Όνομα oμάδας"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__number_group
 msgid "Group of Contacts"
-msgstr ""
+msgstr "Ομάδα Επαφών"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -11894,8 +12106,8 @@ msgstr "HTML"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_http
-msgid "HTTP routing"
-msgstr "Δρομολόγηση HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -11958,10 +12170,10 @@ msgid "Heard Island and McDonald Islands"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:589
+#: code:addons/base/models/ir_qweb_fields.py:604
 #, python-format
 msgid "Height"
-msgstr ""
+msgstr "Ύψος"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12134,13 +12346,13 @@ msgid "Here is the exported translation file:"
 msgstr "Εδώ είναι το εξαγώμενο αρχείο μετάφρασης:"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:614
+#: code:addons/base/models/ir_qweb_fields.py:630
 #, python-format
 msgid "Hide marker"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:221
+#: code:addons/base/models/ir_qweb_fields.py:225
 #, python-format
 msgid "Hide seconds"
 msgstr ""
@@ -12226,7 +12438,7 @@ msgid "Human  Resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:590
+#: code:addons/base/models/ir_qweb_fields.py:605
 #, python-format
 msgid "Human Readable"
 msgstr ""
@@ -12423,7 +12635,7 @@ msgstr "URL Εικονιδίου"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__aggr_ids
 msgid "Ids"
-msgstr ""
+msgstr "Κωδικός"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__multi
@@ -12495,17 +12707,6 @@ msgid ""
 msgstr ""
 "Εάν καθοριστεί, αυτή η ενέργεια θα ανοίξει μια αρχειοθέτηση για αυτόν τον "
 "χρήστη, πρόσθετα στο τυπικό μενού."
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner__lang
-#: model:ir.model.fields,help:base.field_res_users__lang
-msgid ""
-"If the selected language is loaded in the system, all documents related to "
-"this contact will be printed in this language. If not, it will be English."
-msgstr ""
-"Εάν η επιλεγόμενη γλώσσα είναι φορτωμένη στο σύστημα, όλα τα έγγραφα σχετικά"
-" με αυτό το συμβόλαιο θα εκτυπωθούν σε αυτή την γλώσσα. Εάν όχι θα "
-"εκτυπωθούν στα Αγγλικά."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__groups_id
@@ -12669,7 +12870,7 @@ msgid "Import QIF Bank Statement"
 msgstr "Εισαγωγή QIF Τραπεζικής Δήλωσης"
 
 #. module: base
-#: code:addons/base/models/res_partner.py:846
+#: code:addons/base/models/res_partner.py:855
 #, python-format
 msgid "Import Template for Customers"
 msgstr ""
@@ -12920,11 +13121,6 @@ msgid "Integer"
 msgstr "Ακέραιος"
 
 #. module: base
-#: model:ir.module.module,description:base.module_web_clearbit
-msgid "Integrate Clearbit API to get company logo"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
 msgid "Integrate coupon mechanism in sales orders."
 msgstr ""
@@ -13020,7 +13216,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:410
+#: code:addons/base/models/res_users.py:411
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr ""
@@ -13032,7 +13228,7 @@ msgid "Invalid aggregation function %r."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:329
+#: code:addons/base/models/ir_fields.py:330
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
 msgstr ""
@@ -13046,7 +13242,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_default.py:68
+#: code:addons/base/models/ir_default.py:69
 #, python-format
 msgid "Invalid field %s.%s"
 msgstr "Μη έγκυρο πεδίο %s.%s"
@@ -13070,56 +13266,56 @@ msgid "Invalid key: QWeb view should have a key"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:138
 #: code:addons/base/models/ir_actions.py:140
+#: code:addons/base/models/ir_actions.py:142
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:681
+#: code:addons/base/models/ir_ui_view.py:683
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_sequence.py:220
+#: code:addons/base/models/ir_sequence.py:221
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Μη έγκυρο πρόθεμα ή κατάληξη για την ακολουθία '%s'"
 
 #. module: base
-#: code:addons/base/models/res_users.py:418
+#: code:addons/base/models/res_users.py:419
 #, python-format
 msgid "Invalid search criterion"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:602
+#: code:addons/base/models/ir_ui_view.py:604
 #, python-format
 msgid "Invalid specification for moved nodes: '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_property.py:67
+#: code:addons/base/models/ir_property.py:68
 #, python-format
 msgid "Invalid type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_default.py:70
+#: code:addons/base/models/ir_default.py:71
 #, python-format
 msgid "Invalid value for %s.%s: %s"
 msgstr "Μη έγκυρη τιμή για %s.%s: %s"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:343
+#: code:addons/base/models/ir_ui_view.py:345
 #, python-format
 msgid "Invalid view %s definition in %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:345
+#: code:addons/base/models/ir_ui_view.py:347
 #, python-format
 msgid ""
 "Invalid view %s definition in %s \n"
@@ -13141,7 +13337,7 @@ msgstr "Απόθεμα, Εφοδιαστική Αλυσίδα, Αποτίμησ�
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Invoice"
-msgstr ""
+msgstr "Τιμολόγιο"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -13155,7 +13351,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
-#: model:ir.module.module,summary:base.module_documents_mrp
 msgid "Invoices from Documents"
 msgstr ""
 
@@ -13202,7 +13397,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_is_company
 msgid "Is Company"
-msgstr ""
+msgstr "Είναι Εταιρεία"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
@@ -13291,7 +13486,7 @@ msgstr "Jordan (Ιορδανία)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr ""
+msgstr "Στοιχεία Ημερολόγιου που σχετίζονται με την επαφή"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement_jit
@@ -13408,6 +13603,11 @@ msgstr "Οριζόντιος"
 #: model_terms:ir.ui.view,arch_db:base.res_lang_search
 msgid "Language"
 msgstr "Γλώσσα"
+
+#. module: base
+#: model:ir.model,name:base.model_base_language_export
+msgid "Language Export"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
@@ -13743,6 +13943,11 @@ msgid "Lead Automation"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_crm_reveal
+msgid "Lead Generation"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_score
 msgid "Lead Scoring"
 msgstr ""
@@ -13809,7 +14014,7 @@ msgid "Lesotho"
 msgstr "Lesotho"
 
 #. module: base
-#: model:ir.module.module,description:base.module_account_predictive_account
+#: model:ir.module.module,description:base.module_account_predictive_bills
 msgid ""
 "Let the system try to select the right account and/or product for your "
 "vendor bills"
@@ -13869,7 +14074,7 @@ msgstr "Γραμμή"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
 msgid "Lines"
-msgstr ""
+msgstr "Γραμμές"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_payment
@@ -13900,7 +14105,7 @@ msgid "Link using field"
 msgstr "Σύνδεση χρησιμοποιώντας πεδίο"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:612
+#: code:addons/base/models/ir_qweb_fields.py:628
 #, python-format
 msgid "List of contact fields to display in the widget"
 msgstr ""
@@ -13945,7 +14150,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_support
 msgid "Livechat Support"
-msgstr ""
+msgstr "Υποστήριξη Ζωντανής Συνομιλίας"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -13983,6 +14188,7 @@ msgstr "Καταγραφή"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
+#: model:ir.model,name:base.model_ir_logging
 #: model:ir.ui.menu,name:base.ir_logging_all_menu
 msgid "Logging"
 msgstr "Σύνδεση"
@@ -13997,7 +14203,7 @@ msgstr "Σύνδεση"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Logo"
-msgstr ""
+msgstr "Λογότυπο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo_web
@@ -14082,7 +14288,7 @@ msgid "Madam"
 msgstr "Κυρία"
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:488
+#: code:addons/base/models/ir_mail_server.py:489
 #, python-format
 msgid "Mail Delivery Failed"
 msgstr "Παράδοση mail απέτυχε"
@@ -14090,6 +14296,11 @@ msgstr "Παράδοση mail απέτυχε"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_enterprise
 msgid "Mail Enterprise"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_mail_server
+msgid "Mail Server"
 msgstr ""
 
 #. module: base
@@ -14103,7 +14314,7 @@ msgid "Mail Tests: performances and tests specific to mail"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:486
+#: code:addons/base/models/ir_mail_server.py:487
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -14131,7 +14342,7 @@ msgstr "Προγραμματιστής"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_maintenance
 msgid "Maintenance"
-msgstr ""
+msgstr "Συντήρηση"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_maintenance
@@ -14322,7 +14533,7 @@ msgid "Many2One"
 msgstr "ΠολλάΠροςΈνα"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:658
+#: code:addons/base/models/ir_model.py:660
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr ""
@@ -14424,7 +14635,7 @@ msgstr "Mauritius"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr ""
+msgstr "Ανώτατο όριο Ομάδας Επαφών"
 
 #. module: base
 #: model:res.country,name:base.yt
@@ -14452,7 +14663,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Members"
-msgstr ""
+msgstr "Μέλη"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_note_pad
@@ -14460,6 +14671,7 @@ msgid "Memos pad"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_ui_menu
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__name
 #: model_terms:ir.ui.view,arch_db:base.edit_menu
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -14498,28 +14710,38 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically"
-msgstr ""
+msgstr "Αυτόματη Συγχώνευση"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr ""
+msgstr "Αυτόματη Συγχώνευση όλων των διαδικασίων"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
+msgstr "Συγχώνευση Επαφών"
+
+#. module: base
+#: model:ir.model,name:base.model_base_partner_merge_line
+msgid "Merge Partner Line"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
 msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge the following contacts"
-msgstr ""
+msgstr "Συγχώνευση των παρακάτω Επαφών"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge with Manual Check"
-msgstr ""
+msgstr "Συγχώνευση με Χειροκίνητο Έλεγχο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -14532,7 +14754,7 @@ msgid "Messaging and Social"
 msgstr "Μηνύματα και Κοινωνικά"
 
 #. module: base
-#: code:addons/base/models/res_config.py:545
+#: code:addons/base/models/res_config.py:548
 #, python-format
 msgid ""
 "Methods that start with `get_default_` are deprecated. Override `get_values`"
@@ -14540,7 +14762,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_config.py:610
+#: code:addons/base/models/res_config.py:605
 #, python-format
 msgid ""
 "Methods that start with `set_` are deprecated. Override `set_values` instead"
@@ -14576,7 +14798,7 @@ msgstr "Τύπος MIME"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__min_id
 msgid "MinID"
-msgstr ""
+msgstr "MinID"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -14606,7 +14828,7 @@ msgid "Miss"
 msgstr "Δίδα"
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:240
+#: code:addons/base/models/ir_mail_server.py:241
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Λείπει ο SMTP Server"
@@ -14624,7 +14846,7 @@ msgid "Missing required value for the field '%s' (%s)"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:393
+#: code:addons/base/models/ir_ui_view.py:395
 #, python-format
 msgid "Missing view architecture."
 msgstr ""
@@ -14667,21 +14889,31 @@ msgid "Model"
 msgstr "Μοντέλο"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:490
+#: code:addons/base/models/ir_model.py:492
 #, python-format
 msgid "Model %s does not exist"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:654
+#: code:addons/base/models/ir_model.py:656
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Το Υπόδειγμα %s δεν υπάρχει!"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:180
+#: code:addons/base/models/ir_model.py:182
 #, python-format
 msgid "Model '%s' contains module data and cannot be removed."
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_model_access
+msgid "Model Access"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_model_constraint
+msgid "Model Constraint"
 msgstr ""
 
 #. module: base
@@ -14693,6 +14925,7 @@ msgid "Model Constraints"
 msgstr "Περιορισμοί Υποδείγματος"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_model_data
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_data_id
 msgid "Model Data"
 msgstr "Μοντέλο Δεδομένων"
@@ -14740,8 +14973,8 @@ msgid "Model name of the object to open in the view window"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:820
-#: code:addons/base/models/ir_ui_view.py:1042
+#: code:addons/base/models/ir_ui_view.py:822
+#: code:addons/base/models/ir_ui_view.py:1044
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Δεν βρέθηκε το Υπόδειγμα: %(model)s"
@@ -14795,9 +15028,14 @@ msgid "Module Name"
 msgstr "Όνομα Αρθρώματος"
 
 #. module: base
+#: model:ir.model,name:base.model_report_base_report_irmodulereference
+msgid "Module Reference Report (base)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
-msgid "Module Uninstallation"
-msgstr "Απεγκατάσταση Αρθρώματος"
+msgid "Module Uninstall"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -14808,11 +15046,6 @@ msgstr "Ενημέρωση Αρθρώματος"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Module Update Result"
 msgstr "Ενημέρωση Λίστας Αρθωμάτων"
-
-#. module: base
-#: model:ir.model,name:base.model_base_module_upgrade
-msgid "Module Upgrade"
-msgstr "Aναβάθμιση Αρθρώματος"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
@@ -14866,7 +15099,7 @@ msgstr "Monaco"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Monday"
-msgstr ""
+msgstr "Δευτέρα"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -15028,7 +15261,7 @@ msgid "New Caledonia"
 msgstr ""
 
 #. module: base
-#: code:addons/base/wizard/base_export_language.py:18
+#: code:addons/base/wizard/base_export_language.py:19
 #, python-format
 msgid "New Language (Empty translation template)"
 msgstr "Νέα Γλώσσα (Άδειο Πρότυπο Μετάφρασης)"
@@ -15136,19 +15369,19 @@ msgid "No gap"
 msgstr "Χωρίς κενό"
 
 #. module: base
-#: code:addons/fields.py:2353
+#: code:addons/fields.py:2357
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/wizard/base_update_translations.py:25
+#: code:addons/base/wizard/base_update_translations.py:26
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Δεν υπάρχει γλώσσα με κωδικό \"%s\""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:368
+#: code:addons/base/models/ir_fields.py:369
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field "
@@ -15158,7 +15391,7 @@ msgstr ""
 "'%%(field)s'"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:366
+#: code:addons/base/models/ir_fields.py:367
 #, python-format
 msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field "
@@ -15169,7 +15402,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
 msgid "No of Views"
-msgstr ""
+msgstr "Πλήθος προβολών"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
@@ -15182,13 +15415,13 @@ msgid "Non Updatable"
 msgstr "Αδύνατο να ενημερωθεί"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:457
+#: code:addons/base/models/ir_model.py:459
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:414
+#: code:addons/base/models/ir_model.py:416
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -15217,7 +15450,7 @@ msgstr "Norfolk Island"
 #: code:addons/base/models/res_bank.py:69
 #, python-format
 msgid "Normal"
-msgstr ""
+msgstr "Κανονική"
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -15258,7 +15491,7 @@ msgid "Not done"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1407
+#: code:addons/base/models/ir_model.py:1405
 #, python-format
 msgid "Not enough access rights on the external ID:"
 msgstr ""
@@ -16482,7 +16715,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
 msgid "Ok"
-msgstr ""
+msgstr "ΟΚ"
 
 #. module: base
 #: model:res.country,name:base.om
@@ -16522,7 +16755,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:402
+#: code:addons/base/models/res_partner.py:407
 #, python-format
 msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
@@ -16560,13 +16793,13 @@ msgid "Online Ticket Submission"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_config.py:560
+#: code:addons/base/models/res_config.py:611
 #, python-format
 msgid "Only administrators can change the settings"
 msgstr "Μόνο ο διαχειριστές μπορούν να αλλάξουν τις ρυθμίσεις"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:68
+#: code:addons/base/models/ir_attachment.py:69
 #, python-format
 msgid "Only administrators can execute this action."
 msgstr "Μόνο διαχιεριστές μπορούν να εκτελέσουν αυτήν την λειτουργία."
@@ -16591,16 +16824,20 @@ msgid "Only one currency rate per day allowed!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/wizard/base_partner_merge.py:291
+#: code:addons/base/wizard/base_partner_merge.py:293
 #, python-format
 msgid ""
 "Only the destination contact may be linked to existing Journal Items. Please"
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
+"Μόνο η επαφή προορισμός μπορεί να συνδεθεί με τα υπάρχοντα στοιχεία του "
+"ημερολογίου. Παρακαλούμε ρωτήστε τον Διαχειριστή εάν απαιτείται να "
+"συγχωνενεύσετε μερικές επαφές που συνδεόνται με τις υπάρχουσες εγγραφές "
+"ημερολογίου."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1221
+#: code:addons/base/models/ir_model.py:1226
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -16637,12 +16874,12 @@ msgstr "Ευκαιρία σε Προσφορά"
 #. module: base
 #: selection:base.partner.merge.automatic.wizard,state:0
 msgid "Option"
-msgstr ""
+msgstr "Επιλογή"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_options
 msgid "Optional Products"
-msgstr ""
+msgstr "Προαιρετικά Είδη"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__domain
@@ -16695,7 +16932,7 @@ msgstr "Προαιρετικό username για SMTP αυθεντικοποίησ
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Options"
-msgstr ""
+msgstr "Επιλογές"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -16881,7 +17118,7 @@ msgid "Original View"
 msgstr "Αρχική Προβολή"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:381
+#: code:addons/base/models/ir_qweb_fields.py:392
 #, python-format
 msgid "Original currency"
 msgstr ""
@@ -17041,6 +17278,11 @@ msgid "Paper Format"
 msgstr "Ρυθμίσεις Χαρτιού"
 
 #. module: base
+#: model:ir.model,name:base.model_report_paperformat
+msgid "Paper Format Config"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
 msgid "Paper Format General Configuration"
 msgstr "Γενικές Ρυθμίσεις Μορφοποίησης Χαρτιού"
@@ -17130,9 +17372,24 @@ msgid "Partner"
 msgstr "Συναλλασόμενος"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_partner_autocomplete
+msgid "Partner Autocomplete"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_partner_autocomplete_address_extended
+msgid "Partner Autocomplete extends Address autocomplete"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
 msgstr "Ετικέτες Συνεργάτη"
+
+#. module: base
+#: model:ir.model,name:base.model_res_partner_title
+msgid "Partner Title"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_title_form
@@ -17164,7 +17421,7 @@ msgid "Partners Geolocation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:793
+#: code:addons/base/models/res_partner.py:802
 #, python-format
 msgid "Partners: "
 msgstr "Συνεργάτες "
@@ -17181,7 +17438,7 @@ msgid "Path"
 msgstr "Διαδρομή"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:219
+#: code:addons/base/models/ir_qweb_fields.py:223
 #, python-format
 msgid "Pattern to format"
 msgstr ""
@@ -17326,7 +17583,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:164
+#: code:addons/base/models/ir_mail_server.py:165
 #, python-format
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
@@ -17334,7 +17591,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1224
+#: code:addons/base/models/ir_model.py:1229
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -17343,7 +17600,7 @@ msgstr ""
 "ότι αυτό είναι ένα λάθος."
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:241
+#: code:addons/base/models/ir_mail_server.py:242
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -17358,13 +17615,13 @@ msgid "Please set the Model to Create before choosing values"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:491
+#: code:addons/base/models/ir_model.py:493
 #, python-format
 msgid "Please specify a valid model for the object relation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:332
+#: code:addons/base/models/res_users.py:333
 #, python-format
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
@@ -17460,7 +17717,7 @@ msgid "PostgreSQL table name implementing a many2many relation."
 msgstr "Όνομα πίνακα PostgreSQL με υλοποίηση σχέσης ΠολλάΠροςΠολλά."
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_account_predictive_account
+#: model:ir.module.module,shortdesc:base.module_account_predictive_bills
 msgid "Predictive vendor bill data"
 msgstr ""
 
@@ -17587,6 +17844,11 @@ msgid "Products Expiration Date"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_documents_product
+msgid "Products from Documents"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_prof
 msgid "Prof."
 msgstr "Καθ."
@@ -17699,7 +17961,7 @@ msgid "Properties"
 msgstr "Ιδιότητες"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:686
+#: code:addons/base/models/ir_model.py:688
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -17859,7 +18121,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control
 msgid "Quality"
-msgstr ""
+msgstr "Ποιότητα"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -17910,7 +18172,97 @@ msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
 msgstr "Προσφορές, Πωλήσεις, Διαχείριση Τιμολογίων & Αποστολών"
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:352
+#: model:ir.model,name:base.model_ir_qweb_field
+msgid "Qweb Field"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_barcode
+msgid "Qweb Field Barcode"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_date
+msgid "Qweb Field Date"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_datetime
+msgid "Qweb Field Datetime"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_duration
+msgid "Qweb Field Duration"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_float
+msgid "Qweb Field Float"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_float_time
+msgid "Qweb Field Float Time"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_image
+msgid "Qweb Field Image"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_integer
+msgid "Qweb Field Integer"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_many2one
+msgid "Qweb Field Many to One"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_monetary
+msgid "Qweb Field Monerary"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_relative
+msgid "Qweb Field Relative"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_selection
+msgid "Qweb Field Selection"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_text
+msgid "Qweb Field Text"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_qweb
+msgid "Qweb Field qweb"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_qweb_field_many2many
+msgid "Qweb field many2many"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_ui_view.py:354
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -17979,6 +18331,7 @@ msgid "Record ID"
 msgstr "ID Εγγραφής"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "Κανόνας Εγγραφής"
@@ -18003,7 +18356,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:248 code:addons/models.py:4233
+#: code:addons/base/models/ir_actions.py:250 code:addons/models.py:4233
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr ""
@@ -18026,7 +18379,7 @@ msgid "Recursion error in modules dependencies !"
 msgstr "Σφάλμα στις εξαρτήσεις Αρθρωμάτων!"
 
 #. module: base
-#: code:addons/base/models/ir_actions.py:407
+#: code:addons/base/models/ir_actions.py:412
 #, python-format
 msgid "Recursion found in child server actions"
 msgstr "Επανάληψη βρέθηκε σε θυγατρικές ενέργειες του διακομιστή"
@@ -18044,7 +18397,7 @@ msgid "Reference"
 msgstr "Σχετικό"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:552
+#: code:addons/base/models/ir_qweb_fields.py:566
 #, python-format
 msgid "Reference date"
 msgstr ""
@@ -18076,13 +18429,13 @@ msgid "Related field"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:426
+#: code:addons/base/models/ir_model.py:428
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:424
+#: code:addons/base/models/ir_model.py:426
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr ""
@@ -18091,6 +18444,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field
 msgid "Relation Field"
 msgstr "Πεδίο Σχέσης"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_model_relation
+msgid "Relation Model"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__name
@@ -18105,7 +18463,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
 msgid "Relation field"
-msgstr ""
+msgstr "Συσχετιζόμενο πεδίο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
@@ -18115,7 +18473,7 @@ msgstr "Επαναφόρτωση από συνημμένο"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -18150,7 +18508,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_repair
 msgid "Repairs"
-msgstr ""
+msgstr "Επισκευές"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__doall
@@ -18174,6 +18532,11 @@ msgstr "Επανάληψη κάθε Χ."
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Report"
 msgstr "Αναφορά"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -18320,13 +18683,13 @@ msgid "Rounding Factor"
 msgstr "Παράγοντας Στρογγυλοποίησης"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:158
+#: code:addons/base/models/ir_qweb_fields.py:160
 #, python-format
 msgid "Rounding precision"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:498
+#: code:addons/base/models/ir_qweb_fields.py:511
 #, python-format
 msgid "Rounding unit"
 msgstr ""
@@ -18348,13 +18711,13 @@ msgid "Rules"
 msgstr "Κανόνες"
 
 #. module: base
-#: code:addons/base/models/ir_rule.py:56
+#: code:addons/base/models/ir_rule.py:57
 #, python-format
 msgid "Rules can not be applied on Transient models."
 msgstr "Οι Κανόνες δεν μπορούν να εφαρμοστούν σε παροδικά μοντέλα."
 
 #. module: base
-#: code:addons/base/models/ir_rule.py:62
+#: code:addons/base/models/ir_rule.py:63
 #, python-format
 msgid "Rules can not be applied on the Record Rules model."
 msgstr ""
@@ -18363,7 +18726,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run"
-msgstr ""
+msgstr "Εκτέλεση"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -18520,7 +18883,6 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_management
 #: model:ir.module.module,shortdesc:base.module_sale
 #: model:ir.module.module,shortdesc:base.module_sale_management
-#: model:ir.module.module,summary:base.module_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
 msgstr "Πωλήσεις"
@@ -18539,7 +18901,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_sales_team
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Teams"
-msgstr ""
+msgstr "Ομάδες Πωλήσεων"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
@@ -18591,7 +18953,7 @@ msgstr ""
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Saturday"
-msgstr ""
+msgstr "Σάββατο"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -18701,7 +19063,7 @@ msgstr "Αναζήτηση Σχετ. Προβολής"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr ""
+msgstr "Αναζήτηση διπλότυπων με βάση τα διπλά δεδομένα σε"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -18726,7 +19088,7 @@ msgid "Security and Authentication"
 msgstr "Ασφάλεια και Πιστοποίηση"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:310
+#: code:addons/base/models/ir_fields.py:311
 #, python-format
 msgid "See all possible values"
 msgstr "Δείτε όλες τις πιθανές αξίες"
@@ -18755,6 +19117,10 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
+"Επιλέξτε την λίστα των πεδίων που χρησιμοποιούνται για \n"
+"την αναζήτηση διπλών εγγραφών. Εάν επιλέξετε πολλά πεδία,\n"
+"το Odoo θα σας προτείνει να συγχωνεύσετε μόνο αυτές που έχουν\n"
+"κοινά στοιχεία σε όλα αυτά τα πεδία. (όχι ένα από τα πεδία)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selectable
@@ -18769,18 +19135,25 @@ msgid ""
 "                                will be redirected to the destination contact.\n"
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
+"Οι επιλεγμένες επαφές θα συγχωνευθούν μεταξύ τους.\n"
+"Όλα τα έγγραφα που συνδέονται με μία από αυτές τις επαφές\n"
+"θα μεταφερθούν στην τελική επαφή.\n"
+"Μπορείτε να αφαιρέσετε τις επαφές από τη λίστα για να\n"
+"αποφευχθεί η συγχώνευσή τους."
 
 #. module: base
-#: code:addons/base/models/res_partner.py:29
+#: code:addons/base/models/res_partner.py:30
 #, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Εάν επιλέξετε την \"Προειδοποίηση\" θα ειδοποιήσει το χρήστη με το μήνυμα.\n"
+"Εάν επιλέξετε το \"Μήνυμα αποκλεισμού\" η διαδικασία θα διακοπεί και θα εμφανιστεί ένα μήνυμα. Γράψτε το μήνυμα στο επόμενο πεδίο."
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:273
+#: code:addons/base/models/ir_qweb_fields.py:279
 #: selection:base.partner.merge.automatic.wizard,state:0
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 #, python-format
@@ -18870,12 +19243,13 @@ msgid "Separator Format"
 msgstr "Μορφή Διαχωριστή"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:613
+#: code:addons/base/models/ir_qweb_fields.py:629
 #, python-format
 msgid "Separator use to split the address from the display_name."
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_sequence
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__sequence
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__sequence
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo__sequence
@@ -18895,6 +19269,11 @@ msgstr "Ακολουθία"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__code
 msgid "Sequence Code"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_sequence_date_range
+msgid "Sequence Date Range"
 msgstr ""
 
 #. module: base
@@ -19134,7 +19513,7 @@ msgstr "Παράβλεψη"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Skip these contacts"
-msgstr ""
+msgstr "Παρήλειψη αυτών των επαφών"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
@@ -19206,27 +19585,27 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Μερικές φορές ονομάζονται BIC ή SWIFT"
 
 #. module: base
-#: code:addons/base/models/ir_attachment.py:380
-#: code:addons/base/models/ir_model.py:1215
+#: code:addons/base/models/ir_attachment.py:381
+#: code:addons/base/models/ir_model.py:1220
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Συγνώμη , δεν επιτρέπεται η πρόσβαση σε αυτό το έγγραφο"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1217
+#: code:addons/base/models/ir_model.py:1222
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr ""
 "Λυπούμαστε, δεν σας επιτρέπεται να δημιουργήσετε τέτοιου είδους έγγραφα."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1218
+#: code:addons/base/models/ir_model.py:1223
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Λυπούμαστε, δεν σας επιτρέπεται να διαγράψετε αυτό το έγγραφο."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:1216
+#: code:addons/base/models/ir_model.py:1221
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Λυπούμαστε, δεν σας επιτρέπεται να τροποποιήσετε αυτό το έγγραφο."
@@ -19421,6 +19800,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Αυτοκόλλητα σημειώματα, Συνεργατικά"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Απόθεμα"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr ""
@@ -19521,7 +19905,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription
 msgid "Subscriptions"
-msgstr ""
+msgstr "Συνδρομές"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__date_range_ids
@@ -19546,7 +19930,7 @@ msgstr "Τιμή κατάληξης της εγγραφής για την αλλ
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_options
 msgid "Suggest optional products when adding to cart"
-msgstr ""
+msgstr "Προτείνετε προαιρετικά είδη κατά την προσθήκη στο καλάθι"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__summary
@@ -19556,7 +19940,7 @@ msgstr "Περίληψη"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Sunday"
-msgstr ""
+msgstr "Κυριακή"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params
@@ -19633,6 +20017,11 @@ msgstr ""
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr "Syria"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_config_parameter
+msgid "System Parameter"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -19743,16 +20132,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr ""
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_company__vat
-#: model:ir.model.fields,help:base.field_res_partner__vat
-#: model:ir.model.fields,help:base.field_res_users__vat
-msgid ""
-"Tax Identification Number. Fill it if the company is subjected to taxes. "
-"Used by the some of the legal statements."
-msgstr ""
+msgstr "Α.Φ.Μ."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -19792,7 +20172,7 @@ msgid "Technical Settings"
 msgstr "Τεχνικές Ρυθμίσεις"
 
 #. module: base
-#: code:addons/base/models/ir_translation.py:781
+#: code:addons/base/models/ir_translation.py:782
 #, python-format
 msgid "Technical Translations"
 msgstr ""
@@ -19805,7 +20185,7 @@ msgstr "Τεχνικός οδηγός"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
 msgid "Template"
-msgstr ""
+msgstr "Πρότυπο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_name
@@ -19884,7 +20264,7 @@ msgid "Thailand - Accounting Reports"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:385
+#: code:addons/base/models/res_users.py:386
 #, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr ""
@@ -19897,7 +20277,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:385
+#: code:addons/base/models/ir_model.py:387
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression. Please "
@@ -19924,6 +20304,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.model.fields,help:base.field_res_company__vat
+#: model:ir.model.fields,help:base.field_res_partner__vat
+#: model:ir.model.fields,help:base.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_module.py:753
 #, python-format
 msgid ""
@@ -19947,7 +20336,7 @@ msgstr ""
 "διαγράψετε."
 
 #. module: base
-#: code:addons/base/models/res_users.py:378
+#: code:addons/base/models/res_users.py:379
 #, python-format
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
@@ -20018,7 +20407,7 @@ msgid "The demonstration data of"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:584
+#: code:addons/base/models/ir_model.py:586
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
 msgstr ""
@@ -20085,12 +20474,8 @@ msgstr "Πλήρες όνομα χώρας."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
-msgid ""
-"The internal user that is in charge of communicating with this contact if "
-"any."
+msgid "The internal user in charge of this contact."
 msgstr ""
-"Ο εσωτερικός χρήστης που είναι υπέυθυνος να επικοινωνήσει με αυτή την επαφή "
-"(εάν υπάρχει κάποιος)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -20107,7 +20492,7 @@ msgstr ""
 " εφαρμόζει σε όλα τα μενού για αυτό το υπόδειγμα."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:136
+#: code:addons/base/models/ir_model.py:138
 #, python-format
 msgid ""
 "The model name can only contain lowercase characters, digits, underscores "
@@ -20115,7 +20500,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:134
+#: code:addons/base/models/ir_model.py:136
 #, python-format
 msgid "The model name must start with 'x_'."
 msgstr ""
@@ -20234,12 +20619,12 @@ msgid "The record id this is attached to."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:668
+#: code:addons/base/models/ir_actions_report.py:673
 #, python-format
 msgid ""
 "The report's template '%s' is wrong, please contact your administrator. \n"
 "\n"
-"Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname."
+"Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
 
 #. module: base
@@ -20269,20 +20654,20 @@ msgid "The rounding factor must be greater than 0!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:169
+#: code:addons/base/models/ir_mail_server.py:170
 #, python-format
 msgid ""
 "The server refused the sender address (%(email_from)s) with error %(repl)s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:181
+#: code:addons/base/models/ir_mail_server.py:182
 #, python-format
 msgid "The server refused the test connection with error %(repl)s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:174
+#: code:addons/base/models/ir_mail_server.py:175
 #, python-format
 msgid ""
 "The server refused the test recipient (%(email_to)s) with error %(repl)s"
@@ -20294,7 +20679,7 @@ msgid "The state code."
 msgstr "Ο κωδικός Νομού/Πολιτείας."
 
 #. module: base
-#: code:addons/base/models/ir_model.py:517
+#: code:addons/base/models/ir_model.py:519
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -20331,7 +20716,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:393
+#: code:addons/base/models/ir_qweb_fields.py:404
 #, python-format
 msgid "The value send to monetary field is not a number."
 msgstr ""
@@ -20360,7 +20745,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "There is no more contacts to merge for this request..."
-msgstr ""
+msgstr "Δεν υπάρχουν άλλες επαφές για να συγχωνεύσετε για αυτό το αίτημα..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__iso_code
@@ -20375,7 +20760,7 @@ msgid "This Window"
 msgstr "Αυτό το παράθυρο"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:620
+#: code:addons/base/models/ir_model.py:622
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr ""
@@ -20479,12 +20864,12 @@ msgstr "Διαχωριστικό Χιλιάδων"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Μικρογραφία"
 
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Thursday"
-msgstr ""
+msgstr "Πέμπτη"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
@@ -20756,6 +21141,7 @@ msgid "Translated field"
 msgstr "Μεταφρασμένο Πεδίο"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_translation
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
 msgid "Translation"
 msgstr "Μετάφραση"
@@ -20771,7 +21157,7 @@ msgid "Translation comments"
 msgstr "Σχόλια μετάφρασης"
 
 #. module: base
-#: code:addons/base/models/ir_translation.py:659
+#: code:addons/base/models/ir_translation.py:660
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -20783,7 +21169,7 @@ msgid "Translation in Progress"
 msgstr "Μετάφραση σε Εξέλιξη"
 
 #. module: base
-#: code:addons/base/models/ir_translation.py:571
+#: code:addons/base/models/ir_translation.py:572
 #, python-format
 msgid ""
 "Translation is not valid:\n"
@@ -20820,7 +21206,7 @@ msgstr "Trinidad and Tobago"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Τρίτη"
 
 #. module: base
 #: model:res.country,name:base.tn
@@ -21004,7 +21390,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:658
+#: code:addons/base/models/ir_actions_report.py:663
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
@@ -21093,6 +21479,7 @@ msgid "Units of measure"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model__unknown
 #: selection:ir.module.module.dependency,state:0
 #: selection:ir.module.module.exclusion,state:0
 msgid "Unknown"
@@ -21111,25 +21498,25 @@ msgid "Unknown error during import:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:455
+#: code:addons/base/models/ir_model.py:457
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:412
+#: code:addons/base/models/ir_model.py:414
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:360
+#: code:addons/base/models/ir_fields.py:361
 #, python-format
 msgid "Unknown sub-field '%s'"
 msgstr "Άγνωστο υπο-πεδίο '%s'"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:164
+#: code:addons/base/models/ir_fields.py:165
 #, python-format
 msgid "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgstr ""
@@ -21195,6 +21582,11 @@ msgid "Update Terms"
 msgstr "Όροι Ενημέρωσης"
 
 #. module: base
+#: model:ir.model,name:base.model_base_update_translations
+msgid "Update Translations"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.server,state:0
 msgid "Update the Record"
 msgstr ""
@@ -21217,6 +21609,11 @@ msgstr "Ενημερώσεις"
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
 msgstr "Αναβάθμιση"
+
+#. module: base
+#: model:ir.model,name:base.model_base_module_upgrade
+msgid "Upgrade Module"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__url
@@ -21246,10 +21643,16 @@ msgid "Usage"
 msgstr "Χρήση"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:166
+#: code:addons/base/models/ir_fields.py:167
 #, python-format
 msgid "Use '1' for yes and '0' for no"
 msgstr "Χρησιμοποιήστε '1' για ναι και '0' για όχι"
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner__barcode
+#: model:ir.model.fields,help:base.field_res_users__barcode
+msgid "Use a barcode to identify this contact from the Point of Sale."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
@@ -21257,13 +21660,13 @@ msgid "Use barcode scanners to process logistics operations"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:615
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
 msgid "Use comma"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:615
+#: code:addons/base/models/ir_qweb_fields.py:631
 #, python-format
 msgid "Use comma instead of the <br> tag to display the address"
 msgstr ""
@@ -21289,8 +21692,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:209
-#: code:addons/base/models/ir_fields.py:241
+#: code:addons/base/models/ir_fields.py:210
+#: code:addons/base/models/ir_fields.py:242
 #, python-format
 msgid "Use the format '%s'"
 msgstr "Χρησιμοποιήστε το format '%s'"
@@ -21307,6 +21710,14 @@ msgid ""
 "address. Note that the address_format field is used to modify the way to "
 "display addresses (in reports for example), while this field is used to "
 "modify the input form for addresses."
+msgstr ""
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner__type
+#: model:ir.model.fields,help:base.field_res_users__type
+msgid ""
+"Used by Sales and Purchase Apps to select the relevant address depending on "
+"the context."
 msgstr ""
 
 #. module: base
@@ -21329,16 +21740,6 @@ msgstr "Χρησιμοποιείται για να συνδεθείτε στο �
 #: model:ir.model.fields,help:base.field_res_company__sequence
 msgid "Used to order Companies in the company switcher"
 msgstr ""
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner__type
-#: model:ir.model.fields,help:base.field_res_users__type
-msgid ""
-"Used to select automatically the right address according to the context in "
-"sales and purchases documents."
-msgstr ""
-"Χρησιμοποιείται για την αυτόματη επιλογή της σωστής διεύθυνσης με βάση τις "
-"ρυθμίσεις στα έγγραφα αγορών και πωλήσεων"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_change_password_user__user_id
@@ -21377,6 +21778,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_change_password_user
+msgid "User, Change Password Wizard"
 msgstr ""
 
 #. module: base
@@ -21423,6 +21829,11 @@ msgid "Users & Companies"
 msgstr "Χρήστες & Εταιρείες"
 
 #. module: base
+#: model:ir.model,name:base.model_res_users_log
+msgid "Users Log"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid ""
 "Users added to this group are automatically added in the following groups."
@@ -21458,11 +21869,6 @@ msgstr "Uzbekistan"
 #: model:res.country,vat_label:base.sk model:res.country,vat_label:base.uk
 msgid "VAT"
 msgstr "ΦΠΑ"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_base_vat_autocomplete
-msgid "VAT Number Autocomplete"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -21503,7 +21909,7 @@ msgid "Value"
 msgstr "Τιμή"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:277
+#: code:addons/base/models/ir_fields.py:278
 #, python-format
 msgid "Value '%s' not found in selection field '%%(field)s'"
 msgstr ""
@@ -21600,6 +22006,7 @@ msgid "Vietnam - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_ui_view
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
@@ -21660,7 +22067,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_model.py:606
+#: code:addons/base/models/ir_model.py:608
 #, python-format
 msgid "View: %s"
 msgstr ""
@@ -21737,16 +22144,16 @@ msgid "Warehouse Management: Batch Picking"
 msgstr "Διαχείριση Αποθήκης: Συλλογή Παρτίδων"
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:498
-#: code:addons/base/models/ir_model.py:434
-#: code:addons/base/models/ir_model.py:516
-#: code:addons/base/models/res_partner.py:344
+#: code:addons/base/models/ir_mail_server.py:499
+#: code:addons/base/models/ir_model.py:436
+#: code:addons/base/models/ir_model.py:518
+#: code:addons/base/models/res_partner.py:349
 #, python-format
 msgid "Warning"
 msgstr "Προσοχή"
 
 #. module: base
-#: code:addons/base/models/res_config.py:430
+#: code:addons/base/models/res_config.py:433
 #, python-format
 msgid "Warning!"
 msgstr "Προειδοποίηση"
@@ -21767,11 +22174,6 @@ msgstr "Παροχή νερού"
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "Web"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_web_clearbit
-msgid "Web Clearbit"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
@@ -21876,11 +22278,6 @@ msgid "Website Rating"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_website_sale_dashboard_with_margin
-msgid "Website Sale Dashboard With Margin"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Website Sale Stock - Website Delivery Information"
 msgstr ""
@@ -21911,16 +22308,9 @@ msgid "Website Theme Install"
 msgstr ""
 
 #. module: base
-#: model:ir.model.fields,help:base.field_res_company__website
-#: model:ir.model.fields,help:base.field_res_partner__website
-#: model:ir.model.fields,help:base.field_res_users__website
-msgid "Website of Partner or Company"
-msgstr "Ιστότοπος Συνεργάτη ή Εταιρίας"
-
-#. module: base
 #: selection:res.lang,week_start:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Τετάρτη"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -21987,10 +22377,10 @@ msgid "Wholesale/Retail"
 msgstr "Χονδρικές / Λιανικές Πωλήσεις"
 
 #. module: base
-#: code:addons/base/models/ir_qweb_fields.py:588
+#: code:addons/base/models/ir_qweb_fields.py:603
 #, python-format
 msgid "Width"
-msgstr ""
+msgstr "Πλάτος"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -22011,7 +22401,7 @@ msgid "Wizards to be Launched"
 msgstr "Οδηγοί προς δρομολόγηση"
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:405
+#: code:addons/base/models/ir_actions_report.py:410
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
@@ -22019,7 +22409,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_actions_report.py:408
+#: code:addons/base/models/ir_actions_report.py:413
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Το Wkhtmltopdf απέτυχε (αριθμός λάθους: %s). Μήνυμα: %s"
@@ -22099,7 +22489,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:86
+#: code:addons/base/models/res_partner.py:88
 #, python-format
 msgid "You can not create recursive tags."
 msgstr ""
@@ -22110,7 +22500,7 @@ msgid "You can not have two users with the same login !"
 msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο Όνομα Χρήστη!"
 
 #. module: base
-#: code:addons/base/models/res_users.py:483
+#: code:addons/base/models/res_users.py:484
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -22129,13 +22519,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:504
+#: code:addons/base/models/res_partner.py:509
 #, python-format
 msgid "You cannot archive a contact linked to an internal user."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_partner.py:325
+#: code:addons/base/models/res_partner.py:330
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
 msgstr "Δεν μπορείτε να δημιουργήσετε διαδοχικές ιεραρχίες Συνεργάτη."
@@ -22147,19 +22537,19 @@ msgid "You cannot create recursive companies."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:359
+#: code:addons/base/models/ir_ui_view.py:361
 #, python-format
 msgid "You cannot create recursive inherited views."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:436
+#: code:addons/base/models/res_users.py:437
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/res_users.py:438
+#: code:addons/base/models/res_users.py:439
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr ""
@@ -22181,13 +22571,13 @@ msgid "You cannot delete the language which is the user's preferred language."
 msgstr ""
 
 #. module: base
-#: code:addons/base/wizard/base_partner_merge.py:275
+#: code:addons/base/wizard/base_partner_merge.py:277
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "Δεν μπορείτε να συγχωνεύσετε μία επαφή με μία της μητρικής του."
 
 #. module: base
-#: code:addons/base/wizard/base_partner_merge.py:374
+#: code:addons/base/wizard/base_partner_merge.py:376
 #, python-format
 msgid "You have to specify a filter for your selection."
 msgstr ""
@@ -22225,7 +22615,7 @@ msgstr ""
 "χρήστες που δημιουργήθηκαν πρόσφατα στο μενού Ρυθμίσεις / Χρήστες."
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:247
+#: code:addons/base/models/ir_mail_server.py:248
 #, python-format
 msgid ""
 "Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -22234,7 +22624,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_mail_server.py:499
+#: code:addons/base/models/ir_mail_server.py:500
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -22288,11 +22678,6 @@ msgid "_Import"
 msgstr "Ει_σαγωγή"
 
 #. module: base
-#: model:ir.model,name:base.model__unknown
-msgid "_unknown"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_sync
 msgid "account_online_sync"
 msgstr ""
@@ -22312,31 +22697,6 @@ msgstr "και"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
 msgstr "στις"
-
-#. module: base
-#: model:ir.model,name:base.model_base
-msgid "base"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_base_language_export
-msgid "base.language.export"
-msgstr "base.language.export"
-
-#. module: base
-#: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
-msgid "base.partner.merge.automatic.wizard"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_base_partner_merge_line
-msgid "base.partner.merge.line"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_base_update_translations
-msgid "base.update.translations"
-msgstr "base.update.translations"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -22369,7 +22729,7 @@ msgid "crm"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:319
+#: code:addons/base/models/ir_fields.py:320
 #, python-format
 msgid "database id"
 msgstr "id βάσης δεδομένων"
@@ -22471,13 +22831,13 @@ msgid "email@yourcompany.com"
 msgstr "email@yourcompany.com"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:333
+#: code:addons/base/models/ir_fields.py:334
 #, python-format
 msgid "external id"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:143
+#: code:addons/base/models/ir_fields.py:144
 #, python-format
 msgid "false"
 msgstr "ψευδές"
@@ -22500,11 +22860,6 @@ msgstr ""
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
 msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_format_address_mixin
-msgid "format.address.mixin"
-msgstr "format.address.mixin"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -22533,40 +22888,21 @@ msgid "internal note..."
 msgstr "εσωτερική σημείωση..."
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_act_url
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_url"
 msgstr "ir.actions.act_url"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_act_window
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_act_window_view
-msgid "ir.actions.act_window.view"
-msgstr "ir.actions.act_window.view"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_actions_act_window_close
-msgid "ir.actions.act_window_close"
-msgstr "ir.actions.act_window_close"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_actions_actions
-msgid "ir.actions.actions"
-msgstr "ir.actions.actions"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_actions_client
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.client"
 msgstr "ir.actions.client"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_report
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report"
 msgstr "ir.actions.report"
@@ -22578,219 +22914,9 @@ msgid "ir.actions.server"
 msgstr "ir.actions.server"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_config_parameter
-msgid "ir.config_parameter"
-msgstr "ir.config_parameter"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_default
-msgid "ir.default"
-msgstr "ir.default"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_demo
-msgid "ir.demo"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_demo_failure
-msgid "ir.demo_failure"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_demo_failure_wizard
-msgid "ir.demo_failure.wizard"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_exports
-msgid "ir.exports"
-msgstr "ir.exports"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_exports_line
-msgid "ir.exports.line"
-msgstr "ir.exports.line"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_fields_converter
-msgid "ir.fields.converter"
-msgstr "ir.fields.converter"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_logging
-msgid "ir.logging"
-msgstr "ir.logging"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_mail_server
-msgid "ir.mail_server"
-msgstr "ir.mail_server"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_model_access
-msgid "ir.model.access"
-msgstr "ir.model.access"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_model_constraint
-msgid "ir.model.constraint"
-msgstr "ir.model.constraint"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_model_data
-msgid "ir.model.data"
-msgstr "ir.model.data"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_model_relation
-msgid "ir.model.relation"
-msgstr "ir.model.relation"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_property
-msgid "ir.property"
-msgstr "ir.property"
-
-#. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "ir.qweb"
 msgstr "ir.qweb"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field
-msgid "ir.qweb.field"
-msgstr "ir.qweb.field"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_barcode
-msgid "ir.qweb.field.barcode"
-msgstr "ir.qweb.field.barcode"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_contact
-msgid "ir.qweb.field.contact"
-msgstr "ir.qweb.field.contact"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_date
-msgid "ir.qweb.field.date"
-msgstr "ir.qweb.field.date"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_datetime
-msgid "ir.qweb.field.datetime"
-msgstr "ir.qweb.field.datetime"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_duration
-msgid "ir.qweb.field.duration"
-msgstr "ir.qweb.field.duration"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_float
-msgid "ir.qweb.field.float"
-msgstr "ir.qweb.field.float"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_float_time
-msgid "ir.qweb.field.float_time"
-msgstr "ir.qweb.field.float_time"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_html
-msgid "ir.qweb.field.html"
-msgstr "ir.qweb.field.html"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_image
-msgid "ir.qweb.field.image"
-msgstr "ir.qweb.field.image"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_integer
-msgid "ir.qweb.field.integer"
-msgstr "ir.qweb.field.integer"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_many2many
-msgid "ir.qweb.field.many2many"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_many2one
-msgid "ir.qweb.field.many2one"
-msgstr "ir.qweb.field.many2one"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_monetary
-msgid "ir.qweb.field.monetary"
-msgstr "ir.qweb.field.monetary"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_qweb
-msgid "ir.qweb.field.qweb"
-msgstr "ir.qweb.field.qweb"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_relative
-msgid "ir.qweb.field.relative"
-msgstr "ir.qweb.field.relative"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_selection
-msgid "ir.qweb.field.selection"
-msgstr "ir.qweb.field.selection"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_qweb_field_text
-msgid "ir.qweb.field.text"
-msgstr "ir.qweb.field.text"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_rule
-msgid "ir.rule"
-msgstr "ir.rule"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_sequence
-msgid "ir.sequence"
-msgstr "ir.sequence"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_sequence_date_range
-msgid "ir.sequence.date_range"
-msgstr "ir.sequence.date_range"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_ui_menu
-msgid "ir.ui.menu"
-msgstr "ir.ui.menu"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_ui_view_custom
-msgid "ir.ui.view.custom"
-msgstr "ir.ui.view.custom"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -22823,19 +22949,19 @@ msgid "mrp"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_ui_view.py:513
+#: code:addons/base/models/ir_ui_view.py:515
 #, python-format
 msgid "n/a"
 msgstr ""
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:341
+#: code:addons/base/models/ir_fields.py:342
 #, python-format
 msgid "name"
 msgstr "όνομα"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:143
+#: code:addons/base/models/ir_fields.py:144
 #, python-format
 msgid "no"
 msgstr ""
@@ -22866,36 +22992,6 @@ msgid "reference"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_report_base_report_irmodulereference
-msgid "report.base.report_irmodulereference"
-msgstr "report.base.report_irmodulereference"
-
-#. module: base
-#: model:ir.model,name:base.model_res_config
-msgid "res.config"
-msgstr "res.config"
-
-#. module: base
-#: model:ir.model,name:base.model_res_config_installer
-msgid "res.config.installer"
-msgstr "res.config.installer"
-
-#. module: base
-#: model:ir.model,name:base.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: base
-#: model:ir.model,name:base.model_res_partner_title
-msgid "res.partner.title"
-msgstr "res.partner.title"
-
-#. module: base
-#: model:ir.model,name:base.model_res_users_log
-msgid "res.users.log"
-msgstr "res.users.log"
-
-#. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "selection"
 msgstr ""
@@ -22908,11 +23004,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
-msgstr ""
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "stock"
 msgstr ""
 
 #. module: base
@@ -23001,7 +23092,7 @@ msgid "title"
 msgstr "τίτλος"
 
 #. module: base
-#: code:addons/base/models/ir_fields.py:143
+#: code:addons/base/models/ir_fields.py:144
 #, python-format
 msgid "true"
 msgstr "αληθές"
@@ -23012,12 +23103,7 @@ msgid "web_dashboard"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_wizard_ir_model_menu_create
-msgid "wizard.ir.model.menu.create"
-msgstr "wizard.ir.model.menu.create"
-
-#. module: base
-#: code:addons/base/models/ir_fields.py:143
+#: code:addons/base/models/ir_fields.py:144
 #, python-format
 msgid "yes"
 msgstr "ναι"

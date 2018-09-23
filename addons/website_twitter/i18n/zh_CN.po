@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -88,6 +88,11 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr "身份验证证明丢失或者错误。可能是屏幕名称推文被保护。"
+
+#. module: website_twitter
+#: model:ir.model,name:website_twitter.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -177,7 +182,7 @@ msgstr "请再次确认你的Twiiter API 密钥和秘密!"
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
-msgstr "请为一个网站设置的推特屏幕名称来上载你的喜好（它不必是你自己的）"
+msgstr "将推特地址添加到收藏夹中（可以非本人）"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
@@ -277,7 +282,7 @@ msgstr "Twitter API 密钥"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API 秘密"
+msgstr "Twitter API 密钥"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
@@ -292,7 +297,7 @@ msgstr "您可以通过 https://apps.twitter.com/ 获取 Twitter API 密钥"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API 秘密"
+msgstr "Twitter API 密钥"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
@@ -372,6 +377,11 @@ msgid "Website"
 msgstr "网站"
 
 #. module: website_twitter
+#: model:ir.model,name:website_twitter.model_website_twitter_tweet
+msgid "Website Twitter"
+msgstr ""
+
+#. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "api_key.png"
 msgstr ""
@@ -380,16 +390,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "https://apps.twitter.com/app/new"
 msgstr "https://apps.twitter.com/app/new"
-
-#. module: website_twitter
-#: model:ir.model,name:website_twitter.model_res_config_settings
-msgid "res.config.settings"
-msgstr "设置-基础设置"
-
-#. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_twitter_tweet
-msgid "website.twitter.tweet"
-msgstr "website.twitter.tweet"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

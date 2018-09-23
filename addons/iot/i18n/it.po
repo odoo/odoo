@@ -8,14 +8,14 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Paolo Valier, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
+# Mirto Bonan <mbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Mirto Bonan <mbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,17 +26,17 @@ msgstr ""
 #. module: iot
 #: selection:iot.device,connection:0
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #. module: iot
 #: selection:iot.device,type:0
 msgid "Camera"
-msgstr ""
+msgstr "Fotocamera"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__connection
 msgid "Connection"
-msgstr ""
+msgstr "Connessione"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__create_uid
@@ -53,18 +53,18 @@ msgstr "Creato il"
 #. module: iot
 #: selection:iot.device,type:0
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "Device type"
-msgstr ""
+msgstr "Tipo di dispositivo"
 
 #. module: iot
 #: model:ir.actions.act_window,name:iot.iot_device_action
 #: model:ir.model.fields,field_description:iot.field_iot_box__device_ids
 #: model:ir.ui.menu,name:iot.iot_device_menu_action
-#: model:ir.ui.view,arch_db:iot.iot_box_view_form
+#: model_terms:ir.ui.view,arch_db:iot.iot_box_view_form
 msgid "Devices"
 msgstr "Dispositivi"
 
@@ -75,7 +75,7 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "Group By"
 msgstr "Raggruppa per"
 
@@ -84,6 +84,16 @@ msgstr "Raggruppa per"
 #: model:ir.model.fields,field_description:iot.field_iot_device__id
 msgid "ID"
 msgstr "ID"
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_box
+msgid "IOT Box"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_device
+msgid "IOT Device"
+msgstr ""
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__ip
@@ -98,29 +108,29 @@ msgstr "Identificativo"
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__identifier
 msgid "Identifier (Mac Address)"
-msgstr ""
+msgstr "Identificatore (Indirizzo Mac)"
 
 #. module: iot
 #: model:ir.ui.menu,name:iot.iot_menu_root
 msgid "IoT"
-msgstr ""
+msgstr "IoT"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__iot_id
 msgid "IoT Box"
-msgstr ""
+msgstr "IoT Box"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_ir_actions_report__device_id
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "IoT Device"
-msgstr ""
+msgstr "Dispositivo IoT"
 
 #. module: iot
 #: model:ir.actions.act_window,name:iot.iot_box_action
 #: model:ir.ui.menu,name:iot.iot_box_menu_action
 msgid "Iot Boxes"
-msgstr ""
+msgstr "Iot Boxes"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box____last_update
@@ -157,8 +167,13 @@ msgid "Printer"
 msgstr "Stampante"
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_view_form
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_view_form
 msgid "Printer Reports"
+msgstr "Stampante report"
+
+#. module: iot
+#: model:ir.model,name:iot.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: iot
@@ -169,7 +184,7 @@ msgstr "Report"
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__screen_url
 msgid "Screen URL"
-msgstr ""
+msgstr "Screen URL"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__type
@@ -179,22 +194,22 @@ msgstr "Tipo"
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_device__connection
 msgid "Type of connection."
-msgstr ""
+msgstr "Tipo di connessione"
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_device__type
 msgid "Type of device."
-msgstr ""
+msgstr "Tipo di dispositivo"
 
 #. module: iot
 #: selection:iot.device,connection:0
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_box__screen_url
 msgid "Url of the page that will be displayed by hdmi port of the box."
-msgstr ""
+msgstr "Url della pagina mostrato dalla porta hdmi del box"
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_ir_actions_report__device_id
@@ -202,18 +217,5 @@ msgid ""
 "When setting a device here, the report will be printed through this device "
 "on the iotbox"
 msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_box
-msgid "iot.box"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_device
-msgid "iot.device"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_ir_actions_report
-msgid "ir.actions.report"
-msgstr "ir.actions.report"
+"Quando si imposta qui un dispositivo, il report viene attraverso questo "
+"dispositivo sulla iotbox"
