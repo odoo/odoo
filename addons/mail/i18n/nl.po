@@ -6,13 +6,16 @@
 # Martin Trigaux, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Eric Geens <ericgeens@yahoo.com>, 2018
+# Wynand Tastenhoye <wta@odoo.com>, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Thomas Pot <thomas@open2bizz.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,10 +77,10 @@ msgid "%s, %s and more are typing..."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_activity.py:338
+#: code:addons/mail/models/mail_activity.py:341
 #, python-format
 msgid "%s: %s assigned to you"
-msgstr ""
+msgstr "%s: %s aan u toegewezen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -306,7 +309,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Activities</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Activiteiten</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -381,7 +384,7 @@ msgstr ""
 " bij het maken van nieuwe records voor deze alias."
 
 #. module: mail
-#: code:addons/mail/models/ir_actions.py:68
+#: code:addons/mail/models/ir_actions.py:69
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
 msgstr ""
@@ -441,6 +444,11 @@ msgstr "Vereist actie"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
 msgid "Action To Do"
 msgstr "Actie te doen"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -559,7 +567,7 @@ msgid "Add Followers"
 msgstr "Volgers toevoegen"
 
 #. module: mail
-#: code:addons/mail/models/ir_actions.py:62
+#: code:addons/mail/models/ir_actions.py:63
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
 msgstr "Volgers kunnen alleen worden toegevoegd op het mail thread model"
@@ -569,7 +577,7 @@ msgstr "Volgers kunnen alleen worden toegevoegd op het mail thread model"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__add_sign
 #: model:ir.model.fields,field_description:mail.field_mail_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Teken toevoegen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__user_signature
@@ -723,7 +731,7 @@ msgstr "Alle"
 #: code:addons/mail/static/src/xml/thread.xml:46
 #, python-format
 msgid "All pages:&nbsp;"
-msgstr ""
+msgstr "Alle pagina's:&nbsp;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
@@ -752,7 +760,7 @@ msgstr "Altijd toestaan"
 #: code:addons/mail/static/src/js/models/mail_failure.js:80
 #, python-format
 msgid "An error occured when sending an email"
-msgstr ""
+msgstr "Er is een fout opgetreden bij het verzenden van een e-mail"
 
 #. module: mail
 #. openerp-web
@@ -809,8 +817,8 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: mail
-#: code:addons/mail/models/mail_activity.py:255
-#: code:addons/mail/models/mail_activity.py:262
+#: code:addons/mail/models/mail_activity.py:258
+#: code:addons/mail/models/mail_activity.py:265
 #, python-format
 msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
@@ -823,13 +831,18 @@ msgid "Attach a file"
 msgstr "Voeg een bijlage toe"
 
 #. module: mail
+#: model:ir.model,name:mail.model_ir_attachment
+msgid "Attachment"
+msgstr "Bijlage"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Aantal bijlagen"
 
 #. module: mail
 #. openerp-web
@@ -924,9 +937,20 @@ msgid "Auto subscription"
 msgstr "Automatisch aanmelden"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
+msgid "Auto-launched next activity"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
 msgstr "Geautomatiseerde activiteit"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_notify
@@ -1027,7 +1051,7 @@ msgstr "Bel"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:354
-#: code:addons/mail/static/src/xml/activity.xml:85
+#: code:addons/mail/static/src/xml/activity.xml:86
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -1119,7 +1143,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:443
 #, python-format
 msgid "Changed"
-msgstr ""
+msgstr "Gewijzigd"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field
@@ -1285,7 +1309,7 @@ msgstr "Bedrijven"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:322
+#: code:addons/mail/static/src/js/activity.js:378
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -1296,6 +1320,11 @@ msgstr "Email opstellen"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_mode
 msgid "Composition mode"
 msgstr "Bewerkmodus"
+
+#. module: mail
+#: model:ir.model,name:mail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1372,7 +1401,7 @@ msgstr "Aanmaken %s"
 #. module: mail
 #: selection:ir.actions.server,state:0
 msgid "Create Next Activity"
-msgstr ""
+msgstr "Volgende activiteit"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:400
@@ -1494,7 +1523,7 @@ msgstr "Dagen"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:39
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:46
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #, python-format
 msgid "Deadline"
@@ -1627,7 +1656,7 @@ msgstr "Directe berichten"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/discuss.js:348
-#: code:addons/mail/static/src/xml/activity.xml:101
+#: code:addons/mail/static/src/xml/activity.xml:103
 #: code:addons/mail/static/src/xml/discuss.xml:187
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -1756,14 +1785,22 @@ msgstr "Documentnaam"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:99
+#: code:addons/mail/static/src/xml/activity.xml:101
 #, python-format
 msgid "Done"
 msgstr "Gereed"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:97
+#: code:addons/mail/static/src/xml/activity.xml:107
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+#, python-format
+msgid "Done & Launch Next"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/activity.xml:99
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
@@ -1813,7 +1850,7 @@ msgstr "Dynamische bladwijze generator"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:82
+#: code:addons/mail/static/src/xml/activity.xml:83
 #, python-format
 msgid "Edit"
 msgstr "Bewerken"
@@ -1863,6 +1900,11 @@ msgstr "E-mail alias"
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
 msgstr "E-mail Aliassen"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_alias_mixin
+msgid "Email Aliases Mixin"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -1938,7 +1980,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Email address rejected by destination"
-msgstr ""
+msgstr "Email address geweigerd door bestemmeling"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1996,7 +2038,7 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: mail
-#: code:addons/mail/models/update.py:97
+#: code:addons/mail/models/update.py:98
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr "Fout tijdens communicatie met de uitgevers garantie server."
@@ -2112,7 +2154,7 @@ msgstr "Favoriet op"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/activity.js:277
+#: code:addons/mail/static/src/js/activity.js:316
 #: model:ir.model.fields,field_description:mail.field_mail_activity__feedback
 #, python-format
 msgid "Feedback"
@@ -2291,7 +2333,7 @@ msgid "Generic User From Record"
 msgstr "Algemene gebruiker van record"
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:87
+#: code:addons/mail/models/res_users.py:88
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Ga naar het configuratie paneel"
@@ -2615,7 +2657,7 @@ msgstr "Alleen intern"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Invalid email address"
-msgstr ""
+msgstr "Foutief e-mailadres"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:88
@@ -2635,7 +2677,7 @@ msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1967
-#: code:addons/mail/models/mail_thread.py:2196
+#: code:addons/mail/models/mail_thread.py:2198
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
@@ -2957,7 +2999,7 @@ msgstr "Laden..."
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/composers/chatter_composer.js:34
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:34
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:41
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
@@ -3003,7 +3045,7 @@ msgstr "Log of plan een activiteit"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:68
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:45
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:51
 #: model:ir.model.fields,field_description:mail.field_mail_notification__mail_id
 #, python-format
 msgid "Mail"
@@ -3019,7 +3061,7 @@ msgstr "Mail activiteit soort"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
 msgid "Mail Blacklist"
-msgstr ""
+msgstr "E-mail blacklist"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_mixin
@@ -3086,7 +3128,7 @@ msgstr "Mailbox onbeschikbaar - %s"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__mail_template_ids
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__mail_template_ids
 msgid "Mails templates"
-msgstr ""
+msgstr "E-mailsjablonen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_main_attachment_id
@@ -3095,7 +3137,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_main_attachment_id
 #: model:ir.model.fields,field_description:mail.field_res_users__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hoofd bijlage"
 
 #. module: mail
 #. openerp-web
@@ -3103,11 +3145,11 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:9
 #, python-format
 msgid "Manage Messages"
-msgstr ""
+msgstr "Beheer e-Mails"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:79
+#: code:addons/mail/static/src/xml/activity.xml:80
 #, python-format
 msgid "Mark Done"
 msgstr "Markeer als gereed"
@@ -3149,7 +3191,7 @@ msgstr "Zet op gereed voor uitvoeren"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:61
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:71
 #, python-format
 msgid "Mark as done"
 msgstr "Markeer als gereed"
@@ -3194,6 +3236,11 @@ msgid ""
 msgstr ""
 "Leden van die groepen worden automatisch toegevoegd als volger. Zij kunnen "
 "zelfstandig hun lidmaatschap beheren als dat nodig is."
+
+#. module: mail
+#: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/base_partner_merge.py:13
@@ -3477,8 +3524,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
-msgid "Module Uninstallation"
-msgstr "Module de-installatie"
+msgid "Module Uninstall"
+msgstr ""
 
 #. module: mail
 #: selection:ir.actions.server,activity_date_deadline_range_type:0
@@ -3666,7 +3713,7 @@ msgstr "Volgende activiteiten beschikbaar"
 #: code:addons/mail/models/mail_notification.py:50
 #, python-format
 msgid "No Error"
-msgstr ""
+msgstr "Geen fout"
 
 #. module: mail
 #. openerp-web
@@ -4227,7 +4274,7 @@ msgstr "Gelieve ons in de plaats te contacteren door middel van"
 #: code:addons/mail/static/src/xml/thread.xml:544
 #, python-format
 msgid "Please wait"
-msgstr ""
+msgstr "Even Geduld"
 
 #. module: mail
 #. openerp-web
@@ -4288,7 +4335,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:70
 #: code:addons/mail/static/src/xml/discuss.xml:275
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:47
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:54
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 #, python-format
 msgid "Preview"
@@ -4338,6 +4385,11 @@ msgstr "Privé kanalen"
 #, python-format
 msgid "Public Channels"
 msgstr "Openbare kanalen"
+
+#. module: mail
+#: model:ir.model,name:mail.model_publisher_warranty_contract
+msgid "Publisher Warranty Contract"
+msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -4438,7 +4490,7 @@ msgstr "Weiger geselecteerde berichten"
 #: code:addons/mail/static/src/xml/thread.xml:414
 #, python-format
 msgid "Reject |"
-msgstr ""
+msgstr "Afwijzen"
 
 #. module: mail
 #: selection:mail.compose.message,moderation_status:0
@@ -4648,14 +4700,14 @@ msgid "Schedule activity"
 msgstr "Plan activiteit"
 
 #. module: mail
-#: code:addons/mail/models/mail_activity.py:383
+#: code:addons/mail/models/mail_activity.py:395
 #, python-format
 msgid "Schedule an Activity"
 msgstr "Plan een activiteit"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:69
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:82
 #, python-format
 msgid "Schedule an activity"
 msgstr "Plan een activiteit in"
@@ -4741,7 +4793,7 @@ msgstr "Verzenden"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr ""
+msgstr "Opnieuw Versturen"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -4759,7 +4811,7 @@ msgstr "Verstuur mail (%s)"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:72
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:49
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:56
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 #, python-format
@@ -4783,7 +4835,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Send guidelines"
-msgstr ""
+msgstr "Verstuur richtlijnen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_guidelines
@@ -4851,6 +4903,11 @@ msgstr "Verzonden per e-mail"
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__sequence
 msgid "Sequence"
 msgstr "Reeks"
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_actions_server
+msgid "Server Action"
+msgstr "Serveractie"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_shortcode_view_form
@@ -5106,7 +5163,7 @@ msgid "The"
 msgstr "De"
 
 #. module: mail
-#: code:addons/mail/models/ir_actions.py:50
+#: code:addons/mail/models/ir_actions.py:51
 #, python-format
 msgid "The 'Due Date In' value can't be negative."
 msgstr ""
@@ -5114,7 +5171,7 @@ msgstr ""
 #. module: mail
 #: sql_constraint:mail.moderation:0
 msgid "The email address must be unique per channel !"
-msgstr ""
+msgstr "Het e-mail moet uniek zijn per kanaal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -5167,7 +5224,7 @@ msgstr ""
 "gebruiker gebruikt."
 
 #. module: mail
-#: code:addons/mail/models/mail_activity.py:240
+#: code:addons/mail/models/mail_activity.py:243
 #: code:addons/mail/models/mail_message.py:694
 #: code:addons/mail/models/mail_message.py:864
 #, python-format
@@ -5394,13 +5451,13 @@ msgid "Unable to connect to SMTP Server"
 msgstr "Kon niet verbinden met SMTP server"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:2204
+#: code:addons/mail/models/mail_thread.py:2206
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:2169
+#: code:addons/mail/models/mail_thread.py:2171
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
 msgstr ""
@@ -5439,7 +5496,7 @@ msgstr "Eenheid"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_unit
 msgid "Unit of delay"
-msgstr ""
+msgstr "Soort vertraging"
 
 #. module: mail
 #: code:addons/mail/models/mail_notification.py:52
@@ -5571,7 +5628,7 @@ msgstr "Gebruikt om subtypes te sorteren"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:55
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:61
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
@@ -5623,6 +5680,7 @@ msgstr "Video"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:747
+#: model:ir.model,name:mail.model_ir_ui_view
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -5647,14 +5705,14 @@ msgstr "Soort weergave"
 #: code:addons/mail/static/src/xml/chatter.xml:99
 #, python-format
 msgid "View all the attachments of the current record"
-msgstr ""
+msgstr "Bekijk alle bestanden van het huidige record"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:57
 #, python-format
 msgid "Viewer"
-msgstr ""
+msgstr "Toeschouwer"
 
 #. module: mail
 #. openerp-web
@@ -5726,7 +5784,7 @@ msgstr "Wie kan de groepsactiviteiten volgen?"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:95
+#: code:addons/mail/static/src/xml/activity.xml:96
 #, python-format
 msgid "Write Feedback"
 msgstr "Schrijf feedback"
@@ -5817,7 +5875,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/res_users.py:86
+#: code:addons/mail/models/res_users.py:87
 #, python-format
 msgid ""
 "You cannot create a new user from here.\n"
@@ -5909,17 +5967,17 @@ msgstr "Uw bericht is niet verzonden."
 #: code:addons/mail/static/src/xml/thread.xml:424
 #, python-format
 msgid "Your message is pending moderation"
-msgstr ""
+msgstr "Wachtend op moderatie"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:198
 #, python-format
 msgid "Your message was rejected by moderator."
-msgstr ""
+msgstr "Bericht geweigerd door moderator"
 
 #. module: mail
-#: code:addons/mail/models/ir_actions.py:56
+#: code:addons/mail/models/ir_actions.py:57
 #, python-format
 msgid "Your template should define email_from"
 msgstr "Uw sjabloon moet email_from definiëren"
@@ -5946,7 +6004,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.activity.type,delay_from:0
 msgid "after validation date"
-msgstr ""
+msgstr "na controledatum"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1074
@@ -5957,12 +6015,7 @@ msgstr "alias %s: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 msgid "assigned you an activity"
-msgstr ""
-
-#. module: mail
-#: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
-msgid "base.partner.merge.automatic.wizard"
-msgstr "base.partner.merge.automatic.wizard"
+msgstr "heeft u een activiteit toegewezen"
 
 #. module: mail
 #. openerp-web
@@ -6009,7 +6062,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "e.g. 1-5, 7, 8-9"
-msgstr ""
+msgstr "bvb. 1-5, 7, 8-9"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -6047,46 +6100,16 @@ msgid "has been"
 msgstr "is"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:271
+#: code:addons/mail/models/mail_alias.py:272
 #, python-format
 msgid "incorrectly configured alias"
 msgstr "Foutief geconfigureerde alias"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:267
+#: code:addons/mail/models/mail_alias.py:268
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
 msgstr "foutief geconfigureerde alias (onbekend gelinkt record)"
-
-#. module: mail
-#: model:ir.model,name:mail.model_ir_actions_act_window_view
-msgid "ir.actions.act_window.view"
-msgstr "ir.actions.act_window.view"
-
-#. module: mail
-#: model:ir.model,name:mail.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
-
-#. module: mail
-#: model:ir.model,name:mail.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: mail
-#: model:ir.model,name:mail.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: mail
-#: model:ir.model,name:mail.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
-
-#. module: mail
-#: model:ir.model,name:mail.model_mail_alias_mixin
-msgid "mail.alias.mixin"
-msgstr "mail.alias.mixin"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1051
@@ -6142,7 +6165,7 @@ msgstr "op"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:71
-#: code:addons/mail/static/src/xml/web_kanban_activity.xml:48
+#: code:addons/mail/static/src/xml/web_kanban_activity.xml:55
 #, python-format
 msgid "or"
 msgstr "of"
@@ -6165,11 +6188,6 @@ msgid ""
 msgstr ""
 "het plaatsen van een bericht zonder model zou moeten zijn met een parent_id "
 "(privé bericht)"
-
-#. module: mail
-#: model:ir.model,name:mail.model_publisher_warranty_contract
-msgid "publisher_warranty.contract"
-msgstr "publisher_warranty.contract"
 
 #. module: mail
 #. openerp-web
@@ -6205,11 +6223,6 @@ msgstr ""
 "aanmaken"
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: mail
 #: code:addons/mail/models/mail_thread.py:1021
 #, python-format
 msgid "resetting thread_id"
@@ -6222,13 +6235,13 @@ msgid "restricted to channel members"
 msgstr "beperkt tot kanaal leden"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:276
+#: code:addons/mail/models/mail_alias.py:277
 #, python-format
 msgid "restricted to followers"
 msgstr "beperkt tot volgers"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:280
+#: code:addons/mail/models/mail_alias.py:281
 #, python-format
 msgid "restricted to known authors"
 msgstr "Beperkt tot bekende auteurs"
@@ -6280,4 +6293,4 @@ msgstr "gebruikende"
 #. module: mail
 #: selection:mail.activity.type,delay_unit:0
 msgid "weeks"
-msgstr ""
+msgstr "Weken"

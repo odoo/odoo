@@ -7,13 +7,15 @@
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -555,7 +557,6 @@ msgid "Attended the Event"
 msgstr "Présent à l'évènement"
 
 #. module: event
-#: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
@@ -670,6 +671,11 @@ msgstr "Société"
 #, python-format
 msgid "Compose Email"
 msgstr "Rédiger un courriel"
+
+#. module: event
+#: model:ir.model,name:event.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -850,6 +856,7 @@ msgstr "Badge de l'événement"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
 msgstr "Catégorie d'évènement"
 
@@ -864,6 +871,7 @@ msgstr "Catégorie d'évènement"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
+#: model:ir.model,name:event.model_event_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
 msgstr "Confirmation de l'évènement"
@@ -904,6 +912,7 @@ msgid "Event Organization"
 msgstr "Organisation de l'évènement"
 
 #. module: event
+#: model:ir.model,name:event.model_event_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1230,8 +1239,8 @@ msgstr "Planificateurs de courriel"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
-msgid "Mail Scheduling on Event Type"
-msgstr "Planification d'e-mail sur le type d'événement"
+msgid "Mail Scheduling on Event Category"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1383,8 +1392,14 @@ msgstr "En ligne"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_online
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
 msgstr "Événement en ligne"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+msgid "Online Events"
+msgstr "Événements en ligne"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -1726,6 +1741,18 @@ msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr "ATTENTION: Erreur de planificateur d'évènement pour l'évènement: %s"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__website_message_ids
+#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
@@ -1763,11 +1790,6 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm
-msgid "event.confirm"
-msgstr "event.confirm"
-
-#. module: event
 #: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
@@ -1790,11 +1812,6 @@ msgstr "semaine prochaine"
 #, python-format
 msgid "on "
 msgstr "sur"
-
-#. module: event
-#: model:ir.model,name:event.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: event
 #: code:addons/event/models/event.py:522

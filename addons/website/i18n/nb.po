@@ -6,13 +6,14 @@
 # Martin Trigaux, 2018
 # Aleksander, 2018
 # Jorunn D. Newth, 2018
+# Andy Schønhaug <odoo@cypodgroup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Jorunn D. Newth, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
+"Last-Translator: Andy Schønhaug <odoo@cypodgroup.com>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -893,6 +894,11 @@ msgid "Are you sure you want to delete this page ?"
 msgstr "Er du sikker på at du vil slette denne siden?"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_attachment
+msgid "Attachment"
+msgstr "Vedlegg"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
 msgstr "Omdiriger automatisk til språkversjon"
@@ -1136,6 +1142,11 @@ msgid "Complete CRM for any size team"
 msgstr "Komplett CRM for team av alle størrelser"
 
 #. module: website
+#: model:ir.model,name:website.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
 msgstr "Konfigurasjon"
@@ -1295,9 +1306,9 @@ msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Dark"
-msgstr ""
+#: model:ir.ui.menu,name:website.menu_dashboard
+msgid "Dashboard"
+msgstr "Dashbord"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1947,8 +1958,8 @@ msgstr "HTML/CSS-editor"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP-ruting"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
@@ -2118,7 +2129,7 @@ msgstr "Instagram"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_instagram
 #: model:ir.model.fields,field_description:website.field_website__social_instagram
 msgid "Instagram Account"
-msgstr ""
+msgstr "Instagram-konto"
 
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
@@ -2319,11 +2330,6 @@ msgid "Let's start designing."
 msgstr "La oss begynne å designe."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Light"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr "Begrenset tilpassing"
@@ -2447,11 +2453,6 @@ msgid "Menu Label"
 msgstr "Menyvalg"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.theme_customize
-msgid "Menu text"
-msgstr ""
-
-#. module: website
 #: code:addons/website/models/website.py:321
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 #, python-format
@@ -2543,6 +2544,16 @@ msgstr ""
 #. module: website
 #: selection:website.redirect,type:0
 msgid "Moved temporarily (302)"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_multi_mixin
+msgid "Multi Website Mixin"
+msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_multi_mixin
+msgid "Multi Website Published Mixin"
 msgstr ""
 
 #. module: website
@@ -2806,11 +2817,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_dashboard
-msgid "Overview"
-msgstr "Oversikt"
-
-#. module: website
 #: code:addons/website/models/website.py:289
 #: code:addons/website/models/website.py:353
 #: model:ir.model,name:website.model_website_page
@@ -3008,9 +3014,19 @@ msgid "Quality"
 msgstr "Kvalitet"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_contact
+msgid "Qweb Field Contact"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_btn
 msgid "Read more"
 msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_rule
+msgid "Record Rule"
+msgstr "Post Regel"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__url_from
@@ -3143,11 +3159,6 @@ msgid "SEO optimized"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_dashboard
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Sample Icons"
 msgstr ""
@@ -3232,6 +3243,11 @@ msgstr "Send oss en epostmelding"
 #: model:ir.model.fields,field_description:website.field_website_redirect__sequence
 msgid "Sequence"
 msgstr "Sekvens"
+
+#. module: website
+#: model:ir.model,name:website.model_ir_actions_server
+msgid "Server Action"
+msgstr "Handling på server"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -3908,6 +3924,7 @@ msgid "Very Slow"
 msgstr "Veldig langsom"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_view
 #: model:ir.model.fields,field_description:website.field_website_page__view_id
 msgid "View"
 msgstr "Visning"
@@ -4057,6 +4074,11 @@ msgstr "Nettsted-sider"
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 msgid "Website Path"
 msgstr "Nettsted-filbane"
+
+#. module: website
+#: model:ir.model,name:website.model_website_published_mixin
+msgid "Website Published Mixin"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
@@ -4213,8 +4235,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/res_users.py:33 sql_constraint:res.users:0
-#, python-format
+#: sql_constraint:res.users:0
 msgid "You can not have two users with the same login!"
 msgstr ""
 
@@ -4319,6 +4340,11 @@ msgid "e.g. About Us"
 msgstr "for eksempel Om oss"
 
 #. module: website
+#: model:ir.ui.menu,name:website.menu_website_dashboard
+msgid "eCommerce Dashboard"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:41
 #, python-format
@@ -4336,34 +4362,9 @@ msgid "instance of Odoo, the"
 msgstr "instans av Odoo,"
 
 #. module: website
-#: model:ir.model,name:website.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "ir.qweb"
 msgstr "ir.qweb"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_qweb_field_contact
-msgid "ir.qweb.field.contact"
-msgstr "ir.qweb.field.contact"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_rule
-msgid "ir.rule"
-msgstr "ir.rule"
-
-#. module: website
-#: model:ir.model,name:website.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -4384,11 +4385,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "px"
 msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website
 #. openerp-web
@@ -4412,21 +4408,6 @@ msgstr "url"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 msgid "website"
 msgstr "nettsted"
-
-#. module: website
-#: model:ir.model,name:website.model_website_multi_mixin
-msgid "website.multi.mixin"
-msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_mixin
-msgid "website.published.mixin"
-msgstr "website.published.mixin"
-
-#. module: website
-#: model:ir.model,name:website.model_website_published_multi_mixin
-msgid "website.published.multi.mixin"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion

@@ -6,15 +6,14 @@
 # Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # fausthuang, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +47,6 @@ msgid "Ask each attendee"
 msgstr "要求每个参加者"
 
 #. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration
-msgid "Attendee"
-msgstr "出席者"
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_uid
@@ -83,6 +77,7 @@ msgid "Event"
 msgstr "活动"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_answer
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
 msgid "Event Answer"
 msgstr "活动回答"
@@ -93,9 +88,25 @@ msgid "Event Category"
 msgstr "活动类别"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question_report
+msgid "Event Question Report"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
 msgstr "活动登记"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration_answer
+msgid "Event Registration Answer"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -159,7 +170,7 @@ msgid "Question"
 msgstr "疑问"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:78
+#: code:addons/website_event_questions/models/event.py:80
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -206,23 +217,3 @@ msgstr "特定问题"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
 msgstr "称谓"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-msgid "event.answer"
-msgstr "event.answer"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question
-msgid "event.question"
-msgstr "event.question"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "event.question.report"
-msgstr "event.question.report"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration_answer
-msgid "event.registration.answer"
-msgstr "event.registration.answer"

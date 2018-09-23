@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -94,7 +94,7 @@ msgid "Message"
 msgstr "پیام"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:81
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr "شماره همراه %s موجود نیست."
@@ -109,6 +109,11 @@ msgstr "امکان ارسال پیامک نیست، شماره همراه مشخ
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
 msgstr "گیرندگان"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr ""
 
 #. module: sms
 #. openerp-web
@@ -131,6 +136,7 @@ msgstr "ارسال"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
 #: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "ارسال اس ام اس"
@@ -139,13 +145,3 @@ msgstr "ارسال اس ام اس"
 #: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
 msgstr "ارسال یک اس ام اس"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr "sms.api"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
-msgstr "sms.send_sms"

@@ -4,13 +4,17 @@
 # 
 # Translators:
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
+# son dang <son.dang@doda100.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: son dang <son.dang@doda100.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:232
+#: code:addons/snailmail/models/snailmail_letter.py:244
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:200
+#: code:addons/snailmail/models/snailmail_letter.py:212
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
@@ -53,7 +57,7 @@ msgstr "Hủy"
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Đã huỷ"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -69,7 +73,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
-msgstr ""
+msgstr "Màu sắc"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_company
@@ -80,6 +84,11 @@ msgstr "Công ty"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__company_id
 msgid "Company"
 msgstr "Công ty"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -99,7 +108,7 @@ msgstr "Tên hiển thị"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ID Tài liệu"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
@@ -109,7 +118,7 @@ msgstr "Nháp"
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Error"
-msgstr ""
+msgstr "Lỗi"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
@@ -119,7 +128,7 @@ msgstr "ID"
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "In Queue"
-msgstr ""
+msgstr "Đang chờ"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
@@ -154,7 +163,7 @@ msgid "Model"
 msgstr "Đối tượng"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:198
+#: code:addons/snailmail/models/snailmail_letter.py:210
 #, python-format
 msgid "One or more required fields are empty."
 msgstr ""
@@ -162,10 +171,10 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Báo cáo tuỳ chọn để in và đính kèm"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:237
+#: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "Post letter: an error occured."
 msgstr ""
@@ -188,21 +197,31 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
+msgstr "Người nhận"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Send Now"
-msgstr ""
+msgstr "Gửi Ngay"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Sent"
-msgstr ""
+msgstr "Đã gửi"
 
 #. module: snailmail
 #: model:mail.activity.type,name:snailmail.mail_activity_data_snailmail
 msgid "Snailmail"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter
+msgid "Snailmail Letter"
 msgstr ""
 
 #. module: snailmail
@@ -218,13 +237,13 @@ msgid "Status"
 msgstr "Trạng thái"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:196
+#: code:addons/snailmail/models/snailmail_letter.py:208
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:227
+#: code:addons/snailmail/models/snailmail_letter.py:239
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
@@ -244,7 +263,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:194
+#: code:addons/snailmail/models/snailmail_letter.py:206
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -252,19 +271,9 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:191
+#: code:addons/snailmail/models/snailmail_letter.py:203
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
-msgstr ""
-
-#. module: snailmail
-#: model:ir.model,name:snailmail.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_letter
-msgid "snailmail.letter"
 msgstr ""

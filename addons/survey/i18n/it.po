@@ -25,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +275,7 @@ msgstr "Stato delle Attività"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__add_sign
 msgid "Add Sign"
-msgstr ""
+msgstr "Aggiungi Firma"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -352,7 +352,7 @@ msgstr "Contatti Archiviati"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Numero di allegati"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__attachment_ids
@@ -386,6 +386,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
 msgid "Author's avatar"
 msgstr "Avatar Autore"
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.back
@@ -616,6 +621,7 @@ msgid "Delete sent emails (mass mailing only)"
 msgstr "Elimina email inviate (solo mail di massa)"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__description
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
@@ -783,7 +789,7 @@ msgstr "Raggruppa per"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__has_error
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Ha un errore"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__id
@@ -977,7 +983,7 @@ msgstr "Inviare il tipo di attività per email"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Allegato principale"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -1056,6 +1062,13 @@ msgid "Message Record Name"
 msgstr "Nome record messaggio"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__description
+msgid "Message description: either the subject, or the beginning of the body"
+msgstr ""
+"Descrizione messaggio: l'oggetto del messaggio o l'inizio del corpo del "
+"testo"
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
 msgid ""
 "Message type: email for email message, notification for system message, "
@@ -1097,7 +1110,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Moderato Da:"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__moderation_status
@@ -1372,6 +1385,10 @@ msgstr "Messaggio Superiore"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+msgid "Partially Completed"
+msgstr ""
+
+#. module: survey
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
 msgstr ""
@@ -1459,6 +1476,11 @@ msgid "Public url"
 msgstr "URL pubblico"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__website_published
+msgid "Published"
+msgstr "Pubblicato"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__question_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_label_search
@@ -1504,7 +1526,7 @@ msgstr "Pulsanti di scelta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Valore Rating"
 
 #. module: survey
 #: selection:survey.mail.compose.message,moderation_status:0
@@ -1917,9 +1939,13 @@ msgstr "Notifica di sistema"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
-#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
 msgstr "Test"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
+msgid "Test Entries"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__test_entry
@@ -2191,6 +2217,11 @@ msgid "View results"
 msgstr "Vedi risultati"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__website_published
+msgid "Visible on the website as a comment"
+msgstr "Visibile sul sito come commento"
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
 msgstr "Vota"
@@ -2260,11 +2291,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.layout
 msgid "free website"
 msgstr "Sito Web gratuito"
-
-#. module: survey
-#: model:ir.model,name:survey.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.auth_required

@@ -3,26 +3,14 @@
 # * payment_ogone
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# David Arnold <blaggacao@users.noreply.github.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# e2f <projects@e2f.com>, 2018
-# ES R1 <e2fes@hotmail.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
-# Humberto Garza De Koster <garzadekoster@gmail.com>, 2018
-# Antonio Trueba, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,27 +61,27 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
 msgstr "CVC"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Card number"
 msgstr "Número de la tarjeta"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Cardholder name"
 msgstr "Nombre del titular de la tarjeta"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Expires (MM / YY)"
 msgstr "Caducidad (MM / AA)"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
 msgstr "¡Cómo configurar su cuenta Ogone?"
 
@@ -154,6 +142,11 @@ msgid "Payment Acquirer"
 msgstr "Método de pago"
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pago"
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transacción de pago"
@@ -192,8 +185,3 @@ msgstr "Stripe"
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "Transferencia bancaria"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"

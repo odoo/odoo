@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -62,9 +62,19 @@ msgid "Alias"
 msgstr "别名"
 
 #. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "银行对账单明细"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "条码规则"
 
 #. module: pos_mercury
 #. openerp-web
@@ -135,9 +145,7 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:16
 #: selection:barcode.rule,type:0
-#, python-format
 msgid "Credit Card"
 msgstr "信用卡"
 
@@ -161,13 +169,6 @@ msgstr "折扣的产品"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__display_name
 msgid "Display Name"
 msgstr "显示名称"
-
-#. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
-#, python-format
-msgid "Electronic Payment"
-msgstr "电子支付"
 
 #. module: pos_mercury
 #. openerp-web
@@ -301,13 +302,13 @@ msgid "Name of this Mercury configuration"
 msgstr "Mercury配置的名称"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
 #, python-format
 msgid "No Mercury configuration associated with the journal."
 msgstr "没有与日记账关联的 Mercury 配置。"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr ""
@@ -317,7 +318,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr "Mercury没有响应（Mercury down？）"
+msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
@@ -340,6 +341,13 @@ msgstr "处理交易事务的ODoo错误"
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "已经有一个信用卡在刷了"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
+#, python-format
+msgid "Online Payment"
+msgstr "在线支付"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -375,6 +383,16 @@ msgstr "Mercury支付的支付参照号码"
 #, python-format
 msgid "Please setup your Mercury merchant account."
 msgstr "请设置你的Mercury商人账户"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Mercury Configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Mercury Transaction"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -523,23 +541,3 @@ msgstr "称重的产品"
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_barcode_rule
-msgid "barcode.rule"
-msgstr "barcode.rule"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
-msgid "pos_mercury.configuration"
-msgstr "pos_mercury.configuration"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
-msgid "pos_mercury.mercury_transaction"
-msgstr "pos_mercury.mercury_transaction"

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -100,9 +100,19 @@ msgid "Point of Sale"
 msgstr "Point de Vente"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Paramétrage du point de vente"
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Orders"
 msgstr "Commandes du point de vente"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Session du point de vente"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
@@ -126,6 +136,16 @@ msgid "Sales"
 msgstr "Ventes"
 
 #. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
+msgid "Sales Channels"
+msgstr "Equipes de vente"
+
+#. module: pos_sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
 msgstr "Ventes effectuées"
@@ -136,12 +156,6 @@ msgid "Sales Order"
 msgstr "Bon de commande"
 
 #. module: pos_sale
-#: model:ir.model,name:pos_sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Statistiques sur les commandes de ventes"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_crm_team
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
@@ -212,13 +226,3 @@ msgstr "Site Web"
 #: selection:crm.team,dashboard_graph_group_pos:0
 msgid "Week"
 msgstr "Semaine"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_config
-msgid "pos.config"
-msgstr "pos.config"
-
-#. module: pos_sale
-#: model:ir.model,name:pos_sale.model_pos_session
-msgid "pos.session"
-msgstr "pos.session"

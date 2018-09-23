@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,7 @@ msgstr ""
 
 #. module: iap
 #: model:ir.actions.act_window,name:iap.iap_account_action
+#: model:ir.model,name:iap.model_iap_account
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
 msgstr ""
@@ -110,6 +111,11 @@ msgid "Insufficient credit to perform this service."
 msgstr ""
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__insufficient_credit
+msgid "Insufficient credits"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
@@ -134,9 +140,4 @@ msgstr ""
 #: code:addons/iap/static/src/js/crash_manager.js:23
 #, python-format
 msgid "Start a Trial at Odoo"
-msgstr ""
-
-#. module: iap
-#: model:ir.model,name:iap.model_iap_account
-msgid "iap.account"
 msgstr ""

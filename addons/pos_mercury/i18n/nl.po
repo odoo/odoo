@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -65,9 +65,19 @@ msgid "Alias"
 msgstr "Alias"
 
 #. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Bankafschriftregel"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Barcode regel"
 
 #. module: pos_mercury
 #. openerp-web
@@ -138,9 +148,7 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:16
 #: selection:barcode.rule,type:0
-#, python-format
 msgid "Credit Card"
 msgstr "Kredietkaart"
 
@@ -164,13 +172,6 @@ msgstr "Korting product"
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
-
-#. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
-#, python-format
-msgid "Electronic Payment"
-msgstr "Electronische betaling"
 
 #. module: pos_mercury
 #. openerp-web
@@ -310,13 +311,13 @@ msgid "Name of this Mercury configuration"
 msgstr "Naam van deze Mercury configuratie"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:34
 #, python-format
 msgid "No Mercury configuration associated with the journal."
 msgstr "Geen mercury configuratie geassocieerd met het dagboek."
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:22
 #, python-format
 msgid "No opened point of sale session for user %s found."
 msgstr "Geen geopende kassa voor de gebruiker %s gevonden."
@@ -349,6 +350,13 @@ msgstr "Odoo error tijdens transactie verwerking."
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Er is al een creditcard swipe in behandeling."
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
+#, python-format
+msgid "Online Payment"
+msgstr "Online betaling"
 
 #. module: pos_mercury
 #: selection:barcode.rule,type:0
@@ -386,6 +394,16 @@ msgstr "Betalingsreferentie nummer van Mercury Pay"
 #, python-format
 msgid "Please setup your Mercury merchant account."
 msgstr "Zet aub uw Mercury handelaar account op."
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
+msgid "Point of Sale Mercury Configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
+msgid "Point of Sale Mercury Transaction"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -537,23 +555,3 @@ msgstr "Gewogen product"
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_barcode_rule
-msgid "barcode.rule"
-msgstr "barcode.rule"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
-msgid "pos_mercury.configuration"
-msgstr "pos_mercury.configuration"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
-msgid "pos_mercury.mercury_transaction"
-msgstr "pos_mercury.mercury_transaction"

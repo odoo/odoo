@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Fisher <fisher@kdomi.com>, 2018
 # Talway <9010446@qq.com>, 2018
@@ -11,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Talway <9010446@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +62,7 @@ msgid ""
 "button available) for the given URL, and per country.<br/>To identify the "
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
-msgstr "<span/><br/>"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
@@ -107,6 +108,11 @@ msgid "Auto popup timer"
 msgstr "自动弹出时间"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Avatar"
 msgstr "头像"
@@ -147,7 +153,7 @@ msgid ""
 "                your messages by typing <i>:shortcut</i>. The shortcut is\n"
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
-msgstr "<i/>"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -173,7 +179,6 @@ msgid "Channel Rule"
 msgstr "频道规则"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
 msgstr "频道规则"
@@ -508,9 +513,19 @@ msgid "Livechat Channel"
 msgstr "即时聊天"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr ""
+
+#. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
 msgstr "在线对话"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
@@ -522,10 +537,9 @@ msgid ""
 msgstr "实时聊天支持频道统计允许您轻松检查和分析公司实时聊天会话的表现。提取关于错过的会话、观众、会话持续时间等的信息"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Report"
-msgstr "实时聊天支持报表"
+msgid "Livechat Support Operator Report"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
@@ -585,7 +599,7 @@ msgid "No customer ratings on live chat session yet"
 msgstr ""
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:118
+#: code:addons/im_livechat/models/mail_channel.py:119
 #, python-format
 msgid "No history found"
 msgstr "未找到历史记录"
@@ -619,7 +633,7 @@ msgstr "对话中的消息数"
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:12
 #, python-format
 msgid "OK"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -763,7 +777,7 @@ msgid "Search report"
 msgstr "搜索报表"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:106
+#: code:addons/im_livechat/models/mail_channel.py:107
 #, python-format
 msgid "See 15 last visited pages"
 msgstr "查看最后访问的 15 个页面"
@@ -979,11 +993,6 @@ msgstr "例如：您好！请问有什么可以帮你的吗？"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "例如：你的网站地址 "
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

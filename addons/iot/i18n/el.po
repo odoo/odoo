@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #. module: iot
 #: selection:iot.device,connection:0
 msgid "Bluetooth"
-msgstr ""
+msgstr "Bluetooth"
 
 #. module: iot
 #: selection:iot.device,type:0
@@ -61,7 +62,7 @@ msgstr ""
 #: model:ir.ui.menu,name:iot.iot_device_menu_action
 #: model_terms:ir.ui.view,arch_db:iot.iot_box_view_form
 msgid "Devices"
-msgstr ""
+msgstr "Συσκευές"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__display_name
@@ -81,14 +82,24 @@ msgid "ID"
 msgstr "Κωδικός"
 
 #. module: iot
+#: model:ir.model,name:iot.model_iot_box
+msgid "IOT Box"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_device
+msgid "IOT Device"
+msgstr ""
+
+#. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__ip
 msgid "IP Address"
-msgstr ""
+msgstr "Διεύθυνση IP"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__identifier
 msgid "Identifier"
-msgstr ""
+msgstr "Αναγνωριστικό"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__identifier
@@ -144,16 +155,21 @@ msgstr "Περιγραφή"
 #. module: iot
 #: selection:iot.device,connection:0
 msgid "Network"
-msgstr ""
+msgstr "Δίκτυο"
 
 #. module: iot
 #: selection:iot.device,type:0
 msgid "Printer"
-msgstr ""
+msgstr "Εκτυπωτής"
 
 #. module: iot
 #: model_terms:ir.ui.view,arch_db:iot.iot_device_view_form
 msgid "Printer Reports"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: iot
@@ -197,18 +213,3 @@ msgid ""
 "When setting a device here, the report will be printed through this device "
 "on the iotbox"
 msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_box
-msgid "iot.box"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_device
-msgid "iot.device"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_ir_actions_report
-msgid "ir.actions.report"
-msgstr "ir.actions.report"

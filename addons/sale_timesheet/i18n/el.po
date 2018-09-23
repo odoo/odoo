@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alex Yo <omikr0n@hotmail.com>, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +101,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "Αναλυτικός Λογαριασμός"
 
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
@@ -108,12 +111,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Γραμμή Αναλυτικής"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr ""
+msgstr "Αναλυτικές γραμμές"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_assign_so_line_view_form
@@ -209,7 +212,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Billing"
-msgstr ""
+msgstr "Χρεώσεις"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
@@ -256,6 +259,21 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #, python-format
 msgid "Create Invoice"
+msgstr "Δημιουργία Τιμολογίου"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create Invoice from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
+msgid "Create SO Line from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create SO from project"
 msgstr ""
 
 #. module: sale_timesheet
@@ -269,16 +287,6 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_invoice
-msgid "Create a Invoice from project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
-msgid "Create a SO from project"
 msgstr ""
 
 #. module: sale_timesheet
@@ -335,7 +343,7 @@ msgstr "Νόμισμα"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__partner_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Customer"
-msgstr ""
+msgstr "Πελάτης"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -382,7 +390,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Fixed"
-msgstr ""
+msgstr "Σταθερό"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
@@ -423,12 +431,12 @@ msgstr "Κωδικός"
 #: model:ir.model,name:sale_timesheet.model_account_invoice
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice"
-msgstr ""
+msgstr "Τιμολόγιο"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Γραμμή Τιμολογίου"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -438,13 +446,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Invoiced"
-msgstr ""
+msgstr "Τιμολογημένα"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:404
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Τιμολόγια"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -492,17 +500,17 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
 msgid "Lines"
-msgstr ""
+msgstr "Γραμμές"
 
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Manual"
-msgstr ""
+msgstr "Χειροκίνητα"
 
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Χειροκίνητη ρύθμιση ποσοτήτων στην παραγγελία"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_type
@@ -511,6 +519,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Ορισμός ποσοτήτων χειροκίνητα στην παραγγελία: Τιμολόγηση βασισμένη στην χειροκίνητη ποσότητα, χωρίς τη δημιουργία αναλυτικού λογαριασμού.\n"
+"Φύλλο Χρόνου Εργασίας σε συμβόλαιο: Τιμολόγηση βασισμένη στις ώρες από το σχετικό φύλλο εργασίας.\n"
+"Δημιουργία μιας εργασίας και παρακολούθηση ωρών: Δημιουργήστε μια εργασία στην επικύρωση της παραγγελίας και παρακολουθήστε τις ώρες εργασίας."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -567,7 +578,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Hours"
-msgstr ""
+msgstr "Μη Χρεώσιμες Ώρες"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -579,7 +590,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable"
-msgstr ""
+msgstr "Μη Χρεώσιμο"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice__timesheet_count
@@ -597,7 +608,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "Παραγγελθέντα"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -620,12 +631,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
 msgid "Product"
-msgstr ""
+msgstr "Είδος"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Πρότυπο Είδους "
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_manager_and_product
@@ -645,7 +656,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_milestone
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_time_based
 msgid "Products"
-msgstr ""
+msgstr "Είδη"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -694,11 +705,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Project Manager"
-msgstr ""
+msgstr "Διαχειριστής Έργου"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
-msgid "Project Profitability Analysis"
+msgid "Project Profitability Report"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
 msgstr ""
 
 #. module: sale_timesheet
@@ -732,16 +748,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__project_ids
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "Έργα"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_sale_order
-msgid "Quotation"
 msgstr ""
 
 #. module: sale_timesheet
@@ -758,12 +769,13 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Remaining"
-msgstr ""
+msgstr "Εναπομείναντα"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Παραγγελία"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
@@ -773,7 +785,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_line_id
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -797,7 +809,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
-msgstr ""
+msgstr "Παραγγελία"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__order_confirmation_date
@@ -815,7 +827,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__is_service
@@ -828,7 +840,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:395
 #, python-format
 msgid "Sales Orders"
-msgstr ""
+msgstr "Παραγγελίες"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
@@ -860,6 +872,10 @@ msgid ""
 "Timesheets app and invoice them based on a fixed price (ordered quantity) or"
 " on the time spent (delivered quantity)"
 msgstr ""
+"Πωλήστε υπηρεσίες (π.χ. έργο, συντήρηση), καταγράψτε το χρόνο που ξοδεύετε "
+"χρησιμοποιώντας την εφαρμογή Timesheets και τιμολογήστε τους με βάση μια "
+"σταθερή τιμή (παραγγελθείσα ποσότητα) ή τον χρόνο που αφιερώσατε (ποσότητα "
+"που παραδόθηκε)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -870,7 +886,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
-msgstr ""
+msgstr "Υπηρεσία"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
@@ -887,38 +903,38 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your fixed price services"
-msgstr ""
+msgstr "Ρυθμίστε τις υπηρεσίες σταθερής τιμής"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your milestone services"
-msgstr ""
+msgstr "Ρυθμίστε τις με ορόσημα υπηρεσίες σας "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Setup your time-based services"
-msgstr ""
+msgstr "Ρυθμίστε τις υπηρεσίες που βασίζονται στο χρόνο"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Εξαντλήθηκε"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Statistics"
-msgstr ""
+msgstr "Στατιστικά"
 
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Κινήσεις Αποθέματος"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Εργασία"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:177
@@ -940,12 +956,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Tasks"
-msgstr ""
+msgstr "Εργασίες"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Εργασίες που σχετίζονται με αυτή την πώληση"
 
 #. module: sale_timesheet
 #: sql_constraint:project.project:0
@@ -1055,7 +1071,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #, python-format
 msgid "Timesheet"
-msgstr ""
+msgstr "Φύλλο Χρόνου Εργασίας"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
@@ -1104,7 +1120,7 @@ msgstr ""
 #. module: sale_timesheet
 #: selection:product.template,service_type:0
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "Φύλλα Χρόνου Εργασίας για το έργο (ένας φύλλο ανά Παραγγελία/Έργο)"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0
@@ -1126,14 +1142,14 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "Υπηρεσίες Παρακαλούθησης"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__price_unit
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Τιμή Μονάδας"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__price_unit
@@ -1175,6 +1191,11 @@ msgid "Wizard"
 msgstr "Αυτόματος Οδηγός"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
+msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62
 #, python-format
 msgid ""
@@ -1202,14 +1223,4 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to unlink the task from the sale order item in order to delete it."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
-msgid "project.create.sale.order.line"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
-msgid "project.sale.line.employee.map"
 msgstr ""

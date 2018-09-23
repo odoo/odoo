@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -33,9 +33,9 @@ msgid "%s changed cost from %s to %s - %s"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move
-msgid "Account Entry"
-msgstr "Muhasebe Kaydı"
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -98,7 +98,7 @@ msgid "Cancel"
 msgstr "İptal"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:502
+#: code:addons/stock_account/models/stock.py:510
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -108,7 +108,7 @@ msgstr ""
 " üzerinde bir stok giriş hesabı seçmeden bu operasyonu tamamlayamazsınız."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:504
+#: code:addons/stock_account/models/stock.py:512
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -151,7 +151,12 @@ msgid "Choose your date"
 msgstr "Tarihinizi seçin"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:579
+#: model:ir.model,name:stock_account.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:587
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -267,6 +272,7 @@ msgstr "Envanter Konumları"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_quantity_history.py:25
+#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
 #: model:ir.actions.act_window,name:stock_account.product_valuation_action
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product__property_valuation
@@ -287,6 +293,11 @@ msgstr "Fatura"
 #: model:ir.model,name:stock_account.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Fatura Satırı"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move
+msgid "Journal Entries"
+msgstr "Yevmiye Kayıtları"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -345,11 +356,6 @@ msgid "No difference between the standard price and the new price."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Paket Operasyonu"
-
-#. module: stock_account
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
 msgstr "Periyodik (Manuel)"
@@ -366,8 +372,8 @@ msgstr "Fiyat"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Tedarik Talebi"
+msgid "Procurement Group"
+msgstr "Tedarik Grubu"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -378,6 +384,11 @@ msgstr "Ürün"
 #: model:ir.model,name:stock_account.model_product_category
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -414,6 +425,11 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Ters Transfer"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking_line
+msgid "Return Picking Line"
+msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -512,12 +528,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Stok Değerleme Hesabı (Çıkan)"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Hesap Planı Şablonu"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:528
+#: code:addons/stock_account/models/stock.py:536
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -525,7 +536,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:350
+#: code:addons/stock_account/models/stock.py:358
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -533,7 +544,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:361
+#: code:addons/stock_account/models/stock.py:369
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -545,7 +556,7 @@ msgstr ""
 "yapıyorlar."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:359
+#: code:addons/stock_account/models/stock.py:367
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -617,11 +628,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
 msgid "Valuation"
 msgstr "Değerleme"
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
-msgid "Valuation Report"
-msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:246
@@ -718,7 +724,7 @@ msgstr ""
 "etkinleştirildiğinde, bu hesap ürünün mevcut değerini tutacaktır."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:500
+#: code:addons/stock_account/models/stock.py:508
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -727,7 +733,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:506
+#: code:addons/stock_account/models/stock.py:514
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -740,13 +746,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
 msgstr "_Uygula"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"

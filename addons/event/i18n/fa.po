@@ -11,14 +11,13 @@
 # arya sadeghy <aryasadeghy@gmail.com>, 2018
 # mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Arash Sardari <arashss77@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -538,7 +537,6 @@ msgid "Attended the Event"
 msgstr "حاضر شده در رویداد"
 
 #. module: event
-#: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
@@ -653,6 +651,11 @@ msgstr "شرکت"
 #, python-format
 msgid "Compose Email"
 msgstr "نگارش ایمیل"
+
+#. module: event
+#: model:ir.model,name:event.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -833,6 +836,7 @@ msgstr "بج رویداد"
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
 msgstr "طبقه بندیهای رویداد"
 
@@ -847,6 +851,7 @@ msgstr "طبقه بندی رویداد"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm
+#: model:ir.model,name:event.model_event_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Event Confirmation"
 msgstr "تایید کردن رویداد"
@@ -887,6 +892,7 @@ msgid "Event Organization"
 msgstr "سازمان رویداد"
 
 #. module: event
+#: model:ir.model,name:event.model_event_registration
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1184,7 +1190,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
-msgid "Mail Scheduling on Event Type"
+msgid "Mail Scheduling on Event Category"
 msgstr ""
 
 #. module: event
@@ -1335,7 +1341,13 @@ msgstr "آنلاین"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_online
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
+msgstr "رویداد آنلاین"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+msgid "Online Events"
 msgstr "رویداد آنلاین"
 
 #. module: event
@@ -1669,6 +1681,18 @@ msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
+msgid "Website Messages"
+msgstr "پیام‌های وب‌سایت"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__website_message_ids
+#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
+msgid "Website communication history"
+msgstr "تاریخچه ارتباط با وبسایت"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
@@ -1702,11 +1726,6 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr ""
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm
-msgid "event.confirm"
-msgstr ""
-
-#. module: event
 #: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
@@ -1729,11 +1748,6 @@ msgstr ""
 #, python-format
 msgid "on "
 msgstr ""
-
-#. module: event
-#: model:ir.model,name:event.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: event
 #: code:addons/event/models/event.py:522

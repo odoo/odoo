@@ -2,12 +2,15 @@
 # This file contains the translation of the following modules:
 # * event_sale
 # 
+# Translators:
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,11 +21,6 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_event_registration
-msgid "Attendee"
 msgstr ""
 
 #. module: event_sale
@@ -66,7 +64,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Kreiran"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
@@ -77,19 +75,20 @@ msgid ""
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
-msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
-msgstr ""
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
 msgstr ""
 
 #. module: event_sale
@@ -100,7 +99,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
@@ -108,7 +107,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
-msgstr ""
+msgstr "Događaj"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type
@@ -122,10 +121,11 @@ msgid "Event Name"
 msgstr ""
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
-msgstr ""
+msgstr "Registracioni Dogadjaj"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -155,25 +155,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
 #: model:product.category,name:event_sale.product_category_events
 msgid "Events"
-msgstr ""
+msgstr "Događaji"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
-msgstr ""
+msgstr "Slobodan"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
+msgstr "ID"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
+msgid ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
 msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
@@ -224,7 +233,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:205
@@ -242,12 +251,12 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "Ništa"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
-msgstr ""
+msgstr "Poreklo"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
@@ -258,23 +267,23 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
-msgstr ""
+msgstr "Plaćeno"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
-msgstr ""
+msgstr "Isplata"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
@@ -290,17 +299,12 @@ msgstr ""
 #: model:ir.model,name:event_sale.model_product_product
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Quotation"
-msgstr ""
+msgstr "Šablon proizvoda"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:20
@@ -308,7 +312,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
-msgstr ""
+msgstr "Registracija"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:34
@@ -320,7 +324,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "Registracije"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
@@ -333,6 +337,11 @@ msgid "Reserved Seats"
 msgstr ""
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Sale Order"
+msgstr "Nalog za prodaju"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr ""
@@ -340,7 +349,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajni Nalog"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
@@ -362,7 +371,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
-msgstr ""
+msgstr "Preskoči"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
@@ -431,21 +440,11 @@ msgstr ""
 #: model:product.product,weight_uom_name:event_sale.product_product_event
 #: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
 msgid "kg"
-msgstr ""
+msgstr "kg"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor
-msgid "registration.editor"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor_line
-msgid "registration.editor.line"
 msgstr ""
 
 #. module: event_sale

@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -59,11 +59,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard__date
 msgid "Account Date"
 msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_move
-msgid "Account Entry"
-msgstr "Kirjanpitokirjaus"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category__account_depreciation_id
@@ -150,6 +145,7 @@ msgid "Asset Account"
 msgstr "Varojen tili"
 
 #. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_category
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line__asset_category_id
 #: model_terms:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model_terms:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
@@ -158,6 +154,11 @@ msgstr "Varojen tili"
 #: model_terms:ir.ui.view,arch_db:account_asset.view_invoice_asset_category
 msgid "Asset Category"
 msgstr "Varojen kategoria"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
+msgid "Asset Depreciation Line"
+msgstr ""
 
 #. module: account_asset
 #: model_terms:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -200,7 +201,6 @@ msgid "Asset Types"
 msgstr "Käyttöomaisuus tyypit"
 
 #. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_category
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report__asset_category_id
 #: model_terms:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #: model_terms:ir.ui.view,arch_db:account_asset.view_account_asset_category_tree
@@ -212,11 +212,6 @@ msgstr "Varojen kategoria"
 #, python-format
 msgid "Asset created"
 msgstr "Omaisuuserä luotu"
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_account_asset_depreciation_line
-msgid "Asset depreciation line"
-msgstr "Omaisuuserän poistorivi"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:344
@@ -246,6 +241,11 @@ msgstr "Varat"
 #: model_terms:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets Analysis"
 msgstr "Varallisuusanalyysi"
+
+#. module: account_asset
+#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
+msgid "Assets Depreciation Confirmation wizard"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move__asset_depreciation_ids
@@ -768,6 +768,7 @@ msgstr "Päiväkirja"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:463
+#: model:ir.model,name:account_asset.model_account_move
 #: model_terms:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -1239,11 +1240,6 @@ msgstr ""
 #: code:addons/account_asset/models/account_asset.py:652
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
-
-#. module: account_asset
-#: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
-msgid "asset.depreciation.confirmation.wizard"
 msgstr ""
 
 #. module: account_asset

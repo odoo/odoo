@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "%(empl_name)s з %(check_in)s до %(check_out)s"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:109
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:125
 #, python-format
 msgid ""
 "<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't "
@@ -64,14 +64,14 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:124
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:140
 #, python-format
 msgid "An apple a day keeps the doctor away"
 msgstr "Хто яблуко в день з'їдає, у того лікар не буває"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:113
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:129
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr "Ще одна хороший робочий день! До зустрічі!"
@@ -181,6 +181,11 @@ msgid "Check Out"
 msgstr "Вихід"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
+msgid "Check Out Date"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Check-In/Out"
 msgstr "Вхід/вихід"
@@ -226,6 +231,11 @@ msgid "Company Logo"
 msgstr "Логотип компанії"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Configuration"
 msgstr "Налаштування"
@@ -246,11 +256,6 @@ msgid "Created on"
 msgstr "Створено"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Date"
-msgstr "Дата"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
 msgid "Department"
 msgstr "Відділ"
@@ -262,14 +267,14 @@ msgstr "Назва для відображення"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:130
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:146
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr "Хто рано лягає і рано встає, здоров'я, багатство і розум наживе"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:122
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:138
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr "Їжте сніданок як король, обід, як купець і вечерю, як жебрак"
@@ -323,14 +328,14 @@ msgstr "Помилка: не вдалося знайти відповідног�
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:77
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:93
 #, python-format
 msgid "First come, first served"
 msgstr "Перший прийшов - перший отримав"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:92
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:108
 #, python-format
 msgid "Glad to have you back, it's been a while!"
 msgstr "Раді що ви повернулися, це може зайняти деякий час!"
@@ -346,29 +351,29 @@ msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:83
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:99
 #, python-format
 msgid "Good afternoon"
 msgstr "Доброго дня"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:85
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:101
 #, python-format
 msgid "Good evening"
 msgstr "Доброго вечора"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:80
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:96
 #, python-format
 msgid "Good morning"
 msgstr "Доброго ранку"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:71
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:87
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:103
 #, python-format
 msgid "Good night"
 msgstr "Доброї ночі"
@@ -388,28 +393,28 @@ msgstr "Групувати за"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:127
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:143
 #, python-format
 msgid "Have a good afternoon"
 msgstr "Гарного дня"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:118
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:134
 #, python-format
 msgid "Have a good day!"
 msgstr "Гарного дня!"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:132
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:148
 #, python-format
 msgid "Have a good evening"
 msgstr "Гарного вечора"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:120
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:136
 #, python-format
 msgid "Have a nice lunch!"
 msgstr "Приємного обіду!"
@@ -431,7 +436,7 @@ msgstr "ID використовується для ідентифікації п
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:95
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:111
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr "Якщо вже варто робити роботу, то робити її треба добре."
@@ -641,7 +646,7 @@ msgstr "Тут будуть розміщені записи про відвід�
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/greeting_message.js:75
+#: code:addons/hr_attendance/static/src/js/greeting_message.js:91
 #, python-format
 msgid "The early bird catches the worm"
 msgstr "Рання пташка ніс прочищає, пізня очі продирає"
@@ -768,8 +773,3 @@ msgstr "список відвідування для працівника"
 #, python-format
 msgid "or"
 msgstr "або"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

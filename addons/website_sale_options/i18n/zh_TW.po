@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -94,14 +94,6 @@ msgid "Optional Products"
 msgstr "可選產品"
 
 #. module: website_sale_options
-#: model:ir.model.fields,help:website_sale_options.field_product_product__optional_product_ids
-#: model:ir.model.fields,help:website_sale_options.field_product_template__optional_product_ids
-msgid ""
-"Optional Products are suggested whenever the customer hits *Add to Cart* "
-"(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
-msgstr "每當客戶點選 * 加入購物車 *，就會出現建議的可選產品（交叉銷售策略，例如，就電腦而言：保修、軟體等）。"
-
-#. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line__option_line_ids
 msgid "Options Linked"
 msgstr "鏈接選項"
@@ -137,14 +129,14 @@ msgid "Quantity"
 msgstr "數量"
 
 #. module: website_sale_options
-#: model:ir.model,name:website_sale_options.model_sale_order
-msgid "Quotation"
-msgstr "報價"
-
-#. module: website_sale_options
 #: model_terms:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Remove one"
 msgstr ""
+
+#. module: website_sale_options
+#: model:ir.model,name:website_sale_options.model_sale_order
+msgid "Sale Order"
+msgstr "銷售訂單"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
@@ -155,3 +147,9 @@ msgstr "銷售訂單行"
 #: model_terms:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
 msgstr "選擇您的選項:"
+
+#. module: website_sale_options
+#: model:ir.model.fields,help:website_sale_options.field_product_product__optional_product_ids
+#: model:ir.model.fields,help:website_sale_options.field_product_template__optional_product_ids
+msgid "Suggest optional products when adding the product to a cart."
+msgstr ""

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Fabien Bourgeois <fabien@yaltik.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -106,6 +106,11 @@ msgid "Auto popup timer"
 msgstr "Auto popup timer"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Avatar"
 msgstr "Avatar"
@@ -172,7 +177,6 @@ msgid "Channel Rule"
 msgstr "Règle du canal"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
 msgstr "Règles du canal"
@@ -521,9 +525,19 @@ msgid "Livechat Channel"
 msgstr "Canal de Live Chat"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr ""
+
+#. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
 msgstr "Salon de Live Chat"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
@@ -539,10 +553,9 @@ msgstr ""
 "la durée d'une session, etc."
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Report"
-msgstr "Rapport du support Live Chat"
+msgid "Livechat Support Operator Report"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
@@ -605,7 +618,7 @@ msgid "No customer ratings on live chat session yet"
 msgstr "Pas encore d'évaluations de clients sur la session Live Chat"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:118
+#: code:addons/im_livechat/models/mail_channel.py:119
 #, python-format
 msgid "No history found"
 msgstr "Aucun historique trouvé"
@@ -791,7 +804,7 @@ msgid "Search report"
 msgstr "Recherche de rapport"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:106
+#: code:addons/im_livechat/models/mail_channel.py:107
 #, python-format
 msgid "See 15 last visited pages"
 msgstr "Voir les 15 dernières pages visitées"
@@ -1020,11 +1033,6 @@ msgstr "ex. Bonjour, comment puis-je vous aider?"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "ex: VotreSiteWeb.com"
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

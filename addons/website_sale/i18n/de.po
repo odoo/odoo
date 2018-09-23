@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Mathias Markl <mathias.markl@mukit.at>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -440,6 +440,7 @@ msgstr "Verworfener Warenkorb"
 #: model:ir.actions.act_window,name:website_sale.action_abandoned_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #, python-format
 msgid "Abandoned Carts"
 msgstr "Verworfene Warenkörbe"
@@ -458,24 +459,18 @@ msgstr "Verwerfen-Verzögerung"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Abandoned carts are all carts for which no transaction has been confirmed "
-"while the customer has filled in their address. You can find them in "
-"*Website > Orders > Abandoned Carts*. From there you can send a recovery "
-"email to stimulate the customers to resume their order."
+"Abandoned carts are all carts left unconfirmed by website visitors. You can "
+"find them in *Website > Orders > Abandoned Carts*. From there you can send "
+"recovery emails to visitors who entered their contact details."
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before paying (cross-"
-"sell strategy, e.g. for computers: mouse, keyboard, etc.). An algorithm "
-"figures out a list of accessories based on all the products added to cart."
+"Accessories show up when the customerreviews the cart before payment (cross-"
+"sell strategy)."
 msgstr ""
-"Zubehör wird angezeigt, wenn der Kunde vor der Zahlung den Warenkorb prüft "
-"(Strategie zum Cross-Selling, z. B. für Computer: Maus, Tastatur usw.). Ein "
-"Algorithmus enthält eine Liste an Zubehör basierend auf allen Produkten im "
-"Warenkorb."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -541,6 +536,13 @@ msgstr "Alternative Produkte:"
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
 msgid "Amount of Abandoned Carts"
 msgstr "Menge verworfener Warenkörbe"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"An error occured while processing your payment. Please try again or contact "
+"your administrator."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -684,21 +686,6 @@ msgstr ""
 "Touchscreen-Benutzerschnittstelle zu durchsuchen."
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
-#: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
-msgid ""
-"Categories can be published on the Shop page (online catalog grid) to help "
-"customers find all the items within a category. To publish them, go to the "
-"Shop page, hit Customize and turn *Product Categories* on. A product can "
-"belong to several categories."
-msgstr ""
-"Kategorien können auf der Shop-Seite veröffentlicht werden (Raster für "
-"Online-Katalog), damit Kunden alle Artikel einer Kategorie finden. Gehen Sie"
-" zum Veröffentlichen auf die Shop-Seite, klicken Sie auf „Anpassen“ und "
-"aktivieren Sie „Produktkategorien“. Ein Produkt kann zu mehreren Kategorien "
-"gehören."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Unterkategorien"
@@ -792,6 +779,11 @@ msgid "Compute shipping costs on orders"
 msgstr "Versandkosten für Aufträge berechnen"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Confirm Order"
 msgstr "Auftrag bestätigen"
@@ -810,8 +802,8 @@ msgstr "Bestätigen Sie Aufträge bei Zahlung."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
-msgid "Confirmed"
-msgstr "Bestätigt"
+msgid "Confirmation Date"
+msgstr "Bestätigung am"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -872,6 +864,16 @@ msgstr "Währungen"
 #. module: website_sale
 #: selection:website.sale.payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Custom payment instructions"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer"
+msgstr "Kunde"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer Country"
 msgstr ""
 
 #. module: website_sale
@@ -1023,7 +1025,7 @@ msgid "Enter a name for your new product"
 msgstr "Geben Sie einen Namen für Ihr neues Produkt ein"
 
 #. module: website_sale
-#: code:addons/website_sale/models/product.py:92
+#: code:addons/website_sale/models/product.py:93
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fehler! Rekursive Kategorien sind nicht zulässig"
@@ -1058,7 +1060,7 @@ msgstr "Generieren Sie eine Rechnung aus fakturierbaren Aufträgen."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"Generate the invoice automatically when the electronic payment is confirmed"
+"Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
 
 #. module: website_sale
@@ -1077,6 +1079,11 @@ msgid "Grant discounts on sales order lines"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Group By"
+msgstr "Gruppieren nach"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__html_class
 msgid "HTML Classes"
 msgstr "HTML Klassen"
@@ -1088,8 +1095,8 @@ msgstr "HTML Farb-Index"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP-Routing"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute_value__html_color
@@ -1169,7 +1176,7 @@ msgid "Installs the \"Website Delivery Information\" application"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:542
+#: code:addons/website_sale/controllers/main.py:543
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -1352,7 +1359,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:1008
+#: code:addons/website_sale/controllers/main.py:1020
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:32
 #: model_terms:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1427,9 +1434,15 @@ msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:39
+#: model:ir.ui.menu,name:website_sale.menu_report_sales
 #, python-format
 msgid "Online Sales"
 msgstr "Online-Verkäufe"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
+msgid "Online Sales Analysis"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -1460,6 +1473,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Order Date"
 msgstr "Bestelldatum"
 
@@ -1678,6 +1692,7 @@ msgstr ""
 #: model:ir.model,name:website_sale.model_product_product
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
 msgid "Product"
 msgstr "Produkt"
@@ -1688,9 +1703,24 @@ msgid "Product Attribute"
 msgstr "Produktattribut"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_product_attribute_value
+msgid "Product Attribute Value"
+msgstr "Produktattributwert"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Product Category"
+msgstr "Produktkategorie"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
 msgstr "Produktvergleichswerkzeug"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_image
+msgid "Product Image"
+msgstr "Produktbild"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1712,6 +1742,11 @@ msgstr "Produktpreise"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
 msgstr "Öffentliche Produkt Kategorien"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_style
+msgid "Product Style"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -1806,11 +1841,6 @@ msgid "Quantity"
 msgstr "Menge"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_sale_order
-msgid "Quotation"
-msgstr "Angebot"
-
-#. module: website_sale
 #: selection:product.attribute,type:0
 msgid "Radio"
 msgstr "Radio"
@@ -1852,7 +1882,12 @@ msgid "Reason of the rating"
 msgstr "Begründung der Bewertung"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Recovery Email Sent"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
 msgstr "Zu sendende Wiederherstellungs-E-Mail"
 
@@ -1907,6 +1942,11 @@ msgid "Sale"
 msgstr "Verkauf"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order
+msgid "Sale Order"
+msgstr "Verkaufsauftrag"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Report"
 msgstr "Verkaufsbericht"
@@ -1916,8 +1956,6 @@ msgstr "Verkaufsbericht"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:35
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:49
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
-#: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
-#: model:ir.ui.menu,name:website_sale.menu_report_sales
 #: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
@@ -1925,14 +1963,19 @@ msgid "Sales"
 msgstr "Verkauf"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_crm_team
+msgid "Sales Channels"
+msgstr "Vertriebskänale"
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Auftragsposition"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Statistik Verkaufsaufträge"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
@@ -1948,7 +1991,6 @@ msgid "Sales Since Last"
 msgstr "Verkäufe seit letztem/r"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_crm_team
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
 #: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1965,6 +2007,11 @@ msgstr "Verkäufer"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Saved Payment Data"
 msgstr "Gespeicherte Zahlungsdaten"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Search Abandoned Sales Orders"
+msgstr ""
 
 #. module: website_sale
 #: selection:product.attribute,type:0
@@ -2150,7 +2197,7 @@ msgid "Sold"
 msgstr "Verkauft"
 
 #. module: website_sale
-#: code:addons/website_sale/controllers/main.py:560
+#: code:addons/website_sale/controllers/main.py:561
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Einige benötigte Felder sind leer."
@@ -2179,6 +2226,11 @@ msgstr "Bundesland / Routen ..."
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Status"
+msgstr "Status"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2221,11 +2273,9 @@ msgstr "Zwischensumme:"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest more expensive alternatives to your customers (upsell strategy). "
-"Those products show up on the product page."
+"Suggest alternatives to your customer(upsell strategy).Those product show up"
+" on the product page."
 msgstr ""
-"Schlagen Sie Kunden teurere Alternativen vor (Upselling-Strategie). Diese "
-"Produkte werden auf der Produktseite angezeigt."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2288,6 +2338,15 @@ msgid ""
 msgstr ""
 "Der hier ausgewählte Modus gilt als Bestimmung zur Rechnungsstellung für "
 "alle neu erstellten Produkte, jedoch nicht für bestehende Produkte."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+msgid ""
+"The product will be available in each mentioned e-commerce category. Go "
+"toShop > Customize and enable 'E-commerce categories' to view all e-commerce"
+" categories."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
@@ -2378,6 +2437,7 @@ msgstr "USPS"
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #, python-format
 msgid "Unpaid Orders"
 msgstr "Offene Bestellungen"
@@ -2420,6 +2480,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Website"
 msgstr "Website"
 
@@ -2554,8 +2615,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
-"You'll find here all the carts abandoned by your visitors, if they completed their address.\n"
-"                You should send them a recovery email!"
+"You'll find here all the carts abandoned by your visitors.\n"
+"                If they completed their address, you should send them a recovery email!"
 msgstr ""
 
 #. module: website_sale
@@ -2672,26 +2733,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "o_website_sale_search"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_attribute_value
-msgid "product.attribute.value"
-msgstr "product.attribute.value"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_image
-msgid "product.image"
-msgstr "product.image"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_style
-msgid "product.style"
-msgstr "product.style"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note

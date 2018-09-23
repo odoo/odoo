@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,11 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
 msgstr "Vytvořit uživatele"
@@ -66,8 +71,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "Nastavení LDAP"
 
@@ -78,7 +83,7 @@ msgid "LDAP Parameters"
 msgstr "Parametry LDAPu"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
 msgstr "LDAP Server"
 
@@ -128,7 +133,7 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
 msgstr "Přihlašovací údaje"
 
@@ -141,7 +146,7 @@ msgstr ""
 "nakonfigurován k jeho vytvoření"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
 msgstr "Parametr procesu"
 
@@ -162,7 +167,7 @@ msgid "Sequence"
 msgstr "Číselná řada"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
 msgstr "Údaje o serveru"
 
@@ -200,7 +205,7 @@ msgid "Use TLS"
 msgstr "Použít TLS"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
 msgstr "Informace o uživateli"
 
@@ -218,8 +223,3 @@ msgstr "Uživatelé"
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
 msgstr "res.company.ldap"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

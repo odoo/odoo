@@ -12,13 +12,14 @@
 # Melanie Bernard <mbe@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -521,6 +522,11 @@ msgstr "Nom de la société"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
 msgid "Company name"
 msgstr "Nom de la société"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_configuration
@@ -1125,6 +1131,16 @@ msgid "Last state update of the mail"
 msgstr "Dernière mise à jour de l'état du courriel"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_link_tracker
+msgid "Link Tracker"
+msgstr "Surveillance de liens"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__links_click_ids
 msgid "Links click"
 msgstr "Nombre de clics sur les liens"
@@ -1183,6 +1199,7 @@ msgstr "Campagnes d'Emails"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__list_id
@@ -1255,7 +1272,6 @@ msgstr "Test de mailing"
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailings_from_campaign
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__total_mailings
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_menu
-#: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailings
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -1297,6 +1313,7 @@ msgstr "Campagne de courriel de masse"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_id
@@ -1315,6 +1332,7 @@ msgstr "Analyse du publipostage"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_campaign
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_campaign_id
@@ -1341,10 +1359,16 @@ msgid "Mass Mailing Contact"
 msgstr "Contact du courriel de masse"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
 #: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
 msgstr "Nom du publipostage"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mass_mailing_schedule_date
+msgid "Mass Mailing Scheduling"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_statistics_report
@@ -1402,13 +1426,9 @@ msgid "Merge"
 msgstr "Fusionner"
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_mass_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr ""
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mass_mailing_list_merge
-msgid "Merge Mass Mailing Lists"
 msgstr ""
 
 #. module: mass_mailing
@@ -1806,7 +1826,6 @@ msgid "Schedule"
 msgstr "Planifier"
 
 #. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_mass_mailing_schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_schedule_date__schedule_date
 msgid "Schedule in the Future"
@@ -2141,7 +2160,7 @@ msgstr ""
 "Le destinataire <strong>s'est désinscrit de %s</strong> liste(s) de mail"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:786
+#: code:addons/mass_mailing/models/mass_mailing.py:823
 #, python-format
 msgid "There is no recipients selected."
 msgstr "Pas de destinataires sélectionnés."
@@ -2517,21 +2536,6 @@ msgstr "email(s) ont été ignorés et ne seront pas envoyés."
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
 msgid "free website"
 msgstr "Site Web gratuit"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_link_tracker
-msgid "link.tracker"
-msgstr "link.tracker"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_link_tracker_click
-msgid "link.tracker.click"
-msgstr "link.tracker.click"
-
-#. module: mass_mailing
-#: model:ir.model,name:mass_mailing.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout

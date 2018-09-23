@@ -2,12 +2,21 @@
 # This file contains the translation of the following modules:
 # * snailmail
 # 
+# Translators:
+# Martin Trigaux, 2018
+# zbik2607 <darek@krokus.com.pl>, 2018
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2018
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Andrzej Donczew <a.donczew@hadron.eu.com>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,13 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:232
+#: code:addons/snailmail/models/snailmail_letter.py:244
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:200
+#: code:addons/snailmail/models/snailmail_letter.py:212
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
@@ -30,7 +39,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
 msgid "Attachment"
-msgstr ""
+msgstr "Załącznik"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
@@ -45,12 +54,12 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Anulowano"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
@@ -66,77 +75,82 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__color
 msgid "Color"
-msgstr ""
+msgstr "Kolor"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Firmy"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__company_id
 msgid "Company"
+msgstr "Firma"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Utworzona przez"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Data utworzenia"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nazwa wyświetlana"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ID dokumentu"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Projekt"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "In Queue"
-msgstr ""
+msgstr "W kolejce"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
 msgid "Information"
-msgstr ""
+msgstr "Informacja"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Data ostatniej modyfikacji"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ostatnio aktualizowane przez"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Data ostatniej aktualizacji"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
@@ -148,10 +162,10 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:198
+#: code:addons/snailmail/models/snailmail_letter.py:210
 #, python-format
 msgid "One or more required fields are empty."
 msgstr ""
@@ -159,10 +173,10 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Opcjonalny raport do wydrukowania i załączenia"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:237
+#: code:addons/snailmail/models/snailmail_letter.py:249
 #, python-format
 msgid "Post letter: an error occured."
 msgstr ""
@@ -185,21 +199,31 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
 msgid "Recipient"
+msgstr "Adresat"
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
 msgid "Send Now"
-msgstr ""
+msgstr "Wyślij teraz"
 
 #. module: snailmail
 #: selection:snailmail.letter,state:0
 msgid "Sent"
-msgstr ""
+msgstr "Wysłane"
 
 #. module: snailmail
 #: model:mail.activity.type,name:snailmail.mail_activity_data_snailmail
 msgid "Snailmail"
+msgstr ""
+
+#. module: snailmail
+#: model:ir.model,name:snailmail.model_snailmail_letter
+msgid "Snailmail Letter"
 msgstr ""
 
 #. module: snailmail
@@ -212,16 +236,16 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:196
+#: code:addons/snailmail/models/snailmail_letter.py:208
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:227
+#: code:addons/snailmail/models/snailmail_letter.py:239
 #, python-format
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
@@ -241,7 +265,7 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:194
+#: code:addons/snailmail/models/snailmail_letter.py:206
 #, python-format
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
@@ -249,19 +273,9 @@ msgid ""
 msgstr ""
 
 #. module: snailmail
-#: code:addons/snailmail/models/snailmail_letter.py:191
+#: code:addons/snailmail/models/snailmail_letter.py:203
 #, python-format
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
-msgstr ""
-
-#. module: snailmail
-#: model:ir.model,name:snailmail.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
-
-#. module: snailmail
-#: model:ir.model,name:snailmail.model_snailmail_letter
-msgid "snailmail.letter"
 msgstr ""

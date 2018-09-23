@@ -4,13 +4,17 @@
 # 
 # Translators:
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
+# son dang <son.dang@doda100.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +30,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * Trạng thái 'Dự thảo' được sử dụng khi một người dùng tạo mới và chưa xác nhận Biên lai (Voucher).                         \n"
+"* 'Pro-forma' khi biên lai trong trạng thái Pro-forma, biên lai có không số biên lai.                         \n"
+"* Trạng thái 'Đã vào sổ' được sử dụng khi người dùng tạo biên lại, một số biên lai được tạo ra và bút toán biên lai được tạo trong hệ thống kế toán                         \n"
+"* Trạng thái 'Hủy bỏ' được sử dụng khi người dùng hủy bỏ biên lai."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
@@ -36,7 +44,7 @@ msgstr "Tài khoản"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 msgid "Account Date"
-msgstr ""
+msgstr "Ngày Kế toán"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
@@ -46,12 +54,17 @@ msgstr "Ngày kế toán"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
+msgstr "Biên lai Kế toán"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+msgid "Accounting Voucher Line"
 msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Cần có Hành động"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
@@ -66,13 +79,13 @@ msgstr "Tài khoản quản trị"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Từ khóa phân tích"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Bạn chắc chắn muốn hủy bỏ biên lai này?"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
@@ -89,12 +102,12 @@ msgstr "Ngày hóa đơn"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "Thông tin hoá đơn"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Dẫn chiếu Hoá đơn"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -104,7 +117,7 @@ msgstr "Hủy"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "Hủy Biên lai"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -116,6 +129,7 @@ msgstr "Đã hủy"
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
+"Không thể xoá (các) biên lai mà đang ở trạng thái mở hoặc đã thanh toán."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
@@ -188,7 +202,7 @@ msgstr "Nháp"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Biên lai dự thảo"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
@@ -198,22 +212,22 @@ msgstr "Ngày đến hạn"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Ngày hiệu lực cho bút toán kế toán"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Người dõi theo"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Người theo dõi (Các kênh)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Người theo dõi (Các đối tác)"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
@@ -236,12 +250,12 @@ msgstr "ID"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
@@ -253,6 +267,8 @@ msgstr ""
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"Trong trường hợp chúng ta có trục trặc về việc làm tròn trong thuế, sử dụng "
+"trường này để hiệu chỉnh"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -263,7 +279,7 @@ msgstr "Ghi chú nội bộ"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Trở thành người theo dõi"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
@@ -315,7 +331,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Thông điệp"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:109
@@ -342,7 +358,7 @@ msgstr "Số"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Số lượng Hành động"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
@@ -352,7 +368,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Số thông điệp cần có hành động"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
@@ -362,12 +378,12 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Số thông điệp chưa đọc"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Chỉ dành cho thuế bao gồm trong giá"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
@@ -383,17 +399,17 @@ msgstr "Đối tác"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "Thanh toán trực tiếp"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Thanh toán sau"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
-msgstr ""
+msgstr "Thanh toán"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
@@ -403,13 +419,13 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
 msgid "Payment Method"
-msgstr ""
+msgstr "Phương thức thanh toán"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Vui lòng kích hoạt trình tự của sổ nhật ký được chọn!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:211
@@ -430,12 +446,12 @@ msgstr "Đã vào sổ"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Biên lai đã vào sổ"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "hoá đơn tạm"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
@@ -450,12 +466,12 @@ msgstr "Mua hàng"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Biên lai mua hàng"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Biên lai mua hàng"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
@@ -468,7 +484,7 @@ msgstr "Số lượng"
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Receipts"
-msgstr ""
+msgstr "Nhận hàng"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -478,24 +494,24 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr ""
+msgstr "Bán"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Information"
-msgstr ""
+msgstr "Các thông tin Kinh doanh"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Biên lai bán hàng"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Search Vouchers"
-msgstr ""
+msgstr "Tìm kiếm biên lai"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
@@ -519,12 +535,12 @@ msgstr "Trạng thái"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "Thay đổi trạng thái"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
 msgid "Status changed"
-msgstr ""
+msgstr "Trạng thái bị thay đổi"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
@@ -544,7 +560,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "Biên lai đã được thanh toán hết."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
@@ -554,12 +570,12 @@ msgstr "Tài khoản doanh thu hoặc chi phí liên quan tới sản phẩm đ�
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "Tham chiếu cho đối tác về tài liệu này."
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr ""
+msgstr "Để xem xét"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
@@ -585,12 +601,12 @@ msgstr "Đơn giá"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Tin chưa đọc"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Bộ đếm Thông điệp chưa đọc"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -608,7 +624,7 @@ msgstr "Nhà cung cấp"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Biên lai Nhà cung cấp"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:116
@@ -618,44 +634,43 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 #, python-format
 msgid "Voucher"
-msgstr ""
+msgstr "Phiếu"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr ""
+msgstr "Bút toán Biên lai (voucher)"
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
 msgid "Voucher Lines"
-msgstr ""
+msgstr "Chi tiết biên lai (voucher)"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "Thống kê Biên lai (voucher)"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Bút toán Biên lai (Voucher)"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Thông điệp Website"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -663,6 +678,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"Khi một biên lai mua hàng được xác nhận, bạn có thể ghi nhận thanh\n"
+"                toán liên quan đến biên lai mua hàng này."
 
 #. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -670,6 +687,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"Khi một biên lai bán hàng được xác nhận, bạn có thể ghi nhận thanh\n"
+"                toán liên quan đến biên lai bán hàng này."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:457

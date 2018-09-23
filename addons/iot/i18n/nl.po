@@ -6,13 +6,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "Bluetooth"
 #. module: iot
 #: selection:iot.device,type:0
 msgid "Camera"
-msgstr ""
+msgstr "Camera"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__connection
@@ -50,12 +51,12 @@ msgstr "Aangemaakt op"
 #. module: iot
 #: selection:iot.device,type:0
 msgid "Device"
-msgstr ""
+msgstr "Apparaat"
 
 #. module: iot
 #: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "Device type"
-msgstr ""
+msgstr "Apparaat type"
 
 #. module: iot
 #: model:ir.actions.act_window,name:iot.iot_device_action
@@ -83,6 +84,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: iot
+#: model:ir.model,name:iot.model_iot_box
+msgid "IOT Box"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_device
+msgid "IOT Device"
+msgstr ""
+
+#. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__ip
 msgid "IP Address"
 msgstr "IP-adres"
@@ -95,29 +106,29 @@ msgstr "Identificatie "
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__identifier
 msgid "Identifier (Mac Address)"
-msgstr ""
+msgstr "Identificator (Mac Address)"
 
 #. module: iot
 #: model:ir.ui.menu,name:iot.iot_menu_root
 msgid "IoT"
-msgstr ""
+msgstr "IoT"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__iot_id
 msgid "IoT Box"
-msgstr ""
+msgstr "IoT Box"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_ir_actions_report__device_id
 #: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "IoT Device"
-msgstr ""
+msgstr "IoT Apparaat"
 
 #. module: iot
 #: model:ir.actions.act_window,name:iot.iot_box_action
 #: model:ir.ui.menu,name:iot.iot_box_menu_action
 msgid "Iot Boxes"
-msgstr ""
+msgstr "Iot Boxen"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box____last_update
@@ -156,6 +167,11 @@ msgstr "Printer"
 #. module: iot
 #: model_terms:ir.ui.view,arch_db:iot.iot_device_view_form
 msgid "Printer Reports"
+msgstr "Printer Rapporten"
+
+#. module: iot
+#: model:ir.model,name:iot.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: iot
@@ -166,7 +182,7 @@ msgstr "Rapportages"
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__screen_url
 msgid "Screen URL"
-msgstr ""
+msgstr "Scherm URL"
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_device__type
@@ -176,22 +192,23 @@ msgstr "Soort"
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_device__connection
 msgid "Type of connection."
-msgstr ""
+msgstr "Verbindingstype."
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_device__type
 msgid "Type of device."
-msgstr ""
+msgstr "Type apparaat."
 
 #. module: iot
 #: selection:iot.device,connection:0
 msgid "USB"
-msgstr ""
+msgstr "USB"
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_iot_box__screen_url
 msgid "Url of the page that will be displayed by hdmi port of the box."
 msgstr ""
+"Url van de pagina die wordt weergegeven door de hdmi poort van de box."
 
 #. module: iot
 #: model:ir.model.fields,help:iot.field_ir_actions_report__device_id
@@ -199,18 +216,5 @@ msgid ""
 "When setting a device here, the report will be printed through this device "
 "on the iotbox"
 msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_box
-msgid "iot.box"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_device
-msgid "iot.device"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_ir_actions_report
-msgid "ir.actions.report"
-msgstr "ir.actions.report"
+"Wanneer hier een apparaat wordt ingesteld, wordt het rapport afgedrukt via "
+"dit apparaat op de iotbox"

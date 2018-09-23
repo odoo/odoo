@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgid "Device"
 msgstr ""
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "Device type"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:iot.iot_device_action
 #: model:ir.model.fields,field_description:iot.field_iot_box__device_ids
 #: model:ir.ui.menu,name:iot.iot_device_menu_action
-#: model:ir.ui.view,arch_db:iot.iot_box_view_form
+#: model_terms:ir.ui.view,arch_db:iot.iot_box_view_form
 msgid "Devices"
 msgstr ""
 
@@ -72,7 +72,7 @@ msgid "Display Name"
 msgstr "પ્રદર્શન નામ"
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "Group By"
 msgstr ""
 
@@ -81,6 +81,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:iot.field_iot_device__id
 msgid "ID"
 msgstr "ઓળખ"
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_box
+msgid "IOT Box"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_iot_device
+msgid "IOT Device"
+msgstr ""
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_iot_box__ip
@@ -109,7 +119,7 @@ msgstr ""
 
 #. module: iot
 #: model:ir.model.fields,field_description:iot.field_ir_actions_report__device_id
-#: model:ir.ui.view,arch_db:iot.iot_device_search
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_search
 msgid "IoT Device"
 msgstr ""
 
@@ -154,8 +164,13 @@ msgid "Printer"
 msgstr ""
 
 #. module: iot
-#: model:ir.ui.view,arch_db:iot.iot_device_view_form
+#: model_terms:ir.ui.view,arch_db:iot.iot_device_view_form
 msgid "Printer Reports"
+msgstr ""
+
+#. module: iot
+#: model:ir.model,name:iot.model_ir_actions_report
+msgid "Report Action"
 msgstr ""
 
 #. module: iot
@@ -198,19 +213,4 @@ msgstr ""
 msgid ""
 "When setting a device here, the report will be printed through this device "
 "on the iotbox"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_box
-msgid "iot.box"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_iot_device
-msgid "iot.device"
-msgstr ""
-
-#. module: iot
-#: model:ir.model,name:iot.model_ir_actions_report
-msgid "ir.actions.report"
 msgstr ""
