@@ -279,5 +279,45 @@
             <field name="website_published">False</field>
             <field name="view_id" ref="bs_debug_page_view"/>
         </record>
+
+        <!-- Snippet Debug Page -->
+        <!-- Showcase all snippets -->
+        <record id="snippets_debug_page_view" model="ir.ui.view">
+            <field name="name">Snippet Debug</field>
+            <field name="type">qweb</field>
+            <field name="key">website.snippets_debug_page_view</field>
+            <field name="arch" type="xml">
+                <t name="Debug" t-name="website.snippets_debug_page_view">
+                    <t t-call="website.layout">
+                        <style>
+                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header {
+                                display: none !important;
+                            }
+                            [data-oe-type="snippet"]:not([data-module-id])::before {
+                                content: attr(name);
+                                display: block;
+                                padding: 16px;
+                                background-color: lightgray;
+                                color: black;
+                                font-size: 24px;
+                            }
+                            [data-oe-type="snippet"]:not([data-module-id])::after {
+                                content: "";
+                                display: table;
+                                clear: both;
+                            }
+                        </style>
+                        <div id="wrap oe_structure">
+                            <t t-call="website.snippets"/>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="snippets_debug_page" model="website.page">
+            <field name="url">/demo/snippets-debug</field>
+            <field name="website_published">False</field>
+            <field name="view_id" ref="snippets_debug_page_view"/>
+        </record>
     </data>
 </odoo>
