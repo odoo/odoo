@@ -144,8 +144,8 @@ class EventEvent(models.Model):
     date_end = fields.Datetime(
         string='End Date', required=True,
         track_visibility='onchange', states={'done': [('readonly', True)]})
-    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz', store=True)
+    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz', store=True)
 
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
