@@ -781,7 +781,7 @@ class ChallengeLine(models.Model):
     sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)
 
-    name = fields.Char("Name", related='definition_id.name')
+    name = fields.Char("Name", related='definition_id.name', readonly=False)
     condition = fields.Selection("Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
     definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)

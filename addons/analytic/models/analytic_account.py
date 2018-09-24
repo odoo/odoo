@@ -14,7 +14,7 @@ class AccountAnalyticDistribution(models.Model):
 
     account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True)
     percentage = fields.Float(string='Percentage', required=True, default=100.0)
-    name = fields.Char(string='Name', related='account_id.name')
+    name = fields.Char(string='Name', related='account_id.name', readonly=False)
     tag_id = fields.Many2one('account.analytic.tag', string="Parent tag", required=True)
 
     _sql_constraints = [

@@ -121,7 +121,7 @@ class PurchaseOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
 
@@ -408,7 +408,7 @@ class PurchaseOrderLine(models.Model):
     product_uom = fields.Many2one('uom.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
     product_image = fields.Binary(
-        'Product Image', related="product_id.image",
+        'Product Image', related="product_id.image", readonly=False,
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
@@ -421,7 +421,7 @@ class PurchaseOrderLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
-    state = fields.Selection(related='order_id.state', store=True)
+    state = fields.Selection(related='order_id.state', store=True, readonly=False)
 
     invoice_lines = fields.One2many('account.invoice.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 

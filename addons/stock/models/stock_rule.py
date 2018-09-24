@@ -49,7 +49,7 @@ class StockRule(models.Model):
         default='make_to_stock', required=True,
         help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
              Take from Stock: The products will be taken from the available stock.""")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)

@@ -109,7 +109,7 @@ class AccountAssetAsset(models.Model):
     salvage_value = fields.Float(string='Salvage Value', digits=0, readonly=True, states={'draft': [('readonly', False)]},
         help="It is the amount you plan to have that you cannot depreciate.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice', states={'draft': [('readonly', False)]}, copy=False)
-    type = fields.Selection(related="category_id.type", string='Type', required=True)
+    type = fields.Selection(related="category_id.type", string='Type', required=True, readonly=False)
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tag')
     date_first_depreciation = fields.Selection([
@@ -477,7 +477,7 @@ class AccountAssetDepreciationLine(models.Model):
     name = fields.Char(string='Depreciation Name', required=True, index=True)
     sequence = fields.Integer(required=True)
     asset_id = fields.Many2one('account.asset.asset', string='Asset', required=True, ondelete='cascade')
-    parent_state = fields.Selection(related='asset_id.state', string='State of Asset')
+    parent_state = fields.Selection(related='asset_id.state', string='State of Asset', readonly=False)
     amount = fields.Float(string='Current Depreciation', digits=0, required=True)
     remaining_value = fields.Float(string='Next Period Depreciation', digits=0, required=True)
     depreciated_value = fields.Float(string='Cumulative Depreciation', required=True)

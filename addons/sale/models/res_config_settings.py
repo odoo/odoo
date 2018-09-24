@@ -7,18 +7,18 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
+    sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions", readonly=False)
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
         oldname='default_use_sale_note',
         config_parameter='sale.use_sale_note')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
-    quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)")
+    quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)
     use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
     group_warning_sale = fields.Boolean("Sale Order Warnings", implied_group='sale.group_warning_sale')
-    portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Online Signature')
-    portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Online Payment')
+    portal_confirmation_sign = fields.Boolean(related='company_id.portal_confirmation_sign', string='Online Signature', readonly=False)
+    portal_confirmation_pay = fields.Boolean(related='company_id.portal_confirmation_pay', string='Online Payment', readonly=False)
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='sale.group_delivery_invoice_address')
     multi_sales_price = fields.Boolean("Multiple Sales Prices per Product")
     multi_sales_price_method = fields.Selection([

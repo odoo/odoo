@@ -213,7 +213,7 @@ class MrpBomLine(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Component', required=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
@@ -227,7 +227,7 @@ class MrpBomLine(models.Model):
         help="Gives the sequence order when displaying.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
-        related='bom_id.routing_id', store=True,
+        related='bom_id.routing_id', store=True, readonly=False,
         help="The list of operations to produce the finished product. The routing is mainly used to "
              "compute work center costs during operations and to plan future loads on work centers "
              "based on production planning.")

@@ -15,40 +15,40 @@ class ResConfigSettings(models.TransientModel):
 
     website_id = fields.Many2one('website', string="website",
                                  default=_default_website, ondelete='cascade')
-    website_name = fields.Char('Website Name', related='website_id.name')
-    website_domain = fields.Char('Website Domain', related='website_id.domain')
-    website_country_group_ids = fields.Many2many(related='website_id.country_group_ids')
-    website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company')
-    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
+    website_name = fields.Char('Website Name', related='website_id.name', readonly=False)
+    website_domain = fields.Char('Website Domain', related='website_id.domain', readonly=False)
+    website_country_group_ids = fields.Many2many(related='website_id.country_group_ids', readonly=False)
+    website_company_id = fields.Many2one(related='website_id.company_id', string='Website Company', readonly=False)
+    language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', readonly=False)
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
     website_default_lang_id = fields.Many2one(
-        string='Default language', related='website_id.default_lang_id',
+        string='Default language', related='website_id.default_lang_id', readonly=False,
         relation='res.lang', required=True,
         oldname='default_lang_id')
     website_default_lang_code = fields.Char(
-        'Default language code', related='website_id.default_lang_code',
+        'Default language code', related='website_id.default_lang_code', readonly=False,
         oldname='default_lang_code')
-    specific_user_account = fields.Boolean(related='website_id.specific_user_account',
+    specific_user_account = fields.Boolean(related='website_id.specific_user_account', readonly=False,
                                            help='Are newly created user accounts website specific')
 
-    google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')
-    google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id')
-    google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret')
+    google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key', readonly=False)
+    google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id', readonly=False)
+    google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret', readonly=False)
 
-    cdn_activated = fields.Boolean(related='website_id.cdn_activated')
-    cdn_url = fields.Char(related='website_id.cdn_url')
-    cdn_filters = fields.Text(related='website_id.cdn_filters')
+    cdn_activated = fields.Boolean(related='website_id.cdn_activated', readonly=False)
+    cdn_url = fields.Char(related='website_id.cdn_url', readonly=False)
+    cdn_filters = fields.Text(related='website_id.cdn_filters', readonly=False)
     module_website_version = fields.Boolean("A/B Testing")
     module_website_links = fields.Boolean("Link Trackers")
-    auth_signup_uninvited = fields.Selection("Customer Account", related='website_id.auth_signup_uninvited')
+    auth_signup_uninvited = fields.Selection("Customer Account", related='website_id.auth_signup_uninvited', readonly=False)
 
-    social_twitter = fields.Char(related='website_id.social_twitter')
-    social_facebook = fields.Char(related='website_id.social_facebook')
-    social_github = fields.Char(related='website_id.social_github')
-    social_linkedin = fields.Char(related='website_id.social_linkedin')
-    social_youtube = fields.Char(related='website_id.social_youtube')
-    social_googleplus = fields.Char(related='website_id.social_googleplus')
-    social_instagram = fields.Char(related='website_id.social_instagram')
+    social_twitter = fields.Char(related='website_id.social_twitter', readonly=False)
+    social_facebook = fields.Char(related='website_id.social_facebook', readonly=False)
+    social_github = fields.Char(related='website_id.social_github', readonly=False)
+    social_linkedin = fields.Char(related='website_id.social_linkedin', readonly=False)
+    social_youtube = fields.Char(related='website_id.social_youtube', readonly=False)
+    social_googleplus = fields.Char(related='website_id.social_googleplus', readonly=False)
+    social_instagram = fields.Char(related='website_id.social_instagram', readonly=False)
 
     @api.depends('website_id', 'social_twitter', 'social_facebook', 'social_github', 'social_linkedin', 'social_youtube', 'social_googleplus', 'social_instagram')
     def has_social_network(self):
@@ -67,9 +67,9 @@ class ResConfigSettings(models.TransientModel):
 
     has_social_network = fields.Boolean("Configure Social Network", compute=has_social_network, inverse=inverse_has_social_network)
 
-    favicon = fields.Binary('Favicon', related='website_id.favicon')
+    favicon = fields.Binary('Favicon', related='website_id.favicon', readonly=False)
 
-    google_maps_api_key = fields.Char(related='website_id.google_maps_api_key')
+    google_maps_api_key = fields.Char(related='website_id.google_maps_api_key', readonly=False)
     group_multi_website = fields.Boolean("Multi-website", implied_group="website.group_multi_website")
 
     @api.depends('website_id')

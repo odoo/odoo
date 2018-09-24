@@ -63,7 +63,7 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
+    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
 
 
     def _log_less_quantities_than_expected(self, moves):

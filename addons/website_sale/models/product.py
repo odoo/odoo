@@ -185,7 +185,7 @@ class ProductTemplate(models.Model):
 class Product(models.Model):
     _inherit = "product.product"
 
-    website_id = fields.Many2one(related='product_tmpl_id.website_id')
+    website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))

@@ -184,7 +184,7 @@ class SupplierInfo(models.Model):
     _inherit = "product.supplierinfo"
     _order = 'sequence, purchase_requisition_id desc, min_qty desc, price'
 
-    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order')
+    purchase_requisition_id = fields.Many2one('purchase.requisition', related='purchase_requisition_line_id.requisition_id', string='Blanket order', readonly=False)
     purchase_requisition_line_id = fields.Many2one('purchase.requisition.line')
 
 
@@ -296,7 +296,7 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     requisition_id = fields.Many2one('purchase.requisition', string='Purchase Agreement', copy=False)
-    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy')
+    is_quantity_copy = fields.Selection(related='requisition_id.is_quantity_copy', readonly=False)
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):

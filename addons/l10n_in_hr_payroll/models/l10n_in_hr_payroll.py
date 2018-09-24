@@ -168,8 +168,8 @@ class HrPayrollAdviceLine(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     bysal = fields.Float(string='By Salary', digits=dp.get_precision('Payroll'))
     debit_credit = fields.Char(string='C/D', default='C')
-    company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True)
-    ifsc = fields.Boolean(related='advice_id.neft', string='IFSC')
+    company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True, readonly=False)
+    ifsc = fields.Boolean(related='advice_id.neft', string='IFSC', readonly=False)
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):

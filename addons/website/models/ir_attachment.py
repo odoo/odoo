@@ -13,7 +13,7 @@ class Attachment(models.Model):
     _inherit = "ir.attachment"
 
     # related for backward compatibility with saas-6
-    website_url = fields.Char(string="Website URL", related='local_url', deprecated=True)
+    website_url = fields.Char(string="Website URL", related='local_url', deprecated=True, readonly=False)
     key = fields.Char(help='Technical field used to resolve multiple attachments in a multi-website environment.')
     website_id = fields.Many2one('website')
 

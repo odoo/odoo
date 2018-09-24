@@ -38,7 +38,7 @@ class Rating(models.Model):
     res_id = fields.Integer(string='Document', required=True, help="Identifier of the rated object", index=True)
     parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
     parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True, ondelete='cascade')
-    parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True)
+    parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True, readonly=False)
     parent_res_id = fields.Integer('Parent Document', index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
@@ -139,8 +139,8 @@ class RatingMixin(models.AbstractModel):
 
     rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
     rating_last_value = fields.Float('Rating Last Value', compute='_compute_rating_last_value', compute_sudo=True, store=True)
-    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
-    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
+    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback', readonly=False)
+    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image', readonly=False)
     rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
 
     @api.multi
