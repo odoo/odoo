@@ -889,9 +889,11 @@
             <field name="model">mail.mass_mailing.tag</field>
             <field name="arch" type="xml">
                 <form string="Campaign Tags">
-                    <group>
-                        <field name="name"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
