@@ -782,7 +782,7 @@ class StockMove(TransactionCase):
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.env.ref('stock.product_cable_management_box').id,
-            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': 100.0,
         })
         move1._action_confirm()
