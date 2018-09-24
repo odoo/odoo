@@ -5,6 +5,8 @@ var concurrency = require('web.concurrency');
 var GraphView = require('web.GraphView');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
+var patchDate = testUtils.patchDate;
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -800,6 +802,47 @@ QUnit.module('Views', {
 
         graph.destroy();
     });
+
+    QUnit.test('Render graph with empty data and time range comparision', function (assert) {
+        assert.expect(2);
+
+        _.extend(this.data.foo.fields.date, {sortable: true})
+        this.data.foo.records =  [{id: 1, date: "2016-12-15"}]
+
+        var unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+        var actionManager = createActionManager({
+            data: this.data,
+            archs: {
+                'foo,false,graph': '<graph type="line">' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="date"/>' +
+                    '</graph>',
+                'foo,false,search': '<search></search>',
+            },
+        });
+
+        actionManager.doAction({
+            name: 'Foo',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[false, 'graph']],
+        });
+
+        assert.ok($('.o_graph_container').length, 'Graph should be rendered');
+        // open time range menu
+        $('.o_control_panel .o_time_range_menu_button').click();
+        // check checkbox 'Compare To'
+        $('.o_control_panel .o_time_range_menu .o_comparison_checkbox').click();
+        // Click on 'Apply' button
+        $('.o_control_panel .o_time_range_menu .o_apply_range').click();
+        // check that graph has empty data
+        assert.ok($(".o_graph_container")[0].innerText == "Foo\nDecember 2016\n0.00\n",
+                 "Graph should contain empty data value");
+
+        unpatchDate();
+        actionManager.destroy();
+   });
 });
 
 });

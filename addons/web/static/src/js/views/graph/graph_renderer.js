@@ -400,7 +400,7 @@ return AbstractRenderer.extend({
             var serie, tickLabel;
             var identity = function (p) {return p;};
 
-            for (var i = 0; i < this.state.data.length; i++) {
+            for (var i = 0; i < graphData.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
                     tickLabel = this.state.data[i].labels[0];
                     tickValues.push(tick);
@@ -418,6 +418,13 @@ return AbstractRenderer.extend({
                     x: tick - 1, y: graphData[i].value,
                 });
                 data = _.map(data_dict, identity);
+            }
+        }
+
+        // if there is no values.length then set x and y to 0
+        for (var i=0; i < data.length; i++) {
+            if (data[i].values.length === 0) {
+                data[i].values = [{x: 0, y: 0}];
             }
         }
 
