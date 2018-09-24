@@ -13,11 +13,10 @@ for driver in driversList:
         spec.loader.exec_module(foo)
 
 
-#----------------------------------------------------------
-#Bluetooth start
-#----------------------------------------------------------
 if not getattr(modules, '_iot_daemon_started', False):
-    sentinel = True
+    # ----------------------------------------------------------
+    # Bluetooth start
+    # ----------------------------------------------------------
     bm = BtManager()
     bm.daemon = True
     bm.start()
