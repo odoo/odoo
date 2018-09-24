@@ -268,6 +268,7 @@ class WebsitePayment(http.Controller):
             else:
                 status = 'danger'
                 message = tx.acquirer_id.error_msg
+            PaymentProcessing.remove_payment_transaction(tx)
             return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
