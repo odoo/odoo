@@ -85,7 +85,7 @@ class IrActionReport(models.Model):
             device = self.mapped('device_id')[0]
         else:
             device = self.env['iot.device'].browse(data['device_id'])
-        composite_url = "http://" + device.iot_id.ip + ":8069/driveraction/" + device.identifier
+        composite_url = "http://" + device.iot_id.ip + ":8069/hw_drivers/driveraction/" + device.identifier
         datas = self.render(res_ids, data=data)
         type = datas[1]
         data_bytes = datas[0]

@@ -21,7 +21,7 @@ last_ping = {}
 
 class StatusController(http.Controller):
 
-    @http.route('/owner/check', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/owner/check', type='json', auth='none', cors='*', csrf=False)
     def check_cantakeowner(self): #, devices, tab
         data = httprequest.jsonrequest
         for device in data['devices']:
@@ -36,7 +36,7 @@ class StatusController(http.Controller):
                             owner_dict[dev2] = ''
         return 'yes'
 
-    @http.route('/owner/take', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/owner/take', type='json', auth='none', cors='*', csrf=False)
     def take_ownership(self): #, devices, tab
         data = httprequest.jsonrequest
         for device in data['devices']:
@@ -44,7 +44,7 @@ class StatusController(http.Controller):
             last_ping[data['tab']] = datetime.datetime.now()
         return data['tab']
 
-    @http.route('/owner/ping', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/owner/ping', type='json', auth='none', cors='*', csrf=False)
     def ping_trigger(self): #, tab
         data = httprequest.jsonrequest
         ping_dict = {}
@@ -59,7 +59,7 @@ class StatusController(http.Controller):
                 ping_dict[dev] = 'STOP'
         return ping_dict
 
-    @http.route('/box/connect', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/box/connect', type='json', auth='none', cors='*', csrf=False)
     def connect_box(self):
         data = httprequest.jsonrequest
         server = ""  # read from file
@@ -82,7 +82,7 @@ class StatusController(http.Controller):
             send_iot_box_device(False)
             return 'IoTBox connected'
 
-    @http.route('/drivers/status', type='http', auth='none', cors='*')
+    @http.route('/hw_drivers/drivers/status', type='http', auth='none', cors='*')
     def status(self):
         result = "<html><head></head><body>List of drivers and values: <br/> <ul>"
         for path in drivers:
@@ -91,14 +91,14 @@ class StatusController(http.Controller):
         result +=" </body></html>"
         return result
 
-    @http.route('/driverdetails/<string:identifier>', type='http', auth='none', cors='*')
+    @http.route('/hw_drivers/driverdetails/<string:identifier>', type='http', auth='none', cors='*')
     def statusdetail(self, identifier):
         for device in drivers:
             if device.find(identifier) != -1:
                 return str(drivers[device].value)
         return ''
 
-    @http.route('/driveraction/<string:identifier>', type='json', auth='none', cors='*', csrf=False)
+    @http.route('/hw_drivers/driveraction/<string:identifier>', type='json', auth='none', cors='*', csrf=False)
     def driveraction(self, identifier):
         data = httprequest.jsonrequest
         result = 'device not found'
@@ -122,7 +122,7 @@ class StatusController(http.Controller):
             result = {'image': image_bytes}
         return result
 
-    @http.route('/send_iot_box', type='http', auth='none', cors='*')
+    @http.route('/hw_drivers/send_iot_box', type='http', auth='none', cors='*')
     def send_iot_box(self):
         send_iot_box_device(False)
         return 'ok'
