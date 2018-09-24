@@ -188,6 +188,8 @@ class PosSession(models.Model):
                 journals = Journal.with_context(ctx).search([('type', '=', 'cash')])
                 if not journals:
                     journals = Journal.with_context(ctx).search([('journal_user', '=', True)])
+            if not journals:
+                raise ValidationError(_("No payment method configured! \nEither Chart of Account not installed or no payment method configured for this POS"))
             journals.sudo().write({'journal_user': True})
             pos_config.sudo().write({'journal_ids': [(6, 0, journals.ids)]})
 
