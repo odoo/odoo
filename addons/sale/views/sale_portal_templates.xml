@@ -12,7 +12,7 @@
                 <t t-else="">Sales Orders</t>
             </li>
             <li t-if="sale_order" class="breadcrumb-item active">
-                <span t-field="sale_order.type_name"/>
+                <span t-field="sale_order.type_name"/>&amp;nbsp;
                 <t t-esc="sale_order.name"/>
             </li>
         </xpath>
