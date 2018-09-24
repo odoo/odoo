@@ -16,9 +16,14 @@
                         location.reload(true);
                     }, 30000);
                 }).fail(function () {
+                    if ($('#iotname')[0].preventDefault == $('#iotname')[0].value){
+                        var rebootTime = 30;
+                    }else{
+                        var rebootTime = 110;
+                    }
                     setTimeout(function () {
-                        location.reload(true);
-                    }, 30000);
+                            location.reload(true);
+                    }, rebootTime);
                 });
             });
         });
@@ -34,7 +39,7 @@
         <table align="center">
             <tr>
                 <td>IoTBox Name</td>
-                <td><input type="text" name="iotname" value="{{ hostname }}"></td>
+                <td><input type="text" id="iotname" name="iotname" value="{{ hostname }}"></td>
             </tr>
             <tr>
                 <td>Server Token</td>

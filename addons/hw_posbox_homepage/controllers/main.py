@@ -304,7 +304,7 @@ class IoTboxHomepage(odoo.addons.web.controllers.main.Home):
         return server_config_template.render({
             'title': 'IoT -> Odoo server configuration',
             'breadcrumb': 'Configure Odoo Server',
-            'hostname': subprocess.check_output('hostname').decode('utf-8'),
+            'hostname': subprocess.check_output('hostname').decode('utf-8').strip('\n'),
             'server_status': self.get_server_status() or 'Not configured yet',
             'loading_message': 'Configure Domain Server'
         })
