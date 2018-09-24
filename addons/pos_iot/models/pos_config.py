@@ -18,7 +18,7 @@ class PosConfig(models.Model):
     customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
     
     iot_box_id = fields.Many2one('iot.box', string="IoTBox")
-    proxy_ip = fields.Char(string='IP Address', related="iot_box_id.ip")
+    proxy_ip = fields.Char(string='IP Address', related="iot_box_id.ip", store=True)
 
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
