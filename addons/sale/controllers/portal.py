@@ -266,13 +266,13 @@ class CustomerPortal(CustomerPortal):
         vals = {
             'acquirer_id': acquirer_id,
             'type': order._get_payment_type(),
+            'return_url': order.get_portal_url()
         }
 
         transaction = order._create_payment_transaction(vals)
 
         return transaction.render_sale_button(
             order,
-            order.get_portal_url(),
             submit_txt=_('Pay & Confirm'),
             render_values={
                 'type': order._get_payment_type(),
