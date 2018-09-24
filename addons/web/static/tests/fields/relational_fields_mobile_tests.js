@@ -20,6 +20,7 @@ QUnit.module('relational_fields', {
                     qux: {string: "Qux", type: "float", digits: [16,1] },
                     p: {string: "one2many field", type: "one2many", relation: 'partner', relation_field: 'trululu'},
                     trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
+                    partner_ids: {string: "many2many field", type: "many2many", relation: 'partner'},
                 },
                 records: [{
                     id: 1,
@@ -107,6 +108,71 @@ QUnit.module('relational_fields', {
             'there should be a Remove button in the modal footer');
         $('.modal .modal-footer .o_btn_remove').click();
         assert.strictEqual($('.o_modal').length, 0, "there shoul be no more modal");
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
+            'should contain 1 records');
+
+        // save and check that the correct command has been generated
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
+    QUnit.module('FieldMany2Many');
+
+    QUnit.test('many2many kanban: deletion in mobile', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records[0].partner_ids = [2, 4];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="partner_ids">' +
+                        '<kanban>' +
+                        '<field name="display_name"/>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    var commands = args.args[1].partner_ids;
+                    assert.strictEqual(commands.length, 1,
+                        'should have generated one commands');
+                    assert.deepEqual(commands[0], [6, false, [4]] ,
+                        'should properly write ids');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_many2many .o-kanban-button-new').length, 0,
+            '"Add" button should not be visible in readonly');
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_many2many .o-kanban-button-new').length, 1,
+            '"Add" button should be visible in edit');
+        assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
+            "should have 2 records");
+
+        // open and delete record
+        form.$('.oe_kanban_global_click').first().click();
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
+            'there should be a Remove button in the modal footer');
+        $('.modal .modal-footer .o_btn_remove').click();
+        assert.strictEqual($('.o_modal').length, 0, "there should be no more modal");
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 1,
             'should contain 1 records');
 

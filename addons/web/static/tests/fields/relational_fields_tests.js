@@ -4718,9 +4718,9 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many list: unlink two records', function (assert) {
-        assert.expect(9);
-        this.data.partner.records[0].p = [1, 2, 4];
+    QUnit.test('one2many list: unlink one record', function (assert) {
+        assert.expect(6);
+        this.data.partner.records[0].p = [2, 4];
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -4736,51 +4736,37 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/write') {
                     var commands = args.args[1].p;
-                    assert.strictEqual(commands.length, 3,
-                        'should have generated three commands');
+                    assert.strictEqual(commands.length, 2,
+                        'should have generated two commands');
                     assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
                         'should have generated the command 4 (LINK_TO) with id 4');
-                    assert.ok(commands[1][0] === 3 && commands[1][1] === 1,
-                        'should have generated the command 3 (UNLINK) with id 1');
-                    assert.ok(commands[2][0] === 3 && commands[2][1] === 2,
+                    assert.ok(commands[1][0] === 3 && commands[1][1] === 2,
                         'should have generated the command 3 (UNLINK) with id 2');
                 }
                 return this._super.apply(this, arguments);
             },
-            archs: {
-                'partner,false,form':
-                    '<form string="Partner"><field name="display_name"/></form>',
-            },
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
-            "should have 3 remove buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            "should have 2 remove buttons");
 
         assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-times'),
             "should have X icons to remove (unlink) records");
 
         form.$('td.o_list_record_remove button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
-            "should have 2 remove buttons (a record is supposed to have been unlinked)");
-
-        form.$('tr.o_data_row').first().click();
-        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
-            'there should be a modal having Remove Button');
-        $('.modal .modal-footer .o_btn_remove').click();
-
         assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
-            "should have 1 delete button (another record is supposed to have been unlinked)");
+            "should have 1 delete button (a record is supposed to have been unlinked)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 
-    QUnit.test('one2many list: deleting two records', function (assert) {
-        assert.expect(9);
-        this.data.partner.records[0].p = [1, 2, 4];
+    QUnit.test('one2many list: deleting one record', function (assert) {
+        assert.expect(6);
+        this.data.partner.records[0].p = [2, 4];
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -4796,42 +4782,28 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/write') {
                     var commands = args.args[1].p;
-                    assert.strictEqual(commands.length, 3,
-                        'should have generated three commands');
+                    assert.strictEqual(commands.length, 2,
+                        'should have generated two commands');
                     assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
                         'should have generated the command 4 (LINK_TO) with id 4');
-                    assert.ok(commands[1][0] === 2 && commands[1][1] === 1,
-                        'should have generated the command 2 (DELETE) with id 1');
-                    assert.ok(commands[2][0] === 2 && commands[2][1] === 2,
+                    assert.ok(commands[1][0] === 2 && commands[1][1] === 2,
                         'should have generated the command 2 (DELETE) with id 2');
                 }
                 return this._super.apply(this, arguments);
             },
-            archs: {
-                'partner,false,form':
-                    '<form string="Partner"><field name="display_name"/></form>',
-            },
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 3,
-            "should have 3 remove buttons");
+        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
+            "should have 2 remove buttons");
 
         assert.ok(form.$('td.o_list_record_remove button').first().hasClass('fa fa-trash-o'),
             "should have trash bin icons to remove (delete) records");
 
         form.$('td.o_list_record_remove button').first().click();
 
-        assert.strictEqual(form.$('td.o_list_record_remove button').length, 2,
-            "should have 2 remove buttons (a record is supposed to have been deleted)");
-
-        form.$('tr.o_data_row').first().click();
-        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 1,
-            'there should be a modal having Remove Button');
-        $('.modal .modal-footer .o_btn_remove').click();
-
         assert.strictEqual(form.$('td.o_list_record_remove button').length, 1,
-            "should have 1 remove button (another record is supposed to have been deleted)");
+            "should have 1 remove button (a record is supposed to have been deleted)");
 
         // save and check that the correct command has been generated
         form.$buttons.find('.o_form_button_save').click();
