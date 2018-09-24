@@ -410,6 +410,10 @@ class PosConfig(models.Model):
                     field_groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in field_group_xmlids))
                     field_groups.write({'implied_ids': [(4, self.env.ref(field.implied_group).id)]})
 
+    def _check_journal(self):
+        ctx = dict(self.env.context, company_id=self.company_id.id)
+        if not self.env['account.journal'].with_context(ctx).search(['|', ('journal_user', '=', True), ('type', '=', 'cash')]):
+            raise ValidationError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
     def execute(self):
         return {
@@ -443,6 +447,7 @@ class PosConfig(models.Model):
             self._check_company_invoice_journal()
             self._check_company_payment()
             self._check_currencies()
+            self._check_journal()
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
