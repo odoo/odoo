@@ -176,6 +176,11 @@
         <field name="res_model">iot.device</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_group_by_type': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There is no device connected to your IoT boxes
+            </p>
+        </field>
     </record>
     <menuitem
         id="iot_box_menu_action"
