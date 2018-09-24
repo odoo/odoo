@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 try:
     from num2words import num2words
 except ImportError:
-    _logger.warning("The num2words python library is not installed, l10n_mx_edi features won't be fully available.")
+    _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
