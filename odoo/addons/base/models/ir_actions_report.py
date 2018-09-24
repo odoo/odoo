@@ -705,12 +705,12 @@ class IrActionsReport(models.Model):
         report_model_name = 'report.%s' % self.report_name
         report_model = self.env.get(report_model_name)
 
+        data = data and dict(data) or {}
+
         if report_model is not None:
-            data = report_model._get_report_values(docids, data=data)
+            data.update(report_model._get_report_values(docids, data=data))
         else:
             docs = self.env[self.model].browse(docids)
-            if not data:
-                data = {}
             data.update({
                 'doc_ids': docids,
                 'doc_model': self.model,
