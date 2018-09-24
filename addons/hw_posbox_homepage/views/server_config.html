@@ -13,11 +13,10 @@
                 }).done(function (url) {
                     $('.message-status').html('Configure Domain Server <br> Redirect to IoTBox');
                     setTimeout(function () {
-                        window.location = url;
+                        location.reload(true);
                     }, 30000);
                 }).fail(function () {
-                    $('.error-message').text('Error in connecting to server');
-                    $('.loading-block').addClass('o_hide');
+                        location.reload(true);
                 });
             });
         });
