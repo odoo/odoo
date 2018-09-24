@@ -333,6 +333,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     with db.cursor() as cr:
         if not odoo.modules.db.is_initialized(cr):
+            if not update_module:
+                _logger.error("Database %s not initialized, you can force it with `-i base`", cr.dbname)
+                return
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
