@@ -10,7 +10,7 @@ function connect () {
 	HOSTS=/root_bypass_ramdisks/etc/hosts
 	HOST_FILE=/root_bypass_ramdisks/etc/hostname
 	HOSTNAME="$(hostname)"
-	TOKEN_FILE=/tmp/token
+	TOKEN_FILE=/home/pi/token
 	TOKEN="${3}"
 	IOT_NAME="${2}"
 	IOT_NAME="${IOT_NAME//[^[:ascii:]]/}"

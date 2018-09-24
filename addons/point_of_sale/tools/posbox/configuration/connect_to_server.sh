@@ -4,7 +4,7 @@
 function connect () {
 	SERVER="${1}"
 	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
-	TOKEN_FILE=/tmp/token
+	TOKEN_FILE=/home/pi/token
 	TOKEN="${3}"
 	REBOOT="${4}"
 	HOSTS=/root_bypass_ramdisks/etc/hosts

@@ -393,7 +393,7 @@ def send_iot_box_device(send_printer):
         hostname = subprocess.check_output('hostname').decode('utf-8').split('\n')[0]
         token = "" # read from file
         try:
-            f = open('/tmp/token', 'r')
+            f = open('/home/pi/token', 'r')
             for line in f:
                 token += line
             f.close()
