@@ -459,7 +459,6 @@ class IrAttachment(models.Model):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
-            vals = self._make_thumbnail(vals)
             if all([not attachment.res_field for attachment in self]):
                 vals = self._make_thumbnail(vals)
         return super(IrAttachment, self).write(vals)
