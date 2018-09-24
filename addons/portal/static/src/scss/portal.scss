@@ -20,6 +20,9 @@ $o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
 // Portal custom bg color
 $o-portal-bg-color: desaturate($gray-200, 100%);
 
+// Check if portal uses default colors
+$o-portal-use-default-colors: $body-bg == $white;
+
 // Frontend general
 #wrapwrap {
     position: relative;
@@ -307,7 +310,7 @@ img.o_we_custom_image {
 // Portal specific
 // ===  Page custom bg ===
 // To be applied to all portal pages if bg-color is white (default).
-@if ($body-bg == #fff ) {
+@if ($o-portal-use-default-colors) {
     #wrapwrap.o_portal {
         @include o-bg-color($o-portal-bg-color);
     }
@@ -335,8 +338,7 @@ img.o_we_custom_image {
             @extend %o-portal-breadcrumbs;
         }
 
-        &.bg-white {
-            // Overwrite default navabar bg-color
+        @if ($o-portal-use-default-colors) {
             background-color: white!important;
         }
     }
