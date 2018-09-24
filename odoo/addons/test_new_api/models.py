@@ -123,7 +123,7 @@ class Message(models.Model):
     display_name = fields.Char(string='Abstract', compute='_compute_display_name')
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
-    discussion_name = fields.Char(related='discussion.name', string="Discussion Name")
+    discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
@@ -239,7 +239,7 @@ class Edition(models.Model):
     name = fields.Char()
     res_id = fields.Integer(required=True)
     res_model_id = fields.Many2one('ir.model', required=True)
-    res_model = fields.Char(related='res_model_id.model', store=True)
+    res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
 
 class Book(models.Model):
@@ -321,8 +321,8 @@ class Bar(models.Model):
 
     name = fields.Char()
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
-    value1 = fields.Integer(related='foo.value1')
-    value2 = fields.Integer(related='foo.value2')
+    value1 = fields.Integer(related='foo.value1', readonly=False)
+    value2 = fields.Integer(related='foo.value2', readonly=False)
 
     @api.depends('name')
     def _compute_foo(self):
@@ -336,12 +336,12 @@ class Related(models.Model):
 
     name = fields.Char()
     # related fields with a single field
-    related_name = fields.Char(related='name', string='A related on Name')
-    related_related_name = fields.Char(related='related_name', string='A related on a related on Name')
+    related_name = fields.Char(related='name', string='A related on Name', readonly=False)
+    related_related_name = fields.Char(related='related_name', string='A related on a related on Name', readonly=False)
 
     message = fields.Many2one('test_new_api.message')
-    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
-    message_currency = fields.Many2one(related="message.author", string='Message Author')
+    message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body', readonly=False)
+    message_currency = fields.Many2one(related="message.author", string='Message Author', readonly=False)
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'

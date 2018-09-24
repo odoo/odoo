@@ -8,23 +8,23 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
         'account.journal',
-        related='company_id.currency_exchange_journal_id',
+        related='company_id.currency_exchange_journal_id', readonly=False,
         string="Exchange Gain or Loss Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
-    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
+    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -76,19 +76,19 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     module_account_invoice_extract = fields.Boolean(string="Automate Bill Processing")
-    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
     invoice_reference_type = fields.Selection(string='Communication',
-        related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.')
+        related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.', readonly=False)
     account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
-        related='company_id.account_bank_reconciliation_start',
+        related='company_id.account_bank_reconciliation_start', readonly=False,
         help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
                This is useful if you install accounting after having used invoicing for some time and
                don't want to reconcile all the past payments with bank statements.""")
 
-    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code')
-    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print')
-    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email')
+    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code', readonly=False)
+    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
+    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
 
     @api.multi
     def set_values(self):

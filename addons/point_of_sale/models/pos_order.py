@@ -504,8 +504,8 @@ class PosOrder(models.Model):
         'pos.session', string='Session', required=True, index=True,
         domain="[('state', '=', 'opened')]", states={'draft': [('readonly', False)]},
         readonly=True, default=_default_session)
-    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale")
-    invoice_group = fields.Boolean(related="config_id.module_account")
+    config_id = fields.Many2one('pos.config', related='session_id.config_id', string="Point of Sale", readonly=False)
+    invoice_group = fields.Boolean(related="config_id.module_account", readonly=False)
     state = fields.Selection(
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
         'Status', readonly=True, copy=False, default='draft')
@@ -513,7 +513,7 @@ class PosOrder(models.Model):
     invoice_id = fields.Many2one('account.invoice', string='Invoice', copy=False)
     account_move = fields.Many2one('account.move', string='Journal Entry', readonly=True, copy=False)
     picking_id = fields.Many2one('stock.picking', string='Picking', readonly=True, copy=False)
-    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type")
+    picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
     location_id = fields.Many2one(
         comodel_name='stock.location',
         related='session_id.config_id.stock_location_id',
@@ -1056,9 +1056,9 @@ class PosOrderLineLot(models.Model):
     _description = "Specify product lot/serial number in pos order line"
 
     pos_order_line_id = fields.Many2one('pos.order.line')
-    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id")
+    order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
-    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id')
+    product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
 
 class ReportSaleDetails(models.AbstractModel):

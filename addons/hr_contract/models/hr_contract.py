@@ -77,9 +77,9 @@ class Contract(models.Model):
        track_visibility='onchange', help='Status of the contract', default='draft')
     company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
-    permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
-    visa_no = fields.Char('Visa No', related="employee_id.visa_no")
-    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
+    permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
+    visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
+    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
     reported_to_secretariat = fields.Boolean('Social Secretariat',
         help='Green this button when the contract information has been transfered to the social secretariat.')
 

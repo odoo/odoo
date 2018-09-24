@@ -24,7 +24,7 @@ class Users(models.Model):
     alias_contact = fields.Selection([
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
-        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],

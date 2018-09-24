@@ -23,7 +23,7 @@ class MrpWorkorder(models.Model):
         'mrp.workcenter', 'Work Center', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     working_state = fields.Selection(
-        'Workcenter Status', related='workcenter_id.working_state',
+        'Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
 
     production_id = fields.Many2one(
@@ -47,7 +47,7 @@ class MrpWorkorder(models.Model):
         related='production_id.state',
         help='Technical: used in views only.')
     product_tracking = fields.Selection(
-        'Product Tracking', related='production_id.product_id.tracking',
+        'Product Tracking', related='production_id.product_id.tracking', readonly=False,
         help='Technical: used in views only.')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
     qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits=dp.get_precision('Product Unit of Measure'))
@@ -124,7 +124,7 @@ class MrpWorkorder(models.Model):
     next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
-    production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True)
+    production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
     color = fields.Integer('Color', compute='_compute_color')
     capacity = fields.Float(
         'Capacity', default=1.0,

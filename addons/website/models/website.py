@@ -56,7 +56,7 @@ class Website(models.Model):
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id, required=True)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
+    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True, readonly=False)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     def _default_social_facebook(self):
@@ -98,7 +98,7 @@ class Website(models.Model):
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
-    partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner')
+    partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
@@ -776,7 +776,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     _name = "website.published.mixin"
     _description = 'Website Published Mixin'
 
-    website_published = fields.Boolean('Visible on current website', related='is_published')
+    website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is published')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
@@ -815,7 +815,7 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
     website_published = fields.Boolean(compute='_compute_website_published',
                                        inverse='_inverse_website_published',
                                        search='_search_website_published',
-                                       related=False)
+                                       related=False, readonly=False)
 
     @api.multi
     @api.depends('is_published', 'website_id')
@@ -870,7 +870,7 @@ class Page(models.Model):
     header_color = fields.Char()
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
-    website_id = fields.Many2one(related='view_id.website_id', store=True)
+    website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
 
     @api.one
     def _compute_homepage(self):

@@ -46,7 +46,7 @@ class LunchOrder(models.Model):
                              'Status', readonly=True, index=True, copy=False,
                              compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
-    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', related='user_id.company_id', store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
     cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
     balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
@@ -183,7 +183,7 @@ class LunchOrderLine(models.Model):
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
-    currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='order_id.currency_id', readonly=False)
 
     def _check_supplier_availibility(self):
         products = self.mapped('product_id')

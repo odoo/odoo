@@ -147,7 +147,7 @@ class PaymentAcquirer(models.Model):
 
     # TDE FIXME: remove that brol
     module_id = fields.Many2one('ir.module.module', string='Corresponding Module')
-    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state')
+    module_state = fields.Selection(selection=ir_module.STATES, string='Installation State', related='module_id.state', readonly=False)
 
     image = fields.Binary(
         "Image", attachment=True,
@@ -168,7 +168,7 @@ class PaymentAcquirer(models.Model):
         ('s2s','Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
-    inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids')
+    inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids', readonly=False)
 
     @api.onchange('payment_flow')
     def _onchange_payment_flow(self):

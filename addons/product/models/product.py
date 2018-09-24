@@ -626,7 +626,7 @@ class SupplierInfo(models.Model):
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        readonly="1", related='product_tmpl_id.uom_po_id',
+        related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(
         'Minimal Quantity', default=0.0, required=True,
@@ -649,7 +649,7 @@ class SupplierInfo(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')
-    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
