@@ -85,6 +85,10 @@ odoo.define('payment.processing', function (require) {
             transactions.forEach(function (tx) {
                 var key = 'tx_' + tx.state;
                 if(key in render_values) {
+                    if (tx.acquirer_provider === 'transfer') {
+                        window.location = tx.return_url;
+                        return;
+                    }
                     render_values[key].push(tx);
                 }
             });
