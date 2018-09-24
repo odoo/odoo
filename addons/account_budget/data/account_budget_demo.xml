@@ -8,7 +8,7 @@
             <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>
             <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
          <record id="budget_line_analytic_admin" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
@@ -108,7 +108,7 @@
             <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>
             <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
          <record id="budget_line_analytic_admin_pessim" model="crossovered.budget.lines">
