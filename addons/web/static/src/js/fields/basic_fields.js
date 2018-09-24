@@ -38,6 +38,7 @@ var TranslatableFieldMixin = {
             return $('<button>', {
                     type: 'button',
                     'class': 'o_field_translate fa fa-globe btn btn-link',
+                    'style': 'margin-left: 0.5rem; font-size: 18px; position: absolute; margin-top: 1.25rem;'
                 })
                 .on('click', this._onTranslate.bind(this));
         }
