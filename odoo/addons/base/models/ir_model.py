@@ -4,7 +4,7 @@ import datetime
 import dateutil
 import logging
 import time
-from collections import defaultdict
+from collections import defaultdict, Mapping
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -33,18 +33,29 @@ def make_compute(text, deps):
 
 
 # generic INSERT and UPDATE queries
-INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES ({vals}) RETURNING id"
+INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
 UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
 
-def query_insert(cr, table, values):
+def query_insert(cr, table, rows):
+    """ Insert rows in a table. ``rows`` is a list of dicts, all with the same
+        set of keys. Return the ids of the new rows.
+    """
+    if isinstance(rows, Mapping):
+        rows = [rows]
+    cols = list(rows[0])
     query = INSERT_QUERY.format(
         table=table,
-        cols=",".join(values),
-        vals=",".join("%({0})s".format(v) for v in values),
+        cols=",".join(cols),
+        rows=",".join("%s" for row in rows),
     )
-    cr.execute(query, values)
+    params = [tuple(row[col] for col in cols) for row in rows]
+    cr.execute(query, params)
+    return [row[0] for row in cr.fetchall()]
 
 def query_update(cr, table, values, selectors):
+    """ Update the table with the given values (dict), and use the columns in
+        ``selectors`` to select the rows to update.
+    """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
         table=table,
@@ -52,6 +63,7 @@ def query_update(cr, table, values, selectors):
         condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
     )
     cr.execute(query, values)
+    return [row[0] for row in cr.fetchall()]
 
 
 #
@@ -247,11 +259,11 @@ class IrModel(models.Model):
 
         # create/update the entries in 'ir.model' and 'ir.model.data'
         params = self._reflect_model_params(model)
-        query_update(cr, self._table, params, ['model'])
-        if not cr.rowcount:
-            query_insert(cr, self._table, params)
+        ids = query_update(cr, self._table, params, ['model'])
+        if not ids:
+            ids = query_insert(cr, self._table, params)
 
-        record = self.browse(cr.fetchone())
+        record = self.browse(ids)
         self.pool.post_init(record.modified, set(params) - {'model', 'state'})
 
         if model._module == self._context.get('module'):
@@ -779,61 +791,51 @@ class IrModelFields(models.Model):
             'column2': field.column2 if field.type == 'many2many' else None,
         }
 
-    def _reflect_field(self, field):
-        """ Reflect the given field and return its corresponding record. """
-        fields_data = self._existing_field_data(field.model_name)
-        field_data = fields_data.get(field.name)
-        params = self._reflect_field_params(field)
-        cr = self.env.cr
-        created = False
-
-        if field_data is None:
-            # does not exist, create an entry in this table
-            query_insert(cr, self._table, params)
-            record = self.browse(cr.fetchone())
-            self.pool.post_init(record.modified, list(params))
-            # update fields_data (for recursive calls)
-            fields_data[field.name] = dict(params, id=record.id)
-            created = True
-
-        elif any(field_data[key] != val for key, val in params.items()):
-            # exists, update the entry in this table
-            query_update(cr, self._table, params, ['model', 'name'])
-            record = self.browse(cr.fetchone())
-            names = [key for key, val in params.items() if field_data[key] != val]
-            self.pool.post_init(record.modified, names)
-            # update fields_data (for recursive calls)
-            field_data.update(params)
-
-        else:
-            # exists, but nothing to update
-            record = self.browse(field_data['id'])
-
-        # generate xmlids if necessary, one per module defining the same field
-        module = self._context.get('module')
-        if module and (created or module in field._modules):
-            model_name = field.model_name.replace('.', '_')
-            xmlid = 'field_%s__%s' % (model_name, field.name)
-            cr.execute(
-                """
-                INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                SELECT %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')
-                WHERE NOT EXISTS (SELECT id FROM ir_model_data WHERE module=%s AND name=%s)
-                """, (module, xmlid, record._name, record.id, module, xmlid)
-            )
-
-        return record
-
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
-        duplicate_fields_label = {}
+        by_label = {}
         for field in model._fields.values():
-            if field.string in duplicate_fields_label:
-                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.', field.name, duplicate_fields_label[field.string], model, field.string)
+            if field.string in by_label:
+                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.',
+                                field.name, by_label[field.string], model, field.string)
             else:
-                duplicate_fields_label[field.string] = field.name
-            self._reflect_field(field)
+                by_label[field.string] = field.name
+
+        cr = self._cr
+        module = self._context.get('module')
+        fields_data = self._existing_field_data(model._name)
+        to_insert = []
+        to_xmlids = []
+        for name, field in model._fields.items():
+            old_vals = fields_data.get(name)
+            new_vals = self._reflect_field_params(field)
+            if old_vals is None:
+                to_insert.append(new_vals)
+            elif any(old_vals[key] != new_vals[key] for key in new_vals):
+                ids = query_update(cr, self._table, new_vals, ['model', 'name'])
+                record = self.browse(ids)
+                keys = [key for key in new_vals if old_vals[key] != new_vals[key]]
+                self.pool.post_init(record.modified, keys)
+                old_vals.update(new_vals)
+            if module and (old_vals is None or module in field._modules):
+                to_xmlids.append(name)
+
+        if to_insert:
+            # insert missing fields
+            ids = query_insert(cr, self._table, to_insert)
+            records = self.browse(ids)
+            self.pool.post_init(records.modified, to_insert[0])
+            self.clear_caches()
+
+        if to_xmlids:
+            # create or update their corresponding xml ids
+            fields_data = self._existing_field_data(model._name)
+            prefix = '%s.field_%s__' % (module, model._name.replace('.', '_'))
+            self.env['ir.model.data']._update_xmlids([
+                dict(xml_id=prefix + name, record=self.browse(fields_data[name]['id']))
+                for name in to_xmlids
+            ])
 
         if not self.pool._init:
             # remove ir.model.fields that are not in self._fields
