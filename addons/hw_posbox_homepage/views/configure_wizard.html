@@ -24,7 +24,11 @@
                     $('.loading-block').addClass('o_hide');
                     changePage('done');
                     if(url) {
-                        var cpt = 110;
+                        if ($('#iotname')[0].defaultValue == $('#iotname')[0].value){
+                            var cpt = 30;
+                        }else{
+                            var cpt = 100;
+                        }
                         setInterval(function(){
                             if(cpt === 0){
                                 window.location = url
@@ -129,7 +133,7 @@
                 <table align="center">
                     <tr>
                         <td>IoTBox Name</td>
-                        <td><input type="text" name="iotname" value="{{ hostname }}"></td>
+                        <td><input type="text" id="iotname" name="iotname" value="{{ hostname }}"></td>
                     </tr>
                     <tr>
                         <td>Server token</td>
