@@ -189,7 +189,7 @@ class GattBtManager(gatt.DeviceManager):
     def device_discovered(self, device):
         # TODO: need some kind of updated_devices mechanism or not?
         for driverclass in btdrivers:
-            d = driverclass(device = device)
+            d = driverclass(device = device, manager=self)
             path = "bt_%s" % (device.mac_address,)
             if d.supported():
                 drivers[path] = d
@@ -221,9 +221,10 @@ class BtMetaClass(type):
 class BtDriver(Driver, metaclass=BtMetaClass):
 
 
-    def __init__(self, device):
+    def __init__(self, device, manager):
         super(BtDriver, self).__init__()
         self.dev = device
+        self.manager = manager
         self.value = ''
         self.gatt_device = False
 
