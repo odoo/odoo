@@ -24,6 +24,14 @@ class ReportBomStructure(models.AbstractModel):
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
+            if not candidates:
+                if data and data.get('childs'):
+                    doc = self._get_pdf_line(bom_id, qty=int(data.get('quantity')), child_bom_ids=json.loads(data.get('childs')))
+                else:
+                    doc = self._get_pdf_line(bom_id, unfolded=True)
+                doc['report_type'] = 'pdf'
+                doc['report_structure'] = data and data.get('report_type') or 'all'
+                docs.append(doc)
         return {
             'doc_ids': docids,
             'doc_model': 'mrp.bom',
@@ -95,6 +103,12 @@ class ReportBomStructure(models.AbstractModel):
             product = self.env['product.product'].browse(int(product_id))
         else:
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
+        if product:
+            attachments = self.env['mrp.document'].search(['|', '&', ('res_model', '=', 'product.product'),
+            ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)])
+        else:
+            product = bom.product_tmpl_id
+            attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', product.id)])
         operations = self._get_operation_line(bom.routing_id, (bom_quantity / bom.product_qty), 0)
         lines = {
             'bom': bom,
@@ -108,8 +122,7 @@ class ReportBomStructure(models.AbstractModel):
             'level': level or 0,
             'operations': operations,
             'operations_cost': sum([op['total'] for op in operations]),
-            'attachments': self.env['mrp.document'].search(['|', '&',
-                ('res_model', '=', 'product.product'), ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)]),
+            'attachments': attachments,
             'operations_time': sum([op['duration_expected'] for op in operations])
         }
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
