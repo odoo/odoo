@@ -1136,7 +1136,7 @@ class SaleOrderLine(models.Model):
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
     product_no_variant_attribute_values = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
-    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=False)
 
     qty_delivered_method = fields.Selection([
         ('manual', 'Manual'),
@@ -1162,7 +1162,7 @@ class SaleOrderLine(models.Model):
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id'], store=True, string='Currency', readonly=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
-    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
+    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
     is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")

@@ -18,7 +18,7 @@ class website_form_config(models.Model):
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
-    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata")
+    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata", readonly=False)
 
 
 class website_form_model(models.Model):

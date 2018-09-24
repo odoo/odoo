@@ -13,7 +13,7 @@ class ProductChangeQuantity(models.TransientModel):
     # TDE FIXME: strange dfeault method, was present before migration ? to check
     product_id = fields.Many2one('product.product', 'Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', 'Template', required=True)
-    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     new_quantity = fields.Float(
         'New Quantity on Hand', default=1,
         digits=dp.get_precision('Product Unit of Measure'), required=True,

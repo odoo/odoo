@@ -122,9 +122,9 @@ class MailActivity(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
-    activity_category = fields.Selection(related='activity_type_id.category')
-    activity_decoration = fields.Selection(related='activity_type_id.decoration_type')
-    icon = fields.Char('Icon', related='activity_type_id.icon')
+    activity_category = fields.Selection(related='activity_type_id.category', readonly=False)
+    activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=False)
+    icon = fields.Char('Icon', related='activity_type_id.icon', readonly=False)
     summary = fields.Char('Summary')
     note = fields.Html('Note')
     feedback = fields.Html('Feedback')
@@ -152,8 +152,8 @@ class MailActivity(models.Model):
         'Next activities available',
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
-    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
-    force_next = fields.Boolean(related='activity_type_id.force_next')
+    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=False)
+    force_next = fields.Boolean(related='activity_type_id.force_next', readonly=False)
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -502,12 +502,12 @@ class MailActivityMixin(models.AbstractModel):
              'Today: Activity date is today\nPlanned: Future activities.')
     activity_user_id = fields.Many2one(
         'res.users', 'Responsible User',
-        related='activity_ids.user_id',
+        related='activity_ids.user_id', readonly=False,
         search='_search_activity_user_id',
         groups="base.group_user")
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
-        related='activity_ids.activity_type_id',
+        related='activity_ids.activity_type_id', readonly=False,
         search='_search_activity_type_id',
         groups="base.group_user")
     activity_date_deadline = fields.Date(
@@ -517,7 +517,7 @@ class MailActivityMixin(models.AbstractModel):
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
-        related='activity_ids.summary',
+        related='activity_ids.summary', readonly=False,
         search='_search_activity_summary',
         groups="base.group_user",)
 
