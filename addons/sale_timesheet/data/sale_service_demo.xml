@@ -35,7 +35,7 @@
         <!-- Project Task -->
         <record id="project_task_internal" model="project.task">
             <field name="name">Internal training</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_admin"/>
             <field name="project_id" ref="project.project_project_1"/>
         </record>
 
@@ -107,6 +107,7 @@
         <record id="sale_order_1" model="sale.order">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="client_order_ref">AGR</field>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="sale_line_11" model="sale.order.line">
@@ -155,6 +156,7 @@
         <record id="sale_order_2" model="sale.order">
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="client_order_ref">DPC</field>
+            <field name="user_id" ref="base.user_admin"/>
         </record>
 
         <record id="sale_line_21" model="sale.order.line">
