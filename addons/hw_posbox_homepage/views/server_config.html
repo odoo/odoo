@@ -10,16 +10,12 @@
                     url: '/server_connect',
                     type: 'post',
                     data: $('#server-config').serialize(),
-                }).done(function (url) {
-                    $('.message-status').html('Configure Domain Server <br> Redirect to IoTBox');
-                    setTimeout(function () {
-                        location.reload(true);
-                    }, 30000);
                 }).fail(function () {
-                    if ($('#iotname')[0].preventDefault == $('#iotname')[0].value){
-                        var rebootTime = 30;
+                    $('.message-status').html('Configure Domain Server <br> Redirect to IoTBox');
+                    if ($('#iotname')[0].defaultValue == $('#iotname')[0].value){
+                        var rebootTime = 30000;
                     }else{
-                        var rebootTime = 110;
+                        var rebootTime = 110000;
                     }
                     setTimeout(function () {
                             location.reload(true);
