@@ -249,10 +249,25 @@ class IrHttp(models.AbstractModel):
         return env.ref(xmlid, False)
 
     @classmethod
+    def check_access_mode(cls, env, id, access_mode, model, access_token=None, related_id=None):
+        """
+        Implemented by each module to define an additional way to check access.
+
+        :param env: the env of binary_content
+        :param id: id of the record from which to fetch the binary
+        :param access_mode: typically a string that describes the behaviour of the custom check
+        :param model: the model of the object for which binary_content was called
+        :param related_id: optional id to check security.
+        :return: the object or falsy result if not valid.
+        """
+        return None
+
+
+    @classmethod
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, share_id=None, share_token=None, env=None):
+                       access_token=None, related_id=None, access_mode=None, env=None):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -268,8 +283,8 @@ class IrHttp(models.AbstractModel):
         :param str filename_field: if not create an filename with model-id-field
         :param bool download: apply headers to download the file
         :param str mimetype: mintype of the field (for headers)
-        :param share_id: the id of the documents.share that contains the attachment
-        :param share_token: the token of the documents.share that contains the attachment
+        :param related_id: the id of another record used for custom_check
+        :param  access_mode: if truthy, will call custom_check to fetch the object that contains the binary.
         :param str default_mimetype: default mintype if no mintype found
         :param str access_token: optional token for unauthenticated access
                                  only available  for ir.attachment
@@ -281,31 +296,14 @@ class IrHttp(models.AbstractModel):
         obj = None
         if xmlid:
             obj = cls._xmlid_to_obj(env, xmlid)
+        if access_mode:
+            obj = cls.check_access_mode(env, id, access_mode, model, access_token=access_token, related_id=related_id)
         elif id and model == 'ir.attachment' and access_token:
             obj = env[model].sudo().browse(int(id))
             if not consteq(obj.access_token or '', access_token):
                 return (403, [], None)
-        elif id and share_id and share_token:
-            share = env['documents.share'].sudo().browse(int(share_id))
-            if share:
-                if share.state == 'expired':
-                    return (403, [], None)
-                if not consteq(share.access_token, share_token):
-                    return (403, [], None)
-                elif share.type == 'ids' and (id in share.attachment_ids.ids):
-                    obj = env[model].sudo().browse(int(id))
-                elif share.type == 'domain':
-                    obj = env[model].sudo().browse(int(id))
-                    share_domain = []
-                    if share.domain:
-                        share_domain = literal_eval(share.domain)
-                    domain = [['folder_id', '=', share.folder_id.id]] + share_domain
-                    attachments_check = http.request.env['ir.attachment'].sudo().search(domain)
-                    if obj not in attachments_check:
-                        return (403, [], None)
         elif id and model in env.registry:
             obj = env[model].browse(int(id))
-
         # obj exists
         if not obj or not obj.exists() or field not in obj:
             return (404, [], None)

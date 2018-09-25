@@ -241,7 +241,7 @@ class Http(models.AbstractModel):
     def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, share_id=None, share_token=None, env=None):
+                       access_token=None, related_id=None, access_mode=None, env=None):
         env = env or request.env
         obj = None
         if xmlid:
@@ -254,8 +254,8 @@ class Http(models.AbstractModel):
         return super(Http, cls).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype=default_mimetype, access_token=access_token, share_id=share_id, share_token=share_token,
-            env=env)
+            default_mimetype=default_mimetype, access_token=access_token, related_id=related_id,
+            access_mode=access_mode, env=env)
 
     @classmethod
     def _xmlid_to_obj(cls, env, xmlid):
