@@ -23,10 +23,10 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     }),
     // allow text to be customized with inheritance
     newContentText: {
-        failed: _t('"%s" failed to install.'),
+        failed: _t('Failed to install "%s"'),
         installInProgress: _t("The installation of an App is already in progress."),
-        installNeeded: _t('You need to install the "%s" App in order to execute this action.'),
-        installPleaseWait: _t('Please wait while "%s" is being installed...'),
+        installNeeded: _t('Do you want to install the "%s" App?'),
+        installPleaseWait: _t('Installing "%s"'),
     },
 
     /**
@@ -135,10 +135,13 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _install: function (moduleId) {
         this.pendingInstall = true;
+        $('body').css('pointer-events', 'none');
         return this._rpc({
             model: 'ir.module.module',
             method: 'button_immediate_install',
             args: [[moduleId]],
+        }).fail(function () {
+            $('body').css('pointer-events', '');
         });
     },
     /**
