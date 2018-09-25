@@ -119,14 +119,14 @@ class BarcodeNomenclature(models.Model):
     # It will return an object containing various information about the barcode.
     # most importantly : 
     #  - code    : the barcode
-    #  - type   : the type of the barcode: 
+    #  - rule_type   : the type of the barcode:
     #  - value  : if the id encodes a numerical value, it will be put there
     #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
     def parse_barcode(self, barcode):
         parsed_result = {
             'encoding': '', 
-            'type': 'error', 
+            'rule_type': 'error',
             'code': barcode, 
             'base_code': barcode, 
             'value': 0,
@@ -134,7 +134,7 @@ class BarcodeNomenclature(models.Model):
 
         rules = []
         for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
+            rules.append({'rule_type': rule.rule_type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
             cur_barcode = barcode
@@ -148,12 +148,12 @@ class BarcodeNomenclature(models.Model):
 
             match = self.match_pattern(cur_barcode, rule['pattern'])
             if match['match']:
-                if rule['type'] == 'alias':
+                if rule['rule_type'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
                 else:
                     parsed_result['encoding'] = rule['encoding']
-                    parsed_result['type'] = rule['type']
+                    parsed_result['rule_type'] = rule['rule_type']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
                     if rule['encoding'] == "ean13":
@@ -181,10 +181,10 @@ class BarcodeRule(models.Model):
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),
         ], string='Encoding', required=True, default='any', help='This rule will apply only if the barcode is encoded with the specified encoding')
-    type = fields.Selection([
+    rule_type = fields.Selection([
             ('alias', 'Alias'),
             ('product', 'Unit Product')
-        ], string='Type', required=True, default='product')
+        ], string='Type', required=True, default='product', oldname='type')
     pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
     alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)
 

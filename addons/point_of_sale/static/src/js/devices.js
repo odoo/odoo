@@ -573,8 +573,8 @@ var BarcodeReader = core.Class.extend({
             return;
         }
         var parsed_result = this.barcode_parser.parse_barcode(code);
-        if (this.action_callback[parsed_result.type]) {
-            this.action_callback[parsed_result.type](parsed_result);
+        if (this.action_callback[parsed_result.rule_type]) {
+            this.action_callback[parsed_result.rule_type](parsed_result);
         } else if (this.action_callback.error) {
             this.action_callback.error(parsed_result);
         } else {

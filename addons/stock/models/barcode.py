@@ -7,7 +7,7 @@ from odoo import models, fields, _
 class BarcodeRule(models.Model):
     _inherit = 'barcode.rule'
 
-    type = fields.Selection(selection_add=[
+    rule_type = fields.Selection(selection_add=[
             ('weight', 'Weighted Product'),
             ('location', 'Location'),
             ('lot', 'Lot'),

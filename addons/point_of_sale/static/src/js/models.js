@@ -1002,11 +1002,11 @@ exports.PosModel = Backbone.Model.extend({
             return false;
         }
 
-        if(parsed_code.type === 'price'){
+        if(parsed_code.rule_type === 'price'){
             selectedOrder.add_product(product, {price:parsed_code.value});
-        }else if(parsed_code.type === 'weight'){
+        }else if(parsed_code.rule_type === 'weight'){
             selectedOrder.add_product(product, {quantity:parsed_code.value, merge:false});
-        }else if(parsed_code.type === 'discount'){
+        }else if(parsed_code.rule_type === 'discount'){
             selectedOrder.add_product(product, {discount:parsed_code.value, merge:false});
         }else{
             selectedOrder.add_product(product);
