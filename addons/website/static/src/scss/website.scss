@@ -822,11 +822,20 @@ table.table_desc tr td {
     > * {
         position: relative;
     }
-    > .s_parallax_bg, > .s_parallax_filter {
+    > .s_parallax_bg {
         @include o-position-absolute(0, 0, 0, 0);
+        display: block;
+        background-color: inherit;
         background-size: cover;
         background-attachment: scroll;
         pointer-events: none;
+
+        &::after {
+            content: "";
+            @include o-position-absolute(0, 0, 0, 0);
+            display: block;
+            background-color: inherit;
+        }
     }
     &.s_parallax_is_fixed > .s_parallax_bg {
         background-attachment: fixed;

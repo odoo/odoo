@@ -14,9 +14,8 @@
 </template>
 
 <template id="s_cover" name="Cover">
-    <section class="s_cover parallax oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
+    <section class="s_cover parallax bg-black-50 oe_img_bg oe_custom_bg pt96 pb96" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 50% 0;"/>
-        <span class="s_parallax_filter bg-white-50"/>
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-lg-12 s_title" data-name="Title">
@@ -77,24 +76,23 @@
 <template id="s_banner" name="Banner">
     <section class="s_banner parallax s_parallax_is_fixed oe_img_bg pt96 pb96" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
-        <span class="s_parallax_filter"/>
         <div class="container">
-           <div class="row s_nb_column_fixed">
-               <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
-                   <div class="row">
-                       <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
-                           <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
-                       </div>
-                       <div class="col-lg-12 pt8 pb32 s_col_no_bgcolor" data-name="Text">
-                           <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
-                       </div>
-                       <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
-                           <a href="#" class="btn btn-epsilon rounded-circle">Do something</a>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-7 jumbotron pt32 pb32" style="background-color: rgb(255, 255, 255);" data-name="Box">
+                    <div class="row">
+                        <div class="col-lg-12 s_title s_col_no_bgcolor" data-name="Title">
+                            <h1 class="s_title_thin"><font style="font-size: 62px;"><b>Sell Online.</b> Easily.</font></h1>
+                        </div>
+                        <div class="col-lg-12 pt8 pb32 s_col_no_bgcolor" data-name="Text">
+                            <p class="lead">This is a simple hero unit, a simple jumbotron-style component <br/>for calling extra attention to featured content or information.</p>
+                        </div>
+                        <div class="col-lg-12 s_btn text-left pt16 pb16" data-name="Button">
+                            <a href="#" class="btn btn-epsilon rounded-circle">Do something</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -711,9 +709,8 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="s_parallax s_parallax_is_fixed parallax pt160 pb160" data-scroll-background-ratio="1">
+    <section class="s_parallax s_parallax_is_fixed parallax bg-black-50 pt160 pb160" data-scroll-background-ratio="1">
         <span class="s_parallax_bg" style="background-image: url('/web/image/website.s_parallax_default_image'); background-position: 50% 75%;"/>
-        <span class="s_parallax_filter bg-black-50"/>
         <div class="oe_structure">
             <section>
                 <div class="container">
@@ -1237,7 +1234,7 @@
 
     <!-- FILTER | .s_parallax -->
     <div data-js="colorpicker"
-        data-selector=".parallax" data-target="> .s_parallax_filter"
+        data-selector=".parallax"
         data-palette-exclude="common, theme"
         data-palette-default="transparent_grayscale"
         data-palette-title="Overlay Color">
@@ -1272,8 +1269,7 @@
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn">
-    </div>
+        data-selector="section, .row > [class*='col-lg-'], :not(.o_gallery > .container) > .carousel, .parallax, .s_hr, .s_btn"/>
 
     <div data-js="sizing_x"
         data-selector=".row > [class*='col-lg-']"
