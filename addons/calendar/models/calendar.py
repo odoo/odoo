@@ -251,7 +251,7 @@ class AlarmManager(models.AbstractModel):
             FROM
                 calendar_alarm_calendar_event_rel AS rel
             LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.type = %s
+            WHERE alarm.alarm_type = %s
             GROUP BY rel.calendar_event_id
         """
         base_request = """
@@ -340,7 +340,7 @@ class AlarmManager(models.AbstractModel):
         # TODO: remove event_maxdelta and if using it
         if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
-                if alarm.type == alarm_type and \
+                if alarm.alarm_type == alarm_type and \
                     one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                         alert = {
@@ -438,7 +438,7 @@ class AlarmManager(models.AbstractModel):
         alarm = self.env['calendar.alarm'].browse(alert['alarm_id'])
 
         result = False
-        if alarm.type == 'email':
+        if alarm.alarm_type == 'email':
             result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
@@ -446,7 +446,7 @@ class AlarmManager(models.AbstractModel):
         alarm = self.env['calendar.alarm'].browse(alert['alarm_id'])
         meeting = self.env['calendar.event'].browse(alert['event_id'])
 
-        if alarm.type == 'notification':
+        if alarm.alarm_type == 'notification':
             message = meeting.display_time
 
             delta = alert['notify_at'] - datetime.datetime.now()
@@ -490,7 +490,7 @@ class Alarm(models.Model):
     _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
 
     name = fields.Char('Name', translate=True, required=True)
-    type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
+    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email', oldname='type')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
@@ -505,7 +505,7 @@ class Alarm(models.Model):
             cron = self.env['ir.model.data'].sudo().get_object('calendar', 'ir_cron_scheduler_alarm')
         except ValueError:
             return False
-        return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
+        return cron.toggle(model=self._name, domain=[('alarm_type', '=', 'email')])
 
     @api.model
     def create(self, values):
