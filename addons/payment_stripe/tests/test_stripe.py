@@ -42,7 +42,7 @@ class StripeTest(StripeCommon):
             'acquirer_id': self.stripe.id,
             'partner_id': self.buyer_id,
             'payment_token_id': payment_token.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'amount': 115.0
         })
         tx.stripe_s2s_do_transaction()
@@ -151,4 +151,4 @@ class StripeTest(StripeCommon):
         with mute_logger('odoo.addons.payment_stripe.models.payment'):
             tx.form_feedback(stripe_post_data, 'stripe')
         # check state
-        self.assertEqual(tx.state, 'cancel', 'Stipe: erroneous validation did not put tx into error state')
+        self.assertEqual(tx.state, 'cancel', 'Stripe: erroneous validation did not put tx into error state')

@@ -216,7 +216,7 @@ class TxAuthorize(models.Model):
                 self.write({'acquirer_reference': data.get('x_trans_id')})
                 self._set_transaction_authorized()
             if self.partner_id and not self.payment_token_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always'):
+               (self.transaction_type == 'form_save' or self.acquirer_id.save_token == 'always'):
                 transaction = AuthorizeAPI(self.acquirer_id)
                 res = transaction.create_customer_profile_from_tx(self.partner_id, self.acquirer_reference)
                 token_id = self.env['payment.token'].create({

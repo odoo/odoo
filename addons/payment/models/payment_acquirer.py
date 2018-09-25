@@ -444,7 +444,7 @@ class PaymentAcquirer(models.Model):
             'acquirer': self,
             'user': self.env.user,
             'context': self._context,
-            'type': values.get('type') or 'form',
+            'transaction_type': values.get('transaction_type') or 'form',
         })
         values.setdefault('return_url', False)
 
@@ -557,12 +557,12 @@ class PaymentTransaction(models.Model):
     date = fields.Datetime('Validation Date', readonly=True)
     acquirer_id = fields.Many2one('payment.acquirer', string='Acquirer', readonly=True, required=True)
     provider = fields.Selection(string='Provider', related='acquirer_id.provider', readonly=True)
-    type = fields.Selection([
+    transaction_type = fields.Selection([
         ('validation', 'Validation of the bank card'),
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
-        ('form_save', 'Form with tokenization')], 'Type',
-        default='form', required=True, readonly=True)
+        ('form_save', 'Form with tokenization')], string='Type',
+        default='form', required=True, readonly=True, oldname='type')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
@@ -1107,7 +1107,7 @@ class PaymentToken(models.Model):
         tx = self.env['payment.transaction'].sudo().create({
             'amount': amount,
             'acquirer_id': self.acquirer_id.id,
-            'type': 'validation',
+            'transaction_type': 'validation',
             'currency_id': currency.id,
             'reference': reference,
             'payment_token_id': self.id,

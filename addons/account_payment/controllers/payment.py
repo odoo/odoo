@@ -36,7 +36,7 @@ class PaymentPortal(http.Controller):
         }
 
         if save_token:
-            vals['type'] = 'form_save'
+            vals['transaction_type'] = 'form_save'
 
         transaction = invoice_sudo._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(transaction)
@@ -45,7 +45,7 @@ class PaymentPortal(http.Controller):
             invoice_sudo,
             submit_txt=_('Pay & Confirm'),
             render_values={
-                'type': 'form_save' if save_token else 'form',
+                'transaction_type': 'form_save' if save_token else 'form',
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
             }
         )
@@ -76,7 +76,7 @@ class PaymentPortal(http.Controller):
 
         vals = {
             'payment_token_id': token.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'return_url': success_url,
         }
 

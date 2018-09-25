@@ -81,7 +81,7 @@ class StripeController(http.Controller):
 
         stripe_token = post['token']
         response = None
-        if tx.type == 'form_save' and tx.partner_id:
+        if tx.transaction_type == 'form_save' and tx.partner_id:
             payment_token_id = request.env['payment.token'].sudo().create({
                 'acquirer_id': tx.acquirer_id.id,
                 'partner_id': tx.partner_id.id,

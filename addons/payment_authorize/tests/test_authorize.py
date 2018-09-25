@@ -218,7 +218,7 @@ class AuthorizeForm(AuthorizeCommon):
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'currency_id': self.currency_usd.id,
             'reference': 'test_ref_%s' % int(time.time()),
             'payment_token_id': payment_token.id,
@@ -234,7 +234,7 @@ class AuthorizeForm(AuthorizeCommon):
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'currency_id': self.currency_usd.id,
             'reference': 'test_%s' % int(time.time()),
             'payment_token_id': payment_token.id,
@@ -251,7 +251,7 @@ class AuthorizeForm(AuthorizeCommon):
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'currency_id': self.currency_usd.id,
             'reference': 'test_%s' % int(time.time()),
             'payment_token_id': payment_token.id,
@@ -270,7 +270,7 @@ class AuthorizeForm(AuthorizeCommon):
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
             'currency_id': self.currency_usd.id,
             'reference': 'test_ref_%s' % int(time.time()),
             'payment_token_id': ghost_payment_token.id,

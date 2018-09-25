@@ -45,7 +45,7 @@ class AccountPayment(models.Model):
             'payment_token_id': self.payment_token_id.id,
             'acquirer_id': self.payment_token_id.acquirer_id.id,
             'payment_id': self.id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
         }
 
     @api.multi

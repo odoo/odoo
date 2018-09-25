@@ -254,7 +254,7 @@ class PaymentTxOgone(models.Model):
             tx.acquirer_reference = pay_id
 
         # alias was created on ogone server, store it
-        if alias and tx.type == 'form_save':
+        if alias and tx.transaction_type == 'form_save':
             Token = self.env['payment.token']
             domain = [('acquirer_ref', '=', alias)]
             cardholder = data.get('CN')
@@ -294,7 +294,7 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': data['PAYID'],
             }
             if data.get('ALIAS') and self.partner_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               (self.transaction_type == 'form_save' or self.acquirer_id.save_token == 'always')\
                and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,
@@ -309,7 +309,7 @@ class PaymentTxOgone(models.Model):
             self._set_transaction_done()
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
-            if self.type == 'validation':
+            if self.transaction_type == 'validation':
                 self.s2s_do_refund()
 
             return True
@@ -442,7 +442,7 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': tree.get('PAYID'),
             })
             if tree.get('ALIAS') and self.partner_id and \
-               (self.type == 'form_save' or self.acquirer_id.save_token == 'always')\
+               (self.transaction_type == 'form_save' or self.acquirer_id.save_token == 'always')\
                and not self.payment_token_id:
                 pm = self.env['payment.token'].create({
                     'partner_id': self.partner_id.id,
@@ -456,7 +456,7 @@ class PaymentTxOgone(models.Model):
             self._set_transaction_done()
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
-            if self.type == 'validation':
+            if self.transaction_type == 'validation':
                 self.s2s_do_refund()
             return True
         elif status in self._ogone_cancel_tx_status:

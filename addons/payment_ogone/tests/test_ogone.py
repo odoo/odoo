@@ -170,7 +170,7 @@ class OgonePayment(PaymentAcquirerCommon):
             'currency_id': self.currency_euro.id,
             'reference': test_ref,
             'partner_id': self.buyer_id,
-            'type': 'server2server',
+            'transaction_type': 'server2server',
         })
 
         # create an alias
