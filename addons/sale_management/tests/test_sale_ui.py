@@ -21,31 +21,31 @@ class TestUi(odoo.tests.HttpCase):
         # This is not included in demo data to avoid useless noise
         product_attributes = self.env['product.attribute'].create([{
             'name': 'PA1',
-            'type': 'radio',
+            'attribute_type': 'radio',
             'create_variant': 'dynamic'
         }, {
             'name': 'PA2',
-            'type': 'radio',
+            'attribute_type': 'radio',
             'create_variant': 'always'
         }, {
             'name': 'PA3',
-            'type': 'radio',
+            'attribute_type': 'radio',
             'create_variant': 'dynamic'
         }, {
             'name': 'PA4',
-            'type': 'select',
+            'attribute_type': 'select',
             'create_variant': 'no_variant'
         }, {
             'name': 'PA5',
-            'type': 'select',
+            'attribute_type': 'select',
             'create_variant': 'no_variant'
         }, {
             'name': 'PA7',
-            'type': 'color',
+            'attribute_type': 'color',
             'create_variant': 'no_variant'
         }, {
             'name': 'PA8',
-            'type': 'radio',
+            'attribute_type': 'radio',
             'create_variant': 'no_variant'
         }])
 

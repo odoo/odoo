@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="product.attribute_tree_view"></field>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="type"/>
+                <field name="attribute_type"/>
             </field>
         </field>
     </record>
@@ -32,7 +32,7 @@
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_variant']" position="before">
-                <field name="type" widget="radio"/>
+                <field name="attribute_type" widget="radio"/>
             </xpath>
             <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
                 <field name="is_custom" groups="product.group_product_variant" />

@@ -57,11 +57,10 @@ class ProductProduct(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    # YTI FIX ME: PLEASE RENAME ME INTO attribute_type
-    type = fields.Selection([
+    attribute_type = fields.Selection([
         ('radio', 'Radio'),
         ('select', 'Select'),
-        ('color', 'Color')], default='radio', required=True)
+        ('color', 'Color')], string='Type', default='radio', required=True, oldname='type')
 
 
 class ProductAttributeValue(models.Model):
