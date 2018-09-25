@@ -2,20 +2,20 @@
 /// This file regroups the website design rules.
 ///
 
-$-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
-@if $-theme-font {
-    @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
-}
-@if $o-theme-headings-font-number != $o-theme-font-number {
-    $-theme-font: nth($o-theme-font-urls, $o-theme-headings-font-number);
-    @if $-theme-font {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
-    }
-}
-@if $o-theme-buttons-font-number != $o-theme-font-number and $o-theme-buttons-font-number != $o-theme-headings-font-number {
-    $-theme-font: nth($o-theme-font-urls, $o-theme-buttons-font-number);
-    @if $-theme-font {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+$-seen: ();
+$-font-numbers: (
+    $o-theme-font-number,
+    $o-theme-headings-font-number,
+    $o-theme-buttons-font-number,
+    $o-theme-navbar-font-number
+);
+@each $-number in $-font-numbers {
+    @if index($-seen, $-number) == null {
+        $-seen: append($-seen, $-number);
+        $-theme-font: nth($o-theme-font-urls, $-number);
+        @if $-theme-font {
+            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}");
+        }
     }
 }
 
@@ -32,14 +32,9 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
     }
 }
 
-.navbar-light {
-    // Style only navbar-light which Odoo is only supposed to use in standard
-    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
-    // Note: this only works because navbar-light is defined before navbar-dark,
-    // we may want to use a safest way when possible.
-    background-color: color('menu') !important;
-    @if (color-yiq(color('menu')) != $yiq-text-dark) {
-        @extend .navbar-dark;
+.navbar {
+    @if ($o-theme-navbar-font-number != $o-theme-font-number) {
+        font-family: nth($o-theme-fonts, $o-theme-navbar-font-number);
     }
 
     .nav-item {
@@ -51,6 +46,18 @@ $-theme-font: nth($o-theme-font-urls, $o-theme-font-number);
         opacity: 0 !important;
     }
 }
+
+.navbar-light {
+    // Style only navbar-light which Odoo is only supposed to use in standard
+    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
+    // Note: this only works because navbar-light is defined before navbar-dark,
+    // we may want to use a safest way when possible.
+    background-color: color('menu') !important;
+    @if (color-yiq(color('menu')) != $yiq-text-dark) {
+        @extend .navbar-dark;
+    }
+}
+
 .o_footer {
     @include o-bg-color(color('footer'));
 
