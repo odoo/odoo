@@ -137,29 +137,26 @@ odoo.define('l10n_fr_pos_cert.models', function (require) {
             }
 
             return PosModelParent._save_to_server.apply(this, arguments).then(function(server_ids) {
-                if (server_ids) {
-                    if (server_ids.length > 0){
-                        // Try to get hash of saved orders, if required
-                        var posOrderModel = new DataModel('pos.order');
-                        return posOrderModel.call(
-                            'get_certification_information', [server_ids], false
-                        ).then(function (results) {
-                            var hash = false;
-                            _.each(results, function(result){
-                                if (result.pos_reference.indexOf(current_order.uid) > 0) {
-                                    hash = result.l10n_fr_hash;
-                                    current_order.set_hash(hash, setting);
-                                }
-                            });
-                            certification_deferred.resolve(hash);
-                            return server_ids;
-                        }).fail(function (error, event){
-                            certification_deferred.reject();
-                            return server_ids;
+                if (server_ids.length) {
+                    // Try to get hash of saved orders, if required
+                    var posOrderModel = new DataModel('pos.order');
+                    return posOrderModel.call(
+                        'get_certification_information', [server_ids], false
+                    ).then(function (results) {
+                        var hash = false;
+                        _.each(results, function(result){
+                            if (result.pos_reference.indexOf(current_order.uid) > 0) {
+                                hash = result.l10n_fr_hash;
+                                current_order.set_hash(hash, setting);
+                                return server_ids;
+                            }
                         });
-                    }
-                    certification_deferred.resolve(false);
-                    return server_ids;
+                        certification_deferred.resolve(hash);
+                        return server_ids;
+                    }).fail(function (error, event){
+                        certification_deferred.reject();
+                        return server_ids;
+                    });
                 }
                 certification_deferred.reject();
             }, function error() {
