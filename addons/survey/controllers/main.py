@@ -166,9 +166,9 @@ class Survey(http.Controller):
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
-                elif answer.answer_type == 'text' and answer.question_id.type == 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type == 'textbox':
                     answer_value = answer.value_text
-                elif answer.answer_type == 'text' and answer.question_id.type != 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type != 'textbox':
                     # here come comment answers for matrices, simple choice and multiple choice
                     answer_tag = "%s_%s" % (answer_tag, 'comment')
                     answer_value = answer.value_text
@@ -363,13 +363,13 @@ class Survey(http.Controller):
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
         result = []
-        if question.type == 'multiple_choice':
+        if question.question_type == 'multiple_choice':
             result.append({'key': ustr(question.question),
                            'values': Survey.prepare_result(question, current_filters)['answers']
                            })
-        if question.type == 'simple_choice':
+        if question.question_type == 'simple_choice':
             result = Survey.prepare_result(question, current_filters)['answers']
-        if question.type == 'matrix':
+        if question.question_type == 'matrix':
             data = Survey.prepare_result(question, current_filters)
             for answer in data['answers']:
                 values = []

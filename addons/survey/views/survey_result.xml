@@ -37,11 +37,11 @@
                         <h4>
                             <b>Question </b>
                             <span t-field='question.question'></span>
-                            <t t-if="question.type == 'matrix'">
+                            <t t-if="question.question_type == 'matrix'">
                                 <small><span class="badge badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
                             </t>
-                            <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                                <small><span t-field='question.type' class="badge badge-secondary"></span></small>
+                            <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
+                                <small><span t-field='question.question_type' class="badge badge-secondary"></span></small>
                             </t>
                             <span class="float-right">
                                 <span class="badge badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
@@ -52,16 +52,16 @@
                             <t t-if="question.description">
                                 <div class="text-muted oe_no_empty" t-field="question.description" />
                             </t>
-                            <t t-if="question.type in ['textbox', 'free_text', 'date']">
+                            <t t-if="question.question_type in ['textbox', 'free_text', 'date']">
                                 <t t-call="survey.result_text"></t>
                             </t>
-                            <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                            <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
                                 <t t-call="survey.result_choice"></t>
                             </t>
-                            <t t-if="question.type == 'matrix'">
+                            <t t-if="question.question_type == 'matrix'">
                                 <t t-call="survey.result_matrix"></t>
                             </t>
-                            <t t-if="question.type == 'numerical_box'">
+                            <t t-if="question.question_type == 'numerical_box'">
                                 <t t-call="survey.result_number"></t>
                             </t>
                         </t>
@@ -88,17 +88,17 @@
                 <t t-set="text_result" t-value="prepare_result"/>
                 <tr t-foreach="text_result" t-as="user_input">
                     <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
-                    <t t-if="question.type == 'free_text'">
+                    <t t-if="question.question_type == 'free_text'">
                         <td>
                             <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_free_text"></a><br/>
                         </td>
                     </t>
-                    <t t-if="question.type == 'textbox'">
+                    <t t-if="question.question_type == 'textbox'">
                         <td>
                             <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_text"></a><br/>
                         </td>
                     </t>
-                    <t t-if="question.type == 'date'">
+                    <t t-if="question.question_type == 'date'">
                         <td>
                             <a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)" t-field="user_input.value_date"></a><br/>
                         </td>
@@ -136,12 +136,12 @@
         <div>
             <!-- Tabs -->
             <ul class="nav nav-tabs d-print-none" role="tablist">
-                <li class="nav-item" t-if="question.type != 'simple_choice'">
+                <li class="nav-item" t-if="question.question_type != 'simple_choice'">
                     <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
                     </a>
                 </li>
-                <li class="nav-item" t-if="question.type == 'simple_choice'">
+                <li class="nav-item" t-if="question.question_type == 'simple_choice'">
                     <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" class="nav-link active" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Pie Chart
                     </a>
@@ -153,11 +153,11 @@
                 </li>
             </ul>
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.type != 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="bar" t-att-graph-data="graph_data">
+                <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type != 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="bar" t-att-graph-data="graph_data">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
-                <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.type == 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="pie" t-att-graph-data="graph_data">
+                <div role="tabpanel" class="tab-pane active survey_graph" t-if="question.question_type == 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="pie" t-att-graph-data="graph_data">
                     <!-- svg element for drawing pie chart -->
                     <svg style="height:20em"></svg>
                 </div>
