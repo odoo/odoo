@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 " * De 'Concept' status wordt gebruikt wanneer een gebruiker een nieuwe factuur aan het ingeven is\n"
 " * De 'Open' status wordt gebruikt wanneer de gebruiker een factuur aanmaakt, een factuurnummer wordt gegenereerd. De factuur blijft open tot deze betaald is\n"
-" * De 'In betaling' status wordt gebruikt wanneer betalingen werden ontvangen, voor de gehele factuur of een gedeelte ervan, in een journaal dat enkel werd ingesteld voor bank transacties en sommige nog niet werden afgepunt.\n"
-" * De 'Betaald' status wordt automatisch ingesteld wanneer de factuur betaald is. De gerelateerde journaalposten kunnen zowel reeds afgepunt zijn als niet afgepunt zijn.\n"
+" * De 'In betaling' status wordt gebruikt wanneer betalingen werden ontvangen, voor de gehele factuur of een gedeelte ervan, in een dagboek dat enkel werd ingesteld voor bank transacties en sommige nog niet werden afgeletterd.\n"
+" * De 'Betaald' status wordt automatisch ingesteld wanneer de factuur betaald is. De gerelateerde boekingen kunnen zowel reeds afgeletterd zijn als niet afgeletterd zijn.\n"
 " * De 'Geannuleerd' status wordt gebruikt wanneer de gebruiker de factuur annuleert."
 
 #. module: account
@@ -83,7 +83,7 @@ msgstr "%s (kopie)"
 #: code:addons/account/models/account.py:686
 #, python-format
 msgid "%s Sequence"
-msgstr "%sReeks"
+msgstr "%s Reeks"
 
 #. module: account
 #: code:addons/account/models/account_move.py:399
@@ -104,12 +104,12 @@ msgstr "&amp;times;"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> Afgepunt"
+msgstr "-> Afletteren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Zie de deels afgepunte boekingen"
+msgstr "-> Zie de gedeeltelijk afgeletterde boekingen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
@@ -916,7 +916,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:530
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Een geselecteerde boeking is al afgepunt."
+msgstr "Een geselecteerde boeking is al afgeletterd."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:538
@@ -1716,9 +1716,7 @@ msgstr ""
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
-"Alle journaalpost regels moeten zijn verwerkt om de journaalpost af te "
-"sluiten."
+msgstr "Alle boekingen moeten zijn verwerkt om de afschrift af te sluiten."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__update_posted
@@ -2326,8 +2324,7 @@ msgstr "Balans"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr ""
-"Saldo berekend op basis van de openingsbalans en alle journaalpost regels"
+msgstr "Saldo berekend op basis van de openingsbalans en alle boekingen"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -5887,8 +5884,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
-"Om een bankafschrift te verwijderen, dient u eerst het gerelateerde journaal"
-" item te annuleren."
+"Om een bankafschrift te verwijderen, dient u eerst het gerelateerde boeking "
+"te annuleren."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:89

@@ -249,6 +249,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gentile ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Ecco la Sua \n"
+"        % if object.number:\n"
+"            fattura <strong>${object.number}</strong>\n"
+"        % else:\n"
+"            fattura\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (riferimento: ${object.origin})\n"
+"        % endif\n"
+"        per un importo pari a <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        da ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            Questa fattura è già stata pagata.\n"
+"        % else:\n"
+"            La preghiamo di effettuare il pagamento nel più breve tempo possibile.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Non esiti a contattarci per qualsiasi domanda.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -366,6 +394,8 @@ msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
+"'between')]}\">e</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -510,7 +540,7 @@ msgstr "<span>Debito</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>Descrizione</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -580,7 +610,7 @@ msgstr "<span>Partners</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Quantity</span>"
-msgstr ""
+msgstr "<span>Quantità</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -590,12 +620,12 @@ msgstr "<span>Report</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Source Document</span>"
-msgstr ""
+msgstr "<span>Documento di origine</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Imposte</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_agedpartnerbalance
@@ -605,7 +635,7 @@ msgstr "<span>Totale</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
-msgstr ""
+msgstr "<span>Prezzo unitario</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -638,7 +668,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<strong class=\"text-muted\">Your Contact</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">Il tuo contatto</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
@@ -987,6 +1017,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"Il conto %s (%s) non consente la riconciliazione. Cambia la configurazione "
+"di questo conto per consentirla. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1001,7 +1033,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Modello piano dei conti"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1890,13 +1922,13 @@ msgstr "Importo Pagato"
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Paid/Received"
-msgstr ""
+msgstr "Importo pagato/ricevuto"
 
 #. module: account
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Received"
-msgstr ""
+msgstr "Importo ricevuto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_subtotal_signed
@@ -2258,7 +2290,7 @@ msgstr "Trovato automaticamente"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__auto_reconcile
 msgid "Auto-validate"
-msgstr ""
+msgstr "Convalidare automaticamente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3422,7 +3454,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Impostazioni di configurazione"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4319,13 +4351,13 @@ msgstr "Imposta predefinita applicata alle transazioni locali"
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr ""
+msgstr "Imposte predefinite usate per l'acquisto del prodotto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr ""
+msgstr "Imposte predefinite usate per la vendita del prodotto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4856,7 +4888,7 @@ msgstr "Chiusura di cassa"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_to
 msgid "Ending Date, included in the fiscal year."
-msgstr ""
+msgstr "Data di chiusura, inclusa nell'anno fiscale"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -5761,7 +5793,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
-msgstr ""
+msgstr "Se non hai installato un piano dei conti, installane uno prima.<br>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_general_ledger__initial_balance
@@ -6282,6 +6314,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
 "and '_draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}${object.state == 'draft' "
+"and '_draft' or ''}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6367,7 +6401,7 @@ msgstr "Contabilità"
 #: selection:account.reconcile.model,match_amount:0
 #: selection:account.reconcile.model.template,match_amount:0
 msgid "Is Between"
-msgstr ""
+msgstr "È tra"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_is_follower
@@ -6380,13 +6414,13 @@ msgstr "È Follower"
 #: selection:account.reconcile.model,match_amount:0
 #: selection:account.reconcile.model.template,match_amount:0
 msgid "Is Greater Than"
-msgstr ""
+msgstr "È più grande di"
 
 #. module: account
 #: selection:account.reconcile.model,match_amount:0
 #: selection:account.reconcile.model.template,match_amount:0
 msgid "Is Lower Than"
-msgstr ""
+msgstr "È più basso di "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__printed
@@ -7263,6 +7297,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
+"Pagamento manuale: puoi essere pagato in contanti, con assegni o con qualsiasi altro metodo esterno a Odoo.\n"
+"Pagamento elettronico: Puoi essere pagato automaticamente tramite un metodo di pagamento che richiede una transazione su una carta registrata dal cliente al momento dell'acquisto o della registrazione online (gettone di pagamento).\n"
+"Assegno: paga la fattura con un assegno e stampalo da Odoo.\n"
+"Deposito Raggruppato: Incassa più assegni clienti contemporaneamente generando un deposito raggruppato da inviare alla tua banca. Quando inserisci l'estratto conto in Odoo, puoi riconciliare la transazione e il deposito raggruppato. Per attivare il deposito raggruppato, il modulo account_batch_deposit (conto-deposito-raggruppato) deve essere installato. \n"
+"Bonifico SEPA: paga la fattura inviando un file di Bonifico SEPA alla tua banca. Per attivare il bonifico SEPA, il modulo account_sepa (conto-sepa) deve essere installato. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
@@ -8062,6 +8101,11 @@ msgid ""
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr ""
+"Operazione non consentita. Poiché la riga di estratto conto ha già ricevuto "
+"un riferimento (%s), non è possibile riconciliarla completamente con le "
+"registrazioni del sezionale, ciò creerebbe una discontinuità nella "
+"numerazione. È necessario creare una registrazione e cancellarla per "
+"cancellare la riga."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8300,7 +8344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
-msgstr ""
+msgstr "Contratti con i partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner
@@ -8482,7 +8526,7 @@ msgstr "Ricevuta di Pagamento:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Riferimento del pagamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
@@ -8701,7 +8745,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Please use the following communication for your payment :"
-msgstr ""
+msgstr "Usa la seguente comunicazione per il pagamento:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -9545,7 +9589,7 @@ msgstr "SEPA Bonifico (SDD)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA QR Code"
-msgstr ""
+msgstr "Codice QR SEPA"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -13155,7 +13199,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
 msgid "o_onboarding_orange"
-msgstr ""
+msgstr "o_onboarding_orange"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -13195,7 +13239,7 @@ msgstr "rimasti)"
 #: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "res.company"
-msgstr ""
+msgstr "res.company"
 
 #. module: account
 #. openerp-web

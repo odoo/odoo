@@ -114,6 +114,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Buongiorno<br/><br/>\n"
+"        ${user.name} ha condiviso ${object.slide_type} <strong>${object.name}</strong> con te!\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vedi <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -134,6 +149,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Buongiorno,<br/><br/>\n"
+"        Una nuova ${object.slide_type} <strong>${object.name}</strong> è stata pubblicata su ${object.channel_id.name} a ${format_tz(object.write_date, tz=user.tz)}\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vedi <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -174,7 +204,7 @@ msgstr "<i class=\"fa fa-comments-o\"/> Commentis"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Invia una email"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -184,6 +214,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> Questo"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -237,6 +269,8 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgid ""
 "<p>This channel is private and its content is restricted to some users.</p>"
 msgstr ""
+"<p>Questo canale è privato e il suo contenuto è limitato ad alcuni "
+"utenti.</p>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -244,6 +278,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -251,6 +287,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -258,6 +296,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -265,6 +305,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -272,6 +314,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -279,17 +323,21 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Crea un progetto Google e ricevi una chiave"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"form-text\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"form-text\">Invia presentazioni via email</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"form-text\">Use permanent link to share in social media</span>"
 msgstr ""
+"<span class=\"form-text\">Usa un link permanente per condividere sui social "
+"media</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -297,6 +345,8 @@ msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Diapositive</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -338,7 +388,7 @@ msgstr "Attivo"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slides_slides
 msgid "Add a new slide"
-msgstr ""
+msgstr "Aggiungi una nuova diapositiva"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -355,7 +405,7 @@ msgstr "Numero di allegati"
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "Solo Utenti Autentificati "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
@@ -399,7 +449,7 @@ msgstr "Canale"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Channel #{slide.channel_id.name}"
-msgstr ""
+msgstr "Canale #{slide.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
@@ -442,7 +492,7 @@ msgstr "Canali"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Impostazioni di configurazione"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -463,6 +513,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Non è possibile recuperare i dati dall'URL. Documenti o diritti di accesso non disponibili:\n"
+"Qui trovi la risposta ricevuta: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:325
@@ -477,12 +529,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
 msgid "Create a channel"
-msgstr ""
+msgstr "Crea un canale"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_ir_slide_category
 msgid "Create a new category"
-msgstr ""
+msgstr "Crea una nuova categoria"
 
 #. module: website_slides
 #. openerp-web
@@ -698,7 +750,7 @@ msgstr "Google doc key"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Chiave API Google Drive"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -825,7 +877,7 @@ msgstr "Ultima modifica il"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Last slide"
-msgstr ""
+msgstr "Ultima diapositiva"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -906,7 +958,7 @@ msgstr "i più recenti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Next slide"
-msgstr ""
+msgstr "Prossima diapositiva"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -1045,7 +1097,7 @@ msgstr "Presentazioni"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Previous slide"
-msgstr ""
+msgstr "Diapositiva precedente"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1060,7 +1112,7 @@ msgstr "Canale Privato"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Promote this #{slide.slide_type}"
-msgstr ""
+msgstr "Promuovi questa #{slide.slide_type}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1151,7 +1203,7 @@ msgstr "Cerca slides"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Search in #{channel.name}"
-msgstr ""
+msgstr "Cerca in #{channel.name}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1187,17 +1239,17 @@ msgstr "Condividi conti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Facebook"
-msgstr ""
+msgstr "Condividi su Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Google Plus"
-msgstr ""
+msgstr "Condividi su Google Plus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on LinkedIn"
-msgstr ""
+msgstr "Condividi su Linkedln"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -1207,7 +1259,7 @@ msgstr "Condividi sui social Networks"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Twitter"
-msgstr ""
+msgstr "Condividi su Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1612,7 +1664,7 @@ msgstr "Risultati trovati per il criterio di ricerca"
 #: model_terms:ir.ui.view,arch_db:website_slides.related_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "slide.name"
-msgstr ""
+msgstr "slide.name"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide

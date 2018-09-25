@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 # Fred Gilson <fgi@odoo.com>, 2018
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:16+0000\n"
-"PO-Revision-Date: 2018-09-21 13:16+0000\n"
+"POT-Creation-Date: 2018-09-24 14:20+0000\n"
+"PO-Revision-Date: 2018-09-24 14:20+0000\n"
 "Last-Translator: Marie Willemyns <mwi@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -468,7 +468,7 @@ msgstr "Tous"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Toutes les tâches"
 
 #. module: project
 #. openerp-web
@@ -936,7 +936,7 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
 msgid "Deadline"
-msgstr "Echéance"
+msgstr "Date limite"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1063,7 +1063,7 @@ msgstr "Modifier"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr "Modifié la Tâche"
+msgstr "Modifier la tâche"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1184,7 +1184,7 @@ msgstr "Document Final"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr "Replié dans la vue Kanban"
+msgstr "Repliée dans la vue Kanban"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1319,9 +1319,9 @@ msgid ""
 "   them or by someone of their company\n"
 msgstr ""
 "Détermine la visibilité des tâches ou anomalies qui dépendent du projet courant.\n"
-"- Sur invitation uniquement : les salariés ne voient que les projets, tâches et anomalies qu'ils suivent ;\n"
-"- Visible par tous les salariés : les salariés peuvent voir tous les projets, tâches et anomalies ;\n"
-"- Visible par les clients suivants : les salariés voient tout ; si le site web est activé, les utilisateur du portail peuvent voir les projets, tâches et anomalies qu'eux ou un utilisateur appartenant à leur société, suivent.\n"
+"- Sur invitation uniquement : les employés ne voient que les projets, tâches et anomalies qu'ils suivent ;\n"
+"- Visible par tous les salariés : les employés peuvent voir tous les projets, tâches et anomalies ;\n"
+"- Visible par les clients suivants : les employés voient tout ; si le site web est activé, les utilisateur du portail peuvent voir les projets, tâches et anomalies qu'eux ou un utilisateur appartenant à leur société, suivent.\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1632,7 +1632,7 @@ msgstr "Live"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr "Enregistrer du temps sur les tâches"
+msgstr "Encodez des feuilles de temps sur les tâches"
 
 #. module: project
 #. openerp-web
@@ -1774,7 +1774,7 @@ msgstr "Activités suivantes"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'Activité à Venir"
+msgstr "Date limite de la prochaine activité"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -1800,8 +1800,8 @@ msgstr "Pas encore d'évaluations de clients "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
-msgid "No project rating puslished for now."
-msgstr "Aucune note de projet publiée pour le moment."
+msgid "No project rating published for now."
+msgstr "Aucune évaluation de projet publiée."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -2125,7 +2125,7 @@ msgstr "Satisfaction du projet"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Étiquettes de projet"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2362,8 +2362,8 @@ msgstr "Tête triste"
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
 msgstr ""
-"Gérez votre équipe au travers de projets et estimez les deadlines de manière"
-" plus précise."
+"Gérez votre équipe au travers de projets et estimez les dates limite de "
+"manière plus précise"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
@@ -2423,7 +2423,9 @@ msgstr "Séquence"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Ajouter l'image de couverture"
+msgstr ""
+"Ajouter l'image\n"
+"de couverture"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -2523,7 +2525,7 @@ msgstr "Étape changée"
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr "Etapes"
+msgstr "Étapes"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2642,7 +2644,7 @@ msgstr "Tâche créée"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr "Enregistrement de temps sur les tâches"
+msgstr "Feuilles de temps sur les tâches"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -2705,6 +2707,7 @@ msgid "Task ready for Next Stage"
 msgstr "Tâche prête pour la prochaine étape"
 
 #. module: project
+#: code:addons/project/models/project.py:189
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
@@ -2719,6 +2722,8 @@ msgstr "Tâche prête pour la prochaine étape"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#: model:project.project,label_tasks:project.project_project_data
+#, python-format
 msgid "Tasks"
 msgstr "Tâches"
 
@@ -2886,7 +2891,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Cette étape est cachée dans la vue Kanban quand il n'y a pas de dossier à "
+"Cette étape est repliée dans la vue Kanban quand il n'y a pas de dossier à "
 "afficher dans cette étape."
 
 #. module: project
@@ -2963,7 +2968,7 @@ msgstr "Le top 5 des évaluations des 15 derniers jours."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Suivre la satisfaction client sur les tâches"
+msgstr "Suivez la satisfaction client sur les tâches"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -3016,7 +3021,7 @@ msgstr "Utilisez les tâches comme"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr "Utiliser un pad collaboratif à texte riche sur les tâches"
+msgstr "Utilisez un pad collaboratif à texte riche sur les tâches"
 
 #. module: project
 #. openerp-web
@@ -3040,7 +3045,7 @@ msgstr "Courriel de l'utilisateur"
 #. module: project
 #: selection:project.project,privacy_visibility:0
 msgid "Visible by all employees"
-msgstr "Visible par tous les salariés"
+msgstr "Visible par tous les employés"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
