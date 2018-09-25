@@ -33,11 +33,11 @@ class FetchmailServer(models.Model):
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     server = fields.Char(string='Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft': [('readonly', False)]})
     port = fields.Integer(readonly=True, states={'draft': [('readonly', False)]})
-    type = fields.Selection([
+    server_type = fields.Selection([
         ('pop', 'POP Server'),
         ('imap', 'IMAP Server'),
         ('local', 'Local Server'),
-    ], 'Server Type', index=True, required=True, default='pop')
+    ], string='Server Type', index=True, required=True, default='pop', oldname='type')
     is_ssl = fields.Boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)")
     attach = fields.Boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                      "If not enabled, incoming emails will be stripped of any attachments before being processed", default=True)
@@ -55,12 +55,12 @@ class FetchmailServer(models.Model):
     configuration = fields.Text('Configuration', readonly=True)
     script = fields.Char(readonly=True, default='/mail/static/scripts/openerp_mailgate.py')
 
-    @api.onchange('type', 'is_ssl', 'object_id')
+    @api.onchange('server_type', 'is_ssl', 'object_id')
     def onchange_server_type(self):
         self.port = 0
-        if self.type == 'pop':
+        if self.server_type == 'pop':
             self.port = self.is_ssl and 995 or 110
-        elif self.type == 'imap':
+        elif self.server_type == 'imap':
             self.port = self.is_ssl and 993 or 143
         else:
             self.server = ''
@@ -106,13 +106,13 @@ class FetchmailServer(models.Model):
     @api.multi
     def connect(self):
         self.ensure_one()
-        if self.type == 'imap':
+        if self.server_type == 'imap':
             if self.is_ssl:
                 connection = IMAP4_SSL(self.server, int(self.port))
             else:
                 connection = IMAP4(self.server, int(self.port))
             connection.login(self.user, self.password)
-        elif self.type == 'pop':
+        elif self.server_type == 'pop':
             if self.is_ssl:
                 connection = POP3_SSL(self.server, int(self.port))
             else:
@@ -132,14 +132,14 @@ class FetchmailServer(models.Model):
                 connection = server.connect()
                 server.write({'state': 'done'})
             except Exception as err:
-                _logger.info("Failed to connect to %s server %s.", server.type, server.name, exc_info=True)
+                _logger.info("Failed to connect to %s server %s.", server.server_type, server.name, exc_info=True)
                 raise UserError(_("Connection test failed: %s") % tools.ustr(err))
             finally:
                 try:
                     if connection:
-                        if server.type == 'imap':
+                        if server.server_type == 'imap':
                             connection.close()
-                        elif server.type == 'pop':
+                        elif server.server_type == 'pop':
                             connection.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
@@ -149,7 +149,7 @@ class FetchmailServer(models.Model):
     @api.model
     def _fetch_mails(self):
         """ Method called by cron to fetch mails from servers """
-        return self.search([('state', '=', 'done'), ('type', 'in', ['pop', 'imap'])]).fetch_mail()
+        return self.search([('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]).fetch_mail()
 
     @api.multi
     def fetch_mail(self):
@@ -159,13 +159,13 @@ class FetchmailServer(models.Model):
         }
         MailThread = self.env['mail.thread']
         for server in self:
-            _logger.info('start checking for new emails on %s server %s', server.type, server.name)
+            _logger.info('start checking for new emails on %s server %s', server.server_type, server.name)
             additionnal_context['fetchmail_server_id'] = server.id
-            additionnal_context['server_type'] = server.type
+            additionnal_context['server_type'] = server.server_type
             count, failed = 0, 0
             imap_server = None
             pop_server = None
-            if server.type == 'imap':
+            if server.server_type == 'imap':
                 try:
                     imap_server = server.connect()
                     imap_server.select()
@@ -177,19 +177,19 @@ class FetchmailServer(models.Model):
                         try:
                             res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
-                            _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
+                            _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1
                         imap_server.store(num, '+FLAGS', '\\Seen')
                         self._cr.commit()
                         count += 1
-                    _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.type, server.name, (count - failed), failed)
+                    _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
                 except Exception:
-                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
+                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
                 finally:
                     if imap_server:
                         imap_server.close()
                         imap_server.logout()
-            elif server.type == 'pop':
+            elif server.server_type == 'pop':
                 try:
                     while True:
                         pop_server = server.connect()
@@ -203,15 +203,15 @@ class FetchmailServer(models.Model):
                                 res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, message, save_original=server.original, strip_attachments=(not server.attach))
                                 pop_server.dele(num)
                             except Exception:
-                                _logger.info('Failed to process mail from %s server %s.', server.type, server.name, exc_info=True)
+                                _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                                 failed += 1
                             self.env.cr.commit()
                         if num_messages < MAX_POP_MESSAGES:
                             break
                         pop_server.quit()
-                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num_messages, server.type, server.name, (num_messages - failed), failed)
+                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num_messages, server.server_type, server.name, (num_messages - failed), failed)
                 except Exception:
-                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.type, server.name, exc_info=True)
+                    _logger.info("General failure when trying to fetch mail from %s server %s.", server.server_type, server.name, exc_info=True)
                 finally:
                     if pop_server:
                         pop_server.quit()
@@ -225,6 +225,6 @@ class FetchmailServer(models.Model):
         try:
             # Enabled/Disable cron based on the number of 'done' server of type pop or imap
             cron = self.env.ref('fetchmail.ir_cron_mail_gateway_action')
-            cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('type', 'in', ['pop', 'imap'])])
+            cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])])
         except ValueError:
             pass
