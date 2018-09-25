@@ -775,19 +775,44 @@
 
             <div class='orderlines' line-ratio='0.6'>
                 <t t-foreach='receipt.orderlines' t-as='line'>
-                    <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
+                    <t t-set='simple' t-value='(line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1 and !discount_to_show and !(line.display_discount_policy == "without_discount" &amp;&amp; line.price != line.price_lst))' />
                     <t t-if='simple'>
                         <line>
                             <left><t t-esc='line.product_name_wrapped[0]' /></left>
                             <right><value t-att-value-decimals='pos.currency.decimals'><t t-esc='line.price_display' /></value></right>
                         </line>
-                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                     </t>
+                    <t t-call="XmlReceiptWrappedProductNameLines"/>
                     <t t-if='!simple'>
                         <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
                         <t t-call="XmlReceiptWrappedProductNameLines"/>
+                        <t t-if="line.display_discount_policy == 'without_discount' &amp;&amp; line.price != line.price_lst">
+                            <line indent='1'>
+                                <left>
+                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
+                                        <t t-esc="line.price_lst" />
+                                    </value> ->
+                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
+                                        <t t-esc="line.price" />
+                                    </value>
+                                </left>
+                            </line>
+                        </t>
+                        <t t-else='line.discount !== 0'>
+                            <line indent='1'>
+                                <left>
+                                    <value t-att-value-decimals='pos.dp["Product Price"]'>
+                                        <t t-esc="line.price_lst" />
+                                    </value>
+                                </left>
+                            </line>
+                        </t>
                         <t t-if='line.discount !== 0'>
-                            <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
+                            <line indent='1'>
+                                <left>
+                                    Discount: <t t-esc='line.discount' />%
+                                </left>
+                            </line>
                         </t>
                         <line indent='1'>
                             <left>
@@ -799,7 +824,7 @@
                                 </t>
                                 x
                                 <value t-att-value-decimals='pos.dp["Product Price"]'>
-                                    <t t-esc='line.price' />
+                                    <t t-esc='line.price_display_one' />
                                 </value>
                             </left>
                             <right>
@@ -1486,8 +1511,7 @@
                             <div class="pos-disc-font">
                                 <s>
                                     <t t-esc="widget.format_currency(orderline.get_lst_price(),'Product Price')"/>
-                                </s>
-                                   -> 
+                                </s> ->
                                 <t t-esc="widget.format_currency(orderline.get_unit_display_price(),'Product Price')"/>
                             </div>
                         </t>
