@@ -1170,6 +1170,9 @@ var HandleWidget = AbstractField.extend({
 
 var FieldEmail = InputField.extend({
     className: 'o_field_email',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
 
@@ -1210,7 +1213,21 @@ var FieldEmail = InputField.extend({
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('href', this.prefix + ':' + this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @param {MouseEvent} event
+     * @private
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+    },
 });
 
 var FieldPhone = FieldEmail.extend({
@@ -1237,6 +1254,9 @@ var FieldPhone = FieldEmail.extend({
 
 var UrlWidget = InputField.extend({
     className: 'o_field_url',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     supportedFieldTypes: ['char'],
 
     /**
@@ -1278,7 +1298,21 @@ var UrlWidget = InputField.extend({
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @param {MouseEvent} event
+     * @private
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+    },
 });
 
 var CopyClipboard = {
