@@ -91,6 +91,11 @@ tour.register('shop_sale_coupon', {
             trigger: '#wrap:not(:has(#cart_products))',
             run: function () {}, // it's a check
         },
+        {
+            content: "check cart is empty (2)",
+            trigger: 'div.js_cart_lines:contains(Your cart is empty!)',
+            run: function () {}, // it's a check
+        },
         /* 4. Disabled customize options coupon box & 'Show # found'*/
         {
             content: "open customize menu",
@@ -107,18 +112,4 @@ tour.register('shop_sale_coupon', {
         },
     ]
 );
-
-//Check if website_sale_options is installed since its adding an extra step to add to cart
-if ('website_sale_options.website_sale' in odoo.__DEBUG__.services) {
-  var steps = tour.tours.shop_sale_coupon.steps;
-  for (var k=0; k<steps.length; k++) {
-      if (steps[k].content === "click on 'Add to Cart' button") {
-          steps.splice(k+1, 0, {
-              content: "click in modal on 'Proceed to Checkout' button",
-              trigger: 'a:contains("Proceed to Checkout")',
-          });
-          break;
-      }
-  }
-}
 });
