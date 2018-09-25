@@ -26,7 +26,7 @@
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
-                <field name="type"/>
+                <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
             </tree>
@@ -41,7 +41,7 @@
                  <group>
                     <group>
                         <field name="name"/>
-                        <field name="type" groups="base.group_no_one"/>
+                        <field name="alarm_type" groups="base.group_no_one"/>
                     </group>
                     <group>
                         <label for="duration"/>

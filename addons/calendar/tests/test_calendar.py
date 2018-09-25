@@ -93,7 +93,7 @@ class TestCalendar(TransactionCase):
             'name': '1 Day before event starts',
             'duration': 1,
             'interval': 'days',
-            'type': 'notification'
+            'alarm_type': 'notification'
         })
 
         # Now I will assign this reminder to all day event|
