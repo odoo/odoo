@@ -150,7 +150,7 @@ class SurveyMailComposeMessage(models.TransientModel):
                     'survey_id': wizard.survey_id.id,
                     'deadline': wizard.date_deadline,
                     'date_create': fields.Datetime.now(),
-                    'type': 'link',
+                    'input_type': 'link',
                     'state': 'new',
                     'token': token,
                     'partner_id': partner_id,
