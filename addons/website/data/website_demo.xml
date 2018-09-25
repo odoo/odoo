@@ -246,8 +246,10 @@ response = request.render("website.template_partner_comment", {
 
         <!-- BS Debug Page -->
         <!-- Showcase all (most?) BS components and utilities -->
-        <record id="bs_debug_page_view" model="ir.ui.view">
+        <record id="bs_debug_page" model="website.page">
             <field name="name">BS Debug</field>
+            <field name="url">/website/demo/bootstrap</field>
+            <field name="website_published">False</field>
             <field name="type">qweb</field>
             <field name="key">website.bs_debug_page_view</field>
             <field name="arch" type="xml">
@@ -492,16 +494,13 @@ response = request.render("website.template_partner_comment", {
                 </t>
             </field>
         </record>
-        <record id="bs_debug_page" model="website.page">
-            <field name="url">/demo/bs-debug</field>
-            <field name="website_published">False</field>
-            <field name="view_id" ref="bs_debug_page_view"/>
-        </record>
 
         <!-- Snippet Debug Page -->
         <!-- Showcase all snippets -->
-        <record id="snippets_debug_page_view" model="ir.ui.view">
+        <record id="snippets_debug_page" model="website.page">
             <field name="name">Snippet Debug</field>
+            <field name="url">/website/demo/snippets</field>
+            <field name="website_published">False</field>
             <field name="type">qweb</field>
             <field name="key">website.snippets_debug_page_view</field>
             <field name="arch" type="xml">
@@ -531,11 +530,6 @@ response = request.render("website.template_partner_comment", {
                     </t>
                 </t>
             </field>
-        </record>
-        <record id="snippets_debug_page" model="website.page">
-            <field name="url">/demo/snippets-debug</field>
-            <field name="website_published">False</field>
-            <field name="view_id" ref="snippets_debug_page_view"/>
         </record>
     </data>
 </odoo>
