@@ -1328,34 +1328,54 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} [options]
      * @param {string} [options.position=top] if the new record should be added
      *   on top or on bottom of the list
-     * @param {Object} [options.context] additional context to be merged before
-     *   calling the default_get (eg. to set default values)
-     * @returns {Deferred<string>} resolves to the new record id
+     * @param {Object} [options.[context]] additional context to be merged before
+     *   calling the default_get (eg. to set default values).
+     *   If several contexts are found, multiple records are added
+     * @param {boolean} [params.allowWarning=false] if true, the default record
+     *   operation can complete, even if a warning is raised
+     * @returns {Deferred<[string]>} resolves to the new records ids
      */
     _addX2ManyDefaultRecord: function (list, options) {
         var self = this;
         var position = options && options.position || 'top';
-        var additionalContext = options && options.context;
-        var context = this._getContext(list, {additionalContext: additionalContext});
         var params = {
-            context: context,
             fields: list.fields,
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
             position: position,
             viewType: list.viewType,
+            allowWarning: options && options.allowWarning
         };
-        return this._makeDefaultRecord(list.model, params).then(function (id) {
-            list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
-            var record = self.localData[id];
-            list._cache[record.res_id] = id;
-            if (list.orderedResIDs) {
-                var index = list.offset + (position !== 'top' ? list.limit : 0);
-                list.orderedResIDs.splice(index, 0, record.res_id);
-                // list could be a copy of the original one
-                self.localData[list.id].orderedResIDs = list.orderedResIDs;
-            }
-            return id;
+
+        var additionalContexts = options && options.context;
+        var makeDefaultRecords = [];
+        if(additionalContexts){
+            _.each(additionalContexts, function (context) {
+                params.context = self._getContext(list, {additionalContext: context});
+                makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
+            });
+        } else {
+            params.context = self._getContext(list);
+            makeDefaultRecords.push(self._makeDefaultRecord(list.model, params));
+        }
+
+        return $.when.apply($, makeDefaultRecords).then(function(){
+            var ids = [];
+            _.each(arguments, function(id){
+                ids.push(id);
+
+                list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
+                var record = self.localData[id];
+                list._cache[record.res_id] = id;
+                if (list.orderedResIDs) {
+                    var index = list.offset + (position !== 'top' ? list.limit : 0);
+                    list.orderedResIDs.splice(index, 0, record.res_id);
+                    // list could be a copy of the original one
+                    self.localData[list.id].orderedResIDs = list.orderedResIDs;
+                }
+            });
+
+            return ids;
         });
     },
     /**
@@ -1374,6 +1394,9 @@ var BasicModel = AbstractModel.extend({
      *   it was changed.
      * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
+     * @param {boolean} [params.allowWarning=false] if true, change
+     *   operation can complete, even if a warning is raised
+     *   (only supported by X2ManyChange)
      * @returns {Deferred} list of changed fields
      */
     _applyChange: function (recordID, changes, options) {
@@ -1395,7 +1418,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType, options.allowWarning));
             } else if (field.type === 'many2one' || field.type === 'reference') {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -1722,9 +1745,12 @@ var BasicModel = AbstractModel.extend({
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
+     * @param {boolean} [params.allowWarning=false] if true, change
+     *   operation can complete, even if a warning is raised
+     *   (only supported by the 'CREATE' command.operation)
      * @returns {Deferred}
      */
-    _applyX2ManyChange: function (record, fieldName, command, viewType) {
+    _applyX2ManyChange: function (record, fieldName, command, viewType, allowWarning) {
         if (command.operation === 'TRIGGER_ONCHANGE') {
             // the purpose of this operation is to trigger an onchange RPC, so
             // there is no need to apply any change on the record (the changes
@@ -1819,16 +1845,19 @@ var BasicModel = AbstractModel.extend({
                 var options = {
                     context: command.context,
                     position: command.position,
+                    allowWarning: allowWarning
                 };
-                def = this._addX2ManyDefaultRecord(list, options).then(function (id) {
-                    if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {
-                        list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
-                        list.limit += 1;
-                    }
-                    // FIXME: hack for lunch widget, which does useless default_get and onchange
-                    if (command.data) {
-                        return self._applyChange(id, command.data);
-                    }
+                def = this._addX2ManyDefaultRecord(list, options).then(function (ids) {
+                    _.each(ids, function(id){
+                        if (command.position === 'bottom' && list.orderedResIDs && list.orderedResIDs.length >= list.limit) {
+                            list.tempLimitIncrement = (list.tempLimitIncrement || 0) + 1;
+                            list.limit += 1;
+                        }
+                        // FIXME: hack for lunch widget, which does useless default_get and onchange
+                        if (command.data) {
+                            return self._applyChange(id, command.data);
+                        }
+                    });
                 });
                 defs.push(def);
                 break;

@@ -9,7 +9,7 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend({
     read_events: {
         'click #my_wish': '_onClickMyWish',
         'click .o_add_wishlist, .o_add_wishlist_dyn': '_onClickAddWish',
-        'change input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]': '_onChangeVariant',
+        'change input.js_variant_change, select.js_variant_change, ul[data-attribute_exclusions]': '_onChangeVariant',
         'change input.js_product_change': '_onChangeProduct',
         'click .wishlist-section .o_wish_rm': '_onClickWishRemove',
         'click .wishlist-section .o_wish_add': '_onClickWishAdd',
