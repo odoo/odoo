@@ -72,10 +72,12 @@
                             </a>
                         </div>
                         <div class="text-muted">
-                            <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
-                            <span t-field="post.website_meta_keywords"/>
-                            <span t-if="editable and not post.website_meta_keywords" class="badge badge-danger">
-                                No keywords defined!
+                            <span t-if="editable or post.tag_ids" class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
+                            <t t-foreach="post.tag_ids" t-as="one_tag">
+                              <a class="badge badge-primary mr8" t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, tag=one_tag.id)}" t-esc="one_tag.name"/>
+                            </t>
+                            <span t-if="editable and not post.tag_ids" class="badge badge-danger">
+                                No tags defined!
                             </span>
                         </div>
                         <div class="text-muted" t-if="len(post.message_ids) &gt; 0">
