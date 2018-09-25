@@ -14,7 +14,7 @@
 
 <!-- Tools template: share on social networkds -->
 <template id='slides_share' name="Slides Media Share">
-    <div class="form-group">
+    <div>
         <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.website_url}" class="o_slides_social_share" social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook"><i class="fa fa-facebook-square fa-2x"/></a>
         <a t-attf-href="https://twitter.com/intent/tweet?text=#{slide.name}&amp;url=#{slide.website_url}" class="o_slides_social_share"  social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter"><i class="fa fa-twitter fa-2x"/></a>
         <a t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{slide.website_url}&amp;title=#{slide.name}&amp;" social-key="linkedin" class="o_slides_social_share" aria-label="Share on LinkedIn" title="Share on LinkedIn"><i class="fa fa-linkedin fa-2x"/></a>
@@ -99,7 +99,7 @@
                         </t>
                         <!-- Public user has not right to create/write on slide -->
                         <t t-if="channel.can_upload and not is_public_user">
-                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation">
+                            <a role="button" class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" href="#">
                                 <i class="fa fa-cloud-upload"></i> Upload
                             </a>
                         </t>
@@ -249,7 +249,7 @@
                                 </p>
                                 <p>
                                     <!-- Public user has not right to create/write on slide-->
-                                    <a role="button" t-if="can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation">
+                                    <a role="button" t-if="can_upload and not is_public_user" class="btn btn-primary oe_slide_js_upload" t-attf-channel_id="#{channel.id}" aria-label="Upload Presentation" title="Upload Presentation" href="#">
                                         <i class="fa fa-cloud-upload"></i> Upload
                                     </a>
                                 </p>
@@ -323,37 +323,39 @@
 
 <!-- Embedded template: display a list of slides in a grid view -->
 <template id='slides_grid_view' name="Slides (Grid View)">
-    <div class="col-xl-3 col-lg-4 col-md-6 col-12 mt16 mb16" t-foreach="slides" t-as="slide">
-        <div class="card card-body oe_slides_thumbnail_container">
-            <a t-attf-href="/slides/slide/#{slug(slide)}">
-                <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
-            </a>
-            <span t-if="not slide.website_published" class="badge badge-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
-            <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
-                groups="base.group_user"
-                t-attf-href="/slides/slide/#{slide.id}/promote"
-                style="position: absolute;right: 20px;top: 7px;"
-                t-attf-title="Promote this #{slide.slide_type}"
-                t-attf-aria-label="Promote this #{slide.slide_type}">
-                <span class="fa-stack fa-lg">
-                  <i class="fa fa-square fa-stack-2x oe_slides_opacity"></i>
-                  <i class="fa fa-bullhorn fa-stack-1x fa-inverse"></i>
-                </span>
-            </a>
+    <div class="row">
+        <div class="col-xl-3 col-lg-4 col-md-6 col-12 mt16 mb16" t-foreach="slides" t-as="slide">
+            <div class="card card-body">
+                <a t-attf-href="/slides/slide/#{slug(slide)}">
+                    <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
+                </a>
+                <span t-if="not slide.website_published" class="badge badge-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
+                <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
+                    groups="base.group_user"
+                    t-attf-href="/slides/slide/#{slide.id}/promote"
+                    style="position: absolute;right: 20px;top: 7px;"
+                    t-attf-title="Promote this #{slide.slide_type}"
+                    t-attf-aria-label="Promote this #{slide.slide_type}">
+                    <span class="fa-stack fa-lg">
+                      <i class="fa fa-square fa-stack-2x oe_slides_opacity"></i>
+                      <i class="fa fa-bullhorn fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
 
-            <div style="padding: 5px;">
-                <h4 class="mt4 mb8 oe_slides_ellipsis">
-                    <a t-att-title="slide.name" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
-                </h4>
-                <div class="text-muted clearfix">
-                    <small class="float-left"><t t-esc="slide.total_views"/> Views</small>
-                    <small class="float-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
+                <div style="padding: 5px;">
+                    <h4 class="mt4 mb8 oe_slides_ellipsis">
+                        <a t-att-title="slide.name" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
+                    </h4>
+                    <div class="text-muted clearfix">
+                        <small class="float-left"><t t-esc="slide.total_views"/> Views</small>
+                        <small class="float-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
+                    </div>
+                    <p t-if="slide.tag_ids" style="padding-top: 5px;">
+                        <t t-foreach="slide.tag_ids" t-as="att_tag">
+                            <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="badge badge-secondary #{tag and tag.name == att_tag.name and 'badge-primary' ''}" t-field="att_tag.name"/>
+                        </t>
+                    </p>
                 </div>
-                <p t-if="slide.tag_ids" style="padding-top: 5px;">
-                    <t t-foreach="slide.tag_ids" t-as="att_tag">
-                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="badge badge-secondary #{tag and tag.name == att_tag.name and 'badge-primary' ''} text-muted" t-field="att_tag.name"/>
-                    </t>
-                </p>
             </div>
         </div>
     </div>
@@ -624,33 +626,29 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" id="related" class="tab-pane active mt4">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-                                <div class="card">
-                                    <ul class="list-unstyled card-body">
-                                        <t t-set="related_slides_list" t-value="list(related_slides)"/>
-                                        <t t-if="not related_slides_list">
-                                            No presentation available.
-                                        </t>
-                                        <t t-foreach="related_slides_list" t-as="slide">
-                                            <t t-call="website_slides.related_slides"/>
-                                        </t>
-                                    </ul>
-                                </div>
+                            <div class="card">
+                                <ul class="list-unstyled card-body">
+                                    <t t-set="related_slides_list" t-value="list(related_slides)"/>
+                                    <t t-if="not related_slides_list">
+                                        No presentation available.
+                                    </t>
+                                    <t t-foreach="related_slides_list" t-as="slide">
+                                        <t t-call="website_slides.related_slides"/>
+                                    </t>
+                                </ul>
                             </div>
                         </div>
                         <div role="tabpanel" id="most_viewed" class="tab-pane  mt4">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-                                <div class="card">
-                                    <ul class="list-unstyled card-body">
-                                        <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
-                                        <t t-if="not list(most_viewed_slides_list)">
-                                            No presentation available.
-                                        </t>
-                                        <t t-foreach="most_viewed_slides_list" t-as="slide">
-                                            <t t-call="website_slides.related_slides"/>
-                                        </t>
-                                    </ul>
-                                </div>
+                            <div class="card">
+                                <ul class="list-unstyled card-body">
+                                    <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
+                                    <t t-if="not list(most_viewed_slides_list)">
+                                        No presentation available.
+                                    </t>
+                                    <t t-foreach="most_viewed_slides_list" t-as="slide">
+                                        <t t-call="website_slides.related_slides"/>
+                                    </t>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -662,12 +660,12 @@
 
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="related_slides" name="Related Slide">
-    <li class="media">
-        <a t-attf-href="/slides/slide/#{slug(slide)}">
+    <li class="media mt-3">
+        <a t-attf-href="/slides/slide/#{slug(slide)}" class="mr-3">
             <img class="oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
         </a>
         <div class="media-body">
-            <a t-attf-href="/slides/slide/#{slug(slide)}"><h5 t-esc="slide.name"/></a>
+            <a t-attf-href="/slides/slide/#{slug(slide)}"><h6 t-esc="slide.name" class="mb-1"/></a>
             <small class="text-muted">
                 <t t-esc="slide.total_views"/> Views . <timeago class="timeago" t-att-datetime="slide.create_date"></timeago>
             </small>
@@ -680,7 +678,7 @@
 <template id='slide_social_media' name="Share on Social Networks">
     <h4 class="mt0">Share on Social Networks</h4>
     <t t-call="website_slides.slides_share"/>
-    <h4 class="mt0">Share Link</h4>
+    <h4 class="mt-3">Share Link</h4>
     <input type="text" class="form-control" t-att-value="slide.website_url" readonly="readonly" onClick="this.select();"/>
     <span class="form-text">Use permanent link to share in social media</span>
 </template>
@@ -688,7 +686,7 @@
 
 <!-- Slide sub-template: share: send by email -->
 <template id='slide_social_email' name="Share by Email">
-    <h4 class="mt0">Share with a friend</h4>
+    <h4 class="mt-3">Share with a friend</h4>
     <t t-if="not is_public_user">
         <form class="form-group oe_slide_js_share_email" role="form">
             <div class="input-group col-lg-6">
