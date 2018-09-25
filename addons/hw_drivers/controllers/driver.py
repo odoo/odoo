@@ -188,13 +188,14 @@ class GattBtManager(gatt.DeviceManager):
 
     def device_discovered(self, device):
         # TODO: need some kind of updated_devices mechanism or not?
-        for driverclass in btdrivers:
-            d = driverclass(device = device, manager=self)
-            path = "bt_%s" % (device.mac_address,)
-            if d.supported():
-                drivers[path] = d
-                d.connect()
-                send_iot_box_device(False)
+        path = "bt_%s" % (device.mac_address,)
+        if path not in drivers:
+            for driverclass in btdrivers:
+                d = driverclass(device = device, manager=self)
+                if d.supported():
+                    drivers[path] = d
+                    d.connect()
+                    send_iot_box_device(False)
 
 
 class BtManager(Thread):
