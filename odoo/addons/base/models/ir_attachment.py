@@ -562,6 +562,9 @@ class IrAttachment(models.Model):
                     output_page.addPage(input_pdf.getPage(i))
                     new_pdf_id = self._make_pdf(output_page, name_ext)
                     new_pdf_ids.append(new_pdf_id)
+                self.write({'active': False})
+            elif not len(remainder_set):
+                self.write({'active': False})
             return new_pdf_ids
 
     def split_pdf(self, indices, remainder=False):
