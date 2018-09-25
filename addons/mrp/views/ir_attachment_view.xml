@@ -8,7 +8,7 @@
             <kanban>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
-                <field name="type"/>
+                <field name="attachment_type"/>
                 <field name="datas_fname"/>
                 <field name="name"/>
                 <field name="priority"/>
@@ -19,7 +19,7 @@
                             <div class="o_kanban_image">
                                 <div class="o_kanban_image_wrapper">
                                     <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                    <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                    <div t-if="record.attachment_type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
                                     <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                     <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                 </div>
@@ -30,8 +30,8 @@
                                         <field name="name" class="o_text_overflow"/>
                                     </div>
                                     <div class="o_kanban_record_body">
-                                      <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                                      <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                                      <field name="datas_fname" attrs="{'invisible':[('attachment_type','=','url')]}"/>
+                                      <field name="url" widget="url" attrs="{'invisible':[('attachment_type','=','binary')]}"/>
                                     </div>
                                     <div class="o_kanban_record_bottom">
                                         <span class="oe_kanban_bottom_left">

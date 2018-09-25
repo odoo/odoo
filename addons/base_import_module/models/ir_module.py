@@ -96,10 +96,10 @@ class IrModule(models.Model):
                         datas_fname=filename,
                         url=url_path,
                         res_model='ir.ui.view',
-                        type='binary',
+                        attachment_type='binary',
                         datas=data,
                     )
-                    attachment = IrAttachment.search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
+                    attachment = IrAttachment.search([('url', '=', url_path), ('attachment_type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
                     if attachment:
                         attachment.write(values)
                     else:

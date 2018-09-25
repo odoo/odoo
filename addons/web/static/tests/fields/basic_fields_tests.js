@@ -2101,7 +2101,7 @@ QUnit.module('basic_fields', {
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
-        this.data.partner_type.fields.image = {name: 'image', type: 'binary'};
+        this.data.partner_type.fields.image = {name: 'image', attachment_type: 'binary'};
         this.data.partner_type.records[0].image = 'product_image';
         this.data.partner.records[0].timmy = [12];
 

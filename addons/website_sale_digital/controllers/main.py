@@ -67,7 +67,7 @@ class WebsiteSaleDigital(CustomerPortal):
         # Check if this is a valid attachment id
         attachment = request.env['ir.attachment'].sudo().search_read(
             [('id', '=', int(attachment_id))],
-            ["name", "datas", "file_type", "res_model", "res_id", "type", "url"]
+            ["name", "datas", "file_type", "res_model", "res_id", "attachment_type", "url"]
         )
 
         if attachment:
@@ -94,7 +94,7 @@ class WebsiteSaleDigital(CustomerPortal):
             return redirect(self.orders_page)
 
         # The client has bought the product, otherwise it would have been blocked by now
-        if attachment["type"] == "url":
+        if attachment["attachment_type"] == "url":
             if attachment["url"]:
                 return redirect(attachment["url"])
             else:

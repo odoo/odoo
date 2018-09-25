@@ -73,7 +73,7 @@ class SnailmailLetter(models.Model):
                 'datas_fname': filename,
                 'res_model': 'snailmail.letter',
                 'res_id': self.id,
-                'type': 'binary',  # override default_type from context, possibly meant for another model!
+                'attachment_type': 'binary',  # override default_type from context, possibly meant for another model!
             })
             self.write({'attachment_id': attachment.id})
 

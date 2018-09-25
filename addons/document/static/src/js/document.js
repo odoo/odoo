@@ -85,7 +85,7 @@ Sidebar.include({
             });
         _.each(attachments,function (a) {
             a.label = a.name;
-            if (a.type === "binary") {
+            if (a.attachment_type === "binary") {
                 a.url = '/web/content/'  + a.id + '?download=true';
             }
             a.create_date = field_utils.parse.datetime(a.create_date, 'create_date', {isUTC: true});
@@ -126,9 +126,9 @@ Sidebar.include({
             var domain = [
                 ['res_model', '=', this.env.model],
                 ['res_id', '=', activeId],
-                ['type', 'in', ['binary', 'url']]
+                ['attachment_type', 'in', ['binary', 'url']]
             ];
-            var fields = ['name', 'url', 'type',
+            var fields = ['name', 'url', 'attachment_type',
                 'create_uid', 'create_date', 'write_uid', 'write_date'];
             return this._rpc({
                 model: 'ir.attachment',

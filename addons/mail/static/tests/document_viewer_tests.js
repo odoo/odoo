@@ -64,12 +64,12 @@ var createViewer = function (params) {
 QUnit.module('DocumentViewer', {
     beforeEach: function () {
         this.attachments = [
-            {id: 1, datas_fname: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
-            {id: 2, name: 'urlYoutubeName', type: 'url', mimetype: '', url: 'https://youtu.be/FYqW0Gdwbzk', datas_fname: 'urlYoutube'},
-            {id: 3, name: 'urlGoogle', type: 'url', mimetype: '', url: 'https://www.google.com', datas_fname: 'urlRandom'},
-            {id: 4, name: 'text.html', datas_fname: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},
-            {id: 5, name: 'video.mp4', datas_fname: 'video.mp4', type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
-            {id: 6, name: 'image.jpg', datas_fname: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
+            {id: 1, datas_fname: 'filePdf.pdf', attachment_type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
+            {id: 2, name: 'urlYoutubeName', attachment_type: 'url', mimetype: '', url: 'https://youtu.be/FYqW0Gdwbzk', datas_fname: 'urlYoutube'},
+            {id: 3, name: 'urlGoogle', attachment_type: 'url', mimetype: '', url: 'https://www.google.com', datas_fname: 'urlRandom'},
+            {id: 4, name: 'text.html', datas_fname: 'text.html', attachment_type: 'binary', mimetype: 'text/html', datas:'testee'},
+            {id: 5, name: 'video.mp4', datas_fname: 'video.mp4', attachment_type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
+            {id: 6, name: 'image.jpg', datas_fname: 'image.jpg', attachment_type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
         ];
     },
 }, function () {

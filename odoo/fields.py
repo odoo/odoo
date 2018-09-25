@@ -1810,7 +1810,7 @@ class Binary(Field):
                     'res_model': self.model_name,
                     'res_field': self.name,
                     'res_id': record.id,
-                    'type': 'binary',
+                    'attachment_type': 'binary',
                     'datas': value,
                 }
                 for record, value in record_values
@@ -1837,7 +1837,7 @@ class Binary(Field):
                             'res_model': record._name,
                             'res_field': self.name,
                             'res_id': record.id,
-                            'type': 'binary',
+                            'attachment_type': 'binary',
                             'datas': value,
                         }
                         for record in (records - atts_records)

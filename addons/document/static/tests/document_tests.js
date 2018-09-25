@@ -29,20 +29,20 @@ odoo.define('document.tests', function (require) {
                 },
                 'ir.attachment': {
                     fields: {
-                        type: { string: "Type", type: "char" },
+                        attachment_type: { string: "Type", type: "char" },
                         name: {string: "Name", type: "char"},
                         res_id: {string: "ResId", type: "integer"},
                         res_model: {string: "ResModel", type: "char"}
                     },
                     records: [{
                         id: 1,
-                        type:"binary",
+                        attachment_type:"binary",
                         name: "attachment1",
                         res_id: 1,
                         res_model: 'partner'
                     },{
                         id: 2,
-                        type:"binary",
+                        attachment_type:"binary",
                         name: "attachment2",
                         res_id: 1,
                         res_model: 'partner'

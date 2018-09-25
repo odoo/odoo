@@ -387,7 +387,7 @@ class IrModuleModule(models.Model):
         res = super(IrModuleModule, self).update_list()
 
         IrAttachment = self.env['ir.attachment']
-        existing_urls = IrAttachment.search_read([['res_model', '=', self._name], ['type', '=', 'url']], ['url'])
+        existing_urls = IrAttachment.search_read([['res_model', '=', self._name], ['attachment_type', '=', 'url']], ['url'])
         existing_urls = [url_wrapped['url'] for url_wrapped in existing_urls]
 
         for app in self.search([]):
@@ -398,7 +398,7 @@ class IrModuleModule(models.Model):
                 if image_path not in existing_urls:
                     image_name = os.path.basename(image_path)
                     IrAttachment.create({
-                        'type': 'url',
+                        'attachment_type': 'url',
                         'name': image_name,
                         'datas_fname': image_name,
                         'url': image_path,

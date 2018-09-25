@@ -295,8 +295,8 @@ class IrAttachment(models.Model):
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env['res.company']._company_default_get('ir.attachment'))
-    type = fields.Selection([('url', 'URL'), ('binary', 'File')],
-                            string='Type', required=True, default='binary', change_default=True,
+    attachment_type = fields.Selection([('url', 'URL'), ('binary', 'File')],
+                            string='Type', required=True, default='binary', change_default=True, oldname='type',
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
     url = fields.Char('Url', index=True, size=1024)
     public = fields.Boolean('Is public document')
@@ -323,13 +323,13 @@ class IrAttachment(models.Model):
         return res
 
     @api.one
-    @api.constrains('type', 'url')
+    @api.constrains('attachment_type', 'url')
     def _check_serving_attachments(self):
         # restrict writing on attachments that could be served by the
         # ir.http's dispatch exception handling
         if self.env.user._is_admin():
             return
-        if self.type == 'binary' and self.url:
+        if self.attachment_type == 'binary' and self.url:
             has_group = self.env.user.has_group
             if not any([has_group(g) for g in self.get_serving_groups()]):
                 raise ValidationError("Sorry, you are not allowed to write on this document")
@@ -601,7 +601,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
-        domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
+        domain = [('attachment_type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
 

@@ -320,7 +320,7 @@ class IrHttp(models.AbstractModel):
 
         # attachment by url check
         module_resource_path = None
-        if model == 'ir.attachment' and obj.type == 'url' and obj.url:
+        if model == 'ir.attachment' and obj.attachment_type == 'url' and obj.url:
             url_match = re.match("^/(\w+)/(.+)$", obj.url)
             if url_match:
                 module = url_match.group(1)

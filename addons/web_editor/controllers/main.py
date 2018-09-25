@@ -163,7 +163,7 @@ class Web_Editor(http.Controller):
             attachment = Attachments.create({
                 'name': name,
                 'datas_fname': datas_fname,
-                'type': 'url',
+                'attachment_type': 'url',
                 'url': url,
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
@@ -406,7 +406,7 @@ class Web_Editor(http.Controller):
             # If not, create a new attachment to copy the original scss file content, with its modifications
             new_attach = {
                 'name': custom_url,
-                'type': "binary",
+                'attachment_type': "binary",
                 'mimetype': "text/scss",
                 'datas': datas,
                 'datas_fname': url.split("/")[-1],

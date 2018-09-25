@@ -119,7 +119,7 @@ class GoogleDrive(models.Model):
                 'res_model': res_model,
                 'name': name_gdocs,
                 'res_id': res_id,
-                'type': 'url',
+                'attachment_type': 'url',
                 'url': content['alternateLink']
             }).id
             # Commit in order to attach the document to the current object instance, even if the permissions has not been written.

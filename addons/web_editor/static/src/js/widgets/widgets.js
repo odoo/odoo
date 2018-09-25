@@ -375,14 +375,14 @@ var ImageWidget = MediaWidget.extend({
             args: [],
             kwargs: {
                 domain: domain,
-                fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'],
+                fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'attachment_type', 'res_id', 'res_model', 'access_token'],
                 order: [{name: 'id', asc: false}],
                 context: weContext.get(),
             },
         }).then(function (records) {
             self.records = _.chain(records)
                 .filter(function (r) {
-                    return (r.type === "binary" || r.url && r.url.length > 0);
+                    return (r.attachment_type === "binary" || r.url && r.url.length > 0);
                 })
                 .uniq(function (r) {
                     return (r.url || r.id);

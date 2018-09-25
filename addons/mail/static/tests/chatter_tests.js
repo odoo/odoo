@@ -147,16 +147,16 @@ QUnit.module('Chatter', {
                     res_model:{type:'char', string:"res model"},
                     res_id:{type:'integer', string:"res id"},
                     url:{type:'char', string:'url'},
-                    type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
+                    attachment_type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
                     mimetype:{type:'char', string:"mimetype"},
                     datas_fname:{type:'char', string:"filename"},
                 },
                 records:[
-                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                    {id:1, name:"name1", attachment_type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
                      res_id: 7, res_model: 'partner'},
-                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                    {id:2, name:"name2", attachment_type:'binary', mimetype:"application/x-msdos-program",
                      datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
-                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                    {id:3, name:"name2", attachment_type:'binary', mimetype:"application/x-msdos-program",
                      datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
                 ],
             },
@@ -1430,7 +1430,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "there should be three attachment on message");
     assert.strictEqual(form.$('.o_thread_message .o_attachment a').first().attr('href'), '/web/content/1?download=true',
         "image caption should have correct download link");
-    // click on first image attachement
+    // click on first image attachment
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1&signature=999"]').length, 1,
         "Modal popup should open with first image src");
@@ -1442,7 +1442,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "Modal popup should have download button");
     // close attachment popup
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
-    // click on pdf attachement
+    // click on pdf attachment
     form.$('span:contains(Test PDF 1)').click();
     assert.strictEqual($('.o_modal_fullscreen iframe[data-src*="/web/content/4"]').length, 1,
         "Modal popup should open with the pdf preview");

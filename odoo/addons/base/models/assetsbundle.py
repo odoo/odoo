@@ -282,7 +282,7 @@ class AssetsBundle(object):
             'mimetype': mimetype,
             'res_model': 'ir.ui.view',
             'res_id': False,
-            'type': 'binary',
+            'attachment_type': 'binary',
             'public': True,
             'datas': base64.b64encode(content.encode('utf8')),
         }
@@ -442,7 +442,7 @@ class AssetsBundle(object):
                             self.env['ir.attachment'].sudo().create(dict(
                                 datas=base64.b64encode(asset.content.encode('utf8')),
                                 mimetype='text/css',
-                                type='binary',
+                                attachment_type='binary',
                                 name=url,
                                 url=url,
                                 datas_fname=fname,

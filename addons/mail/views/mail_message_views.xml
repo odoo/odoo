@@ -138,11 +138,11 @@
                 <kanban>
                     <field name="id"/>
                     <field name="mimetype"/>
-                    <field name="type"/>
+                    <field name="attachment_type"/>
                     <field name="datas_fname"/>
                     <field name="create_uid"/>
                     <field name="url"/>
-                    <field name="type"/>
+                    <field name="attachment_type"/>
                     <field name="create_date"/>
                     <field name="active"/>
                     <field name="name"/>
@@ -154,7 +154,7 @@
                                 <div class="o_kanban_image">
                                     <div class="o_kanban_image_wrapper">
                                         <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                        <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                        <div t-if="record.attachment_type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
                                         <img t-elif="webimage" t-attf-src="/web/image/#{record.id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
                                         <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
                                     </div>
@@ -162,7 +162,7 @@
                                 <div class="o_kanban_details">
                                     <div class="o_kanban_details_wrapper">
                                         <div t-att-title="record.datas_fname.raw_value" class="o_kanban_record_title">
-                                            <t t-if="record.type.raw_value == 'url'">
+                                            <t t-if="record.attachment_type.raw_value == 'url'">
                                                 <field name="name" class="o_text_overflow"/>
                                             </t>
                                             <t t-else="">
@@ -176,7 +176,7 @@
                                                     <span t-att-title="record.res_name.raw_value">: <field name="res_name"/></span>
                                                 </t>
                                             </t>
-                                            <t t-elif="record.type.raw_value == 'url'">
+                                            <t t-elif="record.attachment_type.raw_value == 'url'">
                                                 <span class="o_document_url"><i class="fa fa-globe"/> <field name="url" widget="url"/></span>
                                             </t>
                                             <samp t-else="" class="text-muted"> </samp>
