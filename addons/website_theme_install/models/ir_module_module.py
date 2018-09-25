@@ -141,7 +141,7 @@ class IrModuleModule(models.Model):
                 if not find and model == 'ir.attachment':
                     find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id)])
 
-                if model == 'ir.ui.view':
+                if old and model == 'ir.ui.view': # at update, ignore active field
                     rec_data.pop('active')
 
                 if find:
@@ -215,8 +215,8 @@ class IrModuleModule(models.Model):
         self.ensure_one()
         mods_to_load = reversed(self + self.upstream_dependencies(exclude_states=('',)).filtered(lambda x: x.name.startswith('theme_')))
         for mod in mods_to_load:
-            _logger.info('Load theme %s for website %s from template.' % (self.mapped('name'), website.id))
-            self._load_one_theme_module(website, with_update=False)
+            _logger.info('Load theme %s for website %s from template.' % (mod.name, website.id))
+            mod._load_one_theme_module(website, with_update=False)
             self.env['theme.utils']._post_copy(mod)
 
     @api.multi
