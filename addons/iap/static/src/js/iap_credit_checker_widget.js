@@ -27,7 +27,7 @@ var IAPCreditChecker = Widget.extend({
      * @override
      */
     start: function () {
-        this.$widget = $(QWeb.render('partner_autocomplete.iap_credit_checker'));
+        this.$widget = $(QWeb.render('iap.credit_checker'));
         this.$loading = this.$widget.find('.loading');
         this.$sufficient = this.$widget.find('.sufficient');
         this.$insufficient = this.$widget.find('.insufficient');
