@@ -82,7 +82,7 @@ odoo.define('payment.processing', function (require) {
                 'tx_error': [],
             };
             // group the transaction according to their state
-            transactions.forEach(tx => {
+            transactions.forEach(function (tx) {
                 var key = 'tx_' + tx.state;
                 if(key in render_values) {
                     render_values[key].push(tx);
