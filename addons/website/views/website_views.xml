@@ -70,7 +70,7 @@
                     <field name="url_to"/>
 
                     <group string="Group By">
-                        <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'type'}"/>
+                        <filter string="Redirection Type" name="group_by_type" domain="[]" context="{'group_by': 'redirect_type'}"/>
                     </group>
                 </search>
             </field>
@@ -94,7 +94,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="type"/>
+                                <field name="redirect_type"/>
                                 <field name="url_from"/>
                                 <field name="url_to"/>
                             </group>
@@ -113,7 +113,7 @@
             <field name="model">website.redirect</field>
             <field name="arch" type="xml">
                 <tree string="Website Redirects" editable="bottom">
-                    <field name="type"/>
+                    <field name="redirect_type"/>
                     <field name="url_from"/>
                     <field name="url_to"/>
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
