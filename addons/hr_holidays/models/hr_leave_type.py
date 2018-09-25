@@ -45,17 +45,6 @@ class HolidaysType(models.Model):
         help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
     active = fields.Boolean('Active', default=True,
                             help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
-    max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
-                              help='This value is given by the sum of all leaves requests with a positive value.')
-    leaves_taken = fields.Float(
-        compute='_compute_leaves', string='Leaves Already Taken',
-        help='This value is given by the sum of all leaves requests with a negative value.')
-    remaining_leaves = fields.Float(
-        compute='_compute_leaves', string='Remaining Leaves',
-        help='Maximum Leaves Allowed - Leaves Already Taken')
-    virtual_remaining_leaves = fields.Float(
-        compute='_compute_leaves', string='Virtual Remaining Leaves',
-        help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
@@ -115,66 +104,6 @@ class HolidaysType(models.Model):
                 ('validity_start', signs[1] if value else signs[0], dt)]
 
     @api.multi
-    def get_days(self, employee_id):
-        # need to use `dict` constructor to create a dict per id
-        result = dict((id, dict(max_leaves=0, leaves_taken=0, remaining_leaves=0, virtual_remaining_leaves=0)) for id in self.ids)
-
-        requests = self.env['hr.leave'].search([
-            ('employee_id', '=', employee_id),
-            ('state', 'in', ['confirm', 'validate1', 'validate']),
-            ('holiday_status_id', 'in', self.ids)
-        ])
-
-        allocations = self.env['hr.leave.allocation'].search([
-            ('employee_id', '=', employee_id),
-            ('state', 'in', ['confirm', 'validate1', 'validate']),
-            ('holiday_status_id', 'in', self.ids)
-        ])
-
-        for request in requests:
-            status_dict = result[request.holiday_status_id.id]
-            status_dict['virtual_remaining_leaves'] -= request.number_of_days
-            if request.state == 'validate':
-                status_dict['leaves_taken'] += request.number_of_days
-                status_dict['remaining_leaves'] -= request.number_of_days
-
-        for allocation in allocations:
-            status_dict = result[allocation.holiday_status_id.id]
-            if allocation.state == 'validate':
-                # note: add only validated allocation even for the virtual
-                # count; otherwise pending then refused allocation allow
-                # the employee to create more leaves than possible
-                status_dict['virtual_remaining_leaves'] += allocation.number_of_days
-                status_dict['max_leaves'] += allocation.number_of_days
-                status_dict['remaining_leaves'] += allocation.number_of_days
-
-        return result
-
-    def _get_contextual_employee_id(self):
-        if 'employee_id' in self._context:
-            employee_id = self._context['employee_id']
-        elif 'default_employee_id' in self._context:
-            employee_id = self._context['default_employee_id']
-        else:
-            employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.user.id)], limit=1).id
-        return employee_id
-
-    @api.multi
-    def _compute_leaves(self):
-        data_days = {}
-        employee_id = self._get_contextual_employee_id()
-
-        if employee_id:
-            data_days = self.get_days(employee_id)
-
-        for holiday_status in self:
-            result = data_days.get(holiday_status.id, {})
-            holiday_status.max_leaves = result.get('max_leaves', 0)
-            holiday_status.leaves_taken = result.get('leaves_taken', 0)
-            holiday_status.remaining_leaves = result.get('remaining_leaves', 0)
-            holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
-
-    @api.multi
     def _compute_group_days_allocation(self):
         grouped_res = self.env['hr.leave.allocation'].read_group(
             [('holiday_status_id', 'in', self.ids), ('holiday_type', '!=', 'employee'), ('state', '=', 'validate'),
@@ -200,16 +129,20 @@ class HolidaysType(models.Model):
 
     @api.multi
     def name_get(self):
-        if not self._context.get('employee_id'):
+        employee_id = self._context.get('employee_id')
+        if not employee_id:
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(HolidaysType, self).name_get()
         res = []
+        employee = self.env['hr.employee'].browse(employee_id).get_remaining_leave_data(self.ids)[employee_id]
         for record in self:
             name = record.name
             if record.allocation_type != 'no':
+                virtual_remaining_leaves = float_round(employee[record.id].get('virtual_remaining_leaves', 0), precision_digits=2)
+                max_leaves = float_round(employee[record.id].get('max_leaves', 0), precision_digits=2)
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
-                    'count': _('%g remaining out of %g') % (float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0, float_round(record.max_leaves, precision_digits=2) or 0.0)
+                    'count': _('%g remaining out of %g') % (virtual_remaining_leaves, max_leaves)
                 }
             res.append((record.id, name))
         return res
@@ -227,11 +160,12 @@ class HolidaysType(models.Model):
         is an employee_id in context and that no other order has been given
         to the method.
         """
-        employee_id = self._get_contextual_employee_id()
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        employee_id = self._context.get('employee_id')
         if not count and not order and employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
             leaves = self.browse(leave_ids)
-            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
+            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', employee.get_remaining_leave_data([l.id])[employee_id]['virtual_remaining_leaves'])
             return leaves.sorted(key=sort_key, reverse=True).ids
         return leave_ids
 

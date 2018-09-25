@@ -19,15 +19,16 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         Allocations = self.env['hr.leave.allocation']
         HolidaysStatus = self.env['hr.leave.type']
 
-        def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
-            self.assertEqual(holiday_status.max_leaves, ml,
-                             'hr_holidays: wrong type days computation')
-            self.assertEqual(holiday_status.leaves_taken, lt,
-                             'hr_holidays: wrong type days computation')
-            self.assertEqual(holiday_status.remaining_leaves, rl,
-                             'hr_holidays: wrong type days computation')
-            self.assertEqual(holiday_status.virtual_remaining_leaves, vrl,
-                             'hr_holidays: wrong type days computation')
+        def _check_holidays_status(holiday_status, employee, ml, lt, rl, vrl):
+            employee = self.env['hr.employee'].browse(employee).with_context(holiday_status_ids=[holiday_status.id])
+            self.assertEqual(employee.max_leaves, ml,
+                             'hr_holidays: wrong number of max leaves')
+            self.assertEqual(employee.leaves_taken, lt,
+                             'hr_holidays: wrong number of leaves taken')
+            self.assertEqual(employee.remaining_leaves, rl,
+                             'hr_holidays: wrong number of remaining leaves')
+            self.assertEqual(employee.virtual_remaining_leaves, vrl,
+                             'hr_holidays: wrong number of virtual remaining leaves')
 
         # HrUser creates some holiday statuses -> crash because only HrManagers should do this
         with self.assertRaises(AccessError):
@@ -157,7 +158,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         aloc1_user_group.sudo(self.user_hrmanager_id).action_validate()
         # Checks Employee has effectively some days left
         hol_status_2_employee_group = self.holidays_status_2.sudo(self.user_employee_id)
-        _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
+        _check_holidays_status(hol_status_2_employee_group, self.employee_emp_id, 2.0, 0.0, 2.0, 2.0)
 
         # Employee creates a leave request in the limited category, now that he has some days left
         hol2 = HolidaysEmployeeGroup.create({
@@ -170,8 +171,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         })
         hol2_user_group = hol2.sudo(self.user_hruser_id)
         # Check left days: - 1 virtual remaining day
-        hol_status_2_employee_group.invalidate_cache()
-        _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
+        _check_holidays_status(hol_status_2_employee_group, self.employee_emp_id, 2.0, 0.0, 2.0, 1.0)
 
         # HrManager validates the first step
         hol2_user_group.sudo(self.user_hrmanager_id).action_approve()
@@ -183,14 +183,14 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         self.assertEqual(hol2.state, 'validate',
                          'hr_holidays: second validation should lead to validate state')
         # Check left days: - 1 day taken
-        _check_holidays_status(hol_status_2_employee_group, 2.0, 1.0, 1.0, 1.0)
+        _check_holidays_status(hol_status_2_employee_group, self.employee_emp_id, 2.0, 1.0, 1.0, 1.0)
 
         # HrManager finds an error: he refuses the leave request
         hol2.sudo(self.user_hrmanager_id).action_refuse()
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: refuse should lead to refuse state')
         # Check left days: 2 days left again
-        _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
+        _check_holidays_status(hol_status_2_employee_group, self.employee_emp_id, 2.0, 0.0, 2.0, 2.0)
 
         self.assertEqual(hol2.state, 'refuse',
                          'hr_holidays: hr_user should not be able to reset a refused leave request')
@@ -234,7 +234,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         hol3.action_approve()
         self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
         # Check left days for casual leave: 19 days left
-        _check_holidays_status(hol3_status, 20.0, 1.0, 19.0, 19.0)
+        _check_holidays_status(hol3_status, employee_id, 20.0, 1.0, 19.0, 19.0)
 
         Requests.create({
             'name': 'Sick Leave',

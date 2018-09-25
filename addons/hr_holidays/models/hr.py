@@ -3,6 +3,7 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -63,10 +64,15 @@ class Department(models.Model):
 class Employee(models.Model):
     _inherit = "hr.employee"
 
-    remaining_leaves = fields.Float(
-        compute='_compute_remaining_leaves', string='Remaining Legal Leaves',
-        help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. '
-             'Total based on all the leave types without overriding limit.')
+    max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
+        help='This value is given by the sum of all leaves requests with a positive value.')
+    leaves_taken = fields.Float(compute='_compute_leaves', string='Leaves Already Taken',
+        help='This value is given by the sum of all leaves requests with a negative value.')
+    remaining_leaves = fields.Float(compute='_compute_leaves', string='Remaining Leaves',
+        help='Maximum Leaves Allowed - Leaves Already Taken')
+    virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Virtual Remaining Leaves',
+        help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
+
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Leave Status",
         selection=[
             ('draft', 'New'),
@@ -83,37 +89,98 @@ class Employee(models.Model):
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
-    def _get_remaining_leaves(self):
-        """ Helper to compute the remaining leaves for the current employees
-            :returns dict where the key is the employee id, and the value is the remain leaves
-        """
-        self._cr.execute("""
-            SELECT
-                sum(h.number_of_days) AS days,
-                h.employee_id
-            FROM
-                (
-                    SELECT holiday_status_id, number_of_days,
-                        state, employee_id
-                    FROM hr_leave_allocation
-                    UNION
-                    SELECT holiday_status_id, (number_of_days * -1) as number_of_days,
-                        state, employee_id
-                    FROM hr_leave
-                ) h
-                join hr_leave_type s ON (s.id=h.holiday_status_id)
-            WHERE
-                h.state='validate' AND
-                (s.allocation_type='fixed' OR s.allocation_type='fixed_allocation') AND
-                h.employee_id in %s
-            GROUP BY h.employee_id""", (tuple(self.ids),))
-        return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
+    leave_ids = fields.One2many('hr.leave', 'employee_id', readonly=True)
+    allocation_ids = fields.One2many('hr.leave.allocation', 'employee_id', readonly=True)
 
     @api.multi
-    def _compute_remaining_leaves(self):
-        remaining = self._get_remaining_leaves()
+    def get_remaining_leave_data(self, leave_types):
+        result = {id: defaultdict(lambda: {}) for id in self.ids}
+
+        if not leave_types:
+            return {}
+
+        # note: add only validated allocation even for the virtual
+        # count; otherwise pending then refused allocation allow
+        # the employee to create more leaves than possible
+
+        self._cr.execute("""
+                SELECT
+                    subsub.employee_id,
+                    subsub.leave_type,
+                    sum(subsub.virtual_remaining_leaves) as virtual_remaining_leaves,
+                    sum(subsub.leaves_taken) as leaves_taken,
+                    sum(subsub.remaining_leaves) as remaining_leaves,
+                    sum(subsub.max_leaves) as max_leaves
+                FROM (SELECT
+                    sub.employee_id,
+                    sub.leave_type,
+                    sub.type,
+                    CASE WHEN sub.type = 'request' THEN sum(sub.number_of_days_neg) ELSE sum(sub.number_of_days) END AS virtual_remaining_leaves,
+                    CASE WHEN sub.state = 'validate' THEN CASE WHEN sub.type = 'request' THEN sum(sub.number_of_days) ELSE 0 END ELSE 0 END AS leaves_taken,
+                    CASE WHEN sub.state = 'validate' THEN CASE WHEN sub.type = 'request' THEN sum(sub.number_of_days_neg) ELSE sum(sub.number_of_days) END ELSE 0 END AS remaining_leaves,
+                    CASE WHEN sub.state = 'validate' THEN CASE WHEN sub.type = 'request' THEN 0 ELSE sum(sub.number_of_days) END ELSE 0 END AS max_leaves
+                    FROM (
+                        SELECT
+                            employee_id,
+                            holiday_status_id as leave_type,
+                            'request' as type,
+                            state,
+                            sum(number_of_days) as number_of_days,
+                            -sum(number_of_days) as number_of_days_neg
+                        FROM hr_leave
+                        WHERE
+                            holiday_status_id in %(leave_types)s
+                            and state in ('confirm', 'validate1', 'validate')
+                            and employee_id in %(employee_ids)s
+                        GROUP BY employee_id, leave_type, state
+                        UNION ALL
+                        SELECT
+                            employee_id,
+                            holiday_status_id as leave_type,
+                            'allocation' as type,
+                            state,
+                            sum(number_of_days) as number_of_days,
+                            -sum(number_of_days) as number_of_days_neg
+                        FROM hr_leave_allocation
+                        WHERE
+                            holiday_status_id in %(leave_types)s
+                            and state = 'validate'
+                            and employee_id in %(employee_ids)s
+                        GROUP BY employee_id, leave_type, state
+                        ) as sub
+                    GROUP BY sub.type, sub.employee_id, sub.leave_type, sub.state) as subsub
+            GROUP BY subsub.employee_id, subsub.leave_type
+        """, {'leave_types': tuple(leave_types), 'employee_ids': tuple(self.ids)})
+
+        for data in self._cr.dictfetchall():
+            status_dict = result[data['employee_id']][data['leave_type']]
+            status_dict['virtual_remaining_leaves'] = data['virtual_remaining_leaves']
+            status_dict['leaves_taken'] = data['leaves_taken']
+            status_dict['remaining_leaves'] = data['remaining_leaves']
+            status_dict['max_leaves'] = data['max_leaves']
+
+        return result
+
+    @api.multi
+    @api.depends('leave_ids', 'allocation_ids', 'leave_ids.state', 'leave_ids.holiday_status_id',
+                 'allocation_ids.state', 'allocation_ids.holiday_status_id')
+    def _compute_leaves(self):
+        context_leave_types = self._context.get('holiday_status_ids', [])
+        leave_types = self.env['hr.leave.type'].search([('allocation_type', 'in', ('fixed', 'fixed_allocation'))]).ids
+
+        if not context_leave_types:
+            return
+
         for employee in self:
-            employee.remaining_leaves = float_round(remaining.get(employee.id, 0.0), precision_digits=2)
+            data_days = employee.get_remaining_leave_data(leave_types)
+
+            for context_leave_type in context_leave_types:
+                result = data_days[employee.id][context_leave_type]
+                if result:
+                    employee.max_leaves += result.get('max_leaves', 0)
+                    employee.leaves_taken += result.get('leaves_taken', 0)
+                    employee.remaining_leaves += result.get('remaining_leaves', 0)
+                    employee.virtual_remaining_leaves += result.get('virtual_remaining_leaves', 0)
 
     @api.multi
     def _compute_leave_status(self):
