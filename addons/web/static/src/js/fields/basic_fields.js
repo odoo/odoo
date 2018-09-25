@@ -538,7 +538,7 @@ var FieldDate = InputField.extend({
      * @override
      */
     activate: function () {
-        if (this.datewidget) {
+        if (this.isFocusable() && this.datewidget) {
             this.datewidget.focus();
             return true;
         }
