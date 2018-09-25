@@ -1556,6 +1556,9 @@ exports.Orderline = Backbone.Model.extend({
             discount:           this.get_discount(),
             product_name:       this.get_product().display_name,
             product_name_wrapped: this.generate_wrapped_product_name(),
+            price_lst:          this.get_lst_price(),
+            display_discount_policy:    this.display_discount_policy(),
+            price_display_one:  this.get_display_price_one(),
             price_display :     this.get_display_price(),
             price_with_tax :    this.get_price_with_tax(),
             price_without_tax:  this.get_price_without_tax(),
@@ -1619,6 +1622,28 @@ exports.Orderline = Backbone.Model.extend({
     get_base_price:    function(){
         var rounding = this.pos.currency.rounding;
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
+    },
+    get_display_price_one: function(){
+        var rounding = this.pos.currency.rounding;
+        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        if (this.pos.config.iface_tax_included !== 'total') {
+            return round_pr(price_unit, rounding);
+        } else {
+            var product =  this.get_product();
+            var taxes_ids = product.taxes_id;
+            var taxes =  this.pos.taxes;
+            var product_taxes = [];
+
+            _(taxes_ids).each(function(el){
+                product_taxes.push(_.detect(taxes, function(t){
+                    return t.id === el;
+                }));
+            });
+
+            var all_taxes = this.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
+
+            return round_pr(all_taxes.total_included * (1 - this.get_discount()/100), rounding);
+        }
     },
     get_display_price: function(){
         if (this.pos.config.iface_tax_included === 'total') {
