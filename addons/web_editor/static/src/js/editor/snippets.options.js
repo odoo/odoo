@@ -835,6 +835,9 @@ registry.background = SnippetOption.extend({
      * image is removed.
      */
     bindBackgroundEvents: function () {
+        if (this.$target.is('.parallax, .s_parallax_bg')) {
+            return;
+        }
         this.$target.off('.background-option')
             .on('background-color-event.background-option', (function (e, previewMode) {
                 e.stopPropagation();
