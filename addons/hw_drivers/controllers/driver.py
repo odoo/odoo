@@ -228,6 +228,10 @@ class BtDriver(Driver, metaclass=BtMetaClass):
         self.value = ''
         self.gatt_device = False
 
+    def disconnect(self):
+        path = "bt_%s" % (self.dev.mac_address,)
+        del drivers[path]
+
     def get_name(self):
         return self.dev.alias()
 
