@@ -28,9 +28,12 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/mail_activity_views.xml',
         'views/assets.xml',
         'views/sale_portal_templates.xml',
+        'views/sale_product_configurator_templates.xml',
         'views/sale_onboarding_views.xml',
         'views/res_config_settings_views.xml',
         'views/payment_views.xml',
+        'views/product_attribute_views.xml',
+        'wizard/sale_product_configurator_views.xml',
     ],
     'demo': [
         'data/sale_demo.xml',
@@ -38,5 +41,5 @@ This module contains all the common features of Sales Management and eCommerce.
     ],
     'uninstall_hook': "uninstall_hook",
     'installable': True,
-    'auto_install': False,
+    'auto_install': False
 }

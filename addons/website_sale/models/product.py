@@ -217,20 +217,6 @@ class Product(models.Model):
         return self.product_tmpl_id.website_publish_button()
 
 
-class ProductAttribute(models.Model):
-    _inherit = "product.attribute"
-
-    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], default='radio')
-
-
-class ProductAttributeValue(models.Model):
-    _inherit = "product.attribute.value"
-
-    html_color = fields.Char(string='HTML Color Index', oldname='color', help="Here you can set a "
-                             "specific HTML color index (e.g. #ff0000) to display the color on the website if the "
-                             "attibute type is 'Color'.")
-
-
 class ProductImage(models.Model):
     _name = 'product.image'
     _description = 'Product Image'

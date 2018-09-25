@@ -496,6 +496,7 @@ var AbstractField = Widget.extend({
             viewType: this.viewType,
             doNotSetDirty: options && options.doNotSetDirty,
             notifyChange: !options || options.notifyChange !== false,
+            allowWarning: options && options.allowWarning,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });

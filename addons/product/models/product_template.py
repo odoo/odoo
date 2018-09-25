@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
+import operator
 import psycopg2
 
 from odoo.addons import decimal_precision as dp
@@ -9,6 +10,7 @@ from odoo.addons import decimal_precision as dp
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, except_orm
 from odoo.tools import pycompat
+from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
@@ -159,6 +161,15 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _compute_template_price(self):
+        prices = self._compute_template_price_no_inverse()
+        for template in self:
+            template.price = prices.get(template.id, 0.0)
+
+    @api.multi
+    def _compute_template_price_no_inverse(self):
+        """The _compute_template_price writes the 'list_price' field with an inverse method
+        This method allows computing the price without writing the 'list_price'
+        """
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
@@ -179,8 +190,7 @@ class ProductTemplate(models.Model):
                 partners = [partner] * len(self)
                 prices = pricelist.get_products_price(self, quantities, partners)
 
-        for template in self:
-            template.price = prices.get(template.id, 0.0)
+        return prices
 
     @api.multi
     def _set_template_price(self):
@@ -403,6 +413,11 @@ class ProductTemplate(models.Model):
         prices = dict.fromkeys(self.ids, 0.0)
         for template in templates:
             prices[template.id] = template[price_type] or 0.0
+            # yes, there can be attribute values for product template if it's not a variant YET
+            # (see field product.attribute create_variant)
+            if price_type == 'list_price' and self._context.get('current_attributes_price_extra'):
+                # we have a list of price_extra that comes from the attribute values, we need to sum all that
+                prices[template.id] += sum(self._context.get('current_attributes_price_extra'))
 
             if uom:
                 prices[template.id] = template.uom_id._compute_price(prices[template.id], uom)
@@ -431,7 +446,7 @@ class ProductTemplate(models.Model):
         for tmpl_id in self.with_context(active_test=False):
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant and len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
@@ -439,25 +454,31 @@ class ProductTemplate(models.Model):
             # iterator of n-uple of product.attribute.value *ids*
             variant_matrix = [
                 AttributeValues.browse(value_ids)
-                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant))
+                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'never'))
             ]
 
             # get the value (id) sets of existing variants
-            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids}
+            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never').ids) for variant in tmpl_id.product_variant_ids}
             # -> for each value set, create a recordset of values to create a
             #    variant for if the value set isn't already a variant
             for value_ids in variant_matrix:
-                if set(value_ids.ids) not in existing_variants:
+                if set(value_ids.ids) not in existing_variants and not any(value_id.attribute_id.create_variant == 'dynamic' for value_id in value_ids):
                     variants_to_create.append({
                         'product_tmpl_id': tmpl_id.id,
                         'attribute_value_ids': [(6, 0, value_ids.ids)]
                     })
 
+            if len(variants_to_create) > 1000:
+                raise UserError(_("""
+                The number of variants to generate is too high.
+                You should either not generate variants for each combination or generate them on demand from the sales order.
+                To do so, open the form view of attributes and change the mode of *Create Variants*."""))
+
             # check product
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
+                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never') in variant_matrix:
                     variants_to_activate.append(product_id)
-                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
+                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'never') not in variant_matrix:
                     variants_to_unlink.append(product_id)
 
         if variants_to_activate:
@@ -478,6 +499,65 @@ class ProductTemplate(models.Model):
                 pass
 
         return True
+
+    def has_dynamic_attributes(self):
+        return self.attribute_line_ids and \
+            any(create_variant == 'dynamic'
+            for create_variant in self.mapped('attribute_line_ids.value_ids.attribute_id.create_variant'))
+
+    @api.multi
+    def get_filtered_variants(self, reference_product=None):
+        """
+        Will filter availability (excluded) for the product
+        combinations (ex: color: white excludes size: large).
+
+        Will also filter availability (excluded) for the parent
+        product if specified (meaning that this product is a an optionnal or
+        accessory product of the reference_product).
+        Args:
+            reference_product (product.product): The reference product that has
+            the current product as an option or accessory product.
+        Returns:
+            The filtered list of product variants
+        """
+        self.ensure_one()
+        product_product_attribute_values = self.env['product.product.attribute.value'].search([('product_tmpl_id', '=', self.id)])
+        if reference_product:
+            # append the reference_product if provided
+            product_product_attribute_values |= reference_product.product_attribute_value_ids
+        product_variants = self.product_variant_ids
+
+        for product_product_attribute_value in product_product_attribute_values:
+            # CASE 1: The whole product is excluded when no attribute values are selected in the parent product
+            # returns empty recordset of product.product if so. What is checked is:
+            # If the product_attribute value doesn't belong to self (i.e. belongs to the reference product)
+            # and self is the excluded product template on the exclusion lines
+            # and the exclusions is on the product without specified product attribute values (i.e. the whole product is excluded)
+            if product_product_attribute_value.product_tmpl_id != self \
+                    and self in product_product_attribute_value.exclude_for.mapped('product_tmpl_id') \
+                    and any(not exclude_for.value_ids
+                            for exclude_for in product_product_attribute_value.exclude_for.filtered(
+                                lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self)):
+                return self.env['product.product']
+
+            # CASE 2: Check if some of the product.product.attribute.value of the product are excluded
+            # for this prodcut. A variant could be excluded:
+            # - Either by itself (eg: The office chair with iron legs excludes the color white)
+            # - Or by the reference product (eg: The customizable desk with iron legs excludes the office chair with aluminium legs)
+            for excluded in product_product_attribute_value.exclude_for.filtered(
+                    lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self):
+                product_variants -= product_variants.filtered(
+                    lambda variant:
+                    # 1/ Check the applicability of the exclusion
+                    # i.e: the restriction comes from the parent
+                    # OR the restriction is on a product_attribute_value that this variant has, eg:
+                    # if the office chair with iron legs excludes the color white, we must check
+                    # that this variant has iron legs to check the exclusion
+                    (product_product_attribute_value.product_tmpl_id != self or product_product_attribute_value in variant.product_attribute_value_ids) and
+                    # 2/ Check the variant has one of the excluded attribute values
+                    any(attribute_value in excluded.value_ids for attribute_value in variant.product_attribute_value_ids))
+
+        return product_variants
 
     @api.model
     def get_empty_list_help(self, help):

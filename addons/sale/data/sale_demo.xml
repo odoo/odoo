@@ -691,6 +691,19 @@ Thanks!</field>
             <field name="price_unit">38.25</field>
         </record>
 
+        <record id="product.product_attribute_2" model="product.attribute">
+            <field name="type">color</field>
+        </record>
+        <record id="product.product_attribute_3" model="product.attribute">
+            <field name="type">select</field>
+        </record>
+
+        <record id="product.product_attribute_value_3" model="product.attribute.value">
+            <field name="html_color">#FFFFFF</field>
+        </record>
+        <record id="product.product_attribute_value_4" model="product.attribute.value">
+            <field name="html_color">#000000</field>
+        </record>
 
         <!-- Confirm some Sales Orders-->
         <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
@@ -700,5 +713,94 @@ Thanks!</field>
         <function model="crm.team" name="message_subscribe"
             eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
 
+        <record id="product_product_1_product_template" model="product.template">
+            <field name="name">Chair floor protection</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="list_price">12.0</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="description_sale">Office chairs can harm your floor: protect it.</field>
+            <field name="image" type="base64" file="sale/static/img/floor_protection-image.png"/>
+        </record>
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[(6,0,[ref('product.product_product_11_product_template')])]"/>
+        </record>
+        <record id="product.product_product_11_product_template" model="product.template">
+            <field name="optional_product_ids" eval="[(6,0,[ref('product_product_1_product_template')])]"/>
+        </record>
+
+        <record id="product_attribute_value_7" model="product.attribute.value">
+            <field name="name">Custom</field>
+            <field name="attribute_id" ref="product.product_attribute_1"/>
+            <field name="is_custom">True</field>
+        </record>
+
+        <record id="product.product_attribute_line_1" model="product.attribute.line">
+            <field name="value_ids" eval="[(4,ref('product_attribute_value_7'))]"/>
+        </record>
+
+        <record id="product_product_4e" model="product.product">
+            <field name="default_code">DESK0005</field>
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_7'), ref('product.product_attribute_value_3')])]"/>
+        </record>
+
+        <record id="product_product_4f" model="product.product">
+            <field name="default_code">DESK0006</field>
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_7'), ref('product.product_attribute_value_4')])]"/>
+        </record>
+
+        <!--
+        Handle automatically created product.product.attribute.value.
+        Check "product.product_product_attribute_value_1" for more information about this
+        -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'sale.product_product_attribute_value_3',
+                'record': obj().env.ref('product.product_attribute_line_1').product_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'sale.product_product_attribute_value_4',
+                'record': obj().env.ref('product.product_attribute_line_4').product_value_ids[0],
+                'noupdate': True,
+            }, {
+                'xml_id': 'sale.product_product_attribute_value_5',
+                'record': obj().env.ref('product.product_attribute_line_2').product_value_ids[1],
+                'noupdate': True,
+            }]"/>
+        </function>
+
+        <record id="product_attribute_filter_line_1" model="product.attribute.filter.line">
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template" />
+            <field name="value_ids" eval="[(6,0,[ref('sale.product_product_attribute_value_5')])]"/>
+        </record>
+
+        <record id="product_attribute_filter_line_2" model="product.attribute.filter.line">
+            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+            <field name="value_ids" eval="[(6,0,[ref('sale.product_product_attribute_value_4')])]"/>
+        </record>
+
+        <!--
+        The "Customizable Desk's Aluminium" attribute value will excude:
+        - The "Customizable Desk's Black" attribute
+        - The "Office Chair's Steel" attribute
+         -->
+        <record id="product.product_product_attribute_value_1" model="product.product.attribute.value">
+            <field name="exclude_for" eval="[(6,0,[ref('sale.product_attribute_filter_line_1') ,ref('sale.product_attribute_filter_line_2')])]" />
+        </record>
+
+        <record id="product_attribute_filter_line_3" model="product.attribute.filter.line">
+            <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+            <field name="value_ids" eval="[(6,0,[ref('product.product_product_attribute_value_2')])]"/>
+        </record>
+
+        <!--
+        The "Customizable Desk's Steel" attribute value will excude:
+        - The "Office Chair's Aluminium" attribute
+         -->
+        <record id="product_product_attribute_value_3" model="product.product.attribute.value">
+            <field name="exclude_for" eval="[(6,0,[ref('sale.product_attribute_filter_line_3')])]" />
+        </record>
     </data>
 </odoo>

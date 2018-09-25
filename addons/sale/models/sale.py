@@ -159,6 +159,7 @@ class SaleOrder(models.Model):
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]}, help="Delivery address for current sales order.")
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
+    pricelist_id_id = fields.Integer(string="Pricelist ID", related='pricelist_id.id', readonly=True)
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False, oldname='project_id')
 
@@ -928,6 +929,21 @@ class SaleOrderLine(models.Model):
             else:
                 line.invoice_status = 'no'
 
+    @api.model
+    def default_get(self, fields):
+        res = super(SaleOrderLine, self).default_get(fields)
+        if self._context.get('product_id'):
+            res['product_id'] = int(self._context.get('product_id'))
+        if self._context.get('quantity'):
+            res['product_uom_qty'] = float(self._context.get('quantity'))
+        if self._context.get('no_variant_attribute_values'):
+            attributes = self._context.get('no_variant_attribute_values')
+            res['product_no_variant_attribute_values'] = [(6, 0, [int(attribute['value']) for attribute in attributes])]
+        if self._context.get('product_custom_variant_values'):
+            values = self._context.get('product_custom_variant_values')
+            res['product_custom_variant_values'] = [(0, 0, value) for value in values]
+        return res
+
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
         """
@@ -1115,6 +1131,10 @@ class SaleOrderLine(models.Model):
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
+    product_custom_variant_values = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
+    # M2M holding the values of product.attribute with create_variant field set to 'never'
+    # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
+    product_no_variant_attribute_values = fields.Many2many('product.product.attribute.value', string='Product attribute values that do not create variants')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -1362,9 +1382,18 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_display_price(self, product):
         # TO DO: move me in master/saas-16 on sale.order
+        # awa: don't know it it's still the case since we need the "product_no_variant_attribute_values" field now
+        # to be able to compute the full price
+        if self.product_no_variant_attribute_values:
+            product = product.with_context(no_variant_attributes_price_extra=[
+                no_variant_attribute_value.price_extra or 0
+                for no_variant_attribute_value in self.product_no_variant_attribute_values
+            ])
+
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
         product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
+
         final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         base_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency != self.order_id.pricelist_id.currency_id:
@@ -1384,7 +1413,7 @@ class SaleOrderLine(models.Model):
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
-            vals['product_uom_qty'] = 1.0
+            vals['product_uom_qty'] = self.product_uom_qty or 1.0
 
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
@@ -1410,7 +1439,23 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        vals.update(name=self.get_sale_order_line_multiline_description_sale(product))
+        name = self.get_sale_order_line_multiline_description_sale(product)
+
+        if self.product_custom_variant_values or self.product_no_variant_attribute_values:
+            name += '\n'
+
+        if self.product_custom_variant_values:
+            for product_custom_variant_value in self.product_custom_variant_values:
+                if product_custom_variant_value.custom_value and product_custom_variant_value.custom_value.strip():
+                    name += '\n' + product_custom_variant_value.attribute_value_id.name + ': ' + product_custom_variant_value.custom_value.strip()
+
+        if self.product_no_variant_attribute_values:
+            for no_variant_attribute_value in self.product_no_variant_attribute_values.filtered(
+                lambda product_attribute_value: not product_attribute_value.is_custom
+            ):
+                name += '\n' + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
+
+        vals.update(name=name)
 
         self._compute_tax_id()
 
