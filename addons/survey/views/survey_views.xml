@@ -337,7 +337,7 @@
                             <tree>
                                 <field name="sequence" widget="handle"/>
                                 <field name="question"/>
-                                <field name="type"/>
+                                <field name="question_type"/>
                                 <field name="constr_mandatory"/>
                             </tree>
                         </field>
@@ -406,42 +406,42 @@
                         </div>
                         <group>
                             <group>
-                                <field name="type" widget="radio" />
+                                <field name="question_type" widget="radio" />
                             </group>
                             <group>
                                 <div class="col-lg-6 offset-lg-3 o_preview_questions">
                                     <!-- Multiple Lines Text Zone -->
-                                    <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'free_text')]}">
                                             <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
                                     </div>
                                     <!-- Single Line Text Zone -->
-                                    <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'textbox')]}">
                                         <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
                                     </div>
                                     <!-- Numerical Value -->
-                                    <div attrs="{'invisible': [('type', '!=', 'numerical_box')]}">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}">
                                         <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123..</i>
                                     </div>
                                     <!-- Date and Time -->
-                                    <div attrs="{'invisible': [('type', '!=', 'date')]}">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'date')]}">
                                         <p class="o_datetime">YYYY-MM-DD
                                             <i class="fa fa-calendar fa-2x" role="img" aria-label="Calendar" title="Calendar"/>
                                         </p>
                                     </div>
                                     <!-- Multiple choice: only one answer -->
-                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                     </div>
                                     <!-- Multiple choice: multiple answers allowed -->
-                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                     </div>
                                     <!-- Matrix -->
-                                    <div attrs="{'invisible': [('type', '!=', 'matrix')]}">
+                                    <div attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                         <div class="row o_matrix_head">
                                             <div class="col-lg-3"></div>
                                             <div class="col-lg-3">ans</div>
@@ -472,10 +472,10 @@
                         </group>
                         <notebook>
                             <page string="Answers">
-                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                                <label for="validation_email" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
                                 <separator />
-                                <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                                <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Choices"/>
@@ -483,8 +483,8 @@
                                     </tree>
                                 </field>
                                 <separator />
-                                <label for="labels_ids_2" attrs="{'invisible': [('type', '!=', 'matrix')]}" />
-                                <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('type', '!=', 'matrix')]}">
+                                <label for="labels_ids_2" attrs="{'invisible': [('question_type', '!=', 'matrix')]}" />
+                                <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="value" string="Rows"/>
@@ -497,32 +497,32 @@
                                         <field name="constr_mandatory" string="Mandatory Answer"/>
                                         <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
+                                    <div colspan="2" attrs="{'invisible': [('question_type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
                                         <group>
-                                            <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
+                                            <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('question_type', '=', 'textbox')]}"/>
                                         </group>
                                         <group col="4" attrs="{'invisible': [('validation_required', '=', False)]}">
-                                            <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                            <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
-                                            <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
-                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
+                                            <field name="validation_length_min" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                                            <field name="validation_length_max" attrs="{'invisible': [('question_type', '!=', 'textbox')]}"/>
+                                            <field name="validation_min_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_max_float_value" attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('question_type', '!=', 'date')]}"/>
                                             <field name="validation_error_msg" colspan="4"/>
                                         </group>
                                     </div>
                                     <group>
-                                        <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                        <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])]}"/>
                                     </group>
                                 </group>
-                                <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
-                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])],'required':[('type','=','simple_choice')]}"/>
-                                    <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
+                                <group string="Display mode" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}">
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('question_type','not in',['simple_choice'])],'required':[('question_type','=','simple_choice')]}"/>
+                                    <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('question_type','=','simple_choice')]}"/>
                                 </group>
-                                <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
+                                <group string="Allow Comments" attrs="{'invisible':[('question_type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
                                     <field name='comments_allowed' />
                                     <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
-                                    <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('type', 'in', ['matrix'])]}" />
+                                    <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('question_type', 'in', ['matrix'])]}" />
                                 </group>
                             </page>
                         </notebook>
@@ -539,7 +539,7 @@
                     <field name="question"/>
                     <field name="page_id"/>
                     <field name="survey_id"/>
-                    <field name="type"/>
+                    <field name="question_type"/>
                 </tree>
             </field>
         </record>
@@ -551,10 +551,10 @@
                     <field name="question" string="Question"/>
                     <field name="survey_id" string="Survey"/>
                     <field name="page_id" string="Page"/>
-                    <field name="type" string="Type"/>
+                    <field name="question_type" string="Type"/>
                     <group expand="1" string="Group By">
                         <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
-                        <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
+                        <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'question_type'}"/>
                     </group>
                 </search>
             </field>

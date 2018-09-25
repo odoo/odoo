@@ -226,7 +226,7 @@ class Survey(models.Model):
         result_summary = {}
 
         # Calculate and return statistics for choice
-        if question.type in ['simple_choice', 'multiple_choice']:
+        if question.question_type in ['simple_choice', 'multiple_choice']:
             comments = []
             answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
             for input_line in question.user_input_line_ids:
@@ -237,7 +237,7 @@ class Survey(models.Model):
             result_summary = {'answers': list(answers.values()), 'comments': comments}
 
         # Calculate and return statistics for matrix
-        if question.type == 'matrix':
+        if question.question_type == 'matrix':
             rows = OrderedDict()
             answers = OrderedDict()
             res = dict()
@@ -254,14 +254,14 @@ class Survey(models.Model):
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
         # Calculate and return statistics for free_text, textbox, date
-        if question.type in ['free_text', 'textbox', 'date']:
+        if question.question_type in ['free_text', 'textbox', 'date']:
             result_summary = []
             for input_line in question.user_input_line_ids:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     result_summary.append(input_line)
 
         # Calculate and return statistics for numerical_box
-        if question.type == 'numerical_box':
+        if question.question_type == 'numerical_box':
             result_summary = {'input_lines': []}
             all_inputs = []
             for input_line in question.user_input_line_ids:
@@ -434,14 +434,14 @@ class SurveyQuestion(models.Model):
         oldname='descriptive_text')
 
     # Answer
-    type = fields.Selection([
+    question_type = fields.Selection([
             ('free_text', 'Multiple Lines Text Box'),
             ('textbox', 'Single Line Text Box'),
             ('numerical_box', 'Numerical Value'),
             ('date', 'Date'),
             ('simple_choice', 'Multiple choice: only one answer'),
             ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-            ('matrix', 'Matrix')], string='Type of Question', default='free_text', required=True)
+            ('matrix', 'Matrix')], string='Type of Question', default='free_text', required=True, oldname='type')
     matrix_subtype = fields.Selection([('simple', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
     labels_ids = fields.One2many('survey.label', 'question_id', string='Types of answers', oldname='answer_choice_ids', copy=True)
@@ -509,9 +509,9 @@ class SurveyQuestion(models.Model):
         """ Validate question, depending on question type and parameters """
         self.ensure_one()
         try:
-            checker = getattr(self, 'validate_' + self.type)
+            checker = getattr(self, 'validate_' + self.question_type)
         except AttributeError:
-            _logger.warning(self.type + ": This type of question has no validation method")
+            _logger.warning(self.question_type + ": This type of question has no validation method")
             return {}
         else:
             return checker(post, answer_tag)
@@ -846,9 +846,9 @@ class SurveyUserInputLine(models.Model):
             overwritten (in order to maintain data consistency).
         """
         try:
-            saver = getattr(self, 'save_line_' + question.type)
+            saver = getattr(self, 'save_line_' + question.question_type)
         except AttributeError:
-            _logger.error(question.type + ": This type of question has no saving function")
+            _logger.error(question.question_type + ": This type of question has no saving function")
             return False
         else:
             saver(user_input_id, question, post, answer_tag)
