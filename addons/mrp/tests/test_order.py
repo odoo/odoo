@@ -439,7 +439,7 @@ class TestMrpOrder(TestMrpCommon):
                                     'product_tmpl_id': self.product_6.product_tmpl_id.id,
                                     'product_qty': 1,
                                     'product_uom_id': self.product_6.uom_id.id,
-                                    'type': 'normal',
+                                    'bom_type': 'normal',
                                     'bom_line_ids': [
                                         (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
                                         (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})

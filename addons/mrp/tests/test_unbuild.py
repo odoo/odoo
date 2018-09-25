@@ -502,7 +502,7 @@ class TestUnbuild(TestMrpCommon):
             'product_tmpl_id': finshed_product.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'type': 'normal',
+            'bom_type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': component1.id, 'product_qty': 1}),
                 (0, 0, {'product_id': component2.id, 'product_qty': 1})

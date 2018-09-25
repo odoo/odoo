@@ -32,7 +32,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
-            'type': 'normal',
+            'bom_type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
@@ -115,7 +115,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
             'routing_id': cls.routing_2.id,
-            'type': 'normal',
+            'bom_type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
@@ -126,7 +126,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_uom_id': cls.product_5.uom_id.id,
             'product_qty': 1.0,
             'routing_id': cls.routing_1.id,
-            'type': 'phantom',
+            'bom_type': 'phantom',
             'sequence': 2,
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 2}),
@@ -138,7 +138,7 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_uom_id': cls.uom_dozen.id,
             'product_qty': 2.0,
             'routing_id': cls.routing_2.id,
-            'type': 'normal',
+            'bom_type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),

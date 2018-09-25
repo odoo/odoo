@@ -17,7 +17,7 @@ class SaleOrderLine(models.Model):
                 # In the case of a kit, we need to check if all components are shipped. Since the BOM might
                 # have changed, we don't compute the quantities but verify the move state.
                 bom = self.env['mrp.bom']._bom_find(product=line.product_id)
-                if bom and bom.type == 'phantom':
+                if bom and bom.bom_type == 'phantom':
                     moves = line.move_ids.filtered(lambda m: m.picking_id and m.picking_id.state != 'cancel')
                     bom_delivered = all([move.state == 'done' for move in moves])
                     if bom_delivered:
@@ -56,7 +56,7 @@ class SaleOrderLine(models.Model):
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
-        if bom and bom.type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
+        if bom and bom.bom_type == 'phantom' and 'previous_product_uom_qty' in self.env.context:
             return self.env.context['previous_product_uom_qty'].get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement()
 
@@ -80,7 +80,7 @@ class AccountInvoiceLine(models.Model):
                 # Beyond qty_done we need to calculate the average of the price_unit
                 # on the moves we encounter.
                 bom = s_line.product_id.product_tmpl_id.bom_ids and s_line.product_id.product_tmpl_id.bom_ids[0]
-                if bom.type == 'phantom':
+                if bom.bom_type == 'phantom':
                     average_price_unit = 0
                     components = s_line._get_bom_component_qty(bom)
                     for product_id in components:

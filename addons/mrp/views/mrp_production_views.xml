@@ -83,7 +83,7 @@
                             <field name="has_moves" invisible="1"/>
                             <field name="check_to_done" invisible="1"/>
                             <field name="id" invisible="1"/>
-                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.type', '=', 'normal')]"/>
+                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False), ('bom_ids.active', '=', True), ('bom_ids.bom_type', '=', 'normal')]"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
@@ -99,7 +99,7 @@
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
-                                                ('type', '=', 'normal')]"
+                                                ('bom_type', '=', 'normal')]"
                                 context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                         </group>

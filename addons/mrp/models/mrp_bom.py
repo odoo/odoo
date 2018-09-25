@@ -24,10 +24,10 @@ class MrpBom(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the bills of material without removing it.")
-    type = fields.Selection([
+    bom_type = fields.Selection([
         ('normal', 'Manufacture this product'),
-        ('phantom', 'Kit')], 'BoM Type',
-        default='normal', required=True)
+        ('phantom', 'Kit')], string='BoM Type',
+        default='normal', required=True, oldname='type')
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
         domain="[('product_type', 'in', ['product', 'consu'])]", required=True)
@@ -165,7 +165,7 @@ class MrpBom(models.Model):
 
             line_quantity = current_qty * current_line.product_qty
             bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
-            if bom.type == 'phantom':
+            if bom.bom_type == 'phantom':
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
                 for bom_line in bom.bom_line_ids:

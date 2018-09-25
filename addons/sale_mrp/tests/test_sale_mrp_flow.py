@@ -95,7 +95,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             f.product_tmpl_id = product_b.product_tmpl_id
             f.product_qty = 1
             f.product_uom_id = self.uom_unit
-            f.type = 'phantom'
+            f.bom_type = 'phantom'
             with f.bom_line_ids.new() as line:
                 line.product_id = product_c
                 line.product_qty = 0.400
@@ -445,7 +445,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': self.finished_product.product_tmpl_id.id,
                 'product_qty': 1.0,
-                'type': 'phantom'})
+                'bom_type': 'phantom'})
         BomLine = self.env['mrp.bom.line']
         BomLine.create({
                 'product_id': self.component1.id,

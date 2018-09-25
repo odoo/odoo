@@ -34,7 +34,7 @@ class TestMrpByProduct(common.TransactionCase):
         bom_product_b = self.MrpBom.create({
             'product_tmpl_id': self.product_b.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'normal',
+            'bom_type': 'normal',
             'product_uom_id': self.uom_unit_id,
             'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
@@ -43,7 +43,7 @@ class TestMrpByProduct(common.TransactionCase):
         bom_product_a = self.MrpBom.create({
             'product_tmpl_id': self.product_a.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'normal',
+            'bom_type': 'normal',
             'product_uom_id': self.uom_unit_id,
             'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
             'sub_products': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 1})]

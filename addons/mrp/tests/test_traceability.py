@@ -46,7 +46,7 @@ class TestTraceability(TestMrpCommon):
                 'product_tmpl_id': finished_product.product_tmpl_id.id,
                 'product_uom_id': self.env.ref('uom.product_uom_unit').id,
                 'product_qty': 1.0,
-                'type': 'normal',
+                'bom_type': 'normal',
                 'bom_line_ids': [
                     (0, 0, {'product_id': consumed_no_track.id, 'product_qty': 1}),
                     (0, 0, {'product_id': consumed_lot.id, 'product_qty': 1}),

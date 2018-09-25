@@ -319,7 +319,7 @@ class MrpProduction(models.Model):
             self.bom_id = False
         else:
             bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id)
-            if bom.type == 'normal':
+            if bom.bom_type == 'normal':
                 self.bom_id = bom.id
                 self.product_qty = self.bom_id.product_qty
                 self.product_uom_id = self.bom_id.product_uom_id.id
@@ -421,7 +421,7 @@ class MrpProduction(models.Model):
         quantity = line_data['qty']
         # alt_op needed for the case when you explode phantom bom and all the lines will be consumed in the operation given by the parent bom line
         alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
-        if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
+        if bom_line.child_bom_id and bom_line.child_bom_id.bom_type == 'phantom':
             return self.env['stock.move']
         if bom_line.product_id.product_type not in ['product', 'consu']:
             return self.env['stock.move']

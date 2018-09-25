@@ -48,7 +48,7 @@ class TestBom(common.TransactionCase):
         bom_form.product_tmpl_id = self.dining_table.product_tmpl_id
         bom_form.product_qty = 1.0
         bom_form.product_uom_id = self.unit
-        bom_form.type = 'normal'
+        bom_form.bom_type = 'normal'
         with bom_form.bom_line_ids.new() as line:
             line.product_id = self.table_head
             line.product_qty = 1
@@ -84,7 +84,7 @@ class TestBom(common.TransactionCase):
         bom_form2.product_tmpl_id = self.table_head.product_tmpl_id
         bom_form2.product_qty = 1.0
         bom_form2.product_uom_id = self.dozen
-        bom_form2.type = 'phantom'
+        bom_form2.bom_type = 'phantom'
         with bom_form2.bom_line_ids.new() as line:
             line.product_id = self.plywood_sheet
             line.product_qty = 12

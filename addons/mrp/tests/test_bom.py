@@ -18,7 +18,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(set([bom[0].id for bom in boms]), set((self.bom_2 | self.bom_3).ids))
         self.assertEqual(
             set([line[0].id for line in lines]),
-            set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
+            set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.bom_type != 'phantom').ids))
 
     def test_variants(self):
         test_bom = self.env['mrp.bom'].create({
@@ -27,7 +27,7 @@ class TestBoM(TestMrpCommon):
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'routing_id': self.routing_2.id,
-            'type': 'normal',
+            'bom_type': 'normal',
         })
         test_bom_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom.id,
@@ -78,7 +78,7 @@ class TestBoM(TestMrpCommon):
             'product_uom_id': self.product_5.uom_id.id,
             'product_qty': 1.0,
             'routing_id': self.routing_1.id,
-            'type': 'phantom'
+            'bom_type': 'phantom'
         })
         test_bom_1_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_1.id,
@@ -92,7 +92,7 @@ class TestBoM(TestMrpCommon):
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
             'routing_id': self.routing_2.id,
-            'type': 'normal',
+            'bom_type': 'normal',
         })
         test_bom_2_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_2.id,
@@ -142,14 +142,14 @@ class TestBoM(TestMrpCommon):
             'product_tmpl_id': self.product_9.product_tmpl_id.id,
             'product_uom_id': self.product_9.uom_id.id,
             'product_qty': 1.0,
-            'type': 'normal'
+            'bom_type': 'normal'
         })
         test_bom_4 = self.env['mrp.bom'].create({
             'product_id': self.product_10.id,
             'product_tmpl_id': self.product_10.product_tmpl_id.id,
             'product_uom_id': self.product_10.uom_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'
+            'bom_type': 'phantom'
         })
         test_bom_3_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_3.id,
@@ -205,7 +205,7 @@ class TestBoM(TestMrpCommon):
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': product_template.id,
             'product_qty': 1.0,
-            'type': 'normal',
+            'bom_type': 'normal',
             'bom_line_ids': [(0, 0, {
                     'product_id': product_A.id,
                     'product_qty': 1,

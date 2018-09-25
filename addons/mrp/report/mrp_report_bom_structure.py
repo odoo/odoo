@@ -156,7 +156,7 @@ class ReportBomStructure(models.AbstractModel):
                 'level': level or 0,
                 'total': sub_total,
                 'child_bom': line.child_bom_id.id,
-                'phantom_bom': line.child_bom_id and line.child_bom_id.type == 'phantom' or False,
+                'phantom_bom': line.child_bom_id and line.child_bom_id.bom_type == 'phantom' or False,
                 'attachments': self.env['mrp.document'].search(['|', '&',
                     ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)]),
 

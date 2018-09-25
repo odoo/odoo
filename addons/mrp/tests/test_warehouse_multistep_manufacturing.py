@@ -42,7 +42,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         bom_product_form.product_id = self.finished_product
         bom_product_form.product_tmpl_id = self.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
-        bom_product_form.type = 'normal'
+        bom_product_form.bom_type = 'normal'
         with bom_product_form.bom_line_ids.new() as bom_line:
             bom_line.product_id = self.raw_product
             bom_line.product_qty = 2.0
