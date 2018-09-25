@@ -26,6 +26,12 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
+    def _prepare_procurement_values(self):
+        values = super(StockMove, self)._prepare_procurement_values()
+        if self.sale_line_id:
+            values['sale_line_id'] = self.sale_line_id.id
+        return values
+
     def _action_done(self):
         result = super(StockMove, self)._action_done()
         for line in result.mapped('sale_line_id').sudo():
