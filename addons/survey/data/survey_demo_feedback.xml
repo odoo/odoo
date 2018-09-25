@@ -21,7 +21,7 @@
             <field name="page_id" ref="feedback_1" />
             <field name="sequence">1</field>
             <field name="question">Are you using Odoo on a daily basis?</field>
-            <field name="type">simple_choice</field>
+            <field name="question_type">simple_choice</field>
             <field name="display_mode">dropdown</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -49,7 +49,7 @@
             <field name="page_id" ref="feedback_1" />
             <field name="sequence">2</field>
             <field name="question">Which modules are you using/testing?</field>
-            <field name="type">multiple_choice</field>
+            <field name="question_type">multiple_choice</field>
             <field name="column_nb">4</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -95,7 +95,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">1</field>
             <field name="question">What do you think about the documentation available on doc.odoo.com?</field>
-            <field name="type">matrix</field>
+            <field name="question_type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -148,7 +148,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">2</field>
             <field name="question">What do you think about the process views of Odoo, available in the web client ?</field>
-            <field name="type">matrix</field>
+            <field name="question_type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -201,13 +201,13 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">3</field>
             <field name="question">Do you have suggestions on how to improve the process view ?</field>
-            <field name="type">free_text</field>
+            <field name="question_type">free_text</field>
         </record>
         <record model="survey.question" id="feedback_2_4">
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">4</field>
             <field name="question">What do you think about the structure of the menus?</field>
-            <field name="type">multiple_choice</field>
+            <field name="question_type">multiple_choice</field>
             <field name="column_nb">4</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -230,7 +230,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">5</field>
             <field name="question">What do you think about the groups of users?</field>
-            <field name="type">matrix</field>
+            <field name="question_type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -283,7 +283,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">6</field>
             <field name="question">What do you think about the structure of the menus?</field>
-            <field name="type">simple_choice</field>
+            <field name="question_type">simple_choice</field>
             <field name="display_mode">columns</field>
             <field name="column_nb">4</field>
             <field name="constr_mandatory" eval="True" />
@@ -307,7 +307,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_2" />
             <field name="sequence">7</field>
             <field name="question">What do you think about configuration wizards?</field>
-            <field name="type">matrix</field>
+            <field name="question_type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -362,7 +362,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_3" />
             <field name="sequence">1</field>
             <field name="question">How do you contribute or plan to contribute to Odoo?</field>
-            <field name="type">multiple_choice</field>
+            <field name="question_type">multiple_choice</field>
             <field name="column_nb">6</field>
             <field name="constr_mandatory" eval="True" />
         </record>
@@ -395,13 +395,13 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_3" />
             <field name="sequence">2</field>
             <field name="question">Do you have a proposition to help people to contribute?</field>
-            <field name="type">free_text</field>
+            <field name="question_type">free_text</field>
         </record>
         <record model="survey.question" id="feedback_3_3">
             <field name="page_id" ref="feedback_3" />
             <field name="sequence">3</field>
             <field name="question">Do you have a proposition to attract new contributors?</field>
-            <field name="type">free_text</field>
+            <field name="question_type">free_text</field>
         </record>
         <!-- Page 4 -->
         <record model="survey.page" id="feedback_4">
@@ -414,7 +414,7 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="page_id" ref="feedback_4" />
             <field name="sequence">1</field>
             <field name="question">Where do you develop your new features?</field>
-            <field name="type">multiple_choice</field>
+            <field name="question_type">multiple_choice</field>
             <field name="column_nb">6</field>
         </record>
                 <record model="survey.label" id="choice_4_1_1">

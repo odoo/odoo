@@ -20,13 +20,13 @@
         <field name="page_id" ref="recruitment_1" />
         <field name="sequence">1</field>
         <field name="question">From which university will you graduate?</field>
-        <field name="type">textbox</field>
+        <field name="question_type">textbox</field>
     </record>
     <record id="recruitment_1_2" model="survey.question">
         <field name="page_id" ref="recruitment_1" />
         <field name="sequence">2</field>
         <field name="question">What is your gender?</field>
-        <field name="type">simple_choice</field>
+        <field name="question_type">simple_choice</field>
         <field name="display_mode">dropdown</field>
     </record>
     <record id="recruitment_1_2_1" model="survey.label">
@@ -43,7 +43,7 @@
         <field name="page_id" ref="recruitment_1" />
         <field name="sequence">3</field>
         <field name="question">What age group do you belong to?</field>
-        <field name="type">simple_choice</field>
+        <field name="question_type">simple_choice</field>
         <field name="display_mode">columns</field>
         <field name="column_nb">4</field>
     </record>
@@ -99,25 +99,25 @@
         <field name="page_id" ref="recruitment_2" />
         <field name="sequence">1</field>
         <field name="question">Knowledge</field>
-        <field name="type">free_text</field>
+        <field name="question_type">free_text</field>
     </record>
     <record id="recruitment_2_2" model="survey.question">
         <field name="page_id" ref="recruitment_2" />
         <field name="sequence">2</field>
         <field name="question">Education</field>
-        <field name="type">free_text</field>
+        <field name="question_type">free_text</field>
     </record>
     <record id="recruitment_2_3" model="survey.question">
         <field name="page_id" ref="recruitment_2" />
         <field name="sequence">3</field>
         <field name="question">Experience</field>
-        <field name="type">free_text</field>
+        <field name="question_type">free_text</field>
     </record>
     <record id="recruitment_2_4" model="survey.question">
         <field name="page_id" ref="recruitment_2" />
         <field name="sequence">4</field>
         <field name="question">Activities</field>
-        <field name="type">free_text</field>
+        <field name="question_type">free_text</field>
     </record>
     <!-- Page 3 -->
     <record id="recruitment_3" model="survey.page">
@@ -130,7 +130,7 @@
         <field name="page_id" ref="recruitment_3" />
         <field name="sequence">1</field>
         <field name="question">Rate the Importance</field>
-        <field name="type">matrix</field>
+        <field name="question_type">matrix</field>
         <field name="matrix_subtype">simple</field>
     </record>
     <record id="rcol_3_1_1" model="survey.label">
