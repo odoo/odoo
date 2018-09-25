@@ -215,7 +215,7 @@ class GoogleCalendar(models.AbstractModel):
         reminders = []
         for alarm in event.alarm_ids:
             reminders.append({
-                "method": "email" if alarm.type == "email" else "popup",
+                "method": "email" if alarm.alarm_type == "email" else "popup",
                 "minutes": alarm.duration_minutes
             })
         data = {
@@ -458,13 +458,13 @@ class GoogleCalendar(models.AbstractModel):
         for google_alarm in single_event_dict.get('reminders', {}).get('overrides', []):
             alarm = CalendarAlarm.search(
                 [
-                    ('type', '=', google_alarm['method'] if google_alarm['method'] == 'email' else 'notification'),
+                    ('alarm_type', '=', google_alarm['method'] if google_alarm['method'] == 'email' else 'notification'),
                     ('duration_minutes', '=', google_alarm['minutes'])
                 ], limit=1
             )
             if not alarm:
                 data = {
-                    'type': google_alarm['method'] if google_alarm['method'] == 'email' else 'notification',
+                    'alarm_type': google_alarm['method'] if google_alarm['method'] == 'email' else 'notification',
                     'duration': google_alarm['minutes'],
                     'interval': 'minutes',
                     'name': "%s minutes - %s" % (google_alarm['minutes'], google_alarm['method'])
