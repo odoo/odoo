@@ -1,17 +1,54 @@
 #!/usr/bin/env bash
 
+# Write the server configuration
 # call with ESSID and optionally a password
 # when called without an ESSID, it will attempt
 # to reconnect to a previously chosen network
 function connect () {
+	SERVER="${1}"
+	CURRENT_SERVER_FILE=/home/pi/odoo-remote-server.conf
+	HOSTS=/root_bypass_ramdisks/etc/hosts
+	HOST_FILE=/root_bypass_ramdisks/etc/hostname
+	HOSTNAME="$(hostname)"
+	TOKEN_FILE=/home/pi/token
+	TOKEN="${3}"
+	IOT_NAME="${2}"
+	IOT_NAME="${IOT_NAME//[^[:ascii:]]/}"
+	IOT_NAME="${IOT_NAME//[^a-zA-Z0-9-]/}"
+	if [ -z "$IOT_NAME" ]
+	then
+		IOT_NAME="${HOSTNAME}"
+	fi
+	sudo mount -o remount,rw /
+	sudo mount -o remount,rw /root_bypass_ramdisks
+	if [ ! -z "${1}" ]
+	then
+		echo "${SERVER}" > ${CURRENT_SERVER_FILE}
+		echo "${TOKEN}" > ${TOKEN_FILE}
+	fi
+	if [ "${IOT_NAME}" != "${HOSTNAME}" ]
+	then
+		sudo sed -i "s/${HOSTNAME}/${IOT_NAME}/g" ${HOSTS}
+		echo "${IOT_NAME}" > /tmp/hostname
+		sudo cp /tmp/hostname "${HOST_FILE}"
+
+		echo "interface=wlan0" > /root_bypass_ramdisks/etc/hostapd/hostapd.conf
+		echo "ssid=${IOT_NAME}" >> /root_bypass_ramdisks/etc/hostapd/hostapd.conf
+		echo "channel=1" >> /root_bypass_ramdisks/etc/hostapd/hostapd.conf
+		
+		sudo hostname "${IOT_NAME}"
+	fi
+	sudo mount -o remount,ro /
+	sudo mount -o remount,ro /root_bypass_ramdisks
+
 	WPA_PASS_FILE="/tmp/wpa_pass.txt"
 	PERSISTENT_WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 	CURRENT_WIFI_NETWORK_FILE="/tmp/current_wifi_network.txt" # used to repair connection when we lose it
 	LOST_WIFI_FILE="/tmp/lost_wifi.txt"
-	ESSID="${1}"
-	PASSWORD="${2}"
-	PERSIST="${3}"
-	NO_AP="${4}"
+	ESSID="${4}"
+	PASSWORD="${5}"
+	PERSIST="${6}"
+	NO_AP="${7}"
 
 	sleep 3
 
@@ -74,7 +111,6 @@ function connect () {
 
 		if [ ! -f "${LOST_WIFI_FILE}" ] ; then
 			logger -t posbox_connect_to_wifi "Restarting odoo"
-			sudo service odoo restart
 		fi
 
 		if [ ${WIFI_WAS_LOST} -eq 0 ] ; then
@@ -85,6 +121,13 @@ function connect () {
 		logger -t posbox_connect_to_wifi "Starting wifi keep alive script"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/keep_wifi_alive.sh &
 	fi
+
+	if [ "${IOT_NAME}" != "${HOSTNAME}" ]
+	then
+		sudo reboot
+	else
+		sudo service odoo restart
+	fi
 }
 
-connect "${1}" "${2}" "${3}" "${4}" &
+connect "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" &

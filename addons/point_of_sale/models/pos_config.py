@@ -272,7 +272,7 @@ class PosConfig(models.Model):
     def _onchange_use_pricelist(self):
         """
         If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
-        using a pricelist for this posbox. 
+        using a pricelist for this iotbox.
         """
         if not self.use_pricelist:
             self.pricelist_id = self._default_pricelist()
