@@ -30,7 +30,7 @@
             <field name="arch" type="xml">
                 <form string="Survey User inputs" create="false">
                     <header>
-                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
+                        <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('input_type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
                         <button name="action_survey_results" string="View Results" type="object" />
                         <field name="state" widget="statusbar"/>
@@ -41,7 +41,7 @@
                             <group>
                                 <field name="survey_id"/>
                                 <field name="date_create"/>
-                                <field name="type"/>
+                                <field name="input_type"/>
                                 <field name="token" groups="base.group_no_one"/>
                             </group>
                             <group>
@@ -76,7 +76,7 @@
                     <field name="deadline"/>
                     <field name="partner_id"/>
                     <field name="email"/>
-                    <field name="type"/>
+                    <field name="input_type"/>
                     <field name="state"/>
                     <field name="test_entry" invisible="True"/>
                     <field name="quizz_score" groups="base.group_no_one"/>
@@ -93,7 +93,7 @@
                     <field name="date_create"/>
                     <field name="partner_id"/>
                     <field name="email"/>
-                    <field name="type"/>
+                    <field name="input_type"/>
                     <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -102,7 +102,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
                                     </div>
-                                    <span class="badge badge-pill"><t t-esc="record.type.value"/></span>
+                                    <span class="badge badge-pill"><t t-esc="record.input_type.value"/></span>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
