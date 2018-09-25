@@ -225,7 +225,7 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.test('no content helper', function (assert) {
+    QUnit.test('no content helper (bar chart)', function (assert) {
         assert.expect(2);
         this.data.foo.records = [];
 
@@ -239,6 +239,25 @@ QUnit.module('Views', {
         });
         assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 0,
                     "should not contain a div with a svg element");
+        assert.strictEqual(graph.$('div.o_view_nocontent').length, 1,
+            "should display the no content helper");
+        graph.destroy();
+    });
+
+    QUnit.test('no content helper (pie chart)', function (assert) {
+        assert.expect(2);
+        this.data.foo.records =  []
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph type="pie">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 0,
+            "should not contain a div with a svg element");
         assert.strictEqual(graph.$('div.o_view_nocontent').length, 1,
             "should display the no content helper");
         graph.destroy();

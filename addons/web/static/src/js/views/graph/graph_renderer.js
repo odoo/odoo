@@ -227,7 +227,10 @@ return AbstractRenderer.extend({
      * Helper function to set up data properly for the pieChart model in
      * nvd3.
      *
-     * @returns {nvd3 chart}
+     * returns undefined in the case of an non-embedded pie chart with no data.
+     * (all zero data included)
+     *.
+     * @returns {nvd3 chart|undefined}
      */
     _renderPieChart: function (stateData) {
         var self = this;
@@ -471,14 +474,16 @@ return AbstractRenderer.extend({
         }
         var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart'](this.state.data);
 
-        // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
-        chart.dispatch.on('renderEnd', function () {
-            $('.nv-y .tick > line').attr('x2', function (i, value) {
-                return Math.abs(value);
-            });
-        })
+        if (chart) {
+            // FIXME: When 'orient' is right for Y axis, horizontal lines aren't displayed correctly
+            chart.dispatch.on('renderEnd', function () {
+                $('.nv-y .tick > line').attr('x2', function (i, value) {
+                    return Math.abs(value);
+                });
+            })
 
-        chartResize(chart);
+            chartResize(chart);
+        }
 
         if (this.state.mode === 'pie' && this.isComparison) {
             // Render graph title
@@ -496,8 +501,9 @@ return AbstractRenderer.extend({
                 text: comparisonChartTitle,
             }));
             chartResize(comparisonChart);
-
-            chart.update();
+            if (chart) {
+                chart.update();
+            }
         } else if (this.title) {
             this.$('.o_graph_svg_container').last().prepend($('<label/>', {
                 text: this.title,
