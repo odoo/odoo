@@ -285,6 +285,15 @@
                 </sheet>
             </field>
         </record>
+        <record id="view_view_tree_inherit_website" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="inherit_id" ref="base.view_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="website_id" groups="website.group_multi_website"/>
+                </field>
+            </field>
+        </record>
 
         <!-- Dashboard -->
         <record id="backend_dashboard" model="ir.actions.client">
