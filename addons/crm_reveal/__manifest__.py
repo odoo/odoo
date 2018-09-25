@@ -15,6 +15,6 @@
         'security/ir.model.access.csv',
         'views/crm_lead_view.xml',
         'views/crm_reveal_views.xml',
-        'views/res_config_settings_views.xml'
+        'views/res_config_settings_views.xml',
     ]
 }

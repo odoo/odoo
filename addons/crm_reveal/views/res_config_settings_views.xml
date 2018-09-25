@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="res_config_settings_view_form" model="ir.ui.view">
-        <field name="name">res.config.settings.view.form.inherit.crm.reveal</field>
+        <field name="name">res.config.settings.view.form.inherit.crm_reveal</field>
         <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
         <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <div id="crm_lead" position="after">
-                <div class="col-xs-12 col-md-6 o_setting_box" id="crm_reveal">
-                    <div class="o_setting_right_pane">
-                        <label string="IAP Lead Generations" for="action_buy_reveal_iap_credits"/>
-                        <div class="text-muted">
-                            Charge your IAP account to generate Leads/Opportunities from your website's traffic
-                        </div>
-                        <div class="content-group">
-                            <button name="action_buy_reveal_iap_credits" string="Buy IAP Credits" type="object" class="oe_link" icon="fa-arrow-right"/>
-                        </div>
-                    </div>
+            <xpath expr="//div[hasclass('crm_reveal_settings')]" position="inside">
+                <div class="content-group">
+                    <widget name="iap_credit_checker" service_name="crm_reveal"/>
                 </div>
-            </div>
+            </xpath>
         </field>
     </record>
 </odoo>
