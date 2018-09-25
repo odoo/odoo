@@ -4006,6 +4006,9 @@ var BasicModel = AbstractModel.extend({
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
+        var orderedBy = _.filter(list.orderedBy, function(order){
+            return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
+        });
         return this._rpc({
                 model: list.model,
                 method: 'read_group',
@@ -4013,7 +4016,7 @@ var BasicModel = AbstractModel.extend({
                 domain: list.domain,
                 context: list.context,
                 groupBy: list.groupedBy,
-                orderBy: list.orderedBy,
+                orderBy: orderedBy,
                 lazy: true,
             })
             .then(function (groups) {
