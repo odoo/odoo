@@ -1791,7 +1791,7 @@ class TestStockUOM(TestStockCommon):
         })
         T_TEST = self.env['product.product'].create({
             'name': 'T_TEST',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': T_LBS.id,
             'uom_po_id': T_LBS.id,
             'tracking': 'lot',
@@ -1839,7 +1839,7 @@ class TestRoutes(TestStockCommon):
         super(TestRoutes, self).setUp()
         self.product1 = self.env['product.product'].create({
             'name': 'product a',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.uom_unit = self.env.ref('uom.product_uom_unit')

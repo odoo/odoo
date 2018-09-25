@@ -14,10 +14,11 @@ class TestMrpByProduct(common.TransactionCase):
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.uom_unit_id = self.ref('uom.product_uom_unit')
+
         def create_product(name, route_ids=[]):
             return self.env['product.product'].create({
                 'name': name,
-                'type': 'product',
+                'product_type': 'product',
                 'route_ids': route_ids})
 
         # Create product A, B, C.

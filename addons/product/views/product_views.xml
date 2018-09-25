@@ -45,7 +45,7 @@
                         <page string="General Information" name="general_information">
                             <group>
                                 <group name="group_general">
-                                    <field name="type"/>
+                                    <field name="product_type"/>
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
@@ -94,9 +94,9 @@
                                 <group string="Vendor Bills" name="bill"/>
                             </group>
                         </page>
-                        <page string="Inventory" name="inventory" groups="product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
+                        <page string="Inventory" name="inventory" groups="product.group_stock_packaging" attrs="{'invisible':[('product_type', '=', 'service')]}">
                             <group name="inventory">
-                                <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
+                                <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('product_type', 'not in', ['product', 'consu'])]}">
                                     <label for="weight"/>
                                     <div class="o_row" name="weight">
                                         <field name="weight"/>
@@ -111,7 +111,7 @@
                             </group>
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
+                                attrs="{'invisible':['|', ('product_type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                             </group>
@@ -135,8 +135,8 @@
                 <field name="name" string="Product" filter_domain="['|', '|', ('product_variant_ids.default_code', 'ilike', self),('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', raw_value)]"/>
                 <separator/>
-                <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
+                <filter string="Services" name="services" domain="[('product_type','=','service')]"/>
+                <filter string="Products" name="consumable" domain="[('product_type', 'in', ['consu', 'product'])]"/>
                 <separator/>
                 <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                 <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', 1)]"/>
@@ -231,7 +231,7 @@
                             </group>
                             <group>
                                 <field name="active"/>
-                                <field name="type" invisible="1"/>
+                                <field name="product_type" invisible="1"/>
                             </group>
                         </group>
                         <group>
@@ -242,7 +242,7 @@
                                 <field name="currency_id" invisible='1'/>
                             </group>
                             <group name="weight">
-                                <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                                <group name="weight" string="Weights" attrs="{'invisible':[('product_type', 'not in', ['product', 'consu'])]}">
                                     <label for="volume"/>
                                     <div class="o_row">
                                         <field name="volume"/>
@@ -301,7 +301,7 @@
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
                     <field name="standard_price"/>
-                    <field name="type" invisible="1"/>
+                    <field name="product_type" invisible="1"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="barcode"/>
@@ -321,7 +321,7 @@
                 <form position="attributes">
                     <attribute name="string">Product Variant</attribute>
                 </form>
-                <field name="type" position="after">
+                <field name="product_type" position="after">
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </field>

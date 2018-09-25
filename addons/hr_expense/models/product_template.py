@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
             vals.update({'supplier_taxes_id': False})
         return super(ProductTemplate, self).create(vals)
 
-    @api.onchange('type')
+    @api.onchange('product_type')
     def _onchange_type_for_expense(self):
-        if self.type not in ['consu', 'service']:  # storable can not be expensed.
+        if self.product_type not in ['consu', 'service']:  # storable can not be expensed.
             self.can_be_expensed = False

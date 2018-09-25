@@ -59,7 +59,7 @@ class TestDropship(common.TransactionCase):
         # Create new product without any routes
         drop_shop_product = self.env['product.product'].create({
             'name': "Pen drive",
-            'type': "product",
+            'product_type': "product",
             'categ_id': self.env.ref('product.product_category_1').id,
             'lst_price': 100.0,
             'standard_price': 0.0,

@@ -239,20 +239,20 @@ class TestBoM(TestMrpCommon):
         uom_litre = self.env.ref('uom.product_uom_litre')
         crumble = self.env['product.product'].create({
             'name': 'Crumble',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
         })
         butter = self.env['product.product'].create({
             'name': 'Butter',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
             'standard_price': 7.01
         })
         biscuit = self.env['product.product'].create({
             'name': 'Biscuit',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': uom_kg.id,
             'uom_po_id': uom_kg.id,
             'standard_price': 1.5
@@ -351,11 +351,11 @@ class TestBoM(TestMrpCommon):
         # Create a more complex BoM with a sub product
         cheese_cake = self.env['product.product'].create({
             'name': 'Cheese Cake 300g',
-            'type': 'product',
+            'product_type': 'product',
         })
         cream = self.env['product.product'].create({
             'name': 'cream',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': uom_litre.id,
             'uom_po_id': uom_litre.id,
             'standard_price': 5.17,

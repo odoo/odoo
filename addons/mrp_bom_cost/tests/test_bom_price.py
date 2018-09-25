@@ -11,7 +11,7 @@ class TestBom(common.TransactionCase):
     def _create_product(self, name, price):
         return self.Product.create({
             'name': name,
-            'type': 'product',
+            'product_type': 'product',
             'standard_price': price,
         })
 

@@ -11,7 +11,7 @@ class TestTraceability(TestMrpCommon):
     def _create_product(self, tracking):
         return self.env['product.product'].create({
             'name': 'Product %s' % tracking,
-            'type': 'product',
+            'product_type': 'product',
             'tracking': tracking,
             'categ_id': self.env.ref('product.product_category_all').id,
         })

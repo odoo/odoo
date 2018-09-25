@@ -27,7 +27,7 @@ class AccountAnalyticLine(models.Model):
         for timesheet in self:
             if timesheet.project_id:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
-                if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
+                if timesheet.task_id and timesheet.so_line.product_id.product_type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
                         if timesheet.so_line.product_id.service_type == 'timesheet':
                             invoice_type = 'billable_time'

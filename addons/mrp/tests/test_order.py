@@ -40,8 +40,8 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_basic(self):
         """ Basic order test: no routing (thus no workorders), no lot """
-        self.product_1.type = 'product'
-        self.product_2.type = 'product'
+        self.product_1.product_type = 'product'
+        self.product_2.product_type = 'product'
         inventory = self.env['stock.inventory'].create({
             'name': 'Initial inventory',
             'filter': 'partial',
@@ -110,7 +110,7 @@ class TestMrpOrder(TestMrpCommon):
         # print procurements
         # for proc in self.env['procurement.order'].browse(procurements):
         #     date_planned = self.mrp_production_test1.date_planned
-        #     if proc.product_id.type not in ('product', 'consu'):
+        #     if proc.product_id.product_type not in ('product', 'consu'):
         #         continue
         #     if proc.product_id.id == order_line.product_id.id:
         #         self.assertEqual(proc.date_planned, date_planned, "Planned date does not correspond")
@@ -183,7 +183,7 @@ class TestMrpOrder(TestMrpCommon):
         })
 
         # reset quantities
-        self.product_1.type = "product"
+        self.product_1.product_type = "product"
         self.env['stock.change.product.qty'].create({
             'product_id': self.product_1.id,
             'new_quantity': 0.0,
@@ -359,12 +359,12 @@ class TestMrpOrder(TestMrpCommon):
         custom_laptop.tracking = 'none'
         product_charger = self.env['product.product'].create({
             'name': 'Charger',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': unit,
             'uom_po_id': unit})
         product_keybord = self.env['product.product'].create({
             'name': 'Usb Keybord',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': unit,
             'uom_po_id': unit})
         bom_custom_laptop = self.env['mrp.bom'].create({

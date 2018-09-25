@@ -14,7 +14,7 @@ class TestRobustness(TransactionCase):
         self.uom_dozen = self.env.ref('uom.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -152,13 +152,13 @@ class TestRobustness(TransactionCase):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product 1',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
         })
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
         })

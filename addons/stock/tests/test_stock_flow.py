@@ -890,7 +890,7 @@ class TestStockFlow(TestStockCommon):
         # Create product in kg and receive in ton.
         # -----------------------------------------
 
-        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'type': 'product'})
+        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'product_type': 'product'})
         picking_in = self.PickingObj.create({
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_in,
@@ -1106,7 +1106,7 @@ class TestStockFlow(TestStockCommon):
         # Test inventory with product KG.
         # ------------------------------------------------
 
-        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'type': 'product'})
+        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id, 'product_type': 'product'})
         inventory = self.InvObj.create({'name': 'Inventory Product KG',
                                         'product_id': productKG.id,
                                         'filter': 'product'})
@@ -1148,8 +1148,8 @@ class TestStockFlow(TestStockCommon):
         # TEST PARTIAL INVENTORY WITH PACKS and LOTS
         # ---------------------------------------------------------
 
-        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
-        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'type': 'product'})
+        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'product_type': 'product'})
+        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'uom_po_id': self.uom_unit.id, 'product_type': 'product'})
         inventory = self.InvObj.create({'name': 'Test Partial and Pack',
                                         'filter': 'partial',
                                         'location_id': self.stock_location})
@@ -1222,7 +1222,7 @@ class TestStockFlow(TestStockCommon):
         inventory4_lines_count = len(inventory4.line_ids)
         inventory4.action_validate()
         # Add one product in this product category
-        product = self.ProductObj.create({'name': 'Product A', 'type': 'product', 'categ_id': category_id})
+        product = self.ProductObj.create({'name': 'Product A', 'product_type': 'product', 'categ_id': category_id})
         # Check that this exhausted product is in the product category inventory adjustment
         inventory5 = self.InvObj.create({
                                     'name': 'Test Exhausted Product',

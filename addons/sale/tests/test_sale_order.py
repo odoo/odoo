@@ -168,7 +168,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'name': "Ordered at cost",
             'standard_price': 160,
             'list_price': 180,
-            'type': 'consu',
+            'product_type': 'consu',
             'invoice_policy': 'order',
             'expense_policy': 'cost',
             'default_code': 'PROD_COST',

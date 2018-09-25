@@ -19,13 +19,13 @@ class TestStockValuation(TransactionCase):
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'default_code': 'prda',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 

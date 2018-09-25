@@ -49,7 +49,7 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', 'in', ['product', 'consu'])],
+        domain=[('product_type', 'in', ['product', 'consu'])],
         readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
@@ -423,7 +423,7 @@ class MrpProduction(models.Model):
         alt_op = line_data['parent_line'] and line_data['parent_line'].operation_id.id or False
         if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
             return self.env['stock.move']
-        if bom_line.product_id.type not in ['product', 'consu']:
+        if bom_line.product_id.product_type not in ['product', 'consu']:
             return self.env['stock.move']
         if self.routing_id:
             routing = self.routing_id

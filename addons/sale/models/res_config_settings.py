@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
     deposit_default_product_id = fields.Many2one(
         'product.product',
         'Deposit Product',
-        domain="[('type', '=', 'service')]",
+        domain="[('product_type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
         oldname='default_deposit_product_id',
         help='Default product used for payment advances')

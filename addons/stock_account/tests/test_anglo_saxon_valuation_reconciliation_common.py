@@ -89,14 +89,14 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         uom = self.env['uom.uom'].search([], limit=1)
         test_product_delivery_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on delivery',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,
         })
         test_product_order_inv_template = self.env['product.template'].create({
             'name': 'Test product template invoiced on order',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.test_product_category.id,
             'uom_id': uom.id,
             'uom_po_id': uom.id,

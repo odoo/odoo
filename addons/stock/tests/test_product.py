@@ -14,7 +14,7 @@ class TestVirtualAvailable(TestStockCommon):
 
         # Make `product3` a storable product for this test. Indeed, creating quants
         # and playing with owners is not possible for consumables.
-        self.product_3.type = 'product'
+        self.product_3.product_type = 'product'
 
         self.env['stock.quant'].create({
             'product_id': self.product_3.id,

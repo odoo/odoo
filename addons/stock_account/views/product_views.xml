@@ -50,7 +50,7 @@
                         </div>
                     </field>
                     <group name="accounting" position="inside">
-                        <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': ['|', ('type','=','service'), ('valuation', '!=', 'real_time')]}" groups="account.group_account_user">
+                        <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': ['|', ('product_type','=','service'), ('valuation', '!=', 'real_time')]}" groups="account.group_account_user">
                             <field name="property_valuation" invisible="1"/>
                             <field name="property_stock_account_input"
                                 domain="[('deprecated', '=', False)]"/>
@@ -97,7 +97,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_stock_product_tree2"/>
-            <field name="domain">[('type', '=', 'product'), ('qty_available', '!=', 0)]</field>
+            <field name="domain">[('product_type', '=', 'product'), ('qty_available', '!=', 0)]</field>
             <field name="context">{'company_owned': True, 'create': False, 'edit' : False}</field>
             <field name="search_view_id" ref="view_inventory_valuation_search"/>
             <field name="help" type="html">

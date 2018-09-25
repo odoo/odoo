@@ -37,7 +37,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -52,7 +52,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         for i in range(3):
             self.env['stock.quant'].create({
@@ -68,7 +68,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         for i in range(3):
             self.env['stock.quant'].create({
@@ -89,7 +89,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
 
@@ -99,7 +99,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -121,7 +121,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -144,7 +144,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'lot',
         })
         lot1 = self.env['stock.production.lot'].create({
@@ -167,7 +167,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'consu',
+            'product_type': 'consu',
         })
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
         self.assertEqual(len(self.gather_relevant(product1, stock_location)), 0)
@@ -180,7 +180,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -196,7 +196,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 1.0)
@@ -207,7 +207,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         for i in range(2):
             self.env['stock.quant'].create({
@@ -245,7 +245,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env = self.env(user=self.env.ref('base.user_demo'))
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
@@ -258,11 +258,11 @@ class StockQuant(TransactionCase):
         stock_sub_location = stock_location.child_ids[0]
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
         self.env['stock.quant']._update_available_quantity(product1, stock_sub_location, 1.0)
@@ -287,7 +287,7 @@ class StockQuant(TransactionCase):
         })
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         with self.assertRaises(ValidationError):
             self.env['stock.quant']._update_available_quantity(product1, location1, 1.0)
@@ -307,7 +307,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
@@ -319,7 +319,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         for i in range(2):
             self.env['stock.quant'].create({
@@ -358,7 +358,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -376,7 +376,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -396,7 +396,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         for i in range(2):
             self.env['stock.quant'].create({
@@ -417,7 +417,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -458,7 +458,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -484,7 +484,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(product1, stock_location, 1.0)
@@ -494,7 +494,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -514,7 +514,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(product1, stock_location, 1.0)
@@ -529,7 +529,7 @@ class StockQuant(TransactionCase):
         pack_location.active = True
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 2.0)
@@ -546,7 +546,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
         })
         lot1 = self.env['stock.production.lot'].create({
@@ -588,7 +588,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         quant = self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -625,7 +625,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         quantity, in_date = self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
         self.assertEqual(quantity, 1)
@@ -636,7 +636,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
         })
         self.env['stock.quant'].create({
             'product_id': product1.id,
@@ -655,7 +655,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
         })
         lot1 = self.env['stock.production.lot'].create({
@@ -673,7 +673,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
         })
         lot1 = self.env['stock.production.lot'].create({
@@ -703,7 +703,7 @@ class StockQuant(TransactionCase):
         stock_location.removal_strategy_id = lifo_strategy
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
         })
         lot1 = self.env['stock.production.lot'].create({
@@ -734,7 +734,7 @@ class StockQuant(TransactionCase):
         stock_location.removal_strategy_id = lifo_strategy
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
         })
 
@@ -759,7 +759,7 @@ class StockQuant(TransactionCase):
         stock_location = self.env.ref('stock.stock_location_stock')
         product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'lot',
         })
         lot1 = self.env['stock.production.lot'].create({

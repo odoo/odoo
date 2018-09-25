@@ -485,15 +485,15 @@ class TestUnbuild(TestMrpCommon):
         # Create a stockable product and its components
         finshed_product = ProductObj.create({
             'name': 'Table',
-            'type': 'product',
+            'product_type': 'product',
         })
         component1 = ProductObj.create({
             'name': 'Table head',
-            'type': 'product',
+            'product_type': 'product',
         })
         component2 = ProductObj.create({
             'name': 'Table stand',
-            'type': 'product',
+            'product_type': 'product',
         })
 
         # Create bom and add components

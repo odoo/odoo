@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
         line_id = values.get('line_id')
 
         for line in self.order_line:
-            if line.product_id.type == 'product' and line.product_id.inventory_availability in ['always', 'threshold']:
+            if line.product_id.product_type == 'product' and line.product_id.inventory_availability in ['always', 'threshold']:
                 cart_qty = sum(self.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
                 if cart_qty > line.product_id.virtual_available and (line_id == line.id):
                     qty = line.product_id.virtual_available - cart_qty

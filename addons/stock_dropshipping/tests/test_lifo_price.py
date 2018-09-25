@@ -29,7 +29,7 @@ class TestLifoPrice(common.TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.default_code = 'LIFO'
         product_form.name = 'LIFO Ice Cream'
-        product_form.type = 'product'
+        product_form.product_type = 'product'
         product_form.categ_id = product_category_001
         product_form.lst_price = 100.0
         product_form.standard_price = 70.0

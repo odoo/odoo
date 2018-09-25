@@ -638,7 +638,7 @@ class StockMove(models.Model):
     def _account_entry_move(self):
         """ Accounting Valuation Entries """
         self.ensure_one()
-        if self.product_id.type != 'product':
+        if self.product_id.product_type != 'product':
             # no stock valuation for consumable products
             return False
         if self.restrict_partner_id:

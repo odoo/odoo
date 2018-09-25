@@ -46,7 +46,7 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         # Create product refrigerator & oven
         self.product_refrigerator = self.Product.create({
             'name': 'Refrigerator',
-            'type': 'product',
+            'product_type': 'product',
             'cost_method': 'fifo',
             'valuation': 'real_time',
             'standard_price': 1.0,
@@ -55,7 +55,7 @@ class TestStockLandedCostsCommon(AccountingTestCase):
             'categ_id': self.categ_all.id})
         self.product_oven = self.Product.create({
             'name': 'Microwave Oven',
-            'type': 'product',
+            'product_type': 'product',
             'cost_method': 'fifo',
             'valuation': 'real_time',
             'standard_price': 1.0,
@@ -75,4 +75,4 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         return self.Product.create({
             'name': name,
             'landed_cost_ok': True,
-            'type': 'service'})
+            'product_type': 'service'})

@@ -13,7 +13,7 @@ class TestSaleStockLeadTime(TestStockCommon):
         super(TestSaleStockLeadTime, self).setUp()
 
         # Update the product_1 with type and Customer Lead Time
-        self.product_1.write({'type': 'product',
+        self.product_1.write({'product_type': 'product',
                               'sale_delay': 5.0})
 
     def test_00_product_company_level_delays(self):

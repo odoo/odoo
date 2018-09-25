@@ -300,7 +300,7 @@ class Inventory(models.Model):
         :param quant_products: products available in stock_quants
         '''
         vals = []
-        exhausted_domain = [('type', 'not in', ('service', 'consu', 'digital'))]
+        exhausted_domain = [('product_type', 'not in', ('service', 'consu', 'digital'))]
         if products:
             exhausted_products = products - quant_products
             exhausted_domain += [('id', 'in', exhausted_products.ids)]
@@ -327,7 +327,7 @@ class InventoryLine(models.Model):
     partner_id = fields.Many2one('res.partner', 'Owner')
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', '=', 'product')],
+        domain=[('product_type', '=', 'product')],
         index=True, required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -424,7 +424,7 @@ class InventoryLine(models.Model):
         their quantity.
         """
         for line in self:
-            if line.product_id.type != 'product':
+            if line.product_id.product_type != 'product':
                 raise UserError(_("You can only adjust storable products."))
 
     def _get_move_values(self, qty, location_id, location_dest_id, out):

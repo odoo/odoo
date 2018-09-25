@@ -23,7 +23,7 @@ class TestReorderingRule(TransactionCase):
         # create product and set the vendor
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product A'
-        product_form.type = 'product'
+        product_form.product_type = 'product'
         with product_form.seller_ids.new() as seller:
             seller.name = partner
         product_form.route_ids.add(self.env.ref('purchase_stock.route_warehouse0_buy'))

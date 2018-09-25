@@ -167,14 +167,14 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
-        """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
+        """ Stock module compute delivered qty for product [('product_type', 'in', ['consu', 'product'])]
             For SO line coming from expense, no picking should be generate: we don't manage stock for
             thoses lines, even if the product is a storable.
         """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
 
         for line in self:
-            if not line.is_expense and line.product_id.type in ['consu', 'product']:
+            if not line.is_expense and line.product_id.product_type in ['consu', 'product']:
                 line.qty_delivered_method = 'stock_move'
 
     @api.multi
@@ -222,7 +222,7 @@ class SaleOrderLine(models.Model):
             # quantity ordered.
             if line.order_id.state == 'done'\
                     and line.invoice_status == 'no'\
-                    and line.product_id.type in ['consu', 'product']\
+                    and line.product_id.product_type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
                     and line.move_ids \
                     and all(move.state in ['done', 'cancel'] for move in line.move_ids):
@@ -256,7 +256,7 @@ class SaleOrderLine(models.Model):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        if self.product_id.type == 'product':
+        if self.product_id.product_type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             product = self.product_id.with_context(
                 warehouse=self.order_id.warehouse_id.id,
@@ -285,7 +285,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
+        if self.state == 'sale' and self.product_id.product_type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
             # Do not display this warning if the new quantity is below the delivered
             # one; the `write` will raise an `UserError` anyway.
             if self.product_uom_qty < self.qty_delivered:
@@ -340,7 +340,7 @@ class SaleOrderLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         errors = []
         for line in self:
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+            if line.state != 'sale' or not line.product_id.product_type in ('consu','product'):
                 continue
             qty = line._get_qty_procurement()
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:

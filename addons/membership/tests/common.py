@@ -20,7 +20,7 @@ class TestMembershipCommon(AccountingTestCase):
             'membership_date_from': datetime.date.today() + relativedelta(days=-2),
             'membership_date_to': datetime.date.today() + relativedelta(months=1),
             'name': 'Basic Limited',
-            'type': 'service',
+            'product_type': 'service',
             'list_price': 100.00,
         })
 

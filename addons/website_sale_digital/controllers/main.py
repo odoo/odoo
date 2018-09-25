@@ -18,7 +18,7 @@ class WebsiteSaleDigitalConfirmation(WebsiteSale):
     def payment_confirmation(self, **post):
         response = super(WebsiteSaleDigitalConfirmation, self).payment_confirmation(**post)
         order_lines = response.qcontext['order'].order_line
-        digital_content = any(x.product_id.type == 'digital' for x in order_lines)
+        digital_content = any(x.product_id.product_type == 'digital' for x in order_lines)
         response.qcontext.update(digital=digital_content)
         return response
 

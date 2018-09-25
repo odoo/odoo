@@ -15,8 +15,8 @@ class TestPacking(TransactionCase):
         self.ship_location = self.warehouse.wh_output_stock_loc_id
         self.customer_location = self.env.ref('stock.stock_location_customers')
 
-        self.productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
-        self.productB = self.env['product.product'].create({'name': 'Product B', 'type': 'product'})
+        self.productA = self.env['product.product'].create({'name': 'Product A', 'product_type': 'product'})
+        self.productB = self.env['product.product'].create({'name': 'Product B', 'product_type': 'product'})
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that

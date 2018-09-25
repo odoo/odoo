@@ -42,7 +42,7 @@ class TestCommonSalePurchaseNoChart(TestCommonSaleNoChart):
             'name': "Out-sourced Service 1",
             'standard_price': 200.0,
             'list_price': 180.0,
-            'type': 'service',
+            'product_type': 'service',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'invoice_policy': 'delivery',
@@ -57,7 +57,7 @@ class TestCommonSalePurchaseNoChart(TestCommonSaleNoChart):
             'name': "Out-sourced Service 2",
             'standard_price': 20.0,
             'list_price': 15.0,
-            'type': 'service',
+            'product_type': 'service',
             'uom_id': uom_dozen.id,  # different UoM
             'uom_po_id': uom_unit.id,
             'invoice_policy': 'order',

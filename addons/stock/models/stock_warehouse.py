@@ -865,7 +865,7 @@ class Orderpoint(models.Model):
         ondelete="cascade", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain=[('type', '=', 'product')], ondelete='cascade', required=True)
+        domain=[('product_type', '=', 'product')], ondelete='cascade', required=True)
     product_uom = fields.Many2one(
         'uom.uom', 'Product Unit of Measure', related='product_id.uom_id',
         readonly=True, required=True,

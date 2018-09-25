@@ -198,7 +198,7 @@ class PurchaseOrder(models.Model):
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
         for order in self:
-            if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
+            if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.product_type')]):
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
                 if not pickings:
                     res = order._prepare_picking()
@@ -231,7 +231,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
         for line in self:
-            if line.product_id.type in ['consu', 'product']:
+            if line.product_id.product_type in ['consu', 'product']:
                 line.qty_received_method = 'stock_moves'
 
     @api.multi
@@ -276,7 +276,7 @@ class PurchaseOrderLine(models.Model):
     @api.multi
     def _create_or_update_picking(self):
         for line in self:
-            if line.product_id.type in ('product', 'consu'):
+            if line.product_id.product_type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
                 if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
@@ -330,7 +330,7 @@ class PurchaseOrderLine(models.Model):
         """
         self.ensure_one()
         res = []
-        if self.product_id.type not in ['product', 'consu']:
+        if self.product_id.product_type not in ['product', 'consu']:
             return res
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()

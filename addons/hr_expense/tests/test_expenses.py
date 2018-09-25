@@ -20,7 +20,7 @@ class TestAccountEntry(TestExpenseCommon):
             'name': "Delivered at cost",
             'standard_price': 700,
             'list_price': 700,
-            'type': 'consu',
+            'product_type': 'consu',
             'supplier_taxes_id': [(6, 0, [self.tax.id])],
             'default_code': 'CONSU-DELI-COST',
             'taxes_id': False,

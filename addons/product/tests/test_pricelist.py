@@ -78,7 +78,7 @@ class TestPricelist(TransactionCase):
             'uom_id': self.uom_ton.id,
             'uom_po_id': self.uom_ton.id,
             'list_price': tonne_price,
-            'type': 'consu'
+            'product_type': 'consu'
         })
 
         self.env['product.pricelist.item'].create({

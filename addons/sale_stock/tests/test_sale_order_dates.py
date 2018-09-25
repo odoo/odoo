@@ -15,19 +15,19 @@ class TestSaleExpectedDate(common.TransactionCase):
 
         product_A = Product.create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'sale_delay': 5,
             'uom_id': 1,
         })
         product_B = Product.create({
             'name': 'Product B',
-            'type': 'product',
+            'product_type': 'product',
             'sale_delay': 10,
             'uom_id': 1,
         })
         product_C = Product.create({
             'name': 'Product C',
-            'type': 'product',
+            'product_type': 'product',
             'sale_delay': 15,
             'uom_id': 1,
         })

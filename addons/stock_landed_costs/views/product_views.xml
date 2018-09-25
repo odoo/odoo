@@ -8,8 +8,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='inventory']" position="inside">
                     <group string="Inventory Valuation" name="inventory_valuation">
-                        <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('type', 'not in', ['product', 'consu', 'service'])]}"/>
-                        <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('type', 'not in', ['product', 'consu', 'service'])]}"/>
+                        <field name="landed_cost_ok" class="oe_inline" attrs="{'invisible':[('product_type', 'not in', ['product', 'consu', 'service'])]}"/>
+                        <field name="split_method" attrs="{'invisible':['|', ('landed_cost_ok', '=' ,False), ('product_type', 'not in', ['product', 'consu', 'service'])]}"/>
                     </group>
                 </xpath>
             </field>

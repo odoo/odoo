@@ -19,7 +19,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
 
         # patch expense products to make them services creating task/project
         service_values = {
-            'type': 'service',
+            'product_type': 'service',
             'service_type': 'timesheet',
             'service_tracking': 'task_new_project'
         }

@@ -24,7 +24,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
             'name': "Expense service",
             'standard_price': 10,
             'list_price': 20,
-            'type': 'service',
+            'product_type': 'service',
             'invoice_policy': 'delivery',
             'expense_policy': 'sales_price',
             'default_code': 'EXP',

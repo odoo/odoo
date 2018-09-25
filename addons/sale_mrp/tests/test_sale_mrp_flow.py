@@ -30,7 +30,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         def create_product(name, uom_id, routes=()):
             p = Form(self.env['product.product'])
             p.name = name
-            p.type = 'product'
+            p.product_type = 'product'
             p.uom_id = uom_id
             p.uom_po_id = uom_id
             p.route_ids.clear()
@@ -332,7 +332,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         product = self.env.ref('mrp.product_product_table_kit')
-        product.type = 'consu'
+        product.product_type = 'consu'
         product.invoice_policy = 'delivery'
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
         product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
@@ -416,19 +416,19 @@ class TestSaleMrpFlow(common.TransactionCase):
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'type': 'product',
+                'product_type': 'product',
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
         self.component1 = Product.create({
                 'name': 'Component 1',
-                'type': 'product',
+                'product_type': 'product',
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.category.id,
                 'standard_price': 20})
         self.component2 = Product.create({
                 'name': 'Component 2',
-                'type': 'product',
+                'product_type': 'product',
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.category.id,
                 'standard_price': 10})

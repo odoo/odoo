@@ -46,7 +46,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         ('percentage', 'Down payment (percentage)'),
         ('fixed', 'Down payment (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],
+    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('product_type', '=', 'service')],
         default=_default_product_id)
     count = fields.Integer(default=_count, string='Order Count')
     amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
@@ -150,7 +150,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     amount = self.amount
                 if self.product_id.invoice_policy != 'order':
                     raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
-                if self.product_id.type != 'service':
+                if self.product_id.product_type != 'service':
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
                 taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
                 if order.fiscal_position_id and taxes:
@@ -182,7 +182,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _prepare_deposit_product(self):
         return {
             'name': 'Down payment',
-            'type': 'service',
+            'product_type': 'service',
             'invoice_policy': 'order',
             'property_account_income_id': self.deposit_account_id.id,
             'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],

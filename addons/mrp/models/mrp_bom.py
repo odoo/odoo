@@ -30,10 +30,10 @@ class MrpBom(models.Model):
         default='normal', required=True)
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
-        domain="[('type', 'in', ['product', 'consu'])]", required=True)
+        domain="[('product_type', 'in', ['product', 'consu'])]", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', 'in', ['product', 'consu'])]",
+        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('product_type', 'in', ['product', 'consu'])]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
     product_qty = fields.Float(

@@ -11,7 +11,7 @@ class TestWiseOperator(TransactionCase):
         # Create a new storable product
         product_wise = self.env['product.product'].create({
             'name': 'Wise Unit',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.ref('product.product_category_1'),
             'uom_id': self.ref('uom.product_uom_unit'),
             'uom_po_id': self.ref('uom.product_uom_unit'),

@@ -27,7 +27,7 @@ class AccountInvoice(models.Model):
         """
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id
-        if i_line.product_id and i_line.product_id.valuation == 'real_time' and i_line.product_id.type == 'product':
+        if i_line.product_id and i_line.product_id.valuation == 'real_time' and i_line.product_id.product_type == 'product':
             # get the fiscal position
             fpos = i_line.invoice_id.fiscal_position_id
             # get the price difference account at the product

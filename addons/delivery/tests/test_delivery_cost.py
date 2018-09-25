@@ -72,7 +72,7 @@ class TestDeliveryCost(common.TransactionCase):
             'uom_po_id': self.product_uom_hour.id,
             'name': 'Service',
             'categ_id': self.product_category.id,
-            'type': 'service'
+            'product_type': 'service'
         })
 
         # I add delivery cost in Sales order

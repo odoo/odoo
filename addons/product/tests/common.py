@@ -30,12 +30,12 @@ class TestProductCommon(common.SavepointCase):
         Product = cls.env['product.product']
         cls.product_0 = Product.create({
             'name': 'Work',
-            'type': 'service',
+            'product_type': 'service',
             'uom_id': cls.uom_unit.id,
             'uom_po_id': cls.uom_unit.id})
         cls.product_1 = Product.create({
             'name': 'Courage',
-            'type': 'consu',
+            'product_type': 'consu',
             'default_code': 'PROD-1',
             'uom_id': cls.uom_dunit.id,
             'uom_po_id': cls.uom_dunit.id})

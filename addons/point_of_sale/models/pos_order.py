@@ -704,7 +704,7 @@ class PosOrder(models.Model):
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
         for order in self:
-            if not order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
+            if not order.lines.filtered(lambda l: l.product_id.product_type in ['product', 'consu']):
                 continue
             address = order.partner_id.address_get(['delivery']) or {}
             picking_type = order.picking_type_id
@@ -735,11 +735,11 @@ class PosOrder(models.Model):
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }
-                pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
+                pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.product_type in ['product', 'consu']])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
                     order_picking.message_post(body=message)
-                neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
+                neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.product_type in ['product', 'consu']])
                 if neg_qty:
                     return_vals = picking_vals.copy()
                     return_vals.update({
@@ -750,7 +750,7 @@ class PosOrder(models.Model):
                     return_picking = Picking.create(return_vals)
                     return_picking.message_post(body=message)
 
-            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
+            for line in order.lines.filtered(lambda l: l.product_id.product_type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,

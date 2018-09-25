@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_service_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type == 'service' and self.product_id.service_to_purchase:
+        if self.state == 'sale' and self.product_id.product_type == 'service' and self.product_id.service_to_purchase:
             if self.product_uom_qty < self._origin.product_uom_qty:
                 if self.product_uom_qty < self.qty_delivered:
                     return {}

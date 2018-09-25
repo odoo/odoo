@@ -29,7 +29,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
     project_id = fields.Many2one('project.project', "Project", domain=[('sale_line_id', '=', False)], help="Project for which we are creating a sales order", required=True)
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True, help="Customer of the sales order")
-    product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
+    product_id = fields.Many2one('product.product', domain=[('product_type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)
 
@@ -198,7 +198,7 @@ class ProjectCreateSalesOrderLine(models.TransientModel):
     _order = 'id,create_date'
 
     wizard_id = fields.Many2one('project.create.sale.order', required=True)
-    product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", required=True,
+    product_id = fields.Many2one('product.product', domain=[('product_type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", required=True,
         help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", default=1.0, help="Unit price of the sales order item.")
     currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)

@@ -13,7 +13,7 @@ class EventSaleTest(common.TransactionCase):
         # First I create an event product
         product = self.env['product.product'].create({
             'name': 'test_formation',
-            'type': 'service',
+            'product_type': 'service',
             'event_ok': True,
         })
 

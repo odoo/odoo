@@ -9,7 +9,7 @@ class TestReports(odoo.tests.TransactionCase):
         product1 = self.env['product.product'].create({
             'name': 'Mellohi',
             'default_code': 'C418',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'tracking': 'lot',
             'barcode': 'scan_me'

@@ -128,10 +128,10 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
-        """ Sale Timesheet module compute delivered qty for product [('type', 'in', ['service']), ('service_type', '=', 'timesheet')] """
+        """ Sale Timesheet module compute delivered qty for product [('product_type', 'in', ['service']), ('service_type', '=', 'timesheet')] """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
         for line in self:
-            if not line.is_expense and line.product_id.type == 'service' and line.product_id.service_type == 'timesheet':
+            if not line.is_expense and line.product_id.product_type == 'service' and line.product_id.service_type == 'timesheet':
                 line.qty_delivered_method = 'timesheet'
 
     @api.multi
@@ -154,12 +154,12 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_is_service(self):
         for so_line in self:
-            so_line.is_service = so_line.product_id.type == 'service'
+            so_line.is_service = so_line.product_id.product_type == 'service'
 
     @api.depends('product_id')
     def _compute_product_updatable(self):
         for line in self:
-            if line.product_id.type == 'service' and line.state == 'sale':
+            if line.product_id.product_type == 'service' and line.state == 'sale':
                 line.product_updatable = False
             else:
                 super(SaleOrderLine, line)._compute_product_updatable()

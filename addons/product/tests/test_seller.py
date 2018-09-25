@@ -12,7 +12,7 @@ class TestSeller(TransactionCase):
         self.product_service.default_code = 'DEFCODE'
         self.product_consu = self.env['product.product'].create({
             'name': 'Boudin',
-            'type': 'consu',
+            'product_type': 'consu',
         })
         self.product_consu.default_code = 'DEFCODE'
         self.asustec = self.env.ref('base.res_partner_1')

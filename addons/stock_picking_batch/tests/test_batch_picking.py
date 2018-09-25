@@ -12,12 +12,12 @@ class TestBatchPicking(TransactionCase):
         self.picking_type_out = self.env['ir.model.data'].xmlid_to_res_id('stock.picking_type_out')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product B',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 

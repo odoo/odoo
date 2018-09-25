@@ -1056,7 +1056,7 @@ class SaleOrderLine(models.Model):
                 msg += "<li> %s:" % (line.product_id.display_name,)
                 msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
                 line.product_uom_qty, float(values['product_uom_qty']),)
-                if line.product_id.type in ('consu', 'product'):
+                if line.product_id.product_type in ('consu', 'product'):
                     msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
                 msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
             msg += "</ul>"
@@ -1173,7 +1173,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.depends('state', 'is_expense')
     def _compute_qty_delivered_method(self):
-        """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
+        """ Sale module compute delivered qty for product [('product_type', 'in', ['consu']), ('service_type', '=', 'manual')]
                 - consu + expense_policy : analytic (sum of analytic unit_amount)
                 - consu + no expense_policy : manual (set manually on SOL)
                 - service (+ service_type='manual', the only available option) : manual

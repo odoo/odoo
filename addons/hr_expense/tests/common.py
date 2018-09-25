@@ -109,14 +109,14 @@ class TestExpenseCommon(TestAccountNoChartCommon):
 
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Batmobile repair',
-            'type': 'service',
+            'product_type': 'service',
             'uom_id': cls.uom_unit,
             'uom_po_id': cls.uom_unit,
         })
 
         cls.product_2 = cls.env['product.product'].create({
             'name': 'Superboy costume washing',
-            'type': 'service',
+            'product_type': 'service',
             'uom_id': cls.uom_unit,
             'uom_po_id': cls.uom_unit,
         })

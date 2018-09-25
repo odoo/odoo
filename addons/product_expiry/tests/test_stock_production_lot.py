@@ -16,7 +16,7 @@ class TestStockProductionLot(TestStockCommon):
         # create product 
         self.productAAA = self.ProductObj.create({
             'name': 'Product AAA',
-            'type': 'product',
+            'product_type': 'product',
             'tracking':'lot'
         })
 
@@ -113,7 +113,7 @@ class TestStockProductionLot(TestStockCommon):
         # create product 
         self.productBBB = self.ProductObj.create({
             'name': 'Product BBB', 
-            'type': 'product',
+            'product_type': 'product',
             'tracking':'lot'
         })
 
@@ -168,7 +168,7 @@ class TestStockProductionLot(TestStockCommon):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
         # create product 
-        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'type': 'product', 'tracking':'lot'})
+        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'product_type': 'product', 'tracking':'lot'})
 
         # create a new lot with with alert date in the past
         self.lot1_productCCC = self.LotObj.create({'name': 'Lot 1 ProductCCC', 'product_id': self.productCCC.id})

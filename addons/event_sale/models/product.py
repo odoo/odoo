@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     @api.onchange('event_ok')
     def _onchange_event_ok(self):
         if self.event_ok:
-            self.type = 'service'
+            self.product_type = 'service'
 
 
 class Product(models.Model):
@@ -24,4 +24,4 @@ class Product(models.Model):
     def _onchange_event_ok(self):
         """ Redirection, inheritance mechanism hides the method on the model """
         if self.event_ok:
-            self.type = 'service'
+            self.product_type = 'service'

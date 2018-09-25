@@ -38,11 +38,11 @@ class TestStockCommon(common.TransactionCase):
         self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
-        self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})
-        self.productB = self.ProductObj.create({'name': 'Product B', 'type': 'product'})
-        self.productC = self.ProductObj.create({'name': 'Product C', 'type': 'product'})
-        self.productD = self.ProductObj.create({'name': 'Product D', 'type': 'product'})
-        self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
+        self.productA = self.ProductObj.create({'name': 'Product A', 'product_type': 'product'})
+        self.productB = self.ProductObj.create({'name': 'Product B', 'product_type': 'product'})
+        self.productC = self.ProductObj.create({'name': 'Product C', 'product_type': 'product'})
+        self.productD = self.ProductObj.create({'name': 'Product D', 'product_type': 'product'})
+        self.productE = self.ProductObj.create({'name': 'Product E', 'product_type': 'product'})
 
         # Configure unit of measure.
         self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm), ('uom_type', '=', 'reference')], limit=1)
@@ -92,9 +92,9 @@ class TestStockCommon(common.TransactionCase):
             'rounding': 1.0})
 
         # Product for different unit of measure.
-        self.DozA = self.ProductObj.create({'name': 'Dozon-A', 'type': 'product', 'uom_id': self.uom_dozen.id, 'uom_po_id': self.uom_dozen.id})
-        self.SDozA = self.ProductObj.create({'name': 'SuperDozon-A', 'type': 'product', 'uom_id': self.uom_sdozen.id, 'uom_po_id': self.uom_sdozen.id})
-        self.SDozARound = self.ProductObj.create({'name': 'SuperDozenRound-A', 'type': 'product', 'uom_id': self.uom_sdozen_round.id, 'uom_po_id': self.uom_sdozen_round.id})
-        self.UnitA = self.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
-        self.kgB = self.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
-        self.gB = self.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': self.uom_gm.id, 'uom_po_id': self.uom_gm.id})
+        self.DozA = self.ProductObj.create({'name': 'Dozon-A', 'product_type': 'product', 'uom_id': self.uom_dozen.id, 'uom_po_id': self.uom_dozen.id})
+        self.SDozA = self.ProductObj.create({'name': 'SuperDozon-A', 'product_type': 'product', 'uom_id': self.uom_sdozen.id, 'uom_po_id': self.uom_sdozen.id})
+        self.SDozARound = self.ProductObj.create({'name': 'SuperDozenRound-A', 'product_type': 'product', 'uom_id': self.uom_sdozen_round.id, 'uom_po_id': self.uom_sdozen_round.id})
+        self.UnitA = self.ProductObj.create({'name': 'Unit-A', 'product_type': 'product'})
+        self.kgB = self.ProductObj.create({'name': 'kg-B', 'product_type': 'product', 'uom_id': self.uom_kg.id, 'uom_po_id': self.uom_kg.id})
+        self.gB = self.ProductObj.create({'name': 'g-B', 'product_type': 'product', 'uom_id': self.uom_gm.id, 'uom_po_id': self.uom_gm.id})

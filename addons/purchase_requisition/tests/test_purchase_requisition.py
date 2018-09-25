@@ -141,7 +141,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         })
         product_test = self.env['product.product'].create({
             'name': 'Usb Keyboard',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -215,7 +215,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         })
         product_1 = self.env['product.product'].create({
             'name': 'product1',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],
@@ -223,7 +223,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
-            'type': 'product',
+            'product_type': 'product',
             'uom_id': unit,
             'uom_po_id': unit,
             'seller_ids': [(6, 0, [supplier_info1.id])],

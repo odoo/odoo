@@ -34,7 +34,7 @@
                     <field name="list_price" string="Membership Fee"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="uom_id" invisible="1"/>
-                    <field name="type" invisible="1"/>
+                    <field name="product_type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -110,8 +110,8 @@
         <record model="ir.actions.act_window" id="action_membership_products">
             <field name="name">Membership Products</field>
             <field name="res_model">product.template</field>
-            <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
-            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
+            <field name="domain">[('membership','=',True), ('product_type', '=', 'service')]</field>
+            <field name="context">{'membership':True, 'product_type':'service', 'default_membership': True, 'default_product_type': 'service'}</field>
             <field name="search_view_id" ref="membership_product_search_form_view"/>
         </record>
 

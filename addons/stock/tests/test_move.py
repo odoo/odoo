@@ -21,24 +21,24 @@ class StockMove(TransactionCase):
         self.uom_dozen = self.env.ref('uom.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product2 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'serial',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product3 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': 'lot',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product4 = self.env['product.product'].create({
             'name': 'Product A',
-            'type': 'consu',
+            'product_type': 'consu',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -239,7 +239,7 @@ class StockMove(TransactionCase):
         """
         # make some stock
 
-        self.product1.type = 'consu'
+        self.product1.product_type = 'consu'
         self.assertEqual(len(self.gather_relevant(self.product1, self.stock_location)), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
 
@@ -3160,7 +3160,7 @@ class StockMove(TransactionCase):
         """
         product5 = self.env['product.product'].create({
             'name': 'Product 5',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -3968,9 +3968,9 @@ class StockMove(TransactionCase):
         move1._action_assign()
 
         with self.assertRaises(UserError):
-            self.product1.type = 'consu'
+            self.product1.product_type = 'consu'
         move1._action_cancel()
-        self.product1.type = 'consu'
+        self.product1.product_type = 'consu'
 
         move2 = self.env['stock.move'].create({
             'name': 'test_customer',
@@ -3986,9 +3986,9 @@ class StockMove(TransactionCase):
         move2._action_assign()
 
         with self.assertRaises(UserError):
-            self.product1.type = 'product'
+            self.product1.product_type = 'product'
         move2._action_cancel()
-        self.product1.type = 'product'
+        self.product1.product_type = 'product'
 
     def test_edit_done_picking_1(self):
         """ Add a new move line in a done picking should generate an

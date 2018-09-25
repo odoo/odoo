@@ -1077,7 +1077,7 @@ class Picking(models.Model):
         view = self.env.ref('stock.stock_scrap_form_view2')
         products = self.env['product.product']
         for move in self.move_lines:
-            if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
+            if move.state not in ('draft', 'cancel') and move.product_id.product_type in ('product', 'consu'):
                 products |= move.product_id
         return {
             'name': _('Scrap'),

@@ -6,7 +6,7 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 class TestWarehouse(TestStockCommon):
 
     def test_inventory_product(self):
-        self.product_1.type = 'product'
+        self.product_1.product_type = 'product'
         inventory_wizard = self.env['stock.change.product.qty'].create({
             'product_id': self.product_1.id,
             'new_quantity': 50.0,
@@ -48,7 +48,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.stock_location_stock')).quantity, 0.0)
 
     def test_inventory_wizard(self):
-        self.product_1.type = 'product'
+        self.product_1.product_type = 'product'
         inventory_wizard = self.env['stock.change.product.qty'].create({
             'product_id': self.product_1.id,
             'new_quantity': 50.0,
@@ -75,7 +75,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_basic_move(self):
         product = self.product_3.sudo(self.user_stock_manager)
-        product.type = 'product'
+        product.product_type = 'product'
         picking_out = self.env['stock.picking'].create({
             'partner_id': self.env.ref('base.res_partner_2').id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
@@ -132,7 +132,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_inventory_adjustment_and_negative_quants_1(self):
         """Make sure negative quants from returns get wiped out with an inventory adjustment"""
-        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        productA = self.env['product.product'].create({'name': 'Product A', 'product_type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
 
@@ -173,7 +173,7 @@ class TestWarehouse(TestStockCommon):
 
     def test_inventory_adjustment_and_negative_quants_2(self):
         """Make sure negative quants get wiped out with an inventory adjustment"""
-        productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
+        productA = self.env['product.product'].create({'name': 'Product A', 'product_type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
         location_loss = self.env.ref('stock.location_inventory')
@@ -261,7 +261,7 @@ class TestWarehouse(TestStockCommon):
 
         product = self.env['product.product'].create({
             'name': 'Fakir',
-            'type': 'product',
+            'product_type': 'product',
             'route_ids': [(4, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
         })
 
@@ -335,7 +335,7 @@ class TestWarehouse(TestStockCommon):
         # The product contains the 2 resupply routes.
         product = self.env['product.product'].create({
             'name': 'Fakir',
-            'type': 'product',
+            'product_type': 'product',
             'route_ids': [(4, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
         })
 

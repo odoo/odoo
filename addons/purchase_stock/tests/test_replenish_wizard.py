@@ -19,7 +19,7 @@ class TestReplenishWizard(TestStockCommon):
         # the 'supplierinfo' prevously created
         self.product1 = self.env['product.product'].create({
             'name': 'product a',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
             'seller_ids': [(4, self.supplierinfo.id, 0)],
             'route_ids': [(4, self.env.ref('purchase_stock.route_warehouse0_buy').id, 0)],

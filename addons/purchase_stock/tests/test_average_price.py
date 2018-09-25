@@ -18,7 +18,7 @@ class TestAveragePrice(TestPurchase):
         product_cable_management_box = self.env['product.product'].create({
             'default_code': 'AVG',
             'name': 'Average Ice Cream',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_1').id,
             'list_price': 100.0,
             'standard_price': 60.0,

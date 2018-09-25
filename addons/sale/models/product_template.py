@@ -71,10 +71,10 @@ class ProductTemplate(models.Model):
 
         return product_variant.id
 
-    @api.onchange('type')
+    @api.onchange('product_type')
     def _onchange_type(self):
         """ Force values to stay consistent with integrity constraints """
-        if self.type == 'consu':
+        if self.product_type == 'consu':
             if not self.invoice_policy:
                 self.invoice_policy = 'order'
             self.service_type = 'manual'

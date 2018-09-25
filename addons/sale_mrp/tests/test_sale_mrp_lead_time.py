@@ -16,7 +16,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
         with Form(self.product_1) as p1:
-            p1.type = 'product'
+            p1.product_type = 'product'
             p1.produce_delay = 5.0
             p1.sale_delay = 5.0
             p1.route_ids.clear()
@@ -25,7 +25,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Update the product_2 with type
         with Form(self.product_2) as p2:
-            p2.type = 'consu'
+            p2.product_type = 'consu'
 
         # Create Bill of materials for product_1
         with Form(self.env['mrp.bom']) as bom:

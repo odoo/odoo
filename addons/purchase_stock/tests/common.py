@@ -33,13 +33,13 @@ class TestPurchase(TestStockCommon):
 
         # Update product_1 with type, route and Delivery Lead Time
         cls.product_1.write({
-            'type': 'product',
+            'product_type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]})
 
         # Update product_2 with type, route and Delivery Lead Time
         cls.product_2.write({
-            'type': 'product',
+            'product_type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 2})]})
 

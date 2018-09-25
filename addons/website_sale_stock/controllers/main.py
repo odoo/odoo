@@ -12,7 +12,7 @@ class WebsiteSale(WebsiteSale):
             product = request.env['product.product'].sudo().browse(res['product_id'])
             res.update({
                 'virtual_available': product.virtual_available,
-                'product_type': product.type,
+                'product_type': product.product_type,
                 'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
                 'custom_message': product.custom_message,
@@ -24,7 +24,7 @@ class WebsiteSale(WebsiteSale):
             product_template = request.env['product.template'].sudo().browse(product_template_id)
             res.update({
                 'virtual_available': 0,
-                'product_type': product_template.type,
+                'product_type': product_template.product_type,
                 'inventory_availability': product_template.inventory_availability,
                 'available_threshold': product_template.available_threshold,
                 'custom_message': product_template.custom_message,

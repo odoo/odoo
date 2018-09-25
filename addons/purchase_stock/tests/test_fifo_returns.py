@@ -17,7 +17,7 @@ class TestFifoReturns(TestPurchase):
         product_fiforet_icecream = self.env['product.product'].create({
             'default_code': 'FIFORET',
             'name': 'FIFO Ice Cream',
-            'type': 'product',
+            'product_type': 'product',
             'categ_id': self.env.ref('product.product_category_1').id,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,

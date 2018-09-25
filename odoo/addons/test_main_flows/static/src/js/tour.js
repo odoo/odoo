@@ -41,7 +41,7 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text the_flow.product',
 }, {
-    trigger:  "select[name=type]",
+    trigger:  "select[name=product_type]",
     content: _t('Let\'s enter the product type'),
     position: 'left',
     run: 'text "product"',
@@ -227,7 +227,7 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text the_flow.service',
 }, {
-    trigger: '.o_field_widget[name=type]',
+    trigger: '.o_field_widget[name=product_type]',
     content: _t('Set to service'),
     position: 'left',
     run: 'text "service"',

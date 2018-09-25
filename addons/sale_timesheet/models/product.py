@@ -77,11 +77,11 @@ class ProductTemplate(models.Model):
         elif self.service_tracking in ['task_new_project', 'project_only']:
             self.project_id = False
 
-    @api.onchange('type')
+    @api.onchange('product_type')
     def _onchange_type(self):
         super(ProductTemplate, self)._onchange_type()
-        if self.type == 'service':
+        if self.product_type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
-        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+        elif self.product_type == 'consu' and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'

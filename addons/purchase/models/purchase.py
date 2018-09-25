@@ -410,7 +410,7 @@ class PurchaseOrderLine(models.Model):
     product_image = fields.Binary(
         'Product Image', related="product_id.image", readonly=False,
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
-    product_type = fields.Selection(related='product_id.type', readonly=True)
+    product_type = fields.Selection(related='product_id.product_type', readonly=True)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
@@ -494,7 +494,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_qty_received_method(self):
         for line in self:
-            if line.product_id.type in ['consu', 'service']:
+            if line.product_id.product_type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
 
     @api.multi

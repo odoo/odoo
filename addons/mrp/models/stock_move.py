@@ -193,7 +193,7 @@ class StockMove(models.Model):
         }
 
     def _generate_move_phantom(self, bom_line, quantity):
-        if bom_line.product_id.type in ['product', 'consu']:
+        if bom_line.product_id.product_type in ['product', 'consu']:
             return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity))
         return self.env['stock.move']
 

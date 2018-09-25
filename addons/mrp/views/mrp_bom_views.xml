@@ -25,8 +25,8 @@
                         </div>
                     <group>
                         <group>
-                            <field name="product_tmpl_id" context="{'default_type': 'product'}"/>
-                            <field name="product_id" groups="product.group_product_variant" context="{'default_type': 'product'}"/>
+                            <field name="product_tmpl_id" context="{'default_product_type': 'product'}"/>
+                            <field name="product_id" groups="product.group_product_variant" context="{'default_product_type': 'product'}"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
@@ -60,7 +60,7 @@
                             <field name="bom_line_ids" widget="one2many_list" context="{'default_parent_product_tmpl_id': product_tmpl_id}">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" context="{'default_type': 'product'}"/>
+                                    <field name="product_id" context="{'default_product_type': 'product'}"/>
                                     <field name="has_attachments" invisible="1"/>
                                     <button name="action_see_attachments" type="object" icon="fa-files-o" attrs="{'invisible': [('has_attachments', '=', False)]}" aria-label="No attachment" title="No attachment"/>
                                     <button name="action_see_attachments" type="object" icon="fa-file" attrs="{'invisible': [('has_attachments', '=', True)]}" aria-label="Attachments" title="Attachments"/>
@@ -144,8 +144,8 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
-                    <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
-                    <filter string="Normal" name="normal" domain="[('type', '=', 'normal')]"/>
+                    <filter string="Kit" name="phantom" domain="[('product_type', '=', 'phantom')]"/>
+                    <filter string="Normal" name="normal" domain="[('product_type', '=', 'normal')]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' name="default_unit_of_measure" domain="[]" context="{'group_by' : 'product_uom_id'}"/>

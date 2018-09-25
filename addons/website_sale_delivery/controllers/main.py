@@ -36,7 +36,7 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     def _get_shop_payment_values(self, order, **kwargs):
         values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
-        has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
+        has_storable_products = any(line.product_id.product_type in ['consu', 'product'] for line in order.order_line)
 
         if not order._get_delivery_methods() and has_storable_products:
             values['errors'].append(

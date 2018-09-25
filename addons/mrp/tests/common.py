@@ -14,17 +14,17 @@ class TestMrpCommon(common2.TestStockCommon):
         """
         product_to_build = self.env['product.product'].create({
             'name': 'Young Tom',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': tracking_final,
         })
         product_to_use_1 = self.env['product.product'].create({
             'name': 'Botox',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': tracking_base_1,
         })
         product_to_use_2 = self.env['product.product'].create({
             'name': 'Old Tom',
-            'type': 'product',
+            'product_type': 'product',
             'tracking': tracking_base_2,
         })
         bom_1 = self.env['mrp.bom'].create({
@@ -56,7 +56,7 @@ class TestMrpCommon(common2.TestStockCommon):
 
         # Update demo products
         (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7 | cls.product_8).write({
-            'type': 'product',
+            'product_type': 'product',
         })
 
         # User Data: mrp user and mrp manager
