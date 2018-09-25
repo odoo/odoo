@@ -440,14 +440,14 @@ class AccountVoucherLine(models.Model):
         for fname, fvalue in onchange_res['value'].items():
             setattr(self, fname, fvalue)
 
-    def _get_account(self, product, fpos, type):
+    def _get_account(self, product, fpos, voucher_type):
         accounts = product.product_tmpl_id.get_product_accounts(fpos)
-        if type == 'sale':
+        if voucher_type == 'sale':
             return accounts['income']
         return accounts['expense']
 
     @api.multi
-    def product_id_change(self, product_id, partner_id=False, price_unit=False, company_id=None, currency_id=None, type=None):
+    def product_id_change(self, product_id, partner_id=False, price_unit=False, company_id=None, currency_id=None, voucher_type=None):
         # TDE note: mix of old and new onchange badly written in 9, multi but does not use record set
         context = self._context
         company_id = company_id if company_id is not None else context.get('company_id', False)
@@ -461,13 +461,13 @@ class AccountVoucherLine(models.Model):
 
         product = self.env['product.product'].browse(product_id)
         fpos = part.property_account_position_id
-        account = self._get_account(product, fpos, type)
+        account = self._get_account(product, fpos, voucher_type)
         values = {
             'name': product.partner_ref,
             'account_id': account.id,
         }
 
-        if type == 'purchase':
+        if voucher_type == 'purchase':
             values['price_unit'] = price_unit or product.standard_price
             taxes = product.supplier_taxes_id or account.tax_ids
             if product.description_purchase:
@@ -482,7 +482,7 @@ class AccountVoucherLine(models.Model):
 
         if company and currency:
             if company.currency_id != currency:
-                if type == 'purchase':
+                if voucher_type == 'purchase':
                     values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
