@@ -23,7 +23,7 @@ QUnit.module('Views', {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "boolean"},
                     date: {string: "Some Date", type: "date"},
-                    int_field: {string: "int_field", type: "integer", sortable: true},
+                    int_field: {string: "int_field", type: "integer", sortable: true, group_operator: "sum"},
                     qux: {string: "my float", type: "float"},
                     m2o: {string: "M2O field", type: "many2one", relation: "bar"},
                     o2m: {string: "O2M field", type: "one2many", relation: "bar"},
@@ -868,7 +868,6 @@ QUnit.module('Views', {
 
     QUnit.test('groups can be sorted on aggregates', function (assert) {
         assert.expect(10);
-
         var list = createView({
             View: ListView,
             model: 'foo',
@@ -901,6 +900,47 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('groups cannot be sorted on non-aggregable fields', function (assert) {
+        assert.expect(6);
+        this.data.foo.fields.sort_field = {string: "sortable_field", type: "sting", sortable: true, default: "value"};
+        _.each(this.data.records, function(elem) {
+            elem.sort_field = "value" + elem.id;
+        });
+        this.data.foo.fields.foo.sortable= true;
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch: '<tree editable="bottom"><field name="foo" /><field name="int_field"/><field name="sort_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.step(args.kwargs.orderby || 'default order');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        //we cannot sort by sort_field since it doesn't have a group_operator
+        list.$('.o_column_sortable:eq(2)').click(); // sort (sort_field ASC(invalid) -> default order)
+        //we can sort by int_field since it has a group_operator
+        list.$('.o_column_sortable:eq(1)').click(); // sort (int_field ASC)
+        //we keep previous order
+        list.$('.o_column_sortable:eq(2)').click(); // sort (sort_field ASC(invalid) -> int_field ASC)
+        //we can sort on foo since we are groupped by foo + previous order
+        list.$('.o_column_sortable:eq(0)').click(); // sort (foo ASC, int_field ASK")
+
+        assert.verifySteps([
+            'default order',
+            'default order',
+            'int_field ASC',
+            'int_field ASC',
+            'foo ASC, int_field ASC'
+        ]);
+
+        list.destroy();
+    });
+
 
     QUnit.test('properly apply onchange in simple case', function (assert) {
         assert.expect(2);
