@@ -146,7 +146,8 @@ class IapAccount(models.Model):
     def get(self, service_name):
         account = self.search([('service_name', '=', service_name), ('company_id', 'in', [self.env.user.company_id.id, False])])
         if not account:
-            account = self.create({'service_name': service_name})
+            # TODO: remove this sudo in v12 as we change the user rights.
+            account = self.sudo().create({'service_name': service_name}).with_env(self.env)
             # Since the account did not exist yet, we will encounter a NoCreditError,
             # which is going to rollback the database and undo the account creation,
             # preventing the process to continue any further.
