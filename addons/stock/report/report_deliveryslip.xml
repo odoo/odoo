@@ -95,7 +95,7 @@
                                     </p>
                                 </td>
                                 <td t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    <span t-field="move_line.lot_name"/>
+                                    <span t-esc="move_line.lot_name or move_line.lot_id.name"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
