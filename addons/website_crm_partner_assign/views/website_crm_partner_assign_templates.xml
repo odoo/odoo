@@ -59,10 +59,10 @@
             </div>
 
             <div class="col-lg-8 offset-lg-1" id="ref_content">
-                <div class='d-flex m-2'>
+                <div class="d-flex p-2">
                     <t t-call="website.pager"/>
-                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
-                        <div class="form-group float-right">
+                    <form action="" method="get" class="form-inline ml-auto">
+                        <div class="form-group">
                             <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                         </div>
                     </form>
