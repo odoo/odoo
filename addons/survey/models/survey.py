@@ -698,7 +698,7 @@ class SurveyUserInput(models.Model):
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='restrict')
     date_create = fields.Datetime('Creation Date', default=fields.Datetime.now, required=True, readonly=True, copy=False)
     deadline = fields.Datetime('Deadline', help="Date by which the person can open the survey and submit answers", oldname="date_deadline")
-    type = fields.Selection([('manually', 'Manually'), ('link', 'Link')], string='Answer Type', default='manually', required=True, readonly=True, oldname="response_type")
+    input_type = fields.Selection([('manually', 'Manually'), ('link', 'Link')], string='Answer Type', default='manually', required=True, readonly=True, oldname="type")
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),
@@ -736,7 +736,7 @@ class SurveyUserInput(models.Model):
             (used as a cronjob declared in data/survey_cron.xml)
         """
         an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
-        self.search([('type', '=', 'manually'), ('state', '=', 'new'),
+        self.search([('input_type', '=', 'manually'), ('state', '=', 'new'),
                     ('date_create', '<', an_hour_ago)]).unlink()
 
     @api.multi
