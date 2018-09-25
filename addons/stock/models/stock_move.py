@@ -1087,8 +1087,7 @@ class StockMove(models.Model):
 
     def _action_done(self):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
-
-        moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
+        moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
