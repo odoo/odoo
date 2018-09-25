@@ -19,7 +19,7 @@
 # Florian Hatat, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# f5f0a0dac17dde787a1d812a6989680e, 2017
 # Shark McGnark <peculiarcheese@gmail.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
 # Alexis de Lattre <alexis@via.ecp.fr>, 2017
@@ -1293,6 +1293,18 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"Planificateur d'évènement pour:\n"
+"                              - Evènement: %s (%s)\n"
+"                              - Prévu: %s\n"
+"                              - Modèle: %s (%s)\n"
+"\n"
+"                            A échoué avec l'erreur:\n"
+"                              - %s\n"
+"\n"
+"                            Vous recevez ce mail parce que vous êtes:\n"
+"                              - l'organisateur de l'évènement,\n"
+"                              - le responsable de l'évènement,\n"
+"                              - ou le dernier a avoir modifié le modèle."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_event_begin_date
@@ -2257,7 +2269,7 @@ msgstr "Visibilité"
 #: code:addons/event/models/event_mail.py:130
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr ""
+msgstr "ATTENTION: Erreur de planificateur d'évènement pour l'évènement: %s"
 
 #. module: event
 #: model:event.event,description:event.event_2

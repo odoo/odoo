@@ -166,7 +166,7 @@ class Website(models.Model):
             'partner_id': partner.id,
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
-            'team_id': self.salesteam_id.id,
+            'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,

@@ -47,8 +47,8 @@ class ProductTemplate(models.Model):
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection([
-        ('consu', _('Consumable')),
-        ('service', _('Service'))], string='Product Type', default='consu', required=True,
+        ('consu', 'Consumable'),
+        ('service', 'Service')], string='Product Type', default='consu', required=True,
         help='A stockable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
              'A consumable product, on the other hand, is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.\n'
@@ -237,10 +237,7 @@ class ProductTemplate(models.Model):
 
     def _compute_is_product_variant(self):
         for template in self:
-            if template._name == 'product.template':
-                template.is_product_variant = False
-            else:
-                template.is_product_variant = True
+            template.is_product_variant = False
 
     @api.one
     def _set_weight(self):

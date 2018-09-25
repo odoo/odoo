@@ -760,7 +760,7 @@ var StatementModel = BasicModel.extend({
             }).then(function (result) {
                 if (result.length > 0) {
                     var line = self.getLine(handle);
-                    self.lines[handle].st_line.open_balance_account_id = line.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
+                    self.lines[handle].st_line.open_balance_account_id = line.balance.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
                 }
             });
     },
@@ -819,6 +819,7 @@ var StatementModel = BasicModel.extend({
 
                             prop.computed_with_tax = tax.price_include
                             prop.tax_amount = tax.amount
+                            prop.tax_exigible = tax.tax_exigibility === 'on_payment' ? true : undefined
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                             prop.invalid = !self._isValid(prop);
@@ -1105,6 +1106,7 @@ var StatementModel = BasicModel.extend({
             name : prop.label,
             debit : amount > 0 ? amount : 0,
             credit : amount < 0 ? -amount : 0,
+            tax_exigible: prop.tax_exigible,
             // This one isn't usefull for the server,
             // But since we need to change the amount (and thus its semantics) into base_amount
             // It might be useful to have a trace in the RPC for debugging purposes
@@ -1169,7 +1171,15 @@ var ManualModel = StatementModel.extend({
                 self.accounts = _.object(self.account_ids, _.pluck(accounts, 'code'));
             });
 
-        return def_account.then(function () {
+        var def_reconcileModel = this._rpc({
+                model: 'account.reconcile.model',
+                method: 'search_read',
+            })
+            .then(function (reconcileModels) {
+                self.reconcileModels = reconcileModels;
+            });
+
+        return $.when(def_reconcileModel, def_account).then(function () {
             switch(context.mode) {
                 case 'customers':
                 case 'suppliers':
@@ -1264,7 +1274,8 @@ var ManualModel = StatementModel.extend({
                 });
             } else {
                 var mv_line_ids = _.pluck(_.filter(props, function (prop) {return !isNaN(prop.id);}), 'id');
-                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display;}), self._formatToProcessReconciliation.bind(self, line));
+                // Dear KangOl, please FORWARD-PORT UP TO SAAS-11.3. Thank you for your hard work.
+                var new_mv_line_dicts = _.map(_.filter(props, function (prop) {return isNaN(prop.id) && prop.display && !prop.is_tax;}), self._formatToProcessReconciliation.bind(self, line));
                 process_reconciliations.push({
                     id: null,
                     type: null,
@@ -1369,7 +1380,7 @@ var ManualModel = StatementModel.extend({
             offset: 0,
             limitMoveLines: this.limitMoveLines,
             filter: "",
-            reconcileModels: [],
+            reconcileModels: this.reconcileModels,
             account_id: this._formatNameGet([data.account_id, data.account_name]),
             st_line: data,
             visible: true

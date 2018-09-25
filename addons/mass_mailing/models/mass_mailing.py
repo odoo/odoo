@@ -610,10 +610,11 @@ class MassMailing(models.Model):
             """
         else:
             query +="""
-               AND s.mass_mailing_id = %%(mailing_id)s;
+               AND s.mass_mailing_id = %%(mailing_id)s
+               AND s.model = %%(target_model)s;
             """
         query = query % {'target': target._table, 'mail_field': mail_field}
-        params = {'mailing_id': self.id, 'mailing_campaign_id': self.mass_mailing_campaign_id.id}
+        params = {'mailing_id': self.id, 'mailing_campaign_id': self.mass_mailing_campaign_id.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
         seen_list = set(m[0] for m in self._cr.fetchall())
         _logger.info(

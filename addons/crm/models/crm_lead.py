@@ -363,52 +363,60 @@ class Lead(models.Model):
         for lead in self:
             stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
-            if lead.user_id and lead.team_id and lead.planned_revenue:
-                query = """
-                    SELECT
-                        SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
-                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
-                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
-                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
-                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
-                    FROM crm_lead
-                    WHERE
-                        type = 'opportunity'
-                    AND
-                        active = True
-                    AND
-                        probability = 100
-                    AND
-                        DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
-                    AND
-                        (user_id = %(user_id)s OR team_id = %(team_id)s)
-                """
-                lead.env.cr.execute(query, {'user_id': lead.user_id.id,
-                                            'team_id': lead.team_id.id})
-                query_result = self.env.cr.dictfetchone()
 
-                message = False
-                if query_result['total_won'] == 1:
-                    message = _('Go, go, go! Congrats for your first deal.')
-                elif query_result['max_team_30'] == lead.planned_revenue:
-                    message = _('Boom! Team record for the past 30 days.')
-                elif query_result['max_team_7'] == lead.planned_revenue:
-                    message = _('Yeah! Deal of the last 7 days for the team.')
-                elif query_result['max_user_30'] == lead.planned_revenue:
-                    message = _('You just beat your personal record for the past 30 days.')
-                elif query_result['max_user_7'] == lead.planned_revenue:
-                    message = _('You just beat your personal record for the past 7 days.')
+        return True
 
-                if message:
-                    return {
-                        'effect': {
-                            'fadeout': 'slow',
-                            'message': message,
-                            'img_url': '/web/image/%s/%s/image' % (lead.team_id.user_id._name, lead.team_id.user_id.id) if lead.team_id.user_id.image else '/web/static/src/img/smile.svg',
-                            'type': 'rainbow_man',
-                        }
+    @api.multi
+    def action_set_won_rainbowman(self):
+        self.ensure_one()
+        self.action_set_won()
+
+        if self.user_id and self.team_id and self.planned_revenue:
+            query = """
+                SELECT
+                    SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                FROM crm_lead
+                WHERE
+                    type = 'opportunity'
+                AND
+                    active = True
+                AND
+                    probability = 100
+                AND
+                    DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+                AND
+                    (user_id = %(user_id)s OR team_id = %(team_id)s)
+            """
+            self.env.cr.execute(query, {'user_id': self.user_id.id,
+                                        'team_id': self.team_id.id})
+            query_result = self.env.cr.dictfetchone()
+
+            message = False
+            if query_result['total_won'] == 1:
+                message = _('Go, go, go! Congrats for your first deal.')
+            elif query_result['max_team_30'] == self.planned_revenue:
+                message = _('Boom! Team record for the past 30 days.')
+            elif query_result['max_team_7'] == self.planned_revenue:
+                message = _('Yeah! Deal of the last 7 days for the team.')
+            elif query_result['max_user_30'] == self.planned_revenue:
+                message = _('You just beat your personal record for the past 30 days.')
+            elif query_result['max_user_7'] == self.planned_revenue:
+                message = _('You just beat your personal record for the past 7 days.')
+
+            if message:
+                return {
+                    'effect': {
+                        'fadeout': 'slow',
+                        'message': message,
+                        'img_url': '/web/image/%s/%s/image' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image else '/web/static/src/img/smile.svg',
+                        'type': 'rainbow_man',
                     }
-            return True
+                }
+        return True
 
     @api.multi
     def action_schedule_meeting(self):
@@ -914,7 +922,7 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        if help:
+        if help and help.find("oe_view_nocontent_create") == -1:
             alias_record = self.env.ref("crm.mail_alias_lead_info", raise_if_not_found=False)
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
@@ -922,7 +930,9 @@ class Lead(models.Model):
                 dynamic_help = _("""All email incoming to %s will automatically
                     create new opportunity. Update your business card, phone book, social media,...
                     Send an email right now and see it here.""") % (email_link,)
-                return '<p class="oe_view_nocontent_create">%s</p>%s<p>%s</p>' % (_('Click to add a new opportunity'), help, dynamic_help)
+                return '<p class="oe_view_nocontent_create">%s</p>%s<p class="oe_view_nocontent_alias">%s</p>' % (
+                    _('Click to add a new opportunity'), help, dynamic_help
+                )
         return super(Lead, self.with_context(
             empty_list_help_model='crm.team',
             empty_list_help_id=self._context.get('default_team_id', False),

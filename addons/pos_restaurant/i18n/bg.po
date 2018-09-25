@@ -231,6 +231,10 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Всеки принтер за поръчки разполага с IP адрес, определящ PosBox/хардуеърния \n"
+"                прокси сървър, където може да бъде открит принтера, както и списък с продуктови категории.\n"
+"                Принтер за поръчки ще разпечатва единствено актуализации на продукти, принадлежащи към някоя от\n"
+"                категориите му."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
@@ -279,7 +283,7 @@ msgstr "Гости ?"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
 #, python-format
 msgid "Guests:"
-msgstr ""
+msgstr "Гости:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -461,33 +465,33 @@ msgstr "Изтриването на маса не може да "
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr ""
+msgstr "Етаж на ресторант"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_floor_ids
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr ""
+msgstr "Етажи на ресторант"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr ""
+msgstr "Принтери за ресторантски поръчки"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr ""
+msgstr "Ресторантска маса"
 
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
 msgid "Round"
-msgstr ""
+msgstr "Закръглете"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_seats
 msgid "Seats"
-msgstr ""
+msgstr "Места"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_sequence
@@ -504,7 +508,7 @@ msgstr "Обслужван от "
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_shape
 msgid "Shape"
-msgstr ""
+msgstr "Форма"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -540,7 +544,7 @@ msgstr "ОБЩО"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_table_id
 msgid "Table"
-msgstr ""
+msgstr "Маса"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_is_table_management
@@ -550,14 +554,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_name
 msgid "Table Name"
-msgstr ""
+msgstr "Име на маса"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:483
 #, python-format
 msgid "Table Name ?"
-msgstr ""
+msgstr "Име на маса?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_table_ids
@@ -576,11 +580,12 @@ msgstr "Тел:"
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
 msgstr ""
+"IP адресът или името на хоста на хардуеърния прокси сървър на принтера"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "Количеството клиенти, обслужвани по тази поръчка."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_color
@@ -588,16 +593,18 @@ msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
 msgstr ""
+"Фоновият цвят на етажната планировка, (трябва да е определен в html-"
+"съвместим формат)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Стандартен номер на клиент, обслужван на тази маса."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
 msgid "The list of tables in this floor"
-msgstr ""
+msgstr "Списъкът с маси на този етаж"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
@@ -607,7 +614,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "Масата, на която е била обслужена тази поръчка"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
@@ -620,7 +627,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
 msgid "The table's height in pixels"
-msgstr ""
+msgstr "Височината на масата в пиксели"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
@@ -628,24 +635,27 @@ msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
 msgstr ""
+"Хоризонталното позициониране на масата от лявата страна до централно-"
+"разположените маси в пиксели"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
 msgstr ""
+"Вертикално позициониране на масата от горе до центъра на масата в пиксели"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "Широчината на масата в пиксели"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr ""
+msgstr "Този етаж все още не разполага с маси, използвайте"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -672,12 +682,12 @@ msgstr "Трансфер"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Използван за сортиране на подове"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_v
 msgid "Vertical Position"
-msgstr ""
+msgstr "Вертикално позициониране"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_width
@@ -698,7 +708,7 @@ msgstr "със"
 #: code:addons/pos_restaurant/static/src/js/floors.js:426
 #, python-format
 msgid "You must be connected to the internet to save your changes."
-msgstr ""
+msgstr "За да запазите промените си, трябва да сте свързани с интернет. "
 
 #. module: pos_restaurant
 #. openerp-web
@@ -713,14 +723,14 @@ msgstr "на"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
-msgstr ""
+msgstr "на маса"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr ""
+msgstr "бутон в края на лентата с инструменти, за да създадете нови маси."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -737,14 +747,14 @@ msgstr "pos.config"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 msgid "restaurant.floor"
-msgstr ""
+msgstr "restaurant.floor"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "restaurant.printer"
-msgstr ""
+msgstr "restaurant.printer"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
-msgstr ""
+msgstr "restaurant.table"

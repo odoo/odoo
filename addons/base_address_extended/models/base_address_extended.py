@@ -33,6 +33,11 @@ class Partner(models.Model):
     street_number2 = fields.Char('Door Number', compute='_split_street',
                                  inverse='_set_street', store=True)
 
+    @api.model
+    def _address_fields(self):
+        """Returns the list of address fields that are synced from the parent."""
+        return super(Partner, self)._address_fields() + ['street_name', 'street_number', 'street_number2']
+
     def get_street_fields(self):
         """Returns the fields that can be used in a street format.
         Overwrite this function if you want to add your own fields."""

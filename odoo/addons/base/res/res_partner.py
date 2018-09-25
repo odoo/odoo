@@ -448,7 +448,7 @@ class Partner(models.Model):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if values.get('parent_id') or values.get('type', 'contact'):
+        if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self._commercial_sync_from_company()

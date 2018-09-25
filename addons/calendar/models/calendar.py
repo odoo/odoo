@@ -630,6 +630,8 @@ class Meeting(models.Model):
                     recurring_date = recurring_date.replace(tzinfo=None)
                 else:
                     recurring_date = todate(meeting.recurrent_id_date)
+                if date_field == "stop":
+                    recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
         return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
@@ -1079,9 +1081,8 @@ class Meeting(models.Model):
             else:
                 sort_fields[field] = self[field]
                 if isinstance(self[field], models.BaseModel):
-                    name_get = self[field].name_get()
-                    if len(name_get) and len(name_get[0]) >= 2:
-                        sort_fields[field] = name_get[0][1]
+                    name_get = self[field].mapped('display_name')
+                    sort_fields[field] = name_get and name_get[0] or ''
         if r_date:
             sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:

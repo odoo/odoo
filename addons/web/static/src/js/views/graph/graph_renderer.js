@@ -57,7 +57,7 @@ return AbstractRenderer.extend({
     on_attach_callback: function () {
         this._super.apply(this, arguments);
         this.isInDOM = true;
-        this._renderGraph();
+        this._render();
     },
     /**
      * @override

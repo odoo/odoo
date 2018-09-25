@@ -808,6 +808,18 @@ element is ``<pivot>`` which can take the following attributes:
 
 The elements allowed within a pivot view are the same as for the graph view.
 
+In Pivot view a ``field`` can have a ``widget`` attribute to dictate its format.
+The widget should be a field formatter, of which the most interesting are
+``date``, ``datetime``, ``float_time``, and ``monetary``.
+
+For instance a timesheet pivot view could be defined as::
+
+    <pivot string="Timesheet">
+        <field name="employee_id" type="row"/>
+        <field name="date" interval="month" type="col"/>
+        <field name="unit_amount" type="measure" widget="float_time"/>
+    </pivot>
+
 .. _reference/views/kanban:
 
 Kanban
