@@ -324,7 +324,7 @@
 </template>
 
 <!-- FAQ Layout -->
-<template id="faq">
+<template id="faq" name="Frequently Asked Questions">
     <t t-call="website_forum.header">
         <div t-field="forum.faq"/>
         <table class="table table-striped">
@@ -369,7 +369,7 @@
 </template>
 
 <!-- All Forums Layout -->
-<template id="forum_all">
+<template id="forum_all" name="Our Forums">
     <t t-call="website.layout">
         <div class="container">
             <h1 class="mb32">Our forums</h1>
@@ -1106,7 +1106,7 @@
     </div>
 </template>
 
-<template id="tag">
+<template id="tag" name="Forum Tags">
     <t t-call="website_forum.header">
         <h1 class="mt0">
             Tags
@@ -1146,7 +1146,7 @@
     </t>
 </template>
 
-<template id="badge">
+<template id="badge" name="Forum Badges">
     <t t-call="website_forum.header">
         <h1 class="mt0">
             Badges
@@ -1176,7 +1176,7 @@
     </t>
 </template>
 
-<template id="moderation_queue">
+<template id="moderation_queue" name="Forum Moderation Queue">
     <t t-call="website_forum.header">
         <h2 class="o_page_header mt0">
             <t t-set="count_posts" t-value="len(posts_ids)"/>
@@ -1269,7 +1269,7 @@
     </t>
 </template>
 
-<template id="edit_profile">
+<template id="edit_profile" name="Forum Edit Profile">
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
         <div class="row">
