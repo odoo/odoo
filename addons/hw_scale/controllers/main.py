@@ -125,6 +125,7 @@ class Scale(Thread):
         self.scalelock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/serial/by-path/'
+        self.forbidden_dir = '/dev/serial/by-id/'
         self.weight = 0
         self.weight_info = 'ok'
         self.device = None
@@ -212,15 +213,16 @@ class Scale(Thread):
                     self.set_status('disconnected', 'No RS-232 device found')
                     return None
 
-                devices = [device for device in listdir(self.input_dir)]
-
+                forbidden_devices = [os.readlink(self.forbidden_dir + d) for d in listdir(self.forbidden_dir) if 'usb-Sylvac_Power_USB_A32DV5VM' in d] # Skip special usb link with Sylvac
+                devices = [device for device in listdir(self.input_dir) if os.readlink(self.input_dir + device) not in forbidden_devices]
                 for device in devices:
+                    path = self.input_dir + device
                     driver = hw_proxy.rs232_devices.get(device)
                     if driver and driver != DRIVER_NAME:
                         # belongs to another driver
                         _logger.info('Ignoring %s, belongs to %s', device, driver)
                         continue
-                    path = self.input_dir + device
+
                     for protocol in SCALE_PROTOCOLS:
                         _logger.info('Probing %s with protocol %s', path, protocol)
                         connection = serial.Serial(path,
