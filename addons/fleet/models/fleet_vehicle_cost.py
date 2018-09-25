@@ -110,8 +110,8 @@ class FleetVehicleLogContract(models.Model):
     state = fields.Selection([
         ('futur', 'Incoming'),
         ('open', 'In Progress'),
-        ('expired', 'Expired'),
         ('diesoon', 'Expiring Soon'),
+        ('expired', 'Expired'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose whether the contract is still valid or not',
