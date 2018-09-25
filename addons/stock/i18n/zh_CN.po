@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
 # Wei "oldrev" Li <liwei@sandwych.com>, 2018
 # Talway <9010446@qq.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
@@ -368,7 +368,7 @@ msgstr "<strong>总数量 </strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 msgid "<strong>Where do you want to send the products ?</strong>"
-msgstr ""
+msgstr "你要把产品发送到哪里？"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:123
@@ -2217,6 +2217,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
+"如果库存调整状态为无效， 则当时理论库存量将被使用。\n"
+"如果库存调整状态为有效果， 则当时的库存调整量已被过帐。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3364,6 +3366,8 @@ msgid ""
 "No procurement rule found in location \"%s\" for product \"%s\".\n"
 " Check routes configuration."
 msgstr ""
+"库位\"%s\"中的产品\"%s\"没有定义补货规则。\n"
+"请确认路线设置。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:59
@@ -3371,7 +3375,7 @@ msgstr ""
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
-msgstr ""
+msgstr "没有可退回产品（只有处于完成状态并且没有全部退回的行才可以退回产品）"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:172
@@ -3462,6 +3466,8 @@ msgid ""
 "                the vendor or the purchase order reference. Then you can confirm\n"
 "                all products received using the buttons on the right of each line."
 msgstr ""
+"当你接收到送货单时，你可依厂商名或者相应的采购订单来筛选。\n"
+"然后你可以点每一订单行右面的按钮确认接收到的产品及数量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:121
@@ -3714,7 +3720,7 @@ msgstr "包裹类型"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
-msgstr ""
+msgstr "包装产品， 发送到待出货区，再送货（3步发货)"
 
 #. module: stock
 #: selection:barcode.rule,type:0
@@ -4140,7 +4146,7 @@ msgstr "产品移动"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "产品移动(移库行)"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -4515,17 +4521,17 @@ msgstr "收货"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly (1 step)"
-msgstr ""
+msgstr "直接接收产品(1步收货）"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input and then stock (2 steps)"
-msgstr ""
+msgstr "接到产品到收料区， 再入库（2步收货）"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods in input, then quality and then stock (3 steps)"
-msgstr ""
+msgstr "接收产品到收料区， 检验， 然后入库（3步收货）"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:524
@@ -6021,7 +6027,7 @@ msgstr "追踪"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__tracking_line_ids
 msgid "Tracking Line"
-msgstr ""
+msgstr "跟踪行"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -6420,12 +6426,12 @@ msgstr "仓库"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr ""
+msgstr "对库存不足给出警告"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr ""
+msgstr "对报废量不足给出警告"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:129
@@ -6581,7 +6587,7 @@ msgstr "在此操作类型下不能创建批次或者序列号。要更改此设
 msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
-msgstr ""
+msgstr "你试图将发货到不同地方的产品装进同一个包装内。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:668
@@ -6707,6 +6713,8 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
+"在“正在进行”状态下，您不能有两个库存调整使用相同的产品（），相同的位置（），相同的包装，相同的所有者和相同的批次。 "
+"在创建另一个产品之前，请先使用此产品验证第一个库存调整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1134
