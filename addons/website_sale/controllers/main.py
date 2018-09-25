@@ -171,7 +171,10 @@ class WebsiteSale(http.Controller):
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        return 'website_published desc,%s , id desc' % post.get('order', 'website_sequence desc')
+        order_value = post.get('order')
+        if not isinstance(order_value, str):
+            order_value = 'website_sequence desc'
+        return 'website_published desc,%s , id desc' % order_value
 
     def _get_search_domain(self, search, category, attrib_values):
         domain = request.website.sale_product_domain()
@@ -202,6 +205,16 @@ class WebsiteSale(http.Controller):
 
         return domain
 
+    def _check_category(self, category):
+        try:
+            category_id = int(category)
+            category = request.env['product.public.category'].browse(category_id).exists()
+            if not category:
+                raise NotFound()
+        except:
+            raise NotFound()
+        return category
+
     @http.route([
         '/shop',
         '/shop/page/<int:page>',
@@ -219,9 +232,7 @@ class WebsiteSale(http.Controller):
             ppg = PPG
 
         if category:
-            category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
-            if not category:
-                raise NotFound()
+            category = self._check_category(category)
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
@@ -295,7 +306,7 @@ class WebsiteSale(http.Controller):
         ProductCategory = request.env['product.public.category']
 
         if category:
-            category = ProductCategory.browse(int(category)).exists()
+            category = self._check_category(category)
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
