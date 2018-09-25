@@ -26,7 +26,7 @@ class IrModuleModule(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('state') == 'installed' and self.name.startswith('theme_'):
+        if self and vals.get('state') == 'installed' and self.name.startswith('theme_'):
             _logger.info('Module %s has been loaded as theme template' % self.name)
         return super(IrModuleModule, self).write(vals)
 
