@@ -62,12 +62,12 @@
             <field name="arch" type="xml">
                 <form string="Contact">
                     <field name="is_company" invisible="1"/>
-                    <field name="type" invisible="1"/>
+                    <field name="partner_type" invisible="1"/>
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"  groups="base.group_no_one"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('partner_type', '=', 'contact')]}"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
@@ -102,9 +102,9 @@
                     <field name="parent_id" invisible="1"/>
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <label for="partner_type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type" groups="base.group_no_one">
-                                <field name="type" class="oe_inline"/>
+                                <field name="partner_type" class="oe_inline"/>
                             </div>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
@@ -139,7 +139,7 @@
                             class="oe_edit_only"
                             options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('partner_type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -157,22 +157,22 @@
                     </div>
                     <group>
                         <group>
-                            <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <field name="partner_type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
-                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
+                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('partner_type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
                                 <field name="street" placeholder="Street..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="city" placeholder="City" class="o_address_city"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
                         </group>
@@ -213,7 +213,7 @@
                             class="oe_edit_only"
                             options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('partner_type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -232,22 +232,22 @@
 
                     <group>
                         <group>
-                            <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <field name="partner_type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
-                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
+                                <div attrs="{'invisible': ['|', ('parent_id', '=', False), ('partner_type', '!=', 'contact')]}" class="oe_edit_only"><b>Company Address:</b></div>
                                 <field name="street" placeholder="Street..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="city" placeholder="City" class="o_address_city"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('partner_type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
                            </group>
@@ -274,7 +274,7 @@
                                     <field name="color"/>
                                     <field name="name"/>
                                     <field name="title"/>
-                                    <field name="type"/>
+                                    <field name="partner_type"/>
                                     <field name="email"/>
                                     <field name="parent_id"/>
                                     <field name="is_company"/>
@@ -301,9 +301,9 @@
                                                 <div class="o_kanban_image">
                                                     <img alt="" t-if="record.image_small.raw_value" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
                                                     <t t-if="!record.image_small.raw_value">
-                                                        <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
-                                                        <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
-                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                        <img alt="Delivery" t-if="record.partner_type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
+                                                        <img alt="Invoice" t-if="record.partner_type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
+                                                        <t t-if="record.partner_type.raw_value !== 'invoice' &amp;&amp; record.partner_type.raw_value !== 'delivery'">
                                                             <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
                                                             <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar.png"'/>
                                                         </t>
@@ -313,7 +313,7 @@
                                                     <field name="name"/>
                                                     <div t-if="record.function.raw_value"><field name="function"/></div>
                                                     <div t-if="record.email.raw_value"><field name="email" widget="email"/></div>
-                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                    <div t-if="record.partner_type.raw_value != 'contact'">
                                                         <div>
                                                             <field name="zip"/>
                                                             <field name="city"/>
@@ -330,14 +330,14 @@
                                 </kanban>
                                 <form string="Contact / Address">
                                     <sheet>
-                                        <!-- parent_id and type fields needed in attrs in base_address_city module which overwrites
+                                        <!-- parent_id and partner_type fields needed in attrs in base_address_city module which overwrites
                                         _fields_view_get() of partner. It would be better to put those fields there but the web client
                                         dosen't support when a field is displayed several times in the same view.-->
-                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="partner_type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
                                         <hr/>
                                         <group>
-                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
+                                            <group attrs="{'invisible': [('partner_type','=', 'contact')]}">
                                                 <label for="street" string="Address"/>
                                                 <div>
                                                     <div class="o_address_format" name="div_address">
@@ -351,11 +351,11 @@
                                                 </div>
                                             </group>
                                             <group>
-                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('partner_type', '=', 'contact')]}"/>
                                                 <field name="title" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                    attrs="{'invisible': [('partner_type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                    attrs="{'invisible': [('partner_type','!=', 'contact')]}"/>
                                                 <field name="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
@@ -406,7 +406,7 @@
             <field name="arch" type="xml">
                 <form string="Private Address Form">
                     <sheet>
-                        <field name="type" invisible="1"/>
+                        <field name="partner_type" invisible="1"/>
                         <label for="name" class="oe_editonly"/>
                         <field name="name" required="0"/>
                         <group>
@@ -496,7 +496,7 @@
                     <field name="state_id"/>
                     <field name="category_id"/>
                     <field name="image_small"/>
-                    <field name="type"/>
+                    <field name="partner_type"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
@@ -512,13 +512,13 @@
                                     <img class="o_kanban_image" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)" t-att-alt="record.display_name"/>
                                 </t>
                                 <t t-else="">
-                                    <t t-if="record.type.raw_value === 'delivery'">
+                                    <t t-if="record.partner_type.raw_value === 'delivery'">
                                         <img alt="Delivery" t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                     </t>
-                                    <t t-if="record.type.raw_value === 'invoice'">
+                                    <t t-if="record.partner_type.raw_value === 'invoice'">
                                         <img alt="Invoice" t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                     </t>
-                                    <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                    <t t-if="record.partner_type.raw_value != 'invoice' &amp;&amp; record.partner_type.raw_value != 'delivery'">
                                         <t t-if="record.is_company.raw_value === true">
                                             <img class="o_kanban_image" alt="Logo" t-att-src='_s + "/base/static/img/company_image.png"'/>
                                         </t>

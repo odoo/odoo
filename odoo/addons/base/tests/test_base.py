@@ -108,30 +108,30 @@ class TestBase(TransactionCase):
             'phone': '123456789',
             'email': 'info@ghoststep.com',
             'vat': 'BE0477472701',
-            'type': 'contact',
+            'partner_type': 'contact',
         })
         p1 = res_partner.browse(res_partner.name_create('Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
-        self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
+        self.assertEqual(p1.partner_type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
         p1.write({'phone': p1phone,
                   'parent_id': ghoststep.id})
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
-        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
+        self.assertEqual(p1.partner_type, 'contact', 'Type should be preserved after address sync')
         self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
 
         # turn off sync
         p1street = 'Different street, 42'
         p1.write({'street': p1street,
-                  'type': 'invoice'})
+                  'partner_type': 'invoice'})
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
         # turn on sync again       
-        p1.write({'type': 'contact'})
+        p1.write({'partner_type': 'contact'})
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
-        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
+        self.assertEqual(p1.partner_type, 'contact', 'Type should be preserved after address sync')
         self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
 
         # Modify parent, sync to children
@@ -151,15 +151,15 @@ class TestBase(TransactionCase):
         res_partner = self.env['res.partner']
         ironshield = res_partner.browse(res_partner.name_create('IronShield')[0])
         self.assertFalse(ironshield.is_company, 'Partners are not companies by default')
-        self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
-        ironshield.write({'type': 'contact'})
+        self.assertEqual(ironshield.partner_type, 'contact', 'Default type must be "contact"')
+        ironshield.write({'partner_type': 'contact'})
 
         p1 = res_partner.create({
             'name': 'Isen Hardearth',
             'street': 'Strongarm Avenue, 12',
             'parent_id': ironshield.id,
         })
-        self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
+        self.assertEquals(p1.partner_type, 'contact', 'Default type must be "contact", not the copied parent type')
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
 
     def test_40_res_partner_address_get(self):
@@ -174,25 +174,25 @@ class TestBase(TransactionCase):
                                       'is_company': True})
         leaf10 = res_partner.create({'name': 'Leaf 10',
                                      'parent_id': branch1.id,
-                                     'type': 'invoice'})
+                                     'partner_type': 'invoice'})
         branch11 = res_partner.create({'name': 'Branch 11',
                                        'parent_id': branch1.id,
-                                       'type': 'other'})
+                                       'partner_type': 'other'})
         leaf111 = res_partner.create({'name': 'Leaf 111',
                                       'parent_id': branch11.id,
-                                      'type': 'delivery'})
+                                      'partner_type': 'delivery'})
         branch11.write({'is_company': False})  # force is_company after creating 1rst child
         branch2 = res_partner.create({'name': 'Branch 2',
                                       'parent_id': elmtree.id,
                                       'is_company': True})
         leaf21 = res_partner.create({'name': 'Leaf 21',
                                      'parent_id': branch2.id,
-                                     'type': 'delivery'})
+                                     'partner_type': 'delivery'})
         leaf22 = res_partner.create({'name': 'Leaf 22',
                                      'parent_id': branch2.id})
         leaf23 = res_partner.create({'name': 'Leaf 23',
                                      'parent_id': branch2.id,
-                                     'type': 'contact'})
+                                     'partner_type': 'contact'})
 
         # go up, stop at branch1
         self.assertEqual(leaf111.address_get(['delivery', 'invoice', 'contact', 'other']),
@@ -248,7 +248,7 @@ class TestBase(TransactionCase):
                         {'contact': elmtree.id}, 'Invalid address resolution, no contact means commercial entity ancestor')
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch1.id}, 'Invalid address resolution, no contact means finding contact in ancestors')
-        branch11.write({'type': 'contact'})
+        branch11.write({'partner_type': 'contact'})
         self.assertEqual(leaf111.address_get([]),
                         {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
 

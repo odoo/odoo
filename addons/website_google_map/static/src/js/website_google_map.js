@@ -31,7 +31,7 @@ function initialize_map() {
         infoWindow.setContent(
               '<div class="marker">'+
               (partner_url.length ? '<a target="_top" href="'+partner_url+p.id+'"><b>'+p.name +'</b></a>' : '<b>'+p.name+'</b>' )+
-              (p.type ? '  <b>' + p.type + '</b>' : '')+
+              (p.partner_type ? '  <b>' + p.partner_type + '</b>' : '')+
               '  <pre>' + p.address + '</pre>'+
               '</div>'
           );

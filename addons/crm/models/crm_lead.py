@@ -800,7 +800,7 @@ class Lead(models.Model):
             'state_id': self.state_id.id,
             'website': self.website,
             'is_company': is_company,
-            'type': 'contact'
+            'partner_type': 'contact'
         }
 
     @api.multi

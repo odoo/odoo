@@ -178,14 +178,14 @@ class Partner(models.Model):
                                help="Check this box if this contact is a vendor. It can be selected in purchase orders.")
     employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     function = fields.Char(string='Job Position')
-    type = fields.Selection(
+    partner_type = fields.Selection(
         [('contact', 'Contact'),
          ('invoice', 'Invoice address'),
          ('delivery', 'Shipping address'),
          ('other', 'Other address'),
          ("private", "Private Address"),
         ], string='Address Type',
-        default='contact',
+        default='contact', oldname='type',
         help="Used by Sales and Purchase Apps to select the relevant address depending on the context.")
     street = fields.Char()
     street2 = fields.Char()
@@ -237,7 +237,7 @@ class Partner(models.Model):
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
     _sql_constraints = [
-        ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
+        ('check_name', "CHECK( (partner_type='contact' AND name IS NOT NULL) or (partner_type!='contact') )", 'Contacts require a name.'),
     ]
 
     @api.model_cr
@@ -246,7 +246,7 @@ class Partner(models.Model):
         if not self._cr.fetchone():
             self._cr.execute("""CREATE INDEX res_partner_vat_index ON res_partner (regexp_replace(upper(vat), '[^A-Z0-9]+', '', 'g'))""")
 
-    @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
+    @api.depends('is_company', 'name', 'parent_id.name', 'partner_type', 'company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
         names = dict(self.with_context(**diff).name_get())
@@ -351,7 +351,7 @@ class Partner(models.Model):
                              'was never correctly set. If an existing contact starts working for a new '
                              'company then a new contact should be created under that new '
                              'company. You can use the "Discard" button to abandon this change.')}
-        if partner.type == 'contact' or self.type == 'contact':
+        if partner.partner_type == 'contact' or self.partner_type == 'contact':
             # for contacts: copy the parent address, if set (aka, at least one
             # value is set in the address: otherwise, keep the one from the
             # contact)
@@ -456,12 +456,12 @@ class Partner(models.Model):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if values.get('parent_id') or values.get('type') == 'contact':
+        if values.get('parent_id') or values.get('partner_type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
             if values.get('parent_id'):
                 self._commercial_sync_from_company()
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set
-            if self.parent_id and self.type == 'contact':
+            if self.parent_id and self.partner_type == 'contact':
                 onchange_vals = self.onchange_parent_id().get('value', {})
                 self.update_address(onchange_vals)
 
@@ -479,7 +479,7 @@ class Partner(models.Model):
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields()
             if any(field in values for field in address_fields):
-                contacts = self.child_ids.filtered(lambda c: c.type == 'contact')
+                contacts = self.child_ids.filtered(lambda c: c.partner_type == 'contact')
                 contacts.update_address(values)
 
     @api.multi
@@ -548,7 +548,7 @@ class Partner(models.Model):
             # compute default image in create, because computing gravatar in the onchange
             # cannot be easily performed if default images are in the way
             if not vals.get('image'):
-                vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
+                vals['image'] = self._get_default_image(vals.get('partner_type'), vals.get('is_company'), vals.get('parent_id'))
             tools.image_resize_images(vals, sizes={'image': (1024, None)})
         partners = super(Partner, self).create(vals_list)
         for partner, vals in pycompat.izip(partners, vals_list):
@@ -601,8 +601,8 @@ class Partner(models.Model):
         name = partner.name or ''
 
         if partner.company_name or partner.parent_id:
-            if not name and partner.type in ['invoice', 'delivery', 'other']:
-                name = dict(self.fields_get(['type'])['type']['selection'])[partner.type]
+            if not name and partner.partner_type in ['invoice', 'delivery', 'other']:
+                name = dict(self.fields_get(['partner_type'])['partner_type']['selection'])[partner.partner_type]
             if not partner.is_company:
                 name = "%s, %s" % (partner.commercial_company_name or partner.parent_id.name, name)
         if self._context.get('show_address_only'):
@@ -774,8 +774,8 @@ class Partner(models.Model):
                 while to_scan:
                     record = to_scan.pop(0)
                     visited.add(record)
-                    if record.type in adr_pref and not result.get(record.type):
-                        result[record.type] = record.id
+                    if record.partner_type in adr_pref and not result.get(record.partner_type):
+                        result[record.partner_type] = record.id
                     if len(result) == len(adr_pref):
                         return result
                     to_scan = [c for c in record.child_ids

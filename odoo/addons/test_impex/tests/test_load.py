@@ -985,7 +985,7 @@ class test_realworld(common.TransactionCase):
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
-        fnames = ["name", "type", "street", "city", "country_id", "category_id",
+        fnames = ["name", "partner_type", "street", "city", "country_id", "category_id",
                   "supplier", "customer", "is_company", "parent_id"]
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json').decode('utf-8'))
         result = self.env['res.partner'].load(fnames, data)

@@ -471,7 +471,7 @@ class WebsiteSale(ProductConfiguratorController):
             Partner = order.partner_id.with_context(show_address=1).sudo()
             shippings = Partner.search([
                 ("id", "child_of", order.partner_id.commercial_partner_id.ids),
-                '|', ("type", "in", ["delivery", "other"]), ("id", "=", order.partner_id.commercial_partner_id.id)
+                '|', ("partner_type", "in", ["delivery", "other"]), ("id", "=", order.partner_id.commercial_partner_id.id)
             ], order='id desc')
             if shippings:
                 if kw.get('partner_id') or 'use_billing' in kw:
@@ -584,10 +584,10 @@ class WebsiteSale(ProductConfiguratorController):
         if lang:
             new_values['lang'] = lang
         if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
-            new_values['type'] = 'other'
+            new_values['partner_type'] = 'other'
         if mode[1] == 'shipping':
             new_values['parent_id'] = order.partner_id.commercial_partner_id.id
-            new_values['type'] = 'delivery'
+            new_values['partner_type'] = 'delivery'
 
         return new_values, errors, error_msg
 

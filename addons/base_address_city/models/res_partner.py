@@ -31,8 +31,8 @@ class Partner(models.Model):
             replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name='city' placeholder="%s" attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
-                <field name='city_id' placeholder="%s" string="%s" attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
+                <field name='city' placeholder="%s" attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('partner_type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                <field name='city_id' placeholder="%s" string="%s" attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('partner_type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
             </div>
             """ % (label, label, label)
             city_id_node = etree.fromstring(replacement_xml)
