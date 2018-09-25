@@ -17,7 +17,7 @@ class CrmLeadConvert2Task(models.TransientModel):
             result['lead_id'] = lead_id
         return result
 
-    lead_id = fields.Many2one('crm.lead', string='Lead', domain=[('type', '=', 'lead')])
+    lead_id = fields.Many2one('crm.lead', string='Lead', domain=[('lead_type', '=', 'lead')])
     project_id = fields.Many2one('project.project', string='Project')
 
     @api.multi

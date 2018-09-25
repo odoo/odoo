@@ -102,20 +102,20 @@ class CRMRevealRule(models.Model):
     def _compute_leads_count(self):
         leads = self.env['crm.lead'].read_group([
             ('reveal_rule_id', 'in', self.ids)
-        ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
-        mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
+        ], fields=['reveal_rule_id', 'lead_type'], groupby=['reveal_rule_id', 'lead_type'], lazy=False)
+        mapping = {(lead['reveal_rule_id'][0], lead['lead_type']): lead['__count'] for lead in leads}
         for rule in self:
             rule.leads_count = mapping.get((rule.id, 'lead'), 0)
             rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
 
     def action_get_lead_tree_view(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
-        action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
+        action['domain'] = [('id', 'in', self.lead_ids.ids), ('lead_type', '=', 'lead')]
         return action
 
     def action_get_opportunity_tree_view(self):
         action = self.env.ref('crm.crm_lead_opportunities').read()[0]
-        action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
+        action['domain'] = [('id', 'in', self.lead_ids.ids), ('lead_type', '=', 'opportunity')]
         return action
 
     @api.model
@@ -375,7 +375,7 @@ class CRMRevealRule(models.Model):
         website_url = 'https://www.%s' % reveal_data['domain'] if reveal_data['domain'] else False
         lead_vals = {
             # Lead vals from rule itself
-            'type': self.lead_type,
+            'lead_type': self.lead_type,
             'team_id': self.team_id.id,
             'tag_ids': [(6, 0, self.tag_ids.ids)],
             'priority': self.priority,

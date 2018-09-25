@@ -26,7 +26,7 @@ class TestCRMLead(TestCrmCases):
     def test_find_stage(self):
         # I create a new lead
         lead = self.env['crm.lead'].create({
-            'type': "lead",
+            'lead_type': "lead",
             'name': "Test lead new",
             'partner_id': self.env.ref("base.res_partner_1").id,
             'description': "This is the description of the test new lead.",
@@ -80,7 +80,7 @@ class TestCRMLead(TestCrmCases):
 
         # TEST CASE 1
         test_crm_opp_01 = LeadSalesmanager.create({
-            'type': 'opportunity',
+            'lead_type': 'opportunity',
             'name': 'Test opportunity 1',
             'partner_id': self.env.ref("base.res_partner_3").id,
             'stage_id': default_stage_id,
@@ -88,7 +88,7 @@ class TestCRMLead(TestCrmCases):
         })
 
         test_crm_lead_01 = LeadSalesmanager.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead first',
             'partner_id': self.env.ref("base.res_partner_1").id,
             'stage_id': default_stage_id,
@@ -96,7 +96,7 @@ class TestCRMLead(TestCrmCases):
         })
 
         test_crm_lead_02 = LeadSalesmanager.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead second',
             'partner_id': self.env.ref("base.res_partner_1").id,
             'stage_id': default_stage_id,
@@ -114,7 +114,7 @@ class TestCRMLead(TestCrmCases):
         merged_lead = self.env['crm.lead'].search([('name', '=', 'Test opportunity 1'), ('partner_id', '=', self.env.ref("base.res_partner_3").id)], limit=1)
         self.assertTrue(merged_lead, 'Fail to create merge opportunity wizard')
         self.assertEqual(merged_lead.description, 'This is the description of the test opp 1.\n\nThis is the description of the test lead first.\n\nThis is the description of the test lead second.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separated with line returns')
-        self.assertEqual(merged_lead.type, 'opportunity', 'Type mismatch: when at least one opp in involved in the merge, the result should be a new opp (instead of %s)' % merged_lead.type)
+        self.assertEqual(merged_lead.lead_type, 'opportunity', 'Type mismatch: when at least one opp in involved in the merge, the result should be a new opp (instead of %s)' % merged_lead.lead_type)
 
         # The other (tailing) leads/opps shouldn't exist anymore
         self.assertFalse(test_crm_lead_01.exists(), 'This tailing lead (id %s) should not exist anymore' % test_crm_lead_02.id)
@@ -123,14 +123,14 @@ class TestCRMLead(TestCrmCases):
         # TEST CASE 2
         # I want to test leads merge.  Start by creating two leads (with the same partner)
         test_crm_lead_03 = LeadSalesmanager.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 3',
             'partner_id': self.env.ref("base.res_partner_1").id,
             'stage_id': default_stage_id
         })
 
         test_crm_lead_04 = LeadSalesmanager.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 4',
             'partner_id': self.env.ref("base.res_partner_1").id,
             'stage_id': default_stage_id
@@ -147,20 +147,20 @@ class TestCRMLead(TestCrmCases):
         merged_lead = self.env['crm.lead'].search([('name', '=', 'Test lead 3'), ('partner_id', '=', self.env.ref("base.res_partner_1").id)], limit=1)
         self.assertTrue(merged_lead, 'Fail to create merge opportunity wizard')
         self.assertEqual(merged_lead.partner_id.id, self.env.ref("base.res_partner_1").id, 'Partner mismatch')
-        self.assertEqual(merged_lead.type, 'lead', 'Type mismatch: when leads get merged together, the result should be a new lead (instead of %s)' % merged_lead.type)
+        self.assertEqual(merged_lead.lead_type, 'lead', 'Type mismatch: when leads get merged together, the result should be a new lead (instead of %s)' % merged_lead.lead_type)
         self.assertFalse(test_crm_lead_04.exists(), 'This tailing lead (id %s) should not exist anymore' % test_crm_lead_04.id)
 
         # TEST CASE 3
         # I want to test opps merge.  Start by creating two opportunities (with the same partner).
         test_crm_opp_02 = LeadSalesmanager.create({
-            'type': 'opportunity',
+            'lead_type': 'opportunity',
             'name': 'Test opportunity 2',
             'partner_id': self.env.ref("base.res_partner_3").id,
             'stage_id': default_stage_id
         })
 
         test_crm_opp_03 = LeadSalesmanager.create({
-            'type': 'opportunity',
+            'lead_type': 'opportunity',
             'name': 'Test opportunity 3',
             'partner_id': self.env.ref("base.res_partner_3").id,
             'stage_id': default_stage_id
@@ -176,5 +176,5 @@ class TestCRMLead(TestCrmCases):
         merged_opportunity = self.env['crm.lead'].search([('name', '=', 'Test opportunity 2'), ('partner_id', '=', self.env.ref("base.res_partner_3").id)], limit=1)
         self.assertTrue(merged_opportunity, 'Fail to create merge opportunity wizard')
         self.assertEqual(merged_opportunity.partner_id.id, self.env.ref("base.res_partner_3").id, 'Partner mismatch')
-        self.assertEqual(merged_opportunity.type, 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merged_opportunity.type)
+        self.assertEqual(merged_opportunity.lead_type, 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merged_opportunity.lead_type)
         self.assertFalse(test_crm_opp_03.exists(), 'This tailing opp (id %s) should not exist anymore' % test_crm_opp_03.id)

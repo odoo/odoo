@@ -100,7 +100,7 @@ class TestPartnerLeadPortal(TestCrmCases):
         self.portal_partner = self.portal_user.partner_id
         # New lead, assigned to the new portal
         self.lead = self.env['crm.lead'].with_context(mail_notrack=True).create({
-            'type': "lead",
+            'lead_type': "lead",
             'name': "Test lead new",
             'user_id': False,
             'team_id': False,
@@ -122,7 +122,7 @@ class TestPartnerLeadPortal(TestCrmCases):
 
         self.lead.sudo(self.portal_user.id).partner_interested(comment="Oh yeah, I take that lead !")
 
-        self.assertEqual(self.lead.type, 'opportunity', 'Bad Type: accepted lead by portal user should become an opportunity.')
+        self.assertEqual(self.lead.lead_type, 'opportunity', 'Bad Type: accepted lead by portal user should become an opportunity.')
         self.assertEqual(self.lead.team_id, team_before, 'Accepting lead does not change the sales team.')
         self.assertEqual(self.lead.user_id, user_before, 'Accepting lead does not change the salesman.')
 

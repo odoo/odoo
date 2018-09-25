@@ -42,7 +42,7 @@ class MergeOpportunity(models.TransientModel):
         merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
 
         # The newly created lead might be a lead or an opp: redirect toward the right view
-        if merge_opportunity.type == 'opportunity':
+        if merge_opportunity.lead_type == 'opportunity':
             return merge_opportunity.redirect_opportunity_view()
         else:
             return merge_opportunity.redirect_lead_view()

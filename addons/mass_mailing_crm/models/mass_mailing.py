@@ -37,7 +37,7 @@ class MassMailing(models.Model):
     def action_redirect_to_leads(self):
         action = self.env.ref('crm.crm_lead_all_leads').read()[0]
         action['domain'] = self._get_crm_utm_domain()
-        action['context'] = {'default_type': 'lead'}
+        action['context'] = {'default_lead_type': 'lead'}
         return action
 
     @api.multi

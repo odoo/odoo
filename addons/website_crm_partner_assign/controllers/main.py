@@ -23,13 +23,13 @@ class WebsiteAccount(CustomerPortal):
     def get_domain_my_lead(self, user):
         return [
             ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
-            ('type', '=', 'lead')
+            ('lead_type', '=', 'lead')
         ]
 
     def get_domain_my_opp(self, user):
         return [
             ('partner_assigned_id', 'child_of', user.commercial_partner_id.id),
-            ('type', '=', 'opportunity')
+            ('lead_type', '=', 'opportunity')
         ]
 
     def _prepare_portal_layout_values(self):
@@ -155,15 +155,15 @@ class WebsiteAccount(CustomerPortal):
         })
         return request.render("website_crm_partner_assign.portal_my_opportunities", values)
 
-    @http.route(['''/my/lead/<model('crm.lead', "[('type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
+    @http.route(['''/my/lead/<model('crm.lead', "[('lead_type','=', 'lead')]"):lead>'''], type='http', auth="user", website=True)
     def portal_my_lead(self, lead, **kw):
-        if lead.type != 'lead':
+        if lead.lead_type != 'lead':
             raise NotFound()
         return request.render("website_crm_partner_assign.portal_my_lead", {'lead': lead})
 
-    @http.route(['''/my/opportunity/<model('crm.lead', "[('type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
+    @http.route(['''/my/opportunity/<model('crm.lead', "[('lead_type','=', 'opportunity')]"):opp>'''], type='http', auth="user", website=True)
     def portal_my_opportunity(self, opp, **kw):
-        if opp.type != 'opportunity':
+        if opp.lead_type != 'opportunity':
             raise NotFound()
 
         return request.render(

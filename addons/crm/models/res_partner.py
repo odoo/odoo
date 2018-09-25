@@ -9,7 +9,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
-    opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
+    opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('lead_type', '=', 'opportunity')])
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id', string='Meetings', copy=False)
     opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')
     meeting_count = fields.Integer("# Meetings", compute='_compute_meeting_count')
@@ -39,7 +39,7 @@ class Partner(models.Model):
     def _compute_opportunity_count(self):
         for partner in self:
             operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
-            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
+            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('lead_type', '=', 'opportunity')])
 
     @api.multi
     def _compute_meeting_count(self):

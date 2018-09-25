@@ -79,8 +79,8 @@ class Lead(models.Model):
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
     partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
-        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
+    lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', index=True, required=True,
+        default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity', oldname='type',
         help="Type is used to separate Leads and Opportunities")
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -287,8 +287,8 @@ class Lead(models.Model):
         # set up context used to find the lead's Sales Team which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
-        if vals.get('type') and not self._context.get('default_type'):
-            context['default_type'] = vals.get('type')
+        if vals.get('lead_type') and not self._context.get('default_lead_type'):
+            context['default_lead_type'] = vals.get('lead_type')
         if vals.get('team_id') and not self._context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
 
@@ -324,11 +324,11 @@ class Lead(models.Model):
         self.ensure_one()
         # set default value in context, if not already set (Put stage to 'new' stage)
         context = dict(self._context)
-        context.setdefault('default_type', self.type)
+        context.setdefault('default_lead_type', self.lead_type)
         context.setdefault('default_team_id', self.team_id.id)
         # Set date_open to today if it is an opp
         default = default or {}
-        default['date_open'] = fields.Datetime.now() if self.type == 'opportunity' else False
+        default['date_open'] = fields.Datetime.now() if self.lead_type == 'opportunity' else False
         # Do not assign to an archived user
         if not self.user_id.active:
             default['user_id'] = False
@@ -379,7 +379,7 @@ class Lead(models.Model):
                     MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
                 FROM crm_lead
                 WHERE
-                    type = 'opportunity'
+                    lead_type = 'opportunity'
                 AND
                     active = True
                 AND
@@ -427,7 +427,7 @@ class Lead(models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'default_opportunity_id': self.id if self.type == 'opportunity' else False,
+            'default_opportunity_id': self.id if self.lead_type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
             'default_team_id': self.team_id.id,
@@ -449,7 +449,7 @@ class Lead(models.Model):
             'views': [(form_view.id, 'form'),],
             'type': 'ir.actions.act_window',
             'target': 'inline',
-            'context': {'default_type': 'opportunity'}
+            'context': {'default_lead_type': 'opportunity'}
         }
 
     def toggle_active(self):
@@ -500,7 +500,7 @@ class Lead(models.Model):
             :param list opps: list of browse records containing the leads/opps to process
             :return string type: the type of the final element
         """
-        if any(record.type == 'opportunity' for record in self):
+        if any(record.lead_type == 'opportunity' for record in self):
             return 'opportunity'
         return 'lead'
 
@@ -543,8 +543,8 @@ class Lead(models.Model):
             else:
                 data[field_name] = _get_first_not_null(field_name, self)
 
-        # define the resulting type ('lead' or 'opportunity')
-        data['type'] = self._merge_get_result_type()
+        # define the resulting lead_type ('lead' or 'opportunity')
+        data['lead_type'] = self._merge_get_result_type()
         return data
 
     @api.one
@@ -553,7 +553,7 @@ class Lead(models.Model):
             :param fields : list of fields to track
             :returns the body of the message for the current crm.lead
         """
-        title = "%s : %s\n" % (_('Merged opportunity') if self.type == 'opportunity' else _('Merged lead'), self.name)
+        title = "%s : %s\n" % (_('Merged opportunity') if self.lead_type == 'opportunity' else _('Merged lead'), self.name)
         body = [title]
         fields = self.env['ir.model.fields'].search([('name', 'in', fields or []), ('model_id.model', '=', self._name)])
         for field in fields:
@@ -666,7 +666,7 @@ class Lead(models.Model):
             sequence = -1
             if opportunity.stage_id.on_change:
                 sequence = opportunity.stage_id.sequence
-            return (sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id
+            return (sequence != -1 and opportunity.lead_type == 'opportunity'), sequence, -opportunity.id
         opportunities = self.sorted(key=opps_key, reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
@@ -727,7 +727,7 @@ class Lead(models.Model):
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
         else:
-            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
+            domain += ['|', '&', ('lead_type', '=', 'lead'), ('active', '=', True), ('lead_type', '=', 'opportunity')]
         return self.search(domain)
 
     @api.multi
@@ -743,7 +743,7 @@ class Lead(models.Model):
             'probability': self.probability,
             'name': self.name,
             'partner_id': customer.id if customer else False,
-            'type': 'opportunity',
+            'lead_type': 'opportunity',
             'date_open': fields.Datetime.now(),
             'email_from': customer and customer.email or self.email_from,
             'phone': customer and customer.phone or self.phone,
@@ -889,7 +889,7 @@ class Lead(models.Model):
             'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
-            'domain': [('type', '=', 'opportunity')],
+            'domain': [('lead_type', '=', 'opportunity')],
             'res_id': self.id,
             'view_id': False,
             'views': [
@@ -900,7 +900,7 @@ class Lead(models.Model):
                 (False, 'graph')
             ],
             'type': 'ir.actions.act_window',
-            'context': {'default_type': 'opportunity'}
+            'context': {'default_lead_type': 'opportunity'}
         }
 
     @api.multi
@@ -914,7 +914,7 @@ class Lead(models.Model):
             'view_type': 'form',
             'view_mode': 'tree, form',
             'res_model': 'crm.lead',
-            'domain': [('type', '=', 'lead')],
+            'domain': [('lead_type', '=', 'lead')],
             'res_id': self.id,
             'view_id': False,
             'views': [
@@ -929,7 +929,7 @@ class Lead(models.Model):
     @api.model
     def get_empty_list_help(self, help):
         help_title, sub_title = "", ""
-        if self._context.get('default_type') == 'lead':
+        if self._context.get('default_lead_type') == 'lead':
             help_title = _('Add a new lead')
         else:
             help_title = _('Create an opportunity in your pipeline')
@@ -993,7 +993,7 @@ class Lead(models.Model):
 
         today = fields.Date.from_string(fields.Date.context_today(self))
 
-        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
+        opportunities = self.search([('lead_type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
             # Expected closing
@@ -1035,12 +1035,12 @@ class Lead(models.Model):
                 mail_message.mail_activity_type_id,
                 mail_message.date,
                 crm_lead.user_id,
-                crm_lead.type
+                crm_lead.lead_type
             FROM mail_message
                 LEFT JOIN crm_lead  ON (mail_message.res_id = crm_lead.id)
                 INNER JOIN mail_activity_type activity_type ON (mail_message.mail_activity_type_id = activity_type.id)
             WHERE
-                (mail_message.model = 'crm.lead') AND (crm_lead.user_id = %s) AND (crm_lead.type = 'opportunity')
+                (mail_message.model = 'crm.lead') AND (crm_lead.user_id = %s) AND (crm_lead.lead_type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
         for activity in activites_done:
@@ -1111,7 +1111,7 @@ class Lead(models.Model):
         groups = super(Lead, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
-        if self.type == 'lead':
+        if self.lead_type == 'lead':
             convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
@@ -1144,7 +1144,7 @@ class Lead(models.Model):
 
     @api.multi
     def get_formview_id(self, access_uid=None):
-        if self.type == 'opportunity':
+        if self.lead_type == 'opportunity':
             view_id = self.env.ref('crm.crm_case_form_view_oppor').id
         else:
             view_id = super(Lead, self).get_formview_id()

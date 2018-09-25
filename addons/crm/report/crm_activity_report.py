@@ -47,7 +47,7 @@ class ActivityReport(models.Model):
                 l.company_id,
                 l.stage_id,
                 l.partner_id,
-                l.type as lead_type,
+                l.lead_type,
                 l.active,
                 l.probability
         """

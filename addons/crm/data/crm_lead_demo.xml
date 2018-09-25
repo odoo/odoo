@@ -39,7 +39,7 @@
         <!--  Demo Leads -->
         <record id="crm_case_1" model="crm.lead">
             <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Club Office Furnitures</field>
             <field name="contact_name">Jacques Dunagan</field>
             <field name="partner_name">Le Club SARL</field>
@@ -75,7 +75,7 @@
 
         <record id="crm_case_2" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Design Software</field>
             <field name="contact_name">Marc Dufour</field>
             <field name="partner_name">The Oil Company</field>
@@ -107,7 +107,7 @@
 
         <record id="crm_case_3" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Pricing for 25 desks</field>
             <field name="contact_name">John Miller</field>
             <field name="partner_name">The Kompany</field>
@@ -130,7 +130,7 @@
 
         <record id="crm_case_4" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Campbell: Chairs</field>
             <field name="contact_name">Henry Campbell</field>
             <field name="partner_name">Burstein Applebee</field>
@@ -152,7 +152,7 @@
 
         <record id="crm_case_5" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=4)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Quotation for 50 Chairs</field>
             <field name="contact_name">Carrie Helle</field>
             <field name="partner_name">Stonage IT</field>
@@ -193,7 +193,7 @@ Contact: +1 813 494 5005</p>]]></field>
 
         <record id="crm_case_6" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=5)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Opensides: Need Info</field>
             <field name="contact_name">Tina Pinero</field>
             <field name="partner_name">Opensides</field>
@@ -214,7 +214,7 @@ Contact: +1 813 494 5005</p>]]></field>
 
         <record id="crm_case_7" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=5)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Gardner: Desks Replacement</field>
             <field name="contact_name">Wendi Baltz</field>
             <field name="partner_name">Gardner Group</field>
@@ -236,7 +236,7 @@ Contact: +1 813 494 5005</p>]]></field>
 
         <record id="crm_case_8" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Product Catalog</field>
             <field name="contact_name">Logan</field>
             <field name="partner_name">ESM Expert</field>
@@ -271,7 +271,7 @@ ESM Expert<br />]]></field>
 
         <record id="crm_case_9" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=4)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Reseller: Office furnitures</field>
             <field name="contact_name">Delisle Albert</field>
             <field name="partner_name">Marketing Business</field>
@@ -292,7 +292,7 @@ ESM Expert<br />]]></field>
 
         <record id="crm_case_10" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Design Software Info</field>
             <field name="contact_name">Jose Garcia</field>
             <field name="partner_name">Solar IT</field>
@@ -326,7 +326,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_11" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=5)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Estimation for Office Furnitures</field>
             <field name="contact_name">Thomas Passot</field>
             <field name="partner_name">Deco Addict</field>
@@ -348,7 +348,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_12" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Quotation for 100 Desks</field>
             <field name="contact_name">Bojing Hú</field>
             <field name="partner_name">Incom Corporation</field>
@@ -374,7 +374,7 @@ Andrew</p>]]></field>
         <!-- Demo Opportunities -->
         <record id="crm_case_13" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Quote for 600 Chairs</field>
             <field name="planned_revenue">40000</field>
             <field name="probability">10.0</field>
@@ -397,7 +397,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_14" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Office Design Project</field>
             <field name="color">7</field>
             <field name="planned_revenue">24000</field>
@@ -423,7 +423,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_15" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Info about services</field>
             <field name="planned_revenue">25000</field>
             <field name="probability">30.0</field>
@@ -515,7 +515,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_16" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=2)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Global Solutions: Furnitures</field>
             <field name="planned_revenue">3800</field>
             <field name="probability">90.0</field>
@@ -538,7 +538,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_17" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=3)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Balmer Inc: Potential Distributor</field>
             <field name="planned_revenue">1000</field>
             <field name="probability">35.0</field>
@@ -572,7 +572,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_18" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=7)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">DeltaPC: 10 Computer Desks</field>
             <field eval="35000" name="planned_revenue"/>
             <field eval="25.0" name="probability"/>
@@ -617,7 +617,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_19" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=7)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Customizable Desk</field>
             <field name="color">3</field>
             <field name="planned_revenue">15000</field>
@@ -645,7 +645,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_20" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=7)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Distributor Contract</field>
             <field name="planned_revenue">19800</field>
             <field name="contact_name">John M. Brown</field>
@@ -667,7 +667,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_21" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Office Design and Architecture</field>
             <field name="planned_revenue">9000</field>
             <field name="partner_id" ref="base.res_partner_4"/>
@@ -687,7 +687,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_22" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">5 VP Chairs</field>
             <field name="planned_revenue">5600</field>
             <field name="probability">30.0</field>
@@ -706,7 +706,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_23" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=7)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Access to Online Catalog</field>
             <field name="planned_revenue">2000</field>
             <field name="probability">80.0</field>
@@ -723,7 +723,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_24" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=7)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Need 20 Desks</field>
             <field name="planned_revenue">60000</field>
             <field name="probability">90.0</field>
@@ -742,7 +742,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_25" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Modern Open Space</field>
             <field name="planned_revenue">4500</field>
             <field name="probability">60</field>
@@ -765,7 +765,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_26" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=6)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Open Space Design</field>
             <field name="planned_revenue">11000</field>
             <field name="probability">45</field>
@@ -789,7 +789,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_27" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Interest in your products</field>
             <field name="planned_revenue">2000</field>
             <field name="probability">80</field>
@@ -810,7 +810,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_28" model="crm.lead">
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Furnish a 60m² office</field>
             <field name="planned_revenue">7500</field>
             <field name="probability">20</field>
@@ -831,7 +831,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_29" model="crm.lead">
             <field name="create_date" eval="DateTime.now() - relativedelta(months=1)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Club Office More Desks</field>
             <field name="contact_name">Jacques Dunagan</field>
             <field name="partner_name">Le Club SARL</field>
@@ -853,7 +853,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_30" model="crm.lead">
             <field name="create_date" eval="DateTime.now() - relativedelta(months=2)"/>
-            <field name="type">lead</field>
+            <field name="lead_type">lead</field>
             <field name="name">Acadia College Furnitures</field>
             <field name="contact_name">Gaston Rochon</field>
             <field name="partner_name">Acadia College</field>
@@ -875,7 +875,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_31" model="crm.lead">
             <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Quote for 600 Chairs</field>
             <field name="planned_revenue">40000</field>
             <field name="probability">10.0</field>
@@ -897,7 +897,7 @@ Andrew</p>]]></field>
 
         <record id="crm_case_32" model="crm.lead">
             <field name="create_date" eval="datetime.now() - relativedelta(months=2)"/>
-            <field name="type">opportunity</field>
+            <field name="lead_type">opportunity</field>
             <field name="name">Quote for 600 Chairs</field>
             <field name="planned_revenue">22500</field>
             <field name="probability">20.0</field>
@@ -919,7 +919,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_1" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(months=1)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Recurring delivery contract</field>
 <field name="planned_revenue">36221</field>
 <field name="probability">20</field>
@@ -938,7 +938,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_2" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Need info about pricing</field>
 <field name="planned_revenue">28443</field>
 <field name="probability">80</field>
@@ -958,7 +958,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_3" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=24)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Trelian New Offices</field>
 <field name="planned_revenue">88715</field>
 <field name="probability">12</field>
@@ -978,7 +978,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_4" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=40)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Branded Furniture</field>
 <field name="planned_revenue">7784</field>
 <field name="probability">20</field>
@@ -997,7 +997,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_5" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=45)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Design New Shelves</field>
 <field name="planned_revenue">54587</field>
 <field name="probability">81</field>
@@ -1017,7 +1017,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_6" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=48)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Office chairs</field>
 <field name="planned_revenue">5474</field>
 <field name="probability">20</field>
@@ -1037,7 +1037,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_7" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=80)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Cleaning subscription</field>
 <field name="planned_revenue">11475</field>
 <field name="probability">25</field>
@@ -1057,7 +1057,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_8" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=37)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Custom Desks (100 pieces)</field>
 <field name="planned_revenue">9987</field>
 <field name="probability">20</field>
@@ -1079,7 +1079,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_9" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=32)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Need a price: urgent</field>
 <field name="planned_revenue">4482</field>
 <field name="probability">90</field>
@@ -1099,7 +1099,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_10" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=18)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Furnitures for new location</field>
 <field name="planned_revenue">22500</field>
 <field name="probability">20</field>
@@ -1119,7 +1119,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_11" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Modernize old offices</field>
 <field name="planned_revenue">99755</field>
 <field name="probability">20</field>
@@ -1140,7 +1140,7 @@ Andrew</p>]]></field>
 
 <record id="crm_case_graph_12" model="crm.lead">
 <field name="create_date" eval="datetime.now() - relativedelta(days=52)"/>
-<field name="type">lead</field>
+<field name="lead_type">lead</field>
 <field name="name">Quote for 600 Chairs</field>
 <field name="planned_revenue">41421</field>
 <field name="probability">20</field>

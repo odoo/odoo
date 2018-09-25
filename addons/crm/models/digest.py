@@ -30,7 +30,7 @@ class Digest(models.Model):
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
             record.kpi_crm_opportunities_won_value = self.env['crm.lead'].search_count([
-                ('type', '=', 'opportunity'),
+                ('lead_type', '=', 'opportunity'),
                 ('probability', '=', '100'),
                 ('date_closed', '>=', start),
                 ('date_closed', '<', end),

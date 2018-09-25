@@ -127,7 +127,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             leads = self.with_context(active_test=False).opportunity_ids.merge_opportunity()
             if not leads.active:
                 leads.write({'active': True, 'activity_type_id': False, 'lost_reason': False})
-            if leads.type == "lead":
+            if leads.lead_type == "lead":
                 values.update({'lead_ids': leads.ids, 'user_ids': [self.user_id.id]})
                 self.with_context(active_ids=leads.ids)._convert_opportunity(values)
             elif not self._context.get('no_force_assignation') or not leads.user_id:

@@ -27,7 +27,7 @@ class TestLead2opportunity2win(TestCrmCases):
         crm_case_3.sudo(self.crm_salemanager.id).convert_opportunity(self.env.ref("base.res_partner_2").id)
 
         # I check details of converted opportunity.
-        self.assertEqual(crm_case_3.type, 'opportunity', 'Lead is not converted to opportunity!')
+        self.assertEqual(crm_case_3.lead_type, 'opportunity', 'Lead is not converted to opportunity!')
         self.assertEqual(crm_case_3.partner_id.id, self.env.ref("base.res_partner_2").id, 'Partner mismatch!')
         self.assertEqual(crm_case_3.stage_id.id, default_stage_id, 'Stage of opportunity is incorrect!')
 
@@ -46,14 +46,14 @@ class TestLead2opportunity2win(TestCrmCases):
 
         # Now I check first lead converted on opportunity.
         self.assertEqual(crm_case_13.name, "Quote for 600 Chairs", "Opportunity name not correct")
-        self.assertEqual(crm_case_13.type, 'opportunity', "Lead is not converted to opportunity!")
+        self.assertEqual(crm_case_13.lead_type, 'opportunity', "Lead is not converted to opportunity!")
         expected_partner = "Will McEncroe"
         self.assertEqual(crm_case_13.partner_id.name, expected_partner, "Partner mismatch! %s vs %s" % (crm_case_13.partner_id.name, expected_partner))
         self.assertEqual(crm_case_13.stage_id.id, default_stage_id, "Stage of probability is incorrect!")
 
         # Then check for second lead converted on opportunity.
         self.assertEqual(crm_case_2.name, "Design Software", "Opportunity name not correct")
-        self.assertEqual(crm_case_2.type, "opportunity", "Lead is not converted to opportunity!")
+        self.assertEqual(crm_case_2.lead_type, "opportunity", "Lead is not converted to opportunity!")
         self.assertEqual(crm_case_2.stage_id.id, default_stage_id, "Stage of probability is incorrect!")
 
         # I loose the second opportunity
@@ -94,37 +94,37 @@ class TestLead2opportunity2win(TestCrmCases):
 
         # Salesman also creates lead so giving access rights of salesman.
         test_crm_lead_01 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 1',
             'email_from': 'Raoul Grosbedon <raoul@grosbedon.fr>',
             'stage_id': default_stage_id
         })
         test_crm_lead_02 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 2',
             'email_from': 'Raoul Grosbedon <raoul@grosbedon.fr>',
             'stage_id': default_stage_id
         })
         test_crm_lead_03 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 3',
             'email_from': 'Raoul Grosbedon <raoul@grosbedon.fr>',
             'stage_id': default_stage_id
         })
         test_crm_lead_04 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 4',
             'email_from': 'Fabrice Lepoilu',
             'stage_id': default_stage_id
         })
         test_crm_lead_05 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 5',
             'email_from': 'Fabrice Lepoilu',
             'stage_id': default_stage_id
         })
         test_crm_lead_06 = LeadSaleman.create({
-            'type': 'lead',
+            'lead_type': 'lead',
             'name': 'Test lead 6',
             'email_from': 'Agrolait SuperSeed SA',
             'stage_id': default_stage_id
@@ -147,6 +147,6 @@ class TestLead2opportunity2win(TestCrmCases):
         opps = self.env['crm.lead'].sudo(self.crm_salesman.id).browse(lead_ids)
         i = 0
         for opp in opps:
-            self.assertEqual(opp.type, 'opportunity', 'Type mismatch: this should be an opp, not a lead')
+            self.assertEqual(opp.lead_type, 'opportunity', 'Type mismatch: this should be an opp, not a lead')
             self.assertEqual(opp.user_id.id, salesmen_ids[i], 'Salesman mismatch: expected salesman %r, got %r' % (salesmen_ids[i], opp.user_id.id))
             i = i + 1 if (i < len(salesmen_ids) - 1) else 0

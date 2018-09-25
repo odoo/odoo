@@ -43,7 +43,7 @@ class Team(models.Model):
     def _compute_unassigned_leads_count(self):
         leads_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
-            ('type', '=', 'lead'),
+            ('lead_type', '=', 'lead'),
             ('user_id', '=', False),
         ], ['team_id'], ['team_id'])
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in leads_data}
@@ -54,7 +54,7 @@ class Team(models.Model):
         opportunity_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
-            ('type', '=', 'opportunity'),
+            ('lead_type', '=', 'opportunity'),
         ], ['planned_revenue', 'probability', 'team_id'], ['team_id'])
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
         amounts = {datum['team_id'][0]: (datum['planned_revenue'] * datum['probability'] / 100) for datum in opportunity_data}
@@ -77,7 +77,7 @@ class Team(models.Model):
         has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
         values = super(Team, self).get_alias_values()
         values['alias_defaults'] = defaults = safe_eval(self.alias_defaults or "{}")
-        defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
+        defaults['lead_type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
         defaults['team_id'] = self.id
         return values
 

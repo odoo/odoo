@@ -31,7 +31,7 @@ class CalendarEvent(models.Model):
                 if event.opportunity_id.id == opportunity_id:
                     event.is_highlighted = True
 
-    opportunity_id = fields.Many2one('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]")
+    opportunity_id = fields.Many2one('crm.lead', 'Opportunity', domain="[('lead_type', '=', 'opportunity')]")
 
     @api.model
     def create(self, vals):

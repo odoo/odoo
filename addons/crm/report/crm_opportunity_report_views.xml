@@ -62,8 +62,8 @@
                     <filter string="My Opportunities" name="my"
                             domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <filter name="lead" string="Lead" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
