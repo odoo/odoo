@@ -202,7 +202,7 @@
         :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 mb-2 o_portal_navbar {{classes if classes else ''}} {{'mt-3 bg-white rounded' if breadcrumbs_searchbar else 'border-top-0' }}">
+        <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 mb-2 o_portal_navbar {{classes if classes else ''}} {{'mt-3 rounded' if breadcrumbs_searchbar else 'border-top-0' }}">
             <!--  Navbar breadcrumb or title  -->
             <t t-if="breadcrumbs_searchbar">
                 <t t-call="portal.portal_breadcrumbs"/>
